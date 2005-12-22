@@ -33,24 +33,42 @@ date spec
 overwrite 
 sparse -> always on
 compression -> altijd gzip
+users
+group
+overwrite
+force
+allow remote
+remote hdup
+remote hdup option
+inherit
+group
+tar option
+chunk size
+
 
 keep:
 archive dir
-proto -> ssh options
-proto options
+dir
+ssh option
 prerun/postrun
-onefilesystem
+one filesystem
 free
+rsync option
+rsync = location
+log = yes/no
 
 nobackup = SEE FILTERS
 exclude -> FILTERS
 include -> FILTERS
-key file = werkt nog niet
-algorithm = werkt nog niet
+#key file = werkt nog niet
+#algorithm = werkt nog niet
 
 
 pre and post run
 get name of current host
+%h current host
+%a archive /tmp/storage/elektron/DATE
+%s scheme: null, incremental
 
 
 use files from, so that I can use my walker.c c-code with .nobackup

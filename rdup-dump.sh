@@ -14,12 +14,16 @@
 
 ARCHIVEDIR=/tmp/storage
 HOST=elektron
-DIR="/home/miekg/bin /home/miekg/adm"
+DIR="/home/miekg/bin"
 
 SUFFIX=`date +%Y%m%d%H%M`
 NULLDIR=`date +%Y%m`
 #OPT="-av --stats --compress --delete -b"
-OPT="-a --compress --delete -b"
+OPT="-av --compress --delete -b -S"
+# .nobackup files are interpreted by rsync
+FILTER=.nobackup
+INCLUDE="--include \*.o --exclude \*"
+ONE_FILE_SYSTEM=-x
 
 case $1 in
         null)
@@ -28,13 +32,14 @@ case $1 in
                 ( cd $ARCHIVEDIR/$HOST; rm -f null )
                 ( cd $ARCHIVEDIR/$HOST; ln -sf $NULLDIR null )
                 for i in $DIR ; do 
-                        rsync $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+                    rsync $INCLUDE --filter ": /$FILTER" $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+                    echo rsync $INCLUDE --filter ": /$FILTER" $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
                 done
         ;;
         inc|incremental)
                 # this should also work for remote
                 for i in $DIR ; do 
-                        rsync $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+                        rsync --filter ": /$FILTER" $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
                 done
         ;;
         *)
