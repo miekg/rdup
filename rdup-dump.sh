@@ -8,6 +8,9 @@
 #    goes to step 1
 
 # a bash prototype of my new rdup utility
+# TODO
+# remote stuf
+# encryption - get that in rsync
 
 ARCHIVEDIR=/tmp/storage
 HOST=elektron
