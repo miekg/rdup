@@ -1,15 +1,41 @@
 #!/bin/bash
 
-# a bach prototype of my new rdup utility
+
+# 1. create a dir for the backup
+# 2. link null to dir: null -> dir
+# 3. incremental dumps, dump to null
+# 4. a new null dump removes the link and
+#    goes to step 1
+
+# a bash prototype of my new rdup utility
 
 ARCHIVEDIR=/tmp/storage
 HOST=elektron
-DIR=/home/miekg/bin
-DIR1=/home/miekg/adm
+DIR="/home/miekg/bin /home/miekg/adm"
 
 SUFFIX=`date +%Y%m%d%H%M`
-OPT="-av --stats --compress --delete -b"
+NULLDIR=`date +%Y%m`
+#OPT="-av --stats --compress --delete -b"
+OPT="-a --compress --delete -b"
 
-mkdir -p $ARCHIVEDIR/$HOST
-rsync $OPT --suffix $SUFFIX $DIR $ARCHIVEDIR/$HOST
-rsync $OPT --suffix $SUFFIX $DIR1 $ARCHIVEDIR/$HOST
+case $1 in
+        null)
+                mkdir -p $ARCHIVEDIR/$HOST/$NULLDIR
+                # remove prev. null link, and add the new one
+                ( cd $ARCHIVEDIR/$HOST; rm -f null )
+                ( cd $ARCHIVEDIR/$HOST; ln -sf $NULLDIR null )
+                for i in $DIR ; do 
+                        rsync $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+                done
+        ;;
+        inc|incremental)
+                for i in $DIR ; do 
+                        rsync $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+                done
+        ;;
+        *)
+                echo "Need: inc or null as argument"
+       ;;
+esac
+        
+
