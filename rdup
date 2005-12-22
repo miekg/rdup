@@ -1,0 +1,51 @@
+rsync based hdup
+
+use a lot of features in rsync - only encryption is a problem.
+libmcrypt
+
+-C algorithm -K keyfile
+
+letters already taken
+
+--crypt --keyfile
+
+enable -W and encrypt the files while sending them
+
+Try to add that to rsync
+
+make it without encryption, then fix encryption in rsync.
+
+
+/vol/backup/<hostname>/<live stuff>
+
+each hostname has a bunch of directories
+check rsync filtering stuff
+
+rsync -av -b --suffix=.221220050826 adm/ adm0
+
+chunk size??? gone
+
+voordelen; iedere users kan eigen dir in om oude backup
+te bekijken
+
+weg:
+date spec 
+overwrite 
+sparse -> always on
+compression -> altijd gzip
+
+keep:
+archive dir
+proto -> ssh options
+proto options
+prerun/postrun
+onefilesystem
+free
+nobackup = SEE FILTERS
+exclude -> FILTERS
+include -> FILTERS
+key file = werkt nog niet
+algorithm = werkt nog niet
+
+
+

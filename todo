@@ -1,0 +1,16 @@
+grammer for ini files
+check filters option of rsync
+
+each month a new null dump into new dir
+2005-12
+liberal permission
+
+each other day incremental dumps to that dir
+first of the month null dump -> the rest increm
+
+
+
+how to check current monthy
+
+nulldump is to dump in empty target dir
+        incrementals
