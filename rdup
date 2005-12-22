@@ -41,6 +41,7 @@ proto options
 prerun/postrun
 onefilesystem
 free
+
 nobackup = SEE FILTERS
 exclude -> FILTERS
 include -> FILTERS
@@ -48,4 +49,8 @@ key file = werkt nog niet
 algorithm = werkt nog niet
 
 
+pre and post run
+get name of current host
 
+
+use files from, so that I can use my walker.c c-code with .nobackup

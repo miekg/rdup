@@ -32,6 +32,7 @@ case $1 in
                 done
         ;;
         inc|incremental)
+                # this should also work for remote
                 for i in $DIR ; do 
                         rsync $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
                 done
