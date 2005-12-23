@@ -59,7 +59,7 @@ log = yes/no
 
 nobackup = SEE FILTERS
 exclude -> FILTERS
-include -> FILTERS
+include -> FILTERS moet kunnen
 #key file = werkt nog niet
 #algorithm = werkt nog niet
 
@@ -72,3 +72,7 @@ get name of current host
 
 
 use files from, so that I can use my walker.c c-code with .nobackup
+
+use ini read from python, write the whole damn thing in python
+
+no encryption, no compression
