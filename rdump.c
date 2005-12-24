@@ -1,15 +1,7 @@
 #include "rdump.h"
 
 /* TODO:
- * we statting to much, once in the crawler
- * and now here. Don't optimize yet
- *
- * print out uid guid and perm make bu use that
- * info too.
- * 
- * add dir info. This is needed when a dir changes into a file or
- * vice versa
- *
+ * symbolic links
  * leak checking, valgrind
  */
 
