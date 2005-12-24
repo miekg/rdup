@@ -1,0 +1,7 @@
+1/ TO BUILD
+
+Run: autoconf && ./configure & make
+
+2/ DOCS
+The manual page explains everything there is to know
+about rdump. See rdump(1).
