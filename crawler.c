@@ -1,34 +1,50 @@
 #include "rdump.h"
 
-
 extern int opt_null;
 extern int opt_onefilesystem;
 extern int opt_nobackup;
 extern int opt_verbose;
+
+struct entry *
+entry_dup(struct entry *f)
+{
+        struct entry *g;
+
+        g = g_malloc(sizeof(struct entry));
+
+        g->f_name  = g_strdup(f->f_name);
+        g->f_uid   = f->f_uid;
+        g->f_gid   = f->f_gid;
+        g->f_mode  = f->f_mode;
+	g->f_mtime = f->f_mtime;
+
+        return g;
+}
 
 GSList *
 dir_crawl(char *path)
 {
 	DIR 		*dir;
 	struct dirent 	*dent;
-	char 		*pop;
+	struct entry	*pop;
 	char 		*curpath;
 	struct stat   	s;
 	dev_t 		current_dev;
 	GSList  	*list;
 
 	list = NULL;
+
 	/* dir stack */
 	gint32 d = 0;
-	gint32 dstack_size = 500; /* realloc when hit */
+	gint32 dstack_size = 100; /* realloc when hit */
 	gint32 dstack_cnt  = 1;
-	char **dirstack = g_malloc(dstack_cnt * dstack_size * sizeof(char*));
+	struct entry **dirstack = g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
 
 	/* file stack */
 	gint32 f = 0;
-	gint32 fstack_size = 2500; 
+	gint32 fstack_size = 200; 
 	gint32 fstack_cnt  = 1;
-	char **filestack = g_malloc(fstack_cnt * fstack_size * sizeof(char *));
+	struct entry **filestack = g_malloc(fstack_cnt * fstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
 		fprintf(stderr, "Cannot enter the directory: %s", path);
@@ -48,7 +64,7 @@ dir_crawl(char *path)
 			continue;
 
 		curpath = g_strdup_printf("%s/%s", path, dent->d_name);
-		
+
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
 			fprintf(stderr, "Could not stat path: %s", curpath);
@@ -67,10 +83,16 @@ dir_crawl(char *path)
 				return NULL;
 			}
 			
-			filestack[f++] = g_strdup(curpath);
-			if (f % fstack_size == 0) {
+			filestack[f] = g_malloc(sizeof(struct entry));
+			filestack[f]->f_name  = g_strdup(curpath);
+			filestack[f]->f_uid   = s.st_uid;
+			filestack[f]->f_gid   = s.st_gid;
+			filestack[f]->f_mtime = s.st_mtime;
+			filestack[f]->f_mode  = s.st_mode;
+
+			if (f++ % fstack_size == 0) {
 				filestack = g_realloc(filestack, 
-						++fstack_cnt * fstack_size * sizeof(char *));
+						++fstack_cnt * fstack_size * sizeof(struct entry *));
 			}
 			continue;
 			
@@ -81,10 +103,16 @@ dir_crawl(char *path)
 				continue;
 			}
 
-			dirstack[d++] = g_strdup(curpath);
-			if (d % dstack_size == 0) {
+			dirstack[d] = g_malloc(sizeof(struct entry));
+			dirstack[d]->f_name  = g_strdup(curpath);
+			dirstack[d]->f_uid   = s.st_uid;
+			dirstack[d]->f_gid   = s.st_gid;
+			dirstack[d]->f_mtime = s.st_mtime;
+			dirstack[d]->f_mode  = s.st_mode;
+
+			if (d++ % dstack_size == 0) {
 				dirstack = g_realloc(dirstack, 
-						++dstack_cnt * dstack_size * sizeof(char *));
+						++dstack_cnt * dstack_size * sizeof(struct entry *));
 			}
 			continue;
 		} else {
@@ -98,13 +126,14 @@ dir_crawl(char *path)
 	 */
 	while (f > 0) {
 		pop = filestack[--f];
-		list = g_slist_prepend(list, (gpointer) g_strdup(pop));
-		g_free(pop);
+		list = g_slist_prepend(list, (gpointer) entry_dup(pop));
+		g_free(pop); 
 	}
 	while (d > 0) {
 		pop = dirstack[--d]; 
-		list = g_slist_prepend(list, (gpointer) g_strdup(pop));
-		list = g_slist_concat(list, dir_crawl(pop));
+		list = g_slist_prepend(list, (gpointer) entry_dup(pop));
+		/* recurse */
+		list = g_slist_concat(list, dir_crawl(pop->f_name));
 		g_free(pop);
 	}
 	

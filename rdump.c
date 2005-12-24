@@ -9,6 +9,8 @@
  * 
  * add dir info. This is needed when a dir changes into a file or
  * vice versa
+ *
+ * leak checking, valgrind
  */
 
 /* cmd options */
@@ -23,10 +25,10 @@ time_t list_mtime;
 /* prototypes */
 GSList * dir_crawl(char *path);
 void gfunc_write(gpointer data, gpointer fp);
-void gfunc_write2(gpointer data, gpointer fp);
+void gfunc_write_all(gpointer data, gpointer fp);
 void gfunc_backup(gpointer data, gpointer usr);
 void gfunc_remove(gpointer data, gpointer usr);
-gint gfunc_str_equal(gconstpointer a, gconstpointer b);
+gint gfunc_equal(gconstpointer a, gconstpointer b);
 
 void
 usage(FILE *f, char *p) 
@@ -64,7 +66,7 @@ g_slist_substract(GSList *a, GSList *b)
 	for(i = 0; i < g_slist_length(a); i++) {
 		data = g_slist_nth_data(a, i);
 
-		if (!g_slist_find_custom(b, data, gfunc_str_equal)) {
+		if (!g_slist_find_custom(b, data, gfunc_equal)) {
 			diff = g_slist_append(diff, data);
 		}
 	}
@@ -75,12 +77,14 @@ GSList *
 g_slist_read_file(FILE *fp)
 {
 	char 	buf[BUFSIZE + 1];
+	mode_t  modus;
 	GSList 	*list;
 
 	list = NULL;
 	while ((fgets(buf, BUFSIZE, fp))) {
 		/* chop annoying newline off */
 		buf[strlen(buf) - 1] = '\0';
+
 		list = g_slist_append(list,
 				(gpointer) g_strdup(buf));
 	}
@@ -140,7 +144,7 @@ main(int argc, __attribute__((unused)) char **argv)
 
 	if (argc < 2) {
 		usage(stdout, progname);
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE); 
 	}
 
 	/* Check for full of incremental dump */
@@ -156,7 +160,10 @@ main(int argc, __attribute__((unused)) char **argv)
 	} else {
 		rewind(fplist);
 	}
+#if 0
 	curlist = g_slist_read_file(fplist);
+#endif
+
 	for (i = 1; i < argc; i++) {
 		backup = g_slist_concat(backup, 
 				dir_crawl(argv[i]));

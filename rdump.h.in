@@ -11,11 +11,12 @@
 #define NULL_DUMP       0
 #define INC_DUMP        1
 
-struct file_entry {
+struct entry {
         char *f_name;
         uid_t f_uid;
         gid_t f_gid;
         mode_t f_mode;
+        time_t f_mtime;
 };
 
 #endif  /* _RDUMP_H */
