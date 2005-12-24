@@ -34,18 +34,25 @@ void
 usage(FILE *f, char *p) 
 {	
 	fprintf(f, "Usage: %s [OPTION...] FILELIST DIR...\n", p);
-	fprintf(f, "%s generates a full or incremental file list, this\n", p);
-	fprintf(f, "list can be used to implement a incremental backup scheme\n");
+	fprintf(f, "rdump generates a full or incremental file list, this\n");
+	fprintf(f, "list can be used to implement a (incremental) backup scheme\n");
 	fprintf(f, "\n   FILELIST\tincremental file list\n");
 	fprintf(f, "   \t\tif not found or empty, a full dump is done\n");
 	fprintf(f, "   DIR\t\tdirectory or directories to dump\n");
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -h\t\tgives this help\n");
+	fprintf(f, "   -V\t\tprint version\n");
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
+}
+
+void
+version(FILE *f) 
+{	
+	fprintf(f, "rdump %s\n", VERSION);
 }
 
 /**
@@ -131,11 +138,14 @@ main(int argc, char **argv)
 	progname = g_strdup(argv[0]);
 	opterr = 0;
 
-	while ((c = getopt (argc, argv, "hnvx0")) != -1) {
+	while ((c = getopt (argc, argv, "hVnvx0")) != -1) {
 		switch (c)
 		{
 			case 'h':
 				usage(stdout, progname);
+				exit(EXIT_SUCCESS);
+			case 'V':
+				version(stdout);
 				exit(EXIT_SUCCESS);
 			case 'n':
 				opt_nobackup = 0;
