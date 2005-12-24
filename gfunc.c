@@ -41,7 +41,8 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 		putc('\n', stdout);
 		return;
 	} 
-	if (S_ISREG(((struct entry*)data)->f_mode)) {
+	if (S_ISREG(((struct entry*)data)->f_mode) ||
+			S_ISLNK(((struct entry*)data)->f_mode)) {
 		/* file, print: +f_uid_gid_mode_path  (_ = space) */
 		switch (dumptype) {
 			case NULL_DUMP:

@@ -1,5 +1,6 @@
 #!/bin/bash
 S_ISDIR=16384   # octal: 040000
+S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permissions
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
@@ -16,18 +17,27 @@ do
         bits=$(($mode & $S_MMASK)) # permission bits
         bits=`printf "%o" $bits` # and back to octal again
 
-        dir=0
+        typ=0
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
-                dir=1;
+                typ=1;
+        fi
+        if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
+                typ=2;
         fi
         
         if [[ $dump == "+" ]]; then
                 # add
-                if [[ $dir == 1 ]]; then
-                        [ ! -d $backupdir/$path ] && mkdir -p $backupdir/$path
-                else
+                case $typ in
+                        0)      # reg file
                         cat $path > $backupdir/$path
-                fi
+                        ;;
+                        1)      # directory
+                        [ ! -d $backupdir/$path ] && mkdir -p $backupdir/$path
+                        ;;
+                        2)      # link
+                        cp -a $path $backupdir/$path
+                        ;;
+                esac
                 chown $uid:$gid $backupdir/$path
                 chmod $bits $backupdir/$path
         else
