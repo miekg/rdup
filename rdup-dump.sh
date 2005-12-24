@@ -16,14 +16,22 @@ ARCHIVEDIR=/vol/backup
 HOST=elektron-etc
 DIR="/etc"
 
+<<<<<<< .mine
+SUFFIX=.`date +%Y%m%d%H%M`
+=======
 EXCLUDE="--exclude .svn/ --exclude tmp/ --exclude .slide_img --exclude
 .thumb_img --exclude lost+found --exclude .Cache/"
 
 
 SUFFIX=`date +%Y%m%d%H%M`
+>>>>>>> .r19
 NULLDIR=`date +%Y%m`
 #OPT="-av --stats --compress --delete -b"
+<<<<<<< .mine
+OPT="-av --compress -C --delete -b -S"
+=======
 OPT="-av -W --compress --delete -b -S"
+>>>>>>> .r19
 # .nobackup files are interpreted by rsync
 FILTER=.nobackup
 
@@ -34,7 +42,11 @@ case $1 in
                 ( cd $ARCHIVEDIR/$HOST; rm -f null )
                 ( cd $ARCHIVEDIR/$HOST; ln -sf $NULLDIR null )
                 for i in $DIR ; do 
+<<<<<<< .mine
+                    rsync --filter ": /$FILTER" $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+=======
                     rsync $EXCLUDE --filter ": /$FILTER" $OPT --suffix $SUFFIX $i $ARCHIVEDIR/$HOST/null
+>>>>>>> .r19
                 done
         ;;
         inc|incremental)
