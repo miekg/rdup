@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Build a rdump distribution tar from the SVN repository.
+# Build a hdup2 distribution tar from the SVN repository.
+# Adapted from NSD to hdup2 by Miek Gieben
 
 # Abort script on unexpected errors.
 set -e
@@ -12,12 +13,12 @@ cwd=`pwd`
 usage () {
     cat >&2 <<EOF
 Usage $0: [-h] [-s] [-d SVN_root]
-Generate a distribution tar file for rdump.
+Generate a distribution tar file for hdup2.
 
     -h           This usage information.
     -s           Build a snapshot distribution file.  The current date is
-                 automatically appended to the current rdump version number.
-    -d SVN_root  Retrieve the rdump source from the specified repository.
+                 automatically appended to the current hdup version number.
+    -d SVN_root  Retrieve the hdup source from the specified repository.
 EOF
     exit 1
 }
@@ -107,14 +108,14 @@ info "SNAPSHOT is $SNAPSHOT"
 
 # Creating temp directory
 info "Creating temporary working directory"
-temp_dir=`mktemp -d rdump-dist-XXXXXX`
+temp_dir=`mktemp -d hdup-dist-XXXXXX`
 info "Directory '$temp_dir' created."
 cd $temp_dir
 
 info "Exporting source from SVN."
-svn export "$SVNROOT" rdump || error_cleanup "SVN command failed"
+svn export "$SVNROOT" hdup2 || error_cleanup "SVN command failed"
 
-cd rdump || error_cleanup "rdump not exported correctly from SVN"
+cd hdup2 || error_cleanup "hdup2 not exported correctly from SVN"
 
 info "Building configure script (autoconf)."
 autoconf || error_cleanup "Autoconf failed."
@@ -125,23 +126,23 @@ find . -name .c-mode-rc.el -exec rm {} \;
 find . -name .cvsignore -exec rm {} \;
 rm makedist.sh || error_cleanup "Failed to remove makedist.sh."
 
-info "Determining rdump version."
+info "Determining hdup2 version."
 version=`./configure --version | head -1 | awk '{ print $3 }'` || \
     error_cleanup "Cannot determine version number."
 
-info "rdump version: $version"
+info "hdup2 version: $version"
 
 if [ "$SNAPSHOT" = "yes" ]; then
-    info "Building rdump snapshot."
+    info "Building hdup2 snapshot."
     version="$version-`date +%Y%m%d`"
     info "Snapshot version number: $version"
 fi
 
-info "Renaming rdump directory to rdump-$version."
+info "Renaming hdup directory to hdup-$version."
 cd ..
-mv rdump rdump-$version || error_cleanup "Failed to rename rdump directory."
+mv hdup2 hdup-$version || error_cleanup "Failed to rename hdup directory."
 
-tarfile="../rdump-$version.tar.gz"
+tarfile="../hdup-$version.tar.gz"
 
 if [ -f $tarfile ]; then
     (question "The file $tarfile already exists.  Overwrite?" \
@@ -149,30 +150,31 @@ if [ -f $tarfile ]; then
 fi
 
 info "Deleting the tpkg and test directory"
-rm -rf rdump-$version/older/
+rm -rf hdup-$version/tpkg/
+rm -rf hdup-$version/test/
 
 info "Deleting the other fluff"
-rm -rf rdump-$version/.svn
-rm -f rdump-$version/core
-rm -f rdump-$version/tar-exclude
-rm -f rdump-$version/config.log 
-rm -f rdump-$version/config.status
-rm -f rdump-$version/tags rdump-$version/src/tags
+rm -rf hdup-$version/.svn
+rm -f hdup-$version/core
+rm -f hdup-$version/tar-exclude
+rm -f hdup-$version/config.log 
+rm -f hdup-$version/config.status
+rm -f hdup-$version/tags hdup-$version/src/tags
 
-info "Creating tar rdump-$version.tar.bz2"
-tar cjf ../rdump-$version.tar.bz2 rdump-$version || error_cleanup "Failed to create tar file."
+info "Creating tar hdup-$version.tar.bz2"
+tar cjf ../hdup-$version.tar.bz2 hdup-$version || error_cleanup "Failed to create tar file."
 
 cleanup
 
 case $OSTYPE in
         linux*)
-                sha=`sha1sum rdump-$version.tar.bz2 |  awk '{ print $1 }'`
+                sha=`sha1sum hdup-$version.tar.bz2 |  awk '{ print $1 }'`
                 ;;
         freebsd*)
-                sha=`sha1  rdump-$version.tar.bz2 |  awk '{ print $5 }'`
+                sha=`sha1  hdup-$version.tar.bz2 |  awk '{ print $5 }'`
                 ;;
 esac
-echo $sha > rdump-$version.tar.bz2.sha1
+echo $sha > hdup-$version.tar.bz2.sha1
 
-info "rdump distribution created successfully."
+info "hdup2 distribution created successfully."
 info "SHA1sum: $sha"

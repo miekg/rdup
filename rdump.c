@@ -192,8 +192,9 @@ main(int argc, char **argv)
 
 	remove = g_slist_substract(curlist, backup); 
 
-	g_slist_foreach(backup, gfunc_backup, NULL);
+	/* first what to remove, then what to backup */
 	g_slist_foreach(remove, gfunc_remove, NULL); 
+	g_slist_foreach(backup, gfunc_backup, NULL);
 
 	/* write new filelist */
 	ftruncate(fileno(fplist), 0);  
