@@ -1,10 +1,5 @@
 #include "rdump.h"
 
-/* TODO:
- * symbolic links
- * leak checking, valgrind
- */
-
 /* cmd options */
 int opt_null = 0;
 int opt_onefilesystem = 0;

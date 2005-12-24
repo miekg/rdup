@@ -24,7 +24,7 @@ all:	rdump
 
 rdump:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdump
-# 	strip rdump
+	strip rdump
 
 clean:
 	@rm -f *.o

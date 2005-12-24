@@ -2,6 +2,86 @@
 
 Run: autoconf && ./configure & make
 
-2/ DOCS
-The manual page explains everything there is to know
-about rdump. See rdump(1).
+2/ DOCUMENTATION
+
+The manual page explains rdump's options and usage. See rdump(1).
+
+Note: the examples given here are simplified, you cannot use a simple
+command, but need to use differentiate between directories, regular
+files and symbolic links. See the example script 'bu'.
+
+2.1/ FULL DUMP
+
+Run: rdump FILELIST dir1
+
+Every directory, file and symlink in dir1 will be printed to stdout,
+like this:
++16832 1000 1000 bin/.svn
++33152 1000 1000 bin/FILE1
++33216 1000 1000 bin/svnlog
++33216 1000 1000 bin/zlog
++33216 1000 1000 bin/zzz
+
+Which says everything is new, that's the + sign in the first column.
+Next to that is the st_mode field of lstat(2), which holds the type
+of the file (dir, regular or symlink) and the protection bits.
+Then we find the numeric user id and numeric group id. As last
+the there is the pathname.
+
+To do a real backup you can use:
+rdump FILELIST dir | ./bu /vol/backup/`date +%Y%m`
+
+'bu' (backup) is a shell script which looks at the filetype and
+acts accordingly. It copies the content (of the dir/symlink) to 
+the archive directory, it creates a mirror of the actual 
+disk layout of the directories to be backed up.
+
+2.2/ INCREMENTAL DUMP
+
+Just run the rdump FILELIST dir1 | ./bu /vol/backup/`date +%Y$m`
+again. This will use the contents of FILELIST and will only print
+the changed files.
+
+If we were not piping the output to 'bu' we would see:
+-33152 0 0 bin/blaat
++16832 1000 1000 bin/.svn
+
+Saying that 'bin/blaat' is to be removed. bin/.svn is always printed
+because that is a directory.
+
+3/ AND NOW FOR SOME FUN
+
+See the note in Section 2. The following are simplified examples of what
+is possible with rdump. Look at 'bu' for an example implementation.
+
+You want gzipped backups?
+for i in `rdump FILELIST /home`; do
+        cat $i | gzip -c > /vol/backup/$i
+done
+
+You want encrypted backups?
+for i in `rdump FILELIST /home`; do 
+        cat $i | mcrypt -F -k 'secret' -a blowfish --mode stream  > /vol/backup/$i
+done
+
+You want encrypted/gzipped backups?
+for i in `rdump FILELIST /home`; do
+        cat $i | gzip -c | \ 
+        mcrypt -F -k 'secret' -a blowfish --mode stream  > /vol/backup/$i
+done
+
+You want a gzipped tar file of your files?
+rdump FILELIST /home > tar_list && \
+tar --create --T list -z --file myhostbackup.tar.gz
+
+You want to exclude certain files?
+for i in `rdump FILELIST /home | grep -v \*.bak`; do 
+         cat $i > /vol/backup/$i
+done
+
+You want to include certain files?
+for i in `rdump FILELIST /home | grep important`; do 
+         cat $i > /vol/backup/$i
+done
+
+As in true unix tradition the list can go on and on :-)
