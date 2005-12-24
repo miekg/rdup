@@ -2,34 +2,48 @@
 
 add=0
 dir=0
+S_ISDIR=16384   # octal: 040000
+S_MMASK=4095    # octal: 00007777, mask to get permissions
 
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
 if [ -z $backupdir ]; then 
         backupdir="/tmp/storage"
 fi
+mkdir -p $backupdir
 
-while read line
+# process the output from rdump
+while read mode uid gid path
 do
-        obj=${line:2}
-        if [[ $line =~ '^\+' ]]; then
-                # ADD
-                if [[ $line =~ '^.d' ]]; then
-                        # DIR
-                        echo "mkdir -p $backupdir/$obj"
-                else 
-                        # FILE
-                        echo "cat $obj | gzip -c > $backupdir/$obj"
-                fi
-        else 
-                # DEL
-                if [[ $line =~ '^.d' ]]; then
-                        # DIR
-                        echo "mv $backupdir/$obj $backupdir/$obj.$suffix"
-                else 
-                        # FILE
-                        echo "mv $backupdir/$obj $backupdir/$obj.$suffix"
+        dump=${mode:0:1}        # to add or remove
+        mode=${mode:1}          # st_mode bits
 
+        # Get the permission bits
+        bits=$(($mode & $S_MMASK))
+        bits=`printf "%o" $bits` # and back to octal again
+
+        # Find out of its a dir or file
+        if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
+                dir=1;
+        else 
+                dir=0;
+        fi
+        
+        if [[ $dump == "+" ]]; then
+                # add
+                if [[ $dir == 1 ]]; then
+                        echo "mkdir -p $backupdir/$path"
+                else
+                        echo "cat $path | gzip -c > $backupdir/$path"
+                fi
+                echo "chown $uid:$gid $backupdir/$path"
+                echo "chmod $bits $backupdir/$path"
+        else
+                # remove
+                if [[ $dir == 1 ]]; then
+                        echo "mv $backupdir/$path $backupdir/$path.$suffix"
+                else
+                        echo "mv $backupdir/$path $backupdir/$path.$suffix"
                 fi
         fi
 done 
