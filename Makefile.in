@@ -31,10 +31,15 @@ clean:
 	@rm -f rdump
 
 realclean: clean
-        rm -rf autom4te.cache
-        rm -f config.log
-        rm -f config.h
-        rm rdump.h
+	rm -rf autom4te.cache
+	rm -f config.log
+	rm -f config.status
+	rm -f config.h
+	rm -f rdump.h
+
+distclean: realclean
+	rm -f configure
+	rm -f Makefile
 
 #uninstall:
 #	@rm -f ${DESTDIR}${sbindir}/hdup
