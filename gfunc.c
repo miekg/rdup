@@ -19,10 +19,10 @@ void
 gfunc_write_all(gpointer data, gpointer fp)
 {
 	fprintf((FILE*) fp, "%s\n", (char*) ((struct entry*)data)->f_name);
-	fprintf((FILE*) fp, "\t%d\n", (int) ((struct entry*)data)->f_uid);
-	fprintf((FILE*) fp, "\t%d\n", (int) ((struct entry*)data)->f_gid);
-	fprintf((FILE*) fp, "\t%d\n", (int) ((struct entry*)data)->f_mtime);
-	fprintf((FILE*) fp, "\t%d\n", (int) ((struct entry*)data)->f_mode);
+	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_uid);
+	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_gid);
+	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mtime);
+	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mode);
 }
 
 void

@@ -78,15 +78,27 @@ g_slist_read_file(FILE *fp)
 {
 	char 	buf[BUFSIZE + 1];
 	mode_t  modus;
+	char    name[BUFSIZE + 1];
 	GSList 	*list;
+	struct entry *e;
 
 	list = NULL;
 	while ((fgets(buf, BUFSIZE, fp))) {
 		/* chop annoying newline off */
 		buf[strlen(buf) - 1] = '\0';
 
-		list = g_slist_append(list,
-				(gpointer) g_strdup(buf));
+		if (sscanf(buf, "%5d %2048[^\n]", &modus, name) != 2) {
+			return list;
+		} else {
+			e = g_malloc(sizeof(struct entry));
+			e->f_name = g_strdup(name);
+			e->f_uid  = 0;
+			e->f_gid  = 0;
+			e->f_mode = modus;
+			e->f_mtime = 0;
+
+			list = g_slist_append(list, (gpointer) e);
+		}
 	}
 	return list;
 }
@@ -103,7 +115,7 @@ mtime(char *f)
 }
 
 int 
-main(int argc, __attribute__((unused)) char **argv) 
+main(int argc, char **argv) 
 {
 	GSList 	*backup; 	/* on disk stuff */
 	GSList 	*remove;	/* what needs to be rm'd */
@@ -160,9 +172,8 @@ main(int argc, __attribute__((unused)) char **argv)
 	} else {
 		rewind(fplist);
 	}
-#if 0
+
 	curlist = g_slist_read_file(fplist);
-#endif
 
 	for (i = 1; i < argc; i++) {
 		backup = g_slist_concat(backup, 
