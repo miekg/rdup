@@ -16,6 +16,10 @@ implement to backup scheme. If FILELIST is empty or non existant all
 files in DIR are dumped. This is the same as a null dump. After a run
 a new FILELIST is written.
 .PP
+Files are checked for changes by comparing the m_time (modification time),
+if this time is NEWER than the m_time of FILELIST the pathname is printed
+to standard output.
+.PP
 The general idea is to be very unix like and create a bunch of simple programs
 which each do a specific their thing very well. With \fBrdump\fR and a
 small shell script (50 lines) one can implement encrypted and compressed
@@ -74,6 +78,9 @@ the pathname
 .PP
 A typical example look like this:
         +33216 1000 1000 bin/rdump
+.PP
+Directories are always printed, as the modification time of directories
+is not compared.
 
 .SH AUTHOR
 Written by Miek Gieben. 

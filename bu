@@ -1,10 +1,6 @@
 #!/bin/bash
-
-add=0
-dir=0
 S_ISDIR=16384   # octal: 040000
 S_MMASK=4095    # octal: 00007777, mask to get permissions
-
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
 if [ -z $backupdir ]; then 
