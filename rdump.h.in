@@ -1,0 +1,13 @@
+#ifndef _RDUMP_H
+#define _RDUMP_H
+
+#define VERSION     "@PACKAGE_VERSION@"
+#define PROGNAME    "@PACKAGE_NAME@"
+
+#include "config.h"
+
+#define BUFSIZE         2048
+#define NOBACKUP        ".nobackup"      
+
+
+#endif  /* _RDUMP_H */

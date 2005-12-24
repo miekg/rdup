@@ -1,0 +1,48 @@
+OBJ=crawler.o rdump.o
+HDR=rdump.h 
+
+prefix  = @prefix@
+exec_prefix = @exec_prefix@
+sbindir = @sbindir@
+mandir = @mandir@
+sysconfdir = @sysconfdir@
+
+GCC = @CC@
+GLIB_CFLAGS     = @GLIB_CFLAGS@
+GLIB_LIBS       = @GLIB_LIBS@
+CFLAGS =-Wall -Wextra @CFLAGS@ @DEFS@ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
+INSTALL = ../install-sh -c
+INSTALL_PROG = $(INSTALL) 
+INSTALL_DATA = $(INSTALL) -m 644
+
+.PHONY:	clean install all uninstall
+
+%.o:    %.c ${HDR}
+	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
+
+all:	rdump
+
+rdump:	${OBJ} ${HDR} 
+	${GCC} ${GLIB_LIBS} ${OBJ} -o rdump
+
+clean:
+	@rm -f *.o
+	@rm -f rdump
+	@rm -f rdump.h
+	@rm -f config.h
+
+#uninstall:
+#	@rm -f ${DESTDIR}${sbindir}/hdup
+#	@rmdir --ignore-fail-on-non-empty ${DESTDIR}${sysconfdir}/hdup
+#	@rm -f ${DESTDIR}${mandir}/man1/hdup.1
+#	@rm -f ${DESTDIR}${mandir}/man5/hdup.conf.5
+#
+#install: hdup ../hdup.conf.distr ../doc/hdup.1 ../doc/hdup.conf.5
+#	@mkdir -p ${DESTDIR}${sysconfdir}/hdup
+#	@mkdir -p ${DESTDIR}${mandir}/man1
+#	@mkdir -p ${DESTDIR}${mandir}/man5
+#	@[ -f ${DESTDIR}${sysconfdir}/hdup/hdup.conf ] || ${INSTALL} -m 600 ../hdup.conf.distr ${DESTDIR}${sysconfdir}/hdup/hdup.conf
+#	@[ -f ${DESTDIR}${sysconfdir}/hdup/postrun-warn-user ] || ${INSTALL} -m 750 ../postrun-warn-user ${DESTDIR}${sysconfdir}/hdup/postrun-warn-user
+#	@${INSTALL} hdup ${DESTDIR}${sbindir}/hdup
+#	@${INSTALL_DATA} ../doc/hdup.1 ${DESTDIR}${mandir}/man1/hdup.1
+#	@${INSTALL_DATA} ../doc/hdup.conf.5 ${DESTDIR}${mandir}/man5/hdup.conf.5
