@@ -1,6 +1,11 @@
 #include "rdump.h"
 
 
+extern int opt_null;
+extern int opt_onefilesystem;
+extern int opt_nobackup;
+extern int opt_verbose;
+
 GSList *
 dir_crawl(char *path)
 {
@@ -52,8 +57,10 @@ dir_crawl(char *path)
 
 		/* catch everything, except dirs */
 		if (!S_ISDIR(s.st_mode)) {
-			if (!g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
-				fprintf(stderr, "** " NOBACKUP "\n");
+			if ((opt_nobackup == 1) && !g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
+				if (opt_verbose) {
+					fprintf(stderr, "** " NOBACKUP " in %s\n", curpath);
+				}
 				/* add this to backup? */
 				g_free(dirstack);
 				g_free(filestack);
@@ -69,7 +76,7 @@ dir_crawl(char *path)
 			
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
-			if (s.st_dev != current_dev) {
+			if (opt_onefilesystem && s.st_dev != current_dev) {
 				fprintf(stderr, "Walking onto different filesystem");
 				continue;
 			}

@@ -6,12 +6,15 @@
  *
  * print out uid guid and perm make bu use that
  * info too.
+ * 
+ * add dir info. This is needed when a dir changes into a file or
+ * vice versa
  */
 
 /* cmd options */
 int opt_null = 0;
 int opt_onefilesystem = 0;
-int opt_nobackup = 0;
+int opt_nobackup = 1;
 int opt_verbose = 0;
 
 int dumptype;
@@ -24,7 +27,6 @@ void gfunc_write2(gpointer data, gpointer fp);
 void gfunc_backup(gpointer data, gpointer usr);
 void gfunc_remove(gpointer data, gpointer usr);
 gint gfunc_str_equal(gconstpointer a, gconstpointer b);
-
 
 void
 usage(FILE *f, char *p) 
@@ -120,7 +122,7 @@ main(int argc, __attribute__((unused)) char **argv)
 				usage(stdout, progname);
 				exit(EXIT_SUCCESS);
 			case 'n':
-				opt_nobackup = 1;
+				opt_nobackup = 0;
 				break;
 			case 'v':
 				opt_verbose = 1;
@@ -171,4 +173,3 @@ main(int argc, __attribute__((unused)) char **argv)
 	fclose(fplist); 
 	exit(EXIT_SUCCESS);
 }
-
