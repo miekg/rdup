@@ -1,4 +1,4 @@
-OBJ=crawler.o rdump.o
+OBJ=crawler.o rdump.o gfunc.o
 HDR=rdump.h 
 
 prefix  = @prefix@
@@ -28,8 +28,8 @@ rdump:	${OBJ} ${HDR}
 clean:
 	@rm -f *.o
 	@rm -f rdump
-	@rm -f rdump.h
-	@rm -f config.h
+
+realclean: clean
 
 #uninstall:
 #	@rm -f ${DESTDIR}${sbindir}/hdup

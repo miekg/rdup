@@ -17,30 +17,39 @@ int opt_verbose;
 int dumptype;
 time_t list_mtime;
 
+/* prototypes */
 GSList * dir_crawl(char *path);
+void gfunc_write(gpointer data, gpointer fp);
+void gfunc_write2(gpointer data, gpointer fp);
+void gfunc_backup(gpointer data, gpointer usr);
+void gfunc_remove(gpointer data, gpointer usr);
+gint gfunc_str_equal(gconstpointer a, gconstpointer b);
 
-void 
-gfunc_print(gpointer *data)
-{
-	fprintf(stdout, "%s\n", (char*) data);
-}
 
 /**
  * subtrace list *b from list *a, leaving
  * the elements that are only in *a. Essentially
  * a double diff: A diff (A diff B)
  */
-#if 0
 GSList *
 g_slist_substract(GSList *a, GSList *b)
 {
-	GSList *diff;
+	GSList 		*diff;
+	guint 		i;
+	gpointer 	data;
 
 	diff = NULL;
 
+	/* everything in a, but NOT in b */
+	for(i = 0; i < g_slist_length(a); i++) {
+		data = g_slist_nth_data(a, i);
+
+		if (!g_slist_find_custom(b, data, gfunc_str_equal)) {
+			diff = g_slist_append(diff, data);
+		}
+	}
 	return diff;
 }
-#endif
 
 GSList *
 g_slist_read_file(FILE *fp)
@@ -49,76 +58,28 @@ g_slist_read_file(FILE *fp)
 	GSList 	*list;
 
 	list = NULL;
-	while (!(fgets(buf, BUFSIZE, fp))) {
-		list = g_slist_prepend(list,
-				(gpointer*) g_strdup(buf));
+	while ((fgets(buf, BUFSIZE, fp))) {
+		/* chop annoying newline off */
+		buf[strlen(buf) - 1] = '\0';
+		list = g_slist_append(list,
+				(gpointer) g_strdup(buf));
 	}
 	return list;
 }
 
-void
-gfunc_backup(gpointer *data)
+time_t
+mtime(char *f)
 {
 	struct stat s;
 
-	if (lstat((char*)data, &s) != 0) {
-		fprintf(stderr, "could not stat\n");
-		return;
+	if (lstat(f, &s) != 0) {
+		return 0;
 	}
-	
-	if (S_ISDIR(s.st_mode)) {
-		/* directory: print +/-dpath */
-		fprintf(stdout, "+d%s", (char*)data);
-		putc('\n', stdout);
-		return;
-	} 
-	if (S_ISREG(s.st_mode)) {
-		/* file: print +/- path */
-		switch (dumptype) {
-			case NULL_DUMP:
-				fprintf(stdout, "+ %s", (char*)data);
-				putc('\n', stdout);
-				return;
-			case INC_DUMP:
-				if (s.st_mtime > list_mtime) {
-					fprintf(stdout, "+ %s", (char*)data);
-					putc('\n', stdout);
-				}
-				return;
-		}
-	}
-	/* neither */
-	return;
+	return s.st_mtime;
 }
-
-void
-gfunc_remove(gpointer *data)
-{
-	struct stat s;
-
-	if (lstat((char*)data, &s) != 0) {
-		fprintf(stderr, "could not stat\n");
-		return;
-	}
-	
-	if (S_ISDIR(s.st_mode)) {
-		/* directory: print +/-dpath */
-		fprintf(stdout, "-d%s", (char*)data);
-		putc('\n', stdout);
-		return;
-	} 
-	if (S_ISREG(s.st_mode)) {
-		fprintf(stdout, "- %s", (char*)data);
-		putc('\n', stdout);
-		return;
-	}
-	/* neither */
-	return;
-}
-
 
 int 
-main(int argc, char **argv) 
+main(int argc, __attribute__((unused)) char **argv) 
 {
 	GSList 	*backup; 	/* on disk stuff */
 	GSList 	*remove;	/* what needs to be rm'd */
@@ -131,26 +92,32 @@ main(int argc, char **argv)
 	remove = NULL;
 	dirpath = NULL;
 
+	dumptype = INC_DUMP;
+
+	list_mtime = mtime("FILELIST");
+
 	if (argc < 2) {
 		dirpath = "bin";
 	}
 	
-	if (!(fplist = fopen("FILELIST", "rw"))) {
+	if (!(fplist = fopen("FILELIST", "a+"))) {
 		fprintf(stderr, "Could not open file\n");
-		dumptype = NULL_DUMP;
+		exit(EXIT_FAILURE);
 	} else {
-		curlist = g_slist_read_file(fplist);
-		dumptype = INC_DUMP;
+		rewind(fplist);
 	}
-	
+	curlist = g_slist_read_file(fplist);
 	backup = dir_crawl(dirpath);
-/*	remove = g_slist_substract(curlist, backup); */
+
+	remove = g_slist_substract(curlist, backup); 
 
 	g_slist_foreach(backup, gfunc_backup, NULL);
-/*	g_slist_foreach(remove, gfunc_remove, NULL); */
+	g_slist_foreach(remove, gfunc_remove, NULL); 
 
 	/* write new filelist */
-	
+	ftruncate(fileno(fplist), 0);  
+	g_slist_foreach(backup, gfunc_write, fplist);
+	fclose(fplist); 
 	exit(EXIT_SUCCESS);
 }
 

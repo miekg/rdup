@@ -54,6 +54,7 @@ dir_crawl(char *path)
 		if (!S_ISDIR(s.st_mode)) {
 			if (!g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
 				fprintf(stderr, "** " NOBACKUP "\n");
+				/* add this to backup? */
 				g_free(dirstack);
 				g_free(filestack);
 				return NULL;
@@ -90,12 +91,14 @@ dir_crawl(char *path)
 	 */
 	while (f > 0) {
 		pop = filestack[--f];
-		list = g_slist_prepend(list, (gpointer*) pop);
+		list = g_slist_prepend(list, (gpointer) g_strdup(pop));
+		g_free(pop);
 	}
 	while (d > 0) {
 		pop = dirstack[--d]; 
-		list = g_slist_prepend(list, (gpointer*) pop);
+		list = g_slist_prepend(list, (gpointer) g_strdup(pop));
 		list = g_slist_concat(list, dir_crawl(pop));
+		g_free(pop);
 	}
 	
 	g_free(dirstack);
