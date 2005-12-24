@@ -36,12 +36,12 @@ realclean: clean
 	rm -f config.status
 	rm -f config.h
 	rm -f rdump.h
+	rm -f rdump*.tar.bz2
+	rm -f rdump*.tar.bz2.sha1
 
 distclean: realclean
 	rm -f configure
 	rm -f Makefile
-	rm -f rdump*.tar.bz2
-	rm -f rdump*.tar.bz2.sha1
 
 #uninstall:
 #	@rm -f ${DESTDIR}${sbindir}/hdup
