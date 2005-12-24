@@ -8,6 +8,7 @@
 
 #define BUFSIZE         2048
 #define NOBACKUP        ".nobackup"      
-
+#define NULL_DUMP       0
+#define INC_DUMP        1
 
 #endif  /* _RDUMP_H */

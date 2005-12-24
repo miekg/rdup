@@ -4,13 +4,13 @@
 GSList *
 dir_crawl(char *path)
 {
-	DIR 	*dir;
-	char 	*pop;
-	char 	*curpath;
-	struct 	dirent *dent;
-	struct 	stat s;
-	dev_t 	current_dev;
-	GSList  *list;
+	DIR 		*dir;
+	struct dirent 	*dent;
+	char 		*pop;
+	char 		*curpath;
+	struct stat   	s;
+	dev_t 		current_dev;
+	GSList  	*list;
 
 	list = NULL;
 	/* dir stack */

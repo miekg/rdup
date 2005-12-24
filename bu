@@ -1,0 +1,35 @@
+#!/bin/bash
+
+add=0
+dir=0
+
+backupdir=$1
+suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
+if [ -z $backupdir ]; then 
+        backupdir="/tmp/storage"
+fi
+
+while read line
+do
+        obj=${line:2}
+        if [[ $line =~ '^\+' ]]; then
+                # ADD
+                if [[ $line =~ '^.d' ]]; then
+                        # DIR
+                        echo "mkdir -p $backupdir/$obj"
+                else 
+                        # FILE
+                        echo "cat $obj | gzip -c > $backupdir/$obj"
+                fi
+        else 
+                # DEL
+                if [[ $line =~ '^.d' ]]; then
+                        # DIR
+                        echo "mv $backupdir/$obj $backupdir/$obj.$suffix"
+                else 
+                        # FILE
+                        echo "mv $backupdir/$obj $backupdir/$obj.$suffix"
+
+                fi
+        fi
+done 
