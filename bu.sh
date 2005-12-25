@@ -39,12 +39,14 @@ do
                 # add
                 case $typ in
                         0)      # reg file
+                        [ -f $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix
                         cat $path > $backupdir/$path
                         ;;
                         1)      # directory
                         [ ! -d $backupdir/$path ] && mkdir -p $backupdir/$path
                         ;;
                         2)      # link
+                        [ -L $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix
                         cp -a $path $backupdir/$path
                         ;;
                 esac
