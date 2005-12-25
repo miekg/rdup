@@ -1,4 +1,5 @@
 o look into networking (for example script that is)
+o -0 is not yet implemented
 o check for leaks, valgrind, etc.
 o portability, first try to compile it on FreeBSD
   (now it only works under Linux)
