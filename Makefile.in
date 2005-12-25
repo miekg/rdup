@@ -42,14 +42,3 @@ realclean: clean
 distclean: realclean
 	rm -f configure
 	rm -f Makefile
-
-#uninstall:
-#	@rm -f ${DESTDIR}${sbindir}/hdup
-#	@rmdir --ignore-fail-on-non-empty ${DESTDIR}${sysconfdir}/hdup
-#	@rm -f ${DESTDIR}${mandir}/man1/hdup.1
-#	@rm -f ${DESTDIR}${mandir}/man5/hdup.conf.5
-#
-#install: hdup ../hdup.conf.distr ../doc/hdup.1 ../doc/hdup.conf.5
-#	@mkdir -p ${DESTDIR}${sysconfdir}/hdup
-#	@mkdir -p ${DESTDIR}${mandir}/man1
-#	@mkdir -p ${DESTDIR}${mandir}/man5

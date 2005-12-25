@@ -1,7 +1,3 @@
-/* hdup config file
- * create for autoconfig, 16 apr 2003
- */
-
 #undef HAVE_GETOPT_H
 #undef HAVE_SYS_VFS_H
 #undef HAVE_SYS_PARAM_H

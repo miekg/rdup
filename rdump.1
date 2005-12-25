@@ -19,7 +19,7 @@ existing file, it just gets overwritten by \fBrdump\fR.
 .PP
 Files are checked for changes by comparing the m_time (modification time),
 if this time is NEWER than the m_time of FILELIST the pathname is printed
-to standard output.
+to standard output. All errors are written to standard error.
 .PP
 The general idea is to be very unix like and create a bunch of simple programs
 which each do a their specific thing very well. With \fBrdump\fR and a

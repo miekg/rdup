@@ -12,7 +12,7 @@ S_MMASK=4095    # octal: 00007777, mask to get permissions
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
 if [ -z $backupdir ]; then 
-        echo "Need archive directory"
+        echo "** Need archive directory"
         exit 1
 fi
 mkdir -p $backupdir
