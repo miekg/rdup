@@ -158,7 +158,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (argc < 2) {
-		usage(stdout, PROGNAME);
+		fprintf(stderr, "** Can not parse command line\n");
 		exit(EXIT_FAILURE); 
 	}
 
@@ -170,7 +170,7 @@ main(int argc, char **argv)
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {
-		fprintf(stderr, "Could not open file\n");
+		fprintf(stderr, "** Could not open file\n");
 		exit(EXIT_FAILURE);
 	} else {
 		rewind(fplist);

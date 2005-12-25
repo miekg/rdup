@@ -52,7 +52,7 @@ dir_crawl(char *path)
 	struct entry **filestack = g_malloc(fstack_cnt * fstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
-		fprintf(stderr, "Cannot enter the directory: %s\n", path);
+		fprintf(stderr, "** Cannot enter the directory: %s\n", path);
 		g_free(filestack);
 		g_free(dirstack);
 		return NULL;
@@ -60,7 +60,7 @@ dir_crawl(char *path)
 
 	/* get device */
 	if (stat(path, &s) != 0) {
-		fprintf(stderr, "Cannot determine holding device of the directory: %s\n", path);
+		fprintf(stderr, "** Cannot determine holding device of the directory: %s\n", path);
 		closedir(dir);
 		g_free(filestack);
 		g_free(dirstack);
@@ -77,7 +77,7 @@ dir_crawl(char *path)
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
-			fprintf(stderr, "Could not stat path: %s\n", curpath);
+			fprintf(stderr, "** Could not stat path: %s\n", curpath);
 			g_free(curpath);
 			continue;
 		}
@@ -112,7 +112,7 @@ dir_crawl(char *path)
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
-				fprintf(stderr, "Walking onto different filesystem\n");
+				fprintf(stderr, "** Walking onto different filesystem\n");
 				g_free(curpath);
 				continue;
 			}
@@ -131,7 +131,7 @@ dir_crawl(char *path)
 			g_free(curpath);
 			continue;
 		} else {
-			fprintf(stderr, "Neither file nor directory: %s\n", curpath);
+			fprintf(stderr, "** Neither file nor directory: %s\n", curpath);
 			g_free(curpath);
 		}
 	}
