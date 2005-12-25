@@ -8,6 +8,16 @@
 # -c copy
 # -C copy carefull
 # -d diff -u
+
+what=0
+while getopts ":n:cCd" options; do 
+        case $options in
+                n) ;;
+                c) what=1; shift;;
+                C) what=2; shift;;
+                d) what=3; shift;;
+        esac
+done
 backupdir=$1
 bsuffix=`date +%Y%m`
 if [ -z $backupdir ]; then
@@ -29,20 +39,23 @@ do
                 echo "** Not found in archive: $file" && continue
 
         # print
-        echo $backupdir$file
+        case $what in
+                0)
+                        $backupdir$file
+                ;;
+                1)
+                        cp -a $backupdir$file $file
+                ;;
+                2)
+                        cmp $backupdir$file $file > /dev/null
+                        if [[ $? ]]; then
+                                cp -a $backupdir$file $file
+                        fi
+                ;;
+                3)
+                        echo diff -u `basename $backupdir$file` `basename $file`
+                        [ -f $backupdir$file ] && diff -u $backupdir$file $file
+                        [ -h $backupdir$file ] && diff -u $backupdir$file $file
+                ;;
+        esac
 done
-
-#        # copy
-#        echo cp -a $backupdir$file .
-#        # copy careful
-#        cmp $backupdir$file $file > /dev/null
-#        if [[ $? ]]; then
-#                # copy only when the differ
-#                echo cp -a $backupdir$file .
-#        fi
-#
-#        # diff, only for files and links
-#        echo diff -u `basename $backupdir$file` `basename $file`
-#        [ -f $backupdir$file ] && diff -u $backupdir$file $file
-#        [ -h $backupdir$file ] && diff -u $backupdir$file $file
-#        exit 0

@@ -33,7 +33,7 @@ do
         fi
 
         # print
-        ls -o $b2Yackupdir$file 2>/dev/null \
+        ls -o $backupdir$file 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9" "$4 }'
         ls -o $backupdir$file.????????.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9" "$4 }'
