@@ -132,6 +132,8 @@ main(int argc, char **argv)
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
+	char 	*crawl;
+	char    pwd[BUFSIZE + 1];
 
 	curlist = NULL;
 	backup = NULL;
@@ -142,6 +144,11 @@ main(int argc, char **argv)
 		fprintf(stderr, "** For safety reasons " PROGNAME " will not run suid/sgid\n");
 		exit(EXIT_FAILURE);
         }
+
+	if (!getcwd(pwd, BUFSIZE)) {
+		fprintf(stderr, "** Could not get current working directory\n");
+		exit(EXIT_FAILURE);
+	}
 
 	while ((c = getopt (argc, argv, "hVnvx0")) != -1) {
 		switch (c)
@@ -191,7 +198,13 @@ main(int argc, char **argv)
 	curlist = g_slist_read_file(fplist);
 
 	for (i = 1; i < argc; i++) {
-		backup = g_slist_concat(backup, dir_crawl(argv[i]));
+		if (argv[i][0] != '/') {
+			crawl = g_strdup_printf("%s/%s", pwd, argv[i]);
+		} else {
+			crawl = g_strdup(argv[i]);
+		}
+		backup = g_slist_concat(backup, dir_crawl(crawl));
+		g_free(crawl);
 	}
 
 	remove = g_slist_substract(curlist, backup); 
