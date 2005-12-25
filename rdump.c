@@ -5,7 +5,7 @@
 
 #include "rdump.h"
 
-/* cmd options */
+/* options */
 int opt_null = 0;
 int opt_onefilesystem = 0;
 int opt_nobackup = 1;
@@ -74,6 +74,10 @@ g_slist_substract(GSList *a, GSList *b)
 	return diff;
 }
 
+/** 
+ * read a filelist, which should hold our previous
+ * backup list
+ */
 GSList *
 g_slist_read_file(FILE *fp)
 {
@@ -105,6 +109,9 @@ g_slist_read_file(FILE *fp)
 	return list;
 }
 
+/**
+ * return the m_time of the filelist
+ */
 time_t
 mtime(char *f)
 {
@@ -130,6 +137,11 @@ main(int argc, char **argv)
 	backup = NULL;
 	remove = NULL;
 	opterr = 0;
+
+	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
+		fprintf(stderr, "** For safety reasons " PROGNAME " will not run suid/sgid\n");
+		exit(EXIT_FAILURE);
+        }
 
 	while ((c = getopt (argc, argv, "hVnvx0")) != -1) {
 		switch (c)
