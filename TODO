@@ -3,6 +3,7 @@ o -0 is not yet implemented
 o make it more efficient, GSList is not the quickest
   data type from GLib
 o ignore or handle signals
+o better error handling on syscalls
 o make install/unstall targets need to be finished
 o look into networking (for example script that is)
 
@@ -36,3 +37,6 @@ o the .nobackup files or not added to the filelist
 o improve error reporting
   All errors are printed to stderrr, and prefixed with "** ".
   No seperate function is needed for this.
+
+o always use the full path
+  call getcwd before crawling if the path wasn't absolute.
