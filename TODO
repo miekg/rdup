@@ -1,13 +1,12 @@
 TODO: 
 o -0 is not yet implemented
+o restore utilities, like yesterday or hist
 o make it more efficient, GSList is not the quickest
-  data type from GLib
+  data type from GLib. Performance.
 o ignore or handle signals
 o better error handling on syscalls
 o make install/unstall targets need to be finished
 o look into networking (for example script that is)
-o restore utilities, like yesterday or hist
-o performace
 o Make directory seperator a define
 
 DONE:
