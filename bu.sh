@@ -5,19 +5,21 @@
 #
 # This actually creates the backup
 # bu /target
-# in /target a mirror is created
+# in /target/YYYYMM/ a mirror is created
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permissions
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
+bsuffix=`date +%Y%m` # YYYYMM
 if [ -z $backupdir ]; then 
         echo "** Need archive directory"
         exit 1
 fi
-mkdir -p $backupdir
-chown root:backup $backupdir
-chmod 755 $backupdir
+mkdir -p $backupdir; mkdir -p $backupdir/$bsuffix
+chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix
+chmod 755 $backupdir; chmod 755 $backupdir/$bsuffix
+backupdir=$backupdir/$bsuffix
 
 while read mode uid gid path
 do
