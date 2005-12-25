@@ -52,7 +52,7 @@ dir_crawl(char *path)
 	struct entry **filestack = g_malloc(fstack_cnt * fstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
-		fprintf(stderr, "** Cannot enter the directory: %s\n", path);
+		fprintf(stderr, "** Cannot enter: %s\n", path);
 		g_free(filestack);
 		g_free(dirstack);
 		return NULL;
