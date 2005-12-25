@@ -1,12 +1,12 @@
 .TH YESTERDAY.SH 1 "25 Dec 2005"
 
 .SH NAME
-yesterday.sh – print file names from the dump
+yesterday.sh -– print file names from the dump
 
 .SH SYNOPSIS
-.B yesterday 
+.B yesterday.sh
 [
-.IR -−cCd --n daysago
+.IR -−cbCdn backupdir
 ]
 .IR BACKUPDIR
 .IR FILES ...
@@ -17,6 +17,9 @@ dumps are done early in the morning, yesterday’s files are really in
 today’s dump. 
 
 .SH OPTIONS
+.TP 
+\fB-−b backupdir
+Alternate backup directory. Defaults to /vol/backup.
 .TP 
 \fB-−c    
 Copy the dump files over the named files.

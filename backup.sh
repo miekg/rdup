@@ -12,9 +12,14 @@ S_MMASK=4095    # octal: 00007777, mask to get permissions
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
 bsuffix=`date +%Y%m` # YYYYMM
+while getopts ":n:b:cCd" options; do
+        case $options in
+                b) backupdir=$OPTARG; shift;;
+        esac
+done
 if [ -z $backupdir ]; then 
-        echo "** Need archive directory"
-        exit 1
+        echo "** Setting archive directory to /vol/backup"
+        backupdir="/vol/backup"
 fi
 mkdir -p $backupdir; mkdir -p $backupdir/$bsuffix
 chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix

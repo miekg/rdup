@@ -8,21 +8,20 @@
 # -c copy
 # -C copy carefull
 # -d diff -u
-
+bsuffix=`date +%Y%m`
 what=0
-while getopts ":n:cCd" options; do 
+while getopts ":n:b:cCd" options; do 
         case $options in
                 n) ;;
+                b) backupdir=$OPTARG; shift;;
                 c) what=1; shift;;
                 C) what=2; shift;;
                 d) what=3; shift;;
         esac
 done
-backupdir=$1
-bsuffix=`date +%Y%m`
 if [ -z $backupdir ]; then
-        echo "** Need archive directory"
-        exit 1
+        echo "** Setting archive directory to /vol/backup"
+        backupdir="/vol/backup"
 fi
 backupdir=$backupdir/$bsuffix
 
@@ -41,7 +40,7 @@ do
         # print
         case $what in
                 0)
-                        $backupdir$file
+                        echo $backupdir$file
                 ;;
                 1)
                         cp -a $backupdir$file $file

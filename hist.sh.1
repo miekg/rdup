@@ -1,14 +1,13 @@
 .TH HIST.SH 1 "25 Dec 2005"
         
 .SH NAME
-hist, history – print file names from the dump
+hist, history -– print file names from the dump
 
 .SH SYNOPSIS
-.B hist.sh 
+.B hist.sh
 [ 
-.IR −-d
+.IR −-bd
 ] 
-.IR BACKUPDIR 
 .IR FILES ...
 
 .SH DESCRIPTION
@@ -24,13 +23,18 @@ produces
 .TS
 tab ($);
 l l.
-2005-12-25 19:44 /vol/backup/200512/home/miekg/.bash_history   106
-2005-12-25 18:07 /vol/backup/200512/home/miekg/.bash_history.20051225.19:44   100
+2005-12-25 19:44 /vol/backup/200512/home/miekg/.bash_history 106
+2005-12-25 18:07 /vol/backup/200512/home/miekg/.bash_history.20051225.19:44 100
 .TE
 
 .SH OPTIONS
-The −d option causes diff(1) −u to be run for each adjacent pair of dump files
-This is not yet implemented.
+.TP
+\fB--b backupdir
+Alternate backup directory. Defaults to /vol/backup.
+.TP
+\fB--d
+The −d option causes diff(1) -−u to be run for each adjacent pair of
+dump files. This is not yet implemented.
 
 .SH EXAMPLES
 Examine changes in block.c:
