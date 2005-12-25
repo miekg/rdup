@@ -200,7 +200,7 @@ main(int argc, char **argv)
 
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] != '/') {
-			crawl = g_strdup_printf("%s/%s", pwd, argv[i]);
+			crawl = g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]);
 		} else {
 			crawl = g_strdup(argv[i]);
 		}

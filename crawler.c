@@ -34,7 +34,7 @@ dir_prepend(GSList *l, char *path)
 	struct stat s;
 	struct entry *e;
 
-	for(p = path + 1; (c = strchr(p, '/')); p++) {
+	for(p = path + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if(lstat(path, &s) != 0) {
 			fprintf(stderr, "** Could not stat dirpath: %s\n", path);
@@ -103,7 +103,7 @@ dir_crawl(char *path)
 				!g_ascii_strcasecmp(dent->d_name, ".."))
 			continue;
 
-		curpath = g_strdup_printf("%s/%s", path, dent->d_name);
+		curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {

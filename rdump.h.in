@@ -10,6 +10,7 @@
 #define NOBACKUP        ".nobackup"      
 #define NULL_DUMP       0
 #define INC_DUMP        1
+#define DIR_SEP         '/'
 
 struct entry {
         char *f_name;

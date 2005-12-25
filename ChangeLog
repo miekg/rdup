@@ -1,4 +1,6 @@
 XX Dec 2005: 0.0.1 Miek <miek@miek.nl>
    - First public release -
    * Fully working, but not all features implemented
+   * The supplied shell script implement one possible
+     backup scheme. Feel free to add more
    * Look at the TODO for what needs to be done

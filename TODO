@@ -1,13 +1,15 @@
 TODO: 
+# rdump util:
 o -0 is not yet implemented
-o restore utilities, like yesterday or hist
 o make it more efficient, GSList is not the quickest
   data type from GLib. Performance.
 o ignore or handle signals
 o better error handling on syscalls
+
+# rest/shell 
 o make install/unstall targets need to be finished
-o look into networking (for example script that is)
-o Make directory seperator a define
+o look into networking (for an example script, that is)
+o shell script portability
 
 DONE:
 o valgrind rdump. Done the remaining leaks look to be coming
@@ -27,18 +29,30 @@ o valgrind rdump. Done the remaining leaks look to be coming
         ==9997==      possibly lost: 0 bytes in 0 blocks.
         ==9997==    still reachable: 39014 bytes in 41 blocks.
         ==9997==         suppressed: 0 bytes in 0 blocks.
+  25 Dec 2005
 
 o portability, first try to compile it on FreeBSD
   It compiles just fine under FreeBSD - made an error using the autoconf
   tools
+  25 Dec 2005
 
 o the .nobackup files or not added to the filelist
   This is now done, allthough I think I've created a memleak
   in crawler.c
+  25 Dec 2005
 
 o improve error reporting
   All errors are printed to stderrr, and prefixed with "** ".
   No seperate function is needed for this.
+  25 Dec 2005
 
 o always use the full path
   call getcwd before crawling if the path wasn't absolute.
+  25 Dec 2005
+
+o restore utilities, like yesterday or hist
+  yesterday.sh and hist.sh are added, 25 Dec 2005.
+
+o make directory seperator a define
+  done, 25 Dec 2005
+
