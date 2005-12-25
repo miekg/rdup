@@ -1,15 +1,41 @@
 #!/bin/bash
+#
+# Copyright (c) 2005, 2006 Miek Gieben
+# See LICENSE for the license
+#
+# inspired by hist of plan9
+backupdir=$1
+bsuffix=`date +%Y%m`
+if [ -z $backupdir ]; then
+        echo "** Need archive directory"
+        exit 1
+fi
+backupdir=$backupdir/$bsuffix
 
-# also copied form plan9
-#Hist prints the names, dates, and sizes of all versions of the named files,
-#looking backwards in time, stored in the dump file system. If the file exists
-#in the main tree, the first line of output will be its current state. For
-#example,
-#
-#        hist ~rsc/.bash_history
-#produces
-#
-#May 19 16:11:37 EDT 2005 /home/am3/rsc/.bash_history 6175
-#May 18 23:32:16 EDT 2005 /dump/am/2005/0519/home/am3/rsc/.bash_history 5156
-#May 17 23:32:31 EDT 2005 /dump/am/2005/0518/home/am3/rsc/.bash_history 5075
-#May 16 07:53:47 EDT 2005 /dump/am/2005/0517/home/am3/rsc/.bash_history 5065
+while shift
+do
+        file=$1
+        if [[ -z $file ]]; then
+                continue
+        fi
+        if [[ ${file:0:1} != "/" ]]; then
+                file=`pwd`/$file
+        fi
+        [[ ! -e $backupdir$file ]] && \
+                echo "** Not found in archive: $file" && continue
+
+        if [[ -d $backupdir$file ]]; then  
+                ls -odh $b2Yackupdir$file 2>/dev/null \
+| awk ' { print $5" "$6" "$7" "$8" "$9" "$4 }'
+                ls -odh $backupdir$file.????????.??:?? 2>/dev/null \
+| awk ' { print $5" "$6" "$7" "$8" "$9" "$4 }'
+                continue;
+        fi
+
+        # print
+        ls -o $b2Yackupdir$file 2>/dev/null \
+| awk ' { print $5" "$6" "$7" "$8" "$9" "$4 }'
+        ls -o $backupdir$file.????????.??:?? 2>/dev/null \
+| awk ' { print $5" "$6" "$7" "$8" "$9" "$4 }'
+
+done

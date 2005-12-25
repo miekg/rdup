@@ -1,5 +1,8 @@
 #!/bin/bash
-
+#
+# Copyright (c) 2005, 2006 Miek Gieben
+# See LICENSE for the license
+#
 # inspired by yesterday of plan9
 # -n days ago
 # -c copy
