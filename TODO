@@ -7,3 +7,4 @@ o make it more efficient, GSList is not the quickest
   data type from GLib
 o ignore or handle signals
 o make install/unstall targets need to be finished
+o improve error reporting
