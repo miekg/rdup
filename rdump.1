@@ -14,7 +14,8 @@ rdump \- generate a file list suitable for making backups
 to FILELIST. Subsequent programs in a pipe line can be used to actually
 implement to backup scheme. If FILELIST is empty or non existant all
 files in DIR are dumped. This is the same as a null dump. After a run
-a new FILELIST is written.
+a new FILELIST is written. No warning is given when FILELIST is an
+existing file, it just gets overwritten by \fBrdump\fR.
 .PP
 Files are checked for changes by comparing the m_time (modification time),
 if this time is NEWER than the m_time of FILELIST the pathname is printed

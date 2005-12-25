@@ -9,7 +9,6 @@ struct entry *
 entry_dup(struct entry *f)
 {
         struct entry *g;
-
         g = g_malloc(sizeof(struct entry));
 
         g->f_name  = g_strdup(f->f_name);
@@ -17,8 +16,14 @@ entry_dup(struct entry *f)
         g->f_gid   = f->f_gid;
         g->f_mode  = f->f_mode;
 	g->f_mtime = f->f_mtime;
-
         return g;
+}
+
+void
+entry_free(struct entry *f)
+{
+	g_free(f->f_name);
+	g_free(f);
 }
 
 GSList *
@@ -48,12 +53,17 @@ dir_crawl(char *path)
 
 	if(!(dir = opendir(path))) {
 		fprintf(stderr, "Cannot enter the directory: %s\n", path);
+		g_free(filestack);
+		g_free(dirstack);
 		return NULL;
 	}
 
 	/* get device */
 	if (stat(path, &s) != 0) {
 		fprintf(stderr, "Cannot determine holding device of the directory: %s\n", path);
+		closedir(dir);
+		g_free(filestack);
+		g_free(dirstack);
 		return NULL;
 	}
 	current_dev = s.st_dev;
@@ -68,6 +78,7 @@ dir_crawl(char *path)
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
 			fprintf(stderr, "Could not stat path: %s\n", curpath);
+			g_free(curpath);
 			continue;
 		}
 
@@ -80,6 +91,8 @@ dir_crawl(char *path)
 				/* add this to backup? */
 				g_free(dirstack);
 				g_free(filestack);
+				g_free(curpath);
+				closedir(dir);
 				return NULL;
 			}
 			
@@ -94,17 +107,18 @@ dir_crawl(char *path)
 				filestack = g_realloc(filestack, 
 						++fstack_cnt * fstack_size * sizeof(struct entry *));
 			}
+			g_free(curpath);
 			continue;
-			
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
 				fprintf(stderr, "Walking onto different filesystem\n");
+				g_free(curpath);
 				continue;
 			}
 
 			dirstack[d] = g_malloc(sizeof(struct entry));
-			dirstack[d]->f_name  = g_strdup(curpath);
+			dirstack[d]->f_name  = g_strdup(curpath); 
 			dirstack[d]->f_uid   = s.st_uid;
 			dirstack[d]->f_gid   = s.st_gid;
 			dirstack[d]->f_mtime = s.st_mtime;
@@ -114,9 +128,11 @@ dir_crawl(char *path)
 				dirstack = g_realloc(dirstack, 
 						++dstack_cnt * dstack_size * sizeof(struct entry *));
 			}
+			g_free(curpath);
 			continue;
 		} else {
 			fprintf(stderr, "Neither file nor directory: %s\n", curpath);
+			g_free(curpath);
 		}
 	}
 	closedir(dir);
@@ -127,14 +143,14 @@ dir_crawl(char *path)
 	while (f > 0) {
 		pop = filestack[--f];
 		list = g_slist_prepend(list, (gpointer) entry_dup(pop));
-		g_free(pop); 
+		entry_free(pop);
 	}
 	while (d > 0) {
 		pop = dirstack[--d]; 
 		list = g_slist_prepend(list, (gpointer) entry_dup(pop));
 		/* recurse */
 		list = g_slist_concat(list, dir_crawl(pop->f_name));
-		g_free(pop);
+		entry_free(pop);
 	}
 	
 	g_free(dirstack);

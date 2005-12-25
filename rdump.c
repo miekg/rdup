@@ -20,6 +20,7 @@ void gfunc_write(gpointer data, gpointer fp);
 void gfunc_write_all(gpointer data, gpointer fp);
 void gfunc_backup(gpointer data, gpointer usr);
 void gfunc_remove(gpointer data, gpointer usr);
+void gfunc_free(gpointer data, gpointer user);
 gint gfunc_equal(gconstpointer a, gconstpointer b);
 
 void
@@ -88,16 +89,17 @@ g_slist_read_file(FILE *fp)
 		buf[strlen(buf) - 1] = '\0';
 
 		if (sscanf(buf, "%5d %2048[^\n]", &modus, name) != 2) {
+			fprintf(stderr, "** Can not parse filelist\n");
 			return list;
 		} else {
 			e = g_malloc(sizeof(struct entry));
 			e->f_name = g_strdup(name);
+			e->f_mode = modus;
 			e->f_uid  = 0;
 			e->f_gid  = 0;
-			e->f_mode = modus;
 			e->f_mtime = 0;
 
-			list = g_slist_append(list, (gpointer) e);
+			list = g_slist_prepend(list, (gpointer) e);
 		}
 	}
 	return list;
@@ -121,21 +123,19 @@ main(int argc, char **argv)
 	GSList 	*remove;	/* what needs to be rm'd */
 	GSList 	*curlist; 	/* previous backup list */
 	FILE 	*fplist;
-	char 	*progname;
 	gint    i;
 	int 	c;
 
 	curlist = NULL;
 	backup = NULL;
 	remove = NULL;
-	progname = g_strdup(argv[0]);
 	opterr = 0;
 
 	while ((c = getopt (argc, argv, "hVnvx0")) != -1) {
 		switch (c)
 		{
 			case 'h':
-				usage(stdout, progname);
+				usage(stdout, PROGNAME);
 				exit(EXIT_SUCCESS);
 			case 'V':
 				version(stdout);
@@ -158,7 +158,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (argc < 2) {
-		usage(stdout, progname);
+		usage(stdout, PROGNAME);
 		exit(EXIT_FAILURE); 
 	}
 
@@ -193,5 +193,14 @@ main(int argc, char **argv)
 	ftruncate(fileno(fplist), 0);  
 	g_slist_foreach(backup, gfunc_write, fplist);
 	fclose(fplist); 
+
+	g_slist_foreach(curlist, gfunc_free, NULL);
+	g_slist_foreach(backup, gfunc_free, NULL);
+	g_slist_foreach(remove, gfunc_free, NULL);
+	
+	g_slist_free(curlist);
+	g_slist_free(backup);
+	g_slist_free(remove);
+	
 	exit(EXIT_SUCCESS);
 }

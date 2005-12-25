@@ -1,6 +1,5 @@
-o look into networking (for example script that is)
+TODO: 
 o -0 is not yet implemented
-o check for leaks, valgrind, etc.
 o portability, first try to compile it on FreeBSD
   (now it only works under Linux)
 o make it more efficient, GSList is not the quickest
@@ -8,3 +7,25 @@ o make it more efficient, GSList is not the quickest
 o ignore or handle signals
 o make install/unstall targets need to be finished
 o improve error reporting
+o look into networking (for example script that is)
+
+DONE:
+o valgrind rdump. Done the remaining leaks look to be coming
+  from glib:
+        ==9997== 38994 bytes in 40 blocks are still reachable in loss record 2 of 2
+        ==9997==    at 0x1B8FF8A2: malloc (vg_replace_malloc.c:149)
+        ==9997==    by 0x1B938F0F: g_malloc (in /usr/lib/libglib-2.0.so.0.800.3)
+        ==9997==    by 0x1B949EA5: g_strdup (in /usr/lib/libglib-2.0.so.0.800.3)
+        ==9997==    by 0x1B93A77E: g_allocator_new (in /usr/lib/libglib-2.0.so.0.800.3)
+        ==9997==    by 0x1B9493AF: g_slist_prepend (in /usr/lib/libglib-2.0.so.0.800.3)
+        ==9997==    by 0x8049371: g_slist_read_file (rdump.c:102)
+        ==9997==    by 0x8049574: main (rdump.c:179)
+
+        ....
+        ==9997== LEAK SUMMARY:
+        ==9997==    definitely lost: 0 bytes in 0 blocks.
+        ==9997==      possibly lost: 0 bytes in 0 blocks.
+        ==9997==    still reachable: 39014 bytes in 41 blocks.
+        ==9997==         suppressed: 0 bytes in 0 blocks.
+
+

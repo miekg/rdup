@@ -8,7 +8,7 @@ The manual page explains rdump's options and usage. See rdump(1).
 
 Note: the examples given here are simplified, you cannot use a simple
 command, but need to use differentiate between directories, regular
-files and symbolic links. See the example script 'bu'.
+files and symbolic links. See the example script 'bu.sh'.
 
 2.1/ FULL DUMP
 
@@ -29,20 +29,20 @@ Then we find the numeric user id and numeric group id. As last
 the there is the pathname.
 
 To do a real backup you can use:
-rdump FILELIST dir | ./bu /vol/backup/`date +%Y%m`
+rdump FILELIST dir | ./bu.sh /vol/backup/`date +%Y%m`
 
-'bu' (backup) is a shell script which looks at the filetype and
+'bu.sh' (backup) is a shell script which looks at the filetype and
 acts accordingly. It copies the content (of the dir/symlink) to 
 the archive directory, it creates a mirror of the actual 
 disk layout of the directories to be backed up.
 
 2.2/ INCREMENTAL DUMP
 
-Just run the rdump FILELIST dir1 | ./bu /vol/backup/`date +%Y$m`
+Just run the rdump FILELIST dir1 | ./bu.sh /vol/backup/`date +%Y$m`
 again. This will use the contents of FILELIST and will only print
 the changed files.
 
-If we were not piping the output to 'bu' we would see:
+If we were not piping the output to 'bu.sh' we would see:
 -33152 0 0 bin/blaat
 +16832 1000 1000 bin/.svn
 
@@ -52,7 +52,7 @@ because that is a directory.
 3/ AND NOW FOR SOME FUN
 
 See the note in Section 2. The following are simplified examples of what
-is possible with rdump. Look at 'bu' for an example implementation.
+is possible with rdump. Look at 'bu.sh' for an example implementation.
 
 You want gzipped backups?
 for i in `rdump FILELIST /home`; do

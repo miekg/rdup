@@ -11,6 +11,16 @@ extern int dumptype;
 extern time_t list_mtime;
 
 void 
+gfunc_free(gpointer data, __attribute__((unused)) gpointer usr)
+{
+	struct entry *f;
+	f = (struct entry*) data;
+	
+	g_free(f->f_name);
+	g_free(f);
+}
+
+void 
 gfunc_write(gpointer data, gpointer fp)
 {
 	/* mode_path */
