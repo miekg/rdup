@@ -1,0 +1,50 @@
+.TH YESTERDAY.SH 1 "25 Dec 2005"
+
+.SH NAME
+yesterday.sh – print file names from the dump
+
+.SH SYNOPSIS
+.B yesterday 
+[
+.IR -−cCd --n daysago
+]
+.IR BACKUPDIR
+.IR FILES ...
+
+.SH DESCRIPTION
+yesterday.sh prints the names of the files from the most recent dump. Since
+dumps are done early in the morning, yesterday’s files are really in
+today’s dump. 
+
+.SH OPTIONS
+.TP 
+\fB-−c    
+Copy the dump files over the named files.
+.TP 
+\fB-−C    
+Copy the dump files over the named files only when they differ.
+.TP 
+\fB-−d    
+Run diff to compare the dump files with the named files.
+.TP 
+\fB-−n daysago
+select the dump daysago prior to the current day.
+
+.SH EXAMPLES
+See what’s changed in the last week in your profile:
+.PP
+        yesterday.sh /vol/backup -−d -−n 7 ~/.profile
+.PP
+Restore your profile from yesterday:
+.PP
+        yesterday.sh /vol/backup −-c ~/.profile
+
+.SH FILES
+/somewhere by convention, root of the dump file system
+
+.SH NOTE
+This manpge was copied verbatim from the yesterday(1) manual page of
+Plan9.
+
+.SH SEE ALSO
+diff(1), hist.sh (1), rdump(8)

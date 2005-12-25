@@ -1,0 +1,46 @@
+.TH HIST.SH 1 "25 Dec 2005"
+        
+.SH NAME
+hist, history – print file names from the dump
+
+.SH SYNOPSIS
+.B hist.sh 
+[ 
+.IR −-d
+] 
+.IR BACKUPDIR 
+.IR FILES ...
+
+.SH DESCRIPTION
+Hist prints the dates, names, and sizes of all versions of the named files,
+looking backwards in time, stored in the dump file system. If the file exists
+in the main tree, the first line of output will be its current state. 
+.PP
+For example,
+.PP
+        hist /vol/backup ~miekg/.bash_history
+.PP
+produces
+.TS
+tab ($);
+l l.
+2005-12-25 19:44 /vol/backup/200512/home/miekg/.bash_history   106
+2005-12-25 18:07 /vol/backup/200512/home/miekg/.bash_history.20051225.19:44   100
+.TE
+
+.SH OPTIONS
+The −d option causes diff(1) −u to be run for each adjacent pair of dump files
+This is not yet implemented.
+
+.SH EXAMPLES
+Examine changes in block.c:
+hist −d /vol/backup ~miekg/block.c
+
+.SH FILES
+/somewhere by convention, root of dump file system
+
+.SH NOTE
+This manpage was copied verbatim from the hist(1) manual page of Plan9.
+
+.SH SEE ALSO
+yesterday.sh(1), rdump(8)

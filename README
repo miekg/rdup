@@ -12,7 +12,7 @@ needed that act on this list and implement the backup strategy.  This
 way rdump can be kept lean and mean. Current the (stripped) rdump
 executable measures 12KB and I don't expect that to increase much.
 
-The manual page explains rdump's options and usage. See rdump(1).
+The manual page explains rdump's options and usage. See rdump(8).
 
 2.1/ FULL DUMP
 
