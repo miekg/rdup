@@ -29,19 +29,21 @@ l l.
 
 .SH OPTIONS
 .TP
-\fB--b backupdir
+\fB-b backupdir
 Alternate backup directory. Defaults to /vol/backup.
 .TP
-\fB--d
+\fB-d
 The −d option causes diff(1) -−u to be run for each adjacent pair of
 dump files. This is not yet implemented.
 
 .SH EXAMPLES
 Examine changes in block.c:
-hist −d /vol/backup ~miekg/block.c
+.PP
+        hist -−d /vol/backup ~miekg/block.c
 
 .SH FILES
-/somewhere by convention, root of dump file system
+Root of dump file system default to /vol/backup, but can be any
+location.
 
 .SH NOTE
 This manpage was copied verbatim from the hist(1) manual page of Plan9.

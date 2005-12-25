@@ -6,7 +6,7 @@ yesterday.sh -– print file names from the dump
 .SH SYNOPSIS
 .B yesterday.sh
 [
-.IR -−cbCdn backupdir
+.IR -−cbCdn
 ]
 .IR BACKUPDIR
 .IR FILES ...
@@ -43,10 +43,11 @@ Restore your profile from yesterday:
         yesterday.sh /vol/backup −-c ~/.profile
 
 .SH FILES
-/somewhere by convention, root of the dump file system
+Root of dump file system default to /vol/backup, but can be any
+location.
 
 .SH NOTE
-This manpge was copied verbatim from the yesterday(1) manual page of
+This manpage was copied verbatim from the yesterday(1) manual page of
 Plan9.
 
 .SH SEE ALSO

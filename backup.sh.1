@@ -1,7 +1,7 @@
 .TH BACKUP.SH 1 "25 Dec 2005"
 
 .SH NAME
-backup.sh -– mirror the files from the list on standard input
+backup.sh -– copy the files from the list on standard input
 
 .SH SYNOPSIS
 .B backup.sh
@@ -10,9 +10,8 @@ backup.sh -– mirror the files from the list on standard input
 ]
 
 .SH DESCRIPTION
-\fBbackup.sh\fR copies the files it gets from stdin to the directory
-specified with the --b option. This script implements the backup
-policy. 
+\fBbackup.sh\fR copies the files it gets from standard input to the directory
+specified with the -b option. This script \fIimplements\fR the backup policy. 
 
 .SH OPTIONS
 .TP 
@@ -20,7 +19,7 @@ policy.
 Alternate backup directory. Defaults to /vol/backup.
 
 .SH FILES
-/vol/backup, or the directory specified with --b, root of
+/vol/backup, or the directory specified with -b, root of
 the backup file system.
 
 .SH SEE ALSO
