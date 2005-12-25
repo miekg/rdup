@@ -88,7 +88,7 @@ g_slist_read_file(FILE *fp)
 		/* chop annoying newline off */
 		buf[strlen(buf) - 1] = '\0';
 
-		if (sscanf(buf, "%5d %2048[^\n]", &modus, name) != 2) {
+		if (sscanf(buf, "%5i %2048[^\n]", &modus, name) != 2) {
 			fprintf(stderr, "** Can not parse filelist\n");
 			return list;
 		} else {
