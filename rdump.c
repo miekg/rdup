@@ -39,6 +39,7 @@ usage(FILE *f, char *p)
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
+	fprintf(f, "See LICENSE for the license\n");
 }
 
 void
