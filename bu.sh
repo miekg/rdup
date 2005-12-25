@@ -16,6 +16,8 @@ if [ -z $backupdir ]; then
         exit 1
 fi
 mkdir -p $backupdir
+chown root:backup $backupdir
+chmod 755 $backupdir
 
 while read mode uid gid path
 do

@@ -88,12 +88,21 @@ dir_crawl(char *path)
 				if (opt_verbose) {
 					fprintf(stderr, "** " NOBACKUP " in %s\n", curpath);
 				}
-				/* add this to backup? */
+				/* add this to the backup */
+				pop = g_malloc(sizeof(struct entry));
+				pop->f_name  = g_strdup(curpath);
+				pop->f_uid   = s.st_uid;
+				pop->f_gid   = s.st_gid;
+				pop->f_mtime = s.st_mtime;
+				pop->f_mode  = s.st_mode;
+				list = NULL; /* leak from here to Tokio */
+				list = g_slist_prepend(list, (gpointer) entry_dup(pop));
+				g_free(pop);
 				g_free(dirstack);
 				g_free(filestack);
 				g_free(curpath);
 				closedir(dir);
-				return NULL;
+				return list;
 			}
 			
 			filestack[f] = g_malloc(sizeof(struct entry));

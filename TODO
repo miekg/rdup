@@ -4,7 +4,6 @@ o make it more efficient, GSList is not the quickest
   data type from GLib
 o ignore or handle signals
 o make install/unstall targets need to be finished
-o improve error reporting
 o look into networking (for example script that is)
 
 DONE:
@@ -30,3 +29,11 @@ o valgrind rdump. Done the remaining leaks look to be coming
 o portability, first try to compile it on FreeBSD
   It compiles just fine under FreeBSD - made an error using the autoconf
   tools
+
+o the .nobackup files or not added to the filelist
+  This is now done, allthough I think I've created a memleak
+  in crawler.c
+
+o improve error reporting
+  All errors are printed to stderrr, and prefixed with "** ".
+  No seperate function is needed for this.
