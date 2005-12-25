@@ -8,7 +8,7 @@ o look into networking (for example script that is)
 
 DONE:
 o valgrind rdump. Done the remaining leaks look to be coming
-  from glib:
+  from glib: (or I'm doing something stupid)
         ==9997== 38994 bytes in 40 blocks are still reachable in loss record 2 of 2
         ==9997==    at 0x1B8FF8A2: malloc (vg_replace_malloc.c:149)
         ==9997==    by 0x1B938F0F: g_malloc (in /usr/lib/libglib-2.0.so.0.800.3)
@@ -24,7 +24,6 @@ o valgrind rdump. Done the remaining leaks look to be coming
         ==9997==      possibly lost: 0 bytes in 0 blocks.
         ==9997==    still reachable: 39014 bytes in 41 blocks.
         ==9997==         suppressed: 0 bytes in 0 blocks.
-
 
 o portability, first try to compile it on FreeBSD
   It compiles just fine under FreeBSD - made an error using the autoconf
