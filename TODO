@@ -1,6 +1,7 @@
-o look into networking
+o look into networking (for example script that is)
 o check for leaks, valgrind, etc.
 o portability, first try to compile it on FreeBSD
   (now it only works under Linux)
 o make it more efficient, GSList is not the quickest
   data type from GLib
+o ignore or handle signals
