@@ -3,7 +3,7 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 #
-# inspired by hist of plan9
+# inspired by hist of plan9 
 bsuffix=`date +%Y%m`
 diff=0
 while getopts ":n:b:cCd" options; do
