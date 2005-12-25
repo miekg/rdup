@@ -222,9 +222,12 @@ main(int argc, char **argv)
 	g_slist_foreach(backup, gfunc_free, NULL);
 	g_slist_foreach(remove, gfunc_free, NULL);
 	
+	/* I free too much... */
+#if 0
 	g_slist_free(curlist);
 	g_slist_free(backup);
 	g_slist_free(remove);
+#endif
 	
 	exit(EXIT_SUCCESS);
 }
