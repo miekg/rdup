@@ -7,9 +7,9 @@ Run: autoconf && ./configure & make
 
 rdump is a utility inspired by rsync and the plan9 way of doing
 backups. rdump it self does not backup anything, it only print
-a list of filenames to standard output. Auxilary scripts are 
-needed that act on this list and implement the backup strategy.
-This way rdump can be kept lean and mean. Current the (stripped) rdump
+a list of absolute filenames to standard output. Auxilary scripts are
+needed that act on this list and implement the backup strategy.  This
+way rdump can be kept lean and mean. Current the (stripped) rdump
 executable measures 12KB and I don't expect that to increase much.
 
 The manual page explains rdump's options and usage. See rdump(1).

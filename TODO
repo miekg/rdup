@@ -7,8 +7,8 @@ o better error handling on syscalls
 o make install/unstall targets need to be finished
 o look into networking (for example script that is)
 o restore utilities, like yesterday or hist
-  (problem is find the file in question, as the backup is
-  relative)
+o performace
+o Make directory seperator a define
 
 DONE:
 o valgrind rdump. Done the remaining leaks look to be coming

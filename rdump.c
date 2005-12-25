@@ -16,6 +16,7 @@ time_t list_mtime;
 
 /* prototypes */
 GSList * dir_crawl(char *path);
+GSList * dir_prepend(GSList *l, char *path);
 void gfunc_write(gpointer data, gpointer fp);
 void gfunc_write_all(gpointer data, gpointer fp);
 void gfunc_backup(gpointer data, gpointer usr);
@@ -203,6 +204,11 @@ main(int argc, char **argv)
 		} else {
 			crawl = g_strdup(argv[i]);
 		}
+
+		/* add dirs leading up the backup dir */
+		backup = dir_prepend(backup, crawl);
+		/* if NULL err?? */
+
 		backup = g_slist_concat(backup, dir_crawl(crawl));
 		g_free(crawl);
 	}

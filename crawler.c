@@ -27,6 +27,36 @@ entry_free(struct entry *f)
 }
 
 GSList *
+dir_prepend(GSList *l, char *path)
+{
+	char *c;
+	char *p;
+	struct stat s;
+	struct entry *e;
+
+	for(p = path + 1; (c = strchr(p, '/')); p++) {
+		*c = '\0';
+		if(lstat(path, &s) != 0) {
+			fprintf(stderr, "** Could not stat dirpath: %s\n", path);
+			return NULL;
+		}
+		e = g_malloc(sizeof(struct entry));
+		e->f_name  = g_strdup(path);
+		e->f_uid   = s.st_uid;
+		e->f_gid   = s.st_gid;
+		e->f_mtime = s.st_mtime;
+		e->f_mode  = s.st_mode;
+		
+		l = g_slist_append(l , (gpointer) entry_dup(e));
+		g_free(e);
+		
+		*c = '/';
+		p = c++;
+	}
+	return l;
+}
+
+GSList *
 dir_crawl(char *path)
 {
 	DIR 		*dir;
