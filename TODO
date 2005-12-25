@@ -6,9 +6,9 @@ o ignore or handle signals
 o better error handling on syscalls
 o make install/unstall targets need to be finished
 o look into networking (for example script that is)
-o Think about permissions of the higher directories, those
-  get created when doing the full dump...
-  Maybe start doing relative again....
+o restore utilities, like yesterday or hist
+  (problem is find the file in question, as the backup is
+  relative)
 
 DONE:
 o valgrind rdump. Done the remaining leaks look to be coming
