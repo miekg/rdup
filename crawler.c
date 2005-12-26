@@ -31,13 +31,26 @@ dir_prepend(GSList *l, char *path)
 {
 	char *c;
 	char *p;
+	char *path2;
+	size_t len;
 	struct stat s;
 	struct entry *e;
 
-	for(p = path + 1; (c = strchr(p, DIR_SEP)); p++) {
+	path2 = g_strdup(path);
+	len   = strlen(path);
+
+	/* add closing / */
+	if (path2[len - 1] != '/') {
+		path2 = g_realloc(path2, len + 1);
+		path2[len] = '/';
+		path2[len + 1] = '\0';
+	}
+
+	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
-		if(lstat(path, &s) != 0) {
-			fprintf(stderr, "** Could not stat dirpath: %s\n", path);
+		fprintf(stderr, "%s\n", path2);
+		if(lstat(path2, &s) != 0) {
+			fprintf(stderr, "** Could not stat dirpath: %s\n", path2);
 			return NULL;
 		}
 		e = g_malloc(sizeof(struct entry));
@@ -53,6 +66,7 @@ dir_prepend(GSList *l, char *path)
 		*c = '/';
 		p = c++;
 	}
+	g_free(path2);
 	return l;
 }
 
