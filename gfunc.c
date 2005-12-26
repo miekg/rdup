@@ -8,8 +8,12 @@
 /* g_slist_foreach helper functions */
 
 extern int dumptype;
+extern int opt_null;
 extern time_t list_mtime;
 
+/**
+ * free a struct entry
+ */
 void 
 gfunc_free(gpointer data, __attribute__((unused)) gpointer usr)
 {
@@ -20,16 +24,26 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer usr)
 	g_free(f);
 }
 
+/**
+ * Write our internal filelist
+ */
 void 
 gfunc_write(gpointer data, gpointer fp)
 {
 	/* mode_path */
+	/* this is used to create our filelist, we cannot parse
+	 * that back in, is its null delimited, so don't do that
+	 */
 	fprintf((FILE*) fp, "%d %s", 
 			(int) ((struct entry*)data)->f_mode,
 			(char*) ((struct entry*)data)->f_name);
 	putc('\n', (FILE*) fp);
 }
 
+#ifndef NDEBUG
+/**
+ * debug function, write a struct entry to fp
+ */
 void
 gfunc_write_all(gpointer data, gpointer fp)
 {
@@ -39,7 +53,11 @@ gfunc_write_all(gpointer data, gpointer fp)
 	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mtime);
 	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mode);
 }
+#endif
 
+/**
+ * write out the list of to be backupped items
+ */
 void
 gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 {
@@ -53,7 +71,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 				(int) ((struct entry*)data)->f_uid,
 				(int) ((struct entry*)data)->f_gid,
 				p);
-		putc('\n', stdout);
+		if (opt_null) {
+			putc('\0', stdout);
+		} else {
+			putc('\n', stdout);
+		}
 		return;
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
@@ -66,7 +88,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 						(int) ((struct entry*)data)->f_uid,
 						(int) ((struct entry*)data)->f_gid,
 						p);
-				putc('\n', stdout);
+				if (opt_null) {
+					putc('\0', stdout);
+				} else {
+					putc('\n', stdout);
+				}
 				return;
 			case INC_DUMP:
 				if (((struct entry*)data)->f_mtime > list_mtime) {
@@ -75,7 +101,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 							(int) ((struct entry*)data)->f_uid,
 							(int) ((struct entry*)data)->f_gid,
 							p);
-					putc('\n', stdout);
+					if (opt_null) {
+						putc('\0', stdout);
+					} else {
+						putc('\n', stdout);
+					}
 				}
 				return;
 		}
@@ -83,6 +113,9 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 	return;
 }
 
+/**
+ * write out the list of removed items
+ */
 void
 gfunc_remove(gpointer data, __attribute__((unused)) gpointer usr)
 {
@@ -93,10 +126,18 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer usr)
 			(int) ((struct entry*)data)->f_uid,
 			(int) ((struct entry*)data)->f_gid,
 			p);
-	putc('\n', stdout);
+	if (opt_null) {
+		putc('\0', stdout);
+	} else {
+		putc('\n', stdout);
+	}
 	return;
 }
 
+/**
+ * decide whether 2 struct entries are equal 
+ * or not
+ */
 gint
 gfunc_equal(gconstpointer a, gconstpointer b)
 {

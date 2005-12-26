@@ -1,10 +1,11 @@
 TODO: 
 # rdump util:
-o -0 is not yet implemented
-o make it more efficient, GSList is not the quickest
-  data type from GLib. Performance.
 o ignore or handle signals
-o better error handling on syscalls
+o better error handling on syscalls?
+o include the filesize in the output too? I have it internally (from
+  lstat)
+o make it more efficient, GSList is not the quickest
+  data type from GLib. Performance/scalability.
 
 # rest/shell 
 o make install/unstall targets need to be finished
@@ -12,6 +13,11 @@ o look into networking (for an example script, that is)
 o shell script portability
 
 DONE:
+o -0 is not yet implemented
+  rdump filelist is \n delimited, as you cannot parse nulls with scanf
+  Our internal list is NEVER null delimited.
+  26 Dec 2005
+  
 o valgrind rdump. Done the remaining leaks look to be coming
   from glib: (or I'm doing something stupid)
         ==9997== 38994 bytes in 40 blocks are still reachable in loss record 2 of 2
