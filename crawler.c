@@ -48,13 +48,12 @@ dir_prepend(GSList *l, char *path)
 
 	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
-		fprintf(stderr, "%s\n", path2);
 		if(lstat(path2, &s) != 0) {
 			fprintf(stderr, "** Could not stat dirpath: %s\n", path2);
 			return NULL;
 		}
 		e = g_malloc(sizeof(struct entry));
-		e->f_name  = g_strdup(path);
+		e->f_name  = g_strdup(path2);
 		e->f_uid   = s.st_uid;
 		e->f_gid   = s.st_gid;
 		e->f_mtime = s.st_mtime;

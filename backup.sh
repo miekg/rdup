@@ -26,6 +26,7 @@ chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix
 chmod 755 $backupdir; chmod 755 $backupdir/$bsuffix
 backupdir=$backupdir/$bsuffix
 
+declare -a path # catch spacing in the path
 while read mode uid gid path
 do
         dump=${mode:0:1}        # to add or remove

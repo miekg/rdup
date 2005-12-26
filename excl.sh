@@ -10,6 +10,7 @@ S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permissions
 
+declare -a path # catch spacing in the path
 while read mode uid gid path
 do
         dump=${mode:0:1}        # to add or remove
