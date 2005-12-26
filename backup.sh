@@ -18,8 +18,8 @@ while getopts ":n:b:cCd" options; do
         esac
 done
 if [ -z $backupdir ]; then 
-        echo "** Setting archive directory to /vol/backup"
-        backupdir="/vol/backup"
+        echo "** Setting archive directory to /vol/backup/`hostname`"
+        backupdir="/vol/backup/`hostname`"
 fi
 mkdir -p $backupdir; mkdir -p $backupdir/$bsuffix
 chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix

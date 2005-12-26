@@ -30,7 +30,7 @@ l l.
 .SH OPTIONS
 .TP
 \fB-b backupdir
-Alternate backup directory. Defaults to /vol/backup.
+Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
 \fB-d
 The −d option causes diff(1) -−u to be run for each adjacent pair of
@@ -39,10 +39,10 @@ dump files. This is not yet implemented.
 .SH EXAMPLES
 Examine changes in block.c:
 .PP
-        hist -−d /vol/backup ~miekg/block.c
+        hist -−d ~miekg/block.c
 
 .SH FILES
-Root of dump file system default to /vol/backup, but can be any
+Root of dump file system default to /vol/backup/`hostname`, but can be any
 location.
 
 .SH NOTE

@@ -4,6 +4,7 @@
 # See LICENSE for the license
 #
 # inspired by hist of plan9 
+# no to go back more months?
 bsuffix=`date +%Y%m`
 diff=0
 while getopts ":n:b:cCd" options; do
@@ -13,8 +14,8 @@ while getopts ":n:b:cCd" options; do
         esac
 done
 if [ -z $backupdir ]; then
-        echo "** Setting archive directory to /vol/backup"
-        backupdir="/vol/backup"
+        echo "** Setting archive directory to /vol/backup/`hostname`"
+        backupdir="/vol/backup/`hostname`"
 fi
 backupdir=$backupdir/$bsuffix
 

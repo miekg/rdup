@@ -20,8 +20,8 @@ while getopts ":n:b:cCd" options; do
         esac
 done
 if [ -z $backupdir ]; then
-        echo "** Setting archive directory to /vol/backup"
-        backupdir="/vol/backup"
+        echo "** Setting archive directory to /vol/backup/`hostname`"
+        backupdir="/vol/backup/`hostname`"
 fi
 backupdir=$backupdir/$bsuffix
 

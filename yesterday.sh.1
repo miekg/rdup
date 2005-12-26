@@ -19,7 +19,7 @@ today’s dump.
 .SH OPTIONS
 .TP 
 \fB-−b backupdir
-Alternate backup directory. Defaults to /vol/backup.
+Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP 
 \fB-−c    
 Copy the dump files over the named files.
@@ -43,7 +43,7 @@ Restore your profile from yesterday:
         yesterday.sh /vol/backup −-c ~/.profile
 
 .SH FILES
-Root of dump file system default to /vol/backup, but can be any
+Root of dump file system default to /vol/backup/`hostname`, but can be any
 location.
 
 .SH NOTE
