@@ -19,23 +19,25 @@ if [ -z $backupdir ]; then
 fi
 backupdir=$backupdir/$bsuffix
 
-while shift
+file=$1
+while [[ ! -z $file ]]
 do
         file=$1
         if [[ -z $file ]]; then
-                continue
+                exit
         fi
         if [[ ${file:0:1} != "/" ]]; then
                 file=`pwd`/$file
         fi
         [[ ! -e $backupdir$file ]] && \
-                echo "** Not found in archive: $file" && continue
+                echo "** Not found in archive: $file" && shift && continue
 
         if [[ -d $backupdir$file ]]; then  
                 ls -odh $b2Yackupdir$file 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
                 ls -odh $backupdir$file.????????.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
+                shift
                 continue;
         fi
 
@@ -44,5 +46,5 @@ do
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
         ls -o $backupdir$file.????????.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
-
+        shift
 done

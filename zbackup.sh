@@ -21,9 +21,10 @@ if [ -z $backupdir ]; then
         echo "** Setting archive directory to /vol/backup/`hostname`"
         backupdir="/vol/backup/`hostname`"
 fi
-mkdir -p $backupdir; mkdir -p $backupdir/$bsuffix
-chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix
-chmod 755 $backupdir; chmod 755 $backupdir/$bsuffix
+mkdir -m 755 -p $backupdir; 
+mkdir -m 755 -p $backupdir/$bsuffix
+chown root:backup $backupdir; 
+chown root:backup $backupdir/$bsuffix
 backupdir=$backupdir/$bsuffix
 
 declare -a path # catch spacing in the path
