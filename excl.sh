@@ -25,7 +25,7 @@ do
         
         case $typ in
                 0|2)      # reg file or link
-                echo $path | egrep '\.swp$' > /dev/null
+                echo "$path" | egrep '\.swp$' > /dev/null
                 if [[ $? != 0 ]]; then
                         echo "$dump$mode $uid $gid $path"
                 fi

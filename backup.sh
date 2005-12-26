@@ -45,21 +45,21 @@ do
                 # add
                 case $typ in
                         0)      # reg file
-                        [ -f $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix
-                        cat $path > $backupdir/$path
+                        [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        cat "$path" > "$backupdir/$path"
                         ;;
                         1)      # directory
-                        [ ! -d $backupdir/$path ] && mkdir -p $backupdir/$path
+                        [ ! -d "$backupdir/$path" ] && mkdir -p "$backupdir/$path"
                         ;;
                         2)      # link
-                        [ -L $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix
-                        cp -a $path $backupdir/$path
+                        [ -L "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        cp -a "$path" "$backupdir/$path"
                         ;;
                 esac
-                chown $uid:$gid $backupdir/$path
-                chmod $bits $backupdir/$path
+                chown $uid:$gid "$backupdir/$path"
+                chmod $bits "$backupdir/$path"
         else
                 # remove
-                mv $backupdir/$path $backupdir/$path.$suffix
+                mv "$backupdir/$path" "$backupdir/$path.$suffix"
         fi
 done 

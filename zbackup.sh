@@ -4,17 +4,22 @@
 # See LICENSE for the license
 #
 # This actually creates the backup
-# zbackup.sh /target
-# in /target/YYYYMM/ a gzipped mirror is created
+# bu /target
+# in /target/YYYYMM/ a mirror is created
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permissions
 backupdir=$1
 suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
 bsuffix=`date +%Y%m` # YYYYMM
+while getopts ":n:b:cCd" options; do
+        case $options in
+                b) backupdir=$OPTARG; shift;;
+        esac
+done
 if [ -z $backupdir ]; then 
-        echo "** Need archive directory"
-        exit 1
+        echo "** Setting archive directory to /vol/backup/`hostname`"
+        backupdir="/vol/backup/`hostname`"
 fi
 mkdir -p $backupdir; mkdir -p $backupdir/$bsuffix
 chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix
@@ -40,21 +45,21 @@ do
                 # add
                 case $typ in
                         0)      # reg file
-                        [ -f $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix
-                        cat $path | gzip -c > $backupdir/$path
+                        [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        cat "$path" | gzip -c > "$backupdir/$path"
                         ;;
                         1)      # directory
-                        [ ! -d $backupdir/$path ] && mkdir -p $backupdir/$path
+                        [ ! -d "$backupdir/$path" ] && mkdir -p "$backupdir/$path"
                         ;;
                         2)      # link
-                        [ -L $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix
-                        cp -a $path $backupdir/$path
+                        [ -L "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        cp -a "$path" "$backupdir/$path"
                         ;;
                 esac
-                chown $uid:$gid $backupdir/$path
-                chmod $bits $backupdir/$path
+                chown $uid:$gid "$backupdir/$path"
+                chmod $bits "$backupdir/$path"
         else
                 # remove
-                mv $backupdir/$path $backupdir/$path.$suffix
+                mv "$backupdir/$path" "$backupdir/$path.$suffix"
         fi
 done 

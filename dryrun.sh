@@ -23,10 +23,6 @@ if [ -z $backupdir ]; then
         backupdir="/vol/backup/`hostname`"
 fi
 backupdir=$backupdir/$bsuffix
-#mkdir -p $backupdir; mkdir -p $backupdir/$bsuffix
-#chown root:backup $backupdir; chown root:backup $backupdir/$bsuffix
-#chmod 755 $backupdir; chmod 755 $backupdir/$bsuffix
-#backupdir=$backupdir/$bsuffix
 
 declare -a path # catch spacing in the path
 while read mode uid gid path
@@ -50,16 +46,16 @@ do
                         echo "cat $path > $backupdir/$path"
                         ;;
                         1)      # directory
-                        echo mkdir -p $backupdir/$path
+                        echo "mkdir -p $backupdir/$path"
                         ;;
                         2)      # link
-                        echo cp -a $path $backupdir/$path
+                        echo "cp -a $path $backupdir/$path"
                         ;;
                 esac
-                echo chown $uid:$gid $backupdir/$path
-                echo chmod $bits $backupdir/$path
+                echo "chown $uid:$gid $backupdir/$path"
+                echo "chmod $bits $backupdir/$path"
         else
                 # remove
-                echo mv $backupdir/$path $backupdir/$path.$suffix
+                echo "mv $backupdir/$path $backupdir/$path.$suffix"
         fi
 done 
