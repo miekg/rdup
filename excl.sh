@@ -6,9 +6,10 @@
 # Exclude certain FILES from getting back upped 
 # Proof of concept as forking a grep on EACH entry
 # is way too slow
-S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
-S_ISLNK=40960   # octal: 0120000
-S_MMASK=4095    # octal: 00007777, mask to get permissions
+
+. ./shared.sh
+
+backup_defines
 
 declare -a path # catch spacing in the path
 while read mode uid gid path
