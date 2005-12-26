@@ -11,10 +11,12 @@ o make it more efficient, GSList is not the quickest
 o make install/unstall targets need to be finished
 o look into networking (for an example script, that is)
 o shell script portability
-o consolidate shell script, write generic functions that can 
-  by sourced and used.
 
 DONE:
+o consolidate shell script, write generic functions that can 
+  by sourced and used.
+  26 Dec 2006
+
 o -0 is not yet implemented
   rdump filelist is \n delimited, as you cannot parse nulls with scanf
   Our internal list is NEVER null delimited.
