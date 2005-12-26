@@ -19,7 +19,7 @@ backup_cmd_options() {
                 esac
         done
         if [ -z $backupdir ]; then 
-                echo "** Setting archive directory to /vol/backup/`hostname`"
+                #echo "** Setting archive directory to /vol/backup/`hostname`"
                 backupdir="/vol/backup/`hostname`"
         fi
         backupdir=$backupdir/`date +%Y%m`
@@ -40,15 +40,29 @@ backup_create_top() {
 }
 
 list_cmd_options() {
-        while getopts ":n:b:cCd" options; do
+        while getopts ":n:b:cCdhz" options; do
                 case $options in
                         b) backupdir=$OPTARG;;
+                        n) daysago=$OPTARG;;
                         d) diff=1;;
+                        z) gzip=1;;
+                        h) list_cmd_usage && exit
                 esac
         done
         if [ -z $backupdir ]; then
-                echo "** Setting archive directory to /vol/backup/`hostname`"
+                #echo "** Setting archive directory to /vol/backup/`hostname`"
                 backupdir="/vol/backup/`hostname`"
         fi
         backupdir=$backupdir/`date +%Y%m`
+}
+
+list_cmd_usage() {
+        echo $0 "-n:b:Ccdhz"
+        echo " -n daysago  go back daysago days"
+        echo " -b dir      use dir as the backup directory, YYYYMM will be added"
+        echo " -c          copy the backed up file over the current file"
+        echo " -C          copy the backed up file over the current file, if they differ"
+        echo " -d          show a diff with the backed up file "
+        echo " -z          backup file is gzipped"
+        echo " -h          this help"
 }

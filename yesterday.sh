@@ -4,30 +4,14 @@
 # See LICENSE for the license
 #
 # inspired by yesterday of plan9
-# -n days ago
-# -c copy
-# -C copy carefull
-# -d diff -u
-bsuffix=`date +%Y%m`
-what=0
-while getopts ":n:b:cCd" options; do 
-        case $options in
-                n) ;;
-                b) backupdir=$OPTARG; shift;;
-                c) what=1; shift;;
-                C) what=2; shift;;
-                d) what=3; shift;;
-        esac
-done
-if [ -z $backupdir ]; then
-        echo "** Setting archive directory to /vol/backup/`hostname`"
-        backupdir="/vol/backup/`hostname`"
-fi
-backupdir=$backupdir/$bsuffix
 
-while shift
+. ./shared.sh
+
+list_cmd_options $@
+shift $(($OPTIND - 1))
+
+for file in $@
 do
-        file=$1
         if [[ -z $file ]]; then
                 continue
         fi
@@ -38,23 +22,23 @@ do
                 echo "** Not found in archive: $file" && continue
 
         # print
-        case $what in
-                0)
-                        echo $backupdir$file
-                ;;
-                1)
+        if [[ $copy -eq 1 ]]; then
+                cp -a $backupdir$file $file
+                continue
+        fi
+        if [[ $Ccopy -eq 1 ]]; then
+                cmp $backupdir$file $file > /dev/null
+                if [[ $? ]]; then
                         cp -a $backupdir$file $file
-                ;;
-                2)
-                        cmp $backupdir$file $file > /dev/null
-                        if [[ $? ]]; then
-                                cp -a $backupdir$file $file
-                        fi
-                ;;
-                3)
-                        echo diff -u `basename $backupdir$file` `basename $file`
-                        [ -f $backupdir$file ] && diff -u $backupdir$file $file
-                        [ -h $backupdir$file ] && diff -u $backupdir$file $file
-                ;;
-        esac
+                fi
+                continue
+        fi
+        if [[ $diff -eq 1 ]]; then
+                echo diff -u `basename $backupdir$file` `basename $file`
+                [ -f $backupdir$file ] && diff -u $backupdir$file $file
+                [ -h $backupdir$file ] && diff -u $backupdir$file $file
+                continue
+        fi
+
+        echo $backupdir$file
 done

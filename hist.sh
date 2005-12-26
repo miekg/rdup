@@ -4,40 +4,28 @@
 # See LICENSE for the license
 #
 # inspired by hist of plan9 
-# no to go back more months?
-bsuffix=`date +%Y%m`
-diff=0
-while getopts ":n:b:cCd" options; do
-        case $options in
-                b) backupdir=$OPTARG; shift;;
-                d) diff=1; shift;;
-        esac
-done
-if [ -z $backupdir ]; then
-        echo "** Setting archive directory to /vol/backup/`hostname`"
-        backupdir="/vol/backup/`hostname`"
-fi
-backupdir=$backupdir/$bsuffix
 
-file=$1
-while [[ ! -z $file ]]
+. ./shared.sh
+
+list_cmd_options $@
+shift $(($OPTIND - 1))
+
+for file in $@
 do
-        file=$1
         if [[ -z $file ]]; then
-                exit
+                continue;
         fi
         if [[ ${file:0:1} != "/" ]]; then
                 file=`pwd`/$file
         fi
         [[ ! -e $backupdir$file ]] && \
-                echo "** Not found in archive: $file" && shift && continue
+                echo "** Not found in archive: $file" && continue
 
         if [[ -d $backupdir$file ]]; then  
                 ls -odh $b2Yackupdir$file 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
                 ls -odh $backupdir$file.????????.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
-                shift
                 continue;
         fi
 
@@ -46,5 +34,4 @@ do
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
         ls -o $backupdir$file.????????.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
-        shift
 done
