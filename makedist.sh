@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Build a rdump distribution tar from the SVN repository.
+# Build a rdup distribution tar from the SVN repository.
 
 set -e
 
@@ -9,12 +9,12 @@ cwd=`pwd`
 usage () {
     cat >&2 <<EOF
 Usage $0: [-h] [-s] [-d SVN_root]
-Generate a distribution tar file for rdump.
+Generate a distribution tar file for rdup.
 
     -h           This usage information.
     -s           Build a snapshot distribution file.  The current date is
-                 automatically appended to the current rdump version number.
-    -d SVN_root  Retrieve the rdump source from the specified repository.
+                 automatically appended to the current rdup version number.
+    -d SVN_root  Retrieve the rdup source from the specified repository.
 EOF
     exit 1
 }
@@ -104,14 +104,14 @@ info "SNAPSHOT is $SNAPSHOT"
 
 # Creating temp directory
 info "Creating temporary working directory"
-temp_dir=`mktemp -d rdump-dist-XXXXXX`
+temp_dir=`mktemp -d rdup-dist-XXXXXX`
 info "Directory '$temp_dir' created."
 cd $temp_dir
 
 info "Exporting source from SVN."
-svn export "$SVNROOT" rdump || error_cleanup "SVN command failed"
+svn export "$SVNROOT" rdup || error_cleanup "SVN command failed"
 
-cd rdump || error_cleanup "rdump not exported correctly from SVN"
+cd rdup || error_cleanup "rdup not exported correctly from SVN"
 
 info "Building configure script (autoconf)."
 autoconf || error_cleanup "Autoconf failed."
@@ -122,23 +122,23 @@ find . -name .c-mode-rc.el -exec rm {} \;
 find . -name .cvsignore -exec rm {} \;
 rm makedist.sh || error_cleanup "Failed to remove makedist.sh."
 
-info "Determining rdump version."
+info "Determining rdup version."
 version=`./configure --version | head -1 | awk '{ print $3 }'` || \
     error_cleanup "Cannot determine version number."
 
-info "rdump version: $version"
+info "rdup version: $version"
 
 if [ "$SNAPSHOT" = "yes" ]; then
-    info "Building rdump snapshot."
+    info "Building rdup snapshot."
     version="$version-`date +%Y%m%d`"
     info "Snapshot version number: $version"
 fi
 
-info "Renaming rdump directory to rdump-$version."
+info "Renaming rdup directory to rdup-$version."
 cd ..
-mv rdump rdump-$version || error_cleanup "Failed to rename rdump directory."
+mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
 
-tarfile="../rdump-$version.tar.gz"
+tarfile="../rdup-$version.tar.gz"
 
 if [ -f $tarfile ]; then
     (question "The file $tarfile already exists.  Overwrite?" \
@@ -146,30 +146,30 @@ if [ -f $tarfile ]; then
 fi
 
 info "Deleting the tpkg and test directory"
-rm -rf rdump-$version/older/
+rm -rf rdup-$version/older/
 
 info "Deleting the other fluff"
-rm -rf rdump-$version/.svn
-rm -f rdump-$version/core
-rm -f rdump-$version/tar-exclude
-rm -f rdump-$version/config.log 
-rm -f rdump-$version/config.status
-rm -f rdump-$version/tags rdump-$version/src/tags
+rm -rf rdup-$version/.svn
+rm -f rdup-$version/core
+rm -f rdup-$version/tar-exclude
+rm -f rdup-$version/config.log 
+rm -f rdup-$version/config.status
+rm -f rdup-$version/tags rdup-$version/src/tags
 
-info "Creating tar rdump-$version.tar.bz2"
-tar cjf ../rdump-$version.tar.bz2 rdump-$version || error_cleanup "Failed to create tar file."
+info "Creating tar rdup-$version.tar.bz2"
+tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
 
 cleanup
 
 case $OSTYPE in
         linux*)
-                sha=`sha1sum rdump-$version.tar.bz2 |  awk '{ print $1 }'`
+                sha=`sha1sum rdup-$version.tar.bz2 |  awk '{ print $1 }'`
                 ;;
         freebsd*)
-                sha=`sha1  rdump-$version.tar.bz2 |  awk '{ print $5 }'`
+                sha=`sha1  rdup-$version.tar.bz2 |  awk '{ print $5 }'`
                 ;;
 esac
-echo $sha > rdump-$version.tar.bz2.sha1
+echo $sha > rdup-$version.tar.bz2.sha1
 
-info "rdump distribution created successfully."
+info "rdup distribution created successfully."
 info "SHA1sum: $sha"

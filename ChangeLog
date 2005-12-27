@@ -1,3 +1,10 @@
+25 Dec 2005: 0.0.2 Miek <miek@miek.nl>
+   * Renamed to rdup.
+   * rdup now uses GTree * instead of GSList *, making
+     to incremental dump 100 times faster. There some
+     efficiency improvements possible.
+
+
 25 Dec 2005: 0.0.1 Miek <miek@miek.nl>
    - First public release -
    * Fully working, but not all features implemented

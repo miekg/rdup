@@ -14,15 +14,9 @@ int opt_verbose = 0;
 int dumptype;
 time_t list_mtime;
 
-/* prototypes */
-GSList * dir_crawl(char *path);
-GSList * dir_prepend(GSList *l, char *path);
-void gfunc_write(gpointer data, gpointer fp);
-void gfunc_write_all(gpointer data, gpointer fp);
-void gfunc_backup(gpointer data, gpointer usr);
-void gfunc_remove(gpointer data, gpointer usr);
-void gfunc_free(gpointer data, gpointer user);
-gint gfunc_equal(gconstpointer a, gconstpointer b);
+/* crawler.c */
+void dir_crawl(GTree *t, char *path);
+void dir_prepend(GTree *t, char *path);
 
 void
 usage(FILE *f) 
@@ -51,27 +45,22 @@ version(FILE *f)
 }
 
 /**
- * subtrace list *b from list *a, leaving
+ * subtrace tree *b from tree *a, leaving
  * the elements that are only in *a. Essentially
  * a double diff: A diff (A diff B)
  */
-GSList *
-g_slist_substract(GSList *a, GSList *b)
+GTree *
+g_tree_substract(GTree *a, GTree *b)
 {
-	GSList 		*diff;
-	guint 		i;
-	gpointer 	data;
+	GTree 	         *diff;
+	struct substract s;
 
-	diff = NULL;
-
-	/* everything in a, but NOT in b */
-	for(i = 0; i < g_slist_length(a); i++) {
-		data = g_slist_nth_data(a, i);
-
-		if (!g_slist_find_custom(b, data, gfunc_equal)) {
-			diff = g_slist_append(diff, data);
-		}
-	}
+	diff = g_tree_new(gfunc_equal);
+	s.d = diff;
+	s.b = b;
+	/* everything in a, but NOT in b 
+	 * diff gets filled inside this function */
+	g_tree_foreach(a, gfunc_substract, (gpointer)&s);
 	return diff;
 }
 
@@ -79,23 +68,25 @@ g_slist_substract(GSList *a, GSList *b)
  * read a filelist, which should hold our previous
  * backup list
  */
-GSList *
-g_slist_read_file(FILE *fp)
+GTree *
+g_tree_read_file(FILE *fp)
 {
 	char 	buf[BUFSIZE + 1];
 	mode_t  modus;
 	char    name[BUFSIZE + 1];
-	GSList 	*list;
+	GTree 	*tree;
 	struct entry *e;
 
-	list = NULL;
+	tree = g_tree_new(gfunc_equal);
+
+	/* this is entirely -0 unsafe */
 	while ((fgets(buf, BUFSIZE, fp))) {
 		/* chop annoying newline off */
 		buf[strlen(buf) - 1] = '\0';
 
 		if (sscanf(buf, "%5i %2048[^\n]", &modus, name) != 2) {
 			fprintf(stderr, "** Can not parse filelist\n");
-			return list;
+			return tree;
 		} else {
 			e = g_malloc(sizeof(struct entry));
 			e->f_name = g_strdup(name);
@@ -104,10 +95,10 @@ g_slist_read_file(FILE *fp)
 			e->f_gid  = 0;
 			e->f_mtime = 0;
 
-			list = g_slist_prepend(list, (gpointer) e);
+			g_tree_replace(tree, (gpointer) e, VALUE);
 		}
 	}
-	return list;
+	return tree;
 }
 
 /**
@@ -127,18 +118,18 @@ mtime(char *f)
 int 
 main(int argc, char **argv) 
 {
-	GSList 	*backup; 	/* on disk stuff */
-	GSList 	*remove;	/* what needs to be rm'd */
-	GSList 	*curlist; 	/* previous backup list */
+	GTree 	*backup; 	/* on disk stuff */
+	GTree 	*remove;	/* what needs to be rm'd */
+	GTree 	*curtree; 	/* previous backup tree */
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
 	char 	*crawl;
 	char    pwd[BUFSIZE + 1];
 
-	curlist = NULL;
-	backup = NULL;
-	remove = NULL;
+	curtree = g_tree_new(gfunc_equal);
+	backup  = g_tree_new(gfunc_equal);
+	remove  = NULL;
 	opterr = 0;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
@@ -196,7 +187,7 @@ main(int argc, char **argv)
 		rewind(fplist);
 	}
 
-	curlist = g_slist_read_file(fplist);
+	curtree = g_tree_read_file(fplist);
 
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] != '/') {
@@ -206,33 +197,40 @@ main(int argc, char **argv)
 		}
 
 		/* add dirs leading up the backup dir */
-		backup = dir_prepend(backup, crawl);
-		/* if NULL err?? */
-
-		backup = g_slist_concat(backup, dir_crawl(crawl));
+		dir_prepend(backup, crawl);
+		/* descend into the dark, misty directory */
+		dir_crawl(backup, crawl);
 		g_free(crawl);
 	}
+	fprintf(stderr, "@curtree\n");
+	g_tree_foreach(curtree, gfunc_write_all, stderr);
+	fprintf(stderr, "@backup\n");
+	g_tree_foreach(backup, gfunc_write_all, stderr);
 
-	remove = g_slist_substract(curlist, backup); 
+	remove = g_tree_substract(curtree, backup); 
+	
+	fprintf(stderr, "@remove\n");
+	g_tree_foreach(remove, gfunc_write_all, stderr);
+
 
 	/* first what to remove, then what to backup */
-	g_slist_foreach(remove, gfunc_remove, NULL); 
-	g_slist_foreach(backup, gfunc_backup, NULL);
+	g_tree_foreach(remove, gfunc_remove, NULL); 
+	g_tree_foreach(backup, gfunc_backup, NULL);
 
 	/* write new filelist */
 	ftruncate(fileno(fplist), 0);  
-	g_slist_foreach(backup, gfunc_write, fplist);
+	g_tree_foreach(backup, gfunc_write, fplist);
 	fclose(fplist); 
 
-	g_slist_foreach(curlist, gfunc_free, NULL);
-	g_slist_foreach(backup, gfunc_free, NULL);
-/*	g_slist_foreach(remove, gfunc_free, NULL); */
+	g_tree_foreach(curtree, gfunc_free, NULL);
+	g_tree_foreach(backup, gfunc_free, NULL);
+/*	g_tree_foreach(remove, gfunc_free, NULL); */
 	
 	/* I free too much... */
-	g_slist_free(curlist);
-	g_slist_free(backup);
+	g_tree_destroy(curtree);
+	g_tree_destroy(backup);
 #if 0
-	g_slist_free(remove);
+	g_tree_free(remove);
 #endif
 	
 	exit(EXIT_SUCCESS);

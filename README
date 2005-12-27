@@ -1,22 +1,22 @@
 1/ TO BUILD
 
-Run: autoconf && ./configure & make
+Run: autoconf && ./configure && make
 (Tested on Linux and FreeBSD)
 
 2/ DOCUMENTATION
 
-rdump is a utility inspired by rsync and the plan9 way of doing
-backups. rdump it self does not backup anything, it only print
+rdup is a utility inspired by rsync and the plan9 way of doing
+backups. rdup it self does not backup anything, it only print
 a list of absolute filenames to standard output. Auxilary scripts are
 needed that act on this list and implement the backup strategy.  This
-way rdump can be kept lean and mean. Current the (stripped) rdump
+way rdup can be kept lean and mean. Current the (stripped) rdup
 executable measures 12KB and I don't expect that to increase much.
 
-The manual page explains rdump's options and usage. See rdump(8).
+The manual page explains rdup's options and usage. See rdup(8).
 
 2.1/ FULL DUMP
 
-Run: rdump FILELIST dir1
+Run: rdup FILELIST dir1
 
 Every directory, file and symlink in dir1 will be printed to stdout,
 like this:
@@ -33,7 +33,7 @@ Then we find the numeric user id and numeric group id. As last
 the there is the pathname.
 
 To do a real backup you can use:
-rdump FILELIST dir | ./backup.sh /vol/backup/
+rdup FILELIST dir | ./backup.sh /vol/backup/
 
 'backup.sh' is a shell script which looks at the filetype and acts
 accordingly. It copies the content (of the dir/symlink) to the archive
@@ -43,7 +43,7 @@ in /vol/backup/YYYYMM.
 
 2.2/ INCREMENTAL DUMP
 
-Just run the rdump FILELIST dir1 | ./backup.sh /vol/backup/ again. This
+Just run the rdup FILELIST dir1 | ./backup.sh /vol/backup/ again. This
 will use the contents of FILELIST and will only print the changed files.
 
 If we were not piping the output to 'backup.sh' we would see:
@@ -61,33 +61,41 @@ files and symbolic links. See the example script 'backup.sh' for an
 implementation.
 
 You want gzipped backups?
-for i in `rdump FILELIST /home`; do
+for i in `rdup FILELIST /home`; do
         cat $i | gzip -c > /vol/backup/$i
 done
 
 You want encrypted backups?
-for i in `rdump FILELIST /home`; do 
+for i in `rdup FILELIST /home`; do 
         cat $i | mcrypt -F -k 'secret' -a blowfish --mode stream  > /vol/backup/$i
 done
 
 You want encrypted/gzipped backups?
-for i in `rdump FILELIST /home`; do
+for i in `rdup FILELIST /home`; do
         cat $i | gzip -c | \ 
         mcrypt -F -k 'secret' -a blowfish --mode stream  > /vol/backup/$i
 done
 
 You want a gzipped tar file of your files?
-rdump FILELIST /home > tar_list && \
+rdup FILELIST /home > tar_list && \
 tar --create --T list -z --file myhostbackup.tar.gz
 
 You want to exclude certain files?
-for i in `rdump FILELIST /home | grep -v \*.bak`; do 
+for i in `rdup FILELIST /home | grep -v \*.bak`; do 
          cat $i > /vol/backup/$i
 done
 
 You want to include certain files?
-for i in `rdump FILELIST /home | grep important`; do 
+for i in `rdup FILELIST /home | grep important`; do 
          cat $i > /vol/backup/$i
 done
+
+# does not work as advertized....
+You want to dump your gzipped files on a remote machine?
+for i in `rdup FILELIST /home`; do
+        cat $i | gzip -c | ssh -c blowfish \
+                user@remotehost.nl /usr/local/sbin/store.sh
+done
+
 
 As in true unix tradition the list can go on and on :-)

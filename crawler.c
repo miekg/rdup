@@ -26,8 +26,11 @@ entry_free(struct entry *f)
 	g_free(f);
 }
 
-GSList *
-dir_prepend(GSList *l, char *path)
+/**
+ * prepend path leading up to backup directory to the tree
+ */
+void
+dir_prepend(GTree *t, char *path)
 {
 	char *c;
 	char *p;
@@ -50,7 +53,7 @@ dir_prepend(GSList *l, char *path)
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
 			fprintf(stderr, "** Could not stat dirpath: %s\n", path2);
-			return NULL;
+			return;
 		}
 		e = g_malloc(sizeof(struct entry));
 		e->f_name  = g_strdup(path2);
@@ -59,18 +62,19 @@ dir_prepend(GSList *l, char *path)
 		e->f_mtime = s.st_mtime;
 		e->f_mode  = s.st_mode;
 		
-		l = g_slist_append(l , (gpointer) entry_dup(e));
+		/* leak; need destroy function for old value */
+		g_tree_replace(t, (gpointer) entry_dup(e), VALUE);
 		g_free(e);
 		
 		*c = '/';
 		p = c++;
 	}
 	g_free(path2);
-	return l;
+	return;
 }
 
-GSList *
-dir_crawl(char *path)
+void
+dir_crawl(GTree *t, char *path)
 {
 	DIR 		*dir;
 	struct dirent 	*dent;
@@ -78,9 +82,6 @@ dir_crawl(char *path)
 	char 		*curpath;
 	struct stat   	s;
 	dev_t 		current_dev;
-	GSList  	*list;
-
-	list = NULL;
 
 	/* dir stack */
 	gint32 d = 0;
@@ -98,7 +99,7 @@ dir_crawl(char *path)
 		fprintf(stderr, "** Cannot enter: %s\n", path);
 		g_free(filestack);
 		g_free(dirstack);
-		return NULL;
+		return;
 	}
 
 	/* get device */
@@ -107,7 +108,7 @@ dir_crawl(char *path)
 		closedir(dir);
 		g_free(filestack);
 		g_free(dirstack);
-		return NULL;
+		return;
 	}
 	current_dev = s.st_dev;
 
@@ -125,27 +126,27 @@ dir_crawl(char *path)
 			continue;
 		}
 
-		/* catch everything, except dirs */
 		if (!S_ISDIR(s.st_mode)) {
 			if ((opt_nobackup == 1) && !g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
 				if (opt_verbose) {
 					fprintf(stderr, "** " NOBACKUP " in %s\n", curpath);
 				}
-				/* add this to the backup */
+				/* add .nobackup to the list */
 				pop = g_malloc(sizeof(struct entry));
 				pop->f_name  = g_strdup(curpath);
 				pop->f_uid   = s.st_uid;
 				pop->f_gid   = s.st_gid;
 				pop->f_mtime = s.st_mtime;
 				pop->f_mode  = s.st_mode;
-				list = NULL; /* leak from here to Tokio */
-				list = g_slist_prepend(list, (gpointer) entry_dup(pop));
+
+				g_tree_replace(t, (gpointer) entry_dup(pop), VALUE);
+
 				g_free(pop);
 				g_free(dirstack);
 				g_free(filestack);
 				g_free(curpath);
 				closedir(dir);
-				return list;
+				return;
 			}
 			
 			filestack[f] = g_malloc(sizeof(struct entry));
@@ -189,23 +190,22 @@ dir_crawl(char *path)
 	}
 	closedir(dir);
 
-	/* we use prepend, but we want dir to be first,
-	 * so do them last
-	 */
-	while (f > 0) {
-		pop = filestack[--f];
-		list = g_slist_prepend(list, (gpointer) entry_dup(pop));
-		entry_free(pop);
-	}
 	while (d > 0) {
 		pop = dirstack[--d]; 
-		list = g_slist_prepend(list, (gpointer) entry_dup(pop));
+		g_tree_replace(t, (gpointer) entry_dup(pop), VALUE);
 		/* recurse */
-		list = g_slist_concat(list, dir_crawl(pop->f_name));
+		/* potentially expensive operation. Better would be to when we hit
+		 * .nobackup to go up the tree and delete some nodes */
+		dir_crawl(t, pop->f_name);
+		entry_free(pop);
+	}
+	while (f > 0) {
+		pop = filestack[--f];
+		g_tree_replace(t, (gpointer) entry_dup(pop), VALUE);
 		entry_free(pop);
 	}
 	
 	g_free(dirstack);
 	g_free(filestack);
-	return list;
+	return;
 }

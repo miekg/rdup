@@ -5,7 +5,7 @@
 
 #include "rdup.h"
 
-/* g_slist_foreach helper functions */
+/* g_tree_foreach helper functions */
 
 extern int dumptype;
 extern int opt_null;
@@ -14,21 +14,23 @@ extern time_t list_mtime;
 /**
  * free a struct entry
  */
-void 
-gfunc_free(gpointer data, __attribute__((unused)) gpointer usr)
+gboolean 
+gfunc_free(gpointer data, __attribute__((unused)) gpointer value, 
+		__attribute__((unused)) gpointer usr)
 {
 	struct entry *f;
 	f = (struct entry*) data;
 	
 	g_free(f->f_name);
 	g_free(f);
+	return FALSE;
 }
 
 /**
  * Write our internal filelist
  */
-void 
-gfunc_write(gpointer data, gpointer fp)
+gboolean 
+gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
 	/* mode_path */
 	/* this is used to create our filelist, we cannot parse
@@ -37,35 +39,38 @@ gfunc_write(gpointer data, gpointer fp)
 	fprintf((FILE*) fp, "%d %s", 
 			(int) ((struct entry*)data)->f_mode,
 			(char*) ((struct entry*)data)->f_name);
+	/* -0 todo */
 	putc('\n', (FILE*) fp);
+	return FALSE;
 }
 
 #ifndef NDEBUG
 /**
  * debug function, write a struct entry to fp
  */
-void
-gfunc_write_all(gpointer data, gpointer fp)
+gboolean
+gfunc_write_all(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
-	fprintf((FILE*) fp, "%s\n", (char*) ((struct entry*)data)->f_name);
-	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_uid);
-	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_gid);
+	fprintf((FILE*) fp, "%s ", (char*) ((struct entry*)data)->f_name);
+	fprintf((FILE*) fp, "   %d ", (int) ((struct entry*)data)->f_uid);
+	fprintf((FILE*) fp, "   %d  ", (int) ((struct entry*)data)->f_gid);
+	fprintf((FILE*) fp, "   %d ", (int) ((struct entry*)data)->f_mode);
 	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mtime);
-	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mode);
+	return FALSE;
 }
 #endif
 
 /**
  * write out the list of to be backupped items
  */
-void
-gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
+gboolean
+gfunc_backup(gpointer data, __attribute__((unused)) gpointer value, 
+		__attribute__((unused)) gpointer usr)
 {
 	char *p;
 	p = ((struct entry*)data)->f_name;
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
-		/* directory, print: +d_uid_gid_mode_path (_ = space) */
 		fprintf(stdout, "+%d %d %d %s", 
 				(int) ((struct entry*)data)->f_mode,
 				(int) ((struct entry*)data)->f_uid,
@@ -76,11 +81,10 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 		} else {
 			putc('\n', stdout);
 		}
-		return;
+		return FALSE;
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
 			S_ISLNK(((struct entry*)data)->f_mode)) {
-		/* file, print: +f_uid_gid_mode_path  (_ = space) */
 		switch (dumptype) {
 			case NULL_DUMP:
 				fprintf(stdout, "+%d %d %d %s", 
@@ -93,7 +97,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 				} else {
 					putc('\n', stdout);
 				}
-				return;
+				return FALSE;
 			case INC_DUMP:
 				if (((struct entry*)data)->f_mtime > list_mtime) {
 					fprintf(stdout, "+%d %d %d %s", 
@@ -107,17 +111,18 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer usr)
 						putc('\n', stdout);
 					}
 				}
-				return;
+				return FALSE;
 		}
 	}
-	return;
+	return FALSE;
 }
 
 /**
  * write out the list of removed items
  */
-void
-gfunc_remove(gpointer data, __attribute__((unused)) gpointer usr)
+gboolean
+gfunc_remove(gpointer data, __attribute__((unused)) gpointer value, 
+		__attribute__((unused)) gpointer usr)
 {
 	char *p;
 	p = ((struct entry*)data)->f_name;
@@ -131,7 +136,7 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer usr)
 	} else {
 		putc('\n', stdout);
 	}
-	return;
+	return FALSE;
 }
 
 /**
@@ -149,4 +154,30 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 		}
 	}
 	return 1;
+}
+
+/**
+ * traverse function
+ * implement the tree substraction
+ * everything in A, but NOT in b
+ * (data := element out of A)
+ * (b    := packed in diff, diff->b)
+ */
+gboolean
+gfunc_substract(gpointer data, gpointer value, gpointer diff)
+{
+	gpointer v;
+	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
+
+	g_tree_foreach((GTree*)((struct substract*)diff)->b, gfunc_write_all, stderr);
+
+	fprintf(stderr, "value %p - ", v);
+		fprintf(stderr, "gfunc_substract: %s %d\n",
+				((struct entry*)data)->f_name,
+				((struct entry*)data)->f_mode);
+
+	if (!v) {
+		g_tree_replace(((struct substract*)diff)->d, data, value);
+	}
+	return FALSE;
 }
