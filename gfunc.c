@@ -3,7 +3,7 @@
  * See LICENSE for the license
  */
 
-#include "rdump.h"
+#include "rdup.h"
 
 /* g_slist_foreach helper functions */
 

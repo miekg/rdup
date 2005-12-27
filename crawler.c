@@ -1,4 +1,4 @@
-#include "rdump.h"
+#include "rdup.h"
 
 extern int opt_null;
 extern int opt_onefilesystem;

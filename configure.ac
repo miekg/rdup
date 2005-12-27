@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdump, 0.0.1, miek@miek.nl, rdump)
-AC_CONFIG_SRCDIR([rdump.c])
+AC_INIT(rdup, 0.0.1, miek@miek.nl, rdup)
+AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
 sinclude(glib-2.0.m4)
@@ -32,6 +32,6 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 #	fi
 #fi
 AC_CONFIG_FILES([Makefile
-                 rdump.h])
+                 rdup.h])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

@@ -3,7 +3,7 @@
  * See LICENSE for the license
  */
 
-#include "rdump.h"
+#include "rdup.h"
 
 /* options */
 int opt_null = 0;
@@ -25,10 +25,10 @@ void gfunc_free(gpointer data, gpointer user);
 gint gfunc_equal(gconstpointer a, gconstpointer b);
 
 void
-usage(FILE *f, char *p) 
+usage(FILE *f) 
 {	
-	fprintf(f, "Usage: %s [OPTION...] FILELIST DIR...\n", p);
-	fprintf(f, "rdump generates a full or incremental file list, this\n");
+	fprintf(f, "Usage: %s [OPTION...] FILELIST DIR...\n", PROGNAME);
+	fprintf(f, "%s generates a full or incremental file list, this\n", PROGNAME);
 	fprintf(f, "list can be used to implement a (incremental) backup scheme\n");
 	fprintf(f, "\n   FILELIST\tincremental file list\n");
 	fprintf(f, "   \t\tif not found or empty, a full dump is done\n");
@@ -47,7 +47,7 @@ usage(FILE *f, char *p)
 void
 version(FILE *f) 
 {	
-	fprintf(f, "rdump %s\n", VERSION);
+	fprintf(f, "%s %s\n", PROGNAME, VERSION);
 }
 
 /**
@@ -155,7 +155,7 @@ main(int argc, char **argv)
 		switch (c)
 		{
 			case 'h':
-				usage(stdout, PROGNAME);
+				usage(stdout);
 				exit(EXIT_SUCCESS);
 			case 'V':
 				version(stdout);
@@ -178,7 +178,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (argc < 2) {
-		fprintf(stderr, "** Can not parse command line\n");
+		usage(stdout);
 		exit(EXIT_FAILURE); 
 	}
 
