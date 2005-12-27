@@ -39,6 +39,15 @@ backup_create_top() {
         chown root:backup $1
 }
 
+backup_succesfull() {
+        echo "Succesfully performed backup of `hostname`"
+        echo "Backup stored in $1"
+}
+
+backup_failed() {
+        echo "** Failed the backup of `hostname`"
+}
+
 list_cmd_options() {
         while getopts ":n:b:cCdhz" options; do
                 case $options in

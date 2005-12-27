@@ -51,3 +51,4 @@ do
                 echo "mv $backupdir/$path $backupdir/$path.$suffix"
         fi
 done 
+backup_successfull $backupdir

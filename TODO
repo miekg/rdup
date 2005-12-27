@@ -1,11 +1,10 @@
 TODO: 
-# rdup util: (this is all minor)
-o ignore or handle signals?
+# rdup util: (this is all rel. minor)
+o ignore or handle signals? Needed to decide what to do with the FILELIST
 o better error handling on syscalls? bail out or try to continue?
-o include the filesize in the output too? I have it internally (from
-  lstat)
 o valgrind and g_free
 o getline is GNU-ism, freebsd has fgetln
+o make install. Use a /etc/rdup directory
 o documentation updates
 
 # rest/shell 
@@ -75,4 +74,3 @@ o restore utilities, like yesterday or hist
 
 o make directory seperator a define
   done, 25 Dec 2005
-
