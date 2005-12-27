@@ -34,7 +34,7 @@ usage(FILE *f)
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
-	fprintf(f, "   -0\t\tdelimit all output with NULLs (not implemented)\n");
+	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
 	fprintf(f, "See LICENSE for the license\n");
 }

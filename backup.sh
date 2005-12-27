@@ -3,14 +3,15 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 #
+# This script implement a mirroring backup scheme
 
 . ./shared.sh
 
 backup_defines
 backup_cmd_options $@
 backup_create_top $backupdir
-
 declare -a path # catch spacing in the path
+
 while read mode uid gid path
 do
         dump=${mode:0:1}        # to add or remove

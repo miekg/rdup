@@ -4,14 +4,22 @@
 # See LICENSE for the license
 #
 # Exclude certain FILES from getting back upped 
-# Proof of concept as forking a grep on EACH entry
-# is way too slow
+# use bash' regular expressions to avoid forking grep
+# watch out with this, if you remove parent directories
+# without removing the files, you will get problem when
+# trying mirror the files
+
+declare -a fileexcludelist
+declare -a direxcludelist
+
+# copied from my hdup.conf
+fileexcludelist=".slide_img.* .thumb_img.*"
+direxcludelist="lost+found/ /proc/ /dev/ /sys/ .Trash/ .Cache/ tmp/"
 
 . ./shared.sh
-
 backup_defines
-
 declare -a path # catch spacing in the path
+
 while read mode uid gid path
 do
         dump=${mode:0:1}        # to add or remove
@@ -26,12 +34,22 @@ do
         
         case $typ in
                 0|2)      # reg file or link
-                echo "$path" | egrep '\.swp$' > /dev/null
-                if [[ $? != 0 ]]; then
-                        echo "$dump$mode $uid $gid $path"
-                fi
+                for file in $fileexcludelist; do 
+                        if [[ "$path" =~ $i ]]; then
+                                continue;
+                        fi
+                done
+                # don't exclude, print it
+                echo "$dump$mode $uid $gid $path"
                 ;;
                 1)      # directory
+                for i in $direxcludelist; do 
+                        if [[ "$path" =~ $i ]]; then
+                                continue;
+                        fi
+                done
+                # don't exclude, print it
+                echo "$dump$mode $uid $gid $path"
                 ;;
         esac
 done 
