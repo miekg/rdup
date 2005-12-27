@@ -1,8 +1,10 @@
-25 Dec 2005: 0.0.2 Miek <miek@miek.nl>
+26 Dec 2005: 0.0.2 Miek <miek@miek.nl>
    * Renamed to rdup.
    * rdup now uses GTree * instead of GSList *, making
-     to incremental dump 100 times faster. There some
-     efficiency improvements possible.
+     to incremental dump 100 times faster. 
+   * make install target was added. /etc/rdup is the configuration
+     directory of rdup
+   * I'm now using rdup to backup my homesystem
 
 
 25 Dec 2005: 0.0.1 Miek <miek@miek.nl>

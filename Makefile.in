@@ -4,6 +4,7 @@ SHS=backup.sh dryrun.sh excl.sh hist.sh yesterday.sh
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
+bindir = @bindir@
 sbindir = @sbindir@
 mandir = @mandir@
 sysconfdir = @sysconfdir@
