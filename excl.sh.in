@@ -16,7 +16,7 @@ declare -a direxcludelist
 fileexcludelist=".slide_img.* .thumb_img.*"
 direxcludelist="lost+found/ /proc/ /dev/ /sys/ .Trash/ .Cache/ tmp/"
 
-. ./shared.sh
+. @sysconfdir@/shared.sh
 backup_defines
 declare -a path # catch spacing in the path
 

@@ -3,15 +3,14 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 #
-# This script implement a mirroring backup scheme
 
-. ./shared.sh
+. @sysconfdir@/rdup/shared.sh
 
 backup_defines
 backup_cmd_options $@
 backup_create_top $backupdir
-declare -a path # catch spacing in the path
 
+declare -a path # catch spacing in the path
 while read mode uid gid path
 do
         dump=${mode:0:1}        # to add or remove
@@ -32,23 +31,23 @@ do
                         0)      # reg file
                         [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         if [[ -z $gzip ]]; then
-                                cat "$path" > "$backupdir/$path"
+                                echo "cat $path > $backupdir/$path"
                         else 
-                                cat "$path" | gzip -c > "$backupdir/$path"
+                                echo "cat $path | gzip -c > $backupdir/$path"
                         fi
                         ;;
                         1)      # directory
-                        [ ! -d "$backupdir/$path" ] && mkdir -p "$backupdir/$path"
+                        echo "[ ! -d $backupdir/$path ] && mkdir -p $backupdir/$path"
                         ;;
                         2)      # link
-                        [ -L "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        cp -a "$path" "$backupdir/$path"
+                        echo "[ -L $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix"
+                        echo "cp -a $path $backupdir/$path"
                         ;;
                 esac
-                chown $uid:$gid "$backupdir/$path"
-                chmod $bits "$backupdir/$path"
+                echo "chown $uid:$gid $backupdir/$path"
+                echo "chmod $bits $backupdir/$path"
         else
                 # remove
-                mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                echo "mv $backupdir/$path $backupdir/$path.$suffix"
         fi
 done 

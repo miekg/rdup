@@ -5,7 +5,7 @@
 #
 # inspired by hist of plan9 
 
-. ./shared.sh
+. @sysconfdir@/rdup/shared.sh
 
 list_cmd_options $@
 shift $(($OPTIND - 1))

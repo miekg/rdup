@@ -26,12 +26,19 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
-#if test $prefix = "NONE"; then
-#	if test $sysconfdir = '${prefix}/etc'; then
-#		sysconfdir="/etc"
-#	fi
-#fi
+# /etc/rdup
+if test $prefix = "NONE"; then
+	if test $sysconfdir = '${prefix}/etc'; then
+		sysconfdir="/etc"
+	fi
+fi
+
 AC_CONFIG_FILES([Makefile
-                 rdup.h])
+                 rdup.h
+                 backup.sh 
+                 dryrun.sh 
+                 excl.sh 
+                 hist.sh 
+                 yesterday.sh])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
