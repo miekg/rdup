@@ -1,18 +1,14 @@
 TODO: 
-# rdup util:
-o ignore or handle signals
-o better error handling on syscalls?
+# rdup util: (this is all minor)
+o ignore or handle signals?
+o better error handling on syscalls? bail out or try to continue?
 o include the filesize in the output too? I have it internally (from
   lstat)
-o make it more efficient, GSList is not the quickest
-  data type from GLib. Performance/scalability.
-  Switch to a tree type.
 
 # rest/shell 
 o make install/unstall targets need to be finished
 o look into networking (for an example script, that is)
 o shell script portability
-
 
 PARTLY DONE:
 o consolidate shell script, write generic functions that can 
@@ -25,6 +21,11 @@ o -0 is not yet implemented
   26 Dec 2005
   
 DONE:
+o make it more efficient, GSList is not the quickest
+  data type from GLib. Performance/scalability.
+  Switch to a tree type.
+  27 Dec 2005
+  
 o valgrind rdup. Done the remaining leaks look to be coming
   from glib: (or I'm doing something stupid)
         ==9997== 38994 bytes in 40 blocks are still reachable in loss record 2 of 2
