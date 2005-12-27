@@ -140,20 +140,23 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 }
 
 /**
- * decide whether 2 struct entries are equal 
- * or not
+ * decide whether 2 struct entries are equal or not
  */
 gint
 gfunc_equal(gconstpointer a, gconstpointer b)
 {
-	if (g_str_equal(((struct entry*)a)->f_name, 
-				((struct entry*)b)->f_name)) {
+	gint e;
+
+	e = g_ascii_strcasecmp(((struct entry*)a)->f_name,
+			((struct entry*)b)->f_name);
+
+	if (e == 0) {
 		if (((struct entry*)a)->f_mode == 
 				((struct entry*)b)->f_mode) {
 			return 0;
 		}
 	}
-	return 1;
+	return e;
 }
 
 /**
@@ -168,13 +171,6 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 {
 	gpointer v;
 	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
-
-	g_tree_foreach((GTree*)((struct substract*)diff)->b, gfunc_write_all, stderr);
-
-	fprintf(stderr, "value %p - ", v);
-		fprintf(stderr, "gfunc_substract: %s %d\n",
-				((struct entry*)data)->f_name,
-				((struct entry*)data)->f_mode);
 
 	if (!v) {
 		g_tree_replace(((struct substract*)diff)->d, data, value);

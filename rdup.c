@@ -202,17 +202,8 @@ main(int argc, char **argv)
 		dir_crawl(backup, crawl);
 		g_free(crawl);
 	}
-	fprintf(stderr, "@curtree\n");
-	g_tree_foreach(curtree, gfunc_write_all, stderr);
-	fprintf(stderr, "@backup\n");
-	g_tree_foreach(backup, gfunc_write_all, stderr);
-
 	remove = g_tree_substract(curtree, backup); 
 	
-	fprintf(stderr, "@remove\n");
-	g_tree_foreach(remove, gfunc_write_all, stderr);
-
-
 	/* first what to remove, then what to backup */
 	g_tree_foreach(remove, gfunc_remove, NULL); 
 	g_tree_foreach(backup, gfunc_backup, NULL);
