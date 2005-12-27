@@ -85,13 +85,13 @@ dir_crawl(GTree *t, char *path)
 
 	/* dir stack */
 	gint32 d = 0;
-	gint32 dstack_size = D_STACK_SIZE; /* realloc when hit */
+	gint32 dstack_size = D_STACKSIZE; /* realloc when hit */
 	gint32 dstack_cnt  = 1;
 	struct entry **dirstack = g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
 
 	/* file stack */
 	gint32 f = 0;
-	gint32 fstack_size = F_STACK_SIZE; 
+	gint32 fstack_size = F_STACKSIZE; 
 	gint32 fstack_cnt  = 1;
 	struct entry **filestack = g_malloc(fstack_cnt * fstack_size * sizeof(struct entry *));
 

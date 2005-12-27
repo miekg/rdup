@@ -12,8 +12,11 @@
 #define INC_DUMP        1
 #define DIR_SEP         '/'
 #define VALUE           (void*)1 /* g_tree_lookup return this in rdup */
-#define F_STACK_SIZE    200
-#define D_STACK_SIZE    100
+#define F_STACKSIZE    200
+#define D_STACKSIZE    100
+
+#define LIST_MINSIZE   6
+#define LIST_SPACEPOS  5
 
 struct entry {
         char *f_name;

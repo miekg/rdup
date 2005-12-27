@@ -39,8 +39,11 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 	fprintf((FILE*) fp, "%d %s", 
 			(int) ((struct entry*)data)->f_mode,
 			(char*) ((struct entry*)data)->f_name);
-	/* -0 todo */
-	putc('\n', (FILE*) fp);
+	if (opt_null) {
+		putc('\0', fp);
+	} else {
+		putc('\n', fp);
+	}
 	return FALSE;
 }
 

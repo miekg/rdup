@@ -4,6 +4,8 @@ o ignore or handle signals?
 o better error handling on syscalls? bail out or try to continue?
 o include the filesize in the output too? I have it internally (from
   lstat)
+o valgrind and g_free
+o getline is GNU-ism, freebsd has fgetln
 
 # rest/shell 
 o make install/unstall targets need to be finished
@@ -15,12 +17,13 @@ o consolidate shell script, write generic functions that can
   by sourced and used.
   26 Dec 2006
 
+DONE:
 o -0 is not yet implemented
   rdup filelist is \n delimited, as you cannot parse nulls with scanf
   Our internal list is NEVER null delimited.
   26 Dec 2005
+  27 Dec 2005
   
-DONE:
 o make it more efficient, GSList is not the quickest
   data type from GLib. Performance/scalability.
   Switch to a tree type.

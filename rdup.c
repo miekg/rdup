@@ -3,6 +3,7 @@
  * See LICENSE for the license
  */
 
+#define _GNU_SOURCE
 #include "rdup.h"
 
 /* options */
@@ -71,33 +72,53 @@ g_tree_substract(GTree *a, GTree *b)
 GTree *
 g_tree_read_file(FILE *fp)
 {
-	char 	buf[BUFSIZE + 1];
-	mode_t  modus;
-	char    name[BUFSIZE + 1];
-	GTree 	*tree;
+	char 	      *buf;
+	char          *n;
+	char 	      delim;
+	mode_t        modus;
+	GTree         *tree;
 	struct entry *e;
+	size_t        s;
 
 	tree = g_tree_new(gfunc_equal);
+	buf  = g_malloc(BUFSIZE);
+	s    = BUFSIZE;
 
-	/* this is entirely -0 unsafe */
-	while ((fgets(buf, BUFSIZE, fp))) {
-		/* chop annoying newline off */
-		buf[strlen(buf) - 1] = '\0';
-
-		if (sscanf(buf, "%5i %2048[^\n]", &modus, name) != 2) {
-			fprintf(stderr, "** Can not parse filelist\n");
-			return tree;
-		} else {
-			e = g_malloc(sizeof(struct entry));
-			e->f_name = g_strdup(name);
-			e->f_mode = modus;
-			e->f_uid  = 0;
-			e->f_gid  = 0;
-			e->f_mtime = 0;
-
-			g_tree_replace(tree, (gpointer) e, VALUE);
-		}
+	if (opt_null) {
+		delim = '\0';
+	} else {
+		delim = '\n';
 	}
+
+	while ((getdelim(&buf, &s, delim, fp)) != -1) {
+		if (s < LIST_MINSIZE) {
+			fprintf(stderr, "** Corrupt entry in filelist\n");
+			continue;
+		}
+		if (!opt_null) {
+			n = strrchr(buf, '\n');
+			if (n) {
+				*n = '\0';
+			}
+		}
+
+		/* get modus */
+		buf[LIST_SPACEPOS] = '\0';
+		modus = (mode_t)atoi(buf);
+		if (modus == 0) {
+			fprintf(stderr, "** Corrupt entry in filelist\n");
+			continue;
+		}
+
+		e = g_malloc(sizeof(struct entry));
+		e->f_name = g_strdup(buf + LIST_SPACEPOS + 1);
+		e->f_mode = modus;
+		e->f_uid  = 0;
+		e->f_gid  = 0;
+		e->f_mtime = 0;
+		g_tree_replace(tree, (gpointer) e, VALUE);
+	}
+	g_free(buf);
 	return tree;
 }
 
