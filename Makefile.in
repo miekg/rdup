@@ -1,5 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o
 HDR=rdup.h 
+SHELL=backup.sh dryrun.sh excl.sh hist.sh yesterday.sh
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
@@ -12,7 +13,6 @@ GLIB_CFLAGS     = @GLIB_CFLAGS@
 GLIB_LIBS       = @GLIB_LIBS@
 CFLAGS =-Wall -Wextra @CFLAGS@ @DEFS@ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 INSTALL = ../install-sh -c
-INSTALL_PROG = $(INSTALL) 
 INSTALL_DATA = $(INSTALL) -m 644
 
 .PHONY:	clean install all uninstall
@@ -27,8 +27,8 @@ rdup:	${OBJ} ${HDR}
 #	strip rdup
 
 clean:
-	@rm -f *.o
-	@rm -f rdup
+	rm -f *.o
+	rm -f rdup
 
 realclean: clean
 	rm -rf autom4te.cache
@@ -38,7 +38,25 @@ realclean: clean
 	rm -f rdup.h
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
+	rm -f ${SHELL}
 
 distclean: realclean
 	rm -f configure
 	rm -f Makefile
+
+install: rdup 
+        mkdir -p ${DESTDIR}${sysconfdir}/rdup
+        mkdir -p ${DESTDIR}${mandir}/man1
+        mkdir -p ${DESTDIR}${mandir}/man8
+        ${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
+        ${INSTALL} yesterday.sh ${DESTDIR}${bindir}/yesterday
+        ${INSTALL} hist.sh ${DESTDIR}${bindir}/hist
+        ${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
+        ${INSTALL} backup.sh ${DESTDIR}${sbindir}/backup
+        ${INSTALL} dryrun.sh ${DESTDIR}${sbindir}/dryrun
+        ${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl
+        ${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
+        ${INSTALL_DATA} rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
+        ${INSTALL_DATA} backup.sh.8 ${DESTDIR}${mandir}/man8/backup.8
+        ${INSTALL_DATA} yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.1
+        ${INSTALL_DATA} hist.sh.1 ${DESTDIR}${mandir}/man1/hist.1

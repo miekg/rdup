@@ -6,11 +6,14 @@ o include the filesize in the output too? I have it internally (from
   lstat)
 o valgrind and g_free
 o getline is GNU-ism, freebsd has fgetln
+o documentation updates
 
 # rest/shell 
 o make install/unstall targets need to be finished
 o look into networking (for an example script, that is)
 o shell script portability
+o manual page for excl.sh?
+o make uninstall
 
 PARTLY DONE:
 o consolidate shell script, write generic functions that can 
