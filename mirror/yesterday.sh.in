@@ -35,8 +35,12 @@ do
         fi
         if [[ $diff -eq 1 ]]; then
                 echo diff -u `basename $backupdir$file` `basename $file`
-                [ -f $backupdir$file ] && diff -u $backupdir$file $file
-                [ -h $backupdir$file ] && diff -u $backupdir$file $file
+                if [[ gzip -eq 1 ]]; then
+                [[ ! -d $backupdir$file ]] && \
+zcat $backupdir$file | diff -u - $file
+                         continue;
+                fi
+                [[ ! -d $backupdir$file ]] && diff -u $backupdir$file $file
                 continue
         fi
 

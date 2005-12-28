@@ -55,6 +55,8 @@ list_cmd_options() {
                         n) daysago=$OPTARG;;
                         d) diff=1;;
                         z) gzip=1;;
+                        c) copy=1;;
+                        C) Ccopy=1;;
                         h) list_cmd_usage && exit
                 esac
         done

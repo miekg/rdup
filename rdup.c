@@ -16,8 +16,8 @@ int dumptype;
 time_t list_mtime;
 
 /* crawler.c */
-void dir_crawl(GTree *t, char *path);
-void dir_prepend(GTree *t, char *path);
+gboolean dir_crawl(GTree *t, char *path);
+gboolean dir_prepend(GTree *t, char *path);
 
 void
 usage(FILE *f) 
@@ -36,7 +36,9 @@ usage(FILE *f)
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
-	fprintf(f, "See LICENSE for the license\n");
+	fprintf(f, "Licensed under the GPL. See the file LICENSE in the\n");
+	fprintf(f, "source distribution of rdup.\n");
+
 }
 
 void
@@ -218,9 +220,11 @@ main(int argc, char **argv)
 		}
 
 		/* add dirs leading up the backup dir */
-		dir_prepend(backup, crawl);
+		if (! dir_prepend(backup, crawl)) {
+			exit(EXIT_FAILURE);
+		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, crawl);
+		(void)dir_crawl(backup, crawl);
 		g_free(crawl);
 	}
 	remove = g_tree_substract(curtree, backup); 

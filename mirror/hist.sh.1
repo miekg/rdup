@@ -1,12 +1,13 @@
-.TH HIST.SH 1 "25 Dec 2005"
+'\" t
+.TH HIST 1 "25 Dec 2005" "0.0.3" "rdump utils"
         
 .SH NAME
 hist, history -– print file names from the dump
 
 .SH SYNOPSIS
-.B hist.sh
+.B hist
 [ 
-.IR −-bd
+.IR \−-bd
 ] 
 .IR FILES ...
 
@@ -29,12 +30,14 @@ l l.
 
 .SH OPTIONS
 .TP
-\fB-b backupdir
+.B \-b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
-\fB-d
+.B \-d
 The −d option causes diff(1) -−u to be run for each adjacent pair of
 dump files. This is not yet implemented.
+.B \-z
+The backupped file is gzipped
 
 .SH EXAMPLES
 Examine changes in block.c:
@@ -49,4 +52,4 @@ location.
 This manpage was copied verbatim from the hist(1) manual page of Plan9.
 
 .SH SEE ALSO
-yesterday.sh(1), rdup(8)
+yesterday(1), rdup(8)

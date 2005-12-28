@@ -29,7 +29,7 @@ entry_free(struct entry *f)
 /**
  * prepend path leading up to backup directory to the tree
  */
-void
+gboolean
 dir_prepend(GTree *t, char *path)
 {
 	char *c;
@@ -53,7 +53,7 @@ dir_prepend(GTree *t, char *path)
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
 			fprintf(stderr, "** Could not stat dirpath: %s\n", path2);
-			return;
+			return FALSE;
 		}
 		e = g_malloc(sizeof(struct entry));
 		e->f_name  = g_strdup(path2);
@@ -70,10 +70,10 @@ dir_prepend(GTree *t, char *path)
 		p = c++;
 	}
 	g_free(path2);
-	return;
+	return TRUE;
 }
 
-void
+gboolean
 dir_crawl(GTree *t, char *path)
 {
 	DIR 		*dir;
@@ -99,7 +99,7 @@ dir_crawl(GTree *t, char *path)
 		fprintf(stderr, "** Cannot enter: %s\n", path);
 		g_free(filestack);
 		g_free(dirstack);
-		return;
+		return TRUE;
 	}
 
 	/* get device */
@@ -108,7 +108,7 @@ dir_crawl(GTree *t, char *path)
 		closedir(dir);
 		g_free(filestack);
 		g_free(dirstack);
-		return;
+		return TRUE;
 	}
 	current_dev = s.st_dev;
 
@@ -146,7 +146,7 @@ dir_crawl(GTree *t, char *path)
 				g_free(filestack);
 				g_free(curpath);
 				closedir(dir);
-				return;
+				return TRUE;
 			}
 			
 			filestack[f] = g_malloc(sizeof(struct entry));
@@ -207,5 +207,5 @@ dir_crawl(GTree *t, char *path)
 	
 	g_free(dirstack);
 	g_free(filestack);
-	return;
+	return TRUE;
 }

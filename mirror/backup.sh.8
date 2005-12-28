@@ -1,21 +1,22 @@
-.TH BACKUP.SH 1 "25 Dec 2005"
+'\" t
+.TH BACKUP.SH 1 "25 Dec 2005" "0.0.3" "rdump utils"
 
 .SH NAME
-backup.sh \– mirror the files from the list on standard input
+backup \–- mirror the files from the list on standard input
 
 .SH SYNOPSIS
-.B backup.sh
+.B backup
 [
 .IR \-b
 ]
 
 .SH DESCRIPTION
-\fBbackup.sh\fR copies the files it gets from standard input to the directory
+\fBbackup\fR copies the files it gets from standard input to the directory
 specified with the \-b option. This script \fIimplements\fR the backup policy. 
 
 .SH OPTIONS
 .TP 
-\fB\−b backupdir\fR
+.B \-−b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 
 .SH FILES
@@ -23,4 +24,4 @@ Alternate backup directory. Defaults to /vol/backup/`hostname`.
 the backup file system.
 
 .SH SEE ALSO
-diff(1), hist.sh (1), rdup(8)
+diff(1), hist(1), yesterday(1), rdup(8)

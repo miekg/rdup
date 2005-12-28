@@ -1,4 +1,5 @@
-.TH RDUP 8 "24 Dec 2005"
+'\" t
+.TH RDUP 8 "24 Dec 2005" "0.0.3" "rdump utils"
 .SH NAME
 rdup \- generate a file list suitable for making backups
 .SH SYNOPSIS
@@ -35,23 +36,23 @@ backups.
 
 .SH OPTIONS
 .TP
-\fB\-h
+.B \-h
 Give an overview of the options.
 .TP
-\fB\-n
+.B \-n
 Honor .nobackup files. If such files are found the directory is not
 printed to standard output.
 .TP
-\fB\-v
+.B \-v
 Be more verbose
 .TP
-\fB\-V
+.B \-V
 Print rdup's version.
 .TP
-\fB\-x
+.B \-x
 Stay on the local filesystem.
 .TP
-\fB\-0
+.B \-0
 Delimit all printed/read/written lists with NULL instead of newlines.
 
 .SH FILELIST
@@ -75,12 +76,12 @@ plus or minus, indicating whether PATH should added or removed.
 the st_mode from stat(2).
 .TP
 .B o UID
-the numerical user id of PATH. Note that if the first character is '-'
-(i.e. removed) the UID will be zero.
+the numerical user id of PATH. Note that if the first character of the
+line is '-' (i.e. remove) the UID will be zero.
 .TP
 .B o GID
-the numerical group id of PATH. Note that if the first character is '-'
-(i.e. removed) the UID will be zero.
+the numerical group id of PATH. Note that if the first character of the
+line is '-' (i.e. remove) the GID will be zero.
 .TP
 .B o PATH
 the pathname

@@ -1,46 +1,50 @@
-.TH YESTERDAY.SH 1 "25 Dec 2005"
+'\" t
+.TH YESTERDAY 1 "25 Dec 2005" "0.0.3" "rdump utils"
 
 .SH NAME
-yesterday.sh -– print file names from the dump
+yesterday \-– print file names from the dump
 
 .SH SYNOPSIS
-.B yesterday.sh
+.B yesterday
 [
-.IR -−cbCdn
+.IR \−-cbCdnz
 ]
 .IR BACKUPDIR
 .IR FILES ...
 
 .SH DESCRIPTION
-yesterday.sh prints the names of the files from the most recent dump. Since
+yesterday prints the names of the files from the most recent dump. Since
 dumps are done early in the morning, yesterday’s files are really in
 today’s dump. 
 
 .SH OPTIONS
 .TP 
-\fB-−b backupdir
+.B \-−b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP 
-\fB-−c    
+.B \−-c
 Copy the dump files over the named files.
-.TP 
-\fB-−C    
+.TP
+.B \−-C
 Copy the dump files over the named files only when they differ.
 .TP 
-\fB-−d    
+.B \− d
 Run diff to compare the dump files with the named files.
 .TP 
-\fB-−n daysago
+.B \−-n daysago
 select the dump daysago prior to the current day.
+.TP 
+.B \−-z
+backupped file is gzipped.
 
 .SH EXAMPLES
 See what’s changed in the last week in your profile:
 .PP
-        yesterday.sh /vol/backup -−d -−n 7 ~/.profile
+        yesterday /vol/backup -−d -−n 7 ~/.profile
 .PP
 Restore your profile from yesterday:
 .PP
-        yesterday.sh /vol/backup −-c ~/.profile
+        yesterday /vol/backup −-c ~/.profile
 
 .SH FILES
 Root of dump file system default to /vol/backup/`hostname`, but can be any
@@ -51,8 +55,9 @@ This manpage was copied verbatim from the yesterday(1) manual page of
 Plan9.
 
 .SH SEE ALSO
-diff(1), hist.sh (1), rdup(8)
+diff(1), hist(1), rdup(8)
 
 .SH BUGS
 It's hard to use this command without singing.
+.PP
 [This was to good to leave out :)]
