@@ -37,8 +37,12 @@ AC_CONFIG_FILES([Makefile
                  rdup.h
                  dryrun.sh 
                  excl.sh 
+                 rdup.8
                  mirror/backup.sh 
                  mirror/hist.sh 
-                 mirror/yesterday.sh])
+                 mirror/yesterday.sh
+                 mirror/backup.sh.8
+                 mirror/hist.sh.1
+                 mirror/yesterday.sh.1])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

@@ -1,9 +1,9 @@
 '\" t
-.TH RDUP 8 "24 Dec 2005" "0.0.3" "rdump utils"
+.TH RDUP 8 "24 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 .SH NAME
-rdup \- generate a file list suitable for making backups
+@PACKAGE_NAME@ \- generate a file list suitable for making backups
 .SH SYNOPSIS
-.B rdup
+.B @PACKAGE_NAME@
 [
 .IR \-hvVx0
 ]

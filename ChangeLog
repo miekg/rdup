@@ -2,7 +2,6 @@ XX Dec 2005: 0.0.3 Miek <miek@miek.nl>
    * Reworked the source directory slighty, all mirror scripts
      are now in their own directory (mirror/)
 
-
 26 Dec 2005: 0.0.2 Miek <miek@miek.nl>
    * Renamed to rdup.
    * rdup now uses GTree * instead of GSList *, making

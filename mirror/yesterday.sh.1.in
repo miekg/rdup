@@ -1,5 +1,5 @@
 '\" t
-.TH YESTERDAY 1 "25 Dec 2005" "0.0.3" "rdump utils"
+.TH YESTERDAY 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 yesterday \-– print file names from the dump

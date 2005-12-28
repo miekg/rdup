@@ -1,5 +1,5 @@
 '\" t
-.TH HIST 1 "25 Dec 2005" "0.0.3" "rdump utils"
+.TH HIST 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
 hist, history -– print file names from the dump
