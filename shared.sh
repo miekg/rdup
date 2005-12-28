@@ -39,7 +39,7 @@ backup_create_top() {
         chown root:backup $1
 }
 
-backup_succesfull() {
+backup_successfull() {
         echo "Succesfully performed backup of `hostname`"
         echo "Backup stored in $1"
 }
