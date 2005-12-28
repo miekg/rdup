@@ -1,6 +1,7 @@
 OBJ=crawler.o rdup.o gfunc.o
 HDR=rdup.h 
 SHS=mirror/backup.sh dryrun.sh excl.sh mirror/hist.sh mirror/yesterday.sh
+MAN=mirror/backup.sh.8 mirror/hist.sh.1 mirror/yesterday.sh.1
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
@@ -40,6 +41,7 @@ realclean: clean
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${SHS}
+	rm -f ${MAN}
 
 distclean: realclean
 	rm -f configure

@@ -77,3 +77,11 @@ list_cmd_usage() {
         echo " -z          backup file is gzipped"
         echo " -h          this help"
 }
+
+## calculate the date back in time $1 days ago
+datesago() {
+        daysago=$(($1 * 86400))
+        epochago=$((`date +%s` - $daysago))
+
+        echo `date --date "Jan 1, 1970 00:00:00 CET + $epochago seconds" +%Y%m%d`
+}
