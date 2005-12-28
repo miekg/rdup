@@ -13,6 +13,7 @@ o make install/unstall targets need to be finished
 o look into networking (for an example script, that is)
 o shell script portability
 o manual page for excl.sh?
+o implement -n for yesterday/hist
 o make uninstall
 
 PARTLY DONE:

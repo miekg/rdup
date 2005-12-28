@@ -101,3 +101,15 @@ The directory mirror/ contains a few scripts which implement a mirroring
 backup scheme. I'm using these scripts at home to backup my machines.
 Other backup schemes may be implemented using these scripts as an
 example.
+
+5/ END USER TOOLS
+rdup includes a few scripts:
+
+o backup - this mirrors/copies the files to their final destination
+o excl   - exclude certain files and directories from the backup
+o yesterday - look at the backupped files and restore them
+o hist      - look at the backup history of files
+
+The last 2 are end user tools that can (and should) be used by users on
+your system to retrieve lost files. Or they may want to use them to look
+at the differences.
