@@ -1,25 +1,25 @@
 .TH BACKUP.SH 1 "25 Dec 2005"
 
 .SH NAME
-backup.sh -– mirror the files from the list on standard input
+backup.sh \– mirror the files from the list on standard input
 
 .SH SYNOPSIS
 .B backup.sh
 [
-.IR -−b
+.IR \-b
 ]
 
 .SH DESCRIPTION
 \fBbackup.sh\fR copies the files it gets from standard input to the directory
-specified with the -b option. This script \fIimplements\fR the backup policy. 
+specified with the \-b option. This script \fIimplements\fR the backup policy. 
 
 .SH OPTIONS
 .TP 
-\fB-−b backupdir   
+\fB\−b backupdir\fR
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 
 .SH FILES
-/vol/backup/`hostname`, or the directory specified with -b, root of
+/vol/backup/`hostname`, or the directory specified with \-b, root of
 the backup file system.
 
 .SH SEE ALSO

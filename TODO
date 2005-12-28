@@ -4,10 +4,11 @@ o ignore or handle signals? Needed to decide what to do with the FILELIST
 o better error handling on syscalls? bail out or try to continue?
 o valgrind and g_free
 o getline is GNU-ism, freebsd has fgetln
-o make install. Use a /etc/rdup directory
 o documentation updates
 
 # rest/shell 
+o manpages are f*cked up when installed, what is diff. when 
+  viewing them in your local dir with man ./page.1?
 o make install/unstall targets need to be finished
 o look into networking (for an example script, that is)
 o shell script portability
@@ -20,6 +21,9 @@ o consolidate shell script, write generic functions that can
   26 Dec 2006
 
 DONE:
+o make install. Use a /etc/rdup directory
+  27 Dec 2005: make install was implemented
+
 o -0 is not yet implemented
   rdup filelist is \n delimited, as you cannot parse nulls with scanf
   Our internal list is NEVER null delimited.
