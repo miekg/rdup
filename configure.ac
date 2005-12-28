@@ -35,10 +35,10 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  rdup.h
-                 backup.sh 
                  dryrun.sh 
                  excl.sh 
-                 hist.sh 
-                 yesterday.sh])
+                 mirror/backup.sh 
+                 mirror/hist.sh 
+                 mirror/yesterday.sh])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

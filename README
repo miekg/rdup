@@ -95,3 +95,9 @@ rdup FILELIST /home > list
 rsync --files-from=list user@remotehost.nl
 
 As in true unix tradition the list can go on and on :-)
+
+4/ BACKUP SCHEME SCRIPTS
+The directory mirror/ contains a few scripts which implement a mirroring
+backup scheme. I'm using these scripts at home to backup my machines.
+Other backup schemes may be implemented using these scripts as an
+example.
