@@ -7,8 +7,6 @@ o getline is GNU-ism, freebsd has fgetln
 o documentation updates
 
 # rest/shell 
-o manpages are f*cked up when installed, what is diff. when 
-  viewing them in your local dir with man ./page.1?
 o make install/unstall targets need to be finished
 o mirror/ was added. document it and make it more robust
 o shell script portability
@@ -17,11 +15,14 @@ o implement -n for yesterday/hist
 o make uninstall
 
 PARTLY DONE:
+
+
+DONE:
 o consolidate shell script, write generic functions that can 
   by sourced and used.
   26 Dec 2006
+  29 Dec 2006
 
-DONE:
 o make install. Use a /etc/rdup directory
   27 Dec 2005: make install was implemented
 

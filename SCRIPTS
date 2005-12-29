@@ -1,0 +1,15 @@
+The following backup schemes are included:
+
+mirror/
+        mirror locally to another directory. It is wise to put
+        this directory on a seperate harddisk.
+
+remote/
+        upload the contents of the backup to a remote host. This
+        utilizes sftp. The following cmd line should work:
+ rdup FILES dir | ./sbackup.sh -b /remote/dir | sftp -C -b - miekg@elektron:
+
+hdup/
+        an implementation of the core hdup2 idea, can be easily extended
+        to work "just as" hdup2.
+
