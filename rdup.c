@@ -14,7 +14,6 @@ int opt_verbose = 0;
 time_t opt_timestamp = 0;
 
 int dumptype;
-time_t list_mtime;
 
 /* crawler.c */
 gboolean dir_crawl(GTree *t, char *path);
@@ -189,6 +188,10 @@ main(int argc, char **argv)
 				/* dumptype isn't really needed... */
 				if ((opt_timestamp = timestamp(optarg)) == 0) {
 					dumptype = NULL_DUMP;
+					if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
+						fprintf(stderr, "** Could not create timestamp file\n");
+						exit(EXIT_FAILURE);
+					}
 				} else {
 					dumptype = INC_DUMP;
 				}
