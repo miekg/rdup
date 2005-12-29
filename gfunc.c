@@ -59,6 +59,7 @@ gfunc_write_all(gpointer data, __attribute__((unused)) gpointer value, gpointer 
 	fprintf((FILE*) fp, "   %d  ", (int) ((struct entry*)data)->f_gid);
 	fprintf((FILE*) fp, "   %d ", (int) ((struct entry*)data)->f_mode);
 	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mtime);
+	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_size);
 	return FALSE;
 }
 #endif
@@ -74,10 +75,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 	p = ((struct entry*)data)->f_name;
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
-		fprintf(stdout, "+%d %d %d %s", 
+		fprintf(stdout, "+%d %d %d %d %s", 
 				(int) ((struct entry*)data)->f_mode,
 				(int) ((struct entry*)data)->f_uid,
 				(int) ((struct entry*)data)->f_gid,
+				(int) ((struct entry*)data)->f_size,
 				p);
 		if (opt_null) {
 			putc('\0', stdout);
@@ -90,10 +92,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 			S_ISLNK(((struct entry*)data)->f_mode)) {
 		switch (dumptype) {
 			case NULL_DUMP:
-				fprintf(stdout, "+%d %d %d %s", 
+				fprintf(stdout, "+%d %d %d %d %s", 
 						(int) ((struct entry*)data)->f_mode,
 						(int) ((struct entry*)data)->f_uid,
 						(int) ((struct entry*)data)->f_gid,
+						(int) ((struct entry*)data)->f_size,
 						p);
 				if (opt_null) {
 					putc('\0', stdout);
@@ -103,10 +106,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 				return FALSE;
 			case INC_DUMP:
 				if (((struct entry*)data)->f_mtime > opt_timestamp) {
-					fprintf(stdout, "+%d %d %d %s", 
+					fprintf(stdout, "+%d %d %d %d %s", 
 							(int) ((struct entry*)data)->f_mode,
 							(int) ((struct entry*)data)->f_uid,
 							(int) ((struct entry*)data)->f_gid,
+							(int) ((struct entry*)data)->f_size,
 							p);
 					if (opt_null) {
 						putc('\0', stdout);
@@ -129,10 +133,11 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 {
 	char *p;
 	p = ((struct entry*)data)->f_name;
-	fprintf(stdout, "-%d %d %d %s", 
+	fprintf(stdout, "-%d %d %d %d %s", 
 			(int) ((struct entry*)data)->f_mode,
 			(int) ((struct entry*)data)->f_uid,
 			(int) ((struct entry*)data)->f_gid,
+			(int) ((struct entry*)data)->f_size,
 			p);
 	if (opt_null) {
 		putc('\0', stdout);

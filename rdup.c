@@ -118,6 +118,7 @@ g_tree_read_file(FILE *fp)
 		e->f_mode = modus;
 		e->f_uid  = 0;
 		e->f_gid  = 0;
+		e->f_size = 0;
 		e->f_mtime = 0;
 		g_tree_replace(tree, (gpointer) e, VALUE);
 	}

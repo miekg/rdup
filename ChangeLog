@@ -1,4 +1,8 @@
 XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
+   * Add the filesize to rdup's output. This change is 
+     not backwards compatible. The out put now is
+     +/-MODE UID GID SIZE FILENAME
+     SIZE = filesize in bytes
    * -n daysago is implemented in yesterday.sh and hist.sh
    * Ran 'rats':
    - take care getopts is not hit by a buffer overrun. Also

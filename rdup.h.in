@@ -24,6 +24,7 @@ struct entry {
         gid_t f_gid;
         mode_t f_mode;
         time_t f_mtime;
+        off_t f_size;
 };
 
 struct substract {

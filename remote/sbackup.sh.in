@@ -20,7 +20,7 @@ sbackup_create_top $backupdir
 # be a problem
 
 declare -a path # catch spacing in the path
-while read mode uid gid path
+while read mode uid gid size path
 do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits

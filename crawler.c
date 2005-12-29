@@ -16,6 +16,7 @@ entry_dup(struct entry *f)
         g->f_gid   = f->f_gid;
         g->f_mode  = f->f_mode;
 	g->f_mtime = f->f_mtime;
+	g->f_size  = f->f_size;
         return g;
 }
 
@@ -61,6 +62,7 @@ dir_prepend(GTree *t, char *path)
 		e->f_gid   = s.st_gid;
 		e->f_mtime = s.st_mtime;
 		e->f_mode  = s.st_mode;
+		e->f_size  = s.st_size;
 		
 		/* leak; need destroy function for old value */
 		g_tree_replace(t, (gpointer) entry_dup(e), VALUE);
@@ -138,6 +140,7 @@ dir_crawl(GTree *t, char *path)
 				pop->f_gid   = s.st_gid;
 				pop->f_mtime = s.st_mtime;
 				pop->f_mode  = s.st_mode;
+				pop->f_size  = s.st_size;
 
 				g_tree_replace(t, (gpointer) entry_dup(pop), VALUE);
 
@@ -155,6 +158,7 @@ dir_crawl(GTree *t, char *path)
 			filestack[f]->f_gid   = s.st_gid;
 			filestack[f]->f_mtime = s.st_mtime;
 			filestack[f]->f_mode  = s.st_mode;
+			filestack[f]->f_size  = s.st_size;
 
 			if (f++ % fstack_size == 0) {
 				filestack = g_realloc(filestack, 
@@ -176,6 +180,7 @@ dir_crawl(GTree *t, char *path)
 			dirstack[d]->f_gid   = s.st_gid;
 			dirstack[d]->f_mtime = s.st_mtime;
 			dirstack[d]->f_mode  = s.st_mode;
+			dirstack[d]->f_size  = s.st_size;
 
 			if (d++ % dstack_size == 0) {
 				dirstack = g_realloc(dirstack, 
