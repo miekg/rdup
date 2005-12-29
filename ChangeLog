@@ -14,6 +14,7 @@ XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
      (-N FILE, where the m_time of FILE is taken is the filestamp)
    * added hdup/ directory. The script in there implements the 
      core functionality of hdup2.
+   * Added -Os, this wipes 2K of the rdup exe (16%)
 
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>
    * Reworked the source directory slighty, all mirror scripts
