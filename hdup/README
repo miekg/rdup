@@ -1,0 +1,6 @@
+The scripts in this directory implement hdup2, although not all
+functionality is included the core features of hdup2 are present.
+It has also one less bug, because tar's incremental backup features
+are not used.
+
+Use: ./rdup -N timestamp filelist dirs | ./hdup2.sh

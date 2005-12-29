@@ -8,6 +8,8 @@ XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
      working though.
    * Added explicit timestamp file as suggest by Boris Goldowsky 
      (-N FILE, where the m_time of FILE is taken is the filestamp)
+   * added hdup/ directory. The script in there implements the 
+     core functionality of hdup2.
 
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>
    * Reworked the source directory slighty, all mirror scripts

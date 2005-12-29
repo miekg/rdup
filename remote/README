@@ -1,0 +1,8 @@
+The scripts in this directory implement a remote mirroring backup
+scheme.
+The filelist piped to sback.sh must be given to sftp which will
+then ftp the files to the remote host, like this:
+
+./rdup -N timestamp LIST dirs | ./sbackup.sh | sftp -C -b - user@host:
+
+By default all scripts work on /vol/backup/`hostname`/YYYYMM.
