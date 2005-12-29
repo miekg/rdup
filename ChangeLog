@@ -1,10 +1,12 @@
 XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
    * -n daysago is implemented in yesterday.sh and hist.sh
 
+
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>
    * Reworked the source directory slighty, all mirror scripts
      are now in their own directory (mirror/)
    * Lots of documentation updates
+
 
 26 Dec 2005: 0.0.2 Miek <miek@miek.nl>
    * Renamed to rdup.
