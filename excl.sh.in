@@ -20,7 +20,7 @@ direxcludelist="lost+found/ /proc/ /dev/ /sys/ .Trash/ .Cache/ tmp/"
 backup_defines
 declare -a path # catch spacing in the path
 
-while read mode uid gid path
+while read mode uid gid size path
 do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits
@@ -40,7 +40,7 @@ do
                         fi
                 done
                 # don't exclude, print it
-                echo "$dump$mode $uid $gid $path"
+                echo "$dump$mode $uid $gid $size $path"
                 ;;
                 1)      # directory
                 for i in $direxcludelist; do 
@@ -49,7 +49,7 @@ do
                         fi
                 done
                 # don't exclude, print it
-                echo "$dump$mode $uid $gid $path"
+                echo "$dump$mode $uid $gid $size $path"
                 ;;
         esac
 done 
