@@ -32,7 +32,7 @@ usage(FILE *f)
 	fprintf(f, "   -V\t\tprint version\n");
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
-	fprintf(f, "   \t\tif FILE does not exist, a full dump is perfomed\n");
+	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
@@ -188,12 +188,14 @@ main(int argc, char **argv)
 				/* dumptype isn't really needed... */
 				if ((opt_timestamp = timestamp(optarg)) == 0) {
 					dumptype = NULL_DUMP;
-					if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
-						fprintf(stderr, "** Could not create timestamp file\n");
-						exit(EXIT_FAILURE);
-					}
 				} else {
 					dumptype = INC_DUMP;
+				}
+				/* re-touch the timestamp file, if rdup fails
+				 * the user needs to do something */
+				if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
+					fprintf(stderr, "** Could not create timestamp file\n");
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'v':
