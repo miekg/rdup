@@ -17,6 +17,12 @@ executable measures 12KB and I don't expect that to increase much.
 
 The manual page explains rdup's options and usage. See rdup(8).
 
+The filelist as printed starts with the root of the filedump and
+then decends into directories. This way all top level directories
+can be created as is and in sequence. If you process the file in
+the same order no magic foo is needed to create directories that
+otherwise might be missing.
+
 2.1/ FULL DUMP
 
 Run: rdup FILELIST dir1

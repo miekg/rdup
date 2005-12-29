@@ -1,7 +1,11 @@
 XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
    * -n daysago is implemented in yesterday.sh and hist.sh
-   * take care getopts is not hit by a buffer overrun
-
+   * Ran 'rats':
+   - take care getopts is not hit by a buffer overrun. Also
+     removed potential race.
+   * Added remote directory with a script that can be piped
+     to 'sftp b - user@remotehost'. This is a poor mans rsync - fully
+     working though.
 
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>
    * Reworked the source directory slighty, all mirror scripts

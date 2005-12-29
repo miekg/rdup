@@ -10,7 +10,7 @@ o documentation updates
 o manpages are f*cked up when installed, what is diff. when 
   viewing them in your local dir with man ./page.1?
 o make install/unstall targets need to be finished
-o look into networking (for an example script, that is)
+o mirror/ was added. document it and make it more robust
 o shell script portability
 o manual page for excl.sh?
 o implement -n for yesterday/hist

@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
+# default user: root:backup (0:34 on my system)
 
 backup_defines() {
         S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
@@ -33,10 +34,33 @@ backup_cmd_usage() {
 }
 
 backup_create_top() {
-        mkdir -m 755 -p $1
-        # why don't we have a -p for chown :-(
-        # well at least the permission are so the anybody can enter
-        chown root:backup $1
+        # need to reverse the order
+        dir=$1;
+        while [[ $dir != "/" ]]
+        do
+                dirs="$dir $dirs"
+                dir=`dirname $dir`
+        done
+        for d in $dirs; do
+                mkdir -m 755 $dir
+                chown 0:34 $dir
+        done
+}
+
+sbackup_create_top() {
+        dir=$1
+        while [[ $dir != "/" ]]
+        do
+                dirs="$dir $dirs"
+                dir=`dirname $dir`
+        done
+        for d in $dirs; do
+                # - : don't make sftp fail
+                echo -mkdir $d
+                echo -chown 0 $d
+                echo -chgrp 34 $d
+                echo -chmod 775 $d
+        done
 }
 
 backup_successfull() {

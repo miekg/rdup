@@ -36,17 +36,21 @@ do
                         else 
                                 cat "$path" | gzip -c > "$backupdir/$path"
                         fi
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
                         1)      # directory
                         [ ! -d "$backupdir/$path" ] && mkdir -p "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
                         2)      # link
                         [ -L "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         cp -a "$path" "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
                 esac
-                chown $uid:$gid "$backupdir/$path"
-                chmod $bits "$backupdir/$path"
         else
                 # remove
                 mv "$backupdir/$path" "$backupdir/$path.$suffix"

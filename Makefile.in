@@ -1,6 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o
 HDR=rdup.h 
-SHS=mirror/backup.sh dryrun.sh excl.sh mirror/hist.sh mirror/yesterday.sh
+SHS=mirror/backup.sh dryrun.sh excl.sh mirror/hist.sh mirror/yesterday.sh remote/sbackup.sh
 MAN=mirror/backup.sh.8 mirror/hist.sh.1 mirror/yesterday.sh.1
 
 prefix  = @prefix@
