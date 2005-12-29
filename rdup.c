@@ -11,6 +11,7 @@ int opt_null = 0;
 int opt_onefilesystem = 0;
 int opt_nobackup = 1;
 int opt_verbose = 0;
+time_t opt_timestamp = 0;
 
 int dumptype;
 time_t list_mtime;
@@ -25,13 +26,14 @@ usage(FILE *f)
 	fprintf(f, "Usage: %s [OPTION...] FILELIST DIR...\n", PROGNAME);
 	fprintf(f, "%s generates a full or incremental file list, this\n", PROGNAME);
 	fprintf(f, "list can be used to implement a (incremental) backup scheme\n");
-	fprintf(f, "\n   FILELIST\tincremental file list\n");
-	fprintf(f, "   \t\tif not found or empty, a full dump is done\n");
+	fprintf(f, "\n   FILELIST\tfile list\n");
 	fprintf(f, "   DIR\t\tdirectory or directories to dump\n");
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -V\t\tprint version\n");
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
+	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
+	fprintf(f, "   \t\tif FILE does not exist, a full dump is perfomed\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
@@ -128,7 +130,7 @@ g_tree_read_file(FILE *fp)
  * return the m_time of the filelist
  */
 time_t
-mtime(char *f)
+timestamp(char *f)
 {
 	struct stat s;
 
@@ -171,7 +173,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "hVnvx0")) != -1) {
+	while ((c = getopt (argc, argv, "hVnN:vx0")) != -1) {
 		switch (c)
 		{
 			case 'h':
@@ -182,6 +184,14 @@ main(int argc, char **argv)
 				exit(EXIT_SUCCESS);
 			case 'n':
 				opt_nobackup = 0;
+				break;
+			case 'N': 
+				/* dumptype isn't really needed... */
+				if ((opt_timestamp = timestamp(optarg)) == 0) {
+					dumptype = NULL_DUMP;
+				} else {
+					dumptype = INC_DUMP;
+				}
 				break;
 			case 'v':
 				opt_verbose = 1;
@@ -200,13 +210,6 @@ main(int argc, char **argv)
 	if (argc < 2) {
 		usage(stdout);
 		exit(EXIT_FAILURE); 
-	}
-
-	/* Check for full of incremental dump */
-	if ((list_mtime = mtime(argv[0])) == 0) {
-		dumptype = NULL_DUMP;
-	} else {
-		dumptype = INC_DUMP;
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {

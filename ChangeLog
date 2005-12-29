@@ -6,6 +6,8 @@ XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
    * Added remote directory with a script that can be piped
      to 'sftp b - user@remotehost'. This is a poor mans rsync - fully
      working though.
+   * Added explicit timestamp file as suggest by Boris Goldowsky 
+     (-N FILE, where the m_time of FILE is taken is the filestamp)
 
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>
    * Reworked the source directory slighty, all mirror scripts

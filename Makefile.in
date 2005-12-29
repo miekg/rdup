@@ -55,6 +55,7 @@ install: rdup
 	${INSTALL} mirror/yesterday.sh ${DESTDIR}${bindir}/yesterday
 	${INSTALL} mirror/hist.sh ${DESTDIR}${bindir}/hist
 	${INSTALL} mirror/backup.sh ${DESTDIR}${sbindir}/backup
+	${INSTALL} remote/sbackup.sh ${DESTDIR}${sbindir}/sbackup
 	${INSTALL} dryrun.sh ${DESTDIR}${sbindir}/dryrun
 	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl
 	${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh

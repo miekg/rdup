@@ -9,7 +9,7 @@
 
 extern int dumptype;
 extern int opt_null;
-extern time_t list_mtime;
+extern time_t opt_timestamp;
 
 /**
  * free a struct entry
@@ -102,7 +102,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 				}
 				return FALSE;
 			case INC_DUMP:
-				if (((struct entry*)data)->f_mtime > list_mtime) {
+				if (((struct entry*)data)->f_mtime > opt_timestamp) {
 					fprintf(stdout, "+%d %d %d %s", 
 							(int) ((struct entry*)data)->f_mode,
 							(int) ((struct entry*)data)->f_uid,
