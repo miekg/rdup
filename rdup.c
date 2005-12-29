@@ -164,6 +164,12 @@ main(int argc, char **argv)
 		fprintf(stderr, "** Could not get current working directory\n");
 		exit(EXIT_FAILURE);
 	}
+	for(c = 0; c < argc; c++) {
+		if (strlen(argv[c]) > BUFSIZE) {
+			fprintf(stderr, "** Argument length overrun\n");
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	while ((c = getopt (argc, argv, "hVnvx0")) != -1) {
 		switch (c)

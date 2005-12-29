@@ -41,7 +41,7 @@ rdup FILELIST dir | ./backup.sh /vol/backup/
 'backup.sh' is a shell script which looks at the filetype and acts
 accordingly. It copies the content (of the dir/symlink) to the archive
 directory, it creates a mirror of the actual disk layout of the
-directories to be backed up. By default is will put the files
+directories to be backed up. By default it will put the files
 in /vol/backup/YYYYMM.
 
 2.2/ INCREMENTAL DUMP

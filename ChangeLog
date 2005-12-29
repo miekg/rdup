@@ -1,5 +1,6 @@
 XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
    * -n daysago is implemented in yesterday.sh and hist.sh
+   * take care getopts is not hit by a buffer overrun
 
 
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>

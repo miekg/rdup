@@ -103,7 +103,7 @@ dir_crawl(GTree *t, char *path)
 	}
 
 	/* get device */
-	if (stat(path, &s) != 0) {
+	if (fstat(dirfd(dir), &s) != 0) {
 		fprintf(stderr, "** Cannot determine holding device of the directory: %s\n", path);
 		closedir(dir);
 		g_free(filestack);
