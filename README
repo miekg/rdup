@@ -29,17 +29,17 @@ Run: rdup FILELIST dir1
 
 Every directory, file and symlink in dir1 will be printed to stdout,
 like this:
-+16832 1000 1000 bin/.svn
-+33152 1000 1000 bin/FILE1
-+33216 1000 1000 bin/svnlog
-+33216 1000 1000 bin/zlog
-+33216 1000 1000 bin/zzz
++33152 1000 1000 0 /home/miekg/svn/rdup/trunk/bin/.svn/.nobackup
++33216 1000 1000 528 /home/miekg/svn/rdup/trunk/bin/svnlog
++33216 1000 1000 441 /home/miekg/svn/rdup/trunk/bin/zlog
++33216 1000 1000 131 /home/miekg/svn/rdup/trunk/bin/zzz
++33152 1000 1000 0 /home/miekg/svn/rdup/trunk/bin/zzzzzz
 
 Which says everything is new, that's the + sign in the first column.
 Next to that is the st_mode field of lstat(2), which holds the type
 of the file (dir, regular or symlink) and the protection bits.
-Then we find the numeric user id and numeric group id. As last
-the there is the pathname.
+Then we find the numeric user id and numeric group id. Then the
+filesize in bytes and as last the there is the pathname.
 
 To do a real backup you can use:
 rdup FILELIST dir | ./backup.sh /vol/backup/
@@ -56,8 +56,8 @@ Just run the rdup FILELIST dir1 | ./backup.sh /vol/backup/ again. This
 will use the contents of FILELIST and will only print the changed files.
 
 If we were not piping the output to 'backup.sh' we would see:
--33152 0 0 bin/blaat
-+16832 1000 1000 bin/.svn
+-33152 0 0 0 bin/blaat
++16832 1000 1000 4096 bin/.svn
 
 Saying that 'bin/blaat' is to be removed. bin/.svn is always printed
 because that is a directory.

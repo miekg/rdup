@@ -219,7 +219,7 @@ main(int argc, char **argv)
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {
-		fprintf(stderr, "** Could not open file\n");
+		fprintf(stderr, "** Could not open filelist: %s\n", argv[0]);
 		exit(EXIT_FAILURE);
 	} else {
 		rewind(fplist);

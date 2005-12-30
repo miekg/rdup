@@ -38,7 +38,8 @@ AC_CONFIG_FILES([Makefile
                  dryrun.sh 
                  excl.sh 
                  rdup.8
-                 remote/sbackup.sh
+                 remote/sftp.sh
+                 remote/catch.sh
                  mirror/backup.sh 
                  mirror/hist.sh 
                  mirror/yesterday.sh
