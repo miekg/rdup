@@ -43,7 +43,7 @@ Give an overview of the options.
 Honor .nobackup files. If such files are found the directory is not
 printed to standard output.
 .TP
-.B \-N TIMESTAMP
+.B \-N timestamp
 use the m_time of file TIMESTAMP as the timestamp to decide what to
 include in the incremental backup list. If TIMESTAMP does not exist
 of full dump is performed. 

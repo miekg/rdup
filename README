@@ -17,15 +17,15 @@ executable measures 12KB and I don't expect that to increase much.
 
 The manual page explains rdup's options and usage. See rdup(8).
 
-The filelist as printed starts with the root of the filedump and
-then decends into directories. This way all top level directories
-can be created as is and in sequence. If you process the file in
-the same order no magic foo is needed to create directories that
-otherwise might be missing.
+The filelist as printed starts with the root of the filedump and then
+decends into directories. This way all top level directories can be
+created as is and in sequence. If you process the file in the same order
+no magic is needed to create directories that otherwise might be
+missing.
 
 2.1/ FULL DUMP
 
-Run: rdup FILELIST dir1
+Run: rm -f timestamp && rdup -N timestamp FILELIST dir1
 
 Every directory, file and symlink in dir1 will be printed to stdout,
 like this:
@@ -42,7 +42,7 @@ Then we find the numeric user id and numeric group id. Then the
 filesize in bytes and as last the there is the pathname.
 
 To do a real backup you can use:
-rdup FILELIST dir | ./backup.sh /vol/backup/
+rdup -N timestamp FILELIST dir | ./backup.sh -b /vol/backup/
 
 'backup.sh' is a shell script which looks at the filetype and acts
 accordingly. It copies the content (of the dir/symlink) to the archive
@@ -52,8 +52,10 @@ in /vol/backup/YYYYMM.
 
 2.2/ INCREMENTAL DUMP
 
-Just run the rdup FILELIST dir1 | ./backup.sh /vol/backup/ again. This
-will use the contents of FILELIST and will only print the changed files.
+Just run:
+rdup -N timestamp FILELIST dir1 | ./backup.sh -b /vol/backup/ again. This
+will use the contents of FILELIST and will only print those files that
+are a newer then the m_time of file timestamp.
 
 If we were not piping the output to 'backup.sh' we would see:
 -33152 0 0 0 bin/blaat
