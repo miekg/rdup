@@ -7,15 +7,15 @@
 # rest of the month incremental dumps
  
 # --- null dump --- #
-00 02 1 * * root /usr/sbin/rdup /etc/rdup/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
-00 02 1 * * root /usr/sbin/rdup /etc/rdup/elektron-var-mail /var/mail | /usr/sbin/excl | /usr/sbin/backup
-00 02 1 * * root /usr/sbin/rdup /etc/rdup/elektron-var-svn /var/svn | /usr/sbin/excl | /usr/sbin/backup
-00 02 1 * * root /usr/sbin/rdup /etc/rdup/elektron-var-lib /var/lib | /usr/sbin/excl | /usr/sbin/backup
-50 02 1 * * root /usr/sbin/rdup /etc/rdup/elektron-homes /home | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-var-mail /var/mail | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-var-svn /var/svn | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-var-lib /var/lib | /usr/sbin/excl | /usr/sbin/backup
+50 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-homes /home | /usr/sbin/excl | /usr/sbin/backup
 
 # --- incremental --- #
-00 06 2-31 * * root /usr/sbin/rdup /etc/rdup/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
-00 06 2-31 * * root /usr/sbin/rdup /etc/rdup/elektron-var-mail /var/mail | /usr/sbin/excl | /usr/sbin/backup
-00 06 2-31 * * root /usr/sbin/rdup /etc/rdup/elektron-var-svn /var/svn | /usr/sbin/excl | /usr/sbin/backup
-00 06 2-31 * * root /usr/sbin/rdup /etc/rdup/elektron-var-lib /var/lib | /usr/sbin/excl | /usr/sbin/backup
-50 06 2-31 * * root /usr/sbin/rdup /etc/rdup/elektron-homes /homae | /usr/sbin/excl | /usr/sbin/backup
+00 06 2-31 * * root /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
+00 06 2-31 * * root /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-var-mail /var/mail | /usr/sbin/excl | /usr/sbin/backup
+00 06 2-31 * * root /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-var-svn /var/svn | /usr/sbin/excl | /usr/sbin/backup
+00 06 2-31 * * root /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-var-lib /var/lib | /usr/sbin/excl | /usr/sbin/backup
+50 06 2-31 * * root /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-homes /home | /usr/sbin/excl | /usr/sbin/backup
