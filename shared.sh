@@ -12,15 +12,15 @@ backup_defines() {
 }
 
 backup_cmd_options() {
-        while getopts ":zhb:" options; do
+        while getopts ":zNhb:" options; do
                 case $options in
                         b) backupdir=$OPTARG;;
                         z) gzip=1;;
+                        N) dry=1;;
                         h) backup_cmd_usage && exit
                 esac
         done
         if [ -z $backupdir ]; then 
-                #echo "** Setting archive directory to /vol/backup/`hostname`"
                 backupdir="/vol/backup/`hostname`"
         fi
         backupdir=$backupdir/`date +%Y%m`
@@ -30,6 +30,7 @@ backup_cmd_usage() {
         echo $0 "-bzh"
         echo " -b dir  use dir as the backup directory, YYYYMM will be added"
         echo " -z      gzip regular files before backing up"
+        echo " -N      dry-run, show what would have been executed"
         echo " -h      this help"
 }
 
@@ -42,12 +43,14 @@ backup_create_top() {
                 dir=`dirname $dir`
         done
         for d in $dirs; do
-                mkdir -m 755 $dir
-                chown 0:34 $dir
+                [[ $dry -eq 0 ]] && mkdir -m 755 "$dir"
+                [[ $dry -eq 1 ]] && echo "mkdir -m 755 $dir"
+                [[ $dry -eq 0 ]] && chown root:backup "$dir"
+                [[ $dry -eq 1 ]] && echo "chown root:backup $dir"
         done
 }
 
-sbackup_create_top() {
+sftpbackup_create_top() {
         dir=$1
         while [[ $dir != "/" ]]
         do
@@ -73,11 +76,12 @@ backup_failed() {
 }
 
 list_cmd_options() {
-        while getopts ":n:b:cCdhz" options; do
+        while getopts ":n:b:cCNdhz" options; do
                 case $options in
                         b) backupdir=$OPTARG;;
                         n) daysago=$OPTARG;;
                         d) diff=1;;
+                        N) dry=1;;
                         z) gzip=1;;
                         c) copy=1;;
                         C) Ccopy=1;;
@@ -98,6 +102,7 @@ list_cmd_usage() {
         echo " -c          copy the backed up file over the current file"
         echo " -C          copy the backed up file over the current file, if they differ"
         echo " -d          show a diff with the backed up file "
+        echo " -N          dry-run, show what would have been executed"
         echo " -z          backup file is gzipped"
         echo " -h          this help"
 }

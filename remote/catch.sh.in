@@ -9,18 +9,12 @@
 # rdup output, namely:
 # +/-MODE UID GID FILESIZE PATHSIZE\nPATH FILECONTENTS
 
-. shared.sh
+. @sysconfdir@/rdup/shared.sh
 
 backup_defines
 backup_cmd_options $@
-#sbackup_create_top $backupdir
+backup_create_top $backupdir
 
-# be flexible on the persmissions- allow them to fail
-# it is hard to check if a file exists on the remote 
-# machine, so we always move it... for dirs this might
-# be a problem
-
-declare -a path # catch spacing in the path
 while read mode uid gid fsize psize
 do
         dump=${mode:0:1}        # to add or remove
@@ -42,19 +36,47 @@ do
                 case $typ in
                         0)      # reg file
                         # catch the file
+                        [[ $dry -eq 0 ]] && [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [[ $dry -eq 1 ]] && echo "[ -f $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix"
                         if [[ $fsize -ne 0 ]]; then
-                                dd bs=$fsize count=1 2>/dev/null > /tmp/miekg/`basename $path`
-                                # permissions and stuff
+                                # catch
+                                dd bs=$fsize count=1 2>/dev/null > "$backupdir/$path"
+                        else 
+                                # empty
+                                [[ $dry -eq 0 ]] && touch "$backupdir/$path"
+                                [[ $dry -eq 1 ]] && echo "touch $backupdir/$path"
                         fi
+                        [[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
+                        [[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
+                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
+                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
                         ;;
                         1)      # directory
+                        # size should be 0
+                        [[ $dry -eq 0 ]] && [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
+                        [[ $dry -eq 1 ]] && echo "[[ ! -d $backupdir/$path ]] && mkdir -p $backupdir/$path"
+                        [[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
+                        [[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
+                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
+                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
                         ;;
-                        2)      # link
+                        2)      # link, target is in the content! (yuck HACK!)
+                        [[ $dry -eq 0 ]] && [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [[ $dry -eq 1 ]] && echo "[[ -L $backupdir/$path ]] && mv $backupdir/$path $backupdir/$path.$suffix"
+                        target=`dd bs=$fsize count=1 2>/dev/null`
+                        # if target is relative add the prefix of $path
+                        #[[ ${target:1} != "/" ]] & target="`dirname $path`/$target"
+                        [[ $dry -eq 0 ]] && ln -sf "$target" "$backupdir/$path" 
+                        [[ $dry -eq 1 ]] && echo "ln -sf $target $backupdir/$path"
+                        [[ $dry -eq 0 ]] && chown -h $uid:$gid "$backupdir/$path"
+                        [[ $dry -eq 1 ]] && echo "chown -h $uid:$gid $backupdir/$path"
                         ;;
                 esac
         else
                 echo
                 # remove
-                #echo rename "$backupdir/$path" "$backupdir/$path.$suffix"
+                [[ $dry -eq 0 ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                [[ $dry -eq 1 ]] && echo "mv $backupdir/$path $backupdir/$path.$suffix"
         fi
+        [[ $dry -eq 1 ]] && echo 
 done 

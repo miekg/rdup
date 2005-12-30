@@ -35,7 +35,6 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  rdup.h
-                 dryrun.sh 
                  excl.sh 
                  rdup.8
                  remote/sftp.sh

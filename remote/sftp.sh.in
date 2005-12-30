@@ -12,7 +12,7 @@
 
 backup_defines
 backup_cmd_options $@
-sbackup_create_top $backupdir
+sftpbackup_create_top $backupdir
 
 # be flexible on the persmissions- allow them to fail
 # it is hard to check if a file exists on the remote 
@@ -55,9 +55,9 @@ do
                         #[ -L "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         # http://www.bioinspired.com/users/ajg112/computing/bashTips.shtml#symLink
                         LS_OUT=$(ls -l "$path")
-                        TARGET=${LS_OUT#*-> }
-                        # need to know absolute of relative...
-                        echo symlink "$backupdir/$path" "$backupdir/$TARGET"
+                        target=${LS_OUT#*-> }
+                        [[ ${target:1} != "/" ]] & target="`dirname $path`/$target"
+                        echo symlink "$backupdir/$target" "$backupdir/$path"
                         echo -chown $uid "$backupdir/$path"
                         echo -chgrp $gid "$backupdir/$path"
                         echo -chmod $bits "$backupdir/$path"

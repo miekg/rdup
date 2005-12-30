@@ -1,6 +1,7 @@
 OBJ=crawler.o rdup.o gfunc.o
 HDR=rdup.h 
-SHS=mirror/backup.sh dryrun.sh excl.sh mirror/hist.sh mirror/yesterday.sh remote/sbackup.sh
+SHS=mirror/backup.sh excl.sh mirror/hist.sh mirror/yesterday.sh remote/sftp.sh \
+remote/catch.sh remote/throw.sh 
 MAN=mirror/backup.sh.8 mirror/hist.sh.1 mirror/yesterday.sh.1
 
 prefix  = @prefix@
@@ -27,6 +28,7 @@ all:	rdup
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
 	strip rdup
+	chmod +x $(SHS)
 
 clean:
 	rm -f *.o
@@ -56,7 +58,6 @@ install: rdup
 	${INSTALL} mirror/hist.sh ${DESTDIR}${bindir}/hist
 	${INSTALL} mirror/backup.sh ${DESTDIR}${sbindir}/backup
 	${INSTALL} remote/sbackup.sh ${DESTDIR}${sbindir}/sbackup
-	${INSTALL} dryrun.sh ${DESTDIR}${sbindir}/dryrun
 	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl
 	${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
 	${INSTALL_DATA} rdup.8 ${DESTDIR}${mandir}/man8/rdup.8

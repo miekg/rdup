@@ -18,7 +18,7 @@ do
         if [[ ${file:0:1} != "/" ]]; then
                 file=`pwd`/$file
         fi
-        [ ! -e $backupdir$file ] && \
+        [[ ! -e $backupdir$file ]] && \
                 echo "** Not found in archive: $file" && continue
 
         # print

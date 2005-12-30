@@ -8,16 +8,22 @@ o documentation updates
 
 # rest/shell 
 o make install/unstall targets need to be finished
-o mirror/ was added. document it and make it more robust
 o shell script portability
 o manual page for excl.sh?
-o implement -n for yesterday/hist
 o make uninstall
 
 PARTLY DONE:
----
+o implement -n for yesterday/hist
+  29 Dec 2006, core function is there, but is it not finished yet
 
 DONE:
+o handle difference between relative and absolute links
+  30 Dec 2006
+
+o Add dryrun to all scripts, which makes them echo all the stuff
+  -N (dry run)
+  30 Dec 2006
+
 o consolidate shell script, write generic functions that can 
   by sourced and used.
   26 Dec 2006
