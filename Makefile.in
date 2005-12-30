@@ -57,8 +57,10 @@ install: rdup
 	${INSTALL} mirror/yesterday.sh ${DESTDIR}${bindir}/yesterday
 	${INSTALL} mirror/hist.sh ${DESTDIR}${bindir}/hist
 	${INSTALL} mirror/backup.sh ${DESTDIR}${sbindir}/backup
-	${INSTALL} remote/sftp.sh ${DESTDIR}${sbindir}/sftp.sh
 	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl
+	${INSTALL} remote/sftp.sh ${DESTDIR}${sbindir}/sftp.sh
+	${INSTALL} remote/throw.sh ${DESTDIR}${sbindir}/throw.sh
+	${INSTALL} remote/catch.sh ${DESTDIR}${sbindir}/catch.sh
 	${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
 	${INSTALL_DATA} rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
 	${INSTALL_DATA} mirror/backup.sh.8 ${DESTDIR}${mandir}/man8/backup.8
