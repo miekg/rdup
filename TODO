@@ -1,7 +1,8 @@
 TODO: 
-# rdup util: (this is all rel. minor)
+# rdup util: 
 o ignore or handle signals? Needed to decide what to do with the FILELIST
 o better error handling on syscalls? bail out or try to continue?
+# rel. minor:
 o valgrind and g_free
 o getline is GNU-ism, freebsd has fgetln
 o documentation updates
