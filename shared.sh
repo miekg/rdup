@@ -18,6 +18,7 @@ backup_cmd_options() {
                         z) gzip=1;;
                         k) keyfile=$OPTARG;;
                         N) dry=1;;
+                        v) verbose=1;;
                         h) backup_cmd_usage && exit
                 esac
         done
@@ -33,6 +34,7 @@ backup_cmd_usage() {
         echo " -z      gzip regular files before backing up"
         echo " -k KEY  use the file KEY as encryption key"
         echo " -N      dry-run, show what would have been executed"
+        echo " -v      echo the files processed to stderr"
         echo " -h      this help"
 }
 
