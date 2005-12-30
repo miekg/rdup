@@ -29,7 +29,7 @@ backup_cmd_options() {
 }
 
 backup_cmd_usage() {
-        echo $0 "-bzh"
+        echo $0 "-bzkhNv"
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
         echo " -z      gzip regular files before backing up"
         echo " -k KEY  use the file KEY as encryption key"
@@ -94,14 +94,13 @@ list_cmd_options() {
                 esac
         done
         if [ -z $backupdir ]; then
-                #echo "** Setting archive directory to /vol/backup/`hostname`"
                 backupdir="/vol/backup/`hostname`"
         fi
         backupdir=$backupdir/`date +%Y%m`
 }
 
 list_cmd_usage() {
-        echo $0 "-n:b:Ccdhz"
+        echo $0 "-nbkCcdhz"
         echo " -n DAYSAGO  go back DAYSAGO days"
         echo " -b DIR      use DIR as the backup directory, YYYYMM will be added"
         echo " -k KEY      use the file KEY as decryption key"
