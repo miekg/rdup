@@ -7,7 +7,7 @@ yesterday \-– print file names from the dump
 .SH SYNOPSIS
 .B yesterday
 [
-.IR \−-cbCdnz
+.IR \−-cbCdnzk
 ]
 .IR BACKUPDIR
 .IR FILES ...
@@ -21,6 +21,9 @@ today’s dump.
 .TP 
 .B \-−b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
+.TP
+.B \−-k keyfile
+When looking at a file use the file keyfile as decryption key.
 .TP 
 .B \−-c
 Copy the dump files over the named files.

@@ -7,7 +7,7 @@ backup \–- mirror the files from the list on standard input
 .SH SYNOPSIS
 .B backup
 [
-.IR \-b
+.IR \-bzkNh
 ]
 
 .SH DESCRIPTION
@@ -18,6 +18,19 @@ specified with the \-b option. This script \fIimplements\fR the backup policy.
 .TP 
 .B \-−b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
+.TP
+.B \-k keyfile
+Encrypt the files when backing up using the contents of keyfile as
+an encryption key.
+.TP
+.B \-z
+Gzip the contents of the files while backing up.
+.TP
+.B \-N
+Dry-run, don't touch the filesystem, but echo what you want to do.
+.TP
+.B \-h
+Short help message.
 
 .SH FILES
 /vol/backup/`hostname`, or the directory specified with \-b, root of
