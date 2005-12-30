@@ -120,6 +120,7 @@ rm -r autom4te* || error_cleanup "Failed to remove autoconf cache directory."
 
 find . -name .c-mode-rc.el -exec rm {} \;
 find . -name .cvsignore -exec rm {} \;
+find . -name .svn -exec rm -rf {} \;
 rm makedist.sh || error_cleanup "Failed to remove makedist.sh."
 
 info "Determining rdup version."
@@ -154,7 +155,7 @@ rm -f rdup-$version/core
 rm -f rdup-$version/tar-exclude
 rm -f rdup-$version/config.log 
 rm -f rdup-$version/config.status
-rm -f rdup-$version/tags rdup-$version/src/tags
+rm -f rdup-$version/tags 
 
 info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
