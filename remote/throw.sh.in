@@ -42,6 +42,7 @@ do
         fi
         
         [[ $verbose -eq 0 ]] && echo $path > /dev/fd/2
+
         if [[ $dump == "+" ]]; then
                 # add
                 case $typ in
