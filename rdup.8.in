@@ -103,6 +103,11 @@ A typical example look like this:
 Directories are always printed, as the modification time of directories
 is not compared.
 
+.SH SCRIPTS
+Various shells scripts are included with rdup. These script actually
+implement the backup scheme. Currently included are various remote
+backup scripts, a local mirroring scheme and an implementation of hdup2
+
 .SH AUTHOR
 Written by Miek Gieben. 
 

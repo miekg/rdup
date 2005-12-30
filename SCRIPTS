@@ -7,9 +7,12 @@ mirror/
 remote/
         upload the contents of the backup to a remote host. This
         utilizes sftp. The following cmd line should work:
- rdup FILES dir | ./sbackup.sh -b /remote/dir | sftp -C -b - miekg@elektron:
+ rdup FILES DIR | ./sftp.sh -b /remote/dir | sftp -C -b - user@remote:
+
+        Also a second remote scheme which is more powerfull has been
+        implemented:
+ rdup FILES DIR | ./throw.sh | ssh -C user@remote | ./catch.sh 
 
 hdup/
         an implementation of the core hdup2 idea, can be easily extended
         to work "just as" hdup2.
-

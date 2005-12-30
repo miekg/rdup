@@ -10,13 +10,15 @@ o documentation updates
 o make install/unstall targets need to be finished
 o shell script portability
 o manual page for excl.sh?
-o make uninstall
 
 PARTLY DONE:
 o implement -n for yesterday/hist
   29 Dec 2006, core function is there, but is it not finished yet
 
 DONE:
+o make uninstall
+  30 Dec 2006
+
 o handle difference between relative and absolute links
   30 Dec 2006
 
