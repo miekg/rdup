@@ -19,7 +19,7 @@
 backup_defines
 backup_cmd_options $@
 
-if [[ ! -f $keyfile ]]; then
+if [[ ! -z $keyfile && ! -f $keyfile ]]; then
         echo "** Can not open key file"
         exit 1
 fi
