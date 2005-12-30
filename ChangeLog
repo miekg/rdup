@@ -3,25 +3,27 @@ XX Dec 2005: 0.0.4 Miek <miek@miek.nl>
      not backwards compatible. The output now is
      +/-MODE UID GID SIZE FILENAME
      SIZE = filesize in bytes
-   * Ran 'rats':
-     - take care getopts is not hit by a buffer overrun. 
-     - Also removed potential race.
+   * Added explicit timestamp file as suggest by Boris Goldowsky 
+     (-N FILE, where the m_time of FILE is taken is the filestamp)
+   Scripts:
    * Added remote directory with a script that can be piped
      to 'sftp b - user@remotehost'. This is a poor mans rsync - fully
      working though.
-   * catch.sh and throw are another remote backup implementation which
-     allow encryption and other foo, only caveat is that the filesize
+   * catch.sh and throw.sh are another remote backup implementation which
+     allow encryption and zipping, only caveat is that the filesize
      MUST not change when fiddling with the contents of a file.
-   * Added explicit timestamp file as suggest by Boris Goldowsky 
-     (-N FILE, where the m_time of FILE is taken is the filestamp)
    * added hdup/ directory. The script in there implements the 
      core functionality of hdup2.
-   * Added -Os, this wipes 2K of the rdup exe (16%)
+   Docs:
    * Started LaTeX document describing features and output
      of rdup and its scripts.
    Source:
    * Removed dump_type, backuptype is now implicitly stored in
      opt_timestamp (0 -> full, !0 -> inc)
+   * Added -Os, this wipes 2K of the rdup exe (16%)
+   * Ran 'rats':
+     - take care getopts is not hit by a buffer overrun. 
+     - Also removed potential race.
 
 
 28 Dec 2005: 0.0.3 Miek <miek@miek.nl>
