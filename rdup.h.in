@@ -9,7 +9,6 @@
 #define BUFSIZE         2048
 #define NOBACKUP        ".nobackup"      
 #define NULL_DUMP       0
-#define INC_DUMP        1
 #define DIR_SEP         '/'
 #define VALUE           (void*)1 /* g_tree_lookup return this in rdup */
 #define F_STACKSIZE    200
@@ -39,8 +38,7 @@ gboolean gfunc_write(gpointer data, gpointer value, gpointer fp);
 gboolean gfunc_backup(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_remove(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_substract(gpointer data, gpointer value, gpointer diff);
-#ifndef NDEBUG
+#if 0
 gboolean gfunc_write_all(gpointer data, gpointer value, gpointer fp);
-#endif /* NDEBUG */
-
+#endif 
 #endif  /* _RDUP_H */

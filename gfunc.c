@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005, 2006 Miek Gieben
  * See LICENSE for the license
+ *
+ * g_tree_foreach helper functions 
  */
 
 #include "rdup.h"
 
-/* g_tree_foreach helper functions */
 
-extern int dumptype;
 extern int opt_null;
 extern time_t opt_timestamp;
 
@@ -47,7 +47,7 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 	return FALSE;
 }
 
-#ifndef NDEBUG
+#if 0
 /**
  * debug function, write a struct entry to fp
  */
@@ -90,7 +90,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
 			S_ISLNK(((struct entry*)data)->f_mode)) {
-		switch (dumptype) {
+		switch (opt_timestamp) {
 			case NULL_DUMP:
 				fprintf(stdout, "+%d %d %d %d %s", 
 						(int) ((struct entry*)data)->f_mode,
@@ -104,7 +104,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 					putc('\n', stdout);
 				}
 				return FALSE;
-			case INC_DUMP:
+			default: /* INC_DUMP */
 				if (((struct entry*)data)->f_mtime > opt_timestamp) {
 					fprintf(stdout, "+%d %d %d %d %s", 
 							(int) ((struct entry*)data)->f_mode,

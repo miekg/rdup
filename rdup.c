@@ -13,8 +13,6 @@ int opt_nobackup = 1;
 int opt_verbose = 0;
 time_t opt_timestamp = 0;
 
-int dumptype;
-
 /* crawler.c */
 gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
@@ -186,14 +184,9 @@ main(int argc, char **argv)
 				opt_nobackup = 0;
 				break;
 			case 'N': 
-				/* dumptype isn't really needed... */
-				if ((opt_timestamp = timestamp(optarg)) == 0) {
-					dumptype = NULL_DUMP;
-				} else {
-					dumptype = INC_DUMP;
-				}
+				opt_timestamp = timestamp(optarg);
 				/* re-touch the timestamp file, if rdup fails
-				 * the user needs to do something */
+				 * the user needs to have something */
 				if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
 					fprintf(stderr, "** Could not create timestamp file\n");
 					exit(EXIT_FAILURE);

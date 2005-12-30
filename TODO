@@ -15,7 +15,7 @@ o implement -n for yesterday/hist
 o make uninstall
 
 PARTLY DONE:
-
+---
 
 DONE:
 o consolidate shell script, write generic functions that can 
