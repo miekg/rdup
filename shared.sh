@@ -12,10 +12,11 @@ backup_defines() {
 }
 
 backup_cmd_options() {
-        while getopts ":zNhb:" options; do
+        while getopts ":zNhb:k:" options; do
                 case $options in
                         b) backupdir=$OPTARG;;
                         z) gzip=1;;
+                        k) keyfile=$OPTARG;;
                         N) dry=1;;
                         h) backup_cmd_usage && exit
                 esac
@@ -28,8 +29,9 @@ backup_cmd_options() {
 
 backup_cmd_usage() {
         echo $0 "-bzh"
-        echo " -b dir  use dir as the backup directory, YYYYMM will be added"
+        echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
         echo " -z      gzip regular files before backing up"
+        echo " -k KEY  use the file KEY as encryption key"
         echo " -N      dry-run, show what would have been executed"
         echo " -h      this help"
 }
@@ -76,12 +78,13 @@ backup_failed() {
 }
 
 list_cmd_options() {
-        while getopts ":n:b:cCNdhz" options; do
+        while getopts ":n:b:k:cCNdhz" options; do
                 case $options in
                         b) backupdir=$OPTARG;;
                         n) daysago=$OPTARG;;
                         d) diff=1;;
                         N) dry=1;;
+                        K) keyfile=$OPTARG;;
                         z) gzip=1;;
                         c) copy=1;;
                         C) Ccopy=1;;
@@ -97,8 +100,9 @@ list_cmd_options() {
 
 list_cmd_usage() {
         echo $0 "-n:b:Ccdhz"
-        echo " -n daysago  go back daysago days"
-        echo " -b dir      use dir as the backup directory, YYYYMM will be added"
+        echo " -n DAYSAGO  go back DAYSAGO days"
+        echo " -b DIR      use DIR as the backup directory, YYYYMM will be added"
+        echo " -k KEY      use the file KEY as decryption key"
         echo " -c          copy the backed up file over the current file"
         echo " -C          copy the backed up file over the current file, if they differ"
         echo " -d          show a diff with the backed up file "
