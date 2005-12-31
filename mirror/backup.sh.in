@@ -51,8 +51,8 @@ do
                                 [[ $dry -eq 0 ]] && cat "$path" | gzip -c > "$backupdir/$path"
                                 [[ $dry -eq 1 ]] && echo "cat $path | gzip -c > $backupdir/$path"
                         else if [[ ! -z $keyfile ]]; then
-                                [[ $dry -eq 0 ]] mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path"
-                                [[ $dry -eq 1 ]] echo "mcrypt -F -k $keyfile -a $alg --mode stream $path"
+                                [[ $dry -eq 0 ]] && mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path"
+                                [[ $dry -eq 1 ]] && echo "mcrypt -F -k $keyfile -a $alg --mode stream $path"
                         else 
                                 [[ $dry -eq 0 ]] && cat "$path" > "$backupdir/$path"
                                 [[ $dry -eq 1 ]] && echo "cat $path > $backupdir/$path"
