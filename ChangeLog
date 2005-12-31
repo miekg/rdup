@@ -1,7 +1,8 @@
-   Jan 2006: 0.1.0 Miek <miek@miek.nl>
+31 Dec 2006: 0.1.0 Miek <miek@miek.nl>
    * Bumped version as rdup matures rapidly
    * Small fixes to the scripts 
    * Test infrastructure was added
+
 
 30 Dec 2005: 0.0.4 Miek <miek@miek.nl>
    * Add the filesize to rdup's output. This change is 
