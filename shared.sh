@@ -9,6 +9,10 @@ backup_defines() {
         S_ISLNK=40960   # octal: 0120000
         S_MMASK=4095    # octal: 00007777, mask to get permis
         suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
+        gzip=0
+        keyfile=""
+        dry=0
+        verbose=0
 }
 
 backup_cmd_options() {
