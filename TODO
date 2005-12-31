@@ -3,13 +3,12 @@ TODO:
 o ignore or handle signals? Needed to decide what to do with the FILELIST
   and the timestamp
 o better error handling on syscalls? bail out or try to continue?
+o getline is GNU-ism, freebsd has fgetln
 # rel. minor:
 o valgrind and g_free
-o getline is GNU-ism, freebsd has fgetln
 o documentation updates
 
 # rest/shell 
-o make install/unstall targets need to be finished
 o shell script portability
 o manual page for excl.sh?
 

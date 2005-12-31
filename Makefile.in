@@ -48,6 +48,8 @@ realclean: clean
 distclean: realclean
 	rm -f configure
 	rm -f Makefile
+	rm -f *.tar.bz2
+	rm -f *.tar.gz
 
 install: rdup 
 	mkdir -p ${DESTDIR}${sysconfdir}/rdup
