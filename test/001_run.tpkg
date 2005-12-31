@@ -1,0 +1,180 @@
+#!/bin/sh
+# This is a shell archive (produced by GNU sharutils 4.2.1).
+# To extract the files from this archive, save it to some FILE, remove
+# everything before the `!/bin/sh' line above, then type `sh FILE'.
+#
+# Made on 2005-12-31 10:49 CET by <miekg@elektron>.
+# Source directory was `/home/miekg/svn/rdup/trunk/test/001_run.dir'.
+#
+# Existing files will *not* be overwritten unless `-c' is specified.
+#
+# This shar contains:
+# length mode       name
+# ------ ---------- ------------------------------------------
+#    280 -rw------- 001_run.dsc
+#    119 -rw------- 001_run.help
+#    663 -rw------- 001_run.test
+#
+save_IFS="${IFS}"
+IFS="${IFS}:"
+gettext_dir=FAILED
+locale_dir=FAILED
+first_param="$1"
+for dir in $PATH
+do
+  if test "$gettext_dir" = FAILED && test -f $dir/gettext \
+     && ($dir/gettext --version >/dev/null 2>&1)
+  then
+    set `$dir/gettext --version 2>&1`
+    if test "$3" = GNU
+    then
+      gettext_dir=$dir
+    fi
+  fi
+  if test "$locale_dir" = FAILED && test -f $dir/shar \
+     && ($dir/shar --print-text-domain-dir >/dev/null 2>&1)
+  then
+    locale_dir=`$dir/shar --print-text-domain-dir`
+  fi
+done
+IFS="$save_IFS"
+if test "$locale_dir" = FAILED || test "$gettext_dir" = FAILED
+then
+  echo=echo
+else
+  TEXTDOMAINDIR=$locale_dir
+  export TEXTDOMAINDIR
+  TEXTDOMAIN=sharutils
+  export TEXTDOMAIN
+  echo="$gettext_dir/gettext -s"
+fi
+if touch -am -t 200112312359.59 $$.touch >/dev/null 2>&1 && test ! -f 200112312359.59 -a -f $$.touch; then
+  shar_touch='touch -am -t $1$2$3$4$5$6.$7 "$8"'
+elif touch -am 123123592001.59 $$.touch >/dev/null 2>&1 && test ! -f 123123592001.59 -a ! -f 123123592001.5 -a -f $$.touch; then
+  shar_touch='touch -am $3$4$5$6$1$2.$7 "$8"'
+elif touch -am 1231235901 $$.touch >/dev/null 2>&1 && test ! -f 1231235901 -a -f $$.touch; then
+  shar_touch='touch -am $3$4$5$6$2 "$8"'
+else
+  shar_touch=:
+  echo
+  $echo 'WARNING: not restoring timestamps.  Consider getting and'
+  $echo "installing GNU \`touch', distributed in GNU File Utilities..."
+  echo
+fi
+rm -f 200112312359.59 123123592001.59 123123592001.5 1231235901 $$.touch
+#
+if mkdir _sh15334; then
+  $echo 'x -' 'creating lock directory'
+else
+  $echo 'failed to create lock directory'
+  exit 1
+fi
+# ============= 001_run.dsc ==============
+if test -f '001_run.dsc' && test "$first_param" != -c; then
+  $echo 'x -' SKIPPING '001_run.dsc' '(file already exists)'
+else
+  $echo 'x -' extracting '001_run.dsc' '(text)'
+  sed 's/^X//' << 'SHAR_EOF' > '001_run.dsc' &&
+BaseName: 001_run
+Version: 1.0
+Description: Run the various components
+CreationDate: Sat Dec 31 10:42:50 CET 2005
+Maintainer: Miek Gieben
+Category: 
+Component:
+CmdDepends: 
+Depends: 000_make_rdup.tpkg
+Help: 001_run.help
+Pre: 
+Post: 
+Test: 001_run.test
+AuxFiles: 
+Passed:
+Failure:
+SHAR_EOF
+  (set 20 05 12 31 10 43 33 '001_run.dsc'; eval "$shar_touch") &&
+  chmod 0600 '001_run.dsc' ||
+  $echo 'restore of' '001_run.dsc' 'failed'
+  if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
+  && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
+    md5sum -c << SHAR_EOF >/dev/null 2>&1 \
+    || $echo '001_run.dsc:' 'MD5 check failed'
+790711125bb9654e46d2c7b9a4b6d90f  001_run.dsc
+SHAR_EOF
+  else
+    shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '001_run.dsc'`"
+    test 280 -eq "$shar_count" ||
+    $echo '001_run.dsc:' 'original size' '280,' 'current size' "$shar_count!"
+  fi
+fi
+# ============= 001_run.help ==============
+if test -f '001_run.help' && test "$first_param" != -c; then
+  $echo 'x -' SKIPPING '001_run.help' '(file already exists)'
+else
+  $echo 'x -' extracting '001_run.help' '(text)'
+  sed 's/^X//' << 'SHAR_EOF' > '001_run.help' &&
+Please describe how to use this test.
+i.e. tpkg -a ARG exe 001_run.tpkg:
+X   ARG is to give the current build directory
+SHAR_EOF
+  (set 20 05 12 31 10 44 02 '001_run.help'; eval "$shar_touch") &&
+  chmod 0600 '001_run.help' ||
+  $echo 'restore of' '001_run.help' 'failed'
+  if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
+  && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
+    md5sum -c << SHAR_EOF >/dev/null 2>&1 \
+    || $echo '001_run.help:' 'MD5 check failed'
+a68c41b4b40ce39c06a8c01e0bc00615  001_run.help
+SHAR_EOF
+  else
+    shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '001_run.help'`"
+    test 119 -eq "$shar_count" ||
+    $echo '001_run.help:' 'original size' '119,' 'current size' "$shar_count!"
+  fi
+fi
+# ============= 001_run.test ==============
+if test -f '001_run.test' && test "$first_param" != -c; then
+  $echo 'x -' SKIPPING '001_run.test' '(file already exists)'
+else
+  $echo 'x -' extracting '001_run.test' '(text)'
+  sed 's/^X//' << 'SHAR_EOF' > '001_run.test' &&
+# #-- 001_run.test --#
+# source the master var file when it's there
+[ -f ../.tpkg.var.master ] && source ../.tpkg.var.master
+# use .tpkg.var.test for in test variable passing
+[ -f .tpkg.var.test ] && source .tpkg.var.test
+# svnserve resets the path, you may need to adjust it, like this:
+PATH=$PATH:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin:.
+X
+# first arg is the build dir, only if no arg is given in .tpkg.var
+if [ -z $TPKG_BUILD ]; then
+X        TPKG_BUILD=$1
+fi
+X
+echo $TPKG_BUILD
+cd $TPKG_BUILD
+X
+X./rdup -V && \
+echo "test" | ./excl.sh && \
+cat /dev/null | ./mirror/backup.sh && \
+X./mirror/yesterday.sh && \
+X./mirror/hist.sh && \
+echo "b" | ./hdup/hdup2.sh
+SHAR_EOF
+  (set 20 05 12 31 10 49 32 '001_run.test'; eval "$shar_touch") &&
+  chmod 0600 '001_run.test' ||
+  $echo 'restore of' '001_run.test' 'failed'
+  if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
+  && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
+    md5sum -c << SHAR_EOF >/dev/null 2>&1 \
+    || $echo '001_run.test:' 'MD5 check failed'
+c46847c2c1291eec76139bc4ed7d6617  001_run.test
+SHAR_EOF
+  else
+    shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '001_run.test'`"
+    test 663 -eq "$shar_count" ||
+    $echo '001_run.test:' 'original size' '663,' 'current size' "$shar_count!"
+  fi
+fi
+rm -fr _sh15334
+exit 0
