@@ -18,6 +18,7 @@ do
         if [[ ${file:0:1} != "/" ]]; then
                 file=`pwd`/$file
         fi
+        # backup file will be gotten with the recent function
         [[ ! -e $backupdir$file ]] && \
                 echo "** Not found in archive: $file" && continue
 

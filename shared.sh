@@ -52,10 +52,10 @@ backup_create_top() {
         done
         for d in $dirs; do
                 if [[ ! -d $d ]]; then
-                        [[ $dry -eq 0 ]] && mkdir -m 755 "$dir"
-                        [[ $dry -eq 1 ]] && echo "mkdir -m 755 $dir"
-                        [[ $dry -eq 0 ]] && chown root:backup "$dir"
-                        [[ $dry -eq 1 ]] && echo "chown root:backup $dir"
+                        [[ $dry -eq 0 ]] && mkdir -m 755 "$d"
+                        [[ $dry -eq 1 ]] && echo "mkdir -m 755 $d"
+                        [[ $dry -eq 0 ]] && chown root:backup "$d"
+                        [[ $dry -eq 1 ]] && echo "chown root:backup $d"
                 fi
         done
 }
