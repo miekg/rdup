@@ -13,6 +13,7 @@
 
 backup_defines
 backup_cmd_options $@
+backup_dirdate
 backup_create_top $backupdir
 
 while read mode uid gid fsize psize

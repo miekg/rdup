@@ -18,8 +18,9 @@ direxcludelist="lost+found/ /proc/ /dev/ /sys/ .Trash/ .Cache/ tmp/"
 
 . @sysconfdir@/rdup/shared.sh
 backup_defines
-declare -a path # catch spacing in the path
+backup_dirdate
 
+declare -a path # catch spacing in the path
 while read mode uid gid size path
 do
         dump=${mode:0:1}        # to add or remove

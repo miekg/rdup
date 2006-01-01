@@ -32,6 +32,10 @@ backup_cmd_options() {
         backupdir=$backupdir/`date +%Y%m`
 }
 
+backup_dirdate() {
+        backupdir=$backupdir/`date +%Y%m`
+}
+
 backup_cmd_usage() {
         echo $0 "-bzkhNv"
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
@@ -102,7 +106,16 @@ list_cmd_options() {
         if [ -z $backupdir ]; then
                 backupdir="/vol/backup/`hostname`"
         fi
-        backupdir=$backupdir/`date +%Y%m`
+}
+
+list_defines() {
+        daysago=0
+        diff=0
+        dry=0
+        keyfile=""
+        gzip=0
+        copy=0
+        Ccopy=0
 }
 
 list_cmd_usage() {
@@ -126,10 +139,16 @@ recent() {
         for i in `seq $1 -1 0`; do 
                 suffix=`datesago $i`
                 yyyymm=${suffix:0:6}
-                files=`ls "$backupdir"/$yyyymm/"$2.$suffix".* 2>/dev/null`
-                if [[ ! -z $files ]]; then
+                # first check without suffix
+                files=`ls "$backupdir"/$yyyymm/"$2" 2>/dev/null`
+                if [[ -z $files ]]; then
+                        files=`ls "$backupdir"/$yyyymm/"$2.$suffix".* 2>/dev/null`
+                        if [[ ! -z $files ]]; then
+                                break
+                        fi
+                else
                         break
-               fi
+                fi
         done
         if [[ -z $files ]]; then 
                 return

@@ -1,6 +1,9 @@
 xx Jan 2005: 0.1.1 Miek <miek@miek.nl>
+   * Use strcmp instead of g_ascii_strcasecmp() as
+     case is significant in unix fs
    * Don't gzip the files by default with backup.sh
-   * Scripts was updated
+   * added mirror/dump.sh which is an example wrapper
+     script for backupping.
 
 
 31 Dec 2005: 0.1.0 Miek <miek@miek.nl>

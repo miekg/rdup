@@ -155,7 +155,7 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 {
 	gint e;
 
-	e = g_ascii_strcasecmp(((struct entry*)a)->f_name,
+	e = strcmp(((struct entry*)a)->f_name,
 			((struct entry*)b)->f_name);
 
 	if (e == 0) {

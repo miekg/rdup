@@ -12,6 +12,7 @@
 
 backup_defines
 backup_cmd_options $@
+backup_dirdate
 sftpbackup_create_top $backupdir
 
 # be flexible on the persmissions- allow them to fail

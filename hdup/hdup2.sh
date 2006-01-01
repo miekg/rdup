@@ -12,7 +12,7 @@ d=`date +%Y-%m-%d`
 
 while read line
 do
-        # 5 6 7 is to catch files with spaces
+        # 5 6 7 is to catch files with spaces - not foolproof
         awk '{ print $5$6$7 '} | tar --create \
 --no-recursion --gzip --file $h.$d.tar.gz \
 --files-from -

@@ -21,6 +21,7 @@ if [[ ! -z $keyfile ]]; then
         fi
 fi
 
+backup_dirdate
 backup_create_top $backupdir
 alg="blowfish"
 

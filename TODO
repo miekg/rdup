@@ -16,6 +16,7 @@ o manual page for excl.sh?
 o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
   do something with it
+o hist.sh go back more months?
 
 PARTLY DONE:
 o implement -n for yesterday/hist

@@ -7,8 +7,10 @@
 
 . @sysconfdir@/rdup/shared.sh
 
+list_defines
 list_cmd_options $@
 shift $(($OPTIND - 1))
+# backup_dirdate don't add date, recent handle this
 
 for file in $@
 do
@@ -18,32 +20,30 @@ do
         if [[ ${file:0:1} != "/" ]]; then
                 file=`pwd`/$file
         fi
-        # backup file will be gotten with the recent function
-        [[ ! -e $backupdir$file ]] && \
-                echo "** Not found in archive: $file" && continue
+        backupfile=`recent $daysago $file`
 
         # print
         if [[ $copy -eq 1 ]]; then
-                cp -a $backupdir$file $file
+                cp -a $backupfile $file
                 continue
         fi
         if [[ $Ccopy -eq 1 ]]; then
-                cmp $backupdir$file $file > /dev/null
+                cmp $backupfile $file > /dev/null
                 if [[ $? ]]; then
-                        cp -a $backupdir$file $file
+                        cp -a $backupfile $file
                 fi
                 continue
         fi
         if [[ $diff -eq 1 ]]; then
-                echo diff -u `basename $backupdir$file` `basename $file`
+                echo diff -u `basename $backupfile` `basename $file`
                 if [[ $gzip -eq 1 ]]; then
-                [[ ! -d $backupdir$file ]] && \
-zcat $backupdir$file | diff -u - $file
+                [[ ! -d $backupfile ]] && \
+zcat $backupfile | diff -u - $file
                          continue;
                 fi
-                [[ ! -d $backupdir$file ]] && diff -u $backupdir$file $file
+                [[ ! -d $backupfile ]] && diff -u $backupfile $file
                 continue
         fi
 
-        echo $backupdir$file
+        echo $backupfile
 done

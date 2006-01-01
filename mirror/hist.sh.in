@@ -7,7 +7,9 @@
 
 . @sysconfdir@/rdup/shared.sh
 
+list_defines
 list_cmd_options $@
+backup_dirdate
 shift $(($OPTIND - 1))
 
 for file in $@
@@ -22,7 +24,7 @@ do
                 echo "** Not found in archive: $file" && continue
 
         if [[ -d $backupdir$file ]]; then  
-                ls -odh $b2Yackupdir$file 2>/dev/null \
+                ls -odh $backupdir$file 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
                 ls -odh $backupdir$file.????????.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
