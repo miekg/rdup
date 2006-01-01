@@ -1,4 +1,9 @@
-31 Dec 2006: 0.1.0 Miek <miek@miek.nl>
+xx Jan 2005: 0.1.1 Miek <miek@miek.nl>
+   * Don't gzip the files by default with backup.sh
+   * Scripts was updated
+
+
+31 Dec 2005: 0.1.0 Miek <miek@miek.nl>
    * Bumped version as rdup matures rapidly
    * Small fixes to the scripts 
    * Test infrastructure was added
