@@ -2,12 +2,12 @@
 .TH YESTERDAY 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-yesterday \-– print file names from the dump
+yesterday \– print file names from the dump
 
 .SH SYNOPSIS
 .B yesterday
 [
-.IR \−-cbCdnzk
+.IR \−cbCdnzk
 ]
 .IR BACKUPDIR
 .IR FILES ...
@@ -19,35 +19,35 @@ today’s dump.
 
 .SH OPTIONS
 .TP 
-.B \-−b backupdir
+.B \−b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
-.B \−-k keyfile
+.B \−k keyfile
 When looking at a file use the file keyfile as decryption key.
 .TP 
-.B \−-c
+.B \−c
 Copy the dump files over the named files.
 .TP
-.B \−-C
+.B \−C
 Copy the dump files over the named files only when they differ.
 .TP 
-.B \− d
+.B \−d
 Run diff to compare the dump files with the named files.
 .TP 
-.B \−-n daysago
+.B \−n daysago
 select the dump daysago prior to the current day.
 .TP 
-.B \−-z
+.B \−z
 backupped file is gzipped.
 
 .SH EXAMPLES
 See what’s changed in the last week in your profile:
 .PP
-        yesterday /vol/backup -−d -−n 7 ~/.profile
+        yesterday /vol/backup \−d \−n 7 ~/.profile
 .PP
 Restore your profile from yesterday:
 .PP
-        yesterday /vol/backup −-c ~/.profile
+        yesterday /vol/backup \-c ~/.profile
 
 .SH FILES
 Root of dump file system default to /vol/backup/`hostname`, but can be any

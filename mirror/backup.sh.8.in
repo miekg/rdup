@@ -2,7 +2,7 @@
 .TH BACKUP 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-backup \–- mirror the files from the list on standard input
+backup \- mirror the files from the list on standard input
 
 .SH SYNOPSIS
 .B backup
