@@ -7,28 +7,28 @@ yesterday \– print file names from the dump
 .SH SYNOPSIS
 .B yesterday
 [
-.IR \−cbCdnzk
+.IR OPTIONS
 ]
 .IR BACKUPDIR
 .IR FILES ...
 
 .SH DESCRIPTION
-yesterday prints the names of the files from the most recent dump. Since
-dumps are done early in the morning, yesterday’s files are really in
-today’s dump. 
+\fByesterday\fR prints the names of the files from the most recent dump.
+Since dumps are done early in the morning, yesterday's files are really
+in today's dump.
 
 .SH OPTIONS
 .TP 
 .B \−b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
-.B \−k keyfile
+.B \-k keyfile
 When looking at a file use the file keyfile as decryption key.
 .TP 
 .B \−c
 Copy the dump files over the named files.
 .TP
-.B \−C
+.B \−\C
 Copy the dump files over the named files only when they differ.
 .TP 
 .B \−d

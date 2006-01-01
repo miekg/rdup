@@ -4,6 +4,7 @@ xx Jan 2005: 0.1.1 Miek <miek@miek.nl>
    * Don't gzip the files by default with backup.sh
    * added mirror/dump.sh which is an example wrapper
      script for backupping.
+   * Manual pages were updated
 
 
 31 Dec 2005: 0.1.0 Miek <miek@miek.nl>

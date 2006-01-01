@@ -5,7 +5,12 @@
 .SH SYNOPSIS
 .B @PACKAGE_NAME@
 [
-.IR \-hvNVx0
+.IR \-N 
+timestamp
+]
+]
+[
+.IR OPTIONS
 ]
 .IR FILELIST 
 .IR DIRS ...

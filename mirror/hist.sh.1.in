@@ -7,7 +7,7 @@ hist, history \– print file names from the dump
 .SH SYNOPSIS
 .B hist
 [ 
-.IR \−bdkz
+.IR OPTIONS
 ] 
 .IR FILES ...
 
@@ -34,7 +34,7 @@ l l.
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
 .B \-d
-The −d option causes diff(1) \−u to be run for each adjacent pair of
+The \−d option causes diff(1) \−u to be run for each adjacent pair of
 dump files. This is not yet implemented.
 .B \-z
 The backupped file is gzipped

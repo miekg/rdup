@@ -7,7 +7,7 @@ backup \- mirror the files from the list on standard input
 .SH SYNOPSIS
 .B backup
 [
-.IR \-bzkNh
+.IR OPTIONS
 ]
 
 .SH DESCRIPTION
