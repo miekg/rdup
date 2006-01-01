@@ -118,6 +118,25 @@ list_cmd_usage() {
         echo " -h          this help"
 }
 
+## find the closest file to the one N days ago
+## if there are multiple return the latest
+recent() {
+        if [[ $1 -ge 32 ]]; then return; fi 
+
+        for i in `seq $1 -1 0`; do 
+                suffix=`datesago $i`
+                yyyymm=${suffix:0:6}
+                files=`ls "$backupdir"/$yyyymm/"$2.$suffix".* 2>/dev/null`
+                if [[ ! -z $files ]]; then
+                        break
+               fi
+        done
+        if [[ -z $files ]]; then 
+                return
+        fi
+        echo $files | sort -n -r | head -1
+}
+
 ## calculate the date back in time $1 days ago
 datesago() {
         daysago=$(($1 * 86400))
