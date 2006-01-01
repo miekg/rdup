@@ -11,6 +11,9 @@ o documentation updates
 # rest/shell 
 o shell script portability
 o manual page for excl.sh?
+o Encryption: it changes the file size! This means it cannot be
+  directory done in a pipe - you first need to encrypt it and then
+  do something with it
 
 PARTLY DONE:
 o implement -n for yesterday/hist

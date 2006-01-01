@@ -47,12 +47,12 @@ do
                         0)      # reg file
                         [[ $dry -eq 0 ]] && [[ -f "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         [[ $dry -eq 1 ]] && echo "[[ -f $backupdir/$path ]] && mv $backupdir/$path $backupdir/$path.$suffix"
-                        if [[ ! -z $gzip ]]; then
+                        if [[ $gzip -eq 1 ]]; then
                                 [[ $dry -eq 0 ]] && cat "$path" | gzip -c > "$backupdir/$path"
                                 [[ $dry -eq 1 ]] && echo "cat $path | gzip -c > $backupdir/$path"
                         elif [[ ! -z $keyfile ]]; then
-                                [[ $dry -eq 0 ]] && mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path"
-                                [[ $dry -eq 1 ]] && echo "mcrypt -F -k $keyfile -a $alg --mode stream $path"
+                                [[ $dry -eq 0 ]] && mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path" > "$backupdir/$path"
+                                [[ $dry -eq 1 ]] && echo "mcrypt -F -k $keyfile -a $alg --mode stream $path > $backupdir/$path"
                         else 
                                 [[ $dry -eq 0 ]] && cat "$path" > "$backupdir/$path"
                                 [[ $dry -eq 1 ]] && echo "cat $path > $backupdir/$path"
@@ -82,9 +82,11 @@ do
                         ;;
                 esac
         else
-                # remove
-                [[ $dry -eq 0 ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                [[ $dry -eq 1 ]] && echo "mv $backupdir/$path $backupdir/$path.$suffix"
+                # remove, it could be the stuff is not there
+                if [[ -e "$backupdir/$path" ]]; then
+                        [[ $dry -eq 0 ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [[ $dry -eq 1 ]] && echo "mv $backupdir/$path $backupdir/$path.$suffix"
+                fi
         fi
 done 
 backup_successfull $backupdir

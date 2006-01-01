@@ -35,7 +35,7 @@ do
         fi
         if [[ $diff -eq 1 ]]; then
                 echo diff -u `basename $backupdir$file` `basename $file`
-                if [[ gzip -eq 1 ]]; then
+                if [[ $gzip -eq 1 ]]; then
                 [[ ! -d $backupdir$file ]] && \
 zcat $backupdir$file | diff -u - $file
                          continue;
