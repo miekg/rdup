@@ -51,7 +51,7 @@ backup_create_top() {
                 dir=`dirname $dir`
         done
         for d in $dirs; do
-                if [[ ! -d $D ]]; then
+                if [[ ! -d $d ]]; then
                         [[ $dry -eq 0 ]] && mkdir -m 755 "$dir"
                         [[ $dry -eq 1 ]] && echo "mkdir -m 755 $dir"
                         [[ $dry -eq 0 ]] && chown root:backup "$dir"
