@@ -1,8 +1,9 @@
 '\" t
-.TH YESTERDAY 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.TH YESTERDAY 1 "2 Jan 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-yesterday \– print file names from the dump
+yesterday \- print file names from the dump
 
 .SH SYNOPSIS
 .B yesterday
@@ -18,49 +19,49 @@ Since dumps are done early in the morning, yesterday's files are really
 in today's dump.
 
 .SH OPTIONS
-.TP 
-.B \−b backupdir
+.TP
+.B \-b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
 .B \-k keyfile
-When looking at a file use the file keyfile as decryption key.
-.TP 
-.B \−c
+When looking at a file use keyfile as decryption key.
+.TP
+.B \-c
 Copy the dump files over the named files.
 .TP
-.B \−\C
+.B \-C 
 Copy the dump files over the named files only when they differ.
-.TP 
-.B \−d
+.TP
+.B \-d
 Run diff to compare the dump files with the named files.
-.TP 
-.B \−n daysago
-select the dump daysago prior to the current day.
-.TP 
-.B \−z
+.TP
+.B \-n daysago
+Select the dump daysago prior to the current day.
+.TP
+.B \-z
 backupped file is gzipped.
 
 .SH EXAMPLES
-See what’s changed in the last week in your profile:
+See what's changed in the last week in your profile:
 .PP
-        yesterday /vol/backup \−d \−n 7 ~/.profile
+        yesterday \-d \-n 7 ~/.bash_profile
 .PP
 Restore your profile from yesterday:
 .PP
-        yesterday /vol/backup \-c ~/.profile
+        yesterday \-c ~/.bash_profile
 
 .SH FILES
-Root of dump file system default to /vol/backup/`hostname`, but can be any
-location.
+Root of the dump file system defaults to /vol/backup/`hostname`, but can
+be any location.
 
 .SH NOTE
-This manpage was copied verbatim from the yesterday(1) manual page of
+The manpage was copied verbatim from the yesterday(1) manual page of
 Plan9.
 
 .SH SEE ALSO
-diff(1), hist(1), rdup(8)
+diff(1), hist(1) and rdup(8)
 
 .SH BUGS
 It's hard to use this command without singing.
 .PP
-[This was to good to leave out :)]
+[This was to good to leave out :-)]

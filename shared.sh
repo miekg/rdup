@@ -29,7 +29,6 @@ backup_cmd_options() {
         if [ -z $backupdir ]; then 
                 backupdir="/vol/backup/`hostname`"
         fi
-        backupdir=$backupdir/`date +%Y%m`
 }
 
 backup_dirdate() {
