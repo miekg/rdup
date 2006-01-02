@@ -56,4 +56,4 @@ location.
 This manpage was copied verbatim from the hist(1) manual page of Plan9.
 
 .SH SEE ALSO
-yesterday(1), rdup(8)
+yesterday(1) and rdup(8)
