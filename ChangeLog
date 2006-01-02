@@ -1,4 +1,4 @@
-xx Jan 2005: 0.1.1 Miek <miek@miek.nl>
+02 Jan 2005: 0.1.1 Miek <miek@miek.nl>
    * Use strcmp instead of g_ascii_strcasecmp() as
      case is significant in unix fs
    * Don't gzip the files by default with backup.sh
