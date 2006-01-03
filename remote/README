@@ -6,7 +6,7 @@ scheme.
 The filelist piped to sback.sh must be given to sftp which will
 then ftp the files to the remote host, like this:
 
-./rdup -N timestamp LIST dirs | ./sbackup.sh | sftp -C -b - user@host:
+./rdup -N timestamp LIST dirs | ./sftp.sh | sftp -C -b - user@host:
 
 
 2/ THROW AND CATCH
