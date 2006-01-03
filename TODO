@@ -1,4 +1,5 @@
 TODO: 
+# does it still work
 # rdup util: 
 o ignore or handle signals? Needed to decide what to do with the FILELIST
   and the timestamp, at least sigpipe, fail gracefully.
