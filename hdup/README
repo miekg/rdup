@@ -1,6 +1,12 @@
-The scripts in this directory implement hdup2, although not all
-functionality is included the core features of hdup2 are present.
+The script in this directory implement hdup2, although not all
+functionality is includedi, the core feature of hdup2 is present.
 It has also one less bug, because tar's incremental backup features
 are not used.
 
 Use: ./rdup -N timestamp filelist dirs | ./hdup2.sh
+
+And you will get a tar file with the contents of the output
+of rdup. 
+
+Hdup2 also offers encryption and remote backup. These features
+can be easily added.

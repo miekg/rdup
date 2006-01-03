@@ -59,7 +59,6 @@ install: rdup
 	${INSTALL} mirror/yesterday.sh ${DESTDIR}${bindir}/yesterday
 	${INSTALL} mirror/hist.sh ${DESTDIR}${bindir}/hist
 	${INSTALL} mirror/backup.sh ${DESTDIR}${sbindir}/backup
-	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl
 	${INSTALL} remote/sftp.sh ${DESTDIR}${sbindir}/sftp.sh
 	${INSTALL} remote/throw.sh ${DESTDIR}${sbindir}/throw.sh
 	${INSTALL} remote/catch.sh ${DESTDIR}${sbindir}/catch.sh
@@ -68,6 +67,8 @@ install: rdup
 	${INSTALL_DATA} mirror/backup.sh.8 ${DESTDIR}${mandir}/man8/backup.8
 	${INSTALL_DATA} mirror/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.1
 	${INSTALL_DATA} mirror/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.1
+	${INSTALL_DATA} remote/catch.sh.1 ${DESTDIR}${mandir}/man1/catch.sh.1
+	${INSTALL_DATA} remote/throw.sh.1 ${DESTDIR}${mandir}/man1/throw.sh.1
 
 uninstall:
 	rm -f ${DESTDIR}${sbindir}/rdup
@@ -75,9 +76,10 @@ uninstall:
 	rm -f ${DESTDIR}${bindir}/hist
 	rm -f ${DESTDIR}${sbindir}/backup
 	rm -f ${DESTDIR}${sbindir}/sftp.sh
-	rm -f ${DESTDIR}${sbindir}/excl
 	rm -f ${DESTDIR}${sysconfdir}/rdup/shared.sh
 	rm -f ${DESTDIR}${mandir}/man8/rdup.8
 	rm -f ${DESTDIR}${mandir}/man8/backup.8
 	rm -f ${DESTDIR}${mandir}/man1/yesterday.1
 	rm -f ${DESTDIR}${mandir}/man1/hist.1
+	rm -f ${DESTDIR}${mandir}/man1/catch.sh.1
+	rm -f ${DESTDIR}${mandir}/man1/throw.sh.1

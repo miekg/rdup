@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdup, 0.1.1, miek@miek.nl, rdup)
+AC_INIT(rdup, 0.1.2, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
@@ -40,6 +40,8 @@ AC_CONFIG_FILES([Makefile
                  remote/sftp.sh
                  remote/catch.sh
                  remote/throw.sh
+                 remote/catch.sh.1
+                 remote/throw.sh.1
                  mirror/backup.sh 
                  mirror/hist.sh 
                  mirror/yesterday.sh

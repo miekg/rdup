@@ -37,7 +37,6 @@ usage(FILE *f)
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
 	fprintf(f, "Licensed under the GPL. See the file LICENSE in the\n");
 	fprintf(f, "source distribution of rdup.\n");
-
 }
 
 void
@@ -256,6 +255,5 @@ main(int argc, char **argv)
 #if 0
 	g_tree_free(remove);
 #endif
-	
 	exit(EXIT_SUCCESS);
 }

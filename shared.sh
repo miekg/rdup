@@ -4,6 +4,7 @@
 # See LICENSE for the license
 # default user: root:backup (0:34 on my system)
 
+# some general defines needed to read rdup's output
 backup_defines() {
         S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
         S_ISLNK=40960   # octal: 0120000
@@ -13,6 +14,11 @@ backup_defines() {
         keyfile=""
         dry=0
         verbose=0
+}
+
+# add the current date suffix to $backupdir
+backup_dirdate() {
+        backupdir=$backupdir/`date +%Y%m`
 }
 
 backup_cmd_options() {
@@ -31,10 +37,6 @@ backup_cmd_options() {
         fi
 }
 
-backup_dirdate() {
-        backupdir=$backupdir/`date +%Y%m`
-}
-
 backup_cmd_usage() {
         echo $0 "-bzkhNv"
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
@@ -45,6 +47,7 @@ backup_cmd_usage() {
         echo " -h      this help"
 }
 
+# create the top level backup directory
 backup_create_top() {
         # need to reverse the order
         dir=$1;
@@ -63,6 +66,8 @@ backup_create_top() {
         done
 }
 
+# create the command for sftp to make
+# the top level backup directory
 sftpbackup_create_top() {
         dir=$1
         while [[ $dir != "/" ]]

@@ -7,9 +7,23 @@
 
 #include "rdup.h"
 
-
 extern int opt_null;
 extern time_t opt_timestamp;
+
+/**
+ * print a struct entry
+ */
+void
+entry_print(FILE *fp, char plusmin, struct entry *e) {
+	fprintf(fp, "%c%d %d %d %d %s",
+			plusmin,
+			(int) e->f_mode,
+			(int) e->f_uid,
+			(int) e->f_gid,
+			(int) e->f_size,
+			e->f_name);
+}
+
 
 /**
  * free a struct entry
@@ -33,9 +47,7 @@ gboolean
 gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
 	/* mode_path */
-	/* this is used to create our filelist, we cannot parse
-	 * that back in, is its null delimited, so don't do that
-	 */
+	/* this is used to create our filelist */
 	fprintf((FILE*) fp, "%d %s", 
 			(int) ((struct entry*)data)->f_mode,
 			(char*) ((struct entry*)data)->f_name);
@@ -71,16 +83,8 @@ gboolean
 gfunc_backup(gpointer data, __attribute__((unused)) gpointer value, 
 		__attribute__((unused)) gpointer usr)
 {
-	char *p;
-	p = ((struct entry*)data)->f_name;
-
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
-		fprintf(stdout, "+%d %d %d %d %s", 
-				(int) ((struct entry*)data)->f_mode,
-				(int) ((struct entry*)data)->f_uid,
-				(int) ((struct entry*)data)->f_gid,
-				(int) ((struct entry*)data)->f_size,
-				p);
+		entry_print(stdout, '+', (struct entry*)data);
 		if (opt_null) {
 			putc('\0', stdout);
 		} else {
@@ -92,12 +96,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 			S_ISLNK(((struct entry*)data)->f_mode)) {
 		switch (opt_timestamp) {
 			case NULL_DUMP:
-				fprintf(stdout, "+%d %d %d %d %s", 
-						(int) ((struct entry*)data)->f_mode,
-						(int) ((struct entry*)data)->f_uid,
-						(int) ((struct entry*)data)->f_gid,
-						(int) ((struct entry*)data)->f_size,
-						p);
+				entry_print(stdout, '+', (struct entry*)data);
 				if (opt_null) {
 					putc('\0', stdout);
 				} else {
@@ -106,12 +105,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 				return FALSE;
 			default: /* INC_DUMP */
 				if (((struct entry*)data)->f_mtime > opt_timestamp) {
-					fprintf(stdout, "+%d %d %d %d %s", 
-							(int) ((struct entry*)data)->f_mode,
-							(int) ((struct entry*)data)->f_uid,
-							(int) ((struct entry*)data)->f_gid,
-							(int) ((struct entry*)data)->f_size,
-							p);
+					entry_print(stdout, '+', (struct entry*)data);
 					if (opt_null) {
 						putc('\0', stdout);
 					} else {
@@ -131,14 +125,7 @@ gboolean
 gfunc_remove(gpointer data, __attribute__((unused)) gpointer value, 
 		__attribute__((unused)) gpointer usr)
 {
-	char *p;
-	p = ((struct entry*)data)->f_name;
-	fprintf(stdout, "-%d %d %d %d %s", 
-			(int) ((struct entry*)data)->f_mode,
-			(int) ((struct entry*)data)->f_uid,
-			(int) ((struct entry*)data)->f_gid,
-			(int) ((struct entry*)data)->f_size,
-			p);
+	entry_print(stdout, '-', (struct entry*)data);
 	if (opt_null) {
 		putc('\0', stdout);
 	} else {

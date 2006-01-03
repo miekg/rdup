@@ -1,16 +1,22 @@
 The scripts in this directory implement a remote mirroring backup
 scheme.
+
+1/ SFTP
+
 The filelist piped to sback.sh must be given to sftp which will
 then ftp the files to the remote host, like this:
 
 ./rdup -N timestamp LIST dirs | ./sbackup.sh | sftp -C -b - user@host:
 
 
-the throw.sh and catch.sh script work directory through ssh, like this:
-./rdup LIST dir | ./remote/throw.sh  | ssh user@host remote/catch.sh 
+2/ THROW AND CATCH
+
+The throw.sh and catch.sh script work directly through ssh, like this:
+./rdup LIST dir | throw.sh  | ssh user@host catch.sh 
 
 throw.sh and catch.sh use their own "protocol" to transfer the files,
-but tweaking throw.sh files can be encrypted (for instance), be aware
+but by tweaking throw.sh files can be encrypted (for instance), be aware
 that the filesize of the file MUST NOT change.
+
 
 By default all scripts work on /vol/backup/`hostname`/YYYYMM.
