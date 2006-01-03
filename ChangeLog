@@ -2,7 +2,7 @@ xx Jan 2005: 0.1.2 Miek <miek@miek.nl>
    * Added manpages remote/catch.sh.1 and remote/throw.sh.1
 
    Code:
-   * refactored printing
+   * refactored printing in gfunc.c
 
 02 Jan 2005: 0.1.1 Miek <miek@miek.nl>
    * Use strcmp instead of g_ascii_strcasecmp() as
