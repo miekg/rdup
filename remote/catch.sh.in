@@ -46,8 +46,10 @@ do
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
                                 i=$(( $fsize / $bsize ))
-                                i=$(( $i + 1 ))
+                                rem=$(( $fsize - ( $i * $bsize ) ))
                                 dd bs=$bsize count=$i 2>/dev/null > "$backupdir/$path"
+                                # read the rest
+                                dd bs=$rem count=$i 2>/dev/null > "$backupdir/$path"
                         else 
                                 # empty
                                 [[ $dry -eq 0 ]] && touch "$backupdir/$path"
