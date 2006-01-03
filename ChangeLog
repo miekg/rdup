@@ -1,5 +1,6 @@
 xx Jan 2005: 0.1.2 Miek <miek@miek.nl>
    * Added manpages remote/catch.sh.1 and remote/throw.sh.1
+   * Mirror script debugged
 
    Code:
    * refactored printing in gfunc.c
