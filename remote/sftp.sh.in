@@ -35,23 +35,24 @@ do
                 typ=2;
         fi
         
-        [[ $verbose -eq 1]] && echo "$path > /dev/fd/2"
+        [[ $verbose -eq 1 ]] && echo "$path > /dev/fd/2"
 
-        if [[ $dump = "+" ]]; then
+        if [[ $dump == "+" ]]; then
                 # add
                 case $typ in
                         0)      # reg file
+                        # if it's there rename it
                         echo -rename "$backupdir/$path" "$backupdir/$path.$suffix"
                         echo put "$path" "$backupdir/$path"
-                        echo -chown $uid "$backupdir/$path"
-                        echo -chgrp $gid "$backupdir/$path"
+                        #echo -chown $uid "$backupdir/$path"
+                        #echo -chgrp $gid "$backupdir/$path"
                         echo -chmod $bits "$backupdir/$path"
                         ;;
                         1)      # directory
                         #echo rename "$backupdir/$path" ## dirs are always included
                         echo -mkdir "$backupdir/$path"
-                        echo -chown $uid "$backupdir/$path"
-                        echo -chgrp $gid "$backupdir/$path"
+                        #echo -chown $uid "$backupdir/$path"
+                        #echo -chgrp $gid "$backupdir/$path"
                         echo -chmod $bits "$backupdir/$path"
                         ;;
                         2)      # link
@@ -59,10 +60,9 @@ do
                         # http://www.bioinspired.com/users/ajg112/computing/bashTips.shtml#symLink
                         LS_OUT=$(ls -l "$path")
                         target=${LS_OUT#*-> }
-                        [[ ${target:1} != "/" ]] & target="`dirname $path`/$target"
-                        echo symlink "$backupdir/$target" "$backupdir/$path"
-                        echo -chown $uid "$backupdir/$path"
-                        echo -chgrp $gid "$backupdir/$path"
+                        echo symlink "$target" "$backupdir/$path"
+                        #echo -chown $uid "$backupdir/$path"
+                        #echo -chgrp $gid "$backupdir/$path"
                         echo -chmod $bits "$backupdir/$path"
                         ;;
                 esac
