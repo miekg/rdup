@@ -18,6 +18,8 @@ backup_cmd_options $@
 backup_dirdate
 backup_create_top $backupdir
 
+bsize=10240
+
 while read mode uid gid fsize psize
 do
         dump=${mode:0:1}        # to add or remove
@@ -43,7 +45,9 @@ do
                         [[ $dry -eq 1 ]] && echo "[ -f $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix"
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
-                                dd bs=$fsize count=1 2>/dev/null > "$backupdir/$path"
+                                i=$(( $fsize / $bsize ))
+                                i=$(( $i + 1 ))
+                                dd bs=$bsize count=$i 2>/dev/null > "$backupdir/$path"
                         else 
                                 # empty
                                 [[ $dry -eq 0 ]] && touch "$backupdir/$path"
