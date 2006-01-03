@@ -68,9 +68,9 @@ do
                         [[ $dry -eq 1 ]] && echo "[[ -L $backupdir/$path ]] && mv $backupdir/$path $backupdir/$path.$suffix"
                         target=`dd bs=$fsize count=1 2>/dev/null`
                         # if target is relative add the prefix of $path
-                        #[[ ${target:1} != "/" ]] & target="`dirname $path`/$target"
-                        #[[ $dry -eq 0 ]] && ln -sf "$target" "$backupdir/$path" 
-                        #[[ $dry -eq 1 ]] && echo "ln -sf $target $backupdir/$path"
+                        [[ ${target:1} != "/" ]] & target="`dirname $path`/$target"
+                        [[ $dry -eq 0 ]] && ln -sf "$target" "$backupdir/$path" 
+                        [[ $dry -eq 1 ]] && echo "ln -sf $target $backupdir/$path"
                         #[[ $dry -eq 0 ]] && chown -h $uid:$gid "$backupdir/$path"
                         #[[ $dry -eq 1 ]] && echo "chown -h $uid:$gid $backupdir/$path"
                         ;;
