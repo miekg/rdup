@@ -42,7 +42,7 @@ do
                 typ=2;
         fi
         
-        [[ $verbose -eq 0 ]] && echo $path > /dev/fd/2
+        [[ $verbose -eq 0 ]] && echo $mode $size $path > /dev/fd/2
 
         if [[ $dump == "+" ]]; then
                 # add
