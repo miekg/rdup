@@ -40,13 +40,13 @@ AC_CONFIG_FILES([Makefile
                  remote/sftp.sh
                  remote/catch.sh
                  remote/throw.sh
-                 remote/catch.sh.1
-                 remote/throw.sh.1
                  mirror/mirror.sh 
                  mirror/hist.sh 
                  mirror/yesterday.sh
-                 mirror/mirror.sh.8
-                 mirror/hist.sh.1
-                 mirror/yesterday.sh.1])
+                 doc/catch.sh.1
+                 doc/throw.sh.1
+                 doc/mirror.sh.8
+                 doc/hist.sh.1
+                 doc/yesterday.sh.1])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
