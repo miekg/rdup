@@ -36,7 +36,6 @@ fi
 AC_CONFIG_FILES([Makefile
                  rdup.h
                  excl.sh 
-                 rdup.8
                  mirror.sh 
                  rmirror.sh
                  rcat.sh
@@ -45,6 +44,7 @@ AC_CONFIG_FILES([Makefile
                  doc/catch.sh.1
                  doc/throw.sh.1
                  doc/mirror.sh.8
+                 doc/rdup.8
                  doc/hist.sh.1
                  doc/yesterday.sh.1])
 AC_CONFIG_HEADER([config.h])
