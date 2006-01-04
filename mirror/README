@@ -1,5 +1,0 @@
-The scripts in this directory implement a mirroring backup scheme.
-Optionally the files can be zipped while they are moved to their
-destination.
-
-By default all scripts work on /vol/backup/`hostname`/YYYYMM.
