@@ -38,8 +38,8 @@ AC_CONFIG_FILES([Makefile
                  excl.sh 
                  rdup.8
                  mirror.sh 
+                 rmirror.sh
                  remote/sftp.sh
-                 remote/catch.sh
                  remote/throw.sh
                  mirror/hist.sh 
                  mirror/yesterday.sh
