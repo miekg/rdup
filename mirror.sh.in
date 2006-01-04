@@ -9,6 +9,7 @@
 
 backup_defines
 backup_cmd_options $@
+alg="blowfish"
 
 if [[ ! -z $keyfile ]]; then
         if [[ ! -z $gzip ]]; then
@@ -23,15 +24,14 @@ fi
 
 backup_dirdate
 backup_create_top $backupdir
-alg="blowfish"
 
 declare -a path # catch spacing in the path
 while read mode uid gid size path
 do
-        dump=${mode:0:1}        # to add or remove
-        mode=${mode:1}          # st_mode bits
-        bits=$(($mode & $S_MMASK)) # permission bits
-        bits=`printf "%o" $bits` # and back to octal again
+        dump=${mode:0:1}                # to add or remove
+        mode=${mode:1}                  # st_mode bits
+        bits=$(($mode & $S_MMASK))      # permission bits
+        bits=`printf "%o" $bits`        # and back to octal again
         typ=0
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1;
@@ -45,48 +45,36 @@ do
         if [[ $dump == "+" ]]; then
                 # add
                 case $typ in
-                        0)      # reg file
-                        [[ $dry -eq 0 ]] && [[ -f "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        [[ $dry -eq 1 ]] && echo "[[ -f $backupdir/$path ]] && mv $backupdir/$path $backupdir/$path.$suffix"
+                        0)      # REG
+                        [[ -f "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         if [[ $gzip -eq 1 ]]; then
-                                [[ $dry -eq 0 ]] && cat "$path" | gzip -c > "$backupdir/$path"
-                                [[ $dry -eq 1 ]] && echo "cat $path | gzip -c > $backupdir/$path"
+                                cat "$path" | gzip -c > "$backupdir/$path"
                         elif [[ ! -z $keyfile ]]; then
-                                [[ $dry -eq 0 ]] && mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path" > "$backupdir/$path"
-                                [[ $dry -eq 1 ]] && echo "mcrypt -F -k $keyfile -a $alg --mode stream $path > $backupdir/$path"
+                                       # will not work like this
+                                mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path" > "$backupdir/$path"
                         else 
-                                [[ $dry -eq 0 ]] && cat "$path" > "$backupdir/$path"
-                                [[ $dry -eq 1 ]] && echo "cat $path > $backupdir/$path"
+                                && cat "$path" > "$backupdir/$path"
                         fi
-                        [[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
-                        1)      # directory
-                        [[ $dry -eq 0 ]] && [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "[[ ! -d $backupdir/$path ]] && mkdir -p $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
+                        1)      # DIR
+                        [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
-                        2)      # link
-                        [[ $dry -eq 0 ]] && [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        [[ $dry -eq 1 ]] && echo "[[ -L $backupdir/$path ]] && mv $backupdir/$path $backupdir/$path.$suffix"
-                        [[ $dry -eq 0 ]] && cp -a "$path" "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "cp -a $path $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
+                        2)      # LNK
+                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        cp -a "$path" "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
                 esac
         else
-                # remove, it could be the stuff is not there
+                # remove. It could be the stuff is not there, don't
+                # error on that.
                 if [[ -e "$backupdir/$path" ]]; then
-                        [[ $dry -eq 0 ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        [[ $dry -eq 1 ]] && echo "mv $backupdir/$path $backupdir/$path.$suffix"
+                        mv "$backupdir/$path" "$backupdir/$path.$suffix"
                 fi
         fi
 done 

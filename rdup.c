@@ -81,7 +81,7 @@ g_tree_read_file(FILE *fp)
 	size_t        s;
 
 	tree = g_tree_new(gfunc_equal);
-	buf  = g_malloc(BUFSIZE);
+	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 
 	if (opt_null) {
@@ -200,6 +200,9 @@ main(int argc, char **argv)
 			case '0':
 				opt_null = 1;
 				break;
+			default:
+				fprintf(stderr, "** Uknown option\n");
+				exit(EXIT_FAILURE);
 		}
 	}
 	argc -= optind;

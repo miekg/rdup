@@ -42,32 +42,27 @@ do
                 typ=2;
         fi
         
-        [[ $verbose -eq 0 ]] && echo $mode $size $path > /dev/fd/2
+        [[ $verbose -eq 1 ]] && echo $mode $size $path > /dev/fd/2
 
         if [[ $dump == "+" ]]; then
                 # add
                 case $typ in
-                        0)      # reg file
-                        echo -e "+$mode $uid $gid $size ${#path}\n$path"
-                        # do your encryption here
-                        if [[ ! -z $keyfile  ]]; then
-                                mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path"
-                        else
+                        0)      # REG
+                        echo "+$mode $uid $gid $size $path"
                                 cat "$path"
-                        fi
                         ;;
-                        1)      # directory
-                        echo -e "+$mode $uid $gid 0 ${#path}\n$path"
+                        1)      # DIR
+                        echo "+$mode $uid $gid 0 $path"
                         ;;
-                        2)      # link, yuch... write the target of the link in the filecontents
+                        2)      # LNK, yuch... write the target of the link in the filecontents
                         LS_OUT=$(ls -l "$path")
                         target=${LS_OUT#*-> }
-                        echo -e "+$mode $uid $gid ${#target} ${#path}\n$path"
+                        echo "+$mode $uid $gid ${#target} $path"
                         echo -n "$target"
                         ;;
                 esac
         else
                 # remove, $size should be 0
-                echo -e "-$mode $uid $gid 0 ${#path}\n$path"
+                echo  "-$mode $uid $gid 0 $path"
         fi
 done 

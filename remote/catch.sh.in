@@ -7,7 +7,7 @@
 # catch is used to do remote backups
 # It uses a slightly different format then what
 # rdup output, namely:
-# +/-MODE UID GID FILESIZE PATHSIZE\nPATH FILECONTENTS
+# +/-MODE UID GID FILESIZE PATH\nFILECONTENTS
 # chown/chgrp is little pupose as the remote user is 
 # likely not to be root
 
@@ -20,72 +20,53 @@ backup_create_top $backupdir
 
 bsize=10240
 
-while read mode uid gid fsize psize
+while read mode uid gid fsize path
 do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits
         bits=$(($mode & $S_MMASK)) # permission bits
         bits=`printf "%o" $bits` # and back to octal again
         typ=0
-        psize=$((psize + 1))   # throw prints to much
-        path=`dd bs=$psize count=1 2>/dev/null`
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1;
         fi
         if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
                 typ=2;
         fi
+
+        [[ $verbose -eq 1 ]] && echo "$path > /dev/fd/2"
         
         if [[ $dump == "+" ]]; then
                 # add
                 case $typ in
-                        0)      # reg file
-                        # catch the file
-                        [[ $dry -eq 0 ]] && [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        [[ $dry -eq 1 ]] && echo "[ -f $backupdir/$path ] && mv $backupdir/$path $backupdir/$path.$suffix"
+                        0)      # REG
+                        [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
-                                i=$(( $fsize / $bsize ))
-                                rem=$(( $fsize - ( $i * $bsize ) ))
                                 dd bs=$fsize conv=noerror count=1 > "$backupdir/$path"
-                                ## read the rest
-                                #dd bs=$rem count=1 > "$backupdir/$path"
                         else 
                                 # empty
-                                [[ $dry -eq 0 ]] && touch "$backupdir/$path"
-                                [[ $dry -eq 1 ]] && echo "touch $backupdir/$path"
+                                touch "$backupdir/$path"
                         fi
-                        #[[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
-                        #[[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
-                        1)      # directory
+                        1)      # DIR
                         # size should be 0
-                        [[ $dry -eq 0 ]] && [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "[[ ! -d $backupdir/$path ]] && mkdir -p $backupdir/$path"
-                        #[[ $dry -eq 0 ]] && chown $uid:$gid "$backupdir/$path"
-                        #[[ $dry -eq 1 ]] && echo "chown $uid:$gid $backupdir/$path"
-                        [[ $dry -eq 0 ]] && chmod $bits "$backupdir/$path"
-                        [[ $dry -eq 1 ]] && echo "chmod $bits $backupdir/$path"
+                        [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
                         ;;
-                        2)      # link, target is in the content! (yuck HACK!)
-                        [[ $dry -eq 0 ]] && [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        [[ $dry -eq 1 ]] && echo "[[ -L $backupdir/$path ]] && mv $backupdir/$path $backupdir/$path.$suffix"
+                        2)      # LNK, target is in the content! 
+                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         target=`dd bs=$fsize count=1 2>/dev/null`
-                        # if target is relative add the prefix of $path
-                        [[ ${target:1} != "/" ]] & target="`dirname $path`/$target"
-                        [[ $dry -eq 0 ]] && ln -sf "$target" "$path" 
-                        [[ $dry -eq 1 ]] && echo "ln -sf $target $path"
-                        #[[ $dry -eq 0 ]] && chown -h $uid:$gid "$backupdir/$path"
-                        #[[ $dry -eq 1 ]] && echo "chown -h $uid:$gid $backupdir/$path"
+                        ln -sf "$target" "$path" 
+                        chown -h $uid:$gid "$backupdir/$path"
                         ;;
                 esac
         else
                 echo
                 # remove
-                [[ $dry -eq 0 ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                [[ $dry -eq 1 ]] && echo "mv $backupdir/$path $backupdir/$path.$suffix"
+                mv "$backupdir/$path" "$backupdir/$path.$suffix"
         fi
-        [[ $dry -eq 1 ]] && echo 
 done 

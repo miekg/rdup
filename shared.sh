@@ -12,7 +12,6 @@ backup_defines() {
         suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
         gzip=0
         keyfile=""
-        dry=0
         verbose=0
 }
 
@@ -27,7 +26,6 @@ backup_cmd_options() {
                         b) backupdir=$OPTARG;;
                         z) gzip=1;;
                         k) keyfile=$OPTARG;;
-                        N) dry=1;;
                         v) verbose=1;;
                         h) backup_cmd_usage && exit
                 esac
@@ -42,7 +40,6 @@ backup_cmd_usage() {
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
         echo " -z      gzip regular files before backing up"
         echo " -k KEY  use the file KEY as encryption key"
-        echo " -N      dry-run, show what would have been executed"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
 }
@@ -58,10 +55,8 @@ backup_create_top() {
         done
         for d in $dirs; do
                 if [[ ! -d $d ]]; then
-                        [[ $dry -eq 0 ]] && mkdir -m 755 "$d"
-                        [[ $dry -eq 1 ]] && echo "mkdir -m 755 $d"
-                        [[ $dry -eq 0 ]] && chown root:backup "$d"
-                        [[ $dry -eq 1 ]] && echo "chown root:backup $d"
+                        mkdir -m 755 "$d"
+                        chown root:backup "$d"
                 fi
         done
 }
@@ -99,7 +94,6 @@ list_cmd_options() {
                         b) backupdir=$OPTARG;;
                         n) daysago=$OPTARG;;
                         d) diff=1;;
-                        N) dry=1;;
                         K) keyfile=$OPTARG;;
                         z) gzip=1;;
                         c) copy=1;;
@@ -115,7 +109,6 @@ list_cmd_options() {
 list_defines() {
         daysago=0
         diff=0
-        dry=0
         keyfile=""
         gzip=0
         copy=0
@@ -130,7 +123,6 @@ list_cmd_usage() {
         echo " -c          copy the backed up file over the current file"
         echo " -C          copy the backed up file over the current file, if they differ"
         echo " -d          show a diff with the backed up file "
-        echo " -N          dry-run, show what would have been executed"
         echo " -z          backup file is gzipped"
         echo " -h          this help"
 }

@@ -1,4 +1,5 @@
-OBJ=crawler.o rdup.o gfunc.o
+RDUP_OBJ=crawler.o rdup.o gfunc.o
+RMIRROR_OBJ=rmirror.o
 HDR=rdup.h 
 SHS=mirror.sh excl.sh mirror/hist.sh mirror/yesterday.sh remote/sftp.sh \
 remote/catch.sh remote/throw.sh 
@@ -23,12 +24,16 @@ INSTALL_DATA = $(INSTALL) -m 644
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
-all:	rdup
-
-rdup:	${OBJ} ${HDR} 
-	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
-	strip rdup
+all:	rdup rmirror
 	chmod +x $(SHS)
+
+rdup:	${RDUP_OBJ} ${HDR} 
+	${GCC} ${GLIB_LIBS} ${RDUP_OBJ} -o rdup
+#	strip rdup
+
+rmirror:	${RMIRROR_OBJ} ${HDR} 
+	${GCC} ${GLIB_LIBS} ${RMIRROR_OBJ} -o rmirror
+#	strip rdup
 
 clean:
 	rm -f *.o
