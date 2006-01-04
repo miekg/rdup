@@ -43,7 +43,7 @@ do
                         [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
-                                dd bs=$fsize conv=noerror count=1 > "$backupdir/$path"
+                                head -c $fsize > "$backupdir/$path"
                         else 
                                 # empty
                                 touch "$backupdir/$path"
@@ -59,8 +59,8 @@ do
                         ;;
                         2)      # LNK, target is in the content! 
                         [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
-                        target=`dd bs=$fsize count=1 2>/dev/null`
-                        ln -sf "$target" "$path" 
+                        target=`head -c $fsize`
+                        ln -sf "$target" "$backupdir/$path" 
                         chown -h $uid:$gid "$backupdir/$path"
                         ;;
                 esac
