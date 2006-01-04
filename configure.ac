@@ -42,7 +42,7 @@ AC_CONFIG_FILES([Makefile
                  remote/throw.sh
                  remote/catch.sh.1
                  remote/throw.sh.1
-                 mirror/backup.sh 
+                 mirror/mirror.sh 
                  mirror/hist.sh 
                  mirror/yesterday.sh
                  mirror/backup.sh.8
