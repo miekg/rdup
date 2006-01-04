@@ -1,6 +1,8 @@
 xx Jan 2005: 0.1.2 Miek <miek@miek.nl>
    * Added manpages remote/catch.sh.1 and remote/throw.sh.1
    * Mirror script debugged
+   * Rearranged the layout of the source directory. Docs are now
+     in a doc/ directory.
 
    Code:
    * refactored printing in gfunc.c

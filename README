@@ -6,7 +6,13 @@ Run: autoconf && ./configure && make
 As of version 0.0.2 getdelim is used, which is a GNUism, therefor
 compilation on FreeBSD fails, also see TODO.
 
-2/ DOCUMENTATION
+2/ DIFF WITH RSYNC
+
+While rsync really works well I wanted to have the ability to gzip
+and/or encrypt the backupped files. rsync can not do that, that's
+way I wrote rdup, which with the help of some scripts can do that.
+
+3/ DOCUMENTATION
 
 rdup is a utility inspired by rsync and the plan9 way of doing
 backups. rdup it self does not backup anything, it only print
@@ -23,7 +29,7 @@ created as is and in sequence. If you process the file in the same order
 no magic is needed to create directories that otherwise might be
 missing.
 
-2.1/ FULL DUMP
+3.1/ FULL DUMP
 
 Run: rm -f timestamp && rdup -N timestamp FILELIST dir1
 
@@ -50,7 +56,7 @@ directory, it creates a mirror of the actual disk layout of the
 directories to be backed up. By default it will put the files
 in /vol/backup/YYYYMM.
 
-2.2/ INCREMENTAL DUMP
+3.2/ INCREMENTAL DUMP
 
 Just run:
 rdup -N timestamp FILELIST dir1 | ./backup.sh -b /vol/backup/ again. This
@@ -64,7 +70,7 @@ If we were not piping the output to 'backup.sh' we would see:
 Saying that 'bin/blaat' is to be removed. bin/.svn is always printed
 because that is a directory.
 
-3/ AND NOW FOR SOME FUN
+4/ AND NOW FOR SOME FUN
 
 Note: the examples given here are simplified, you cannot use a simple
 command, but need to use differentiate between directories, regular
@@ -106,21 +112,3 @@ rdup FILELIST /home > list
 rsync --files-from=list user@remotehost.nl
 
 As in true unix tradition the list can go on and on :-)
-
-4/ BACKUP SCHEME SCRIPTS
-The directory mirror/ contains a few scripts which implement a mirroring
-backup scheme. I'm using these scripts at home to backup my machines.
-Other backup schemes may be implemented using these scripts as an
-example.
-
-5/ END USER TOOLS
-rdup includes a few scripts:
-
-o backup - this mirrors/copies the files to their final destination
-o excl   - exclude certain files and directories from the backup
-o yesterday - look at the backupped files and restore them
-o hist      - look at the backup history of files
-
-The last 2 are end user tools that can (and should) be used by users on
-your system to retrieve lost files. Or they may want to use them to look
-at the differences.
