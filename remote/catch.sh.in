@@ -47,9 +47,9 @@ do
                                 # catch
                                 i=$(( $fsize / $bsize ))
                                 rem=$(( $fsize - ( $i * $bsize ) ))
-                                dd bs=$bsize count=$i 2>/dev/null > "$backupdir/$path"
-                                # read the rest
-                                dd bs=$rem count=$i 2>/dev/null > "$backupdir/$path"
+                                dd bs=$fsize conv=noerror count=1 > "$backupdir/$path"
+                                ## read the rest
+                                #dd bs=$rem count=1 > "$backupdir/$path"
                         else 
                                 # empty
                                 [[ $dry -eq 0 ]] && touch "$backupdir/$path"
