@@ -9,6 +9,9 @@ o valgrind and g_free
 o documentation updates
 o ?
 
+# test
+o do a make install test
+
 o graphic (GTK) frontend? What would it do?
         - specify what to backup
         - to where
