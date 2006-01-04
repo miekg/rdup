@@ -45,7 +45,7 @@ AC_CONFIG_FILES([Makefile
                  mirror/mirror.sh 
                  mirror/hist.sh 
                  mirror/yesterday.sh
-                 mirror/backup.sh.8
+                 mirror/mirror.sh.8
                  mirror/hist.sh.1
                  mirror/yesterday.sh.1])
 AC_CONFIG_HEADER([config.h])
