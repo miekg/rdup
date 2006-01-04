@@ -12,6 +12,32 @@
 #include "rdup.h"
 
 #define AFTER_MODUS 6
+#define SUFFIX_SIZE 12
+
+
+gboolean 
+rmkdir(char *name, uid_t u, gid_t g)
+{
+	printf("%d %d %s/\n", u, g, name);
+	return TRUE;
+}
+
+
+gboolean
+rmklnk(char *name, char *target, uid_t u, gid_t g)
+{
+	printf("%d %d %s->%s\n", u, g, name, target);
+	return TRUE;
+}
+
+gboolean
+exist(char *path)
+{
+	struct stat s;
+
+	return lstat(path, &s);
+}
+
 
 int
 main(int argc, char **argv)
@@ -19,28 +45,34 @@ main(int argc, char **argv)
 	/* readline 
 	 * read contents
 	 * until eof */
-	ssize_t s;
-	size_t t;
-	char   *buf;
-	char   *bufp;
-	char   *p;
+	ssize_t 	s;
+	size_t 		t;
+	char   		*buf;
+	char   		*bufp;
+	char   		*p;
+	char 		*date_suf;
+	time_t  	epoch;
 
-	char   m;
-	mode_t modus;
-	uid_t  uid;
-	gid_t  gid;
-	size_t size;
-	char   *name;
-
-	size_t i;
-	size_t c;
+	char   		m;
+	char   		*name;
+	mode_t 		modus;
+	uid_t  		uid;
+	gid_t  		gid;
+	size_t 		size;
+	size_t 		i;
+	size_t 		c;
 	
-	buf = g_malloc(BUFSIZE + 1);
-	bufp = buf;
-	s = BUFSIZE;
+	buf      = g_malloc(BUFSIZE + 1);
+	date_suf = g_malloc(SUFFIX_SIZE);
+	bufp     = buf;
+	s        = BUFSIZE;
 	
-	/* +33261 1000 1000 2885 /home/miekg/bin/tt */
-
+	(void)time(&epoch);
+	strftime(date_suf, SUFFIX_SIZE, ".%m%d.%H:%M", localtime(&epoch));
+	
+	/* Read line like this: 
+	 * +33261 1000 1000 2885 /home/miekg/bin/tt 
+	 */
 	while ((s = getdelim(&buf, &t, '\n', stdin)) != -1) {
 		if (t < LIST_MINSIZE) {
 			/* corrupt */
@@ -48,6 +80,7 @@ main(int argc, char **argv)
 		buf[s - 1] = '\0';
 
 		m = buf[0];  /* +/- */
+		
 		modus = (mode_t)atoi(buf + 1);
 		if (modus == 0) {
 			fprintf(stderr, "** Corrupt entry in filelist\n");
@@ -68,29 +101,41 @@ main(int argc, char **argv)
 		/* the rest is the name */
 		name = strdup(buf);
 
-		/* stdin is never closed here, so we keep reading the
-		 * number of bytes (size) we should read
-		 *
+		/*
 		 * buf is plundered and can be reused
 		 */
-		printf("%d,%d: %i %i\n", size, BUFSIZE, (size / BUFSIZE), (size % BUFSIZE));
-		for (i = 0; i < size / BUFSIZE; i++) {
-			c = fread(bufp, sizeof(char), BUFSIZE, stdin);
-			if (c != BUFSIZE) {
+		if (S_ISDIR(modus)) {
+			rmkdir(name, uid, gid);
+		}
+
+		if (S_ISLNK(modus)) {
+			/* we will be able to read this in one swoop */
+			c = fread(bufp, sizeof(char), size, stdin);
+			if (c != size) {
 				fprintf(stderr, "** Read too little from standard input\n");
 				exit(EXIT_FAILURE);
 			}
+			rmklnk(name, bufp, uid, gid);
 		}
-		/* read in the remainder */
-		c = fread(bufp, sizeof(char), size % BUFSIZE, stdin);
-		if (c != size % BUFSIZE) {
-			fprintf(stderr, "** Read too little from standard input\n");
-			exit(EXIT_FAILURE);
-		}
-		
-		printf("%c%d %d %d %d %s\n", m, modus, uid, gid, size, name);
 
-		buf = bufp;
+
+		if (S_ISREG(modus)) {
+			for (i = 0; i < size / BUFSIZE; i++) {
+				c = fread(bufp, sizeof(char), BUFSIZE, stdin);
+				if (c != BUFSIZE) {
+					fprintf(stderr, "** Read too little from standard input\n");
+					exit(EXIT_FAILURE);
+				}
+			}
+			/* read in the remainder */
+			c = fread(bufp, sizeof(char), size % BUFSIZE, stdin);
+			if (c != size % BUFSIZE) {
+				fprintf(stderr, "** Read too little from standard input\n");
+				exit(EXIT_FAILURE);
+			}
+			printf("%d %d %s\n", uid, gid, name);
+		}
+		buf = bufp; /* reset the pointer */
 		g_free(name);
 	}
 	exit(EXIT_SUCCESS);

@@ -9,7 +9,7 @@
 # It transforms rdup out from
 # +/-MODE UID GID FILESIZE PATH 
 # to 
-# +/-MODE UID GID FILESIZE PATHSIZE\nPATH FILECONTENTS
+# +/-MODE UID GID FILESIZE PATH\nFILECONTENTS
 # any zipping should be handled by the network protcol
 # encryption of file contents should be possible as
 # long as the filesize does not change!

@@ -9,7 +9,7 @@ backup_defines() {
         S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
         S_ISLNK=40960   # octal: 0120000
         S_MMASK=4095    # octal: 00007777, mask to get permis
-        suffix=`date +%Y%m%d.%H:%M`  # YYYYMMDD.HH:MM
+        suffix=`date %M%d.%H:%M`  # MMDD.HH:MM
         gzip=0
         keyfile=""
         verbose=0
