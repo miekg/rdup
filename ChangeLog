@@ -4,6 +4,7 @@
    * End-user script were improved.
    * Documentation and man pages were improved and
      updated to reflect the modifications in the scripts.
+   * Everything is now much more enduser friendly
    Code:
    * refactored printing in gfunc.c, this was a minor change.
 
