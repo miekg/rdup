@@ -76,3 +76,14 @@ mirror_ok() {
         echo "** STORED IN   : $backupdir" > /dev/fd/2
         echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }
+
+rmirror_ok() {
+        te=`date +%s`
+        echo "** #REG FILES  : $ireg"
+        echo "** #DIRECTORIES: $idir"
+        echo "** #LINKS      : $ilnk"
+        echo "** #(RE)MOVED  : $irm" 
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" 
+        echo "** STORED IN   : $backupdir" 
+        echo "** ELAPSED     : $(($te - $ts)) s" 
+}

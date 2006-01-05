@@ -8,8 +8,8 @@
 # It uses a slightly different format then what
 # rdup output, namely:
 # +/-MODE UID GID FILESIZE PATH\nFILECONTENTS
-# chown/chgrp is little pupose as the remote user is 
-# likely not to be root
+# chown/chgrp is of little pupose as the remote user is 
+# likely not to be root. Hide the errors?
 
 . @sysconfdir@/rdup/mshared.sh
 
@@ -46,7 +46,7 @@ do
                                 # empty
                                 touch "$backupdir/$path"
                         fi
-                        chown $uid:$gid "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path" 2>/dev/null
                         chmod $bits "$backupdir/$path"
                         ftsize=$(($ftsize + $fsize))
                         ireg=$(( $ireg + 1))
@@ -54,7 +54,7 @@ do
                         1)      # DIR
                         # size should be 0
                         [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                        chown $uid:$gid "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path" 2>/dev/null
                         chmod $bits "$backupdir/$path"
                         idir=$(( $idir + 1))
                         ;;
@@ -62,7 +62,7 @@ do
                         [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         target=`head -c $fsize`
                         ln -sf "$target" "$backupdir/$path" 
-                        chown -h $uid:$gid "$backupdir/$path"
+                        chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
                         ilnk=$(( $ilnk + 1))
                         ;;
                 esac
@@ -75,4 +75,4 @@ do
                 irm=$(( $irm + 1))
         fi
 done 
-mirror_ok
+rmirror_ok 
