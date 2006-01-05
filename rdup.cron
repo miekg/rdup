@@ -5,13 +5,14 @@
 # using the mirror scheme
 # first of the month: null dump
 # rest of the month incremental dumps
+RD=/etc/rdup
  
 # --- null dump --- #
-00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
-00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-var-mail /var/mail | /usr/sbin/excl | /usr/sbin/backup
-00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-var-svn /var/svn | /usr/sbin/excl | /usr/sbin/backup
-00 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-var-lib /var/lib | /usr/sbin/excl | /usr/sbin/backup
-50 02 1 * * root rm -f /etc/rdup/stamp && /usr/sbin/rdup /etc/rdup/elektron-homes /home | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f $RD/st-etc && /usr/sbin/rdup -N $RD/st-etc $RD/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/st-mail && /usr/sbin/rdup /etc/rdup/elektron-var-mail /var/mail | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/st-svn && /usr/sbin/rdup /etc/rdup/elektron-var-svn /var/svn | /usr/sbin/excl | /usr/sbin/backup
+00 02 1 * * root rm -f /etc/rdup/st-lib && /usr/sbin/rdup /etc/rdup/elektron-var-lib /var/lib | /usr/sbin/excl | /usr/sbin/backup
+50 02 1 * * root rm -f /etc/rdup/st-home && /usr/sbin/rdup /etc/rdup/elektron-homes /home | /usr/sbin/excl | /usr/sbin/backup
 
 # --- incremental --- #
 00 06 2-31 * * root /usr/sbin/rdup -N /etc/rdup/stamp /etc/rdup/elektron-etc /etc | /usr/sbin/excl | /usr/sbin/backup
