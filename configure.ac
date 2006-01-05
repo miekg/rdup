@@ -41,8 +41,8 @@ AC_CONFIG_FILES([Makefile
                  rcat.sh
                  tools/hist.sh 
                  tools/yesterday.sh
-                 doc/catch.sh.1
-                 doc/throw.sh.1
+                 doc/rmirror.sh.1
+                 doc/rcat.sh.1
                  doc/mirror.sh.8
                  doc/rdup.8
                  doc/hist.sh.1

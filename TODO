@@ -19,7 +19,7 @@ o graphic (GTK) frontend? What would it do?
         - systray info bubble - when doing backups
 
 # rest/shell 
-o shell script portability
+o shell script portability, date +%s is now also used...
 o manual page for excl.sh?
 o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
