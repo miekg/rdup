@@ -3,7 +3,7 @@
 # To extract the files from this archive, save it to some FILE, remove
 # everything before the `!/bin/sh' line above, then type `sh FILE'.
 #
-# Made on 2006-01-04 23:57 CET by <miekg@elektron>.
+# Made on 2006-01-05 20:50 CET by <miekg@peer>.
 # Source directory was `/home/miekg/svn/rdup/trunk/test/001_run.dir'.
 #
 # Existing files will *not* be overwritten unless `-c' is specified.
@@ -13,7 +13,7 @@
 # ------ ---------- ------------------------------------------
 #    280 -rw------- 001_run.dsc
 #    119 -rw------- 001_run.help
-#    661 -rw------- 001_run.test
+#    654 -rw------- 001_run.test
 #
 save_IFS="${IFS}"
 IFS="${IFS}:"
@@ -63,7 +63,7 @@ else
 fi
 rm -f 200112312359.59 123123592001.59 123123592001.5 1231235901 $$.touch
 #
-if mkdir _sh16171; then
+if mkdir _sh22408; then
   $echo 'x -' 'creating lock directory'
 else
   $echo 'failed to create lock directory'
@@ -156,25 +156,25 @@ cd $TPKG_BUILD
 X
 X./rdup -V && \
 echo "test" | ./excl.sh && \
-cat /dev/null | ./mirror/mirror.sh && \
+cat /dev/null | ./mirror.sh && \
 X./tools/yesterday.sh && \
 X./tools/hist.sh && \
 echo "b" | ./hdup/hdup2.sh
 SHAR_EOF
-  (set 20 06 01 04 23 57 43 '001_run.test'; eval "$shar_touch") &&
+  (set 20 06 01 05 20 49 55 '001_run.test'; eval "$shar_touch") &&
   chmod 0600 '001_run.test' ||
   $echo 'restore of' '001_run.test' 'failed'
   if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
   && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
     md5sum -c << SHAR_EOF >/dev/null 2>&1 \
     || $echo '001_run.test:' 'MD5 check failed'
-5c90996e41847193887687185c1ce93f  001_run.test
+bb24e67a737213fe95a1a9e094c2bca7  001_run.test
 SHAR_EOF
   else
     shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '001_run.test'`"
-    test 661 -eq "$shar_count" ||
-    $echo '001_run.test:' 'original size' '661,' 'current size' "$shar_count!"
+    test 654 -eq "$shar_count" ||
+    $echo '001_run.test:' 'original size' '654,' 'current size' "$shar_count!"
   fi
 fi
-rm -fr _sh16171
+rm -fr _sh22408
 exit 0

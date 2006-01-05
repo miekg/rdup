@@ -4,37 +4,38 @@ Run: autoconf && ./configure && make
 (Tested on Linux)
 
 As of version 0.0.2 getdelim is used, which is a GNUism, therefor
-compilation on FreeBSD fails, also see TODO.
+compilation on FreeBSD fails, also see TODO. There are more GNUism, like
+'date +%s' which should also be removed.
 
-2/ DIFF WITH RSYNC
+2/ DIFFERENCE WITH RSYNC
 
-While rsync really works well I wanted to have the ability to gzip
-and/or encrypt the backupped files. rsync can not do that, that's
-way I wrote rdup, which with the help of some scripts can do that.
+While rsync really works well, I wanted to have the ability to gzip
+and/or encrypt the backupped files. rsync can not do that, that's way I
+wrote rdup, which, with the help of some scripts can do that.
 
 3/ DOCUMENTATION
 
-rdup is a utility inspired by rsync and the plan9 way of doing
-backups. rdup it self does not backup anything, it only print
-a list of absolute filenames to standard output. Auxilary scripts are
-needed that act on this list and implement the backup strategy.  This
-way rdup can be kept lean and mean. Current the (stripped) rdup
-executable measures 12KB and I don't expect that to increase much.
+rdup is a utility inspired by rsync and the plan9 way of doing backups.
+rdup it self does not backup anything, it only print a list of absolute
+filenames to standard output. Auxilary scripts are needed that act on
+this list and implement the backup strategy.  This way rdup can be kept
+lean and mean. Current the (stripped) rdup executable measures 12KB and
+I don't expect that to increase much.
 
 The manual page explains rdup's options and usage. See rdup(8).
 
 The filelist as printed starts with the root of the filedump and then
 decends into directories. This way all top level directories can be
-created as is and in sequence. If you process the file in the same order
-no magic is needed to create directories that otherwise might be
-missing.
+created in sequence. If you process the files in the same order no magic
+is needed to create directories that otherwise might be missing.
 
 3.1/ FULL DUMP
 
-Run: rm -f timestamp && rdup -N timestamp FILELIST dir1
+So how do you actually make a backup with rdup then? First run:
+rm -f timestamp && rdup -N timestamp FILELIST dir1
 
-Every directory, file and symlink in dir1 will be printed to stdout,
-like this:
+Every directory, file and symlink in dir1 will be printed to standard
+out put, like this:
 +33152 1000 1000 0 /home/miekg/svn/rdup/trunk/bin/.svn/.nobackup
 +33216 1000 1000 528 /home/miekg/svn/rdup/trunk/bin/svnlog
 +33216 1000 1000 441 /home/miekg/svn/rdup/trunk/bin/zlog
@@ -48,22 +49,28 @@ Then we find the numeric user id and numeric group id. Then the
 filesize in bytes and as last the there is the pathname.
 
 To do a real backup you can use:
-rdup -N timestamp FILELIST dir | ./backup.sh -b /vol/backup/
+rm -f timestamp
+rdup -N timestamp FILELIST dir | ./mirror.sh -b /vol/backup/
 
-'backup.sh' is a shell script which looks at the filetype and acts
-accordingly. It copies the content (of the dir/symlink) to the archive
-directory, it creates a mirror of the actual disk layout of the
-directories to be backed up. By default it will put the files
-in /vol/backup/YYYYMM.
+'mirror.sh' is a shell script which looks at the filetype and acts
+accordingly. It copies the content of all files to the archive
+directory, directories and symlinks are recreated.
+
+Thus mirror.sh creates a mirror of the directories in the archive
+directory.
+
+By default it will put the files in /vol/backup/YYYYMM.
 
 3.2/ INCREMENTAL DUMP
 
 Just run:
-rdup -N timestamp FILELIST dir1 | ./backup.sh -b /vol/backup/ again. This
-will use the contents of FILELIST and will only print those files that
-are a newer then the m_time of file timestamp.
+rdup -N timestamp FILELIST dir1 | ./mirror.sh -b /vol/backup/ 
+again.
+This will use the contents of FILELIST and the date on `timestamp' and
+will only print those files that are a newer then the m_time of file
+timestamp.
 
-If we were not piping the output to 'backup.sh' we would see:
+If we were not piping the output to 'rmirror.sh' we would see:
 -33152 0 0 0 bin/blaat
 +16832 1000 1000 4096 bin/.svn
 
@@ -74,7 +81,7 @@ because that is a directory.
 
 Note: the examples given here are simplified, you cannot use a simple
 command, but need to use differentiate between directories, regular
-files and symbolic links. See the example script 'backup.sh' for an
+files and symbolic links. See the example script 'mirror.sh' for an
 implementation.
 
 You want gzipped backups?

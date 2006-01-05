@@ -58,14 +58,14 @@ install: rdup
 	${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
 	${INSTALL_DATA} mshared.sh ${DESTDIR}${sysconfdir}/rdup/mshared.sh
 	for i in $(SHS); do \
-	${INSTALL} $i mirror.sh ${DESTDIR}${sbindir}/$i ; done
+	${INSTALL} $i ${DESTDIR}${sbindir}/$i ; done
 #
 	${INSTALL_DATA} doc/rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
-	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.8
-	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.1
+	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.sh.8
+	${INSTALL_DATA} doc/rmirror.sh.8 ${DESTDIR}${mandir}/man1/rmirror.sh.8
+	${INSTALL_DATA} doc/rcat.sh.8 ${DESTDIR}${mandir}/man1/rcat.sh.8
+	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.sh.1
 	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.1
-	${INSTALL_DATA} doc/catch.sh.1 ${DESTDIR}${mandir}/man1/catch.sh.1
-	${INSTALL_DATA} doc/throw.sh.1 ${DESTDIR}${mandir}/man1/throw.sh.1
 
 uninstall:
 	rm -f ${DESTDIR}${sbindir}/rdup

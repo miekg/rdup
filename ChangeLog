@@ -1,7 +1,7 @@
 xx Jan 2005: 0.1.2 Miek <miek@miek.nl>
    * All scripts were completely reworked, local
      and remote backing up is now working.
-   * Enduser script were improved
+   * End-user script were improved
    * Documentation and man pages were improved and
      updated to reflect the modifications in the scripts.
 

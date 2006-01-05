@@ -2,23 +2,23 @@
 .TH HIST 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-hist, history \– print file names from the dump
+hist.sh, history \– print file names from the dump
 
 .SH SYNOPSIS
-.B hist
+.B hist.sh
 [ 
 .IR OPTIONS
 ] 
 .IR FILES ...
 
 .SH DESCRIPTION
-Hist prints the dates, names, and sizes of all versions of the named files,
+\fBhist.sh\fR prints the dates, names, and sizes of all versions of the named files,
 looking backwards in time, stored in the dump file system. If the file exists
 in the main tree, the first line of output will be its current state. 
 .PP
 For example,
 .PP
-        hist /vol/backup ~miekg/.bash_history
+        hist.sh /vol/backup ~miekg/.bash_history
 .PP
 produces
 .TS
@@ -46,7 +46,7 @@ an decryption key.
 .SH EXAMPLES
 Examine changes in block.c:
 .PP
-        hist \−d ~miekg/block.c
+        hist.sh \−d ~miekg/block.c
 
 .SH FILES
 Root of dump file system default to /vol/backup/`hostname`, but can be any
@@ -56,4 +56,4 @@ location.
 This manpage was copied verbatim from the hist(1) manual page of Plan9.
 
 .SH SEE ALSO
-yesterday(1) and rdup(8)
+yesterday.sh(1) and rdup(8)

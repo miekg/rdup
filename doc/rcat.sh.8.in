@@ -1,24 +1,23 @@
 '\" t
-
-.TH RMIRROR.SH 1 "2 Jan 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RCAT.SH 1 "2 Jan 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-rmirror.sh \- receive files when doing a remote dump
+rcat.sh \- remote cat
 
 .SH SYNOPSIS
-.B rmirror.sh
+.B rcat.sh
 [
 .IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBrmirror.sh\fR receive files that are \fBthrown\fR from the remote 
-location and dump them in the backup directory. The files are read
-from standard input.
+\fBrcat.sh\fR sends files so that \fBrmirror.sh\fR can receive
+them at a remote location. rcat.sh reads the output of rdup
+and generates a new list on standard output.
 
-.SH INPUT FORMAT
-The standard input rmirror.sh must adhere to the following format:
-        +|-MODE UID GID FILESIZE PATH\nFILECONTENT
+.SH OUTPUT FORMAT
+The output of rcat.sh has the following charateristics:
+        +|-MODE UID GID FILESIZE PATH\\nFILECONTENT
 .PP
 Where:
 .TP
@@ -49,19 +48,16 @@ the pathname
 the (possibly binary) contents of the file.
 .PP
 A typical example look like this:
-        +33216 1000 1000 11288 120 bin/rdup 
+        +33216 1000 1000 11288 120 bin/rdup
         <120 bytes contents>
 
 .SH OPTIONS
 .TP
-.B \-b backupdir
-Alternate backup directory. Defaults to /vol/backup/`hostname`.
-.TP
 .B \-z
-Gzip the file while receiving (not yet implemented).
+Gzip the file while sending (not yet implemented).
 
 .SH EXAMPLES
-Here we backup remotely to \fBremotehost\fR. The received
+Here we backup remotely to \fBremotehost\fR. The catched
 files are dumped in \fB/vol/backup/remote\fR.
         rdup LIST dir | rcat.sh  | \\
         ssh user@remotehost rmirror.sh -b /vol/backup/remote
@@ -71,4 +67,4 @@ Root of the dump file system defaults to /vol/backup/`hostname`, but can
 be any location.
 
 .SH SEE ALSO
-rcat.sh(1), hist(1) and rdup(8).
+rcat.sh(1), hist.sh(1) and rdup(8).

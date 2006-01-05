@@ -1,18 +1,22 @@
-The following backup schemes are included:
+The following scripts are included:
 
-mirror/
-        mirror locally to another directory. It is wise to put
-        this directory on a seperate harddisk.
+mirror.sh
+        mirror locally to another directory. It is prudent to put
+        this directory on a seperate harddisk. Example:
+        rdup -N ts LIST DIR | mirror.sh -b /vol/backup/HOSTNAME
 
-remote/
-        upload the contents of the backup to a remote host. This
-        utilizes sftp. The following cmd line should work:
- rdup FILES DIR | ./sftp.sh -b /remote/dir | sftp -C -b - user@remote:
+rmirror.sh
+        perform a remote backup. As the output of rdup isn't sufficient
+        for a remote backup we need `rcat.sh' to include the file
+        contents in the backup. Example:
+        rdup -N ts LIST DIR | rcat.sh | ssh -C user@remotehost \ 
+         rmirror.sh -v /vol/backup/remote/HOSTNAME
 
-        Also a second remote scheme which is more powerfull has been
-        implemented:
- rdup FILES DIR | ./throw.sh | ssh -C user@remote | ./catch.sh 
+scripts/hdup/
+        an implementation of the core hdup2 idea, can be extended to
+        work "just as" hdup2.
 
-hdup/
-        an implementation of the core hdup2 idea, can be easily extended
-        to work "just as" hdup2.
+tools/
+        yesterday.sh and hist.sh, scripts meant for users on systems
+        that use rdup. See their respective manual pages for more
+        information.
