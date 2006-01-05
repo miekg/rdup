@@ -16,16 +16,13 @@
 
 . @sysconfdir@/rdup/shared.sh
 
-backup_defines
-backup_cmd_options $@
-backup_dirdate
+tool_defines
+tool_cmd_options $@ # only need -v -k -h
 
 if [[ ! -z $keyfile && ! -f $keyfile ]]; then
         echo "** Can not open key file"
         exit 1
 fi
-
-alg="blowfish"
 
 declare -a path # catch spacing in the path
 while read mode uid gid size path
@@ -49,7 +46,7 @@ do
                 case $typ in
                         0)      # REG
                         echo "+$mode $uid $gid $size $path"
-                                cat "$path"
+                        cat "$path"
                         ;;
                         1)      # DIR
                         echo "+$mode $uid $gid 0 $path"

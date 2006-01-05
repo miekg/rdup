@@ -7,10 +7,10 @@
 
 . @sysconfdir@/rdup/shared.sh
 
-list_defines
-list_cmd_options $@
+tool_defines
+tool_cmd_options $@
 shift $(($OPTIND - 1))
-# backup_dirdate don't add date, recent handle this
+# tool_dirdate don't add date, recent handle this
 
 for file in $@
 do

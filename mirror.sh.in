@@ -5,10 +5,10 @@
 #
 # This script implement a mirroring backup scheme
 
-. @sysconfdir@/rdup/shared.sh
+. @sysconfdir@/rdup/mshared.sh
 
-backup_defines
-backup_cmd_options $@
+mirror_defines
+mirror_cmd_options $@
 alg="blowfish"
 
 if [[ ! -z $keyfile ]]; then
@@ -22,8 +22,8 @@ if [[ ! -z $keyfile ]]; then
         fi
 fi
 
-backup_dirdate
-backup_create_top $backupdir
+mirror_dirdate
+mirror_create_top $backupdir
 
 declare -a path # catch spacing in the path
 while read mode uid gid size path
@@ -46,36 +46,40 @@ do
                 # add
                 case $typ in
                         0)      # REG
-                        [[ -f "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [[ -f "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path$suffix"
                         if [[ $gzip -eq 1 ]]; then
                                 cat "$path" | gzip -c > "$backupdir/$path"
                         elif [[ ! -z $keyfile ]]; then
-                                       # will not work like this
                                 mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path" > "$backupdir/$path"
                         else 
-                                && cat "$path" > "$backupdir/$path"
+                                cat "$path" > "$backupdir/$path"
                         fi
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
+                        ftsize=$(($ftsize + $size))
+                        ireg=$(( $ireg + 1))
                         ;;
                         1)      # DIR
                         [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
+                        idir=$(($idir + 1))
                         ;;
                         2)      # LNK
-                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path$suffix"
                         cp -a "$path" "$backupdir/$path"
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
+                        ilnk=$(($ilnk + 1))
                         ;;
                 esac
         else
                 # remove. It could be the stuff is not there, don't
                 # error on that.
                 if [[ -e "$backupdir/$path" ]]; then
-                        mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        mv "$backupdir/$path" "$backupdir/$path$suffix"
                 fi
+                irm=$(($irm + 1))
         fi
 done 
-backup_successfull $backupdir
+mirror_ok

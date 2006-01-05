@@ -56,9 +56,9 @@ install: rdup
 	mkdir -p ${DESTDIR}${mandir}/man8
 	${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
 	${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
-	for i in $(SHS); do 
-	${INSTALL} $i mirror.sh ${DESTDIR}${sbindir}/$i
-	done
+	${INSTALL_DATA} mshared.sh ${DESTDIR}${sysconfdir}/rdup/mshared.sh
+	for i in $(SHS); do \
+	${INSTALL} $i mirror.sh ${DESTDIR}${sbindir}/$i ; done
 #
 	${INSTALL_DATA} doc/rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
 	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.8

@@ -1,11 +1,13 @@
 xx Jan 2005: 0.1.2 Miek <miek@miek.nl>
-   * Added manpages remote/catch.sh.1 and remote/throw.sh.1
-   * Mirror script debugged
-   * Rearranged the layout of the source directory. Docs are now
-     in a doc/ directory.
+   * All scripts were completely reworked, local
+     and remote backing up is now working.
+   * Enduser script were improved
+   * Documentation and man pages were improved and
+     updated to reflect the modifications in the scripts.
 
    Code:
    * refactored printing in gfunc.c
+
 
 02 Jan 2005: 0.1.1 Miek <miek@miek.nl>
    * Use strcmp instead of g_ascii_strcasecmp() as

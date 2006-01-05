@@ -11,20 +11,17 @@
 
 declare -a fileexcludelist
 declare -a direxcludelist
-
-# copied from my hdup.conf
 fileexcludelist=".slide_img.* .thumb_img.*"
 direxcludelist="lost+found/ /proc/ /dev/ /sys/ .Trash/ .Cache/ tmp/"
 
 . @sysconfdir@/rdup/shared.sh
 backup_defines
-backup_dirdate
 
 declare -a path # catch spacing in the path
 while read mode uid gid size path
 do
-        dump=${mode:0:1}        # to add or remove
-        mode=${mode:1}          # st_mode bits
+        dump=${mode:0:1}        
+        mode=${mode:1}         
         typ=0
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1;

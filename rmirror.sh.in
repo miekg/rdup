@@ -11,14 +11,12 @@
 # chown/chgrp is little pupose as the remote user is 
 # likely not to be root
 
-. @sysconfdir@/rdup/shared.sh
+. @sysconfdir@/rdup/mshared.sh
 
-backup_defines
-backup_cmd_options $@
-backup_dirdate
-backup_create_top $backupdir
-
-bsize=10240
+mirror_defines
+mirror_cmd_options $@
+mirror_dirdate
+mirror_create_top $backupdir
 
 while read mode uid gid fsize path
 do
@@ -50,23 +48,31 @@ do
                         fi
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
+                        ftsize=$(($ftsize + $fsize))
+                        ireg=$(( $ireg + 1))
                         ;;
                         1)      # DIR
                         # size should be 0
                         [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
+                        idir=$(( $idir + 1))
                         ;;
                         2)      # LNK, target is in the content! 
                         [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
                         target=`head -c $fsize`
                         ln -sf "$target" "$backupdir/$path" 
                         chown -h $uid:$gid "$backupdir/$path"
+                        ilnk=$(( $ilnk + 1))
                         ;;
                 esac
         else
                 echo
                 # remove
-                mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                if [[ -e "$backupdir/$path" ]]; then
+                        mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                fi
+                irm=$(( $irm + 1))
         fi
 done 
+mirror_ok

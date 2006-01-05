@@ -258,5 +258,11 @@ main(int argc, char **argv)
 #if 0
 	g_tree_free(remove);
 #endif
+	fprintf(stderr, "** DIRECTORIES :");
+	for (i = 1; i < argc; i++) {
+		fprintf(stderr, " %s", argv[i]);
+	}
+	fprintf(stderr, "\n");
+
 	exit(EXIT_SUCCESS);
 }
