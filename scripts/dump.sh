@@ -1,25 +1,23 @@
 #!/bin/sh
 
-# small script to tie a backup together
-
 # all relative to /etc/rdup
 # $1 = timestamp file
 # $2 = file list
-# $3 = dir
+# $3 ... = dirs
 
 # so we need:
 # dump null timestamp.home filelist.home /home
 
 type=$1  # null/incr
-ts=$2
-list=$3
-dir=$4
+name=$2
+# dirs in $@
+shift
+shift
 
 if [[ $type == "null" ]]; then
-        # kill the timestamp
-        rm -f /etc/rdup/$ts
-        # kill the inc list
-        rm -f /etc/rdup/$list
+        # kill the timestamp and inc list
+        rm -f /etc/rdup/ts-$name /etc/rdup/list-$name
 fi
 
-/usr/sbin/rdup -N /etc/rdup/$ts /etc/rdup/$list $dir | /usr/sbin/excl | /usr/sbin/backup
+/usr/sbin/rdup -N /etc/rdup/ts-$name /etc/rdup/list-$name $dir | \
+/usr/sbin/excl.sh | /usr/sbin/mirror.sh

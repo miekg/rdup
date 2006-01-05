@@ -14,7 +14,7 @@ mirror_defines() {
         verbose=0
         idir=0
         ireg=0
-        llnk=0
+        ilnk=0
         irm=0
         ftsize=0
         ts=`date +%s` # gnuism
@@ -74,5 +74,5 @@ mirror_ok() {
         echo "** #(RE)MOVED  : $irm" > /dev/fd/2
         echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
         echo "** STORED IN   : $backupdir" > /dev/fd/2
-        echo "** ELAPSED     : $(( ($te - $ts) / 60)) m" > /dev/fd/2
+        echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }

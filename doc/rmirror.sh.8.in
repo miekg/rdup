@@ -14,6 +14,8 @@ rmirror.sh \- receive files when doing a remote dump
 \fBrmirror.sh\fR receive files that are \fBthrown\fR from the remote 
 location and dump them in the backup directory. The files are read
 from standard input.
+If files already exist in the backup directory they will get a
+suffix. This suffix is of the form: '+DD.HH:MM'.
 
 .SH INPUT FORMAT
 The standard input rmirror.sh must adhere to the following format:

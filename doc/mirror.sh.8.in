@@ -13,6 +13,9 @@ mirror \- mirror the files from the list on standard input
 .SH DESCRIPTION
 \fBmirror\fR copies the files it gets from standard input to the directory
 specified with the \-b option. This script \fIimplements\fR the backup policy. 
+.PP
+If a file already exists in the backup directory it will be moved and
+will get a suffix. This suffix is of the form: '+DD.HH:MM'. 
 
 .SH OPTIONS
 .TP 

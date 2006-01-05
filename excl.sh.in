@@ -12,10 +12,10 @@
 declare -a fileexcludelist
 declare -a direxcludelist
 fileexcludelist=".slide_img.* .thumb_img.*"
-direxcludelist="lost+found/ /proc/ /dev/ /sys/ .Trash/ .Cache/ tmp/"
+direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/ tmp/"
 
 . @sysconfdir@/rdup/shared.sh
-backup_defines
+tool_defines
 
 declare -a path # catch spacing in the path
 while read mode uid gid size path
