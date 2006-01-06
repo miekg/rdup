@@ -19,7 +19,7 @@ suffix. This suffix is of the form: '+DD.HH:MM'.
 
 .SH INPUT FORMAT
 The standard input rmirror.sh must adhere to the following format:
-        +|-MODE UID GID FILESIZE PATH\nFILECONTENT
+        +|-MODE UID GID FILESIZE PATH\\nFILECONTENT
 .PP
 Where:
 .TP

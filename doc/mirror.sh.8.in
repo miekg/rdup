@@ -19,7 +19,7 @@ will get a suffix. This suffix is of the form: '+DD.HH:MM'.
 
 .SH OPTIONS
 .TP 
-.B \-−b backupdir
+.B \-b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
 .B \-k keyfile

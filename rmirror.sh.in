@@ -38,7 +38,7 @@ do
                 # add
                 case $typ in
                         0)      # REG
-                        [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [ -f "$backupdir/$path" ] && mv "$backupdir/$path" "$backupdir/$path$suffix"
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
                                 head -c $fsize > "$backupdir/$path"
@@ -59,7 +59,7 @@ do
                         idir=$(( $idir + 1))
                         ;;
                         2)      # LNK, target is in the content! 
-                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path$suffix"
                         target=`head -c $fsize`
                         ln -sf "$target" "$backupdir/$path" 
                         chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
@@ -70,7 +70,7 @@ do
                 echo
                 # remove
                 if [[ -e "$backupdir/$path" ]]; then
-                        mv "$backupdir/$path" "$backupdir/$path.$suffix"
+                        mv "$backupdir/$path" "$backupdir/$pathsuffix"
                 fi
                 irm=$(( $irm + 1))
         fi
