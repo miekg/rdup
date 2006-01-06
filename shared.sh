@@ -78,7 +78,9 @@ recent() {
 
 ## calculate the date back in time $1 days ago
 datesago() {
-        daysago=$(($1 * 86400))
-        epochago=$((`date +%s` - $daysago))
-        echo `date --date "Jan 1, 1970 00:00:00 + $epochago seconds" +%Y%m%d`
+        echo `date --date "$1 days ago" +%Y%m%d` # YYYYMMDD
+}
+
+monthsago() {
+        echo `date --date "$1 months ago" +%Y%m` # YYYYMM
 }

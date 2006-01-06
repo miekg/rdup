@@ -9,7 +9,7 @@
 
 tool_defines
 tool_cmd_options $@
-tool_dirdate
+# tool_dirdate # we do that ourselves
 shift $(($OPTIND - 1))
 
 for file in $@
@@ -20,20 +20,26 @@ do
         if [[ ${file:0:1} != "/" ]]; then
                 file=`pwd`/$file
         fi
-        [[ ! -e $backupdir$file ]] && \
-                echo "** Not found in archive: $file" && continue
 
-        if [[ -d $backupdir$file ]]; then  
-                ls -odh $backupdir$file 2>/dev/null \
-| awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
-                ls -odh $backupdir$file.????????.??:?? 2>/dev/null \
-| awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
-                continue;
-        fi
+        # go back 3 months
+        for i in 0 1 2 3; do
+                yyyymm=`monthsago $i`
+                b=$backupdir/$yyyymm
+        
+                [[ ! -e $b$file ]] && continue
 
-        # print +DD.HH:MM
-        ls -o $backupdir$file 2>/dev/null \
+                if [[ -d $b$file ]]; then  
+                        ls -odh $b$file 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
-        ls -o $backupdir$file+??.??:?? 2>/dev/null \
+                        ls -odh $b$file+??.??:?? 2>/dev/null \
 | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
+                        continue
+                fi
+
+                # print +DD.HH:MM
+                ls -o $b$file 2>/dev/null \
+| awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
+                ls -o $b$file+??.??:?? 2>/dev/null \
+| awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
+        done
 done
