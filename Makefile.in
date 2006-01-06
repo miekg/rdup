@@ -69,7 +69,7 @@ install: rdup
 	${INSTALL_DATA} doc/rmirror.sh.8 ${DESTDIR}${mandir}/man8/rmirror.sh.8
 	${INSTALL_DATA} doc/rcat.sh.8 ${DESTDIR}${mandir}/man8/rcat.sh.8
 	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.sh.1
-	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.1
+	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.sh.1
 
 uninstall:
 	rm -f ${DESTDIR}${sbindir}/rdup

@@ -2,7 +2,7 @@
 .TH HIST 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-hist.sh, history \– print file names from the dump
+host.sh, history \- print file names from the dump
 
 .SH SYNOPSIS
 .B hist.sh
@@ -34,7 +34,7 @@ l l.
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
 .B \-d
-The \−d option causes diff(1) \−u to be run for each adjacent pair of
+The \d option causes diff(1) \-u to be run for each adjacent pair of
 dump files. This is not yet implemented.
 .B \-z
 The backupped file is gzipped
@@ -46,7 +46,7 @@ an decryption key.
 .SH EXAMPLES
 Examine changes in block.c:
 .PP
-        hist.sh \−d ~miekg/block.c
+        host.sh \-d ~miekg/block.c
 
 .SH FILES
 Root of dump file system default to /vol/backup/`hostname`, but can be any
