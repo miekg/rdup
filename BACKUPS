@@ -1,0 +1,32 @@
+1/ HOW TO MAKE BACKUPS
+
+1. What directories do you want to backup?
+   (Let's say: /home)
+2. Where do you want to store the backups?
+   (Let's say: /vol/backup/`hostname`, this is the default)
+
+By default mirror.sh will create a backup directory for
+each year and month. Thus the current backup is put in
+'/vol/backup/`hostname`/200601'  (January 2006 backup).
+
+1.1/ LOCAL FULL DUMP
+
+As root run:
+rm -f /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST  
+/usr/bin/rdup -N /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST /home |\
+/usr/sbin/mirror.sh
+
+When this completes it will print (or somehing very simular):
+** #REG FILES  : 32
+** #DIRECTORIES: 2521
+** #LINKS      : 0
+** #(RE)MOVED  : 2
+** SIZE        : 139305 KB
+** STORED IN   : /vol/backup/elektron/200601
+** ELAPSED     : 42 s
+
+1.2/ LOCAL INCREMENTAL DUMP
+
+An incremental dump is easy, just run the above command again, but
+be sure that HOME_TIMESTAMP and HOMELIST are created by the null
+dump.
