@@ -34,7 +34,7 @@ do
                 0|2)      # reg file or link
                 for file in $fileexcludelist; do 
                         if [[ "$path" =~ $i ]]; then
-                                continue
+                                continue 2 # jump to next while
                         fi
                 done
                 # don't exclude, print it
@@ -43,7 +43,7 @@ do
                 1)      # directory
                 for i in $direxcludelist; do 
                         if [[ "$path" =~ $i ]]; then
-                                continue
+                                continue 2
                         fi
                 done
                 # don't exclude, print it

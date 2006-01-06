@@ -1,26 +1,32 @@
 TODO: 
-# rdup util: 
+
+:portability:
+o getline is GNU-ism, freebsd has fgetln
+o shell script portability, date +%s is now also used...
+
+:rdup util: 
 o ignore or handle signals? Needed to decide what to do with the FILELIST
   and the timestamp, at least sigpipe, fail gracefully.
 o better error handling on syscalls? bail out or try to continue?
-o getline is GNU-ism, freebsd has fgetln
 # rel. minor:
 o valgrind and g_free
 o documentation updates
-o ?
 
-# test
+:tests:
 o do a make install test
 
+:doc:
+o manual page for excl.sh? Its more a script that needs to be
+  edited
+
+:gtk:
 o graphic (GTK) frontend? What would it do?
         - specify what to backup
         - to where
         - how often, cron interface
         - systray info bubble - when doing backups
 
-# rest/shell 
-o shell script portability, date +%s is now also used...
-o manual page for excl.sh?
+:shell:
 o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
   do something with it

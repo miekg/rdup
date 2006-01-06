@@ -1,10 +1,11 @@
-05 Jan 2005: 0.1.2 Miek <miek@miek.nl>
+06 Jan 2005: 0.1.2 Miek <miek@miek.nl>
    * All scripts were completely reworked, local
      and remote backing up is now working.
-   * End-user script were improved.
+   * End-user script were improved, excl.sh is now
+     a working example. Everything is much more 
+     enduser friendly
    * Documentation and man pages were improved and
      updated to reflect the modifications in the scripts.
-   * Everything is now much more enduser friendly
    Code:
    * refactored printing in gfunc.c, this was a minor change.
 
