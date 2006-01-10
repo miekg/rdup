@@ -16,7 +16,7 @@ rm -f /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST
 /usr/bin/rdup -N /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST /home |\
 /usr/sbin/mirror.sh
 
-When this completes it will print (or somehing very simular):
+When this completes it will print (or something very simular):
 ** #REG FILES  : 32
 ** #DIRECTORIES: 2521
 ** #LINKS      : 0

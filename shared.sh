@@ -52,6 +52,9 @@ tool_cmd_usage() {
 
 ## find the closest file to the one N days ago
 ## if there are multiple return the latest
+## blaat           -n0 -> this one
+## blaat+05:6:10   -n5 -> this one
+## blaat+07:6:10   -n7 -> this one
 recent() {
         if [[ $1 -ge 32 ]]; then return; fi 
 
@@ -62,7 +65,7 @@ recent() {
                 # first check without suffix
                 files=`ls "$backupdir"/$yyyymm/"$2" 2>/dev/null`
                 if [[ -z $files ]]; then
-                        files=`ls "$backupdir"/$yyyymm/"$2+$suffix".* 2>/dev/null`
+                        files=`ls "$backupdir"/$yyyymm/"$2+$daysuffix".* 2>/dev/null`
                         if [[ ! -z $files ]]; then
                                 break
                         fi
