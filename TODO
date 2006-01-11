@@ -34,6 +34,9 @@ o Encryption: it changes the file size! This means it cannot be
 o hist.sh go back more months?
 o where to place to aux. scripts? /usr/lib/rdup ??
 
+:cron:
+o port over some scripts from hdup2 to remove old backups
+
 PARTLY DONE:
 ---
 

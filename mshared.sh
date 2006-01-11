@@ -3,12 +3,11 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 
-# some general defines needed to read rdup's output
+## some general defines needed to read rdup's output
 mirror_defines() {
         S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
         S_ISLNK=40960   # octal: 0120000
         S_MMASK=4095    # octal: 00007777, mask to get permission
-        suffix=`date +\+%d.%H:%M`  # +DD.HH:MM
         keyfile=""
         gzip=0
         verbose=0
@@ -20,7 +19,16 @@ mirror_defines() {
         ts=`date +%s` # gnuism
 }
 
-# add the current date suffix to $backupdir
+## gets a filepath and return the correct sufffix in +DD.HH.MM
+## XXX portability
+mirror_suffix() {
+        fulldate=`ls -l $1 | awk ' { print $6 $7 } '`
+        dd=${fulldate:8:2}
+        tt=${fulldate:10}
+        echo "+$dd.$tt"
+}
+
+## add the current date suffix to $backupdir
 mirror_dirdate() {
         backupdir=$backupdir/`date +%Y%m`
 }

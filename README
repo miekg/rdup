@@ -3,6 +3,9 @@
 Run: autoconf && ./configure && make
 (Tested on Linux)
 
+rdup depends on Glib to build. Glib is the lowlevel C library of the
+GTK project. 
+
 As of version 0.0.2 getdelim is used, which is a GNUism, therefor
 compilation on FreeBSD fails, also see TODO. There are more GNUism, like
 'date +%s' which should also be removed.

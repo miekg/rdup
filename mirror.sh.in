@@ -46,7 +46,10 @@ do
                 # add
                 case $typ in
                         0)      # REG
-                        [[ -f "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path$suffix"
+                        if [[ -f "$backupdir/$path" ]]; then
+                                suffix=`mirror_suffix $backupdir/$path`
+                                mv "$backupdir/$path" "$backupdir/$path$suffix"
+                        fi
                         if [[ $gzip -eq 1 ]]; then
                                 cat "$path" | gzip -c > "$backupdir/$path"
                         elif [[ ! -z $keyfile ]]; then
@@ -66,7 +69,10 @@ do
                         idir=$(($idir + 1))
                         ;;
                         2)      # LNK
-                        [[ -L "$backupdir/$path" ]] && mv "$backupdir/$path" "$backupdir/$path$suffix"
+                        if [[ -L "$backupdir/$path" ]]; then
+                                suffix=`mirror_suffix $backupdir/$path`
+                                mv "$backupdir/$path" "$backupdir/$path$suffix"
+                        fi
                         cp -a "$path" "$backupdir/$path"
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
@@ -77,6 +83,7 @@ do
                 # remove. It could be the stuff is not there, don't
                 # error on that.
                 if [[ -e "$backupdir/$path" ]]; then
+                        suffix=`mirror_suffix $backupdir/$path`
                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                 fi
                 irm=$(($irm + 1))
