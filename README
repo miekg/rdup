@@ -3,6 +3,9 @@
 Run: autoconf && ./configure && make
 (Tested on Linux)
 
+Note: autoCONF not autoreconf. If you executed an autoreconf the
+config.h.in will be messed up and you need to fetch a fresh one.
+
 rdup depends on Glib to build. Glib is the lowlevel C library of the
 GTK project. 
 
