@@ -56,27 +56,26 @@ tool_cmd_usage() {
 ## blaat+05:6:10   -n5 -> this one
 ## blaat+07:6:10   -n7 -> this one
 recent() {
-        if [[ $1 -ge 32 ]]; then return; fi 
+        if [[ $1 -ge 32 ]]; then return; fi
 
-        for i in `seq $1 -1 0`; do 
+        for i in `seq $1 -1 0`; do
                 suffix=`datesago $i`
                 dayfix=${suffix:6:8}  # mshared.sh has the def.
                 yyyymm=${suffix:0:6}
-                # first check without suffix
-                files=`ls "$backupdir"/$yyyymm/"$2" 2>/dev/null`
-                if [[ -z $files ]]; then
-                        files=`ls "$backupdir"/$yyyymm/"$2+$daysuffix".* 2>/dev/null`
-                        if [[ ! -z $files ]]; then
-                                break
-                        fi
-                else
-                        break
+                # first check with suffix
+                files=`ls "$backupdir"/$yyyymm/"$2"+$dayfix.* 2>/dev/null`
+                if [[ ! -z $files ]]; then
+                        echo $files | sort -n -r | head -1
+                        return
                 fi
         done
-        if [[ -z $files ]]; then 
+        files=`ls "$backupdir"/$yyyymm/"$2" 2>/dev/null`
+        if [[ -z $files ]]; then
+                return
+        else
+                echo $files | sort -n -r | head -1
                 return
         fi
-        echo $files | sort -n -r | head -1
 }
 
 ## calculate the date back in time $1 days ago

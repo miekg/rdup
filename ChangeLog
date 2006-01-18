@@ -1,7 +1,9 @@
-xx Jan 2005: 0.1.3 Miek <miek@miek.nl>
+18 Jan 2005: 0.1.3 Miek <miek@miek.nl>
    * hist.sh updated, it goes back for 3 months now
+   * yesterday.sh now works correctly 
    * mirror.sh/rmirror.sh now create suffixes for backup
-     files based on their creation time
+     files based on their creation time. The suffix 
+     used it +MONTHDAY.HH.MM.
 
 
 06 Jan 2005: 0.1.2 Miek <miek@miek.nl>
