@@ -3,7 +3,7 @@
    * yesterday.sh now works correctly 
    * mirror.sh/rmirror.sh now create suffixes for backup
      files based on their creation time. The suffix 
-     used it +MONTHDAY.HH.MM.
+     used is +MONTHDAY.HH.MM.
 
 
 06 Jan 2005: 0.1.2 Miek <miek@miek.nl>
