@@ -1,7 +1,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* for GNU getdelim */
-#undef HAVE_DELIM
+/* Define to 1 if you have the `getdelim' function. */
+#undef HAVE_GETDELIM
 
 /* Define to 1 if you have the <getopt.h> header file. */
 #undef HAVE_GETOPT_H
