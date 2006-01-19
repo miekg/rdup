@@ -1,7 +1,7 @@
 TODO: 
 
 :portability:
-o shell script portability, date +%s is now also used...
+-done-
 
 :rdup util: 
 o ignore or handle signals? Needed to decide what to do with the FILELIST
@@ -9,7 +9,6 @@ o ignore or handle signals? Needed to decide what to do with the FILELIST
 o better error handling on syscalls? bail out or try to continue?
 # rel. minor:
 o valgrind and g_free
-o documentation updates
 
 :tests:
 o do a make install test
@@ -17,9 +16,9 @@ o do a make install test
 :doc:
 o manual page for excl.sh? Its more a script that needs to be
   edited
-o more docs
+o documentation updates
 
-:gtk:
+:gtk: (if ever)
 o graphic (GTK) frontend? What would it do?
         - specify what to backup
         - to where
@@ -40,10 +39,14 @@ o port over some scripts from hdup2 to remove old backups
 PARTLY DONE:
 o getline is GNU-ism, freebsd has fgetln
   configure adapted
+  need to code it...
 
 ---
 
 DONE:
+o shell script portability, date +%s is now also used...
+  19 Jan. FreeBSD 6 has date +%s - enough for me...
+
 o hist.sh go back more months?
   10 Jan
 
