@@ -17,6 +17,14 @@ time_t opt_timestamp = 0;
 gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 
+#ifndef HAVE_DELIM
+/* implement our version of getdelim for use on FreeBSD (and maybe others) */
+ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream) {
+	/* do something */
+	return 0;
+}
+#endif /* ! HAVE_DELIM */
+
 void
 usage(FILE *f) 
 {	

@@ -1,17 +1,10 @@
 1/ TO BUILD
 
-Run: autoconf && ./configure && make
-(Tested on Linux)
-
-Note: autoCONF not autoreconf. If you executed an autoreconf the
-config.h.in will be messed up and you need to fetch a fresh one.
+Run: autoreconf && ./configure && make
+(Tested on Linux/FreeBSD)
 
 rdup depends on Glib to build. Glib is the lowlevel C library of the
-GTK project. 
-
-As of version 0.0.2 getdelim is used, which is a GNUism, therefor
-compilation on FreeBSD fails, also see TODO. There are more GNUism, like
-'date +%s' which should also be removed.
+GTK project. Configure will check for this.
 
 2/ DIFFERENCE WITH RSYNC
 

@@ -1,7 +1,6 @@
 TODO: 
 
 :portability:
-o getline is GNU-ism, freebsd has fgetln
 o shell script portability, date +%s is now also used...
 
 :rdup util: 
@@ -26,21 +25,28 @@ o graphic (GTK) frontend? What would it do?
         - to where
         - how often, cron interface
         - systray info bubble - when doing backups
+        - yesterday.sh frontend
+        - hist.sh frontend (or in nautilus?)
 
 :shell:
 o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
   do something with it
-o hist.sh go back more months?
 o where to place to aux. scripts? /usr/lib/rdup ??
 
 :cron:
 o port over some scripts from hdup2 to remove old backups
 
 PARTLY DONE:
+o getline is GNU-ism, freebsd has fgetln
+  configure adapted
+
 ---
 
 DONE:
+o hist.sh go back more months?
+  10 Jan
+
 o implement -n for yesterday/hist
   29 Dec 2006, core function is there, but is it not finished yet
   1 Jan, finished it.

@@ -60,7 +60,7 @@ do
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
                         ftsize=$(($ftsize + $size))
-                        ireg=$(( $ireg + 1))
+                        ireg=$(($ireg + 1))
                         ;;
                         1)      # DIR
                         [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"

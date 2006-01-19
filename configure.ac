@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdup, 0.1.3, miek@miek.nl, rdup)
+AC_INIT(rdup, 0.2.0, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
@@ -15,6 +15,32 @@ AC_PROG_MAKE_SET
 
 # Checks for glib 
 AM_PATH_GLIB_2_0(2.0.0)
+
+AC_DEFUN([AC_CHECK_DELIM],
+[AC_REQUIRE([AC_PROG_CC])
+AC_MSG_CHECKING(for GNU delim)
+AC_CACHE_VAL(ac_cv_c_delim,
+[ac_cv_c_delim=no
+AC_TRY_COMPILE(
+[#define _GNU_SOURCE
+#include <stdio.h>
+void f(void) { FILE *fp; char *line; size_t len; (void)getline(&line, &len, fp); }],
+[
+        f();
+],
+[ac_cv_c_delim="yes"],
+[ac_cv_c_delim="no"])
+])
+
+AC_MSG_RESULT($ac_cv_c_delim)
+if test $ac_cv_c_delim = yes; then
+        AC_DEFINE(HAVE_DELIM, 1, [for GNU delim])
+fi
+])dnl
+
+AC_CHECK_DELIM
+
+
 
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,

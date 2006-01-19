@@ -18,5 +18,5 @@ scripts/hdup/
 
 tools/
         yesterday.sh and hist.sh, scripts meant for users on systems
-        that use rdup. See their respective manual pages for more
+        that use rdup/mirror.sh. See their respective manual pages for more
         information.

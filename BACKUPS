@@ -12,7 +12,7 @@ each year and month. Thus the current backup is put in
 1.1/ LOCAL FULL DUMP
 
 As root run:
-rm -f /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST  
+rm -f /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST && \
 /usr/bin/rdup -N /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST /home |\
 /usr/sbin/mirror.sh
 
@@ -27,6 +27,14 @@ When this completes it will print (or something very simular):
 
 1.2/ LOCAL INCREMENTAL DUMP
 
-An incremental dump is easy, just run the above command again, but
-be sure that HOME_TIMESTAMP and HOMELIST are created by the null
-dump.
+An incremental dump is easy, just run:
+/usr/bin/rdup -N /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST /home |\
+/usr/sbin/mirror.sh
+
+This will dump all files that have changed sine the last dump. The time
+of the last dump is gotten from the file HOME_TIMESTAMP. Old files in
+the backup filesystem are moved to: filename+MONTHDAY.HH.MM and the new
+files are put in place.
+
+Incremental backups can be run as often as you want. The tools
+yesterday.sh and hist.sh can be used to retrieve old files.
