@@ -20,7 +20,7 @@ gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 
 #ifndef HAVE_GETDELIM
-ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream) {
+ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 #endif /* !HAVE_GETDELIM */
 
 void

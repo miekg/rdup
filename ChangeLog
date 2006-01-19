@@ -1,6 +1,6 @@
    Jan 2006: 0.2.0 Miek <miek@miek.nl>
-   * jumped to version 0.2.0, almost ready for 1.0.0
-   * ported to FreeBSD 
+   * jumped to version 0.2.0.
+   * ported to FreeBSD, getdelim.c was added for that.
    * reworked autoconf, autoREconf && ./configure && make
      can now be used.
 
