@@ -3,7 +3,9 @@
  * See LICENSE for the license
  */
 
+#ifdef HAVE_GETDELIM
 #define _GNU_SOURCE
+#endif
 #include "rdup.h"
 
 /* options */
@@ -18,11 +20,7 @@ gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 
 #ifndef HAVE_GETDELIM
-/* implement our version of getdelim for use on FreeBSD (and maybe others) */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream) {
-	/* do something */
-	return 0;
-}
 #endif /* !HAVE_GETDELIM */
 
 void
