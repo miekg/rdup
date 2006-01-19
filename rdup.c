@@ -3,9 +3,6 @@
  * See LICENSE for the license
  */
 
-#ifdef HAVE_GETDELIM
-#define _GNU_SOURCE
-#endif
 #include "rdup.h"
 
 /* options */
@@ -18,10 +15,8 @@ time_t opt_timestamp = 0;
 /* crawler.c */
 gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
-
-#ifndef HAVE_GETDELIM
+/* no matter what, this prototype is correct */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
-#endif /* !HAVE_GETDELIM */
 
 void
 usage(FILE *f) 

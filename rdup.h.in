@@ -5,6 +5,10 @@
 
 #include "config.h"
 
+#ifdef HAVE_GETDELIM
+#define _GNU_SOURCE
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -30,13 +34,11 @@
 #define VERSION     "@PACKAGE_VERSION@"
 #define PROGNAME    "@PACKAGE_NAME@"
 
-#include "config.h"
-
 #define BUFSIZE         2048
 #define NOBACKUP        ".nobackup"      
 #define NULL_DUMP       0
 #define DIR_SEP         '/'
-#define VALUE           (void*)1 /* g_tree_lookup return this in rdup */
+#define VALUE           (void*)1 /* g_tree_lookup returns this in rdup */
 #define F_STACKSIZE    200
 #define D_STACKSIZE    100
 
