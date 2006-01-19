@@ -18,13 +18,13 @@ AM_PATH_GLIB_2_0(2.0.0)
 
 AC_DEFUN([AC_CHECK_DELIM],
 [AC_REQUIRE([AC_PROG_CC])
-AC_MSG_CHECKING(for GNU delim)
+AC_MSG_CHECKING(for GNU getdelim)
 AC_CACHE_VAL(ac_cv_c_delim,
 [ac_cv_c_delim=no
 AC_TRY_COMPILE(
 [#define _GNU_SOURCE
 #include <stdio.h>
-void f(void) { FILE *fp; char *line; size_t len; (void)getline(&line, &len, fp); }],
+void f(void) { FILE *fp; char *line; size_t len; (void)getdelim(&line, &len, '\n', fp); }],
 [
         f();
 ],
@@ -34,7 +34,7 @@ void f(void) { FILE *fp; char *line; size_t len; (void)getline(&line, &len, fp);
 
 AC_MSG_RESULT($ac_cv_c_delim)
 if test $ac_cv_c_delim = yes; then
-        AC_DEFINE(HAVE_DELIM, 1, [for GNU delim])
+        AC_DEFINE(HAVE_DELIM, 1, [for GNU getdelim])
 fi
 ])dnl
 
