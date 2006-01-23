@@ -5,6 +5,8 @@ mirror.sh
         this directory on a seperate harddisk. Example:
         rdup -N ts LIST DIR | mirror.sh -b /vol/backup/HOSTNAME
 
+        Where /vol/backup lives on another disk.
+
 rmirror.sh
         perform a remote backup. As the output of rdup isn't sufficient
         for a remote backup we need `rcat.sh' to include the file
@@ -14,7 +16,8 @@ rmirror.sh
 
 scripts/hdup/
         an implementation of the core hdup2 idea, can be extended to
-        work "just as" hdup2.
+        work "just as" hdup2, but this will need a lot of config file
+        parsing.
 
 tools/
         yesterday.sh and hist.sh, scripts meant for users on systems
