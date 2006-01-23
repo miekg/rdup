@@ -1,8 +1,9 @@
    Jan 2006: 0.2.0 Miek <miek@miek.nl>
-   * jumped to version 0.2.0.
-   * ported to FreeBSD, getdelim.c was added for that.
-   * reworked autoconf, autoREconf && ./configure && make
-     can now be used.
+   * Jumped to version 0.2.0.
+   * Ported to FreeBSD, getdelim.c was added for that.
+     Also test compiled it on Mac OS X with Fink.
+   * Reworked autoconf, autoREconf && ./configure && make
+     must now be used.
 
 
 18 Jan 2006: 0.1.3 Miek <miek@miek.nl>
@@ -11,7 +12,7 @@
    * mirror.sh/rmirror.sh now create suffixes for backup
      files based on their creation time. The suffix 
      used is +MONTHDAY.HH.MM.
-     `
+
 
 06 Jan 2005: 0.1.2 Miek <miek@miek.nl>
    * All scripts were completely reworked, local
