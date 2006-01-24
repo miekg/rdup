@@ -23,3 +23,11 @@ tools/
         yesterday.sh and hist.sh, scripts meant for users on systems
         that use rdup/mirror.sh. See their respective manual pages for more
         information.
+
+1/ POSSIBLE NEW SCRIPTS
+
+snapshot.sh - a script that doesn't backup to a different harddisk, but 
+        creates a special subdirectory. For instance it created a
+        .YYYYMM subdirectory and in there all files are copied that
+        are backed up from the parent directory. These could be
+        hardlinked.
