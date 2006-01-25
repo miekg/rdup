@@ -1,8 +1,8 @@
-   Jan 2006: 0.2.0 Miek <miek@miek.nl>
+25 Jan 2006: 0.2.0 Miek <miek@miek.nl>
    * Jumped to version 0.2.0.
    Build:
    * Reworked autoconf, autoREconf && ./configure && make
-     must now be used.
+     must now be used to compile rdup
    Code:
    * Ported to FreeBSD, getdelim.c was added for that.
      Also test compiled it on Mac OS X with Fink.
@@ -18,7 +18,7 @@
      used is +MONTHDAY.HH.MM.
 
 
-06 Jan 2005: 0.1.2 Miek <miek@miek.nl>
+06 Jan 2006: 0.1.2 Miek <miek@miek.nl>
    * All scripts were completely reworked, local
      and remote backing up is now working.
    * End-user script were improved, excl.sh is now
@@ -30,7 +30,7 @@
    * refactored printing in gfunc.c, this was a minor change.
 
 
-02 Jan 2005: 0.1.1 Miek <miek@miek.nl>
+02 Jan 2006: 0.1.1 Miek <miek@miek.nl>
    * Use strcmp instead of g_ascii_strcasecmp() as
      case is significant in unix fs
    * Don't gzip the files by default with backup.sh
