@@ -11,10 +11,15 @@ int opt_onefilesystem = 0;
 int opt_nobackup = 1;
 int opt_verbose = 0;
 time_t opt_timestamp = 0;
+/* signals */
+sig_atomic_t sig = 0;
 
 /* crawler.c */
 gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
+/* signal.c */
+void sigint(int signal);
+void sigpipe(int signal);
 /* no matter what, this prototype is correct */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 
@@ -149,6 +154,18 @@ main(int argc, char **argv)
 	int 	c;
 	char 	*crawl;
 	char    pwd[BUFSIZE + 1];
+
+	struct sigaction sa;
+
+	/* setup our signal handling */
+	sa.sa_flags   = 0;
+	sigfillset(&sa.sa_mask);
+
+	sa.sa_handler = sigpipe;
+	sigaction(SIGPIPE, &sa, NULL);
+
+	sa.sa_handler = sigint;
+	sigaction(SIGINT, &sa, NULL);
 
 	curtree = g_tree_new(gfunc_equal);
 	backup  = g_tree_new(gfunc_equal);

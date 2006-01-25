@@ -9,6 +9,27 @@
 
 extern int opt_null;
 extern time_t opt_timestamp;
+extern sig_atomic_t sig;
+
+/**
+ * we received a signal 
+ */
+void
+signal_abort(int signal)
+{
+	switch(signal) {
+		case SIGPIPE:
+			fprintf(stderr, "** SIGPIPE received, exiting\n");
+			break;
+		case SIGINT:
+			fprintf(stderr, "** SIGINT received, exiting\n");
+			break;
+		default:
+			fprintf(stderr, "** Unknown signal reveived, exiting\n");
+			break;
+	}
+	exit(EXIT_FAILURE);
+}
 
 /**
  * print a struct entry
@@ -46,6 +67,9 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 gboolean 
 gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
+	if (sig != 0) {
+		signal_abort(sig);
+	}
 	/* mode_path */
 	/* this is used to create our filelist */
 	fprintf((FILE*) fp, "%d %s", 
@@ -83,6 +107,10 @@ gboolean
 gfunc_backup(gpointer data, __attribute__((unused)) gpointer value, 
 		__attribute__((unused)) gpointer usr)
 {
+	if (sig != 0) {
+		signal_abort(sig);
+	}
+
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
 		entry_print(stdout, '+', (struct entry*)data);
 		if (opt_null) {
@@ -125,6 +153,10 @@ gboolean
 gfunc_remove(gpointer data, __attribute__((unused)) gpointer value, 
 		__attribute__((unused)) gpointer usr)
 {
+	if (sig != 0) {
+		signal_abort(sig);
+	}
+
 	entry_print(stdout, '-', (struct entry*)data);
 	if (opt_null) {
 		putc('\0', stdout);
@@ -141,6 +173,10 @@ gint
 gfunc_equal(gconstpointer a, gconstpointer b)
 {
 	gint e;
+
+	if (sig != 0) {
+		signal_abort(sig);
+	}
 
 	e = strcmp(((struct entry*)a)->f_name,
 			((struct entry*)b)->f_name);
@@ -165,6 +201,11 @@ gboolean
 gfunc_substract(gpointer data, gpointer value, gpointer diff)
 {
 	gpointer v;
+
+	if (sig != 0) {
+		signal_abort(sig);
+	}
+
 	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
 
 	if (!v) {
@@ -172,3 +213,4 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 	}
 	return FALSE;
 }
+

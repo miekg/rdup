@@ -1,13 +1,6 @@
 TODO: 
 
-:portability:
--done-
-
 :rdup util: 
-o ignore or handle signals? Needed to decide what to do with the FILELIST
-  and the timestamp, at least sigpipe, fail gracefully.
-o better error handling on syscalls? bail out or try to continue?
-# rel. minor:
 o valgrind and g_free
 
 :tests:
@@ -38,6 +31,10 @@ o graphic (GTK) frontend? What would it do?
 
 
 DONE:
+o ignore or handle signals? Needed to decide what to do with the FILELIST
+  and the timestamp, at least sigpipe, fail gracefully.
+  25 Jan - we just exit
+
 o getline is GNU-ism, freebsd has fgetln
   configure adapted
   19 Jan. Ported
