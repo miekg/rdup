@@ -32,9 +32,11 @@ hostname=`ls $1/$mountpoint | sort -nr | head -1`
 # $changed/host -> backupdir
 # $changed/etc/host -> admin dir
 
-etc="$hostname/etc"
-backuphost="$hostname/$h"
+etc="$1/$mountpoint/$hostname/etc"
+backuphost="$1/$mountpoint/$hostname/$h"
 
+echo $mountpoint
+echo $hostname
 echo $etc
 echo $backuphost
 
@@ -64,4 +66,4 @@ fi
 shift
 
 echo /usr/sbin/rdup -N "$etc/$h-timestamp" "$etc/$h-list" $@ 
-echo /usr/sbin/mirror.sh
+echo /usr/sbin/mirror.sh -b $backupdir
