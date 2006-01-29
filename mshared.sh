@@ -40,7 +40,8 @@ mirror_cmd_options() {
                         z) gzip=1;;
                         k) keyfile=$OPTARG;;
                         v) verbose=1;;
-                        h) backup_cmd_usage && exit
+                        h) backup_cmd_usage && exit;;
+                        ?) backup_cmd_usage && exit;;
                 esac
         done
         if [ -z $backupdir ]; then 

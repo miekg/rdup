@@ -12,7 +12,8 @@ tool_cmd_options() {
                         z) gzip=1;;
                         c) copy=1;;
                         C) Ccopy=1;;
-                        h) list_cmd_usage && exit
+                        h) list_cmd_usage && exit;;
+                        ?) list_cmd_usage && exit;;
                 esac
         done
         if [ -z $backupdir ]; then
