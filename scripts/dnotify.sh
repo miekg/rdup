@@ -67,3 +67,5 @@ shift
 
 echo /usr/sbin/rdup -N "$etc/$h-timestamp" "$etc/$h-list" $@ 
 echo /usr/sbin/mirror.sh -b $backupdir
+
+echo /usr/bin/pumount $mountpoint
