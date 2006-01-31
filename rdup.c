@@ -18,8 +18,7 @@ sig_atomic_t sig = 0;
 gboolean dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
-void sigint(int signal);
-void sigpipe(int signal);
+void got_sig(int signal);
 /* no matter what, this prototype is correct */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 
@@ -161,10 +160,8 @@ main(int argc, char **argv)
 	sa.sa_flags   = 0;
 	sigfillset(&sa.sa_mask);
 
-	sa.sa_handler = sigpipe;
+	sa.sa_handler = got_sig;
 	sigaction(SIGPIPE, &sa, NULL);
-
-	sa.sa_handler = sigint;
 	sigaction(SIGINT, &sa, NULL);
 
 	curtree = g_tree_new(gfunc_equal);
