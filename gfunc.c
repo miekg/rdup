@@ -8,6 +8,7 @@
 #include "rdup.h"
 
 extern int opt_null;
+extern int opt_contents;
 extern time_t opt_timestamp;
 extern sig_atomic_t sig;
 
@@ -36,12 +37,13 @@ signal_abort(int signal)
  */
 void
 entry_print(FILE *fp, char plusmin, struct entry *e) {
-	fprintf(fp, "%c%d %d %d %d %s",
+	fprintf(fp, "%c%d %d %d %ld %ld %s",
 			plusmin,
 			(int) e->f_mode,
 			(int) e->f_uid,
 			(int) e->f_gid,
-			(int) e->f_size,
+			e->f_name_size,
+			e->f_size,
 			e->f_name);
 }
 

@@ -1,4 +1,7 @@
 xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
+   * 
+
+
    * Add script for use with dnofity - to automaticaly
      backup when a harddisk is attached to the system
    * Various typo's are fixed

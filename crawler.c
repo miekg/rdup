@@ -11,12 +11,13 @@ entry_dup(struct entry *f)
         struct entry *g;
         g = g_malloc(sizeof(struct entry));
 
-        g->f_name  = g_strdup(f->f_name);
-        g->f_uid   = f->f_uid;
-        g->f_gid   = f->f_gid;
-        g->f_mode  = f->f_mode;
-	g->f_mtime = f->f_mtime;
-	g->f_size  = f->f_size;
+        g->f_name       = g_strdup(f->f_name);
+        g->f_name_size  = f->f_name_size;
+        g->f_uid        = f->f_uid;
+        g->f_gid        = f->f_gid;
+        g->f_mode       = f->f_mode;
+	g->f_mtime      = f->f_mtime;
+	g->f_size       = f->f_size;
         return g;
 }
 
@@ -57,12 +58,13 @@ dir_prepend(GTree *t, char *path)
 			return FALSE;
 		}
 		e = g_malloc(sizeof(struct entry));
-		e->f_name  = g_strdup(path2);
-		e->f_uid   = s.st_uid;
-		e->f_gid   = s.st_gid;
-		e->f_mtime = s.st_mtime;
-		e->f_mode  = s.st_mode;
-		e->f_size  = s.st_size;
+		e->f_name      = path2;
+		e->f_name_size = strlen(path2);
+		e->f_uid       = s.st_uid;
+		e->f_gid       = s.st_gid;
+		e->f_mtime     = s.st_mtime;
+		e->f_mode      = s.st_mode;
+		e->f_size      = s.st_size;
 		
 		/* leak; need destroy function for old value */
 		g_tree_replace(t, (gpointer) entry_dup(e), VALUE);
@@ -84,6 +86,7 @@ dir_crawl(GTree *t, char *path)
 	char 		*curpath;
 	struct stat   	s;
 	dev_t 		current_dev;
+	size_t 		curpath_len;
 
 	/* dir stack */
 	gint32 d = 0;
@@ -120,6 +123,7 @@ dir_crawl(GTree *t, char *path)
 			continue;
 
 		curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
+		curpath_len = strlen(curpath);
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
@@ -135,12 +139,13 @@ dir_crawl(GTree *t, char *path)
 				}
 				/* add .nobackup to the list */
 				pop = g_malloc(sizeof(struct entry));
-				pop->f_name  = g_strdup(curpath);
-				pop->f_uid   = s.st_uid;
-				pop->f_gid   = s.st_gid;
-				pop->f_mtime = s.st_mtime;
-				pop->f_mode  = s.st_mode;
-				pop->f_size  = s.st_size;
+				pop->f_name      = curpath;
+				pop->f_name_size = curpath_len;
+				pop->f_uid       = s.st_uid;
+				pop->f_gid       = s.st_gid;
+				pop->f_mtime     = s.st_mtime;
+				pop->f_mode      = s.st_mode;
+				pop->f_size      = s.st_size;
 
 				g_tree_replace(t, (gpointer) entry_dup(pop), VALUE);
 
@@ -153,12 +158,13 @@ dir_crawl(GTree *t, char *path)
 			}
 			
 			filestack[f] = g_malloc(sizeof(struct entry));
-			filestack[f]->f_name  = g_strdup(curpath);
-			filestack[f]->f_uid   = s.st_uid;
-			filestack[f]->f_gid   = s.st_gid;
-			filestack[f]->f_mtime = s.st_mtime;
-			filestack[f]->f_mode  = s.st_mode;
-			filestack[f]->f_size  = s.st_size;
+			filestack[f]->f_name       = g_strdup(curpath);
+			filestack[f]->f_name_size  = curpath_len;
+			filestack[f]->f_uid        = s.st_uid;
+			filestack[f]->f_gid        = s.st_gid;
+			filestack[f]->f_mtime      = s.st_mtime;
+			filestack[f]->f_mode       = s.st_mode;
+			filestack[f]->f_size       = s.st_size;
 
 			if (f++ % fstack_size == 0) {
 				filestack = g_realloc(filestack, 
@@ -175,12 +181,13 @@ dir_crawl(GTree *t, char *path)
 			}
 
 			dirstack[d] = g_malloc(sizeof(struct entry));
-			dirstack[d]->f_name  = g_strdup(curpath); 
-			dirstack[d]->f_uid   = s.st_uid;
-			dirstack[d]->f_gid   = s.st_gid;
-			dirstack[d]->f_mtime = s.st_mtime;
-			dirstack[d]->f_mode  = s.st_mode;
-			dirstack[d]->f_size  = s.st_size;
+			dirstack[d]->f_name       = g_strdup(curpath); 
+			dirstack[d]->f_name_size  = curpath_len;
+			dirstack[d]->f_uid        = s.st_uid;
+			dirstack[d]->f_gid        = s.st_gid;
+			dirstack[d]->f_mtime      = s.st_mtime;
+			dirstack[d]->f_mode       = s.st_mode;
+			dirstack[d]->f_size       = s.st_size;
 
 			if (d++ % dstack_size == 0) {
 				dirstack = g_realloc(dirstack, 

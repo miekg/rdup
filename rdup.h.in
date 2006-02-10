@@ -47,6 +47,7 @@
 
 struct entry {
         char *f_name;
+        size_t f_name_size;
         uid_t f_uid;
         gid_t f_gid;
         mode_t f_mode;

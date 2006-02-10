@@ -6,11 +6,12 @@
 #include "rdup.h"
 
 /* options */
-int opt_null = 0;
-int opt_onefilesystem = 0;
-int opt_nobackup = 1;
-int opt_verbose = 0;
-time_t opt_timestamp = 0;
+int opt_null = 0;          /* delimit all in/output with \0  */
+int opt_onefilesystem = 0; /* stay on one filesystem */
+int opt_nobackup = 1;      /* ignore .nobackup files */
+int opt_verbose = 0;       /* be more verbose */
+int opt_contents = 0;      /* cat the file content to stdout */
+time_t opt_timestamp = 0;  /* timestamp file */
 /* signals */
 sig_atomic_t sig = 0;
 
@@ -33,6 +34,7 @@ usage(FILE *f)
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -V\t\tprint version\n");
+	fprintf(f, "   -c\t\tconcatenate the content of the file to standard output\n");
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
@@ -116,12 +118,13 @@ g_tree_read_file(FILE *fp)
 		}
 
 		e = g_malloc(sizeof(struct entry));
-		e->f_name = g_strdup(buf + LIST_SPACEPOS + 1);
-		e->f_mode = modus;
-		e->f_uid  = 0;
-		e->f_gid  = 0;
-		e->f_size = 0;
-		e->f_mtime = 0;
+		e->f_name      = g_strdup(buf + LIST_SPACEPOS + 1);
+		e->f_name_size = strlen(e->f_name);
+		e->f_mode      = modus;
+		e->f_uid       = 0;
+		e->f_gid       = 0;
+		e->f_size      = 0;
+		e->f_mtime     = 0;
 		g_tree_replace(tree, (gpointer) e, VALUE);
 	}
 	g_free(buf);
@@ -185,7 +188,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "hVnN:vx0")) != -1) {
+	while ((c = getopt (argc, argv, "chVnN:vx0")) != -1) {
 		switch (c)
 		{
 			case 'h':
@@ -196,6 +199,9 @@ main(int argc, char **argv)
 				exit(EXIT_SUCCESS);
 			case 'n':
 				opt_nobackup = 0;
+				break;
+			case 'c':
+				opt_contents = 1;
 				break;
 			case 'N': 
 				opt_timestamp = timestamp(optarg);
