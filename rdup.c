@@ -6,12 +6,12 @@
 #include "rdup.h"
 
 /* options */
-int opt_null = 0;          /* delimit all in/output with \0  */
-int opt_onefilesystem = 0; /* stay on one filesystem */
-int opt_nobackup = 1;      /* ignore .nobackup files */
-int opt_verbose = 0;       /* be more verbose */
-int opt_contents = 0;      /* cat the file content to stdout */
-size_t opt_size  = 0;      /* only output files smaller then <size> */
+gboolean opt_null = FALSE;          /* delimit all in/output with \0  */
+gboolean opt_onefilesystem = FALSE; /* stay on one filesystem */
+gboolean opt_nobackup = TRUE;       /* don't ignore .nobackup files */
+gboolean opt_verbose = FALSE;       /* be more verbose */
+gboolean opt_contents = FALSE;      /* cat the file content to stdout */
+size_t opt_size  = 0;               /* only output files smaller then <size> */
 time_t opt_timestamp = 0;  /* timestamp file */
 /* signals */
 sig_atomic_t sig = 0;
@@ -33,11 +33,11 @@ usage(FILE *f)
 	fprintf(f, "\n   FILELIST\tfile list\n");
 	fprintf(f, "   DIR\t\tdirectory or directories to dump\n");
 	fprintf(f, "\nOptions:\n");
+	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -V\t\tprint version\n");
 	fprintf(f, "   -c\t\tconcatenate the content of the file to standard output\n");
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
-	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
@@ -199,10 +199,10 @@ main(int argc, char **argv)
 				version(stdout);
 				exit(EXIT_SUCCESS);
 			case 'n':
-				opt_nobackup = 0;
+				opt_nobackup = FALSE;
 				break;
 			case 'c':
-				opt_contents = 1;
+				opt_contents = TRUE;
 				break;
 			case 'N': 
 				opt_timestamp = timestamp(optarg);
@@ -214,13 +214,13 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'v':
-				opt_verbose = 1;
+				opt_verbose = TRUE;
 				break;
 			case 'x':
-				opt_onefilesystem = 1;
+				opt_onefilesystem = TRUE;
 				break;
 			case '0':
-				opt_null = 1;
+				opt_null = TRUE;
 				break;
 			default:
 				fprintf(stderr, "** Uknown option\n");

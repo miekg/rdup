@@ -1,9 +1,8 @@
 #include "rdup.h"
 
-extern int opt_null;
-extern int opt_onefilesystem;
-extern int opt_nobackup;
-extern int opt_verbose;
+extern gboolean opt_onefilesystem;
+extern gboolean opt_nobackup;
+extern gboolean opt_verbose;
 
 static struct entry *
 entry_dup(struct entry *f)
@@ -133,7 +132,7 @@ dir_crawl(GTree *t, char *path)
 		}
 
 		if (!S_ISDIR(s.st_mode)) {
-			if ((opt_nobackup == 1) && !g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
+			if (opt_nobackup  && !g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
 				if (opt_verbose) {
 					fprintf(stderr, "** " NOBACKUP " in %s\n", curpath);
 				}

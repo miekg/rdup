@@ -7,8 +7,8 @@
 
 #include "rdup.h"
 
-extern int opt_null;
-extern int opt_contents;
+extern gboolean opt_null;
+extern gboolean opt_contents;
 extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
@@ -60,7 +60,7 @@ signal_abort(int signal)
 static void
 entry_print(FILE *fp, char plusmin, struct entry *e) {
 	switch(opt_contents) {
-		case 0:
+		case FALSE:
 		fprintf(fp, "%c%d %d %d %ld %ld %s",
 				plusmin,
 				(int) e->f_mode,
@@ -70,7 +70,7 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 				e->f_size,
 				e->f_name);
 		break;
-		case 1:
+		case TRUE:
 		/* do some magic here:
 		 * directories -> size to 0 no content
 		 * files -> normal size + content
