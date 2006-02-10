@@ -11,6 +11,7 @@ int opt_onefilesystem = 0; /* stay on one filesystem */
 int opt_nobackup = 1;      /* ignore .nobackup files */
 int opt_verbose = 0;       /* be more verbose */
 int opt_contents = 0;      /* cat the file content to stdout */
+size_t opt_size  = 0;      /* only output files smaller then <size> */
 time_t opt_timestamp = 0;  /* timestamp file */
 /* signals */
 sig_atomic_t sig = 0;
@@ -23,7 +24,7 @@ void got_sig(int signal);
 /* no matter what, this prototype is correct */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 
-void
+static void
 usage(FILE *f) 
 {	
 	fprintf(f, "Usage: %s [OPTION...] FILELIST DIR...\n", PROGNAME);
@@ -46,7 +47,7 @@ usage(FILE *f)
 	fprintf(f, "source distribution of rdup.\n");
 }
 
-void
+static void
 version(FILE *f) 
 {	
 	fprintf(f, "%s %s\n", PROGNAME, VERSION);
@@ -57,7 +58,7 @@ version(FILE *f)
  * the elements that are only in *a. Essentially
  * a double diff: A diff (A diff B)
  */
-GTree *
+static GTree *
 g_tree_substract(GTree *a, GTree *b)
 {
 	GTree 	         *diff;
@@ -76,7 +77,7 @@ g_tree_substract(GTree *a, GTree *b)
  * read a filelist, which should hold our previous
  * backup list
  */
-GTree *
+static GTree *
 g_tree_read_file(FILE *fp)
 {
 	char 	      *buf;
@@ -134,7 +135,7 @@ g_tree_read_file(FILE *fp)
 /**
  * return the m_time of the filelist
  */
-time_t
+static time_t
 timestamp(char *f)
 {
 	struct stat s;

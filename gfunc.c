@@ -10,12 +10,34 @@
 extern int opt_null;
 extern int opt_contents;
 extern time_t opt_timestamp;
+extern size_t opt_size;
 extern sig_atomic_t sig;
+
+static gboolean
+cat(FILE *fp, char *filename)
+{
+	char buf[BUFSIZE + 1];
+	FILE *file;
+	size_t i;
+		
+	if ((file = fopen(filename, "r")) == NULL) {
+		return FALSE;
+	}
+	
+	while (!feof(file)) {
+		i = fread(buf, sizeof(char), BUFSIZE, file);
+		if (fwrite(buf, sizeof(char), i, fp) != i) {
+			fprintf(stderr, "** Write failure\n");
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
 
 /**
  * we received a signal 
  */
-void
+static void
 signal_abort(int signal)
 {
 	switch(signal) {
@@ -35,7 +57,7 @@ signal_abort(int signal)
 /**
  * print a struct entry
  */
-void
+static void
 entry_print(FILE *fp, char plusmin, struct entry *e) {
 	fprintf(fp, "%c%d %d %d %ld %ld %s",
 			plusmin,
@@ -45,8 +67,12 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 			e->f_name_size,
 			e->f_size,
 			e->f_name);
+	if (opt_contents == 1) {
+		if (! cat(fp, e->f_name)) {
+			exit(EXIT_FAILURE);
+		}
+	}
 }
-
 
 /**
  * free a struct entry
@@ -58,7 +84,7 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 	struct entry *f;
 	f = (struct entry*) data;
 	
-	g_free(f->f_name);
+	/*  g_free(f->f_name); */
 	g_free(f);
 	return FALSE;
 }

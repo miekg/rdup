@@ -5,7 +5,7 @@ extern int opt_onefilesystem;
 extern int opt_nobackup;
 extern int opt_verbose;
 
-struct entry *
+static struct entry *
 entry_dup(struct entry *f)
 {
         struct entry *g;
@@ -21,7 +21,7 @@ entry_dup(struct entry *f)
         return g;
 }
 
-void
+static void
 entry_free(struct entry *f)
 {
 	g_free(f->f_name);
@@ -152,7 +152,6 @@ dir_crawl(GTree *t, char *path)
 				g_free(pop);
 				g_free(dirstack);
 				g_free(filestack);
-				g_free(curpath);
 				closedir(dir);
 				return TRUE;
 			}
