@@ -27,7 +27,7 @@ all:	rdup
 
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
-#	strip rdup
+	strip rdup
 
 clean:
 	rm -f *.o

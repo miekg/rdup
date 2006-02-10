@@ -61,11 +61,11 @@ static void
 entry_print(FILE *fp, char plusmin, struct entry *e) {
 	switch(opt_contents) {
 		case FALSE:
-		fprintf(fp, "%c%d %d %d %ld %ld %s",
+		fprintf(fp, "%c%d %d %d %zd %zd %s",
 				plusmin,
-				(int) e->f_mode,
-				(int) e->f_uid,
-				(int) e->f_gid,
+				e->f_mode,
+				e->f_uid,
+				e->f_gid,
 				e->f_name_size,
 				e->f_size,
 				e->f_name);
