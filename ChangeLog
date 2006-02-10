@@ -1,7 +1,11 @@
 xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
-   * 
-
-
+   * the output format was changed: 
+     the path_size was added to it
+   * a -c option was added, which concatenate the file's
+     output to standard output. This is done to make 
+     remote backups more easily.
+   * a -s <size> option was added which will only print
+     out files that are smaller then a certain size.
    * Add script for use with dnofity - to automaticaly
      backup when a harddisk is attached to the system
    * Various typo's are fixed

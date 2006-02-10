@@ -272,11 +272,10 @@ main(int argc, char **argv)
 	g_tree_foreach(curtree, gfunc_free, NULL);
 	g_tree_foreach(backup, gfunc_free, NULL);
 	g_tree_foreach(remove, gfunc_free, NULL); 
-	
-	/* I free too much... */
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
+
 	fprintf(stderr, "** DIRECTORIES :");
 	for (i = 1; i < argc; i++) {
 		fprintf(stderr, " %s", argv[i]);

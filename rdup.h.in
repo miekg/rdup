@@ -67,7 +67,4 @@ gboolean gfunc_write(gpointer data, gpointer value, gpointer fp);
 gboolean gfunc_backup(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_remove(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_substract(gpointer data, gpointer value, gpointer diff);
-#if 0
-gboolean gfunc_write_all(gpointer data, gpointer value, gpointer fp);
-#endif 
 #endif  /* _RDUP_H */

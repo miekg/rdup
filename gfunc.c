@@ -85,23 +85,6 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 	return FALSE;
 }
 
-#if 0
-/**
- * debug function, write a struct entry to fp
- */
-gboolean
-gfunc_write_all(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
-{
-	fprintf((FILE*) fp, "%s ", (char*) ((struct entry*)data)->f_name);
-	fprintf((FILE*) fp, "   %d ", (int) ((struct entry*)data)->f_uid);
-	fprintf((FILE*) fp, "   %d  ", (int) ((struct entry*)data)->f_gid);
-	fprintf((FILE*) fp, "   %d ", (int) ((struct entry*)data)->f_mode);
-	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_mtime);
-	fprintf((FILE*) fp, "   %d\n", (int) ((struct entry*)data)->f_size);
-	return FALSE;
-}
-#endif
-
 /**
  * write out the list of to be backupped items
  */
