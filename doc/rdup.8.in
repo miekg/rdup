@@ -67,6 +67,12 @@ Print rdup's version.
 .B \-x
 Stay on the local filesystem.
 .TP
+.B \-s SIZE
+Only output files smaller then SIZE bytes. This can be used to limit
+the amount of data to be transferred when doing a remote backup.
+This option \fIonly\fR applies to files and symbolic links, \fInot\fR
+to directories.
+.TP
 .B \-0
 Delimit all printed/read/written lists with NULL instead of a
 whitespace.

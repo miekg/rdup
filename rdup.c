@@ -39,6 +39,7 @@ usage(FILE *f)
 	fprintf(f, "   -c\t\tconcatenate the content of the file to standard output\n");
 	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
+	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE byes\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
@@ -189,7 +190,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "chVnN:vx0")) != -1) {
+	while ((c = getopt (argc, argv, "chVnN:s:vx0")) != -1) {
 		switch (c)
 		{
 			case 'h':
@@ -221,6 +222,13 @@ main(int argc, char **argv)
 				break;
 			case '0':
 				opt_null = TRUE;
+				break;
+			case 's':
+				opt_size = atoi(optarg);
+				if (opt_size == 0) {
+					fprintf(stderr, "** -s requires a numerical value\n");
+					exit(EXIT_FAILURE);
+				}
 				break;
 			default:
 				fprintf(stderr, "** Uknown option\n");

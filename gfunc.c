@@ -125,8 +125,6 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 	}
 }
 
-
-
 /**
  * free a struct entry
  */
@@ -136,8 +134,7 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 {
 	struct entry *f;
 	f = (struct entry*) data;
-	
-	/*  g_free(f->f_name); */
+	/* name is not freed - this lead to double frees */
 	g_free(f);
 	return FALSE;
 }
@@ -188,6 +185,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 			S_ISLNK(((struct entry*)data)->f_mode)) {
 		switch (opt_timestamp) {
 			case NULL_DUMP:
+				if (opt_size != 0 &&
+						((struct entry*)data)->f_size >
+						opt_size) {
+					return FALSE;
+				}
 				entry_print(stdout, '+', (struct entry*)data);
 				if (opt_null) {
 					putc('\0', stdout);
