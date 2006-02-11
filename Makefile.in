@@ -1,6 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
-SHS=mirror.sh excl.sh tools/hist.sh tools/yesterday.sh rmirror.sh rcat.sh
+SHS=mirror.sh excl.sh tools/hist.sh tools/yesterday.sh rmirror.sh 
 MAN=doc/rdup.8,in doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1 doc/catch.sh.1 doc/throw.sh.1
 
 prefix  = @prefix@
@@ -61,13 +61,11 @@ install: rdup
 	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl.sh
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
 	${INSTALL} rmirror.sh ${DESTDIR}${sbindir}/rmirror.sh
-	${INSTALL} rcat.sh ${DESTDIR}${sbindir}/rcat.sh
 	${INSTALL} tools/hist.sh ${DESTDIR}${sbindir}/hist.sh
 	${INSTALL} tools/yesterday.sh ${DESTDIR}${sbindir}/yesterday.sh
 	${INSTALL_DATA} doc/rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
 	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.sh.8
 	${INSTALL_DATA} doc/rmirror.sh.8 ${DESTDIR}${mandir}/man8/rmirror.sh.8
-	${INSTALL_DATA} doc/rcat.sh.8 ${DESTDIR}${mandir}/man8/rcat.sh.8
 	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.sh.1
 	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.sh.1
 
@@ -80,6 +78,5 @@ uninstall:
 	rm -f ${DESTDIR}${mandir}/man8/rdup.8
 	rm -f ${DESTDIR}${mandir}/man8/bmirror.8
 	rm -f ${DESTDIR}${mandir}/man8/rmirror.sh.8
-	rm -f ${DESTDIR}${mandir}/man8/rcat.sh.8
 	rm -f ${DESTDIR}${mandir}/man1/yesterday.1
 	rm -f ${DESTDIR}${mandir}/man1/hist.1
