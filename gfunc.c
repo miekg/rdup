@@ -96,29 +96,41 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 					e->f_name_size,
 					e->f_size,
 					e->f_name);
-			if (! cat(fp, e->f_name)) {
+			/* only print content when we're adding */
+			if (plusmin == '+' && !cat(fp, e->f_name)) {
 				exit(EXIT_FAILURE);
 			}
 			break;
 		}
 		if (S_ISLNK(e->f_mode)) {
-			char buf[BUFSIZE + 1];
-			size_t i;
-			if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-				fprintf(stderr, "** Error reading link: %s\n", e->f_name);
-				exit(EXIT_FAILURE);
+			/* only print content when we're adding */
+			if (plusmin == '+') {
+				char buf[BUFSIZE + 1];
+				size_t i;
+				if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
+					fprintf(stderr, "** Error reading link: %s\n", e->f_name);
+					exit(EXIT_FAILURE);
+				}
+				buf[i + 1] = '\0';
+				fprintf(fp, "%c%d %d %d %ld %ld %s%s",
+						plusmin,
+						(int) e->f_mode,
+						(int) e->f_uid,
+						(int) e->f_gid,
+						e->f_name_size,
+						i,
+						e->f_name,
+						buf);
+			} else {
+				fprintf(fp, "%c%d %d %d %ld %ld %s",
+						plusmin,
+						(int) e->f_mode,
+						(int) e->f_uid,
+						(int) e->f_gid,
+						e->f_name_size,
+						i,
+						e->f_name);
 			}
-			buf[i + 1] = '\0';
-
-			fprintf(fp, "%c%d %d %d %ld %ld %s%s",
-					plusmin,
-					(int) e->f_mode,
-					(int) e->f_uid,
-					(int) e->f_gid,
-					e->f_name_size,
-					i,
-					e->f_name,
-					buf);
 			break;
 		}
 
