@@ -1,3 +1,5 @@
+
+
 TODO: 
 
 :rdup util: 
@@ -16,6 +18,7 @@ o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
   do something with it
 o where to place to aux. scripts? /usr/lib/rdup ??
+o bandwidth limiting: cstream
 
 :cron:
 o port over some scripts from hdup2 to remove old backups
