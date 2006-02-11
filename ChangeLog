@@ -9,6 +9,7 @@ xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
    * Various typo's are fixed
    * -Wextra was dropped to allow compilation with older gcc's.
    * functions that weren't exported are now declared static.
+   * Moved TODO to todo
 
 
 25 Jan 2006: 0.2.0 Miek <miek@miek.nl>
