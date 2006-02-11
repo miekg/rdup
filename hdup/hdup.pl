@@ -8,6 +8,8 @@ use strict;
 use Config::IniFiles;
 use Unix::Syslog;
 
+my $VERSION="rdup(hdup2) @RDUP_VERSION@";
+
 my $hdupconf = "hdup.conf";
 my $cfg;
 my %rec;
@@ -50,3 +52,9 @@ foreach my $sec ($cfg->Sections) {
 
 print $rec{global}->{ARCHIVEDIR},"\n";
 print @{$rec{elektron}->{DIR}},"\n";
+
+
+# run rdup, feed it's output to tar
+# put the archive some where, chown/chgrp it
+# encrypt it
+# ready
