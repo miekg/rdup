@@ -128,7 +128,7 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 						(int) e->f_uid,
 						(int) e->f_gid,
 						e->f_name_size,
-						i,
+						e->f_size,
 						e->f_name);
 			}
 			break;
