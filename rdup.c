@@ -10,6 +10,7 @@ gboolean opt_null = FALSE;          /* delimit all in/output with \0  */
 gboolean opt_onefilesystem = FALSE; /* stay on one filesystem */
 gboolean opt_nobackup = TRUE;       /* don't ignore .nobackup files */
 gboolean opt_verbose = FALSE;       /* be more verbose */
+gboolean opt_quiet   = FALSE;       /* be more quiet */
 gboolean opt_contents = FALSE;      /* cat the file content to stdout */
 size_t opt_size  = 0;               /* only output files smaller then <size> */
 time_t opt_timestamp = 0;  /* timestamp file */
@@ -41,6 +42,7 @@ usage(FILE *f)
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE byes\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
+	fprintf(f, "   -q\t\tbe less verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
@@ -190,7 +192,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "chVnN:s:vx0")) != -1) {
+	while ((c = getopt (argc, argv, "chVnN:s:vqx0")) != -1) {
 		switch (c)
 		{
 			case 'h':
@@ -216,6 +218,9 @@ main(int argc, char **argv)
 				break;
 			case 'v':
 				opt_verbose = TRUE;
+				break;
+			case 'q':
+				opt_quiet = TRUE;
 				break;
 			case 'x':
 				opt_onefilesystem = TRUE;
@@ -285,11 +290,14 @@ main(int argc, char **argv)
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
 
-	fprintf(stderr, "** DIRECTORIES :");
+	if (!opt_quiet) 
+		fprintf(stderr, "** DIRECTORIES :");
 	for (i = 1; i < argc; i++) {
-		fprintf(stderr, " %s", argv[i]);
+		if (!opt_quiet) 
+			fprintf(stderr, " %s", argv[i]);
 	}
-	fprintf(stderr, "\n");
+	if (!opt_quiet)
+		fprintf(stderr, "\n");
 
 	exit(EXIT_SUCCESS);
 }
