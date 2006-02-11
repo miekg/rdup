@@ -40,11 +40,9 @@ AC_CONFIG_FILES([Makefile
                  excl.sh 
                  mirror.sh 
                  rmirror.sh
-                 rcat.sh
                  tools/hist.sh 
                  tools/yesterday.sh
                  doc/rmirror.sh.8
-                 doc/rcat.sh.8
                  doc/mirror.sh.8
                  doc/rdup.8
                  doc/hist.sh.1
