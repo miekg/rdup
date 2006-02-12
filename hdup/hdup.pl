@@ -37,7 +37,6 @@ sub yesno {
         return $FALSE;
 }
 
-
 $rec{global} = {
         ARCHIVEDIR => '',       # backup directory
         DATE => '',             # not impl. default to ISO
@@ -103,10 +102,18 @@ foreach my $sec ($cfg->Sections) {
         $rec{$sec}->{TAROPTION} = $cfg->val($sec, 'tar option');
         $rec{$sec}->{TAR} = $cfg->val($sec, 'tar');
 
+        # only used as yes/no 
+        $rec{$sec}->{NOBACKUP} = $TRUE if (defined($cfg->val($sec, 'no backup')));
+
+
         # list structures
         @{$rec{$sec}->{DIR}} = split /, */, $cfg->val($sec, 'dir') if
                                 (defined($cfg->val($sec, 'dir')));
 }
+# copy over the defaults of [global]
+
+
+# make the directories
 
 # SCHEME is NULL
 my $TARFILE = "$HOST-$DATE.tar.gz";
