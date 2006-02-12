@@ -18,13 +18,14 @@ mirror_cmd_options $@
 mirror_dirdate
 mirror_create_top $backupdir
 
-while read mode uid gid fsize path
+while read mode uid gid psize fsize
 do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits
         bits=$(($mode & $S_MMASK)) # permission bits
         bits=`printf "%o" $bits` # and back to octal again
         typ=0
+        path=`head -c $psize`
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1;
         fi

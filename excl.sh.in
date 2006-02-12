@@ -18,7 +18,7 @@ direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/ tmp/"
 tool_defines
 
 declare -a path # catch spacing in the path
-while read mode uid gid size path
+while read mode uid gid psize fsize path
 do
         dump=${mode:0:1}        
         mode=${mode:1}         
@@ -38,7 +38,7 @@ do
                         fi
                 done
                 # don't exclude, print it
-                echo "$dump$mode $uid $gid $size $path"
+                echo "$dump$mode $uid $gid $psize $fsize $path"
                 ;;
                 1)      # directory
                 for i in $direxcludelist; do 
@@ -47,7 +47,7 @@ do
                         fi
                 done
                 # don't exclude, print it
-                echo "$dump$mode $uid $gid $size $path"
+                echo "$dump$mode $uid $gid $psize $fsize $path"
                 ;;
         esac
 done 

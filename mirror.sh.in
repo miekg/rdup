@@ -26,7 +26,7 @@ mirror_dirdate
 mirror_create_top $backupdir
 
 declare -a path # catch spacing in the path
-while read mode uid gid size path
+while read mode uid gid psize fsize path
 do
         dump=${mode:0:1}                # to add or remove
         mode=${mode:1}                  # st_mode bits
@@ -59,7 +59,7 @@ do
                         fi
                         chown $uid:$gid "$backupdir/$path"
                         chmod $bits "$backupdir/$path"
-                        ftsize=$(($ftsize + $size))
+                        ftsize=$(($ftsize + $fsize))
                         ireg=$(($ireg + 1))
                         ;;
                         1)      # DIR

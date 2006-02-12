@@ -8,6 +8,10 @@
 # bzip2/gzip/none
 # date cannot be specified anymore
 # compression level gone
+# TODO
+# - logging like hdup2
+# - overview mesg like hdup2
+# - make it look more like hdup2 in general
 
 use strict;
 use Config::IniFiles;
