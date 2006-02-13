@@ -6,7 +6,7 @@ xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
      remote backups more easily. This also changes rdup's output!
    * a -s <size> option was added which will only print
      out files that are smaller then a certain size.
-   * -q (quiet) implement, don't output anything that is not needed
+   Code:
    * Various typo's are fixed
    * -Wextra was dropped to allow compilation with older gcc's.
    * functions that weren't exported are now declared static.

@@ -2,7 +2,7 @@
 
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
-extern gboolean opt_verbose;
+extern gint opt_verbose;
 
 static struct entry *
 entry_dup(struct entry *f)
@@ -133,7 +133,7 @@ dir_crawl(GTree *t, char *path)
 
 		if (!S_ISDIR(s.st_mode)) {
 			if (opt_nobackup  && !g_ascii_strcasecmp(dent->d_name, NOBACKUP)) {
-				if (opt_verbose) {
+				if (opt_verbose > 1) {
 					fprintf(stderr, "** " NOBACKUP " in %s\n", curpath);
 				}
 				/* add .nobackup to the list */

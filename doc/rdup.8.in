@@ -59,7 +59,8 @@ of full dump is performed.
 will create TIMESTAMP before it starts printing the file list.
 .TP
 .B \-v
-Be more verbose
+Be more verbose. If specified another time, \fBrdup\fR will be even
+more verbose.
 .TP
 .B \-V
 Print rdup's version.
