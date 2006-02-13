@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [[ $0 =~ ^/ ]]; then
+        current_path=$0
+ else
+        current_path=`pwd`/$0
+fi
+
+echo $current_path
+
+zenity --text "Perform backup of `hostname`?" --title "rdup @ `hostname`" --question
+
