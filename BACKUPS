@@ -9,10 +9,11 @@ o USB/FireWire HD backups
 What they have incommon
 
 
-
 Difference
 
 Placement of Files
+# dump.sh?
+/etc/timestamp /etc/filelist files
 
 
 
