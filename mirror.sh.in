@@ -75,7 +75,6 @@ do
                         fi
                         cp -a "$path" "$backupdir/$path"
                         chown $uid:$gid "$backupdir/$path"
-                        chmod $bits "$backupdir/$path"
                         ilnk=$(($ilnk + 1))
                         ;;
                 esac
