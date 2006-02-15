@@ -29,11 +29,11 @@ while getopts ":b:eh" o; do
 done
 shift $((OPTIND - 1))
 if [[ -z $1 ]]; then
-        echo "** NAME is mandatory"
+        echo "** NAME is mandatory" > /dev/fd/2
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
-        BACKUPDIR="/vol/backup/$HOSTNAME"
+        BACKUPDIR="/vol/backup/$HOSTNAME" 
 fi
 
 if [[ $etc -eq 0 ]]; then
@@ -49,7 +49,7 @@ LIST="$ETC/$HOSTNAME.$NAME.list"
 # DIRS in $@
 shift
 if [[ -z $@ ]]; then
-        echo "** No directories to backup"
+        echo "** No directories to backup" > /dev/fd/2
         exit 1
 fi
 
@@ -59,15 +59,13 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         mkdir -p "$BACKUPDIR_DATE"
         rm -f "$LIST"
         rm -f "$STAMP"
-        TIMESTAMP=
-        echo "** Full dump"
+        echo "** Full dump" > /dev/fd/2
 else
-        TIMESTAMP="-N $STAMP"
-        echo "** Incremental dump"
+        echo "** Incremental dump" > /dev/fd/2
 fi
 
 if [[ ! -z $exclude ]]; then
-        /usr/sbin/rdup $TIMESTAMP $LIST $@ | $exclude | /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup -N $STAMP $LIST $@ | $exclude | /usr/sbin/mirror.sh -b $BACKUPDIR
 else
-        /usr/sbin/rdup $TIMESTAMP $LIST $@ | /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup -N $STAMP $LIST $@ | /usr/sbin/mirror.sh -b $BACKUPDIR
 fi

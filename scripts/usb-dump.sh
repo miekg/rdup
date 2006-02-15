@@ -40,6 +40,11 @@ LIST="$mountpath/$HOSTNAME/$HOSTNAME.list"
 BACKUPDIR="$mountpath/$HOSTNAME"
 BACKUPDIR_DATE="$mountpath/$HOSTNAME/$d"
 
+echo $STAMP
+echo $LIST
+echo $BACKUPDIR
+echo $BACKUPDIR_DATE
+
 # create top-level backup dir
 sudo mkdir -p $BACKUPDIR
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
@@ -47,17 +52,12 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         sudo mkdir -p "$BACKUPDIR_DATE"
         sudo rm -f "$LIST"
         sudo rm -f "$STAMP"
-        TIMESTAMP=
         TEXT="Full dump of $HOSTNAME completed"
 else
-        TIMESTAMP="-N $STAMP"
         TEXT="Incremental dump of $HOSTNAME completed"
 fi
 
-echo $TEXT
-echo  /usr/sbin/rdup $TIMESTAMP $LIST $DIRS 
-echo  /usr/sbin/mirror.sh -b $BACKUPDIR
-sudo /usr/sbin/rdup $TIMESTAMP $LIST $DIRS |\
-sudo /usr/sbin/mirror.sh -b $BACKUPDIR
-
+sudo /usr/sbin/rdup -N $STAMP $LIST $DIRS |\
+sudo /usr/sbin/mirror.sh -b $BACKUPDIR 2>&1
+# backup completed
 zenity --info --title "rdup @ $HOSTNAME" --text "$TEXT"
