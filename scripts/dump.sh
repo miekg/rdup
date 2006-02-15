@@ -4,7 +4,7 @@ usage() {
         echo "$0 [OPTIONS] NAME DIR [DIR ...]"
         echo 
         echo NAME - suffix for filelist and timestamp files
-        echo DIR  - directories to back up
+        echo DIR \ - directories to back up
         echo
         echo OPTIONS
         echo "-b DIR     backup directory. Default: /vol/backup/HOSTNAME"
@@ -47,6 +47,17 @@ STAMP="$ETC/$HOSTNAME.$NAME.timestamp"
 LIST="$ETC/$HOSTNAME.$NAME.list"
 # DIRS in $@
 shift
+if [[ -z $@ ]]; then
+        echo "** No directories to backup"
+        exit 1
+fi
+
+echo $NAME
+echo $BACKUPDIR_DATE
+echo $STAMP
+echo $LIST
+
+exit;
 
 mkdir -p "$BACKUPDIR"
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
@@ -63,6 +74,6 @@ if [[ ! -z $exclude ]]; then
         /usr/sbin/rdup "$TIMESTAMP" "$LIST" $@ | $exclude |\
         /usr/sbin/mirror.sh -b $BACKUPDIR
 else
-        /usr/sbin/rdup -N "$TIMESTAMP" "$LIST" $@ |\
+        /usr/sbin/rdup "$TIMESTAMP" "$LIST" $@ |\
         /usr/sbin/mirror.sh -b $BACKUPDIR
 fi
