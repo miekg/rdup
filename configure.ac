@@ -37,7 +37,6 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  rdup.h
-                 excl.sh 
                  doc/mirror.sh.8
                  doc/rdup.8
                  doc/hist.sh.1
