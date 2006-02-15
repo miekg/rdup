@@ -3,7 +3,7 @@ xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
      the path_size was added to it
    * a -c option was added, which concatenate the file's
      output to standard output. This is done to make 
-     remote backups more easily. This also changes rdup's output!
+     remote backups more easy. This also changes rdup's output!
    * a -s <size> option was added which will only print
      out files that are smaller then a certain size.
    * A beginning was made with a perl impl. of hdup2, which 

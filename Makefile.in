@@ -55,17 +55,13 @@ install: rdup
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${mandir}/man8
 	${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
-	${INSTALL_DATA} tools/shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
-	${INSTALL_DATA} mshared.sh ${DESTDIR}${sysconfdir}/rdup/mshared.sh
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
 	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl.sh
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
-	${INSTALL} rmirror.sh ${DESTDIR}${sbindir}/rmirror.sh
 	${INSTALL} tools/hist.sh ${DESTDIR}${sbindir}/hist.sh
 	${INSTALL} tools/yesterday.sh ${DESTDIR}${sbindir}/yesterday.sh
 	${INSTALL_DATA} doc/rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
 	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.sh.8
-	${INSTALL_DATA} doc/rmirror.sh.8 ${DESTDIR}${mandir}/man8/rmirror.sh.8
 	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.sh.1
 	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.sh.1
 
@@ -74,9 +70,7 @@ uninstall:
 	rm -f ${DESTDIR}${sbindir}/yesterday.sh
 	rm -f ${DESTDIR}${sbindir}/hist.sh
 	rm -f ${DESTDIR}${sbindir}/mirror.sh
-	rm -f ${DESTDIR}${sysconfdir}/rdup/shared.sh
 	rm -f ${DESTDIR}${mandir}/man8/rdup.8
 	rm -f ${DESTDIR}${mandir}/man8/bmirror.8
-	rm -f ${DESTDIR}${mandir}/man8/rmirror.sh.8
 	rm -f ${DESTDIR}${mandir}/man1/yesterday.1
 	rm -f ${DESTDIR}${mandir}/man1/hist.1

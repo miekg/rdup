@@ -72,4 +72,4 @@ Root of the dump file system defaults to /vol/backup/`hostname`, but can
 be any location.
 
 .SH SEE ALSO
-rcat.sh(1), hist.sh(1) and rdup(8).
+hist.sh(1) and rdup(8).
