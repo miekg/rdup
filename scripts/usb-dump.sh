@@ -1,5 +1,18 @@
 #!/bin/sh
 
+##
+# For each HOST you should define the directories to backup 
+##
+case $HOSTNAME in
+        elektron*)
+        DIRS=
+        ;;
+
+        floep*)
+        DIRS=
+        ;;
+esac
+
 # get the path were we live
 if [[ $0 =~ ^/ ]]; then
         p=$0
@@ -9,6 +22,11 @@ fi
 
 d=`date +%Y%m`
 mountpath=`dirname $p`
+
+if [[ -z $DIRS ]]; then
+         zenity --error --title "rdup @ $HOSTNAME" --text "No backup directories defined"
+         exit 1
+fi
 
 # only to get root 
 gksudo -m "Perform backup of $HOSTNAME to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
@@ -30,20 +48,12 @@ if [[ ! -d "$BACKUPDIR" ]]; then
         sudo      rm -f "$LIST"
         sudo      rm -f "$STAMP"
         TIMESTAMP=
+        TEXT="Full dump in progress..."
 else
         TIMESTAMP="-N $STAMP"
+        TEXT="Incremental dump in progress..."
 fi
 
-case $HOSTNAME in
-        elektron*)
-        DIRS="   "
-        sudo /usr/sbin/rdup "$TIMESTAMP" "$LIST" $DIRS |\
-        /usr/sbin/mirror.sh -b "$BACKUPDIR"
-        ;;
-
-        floep*)
-        DIRS="   "
-        sudo /usr/sbin/rdup "$TIMESTAMP" "$LIST" $DIRS |\
-        /usr/sbin/mirror.sh -b "$BACKUPDIR"
-        ;;
-esac
+sudo /usr/sbin/rdup $TIMESTAMP $LIST $DIRS |\
+/usr/sbin/mirror.sh -b $BACKUPDIR |\
+zenity --progress --pulsate -t "rdup @ $HOSTNAME" --text $TEXT

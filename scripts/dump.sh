@@ -17,11 +17,12 @@ d=`date +%Y%m`
 etc=0
 exclude=""
 
+## ${variablename#pattern}  strip leading space
 while getopts ":b:eh" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 e) etc=1;;
-                x) exclude=$OPTARG;;
+                x) exclude=$$OPTARG;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac
@@ -52,13 +53,6 @@ if [[ -z $@ ]]; then
         exit 1
 fi
 
-echo $NAME
-echo $BACKUPDIR_DATE
-echo $STAMP
-echo $LIST
-
-exit;
-
 mkdir -p "$BACKUPDIR"
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         # kill the timestamp and inc list
@@ -66,14 +60,14 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         rm -f "$LIST"
         rm -f "$STAMP"
         TIMESTAMP=
+        echo "** Full dump"
 else
         TIMESTAMP="-N $STAMP"
+        echo "** Incremental dump"
 fi
 
 if [[ ! -z $exclude ]]; then
-        /usr/sbin/rdup "$TIMESTAMP" "$LIST" $@ | $exclude |\
-        /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup $TIMESTAMP $LIST $@ | $exclude | /usr/sbin/mirror.sh -b $BACKUPDIR
 else
-        /usr/sbin/rdup "$TIMESTAMP" "$LIST" $@ |\
-        /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup $TIMESTAMP $LIST $@ | /usr/sbin/mirror.sh -b $BACKUPDIR
 fi
