@@ -7,9 +7,9 @@ usage() {
         echo DIR  - directories to back up
         echo
         echo OPTIONS
-        echo "-b  backup directory. Default: /vol/backup/HOSTNAME"
-        echo "-e  filelist and timestamp are put in backup directory"
-        echo "-h  this help"
+        echo "-b DIR  backup directory. Default: /vol/backup/HOSTNAME"
+        echo "-e      filelist and timestamp are put in backup directory"
+        echo "-h      this help"
 }
 
 d=`date +%Y%m`
