@@ -38,8 +38,6 @@ else
         ETC="$BACKUPDIR"
 fi
 
-# create top-level backup dir
-
 NAME=$1  
 BACKUPDIR_DATE="$BACKUPDIR/$d"
 STAMP="$ETC/$HOSTNAME.$NAME.timestamp"
@@ -47,24 +45,18 @@ LIST="$ETC/$HOSTNAME.$NAME.list"
 # DIRS in $@
 shift
 
-echo $BACKUPDIR
-echo $BACKUPDIR_DATE
-echo $STAMP
-echo $LIST
-echo $@
-
-echo mkdir -p "$BACKUPDIR"
+mkdir -p "$BACKUPDIR"
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         # kill the timestamp and inc list
-        echo      mkdir -p "$BACKUPDIR_DATE"
-        echo      rm -f "$LIST"
-        echo      rm -f "$STAMP"
+        mkdir -p "$BACKUPDIR_DATE"
+        rm -f "$LIST"
+        rm -f "$STAMP"
 fi
 
 if [[ -f /usr/bin/excl.sh ]]; then
-echo        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ #|\
-echo        /usr/sbin/excl.sh  /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ |\
+        /usr/sbin/excl.sh  /usr/sbin/mirror.sh -b $BACKUPDIR
 else
-echo        /usr/sbin/rdup -N "$STAMP" "$LIST" $@  #|\
-echo        /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ |\
+        /usr/sbin/mirror.sh -b $BACKUPDIR
 fi
