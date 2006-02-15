@@ -8,15 +8,22 @@
 usage() {
         echo "$0 [OPTIONS] FILE [FILE ...]"
         echo
+        echo Print file history from the dump
+        echo 
         echo FILE - search for this file in the backup directory
         echo
         echo OPTIONS
-        echo "-b  backup directory. Default: /vol/backup/HOSTNAME"
-        echo "-h  this help"
+        echo "-b DIR  backup directory. Default: /vol/backup/HOSTNAME"
+        echo "-h      this help"
 }
 
-while getopts ":b:h" options; do
-        case $options in
+monthsago() {
+       echo `date --date "$1 months ago" +%Y%m` # YYYYMM
+}
+
+
+while getopts ":b:h" o; do
+        case $o in
                 b) backupdir=$OPTARG;;
                 h) usage && exit;;
                 \?) usage && exit;;
