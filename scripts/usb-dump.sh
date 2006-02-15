@@ -40,11 +40,6 @@ LIST="$mountpath/$HOSTNAME/$HOSTNAME.list"
 BACKUPDIR="$mountpath/$HOSTNAME"
 BACKUPDIR_DATE="$mountpath/$HOSTNAME/$d"
 
-echo $STAMP
-echo $LIST
-echo $BACKUPDIR
-echo $BACKUPDIR_DATE
-
 # create top-level backup dir
 sudo mkdir -p $BACKUPDIR
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
