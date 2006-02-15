@@ -5,12 +5,27 @@
 #
 # inspired by hist of plan9 
 
-. @sysconfdir@/rdup/shared.sh
+usage() {
+        echo "$0 [OPTIONS] FILE [FILE ...]"
+        echo
+        echo FILE - search for this file in the backup directory
+        echo
+        echo OPTIONS
+        echo "-b  backup directory. Default: /vol/backup/HOSTNAME"
+        echo "-h  this help"
+}
 
-tool_defines
-tool_cmd_options $@
-# tool_dirdate # we do that ourselves
-shift $(($OPTIND - 1))
+while getopts ":b:h" options; do
+        case $options in
+                b) backupdir=$OPTARG;;
+                h) usage && exit;;
+                \?) usage && exit;;
+        esac
+done
+if [ -z $backupdir ]; then
+        backupdir="/vol/backup/`hostname`"
+fi
+shift $((OPTIND - 1))
 
 for file in $@
 do
