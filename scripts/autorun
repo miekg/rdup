@@ -1,12 +1,47 @@
 #!/bin/sh
 
+# get the path were we live
 if [[ $0 =~ ^/ ]]; then
-        current_path=$0
+        p=$0
  else
-        current_path=`pwd`/$0
+        p=`pwd`/$0
 fi
 
-echo $current_path
+d=`date +%Y%m`
+mountpath=`dirname $p`
+echo $mountpath
+echo $d
+# $mountpath/etc  -- etc/adm dir
+# $mountpath/$HOSTNAME/$date backup dir
 
-zenity --text "Perform backup of `hostname`?" --title "rdup @ `hostname`" --question
+# only to get a passwd
+echo gksudo -m "Perform backup of $HOSTNAME as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
+if [[ $? -ne 0 ]]; then
+        exit
+fi
 
+# create the paths
+echo sudo mkdir -p "$mountpath/etc"
+echo sudo mkdir -p "$mountpath/$HOSTNAME"
+
+if [[ ! -d "$mountpath/$d" ]]; then
+        DUMP=FULL
+        echo      mkdir -p "$mountpath/$d"
+        echo      rm -f "$mountpath/etc/$HOSTNAME.list"
+        echo      rm -f "$mountpath/etc/$HOSTNAME.timestamp"
+
+else
+        DUMP=INC
+fi
+
+case $HOSTNAME in
+        elektron*)
+        DIRS="   "
+
+        ;;
+
+        floep*)
+        DIRS="   "
+        /usr/sbin/rdup -N "$mountpath/etc/$HOSTNAME.list"
+        ;;
+esac
