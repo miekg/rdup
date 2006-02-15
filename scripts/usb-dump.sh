@@ -29,19 +29,21 @@ if [[ ! -d "$BACKUPDIR" ]]; then
         sudo      mkdir -p "$BACKUPDIR"
         sudo      rm -f "$LIST"
         sudo      rm -f "$STAMP"
+        TIMESTAMP=
+else
+        TIMESTAMP="-N $STAMP"
 fi
-
 
 case $HOSTNAME in
         elektron*)
         DIRS="   "
-        sudo /usr/sbin/rdup -N "$STAMP" "$LIST" $DIRS |\
+        sudo /usr/sbin/rdup "$TIMESTAMP" "$LIST" $DIRS |\
         /usr/sbin/mirror.sh -b "$BACKUPDIR"
         ;;
 
         floep*)
         DIRS="   "
-        sudo /usr/sbin/rdup -N "$STAMP" "$LIST" $DIRS |\
+        sudo /usr/sbin/rdup "$TIMESTAMP" "$LIST" $DIRS |\
         /usr/sbin/mirror.sh -b "$BACKUPDIR"
         ;;
 esac

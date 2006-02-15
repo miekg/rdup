@@ -210,7 +210,8 @@ main(int argc, char **argv)
 				/* re-touch the timestamp file, if rdup fails
 				 * the user needs to have something */
 				if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
-					fprintf(stderr, "** Could not create timestamp file\n");
+					fprintf(stderr, "** Could not create timestamp file: %s\n",
+							optarg);
 					exit(EXIT_FAILURE);
 				}
 				break;

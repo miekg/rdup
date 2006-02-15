@@ -54,12 +54,15 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         mkdir -p "$BACKUPDIR_DATE"
         rm -f "$LIST"
         rm -f "$STAMP"
+        TIMESTAMP=
+else
+        TIMESTAMP="-N $STAMP"
 fi
 
 if [[ ! -z $exclude ]]; then
-        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ | $exclude |\
+        /usr/sbin/rdup "$TIMESTAMP" "$LIST" $@ | $exclude |\
         /usr/sbin/mirror.sh -b $BACKUPDIR
 else
-        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ |\
+        /usr/sbin/rdup -N "$TIMESTAMP" "$LIST" $@ |\
         /usr/sbin/mirror.sh -b $BACKUPDIR
 fi
