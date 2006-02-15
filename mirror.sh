@@ -185,7 +185,6 @@ remote_mirror() {
                                 ;;
                         esac
                 else
-                        echo
                         # remove
                         if [[ -e "$backupdir/$path" ]]; then
                                 suffix=`mirror_suffix $backupdir/$path`

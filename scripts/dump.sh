@@ -7,25 +7,28 @@ usage() {
         echo DIR  - directories to back up
         echo
         echo OPTIONS
-        echo "-b DIR  backup directory. Default: /vol/backup/HOSTNAME"
-        echo "-e      filelist and timestamp are put in backup directory"
-        echo "-h      this help"
+        echo "-b DIR     backup directory. Default: /vol/backup/HOSTNAME"
+        echo "-e         filelist and timestamp are put in backup directory"
+        echo "-x SCRIPT  use SCRIPT as exclude script"
+        echo "-h         this help"
 }
 
 d=`date +%Y%m`
 etc=0
+exclude=""
 
 while getopts ":b:eh" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 e) etc=1;;
+                x) exclude=$OPTARG;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
 if [[ -z $1 ]]; then
-        echo "NAME is mandatory"
+        echo "** NAME is mandatory"
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
@@ -53,9 +56,9 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         rm -f "$STAMP"
 fi
 
-if [[ -f /usr/bin/excl.sh ]]; then
-        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ |\
-        /usr/sbin/excl.sh  /usr/sbin/mirror.sh -b $BACKUPDIR
+if [[ ! -z $exclude ]]; then
+        /usr/sbin/rdup -N "$STAMP" "$LIST" $@ | $exclude |\
+        /usr/sbin/mirror.sh -b $BACKUPDIR
 else
         /usr/sbin/rdup -N "$STAMP" "$LIST" $@ |\
         /usr/sbin/mirror.sh -b $BACKUPDIR
