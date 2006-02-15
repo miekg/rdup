@@ -5,7 +5,7 @@
 ##
 case $HOSTNAME in
         elektron*)
-        DIRS=
+        DIRS="/home/miekg/bin"
         ;;
 
         floep*)
@@ -37,23 +37,27 @@ fi
 ## Set the directories ##
 STAMP="$mountpath/$HOSTNAME/$HOSTNAME.timestamp"
 LIST="$mountpath/$HOSTNAME/$HOSTNAME.list"
-BACKUPDIR="$mountpath/$HOSTNAME/$d"
+BACKUPDIR="$mountpath/$HOSTNAME"
+BACKUPDIR_DATE="$mountpath/$HOSTNAME/$d"
 
 # create top-level backup dir
-sudo mkdir -p "$mountpath/$HOSTNAME"
-
-if [[ ! -d "$BACKUPDIR" ]]; then
+sudo mkdir -p $BACKUPDIR
+if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         # kill the timestamp and inc list
-        sudo      mkdir -p "$BACKUPDIR"
-        sudo      rm -f "$LIST"
-        sudo      rm -f "$STAMP"
+        sudo mkdir -p "$BACKUPDIR_DATE"
+        sudo rm -f "$LIST"
+        sudo rm -f "$STAMP"
         TIMESTAMP=
-        TEXT="Full dump in progress..."
+        TEXT="Full dump of $HOSTNAME completed"
 else
         TIMESTAMP="-N $STAMP"
-        TEXT="Incremental dump in progress..."
+        TEXT="Incremental dump of $HOSTNAME completed"
 fi
 
+echo $TEXT
+echo  /usr/sbin/rdup $TIMESTAMP $LIST $DIRS 
+echo  /usr/sbin/mirror.sh -b $BACKUPDIR
 sudo /usr/sbin/rdup $TIMESTAMP $LIST $DIRS |\
-/usr/sbin/mirror.sh -b $BACKUPDIR |\
-zenity --progress --pulsate -t "rdup @ $HOSTNAME" --text $TEXT
+sudo /usr/sbin/mirror.sh -b $BACKUPDIR
+
+zenity --info --title "rdup @ $HOSTNAME" --text "$TEXT"
