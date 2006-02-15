@@ -11,37 +11,42 @@ d=`date +%Y%m`
 mountpath=`dirname $p`
 echo $mountpath
 echo $d
-# $mountpath/etc  -- etc/adm dir
-# $mountpath/$HOSTNAME/$date backup dir
+# $mountpath/$HOSTNAME/etc - etc/adm dir
+# $mountpath/$HOSTNAME/$date - backup dir
 
-# only to get a passwd
-echo gksudo -m "Perform backup of $HOSTNAME as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
+# only to get root 
+echo gksudo -m "Perform backup of $HOSTNAME to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
 if [[ $? -ne 0 ]]; then
         exit
 fi
 
-# create the paths
-echo sudo mkdir -p "$mountpath/etc"
+## Set the directories ##
+STAMP="$mountpath/$HOSTNAME/$HOSTNAME.timestamp"
+LIST="$mountpath/$HOSTNAME/$HOSTNAME.list"
+BACKUPDIR="$mountpath/$HOSTNAME/$d"
+
+# createte top-level backup dir
 echo sudo mkdir -p "$mountpath/$HOSTNAME"
 
-if [[ ! -d "$mountpath/$d" ]]; then
-        DUMP=FULL
-        echo      mkdir -p "$mountpath/$d"
-        echo      rm -f "$mountpath/etc/$HOSTNAME.list"
-        echo      rm -f "$mountpath/etc/$HOSTNAME.timestamp"
-
-else
-        DUMP=INC
+if [[ ! -d "$BACKUPDIR" ]]; then
+        # kill the timestamp and inc list
+        echo      mkdir -p "$BACKUPDIR"
+        echo      rm -f "$LIST"
+        echo      rm -f "$STAMP"
 fi
+
 
 case $HOSTNAME in
         elektron*)
         DIRS="   "
+echo    /usr/sbin/rdup -N "$STAMP" "$LIST" $DIRS \
+        /usr/sbin/mirror.sh -b "$BACKUPDIR"
 
         ;;
 
         floep*)
         DIRS="   "
-        /usr/sbin/rdup -N "$mountpath/etc/$HOSTNAME.list"
+echo    /usr/sbin/rdup -N "$STAMP" "$LIST" $DIRS \
+        /usr/sbin/mirror.sh -b "$BACKUPDIR"
         ;;
 esac
