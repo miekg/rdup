@@ -147,9 +147,7 @@ if [ -f $tarfile ]; then
 fi
 
 info "Deleting the tpkg and test directory"
-rm -rf rdup-$version/older/
 rm -rf rdup-$version/test/
-rm -rf rdup-$version/tpkg/
 
 info "Deleting the other fluff"
 rm -rf rdup-$version/.svn
