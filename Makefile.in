@@ -55,7 +55,7 @@ install: rdup
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${mandir}/man8
 	${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
-	${INSTALL_DATA} shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
+	${INSTALL_DATA} tools/shared.sh ${DESTDIR}${sysconfdir}/rdup/shared.sh
 	${INSTALL_DATA} mshared.sh ${DESTDIR}${sysconfdir}/rdup/mshared.sh
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
 	${INSTALL} excl.sh ${DESTDIR}${sbindir}/excl.sh
