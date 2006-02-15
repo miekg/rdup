@@ -33,8 +33,6 @@ do
                 typ=2;
         fi
 
-        [[ $verbose -eq 1 ]] && echo "$path > /dev/fd/2"
-        
         if [[ $dump == "+" ]]; then
                 # add
                 case $typ in

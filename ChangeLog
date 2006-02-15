@@ -8,6 +8,8 @@ xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
      out files that are smaller then a certain size.
    * A beginning was made with a perl impl. of hdup2, which 
      runs on top of rdup.
+   * rmirror and mirror are combined into mirror.sh
+   * all shared stuff was refactored
    Code:
    * Various typo's are fixed
    * -Wextra was dropped to allow compilation with older gcc's.

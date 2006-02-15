@@ -38,11 +38,6 @@ fi
 AC_CONFIG_FILES([Makefile
                  rdup.h
                  excl.sh 
-                 mirror.sh 
-                 rmirror.sh
-                 tools/hist.sh 
-                 tools/yesterday.sh
-                 doc/rmirror.sh.8
                  doc/mirror.sh.8
                  doc/rdup.8
                  doc/hist.sh.1
