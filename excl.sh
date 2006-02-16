@@ -12,7 +12,8 @@
 declare -a fileexcludelist
 declare -a direxcludelist
 fileexcludelist=".slide_img.* .thumb_img.*"
-direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/ tmp/"
+#direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/ tmp/"
+direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/"
 
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000

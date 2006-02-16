@@ -18,7 +18,7 @@ ftsize=0
 ts=`date +%s` # gnuism
 
 mirror_suffix() {
-        fulldate=`ls -l $1 | awk ' { print $6 $7 } '`
+        fulldate=`ls -l "$@" | awk ' { print $6 $7 } '`
         dd=${fulldate:8:2}
         tt=${fulldate:10}
         echo "+$dd.$tt"
@@ -79,7 +79,7 @@ local_mirror() {
                         case $typ in
                                 0)      # REG
                                 if [[ -f "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix $backupdir/$path`
+                                        suffix=`mirror_suffix "$backupdir/$path"`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 if [[ $gzip -eq 1 ]]; then
