@@ -1,4 +1,4 @@
-xx Feb 2006: 0.2.1 Miek <miek@miek.nl>
+16 Feb 2006: 0.2.1 Miek <miek@miek.nl>
    * the output format was changed: 
      the path_size was added to it
    * a -c option was added, which concatenate the file's
