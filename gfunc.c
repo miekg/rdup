@@ -67,7 +67,7 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 				e->f_uid,
 				e->f_gid,
 				e->f_name_size,
-				e->f_size,
+				(size_t)e->f_size,
 				e->f_name);
 		break;
 		case TRUE:
@@ -77,24 +77,24 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 		 * links -> size target path len + target path
 		 */
 		if (S_ISDIR(e->f_mode)) {
-			fprintf(fp, "%c%d %d %d %ld %d %s",
+			fprintf(fp, "%c%d %d %d %zd %d %s",
 					plusmin,
-					(int) e->f_mode,
-					(int) e->f_uid,
-					(int) e->f_gid,
+					e->f_mode,
+					e->f_uid,
+					e->f_gid,
 					e->f_name_size,
 					0,
 					e->f_name);
 			break;
 		}
 		if (S_ISREG(e->f_mode)) {
-			fprintf(fp, "%c%d %d %d %ld %ld %s",
+			fprintf(fp, "%c%d %d %d %zd %zd %s",
 					plusmin,
-					(int) e->f_mode,
-					(int) e->f_uid,
-					(int) e->f_gid,
+					e->f_mode,
+					e->f_uid,
+					e->f_gid,
 					e->f_name_size,
-					e->f_size,
+					(size_t)e->f_size,
 					e->f_name);
 			/* only print content when we're adding */
 			if (plusmin == '+' && !cat(fp, e->f_name)) {
@@ -112,23 +112,23 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 					exit(EXIT_FAILURE);
 				}
 				buf[i + 1] = '\0';
-				fprintf(fp, "%c%d %d %d %ld %ld %s%s",
+				fprintf(fp, "%c%d %d %d %zd %zd %s%s",
 						plusmin,
-						(int) e->f_mode,
-						(int) e->f_uid,
-						(int) e->f_gid,
+						e->f_mode,
+						e->f_uid,
+						e->f_gid,
 						e->f_name_size,
 						i,
 						e->f_name,
 						buf);
 			} else {
-				fprintf(fp, "%c%d %d %d %ld %ld %s",
+				fprintf(fp, "%c%d %d %d %zd %zd %s",
 						plusmin,
-						(int) e->f_mode,
-						(int) e->f_uid,
-						(int) e->f_gid,
+						e->f_mode,
+						e->f_uid,
+						e->f_gid,
 						e->f_name_size,
-						e->f_size,
+						(size_t)e->f_size,
 						e->f_name);
 			}
 			break;
