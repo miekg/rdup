@@ -13,7 +13,7 @@ case $HOSTNAME in
         ;;
 esac
 
-if [ ! -x /u1sr/sbin/rdup ]; then 
+if [ ! -x /usr/sbin/rdup ]; then 
         zenity --error --title "rdup @ $HOSTNAME" --text "rdup can not be found"
         exit 1
 fi
