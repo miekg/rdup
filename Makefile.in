@@ -1,6 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
-SHS=mirror.sh rdgrep.sh tools/hist.sh tools/yesterday.sh
+SHS=mirror.sh tools/hist.sh tools/yesterday.sh
 MAN=doc/rdup.8,in doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1 doc/catch.sh.1 doc/throw.sh.1
 
 prefix  = @prefix@
@@ -56,7 +56,6 @@ install: rdup
 	mkdir -p ${DESTDIR}${mandir}/man8
 	${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
-	${INSTALL} rdgrep.sh ${DESTDIR}${sbindir}/rdgrep.sh
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
 	${INSTALL} tools/hist.sh ${DESTDIR}${sbindir}/hist.sh
 	${INSTALL} tools/yesterday.sh ${DESTDIR}${sbindir}/yesterday.sh
