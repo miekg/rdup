@@ -39,6 +39,7 @@ usage(FILE *f)
 	fprintf(f, "   -F FORMAT\tuse specified format string\n");
 	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "   -V\t\tprint version\n");
+	fprintf(f, "   -c\t\tconcatenate the contents (adds \%C to the FORMAT string)\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
 	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");
@@ -197,11 +198,14 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "rmhVnN:s:vqx0F:")) != -1) {
+	while ((c = getopt (argc, argv, "crmhVnN:s:vqx0F:")) != -1) {
 		switch (c)
 		{
 			case 'F':
 				opt_format = optarg;
+				break;
+			case 'c':
+				opt_format = "%p%m %u %g %l %s %n%C\n";
 				break;
 			case 'h':
 				usage(stdout);
