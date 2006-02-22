@@ -9,8 +9,8 @@
 gboolean opt_null = FALSE;                  /* delimit all in/output with \0  */
 gboolean opt_onefilesystem = FALSE;         /* stay on one filesystem */
 gboolean opt_nobackup = TRUE;               /* don't ignore .nobackup files */
-gboolean opt_removed = FALSE; 		    /* wether to print removed files */
-gboolean opt_modified = FALSE; 		    /* wether to print modified files */
+gboolean opt_removed = TRUE; 		    /* wether to print removed files */
+gboolean opt_modified = TRUE; 		    /* wether to print modified files */
 char *opt_format = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
 gint opt_verbose = 0;                       /* be more verbose */
 gboolean opt_contents = FALSE;              /* cat the file content to stdout */
@@ -94,10 +94,12 @@ g_tree_read_file(FILE *fp)
 	GTree         *tree;
 	struct entry *e;
 	size_t        s;
+	size_t 	      l;
 
 	tree = g_tree_new(gfunc_equal);
 	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
+	l    = 1;
 
 	if (opt_null) {
 		delim = '\0';
@@ -107,7 +109,7 @@ g_tree_read_file(FILE *fp)
 
 	while ((getdelim(&buf, &s, delim, fp)) != -1) {
 		if (s < LIST_MINSIZE) {
-			fprintf(stderr, "** Corrupt entry in filelist\n");
+			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", l);
 			continue;
 		}
 		if (!opt_null) {
@@ -121,7 +123,7 @@ g_tree_read_file(FILE *fp)
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
-			fprintf(stderr, "** Corrupt entry in filelist\n");
+			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", l);
 			continue;
 		}
 
@@ -134,6 +136,7 @@ g_tree_read_file(FILE *fp)
 		e->f_size      = 0;
 		e->f_mtime     = 0;
 		g_tree_replace(tree, (gpointer) e, VALUE);
+		l++;
 	}
 	g_free(buf);
 	return tree;
@@ -265,7 +268,8 @@ main(int argc, char **argv)
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {
-		fprintf(stderr, "** Could not open filelist: %s\n", argv[0]);
+		fprintf(stderr, "** Could not open filelist `%s\': %s\n", argv[0],
+				strerror(errno));
 		exit(EXIT_FAILURE);
 	} else {
 		rewind(fplist);

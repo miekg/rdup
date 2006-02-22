@@ -111,7 +111,8 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 				char buf[BUFSIZE + 1];
 				size_t i;
 				if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-					fprintf(stderr, "** Error reading link: %s\n", e->f_name);
+					fprintf(stderr, "** Error reading link %s %s\n", e->f_name,
+					strerror(errno));
 					exit(EXIT_FAILURE);
 				}
 				buf[i + 1] = '\0';
@@ -176,12 +177,21 @@ return;
 static void
 entry_print_data(char n, FILE *out, struct entry *e) {
 switch (n) {
-	case 'n': fputs(e->f_name, out);		break;
-	case 'l': fprintf(out, "%zd", e->f_name_size);	break;
-	case 'u': fprintf(out, "%d", e->f_uid);		break;
-	case 'g': fprintf(out, "%d", e->f_gid);		break;
-	case 'm': fprintf(out, "%d", e->f_mode);	break;
-
+	case 'n': 
+		fputs(e->f_name, out);		
+		break;
+	case 'l': 
+		fprintf(out, "%zd", e->f_name_size);	
+		break;
+	case 'u': 
+		fprintf(out, "%d", e->f_uid);		
+		break;
+	case 'g': 
+		fprintf(out, "%d", e->f_gid);		
+		break;
+	case 'm': 
+		fprintf(out, "%d", e->f_mode);	
+		break;
 	case 't': 
 		fprintf(out, "%ld", (unsigned long)e->f_mtime);	
 		break;	
@@ -195,13 +205,11 @@ switch (n) {
 
 		fprintf(out, "%ld", (unsigned long)e->f_size);
 		break;
-
 	case 'T': 
 		if (S_ISDIR(e->f_mode)) putchar('d');
 		else if (S_ISLNK(e->f_mode)) putchar('l');
 		else putchar('-');
 		break;
-
 	default:
 		fputc(' ', out);
 		break;
@@ -213,13 +221,14 @@ return;
 /**
  * print function
  */
-
 void 
 entry_print(FILE *out, char plusmin, struct entry *e)
 {
 	char *pos;
-	if ((plusmin == '+') && (opt_modified == FALSE)) return;
-	if ((plusmin == '-') && (opt_removed == FALSE)) return;
+	if ((plusmin == '+') && (opt_modified == FALSE)) 
+		return;
+	if ((plusmin == '-') && (opt_removed == FALSE)) 
+		return;
 
 	for (pos = opt_format; *pos != '\0';  ++pos) {
 		switch (*pos) {
@@ -228,8 +237,6 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 				++pos;
 				entry_print_escape(*pos, out);
 				break;
-
-
 				/* emit data */
 			case '%':
 				++pos;
@@ -243,14 +250,12 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 						  break;
 				}
 				break;
-
 				/* don't know? echo it. */
 			default:
 				fputc(*pos, out);
 				break;
 		}
 	}
-
 	return;
 }
 
@@ -393,6 +398,8 @@ gfunc_equal(gconstpointer a, gconstpointer b)
  * everything in A, but NOT in b
  * (data := element out of A)
  * (b    := packed in diff, diff->b)
+ * This function is essentially the most expensive function 
+ * in rdup...
  */
 gboolean
 gfunc_substract(gpointer data, gpointer value, gpointer diff)

@@ -47,6 +47,9 @@ Give an overview of the options.
 Don't honor .nobackup files. Normally if such files are found the directory is not
 printed to standard output, now it is.
 .TP
+.TP
+.B \-F FORMAT
+Specify a printf-style format to use. See \fBFORMAT\fR below.
 .B \-c
 Concatenate the file's contents also to standard output. This is usefull
 when doing a remote backup (where you need to actual contents).
@@ -77,6 +80,19 @@ to directories.
 .B \-0
 Delimit all printed/read/written lists with NULL instead of a
 whitespace.
+
+.SH FORMAT
+      'p': '+' if file is new/modified, '-' if removed
+                'm': mode from lstat
+                'u': uid of owner
+                'g': gid of owner
+                'l': length of name
+                's': size of file (zero if directory)
+                'n': absolute path of file
+                't': time of modification (in seconds from epoch!)
+                'T': 'type' - same chars as 'ls -l'
+
+
 
 .SH FILELIST
 \fBrdup\fR write the FILELIST in the following format:

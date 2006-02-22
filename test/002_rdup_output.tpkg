@@ -1,0 +1,188 @@
+#!/bin/sh
+# This is a shell archive (produced by GNU sharutils 4.2.1).
+# To extract the files from this archive, save it to some FILE, remove
+# everything before the `!/bin/sh' line above, then type `sh FILE'.
+#
+# Made on 2006-02-22 09:36 CET by <miekg@elektron>.
+# Source directory was `/home/miekg/svn/rdup/trunk/test/002_rdup_output.dir'.
+#
+# Existing files will *not* be overwritten unless `-c' is specified.
+#
+# This shar contains:
+# length mode       name
+# ------ ---------- ------------------------------------------
+#    283 -rw------- 002_rdup_output.dsc
+#    127 -rw------- 002_rdup_output.help
+#    700 -rw------- 002_rdup_output.test
+#
+save_IFS="${IFS}"
+IFS="${IFS}:"
+gettext_dir=FAILED
+locale_dir=FAILED
+first_param="$1"
+for dir in $PATH
+do
+  if test "$gettext_dir" = FAILED && test -f $dir/gettext \
+     && ($dir/gettext --version >/dev/null 2>&1)
+  then
+    set `$dir/gettext --version 2>&1`
+    if test "$3" = GNU
+    then
+      gettext_dir=$dir
+    fi
+  fi
+  if test "$locale_dir" = FAILED && test -f $dir/shar \
+     && ($dir/shar --print-text-domain-dir >/dev/null 2>&1)
+  then
+    locale_dir=`$dir/shar --print-text-domain-dir`
+  fi
+done
+IFS="$save_IFS"
+if test "$locale_dir" = FAILED || test "$gettext_dir" = FAILED
+then
+  echo=echo
+else
+  TEXTDOMAINDIR=$locale_dir
+  export TEXTDOMAINDIR
+  TEXTDOMAIN=sharutils
+  export TEXTDOMAIN
+  echo="$gettext_dir/gettext -s"
+fi
+if touch -am -t 200112312359.59 $$.touch >/dev/null 2>&1 && test ! -f 200112312359.59 -a -f $$.touch; then
+  shar_touch='touch -am -t $1$2$3$4$5$6.$7 "$8"'
+elif touch -am 123123592001.59 $$.touch >/dev/null 2>&1 && test ! -f 123123592001.59 -a ! -f 123123592001.5 -a -f $$.touch; then
+  shar_touch='touch -am $3$4$5$6$1$2.$7 "$8"'
+elif touch -am 1231235901 $$.touch >/dev/null 2>&1 && test ! -f 1231235901 -a -f $$.touch; then
+  shar_touch='touch -am $3$4$5$6$2 "$8"'
+else
+  shar_touch=:
+  echo
+  $echo 'WARNING: not restoring timestamps.  Consider getting and'
+  $echo "installing GNU \`touch', distributed in GNU File Utilities..."
+  echo
+fi
+rm -f 200112312359.59 123123592001.59 123123592001.5 1231235901 $$.touch
+#
+if mkdir _sh23720; then
+  $echo 'x -' 'creating lock directory'
+else
+  $echo 'failed to create lock directory'
+  exit 1
+fi
+# ============= 002_rdup_output.dsc ==============
+if test -f '002_rdup_output.dsc' && test "$first_param" != -c; then
+  $echo 'x -' SKIPPING '002_rdup_output.dsc' '(file already exists)'
+else
+  $echo 'x -' extracting '002_rdup_output.dsc' '(text)'
+  sed 's/^X//' << 'SHAR_EOF' > '002_rdup_output.dsc' &&
+BaseName: 002_rdup_output
+Version: 1.0
+Description: Test the output of rdup
+CreationDate: Wed Feb 22 09:31:38 CET 2006
+Maintainer: Miek Gieben
+Category: 
+Component:
+CmdDepends: 
+Depends: 
+Help: 002_rdup_output.help
+Pre: 
+Post: 
+Test: 002_rdup_output.test
+AuxFiles: 
+Passed:
+Failure:
+SHAR_EOF
+  (set 20 06 02 22 09 36 20 '002_rdup_output.dsc'; eval "$shar_touch") &&
+  chmod 0600 '002_rdup_output.dsc' ||
+  $echo 'restore of' '002_rdup_output.dsc' 'failed'
+  if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
+  && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
+    md5sum -c << SHAR_EOF >/dev/null 2>&1 \
+    || $echo '002_rdup_output.dsc:' 'MD5 check failed'
+1d7eaf8a09db71c8f9ec0c1ff932bb2b  002_rdup_output.dsc
+SHAR_EOF
+  else
+    shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '002_rdup_output.dsc'`"
+    test 283 -eq "$shar_count" ||
+    $echo '002_rdup_output.dsc:' 'original size' '283,' 'current size' "$shar_count!"
+  fi
+fi
+# ============= 002_rdup_output.help ==============
+if test -f '002_rdup_output.help' && test "$first_param" != -c; then
+  $echo 'x -' SKIPPING '002_rdup_output.help' '(file already exists)'
+else
+  $echo 'x -' extracting '002_rdup_output.help' '(text)'
+  sed 's/^X//' << 'SHAR_EOF' > '002_rdup_output.help' &&
+Please describe how to use this test.
+i.e. tpkg -a ARG exe 002_rdup_output.tpkg:
+X   ARG is to give the current build directory
+SHAR_EOF
+  (set 20 06 02 22 09 32 11 '002_rdup_output.help'; eval "$shar_touch") &&
+  chmod 0600 '002_rdup_output.help' ||
+  $echo 'restore of' '002_rdup_output.help' 'failed'
+  if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
+  && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
+    md5sum -c << SHAR_EOF >/dev/null 2>&1 \
+    || $echo '002_rdup_output.help:' 'MD5 check failed'
+7299ddda108e70e9c5eae3e87ea2aeb5  002_rdup_output.help
+SHAR_EOF
+  else
+    shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '002_rdup_output.help'`"
+    test 127 -eq "$shar_count" ||
+    $echo '002_rdup_output.help:' 'original size' '127,' 'current size' "$shar_count!"
+  fi
+fi
+# ============= 002_rdup_output.test ==============
+if test -f '002_rdup_output.test' && test "$first_param" != -c; then
+  $echo 'x -' SKIPPING '002_rdup_output.test' '(file already exists)'
+else
+  $echo 'x -' extracting '002_rdup_output.test' '(text)'
+  sed 's/^X//' << 'SHAR_EOF' > '002_rdup_output.test' &&
+# #-- 002_rdup_output.test --#
+# source the master var file when it's there
+[ -f ../.tpkg.var.master ] && source ../.tpkg.var.master
+# use .tpkg.var.test for in test variable passing
+[ -f .tpkg.var.test ] && source .tpkg.var.test
+# svnserve resets the path, you may need to adjust it, like this:
+PATH=$PATH:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin:.
+X
+# first arg is the build dir, only if no arg is given in .tpkg.var
+if [ -z $TPKG_BUILD ]; then
+X        TPKG_BUILD=$1
+fi
+X
+#echo $TPKG_BUILD
+#cd $TPKG_BUILD
+X
+mkdir aaa
+touch aaa/A
+touch aaa/b
+touch aaa/c
+touch aaa/d
+touch aaa/e
+touch aaa/f
+touch aaa/r
+cd aaa
+ln -sf b def
+cd ..
+X
+# 41471 is the link we've created
+X../../rdup AAA aaa | grep 41471
+SHAR_EOF
+  (set 20 06 02 22 09 36 12 '002_rdup_output.test'; eval "$shar_touch") &&
+  chmod 0600 '002_rdup_output.test' ||
+  $echo 'restore of' '002_rdup_output.test' 'failed'
+  if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
+  && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
+    md5sum -c << SHAR_EOF >/dev/null 2>&1 \
+    || $echo '002_rdup_output.test:' 'MD5 check failed'
+49d90fc4d757707b990e02f7dc64477b  002_rdup_output.test
+SHAR_EOF
+  else
+    shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '002_rdup_output.test'`"
+    test 700 -eq "$shar_count" ||
+    $echo '002_rdup_output.test:' 'original size' '700,' 'current size' "$shar_count!"
+  fi
+fi
+rm -fr _sh23720
+exit 0
