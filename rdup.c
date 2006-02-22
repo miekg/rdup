@@ -6,17 +6,17 @@
 #include "rdup.h"
 
 /* options */
-gboolean opt_null = FALSE;                  /* delimit all in/output with \0  */
-gboolean opt_onefilesystem = FALSE;         /* stay on one filesystem */
-gboolean opt_nobackup = TRUE;               /* don't ignore .nobackup files */
-gboolean opt_removed = TRUE; 		    /* wether to print removed files */
-gboolean opt_modified = TRUE; 		    /* wether to print modified files */
-char *opt_format = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
-gint opt_verbose = 0;                       /* be more verbose */
-size_t opt_size  = 0;                       /* only output files smaller then <size> */
-time_t opt_timestamp = 0;                   /* timestamp file */
+gboolean opt_null 	   = FALSE;                   /* delimit all in/output with \0  */
+gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
+gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
+gboolean opt_removed       = TRUE; 		      /* wether to print removed files */
+gboolean opt_modified      = TRUE; 		      /* wether to print modified files */
+char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
+gint opt_verbose 	   = 0;                       /* be more verbose */
+size_t opt_size            = 0;                       /* only output files smaller then <size> */
+time_t opt_timestamp       = 0;                       /* timestamp file */
 /* signals */
-sig_atomic_t sig = 0;
+sig_atomic_t sig           = 0;
 
 /* crawler.c */
 gboolean dir_crawl(GTree *t, char *path);

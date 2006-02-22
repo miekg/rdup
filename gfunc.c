@@ -15,7 +15,7 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
-/*static gboolean
+static gboolean
 cat(FILE *fp, char *filename)
 {
 	char buf[BUFSIZE + 1];
@@ -23,18 +23,21 @@ cat(FILE *fp, char *filename)
 	size_t i;
 		
 	if ((file = fopen(filename, "r")) == NULL) {
+		fprintf(stderr, "** Could not open '%s\': %s\n",
+				filename, strerror(errno));
 		return FALSE;
 	}
 	
 	while (!feof(file)) {
 		i = fread(buf, sizeof(char), BUFSIZE, file);
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
-			fprintf(stderr, "** Write failure\n");
+			fprintf(stderr, "** Write failure %s\n",
+					strerror(errno));
 			return FALSE;
 		}
 	}
 	return TRUE;
-}*/
+}
 
 /**
  * we received a signal 
@@ -174,51 +177,54 @@ return;
  * print arbitrary data field 
  */
 static void
-entry_print_data(char n, FILE *out, struct entry *e) {
-switch (n) {
-	case 'n': 
-		fputs(e->f_name, out);		
-		break;
-	case 'l': 
-		fprintf(out, "%zd", e->f_name_size);	
-		break;
-	case 'u': 
-		fprintf(out, "%d", e->f_uid);		
-		break;
-	case 'g': 
-		fprintf(out, "%d", e->f_gid);		
-		break;
-	case 'm': 
-		fprintf(out, "%d", e->f_mode);	
-		break;
-	case 't': 
-		fprintf(out, "%ld", (unsigned long)e->f_mtime);	
-		break;	
-	case 's': 
-		/* don't report size for directories. */
-		if (S_ISDIR(e->f_mode)) {
-			putchar('0');
+entry_print_data(FILE *out, char n, struct entry *e) {
+	switch (n) {
+		case 'n': 
+			fputs(e->f_name, out);		
 			break;
-		}
-		fprintf(out, "%ld", (unsigned long)e->f_size);
-		break;
-	case 'T': 
-		if (S_ISDIR(e->f_mode)) {
-			putchar('d');
-		} else if (S_ISLNK(e->f_mode)) 
-		{
-			putchar('l');
-		} else 
-		{
-			putchar('-');
-		}
-		break;
-	default:
-		fputc(' ', out);
-		break;
+		case 'l': 
+			fprintf(out, "%zd", e->f_name_size);	
+			break;
+		case 'u': 
+			fprintf(out, "%d", e->f_uid);		
+			break;
+		case 'g': 
+			fprintf(out, "%d", e->f_gid);		
+			break;
+		case 'm': 
+			fprintf(out, "%d", e->f_mode);	
+			break;
+		case 't': 
+			fprintf(out, "%ld", (unsigned long)e->f_mtime);	
+			break;	
+		case 's': 
+			/* don't report size for directories. */
+			if (S_ISDIR(e->f_mode)) {
+				putchar('0');
+				break;
+			}
+			fprintf(out, "%zd", (size_t)e->f_size);
+			break;
+		case 'T': /* file type */
+			if (S_ISDIR(e->f_mode)) {
+				putchar('d');
+			} else if (S_ISLNK(e->f_mode)) {
+				putchar('l');
+			} else {
+				putchar('-');
+			}
+			break;
+		case 'C': /* file contents */
+			if (!cat(out, e->f_name)) {
+				exit(EXIT_FAILURE);
+			}
+			break;
+		default:
+			fputc(' ', out);
+			break;
 	}
 
-return;
+	return;
 }
 
 /**
@@ -245,11 +251,15 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 				++pos;
 
 				switch (*pos) {
-					case '%': fputc('%', out); break;
-					case 'p': fputc(plusmin, out); break;
+					case '%':
+						  fputc('%', out); 
+						  break;
+					case 'p': 
+						  fputc(plusmin, out); 
+						  break;
 
 					default: 
-						  entry_print_data(*pos, out, e);
+						  entry_print_data(out, *pos, e);
 						  break;
 				}
 				break;

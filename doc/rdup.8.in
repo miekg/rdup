@@ -85,13 +85,13 @@ The following escape sequences are understood by \fBrdup\fR:
 
         'p': '+' if file is new/modified, '-' if removed
         'm': mode from lstat(2)
-        'u': uid of the owner
-        'g': gid of the owner
-        'l': length of name
-        's': size of file/link (zero if directory)
-        'n': absolute path 
+        'u': uid 
+        'g': gid 
+        'l': length of the path name
+        's': size of the file/link (zero if directory)
+        'n': path 
         't': time of modification (in seconds from epoch)
-        'T': 'type' - same chars as 'ls -l'
+        'T': 'type' - 'd'/'l'/'-' for directory, link or file.
         'C': the content of the file/link (none for directories)
 .PP
 To delimit the outout of \fBrdup\fR with NULLs you can use '\\0' in the 
