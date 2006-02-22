@@ -6,6 +6,10 @@
    * Added -r: show only removed files
    * Added -m: only show new/modified files
      (Both from Aaron Bader)
+   * output changes:
+     -directory size is always zero
+   * -c was removed: use %C in the -F format string
+   * Documentation was updated to reflect the current code
 
 
 16 Feb 2006: 0.2.1 Miek <miek@miek.nl>

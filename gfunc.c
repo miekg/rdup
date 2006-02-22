@@ -8,7 +8,6 @@
 #include "rdup.h"
 
 extern gboolean opt_null;
-extern gboolean opt_contents;
 extern gboolean opt_removed;
 extern gboolean opt_modified;
 extern char *opt_format;
@@ -195,20 +194,24 @@ switch (n) {
 	case 't': 
 		fprintf(out, "%ld", (unsigned long)e->f_mtime);	
 		break;	
-
 	case 's': 
 		/* don't report size for directories. */
 		if (S_ISDIR(e->f_mode)) {
 			putchar('0');
 			break;
-			}
-
+		}
 		fprintf(out, "%ld", (unsigned long)e->f_size);
 		break;
 	case 'T': 
-		if (S_ISDIR(e->f_mode)) putchar('d');
-		else if (S_ISLNK(e->f_mode)) putchar('l');
-		else putchar('-');
+		if (S_ISDIR(e->f_mode)) {
+			putchar('d');
+		} else if (S_ISLNK(e->f_mode)) 
+		{
+			putchar('l');
+		} else 
+		{
+			putchar('-');
+		}
 		break;
 	default:
 		fputc(' ', out);

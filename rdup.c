@@ -13,7 +13,6 @@ gboolean opt_removed = TRUE; 		    /* wether to print removed files */
 gboolean opt_modified = TRUE; 		    /* wether to print modified files */
 char *opt_format = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
 gint opt_verbose = 0;                       /* be more verbose */
-gboolean opt_contents = FALSE;              /* cat the file content to stdout */
 size_t opt_size  = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp = 0;                   /* timestamp file */
 /* signals */
@@ -38,17 +37,16 @@ usage(FILE *f)
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
 	fprintf(f, "   -F FORMAT\tuse specified format string\n");
-	fprintf(f, "   -h\t\tgives this help\n");
+	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "   -V\t\tprint version\n");
-	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
+	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
-	fprintf(f, "   -c\t\tconcatenate the content of the file to standard output\n");
 	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
+	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE byes\n");
 	fprintf(f, "   -v\t\tbe more verbose (two times for more verbosity)\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
-	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
 	fprintf(f, "Licensed under the GPL. See the file LICENSE in the\n");
 	fprintf(f, "source distribution of rdup.\n");
@@ -199,7 +197,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "rmchVnN:s:vqx0F:")) != -1) {
+	while ((c = getopt (argc, argv, "rmhVnN:s:vqx0F:")) != -1) {
 		switch (c)
 		{
 			case 'F':
@@ -213,9 +211,6 @@ main(int argc, char **argv)
 				exit(EXIT_SUCCESS);
 			case 'n':
 				opt_nobackup = FALSE;
-				break;
-			case 'c':
-				opt_contents = TRUE;
 				break;
 			case 'N': 
 				opt_timestamp = timestamp(optarg);
