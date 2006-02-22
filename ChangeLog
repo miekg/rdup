@@ -1,3 +1,13 @@
+   Feb 2006: 0.2.2 Miek <miek@miek.nl>
+   -- major feature release --
+   * Added -F FORMAT option that allows you 
+     to specify the exact output of rdup 
+     (Patch from Aaron Bader)
+   * Added -r: show only removed files
+   * Added -m: only show new/modified files
+     (Both from Aaron Bader)
+
+
 16 Feb 2006: 0.2.1 Miek <miek@miek.nl>
    * the output format was changed: 
      the path_size was added to it

@@ -58,6 +58,7 @@ else
 fi
 
 sudo /usr/sbin/rdup -N $STAMP $LIST $DIRS |\
-sudo /usr/sbin/mirror.sh -b $BACKUPDIR 2>&1
+sudo /usr/sbin/mirror.sh -b $BACKUPDIR 2>&1 |\
+mail -s "$TEXT" root@localhost
 # backup completed
 zenity --info --title "rdup @ $HOSTNAME" --text "$TEXT"

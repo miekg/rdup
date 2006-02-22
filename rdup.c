@@ -37,7 +37,7 @@ usage(FILE *f)
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -V\t\tprint version\n");
 	fprintf(f, "   -c\t\tconcatenate the content of the file to standard output\n");
-	fprintf(f, "   -n\t\tdo not look at" NOBACKUP "files\n");
+	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE byes\n");
 	fprintf(f, "   -v\t\tbe more verbose (two times for more verbosity)\n");
