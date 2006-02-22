@@ -146,12 +146,13 @@ remote_mirror() {
                         typ=2;
                 fi
 
-                echo "m{"$mode"}"
-                echo "u{"$uid"}"
-                echo "g{"$gid"}"
-                echo "l{"$psize"}"
-                echo "s{"$fsize"}"
-                echo "p{"$path"}"
+# debugging - the output of rdup should perfectly match our reads
+#                echo "m{"$mode"}"
+#                echo "u{"$uid"}"
+#                echo "g{"$gid"}"
+#                echo "l{"$psize"}"
+#                echo "s{"$fsize"}"
+#                echo "p{"$path"}"
 
                 if [[ $dump == "+" ]]; then
                         # add
