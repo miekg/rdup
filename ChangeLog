@@ -6,9 +6,14 @@
    * Added -r: show only removed files
    * Added -m: only show new/modified files
      (Both from Aaron Bader)
+   * -0 semantics changed: now only applies to 
+     the internal filelist. If you want a NULL use
+     '\0' in the -F FORMAT string
    * output changes:
      - directory size is always set to zero
    * Documentation was updated to reflect the current code
+   * strerror() is now also printed when syscalls fail
+   * various small bits: typo's, check for signals more often
 
 
 16 Feb 2006: 0.2.1 Miek <miek@miek.nl>

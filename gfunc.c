@@ -15,30 +15,6 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
-static gboolean
-cat(FILE *fp, char *filename)
-{
-	char buf[BUFSIZE + 1];
-	FILE *file;
-	size_t i;
-		
-	if ((file = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "** Could not open '%s\': %s\n",
-				filename, strerror(errno));
-		return FALSE;
-	}
-	
-	while (!feof(file)) {
-		i = fread(buf, sizeof(char), BUFSIZE, file);
-		if (fwrite(buf, sizeof(char), i, fp) != i) {
-			fprintf(stderr, "** Write failure %s\n",
-					strerror(errno));
-			return FALSE;
-		}
-	}
-	return TRUE;
-}
-
 /**
  * we received a signal 
  */
@@ -57,6 +33,35 @@ signal_abort(int signal)
 			break;
 	}
 	exit(EXIT_FAILURE);
+}
+
+
+static gboolean
+cat(FILE *fp, char *filename)
+{
+	char buf[BUFSIZE + 1];
+	FILE *file;
+	size_t i;
+		
+	if ((file = fopen(filename, "r")) == NULL) {
+		fprintf(stderr, "** Could not open '%s\': %s\n",
+				filename, strerror(errno));
+		return FALSE;
+	}
+	
+	while (!feof(file)) {
+		if (sig != 0) {
+			signal_abort(sig);
+		}
+		
+		i = fread(buf, sizeof(char), BUFSIZE, file);
+		if (fwrite(buf, sizeof(char), i, fp) != i) {
+			fprintf(stderr, "** Write failure `%s\': %s\n", 
+					filename, strerror(errno));
+			return FALSE;
+		}
+	}
+	return TRUE;
 }
 
 /*
@@ -90,28 +95,38 @@ entry_cat_data(FILE *fp, struct entry *e)
  */
 static void
 entry_print_escape(char n, FILE *out) {
-switch (n) {
-	case 'a': fputc('\a', out); break;
-	case 'b': fputc('\b', out); break;
-	case 'e': fputc('\e', out); break;
-	case 'f': fputc('\f', out); break;
-	case 'r': fputc('\r', out); break;
-	case 't': fputc('\t', out); break;
-	case 'v': fputc('\v', out); break;
-	case '0': fputc('\0', out); break;
-
-	case 'n':
-		/* reverse compatiblity: when -0 is on, put out a NULL. */
-		if (opt_null) fputc('\0', out);
-			else fputc('\n', out); 
-		break;
-
-	default:
-		fputc(n, out); 
-		break;
+	switch (n) {
+		case 'a': 
+			fputc('\a', out); 
+			break;
+		case 'b': 
+			fputc('\b', out); 
+			break;
+		case 'e': 
+			fputc('\e', out); 
+			break;
+		case 'f': 
+			fputc('\f', out); 
+			break;
+		case 'r': 
+			fputc('\r', out); 
+			break;
+		case 't': 
+			fputc('\t', out); 
+			break;
+		case 'v': 
+			fputc('\v', out); 
+			break;
+		case '0': 
+			fputc('\0', out); 
+			break;
+		case 'n': 
+			fputc('\n', out); 
+			break;
+		default:
+			fputc(n, out); 
+			break;
 	}
-
-return;
 }
 
 /**
@@ -159,8 +174,6 @@ entry_print_data(FILE *out, char n, struct entry *e) {
 			fputc(' ', out);
 			break;
 	}
-
-	return;
 }
 
 /**
@@ -209,7 +222,6 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 				break;
 		}
 	}
-	return;
 }
 
 /**

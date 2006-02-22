@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2005, 2006 Miek Gieben
+ * See LICENSE for the license
+ *
+ * Directory crawler
+ */
 #include "rdup.h"
 
 extern gboolean opt_onefilesystem;
@@ -53,7 +59,8 @@ dir_prepend(GTree *t, char *path)
 	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
-			fprintf(stderr, "** Could not stat dirpath: %s\n", path2);
+			fprintf(stderr, "** Could not stat dirpath `%s\': %s\n", path2,
+					strerror(errno));
 			return FALSE;
 		}
 		e = g_malloc(sizeof(struct entry));
@@ -65,7 +72,6 @@ dir_prepend(GTree *t, char *path)
 		e->f_mode      = s.st_mode;
 		e->f_size      = s.st_size;
 		
-		/* leak; need destroy function for old value */
 		g_tree_replace(t, (gpointer) entry_dup(e), VALUE);
 		g_free(e);
 		
@@ -100,7 +106,8 @@ dir_crawl(GTree *t, char *path)
 	struct entry **filestack = g_malloc(fstack_cnt * fstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
-		fprintf(stderr, "** Cannot enter: %s\n", path);
+		fprintf(stderr, "** Cannot enter `%s\n\': %s", path,
+				strerror(errno));
 		g_free(filestack);
 		g_free(dirstack);
 		return TRUE;
@@ -108,7 +115,8 @@ dir_crawl(GTree *t, char *path)
 
 	/* get device */
 	if (fstat(dirfd(dir), &s) != 0) {
-		fprintf(stderr, "** Cannot determine holding device of the directory: %s\n", path);
+		fprintf(stderr, "** Cannot determine holding device of the directory `%s\': %s\n", path,
+				strerror(errno));
 		closedir(dir);
 		g_free(filestack);
 		g_free(dirstack);
@@ -126,7 +134,8 @@ dir_crawl(GTree *t, char *path)
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
-			fprintf(stderr, "** Could not stat path: %s\n", curpath);
+			fprintf(stderr, "** Could not stat path `%s\': %s\n", curpath,
+					strerror(errno));
 			g_free(curpath);
 			continue;
 		}
@@ -173,7 +182,7 @@ dir_crawl(GTree *t, char *path)
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
-				fprintf(stderr, "** Walking onto different filesystem\n");
+				fprintf(stderr, "** Walking into different filesystem\n");
 				g_free(curpath);
 				continue;
 			}
