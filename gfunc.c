@@ -221,7 +221,7 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 {
 	struct entry *f;
 	f = (struct entry*) data;
-	/* name is not freed - this lead to double frees */
+	g_free(f->f_name);
 	g_free(f);
 	return FALSE;
 }

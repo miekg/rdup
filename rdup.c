@@ -304,7 +304,6 @@ main(int argc, char **argv)
 
 	g_tree_foreach(curtree, gfunc_free, NULL);
 	g_tree_foreach(backup, gfunc_free, NULL);
-	g_tree_foreach(remove, gfunc_free, NULL); 
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
