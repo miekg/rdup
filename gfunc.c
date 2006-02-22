@@ -59,90 +59,31 @@ signal_abort(int signal)
 	exit(EXIT_FAILURE);
 }
 
-/**
- * print a struct entry
- *
+/*
+ * cat the contents, only when adding and only for files/links
+ */
 static void
-entry_print(FILE *fp, char plusmin, struct entry *e) {
-	switch(opt_contents) {
-		case FALSE:
-		fprintf(fp, "%c%d %d %d %zd %zd %s",
-				plusmin,
-				e->f_mode,
-				e->f_uid,
-				e->f_gid,
-				e->f_name_size,
-				(size_t)e->f_size,
-				e->f_name);
-		break;
-		case TRUE:
-		* do some magic here:
-		 * directories -> size to 0 no content
-		 * files -> normal size + content
-		 * links -> size target path len + target path
-		 *
-		if (S_ISDIR(e->f_mode)) {
-			fprintf(fp, "%c%d %d %d %zd %d %s",
-					plusmin,
-					e->f_mode,
-					e->f_uid,
-					e->f_gid,
-					e->f_name_size,
-					0,
-					e->f_name);
-			break;
+entry_cat_data(FILE *fp, struct entry *e)
+{
+	if (S_ISREG(e->f_mode)) {
+		if (!cat(fp, e->f_name)) {
+			exit(EXIT_FAILURE);
 		}
-		if (S_ISREG(e->f_mode)) {
-			fprintf(fp, "%c%d %d %d %zd %zd %s",
-					plusmin,
-					e->f_mode,
-					e->f_uid,
-					e->f_gid,
-					e->f_name_size,
-					(size_t)e->f_size,
-					e->f_name);
-			* only print content when we're adding *
-			if (plusmin == '+' && !cat(fp, e->f_name)) {
-				exit(EXIT_FAILURE);
-			}
-			break;
-		}
-		if (S_ISLNK(e->f_mode)) {
-			* only print content when we're adding *
-			if (plusmin == '+') {
-				char buf[BUFSIZE + 1];
-				size_t i;
-				if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-					fprintf(stderr, "** Error reading link %s %s\n", e->f_name,
-					strerror(errno));
-					exit(EXIT_FAILURE);
-				}
-				buf[i + 1] = '\0';
-				fprintf(fp, "%c%d %d %d %zd %zd %s%s",
-						plusmin,
-						e->f_mode,
-						e->f_uid,
-						e->f_gid,
-						e->f_name_size,
-						i,
-						e->f_name,
-						buf);
-			} else {
-				fprintf(fp, "%c%d %d %d %zd %zd %s",
-						plusmin,
-						e->f_mode,
-						e->f_uid,
-						e->f_gid,
-						e->f_name_size,
-						(size_t)e->f_size,
-						e->f_name);
-			}
-			break;
-		}
-
+		return;
 	}
-} */
-
+	if (S_ISLNK(e->f_mode)) {
+		char buf[BUFSIZE + 1];
+		size_t i;
+		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
+			fprintf(stderr, "** Error reading link %s: '%s\'\n", e->f_name,
+					strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+		buf[i] = '\0';
+		fprintf(fp, "%s", buf);
+		return;
+	}
+}
 
 /**
  * print an escape sequence correctly 
@@ -214,11 +155,6 @@ entry_print_data(FILE *out, char n, struct entry *e) {
 				putchar('-');
 			}
 			break;
-		case 'C': /* file contents */
-			if (!cat(out, e->f_name)) {
-				exit(EXIT_FAILURE);
-			}
-			break;
 		default:
 			fputc(' ', out);
 			break;
@@ -257,7 +193,11 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 					case 'p': 
 						  fputc(plusmin, out); 
 						  break;
-
+					case 'C':
+						  if (plusmin == '+') {
+						  	entry_cat_data(out, e);
+						  }
+						  break;
 					default: 
 						  entry_print_data(out, *pos, e);
 						  break;
@@ -321,11 +261,6 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
 		entry_print(stdout, '+', (struct entry*)data);
-		/*if (opt_null) {
-			putc('\0', stdout);
-		} else {
-			putc('\n', stdout);
-		}*/
 		return FALSE;
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
@@ -338,20 +273,10 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 					return FALSE;
 				}
 				entry_print(stdout, '+', (struct entry*)data);
-				/*if (opt_null) {
-					putc('\0', stdout);
-				} else {
-					putc('\n', stdout);
-				}*/
 				return FALSE;
 			default: /* INC_DUMP */
 				if (((struct entry*)data)->f_mtime > opt_timestamp) {
 					entry_print(stdout, '+', (struct entry*)data);
-					/*if (opt_null) {
-						putc('\0', stdout);
-					} else {
-						putc('\n', stdout);
-					}*/
 				}
 				return FALSE;
 		}
@@ -371,13 +296,6 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 	}
 
 	entry_print(stdout, '-', (struct entry*)data);
-/*
-	if (opt_null) {
-		putc('\0', stdout);
-	} else {
-		putc('\n', stdout);
-	}
-*/
 	return FALSE;
 }
 
@@ -430,4 +348,3 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 	}
 	return FALSE;
 }
-

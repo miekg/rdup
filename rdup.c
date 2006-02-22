@@ -37,9 +37,9 @@ usage(FILE *f)
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
 	fprintf(f, "   -F FORMAT\tuse specified format string\n");
-	fprintf(f, "   -0\t\tdelimit all output with NULLs\n");
+	fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
 	fprintf(f, "   -V\t\tprint version\n");
-	fprintf(f, "   -c\t\tconcatenate the contents (adds \%C to the FORMAT string)\n");
+	fprintf(f, "   -c\t\tconcatenate the contents (adds %%C to the FORMAT string)\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
 	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");

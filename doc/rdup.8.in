@@ -131,7 +131,8 @@ spaces this can come in handy.
 .TP
 .B o FILE_SIZE
 the size of file pointed to by PATH. Note that if the first character of the line is '-'
-(.ie. remove) the SIZE will be zero.
+(.ie. remove) the SIZE will be zero. For directories this size will
+always be zero.
 .TP
 .B o PATH
 the pathname
@@ -163,7 +164,7 @@ The entire file is concatenated to standard output.
 The output when using the \-c is changed as follows, for:
 .TP
 .B o directories:
-the FILE_SIZE is set to zero and no content is printed. Thus:
+the FILE_SIZE is zero and no content is printed. Thus:
         +16877 1000 1000 11 0 \fB/home/miekg\fR
 .TP
 .B o regular files:
