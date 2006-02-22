@@ -9,11 +9,14 @@
 
 extern gboolean opt_null;
 extern gboolean opt_contents;
+extern gboolean opt_removed;
+extern gboolean opt_modified;
+extern char *opt_format;
 extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
-static gboolean
+/*static gboolean
 cat(FILE *fp, char *filename)
 {
 	char buf[BUFSIZE + 1];
@@ -32,7 +35,7 @@ cat(FILE *fp, char *filename)
 		}
 	}
 	return TRUE;
-}
+}*/
 
 /**
  * we received a signal 
@@ -56,7 +59,7 @@ signal_abort(int signal)
 
 /**
  * print a struct entry
- */
+ *
 static void
 entry_print(FILE *fp, char plusmin, struct entry *e) {
 	switch(opt_contents) {
@@ -71,11 +74,11 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 				e->f_name);
 		break;
 		case TRUE:
-		/* do some magic here:
+		* do some magic here:
 		 * directories -> size to 0 no content
 		 * files -> normal size + content
 		 * links -> size target path len + target path
-		 */
+		 *
 		if (S_ISDIR(e->f_mode)) {
 			fprintf(fp, "%c%d %d %d %zd %d %s",
 					plusmin,
@@ -96,14 +99,14 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 					e->f_name_size,
 					(size_t)e->f_size,
 					e->f_name);
-			/* only print content when we're adding */
+			* only print content when we're adding *
 			if (plusmin == '+' && !cat(fp, e->f_name)) {
 				exit(EXIT_FAILURE);
 			}
 			break;
 		}
 		if (S_ISLNK(e->f_mode)) {
-			/* only print content when we're adding */
+			* only print content when we're adding *
 			if (plusmin == '+') {
 				char buf[BUFSIZE + 1];
 				size_t i;
@@ -135,6 +138,120 @@ entry_print(FILE *fp, char plusmin, struct entry *e) {
 		}
 
 	}
+} */
+
+
+/**
+ * print an escape sequence correctly 
+ */
+static void
+entry_print_escape(char n, FILE *out) {
+switch (n) {
+	case 'a': fputc('\a', out); break;
+	case 'b': fputc('\b', out); break;
+	case 'e': fputc('\e', out); break;
+	case 'f': fputc('\f', out); break;
+	case 'r': fputc('\r', out); break;
+	case 't': fputc('\t', out); break;
+	case 'v': fputc('\v', out); break;
+	case '0': fputc('\0', out); break;
+
+	case 'n':
+		/* reverse compatiblity: when -0 is on, put out a NULL. */
+		if (opt_null) fputc('\0', out);
+			else fputc('\n', out); 
+		break;
+
+	default:
+		fputc(n, out); 
+		break;
+	}
+
+return;
+}
+
+/**
+ * print arbitrary data field 
+ */
+static void
+entry_print_data(char n, FILE *out, struct entry *e) {
+switch (n) {
+	case 'n': fputs(e->f_name, out);		break;
+	case 'l': fprintf(out, "%zd", e->f_name_size);	break;
+	case 'u': fprintf(out, "%d", e->f_uid);		break;
+	case 'g': fprintf(out, "%d", e->f_gid);		break;
+	case 'm': fprintf(out, "%d", e->f_mode);	break;
+
+	case 't': 
+		fprintf(out, "%ld", (unsigned long)e->f_mtime);	
+		break;	
+
+	case 's': 
+		/* don't report size for directories. */
+		if (S_ISDIR(e->f_mode)) {
+			putchar('0');
+			break;
+			}
+
+		fprintf(out, "%ld", (unsigned long)e->f_size);
+		break;
+
+	case 'T': 
+		if (S_ISDIR(e->f_mode)) putchar('d');
+		else if (S_ISLNK(e->f_mode)) putchar('l');
+		else putchar('-');
+		break;
+
+	default:
+		fputc(' ', out);
+		break;
+	}
+
+return;
+}
+
+/**
+ * print function
+ */
+
+void 
+entry_print(FILE *out, char plusmin, struct entry *e)
+{
+	char *pos;
+	if ((plusmin == '+') && (opt_modified == FALSE)) return;
+	if ((plusmin == '-') && (opt_removed == FALSE)) return;
+
+	for (pos = opt_format; *pos != '\0';  ++pos) {
+		switch (*pos) {
+			/* c-style escapes are valid */
+			case '\\':
+				++pos;
+				entry_print_escape(*pos, out);
+				break;
+
+
+				/* emit data */
+			case '%':
+				++pos;
+
+				switch (*pos) {
+					case '%': fputc('%', out); break;
+					case 'p': fputc(plusmin, out); break;
+
+					default: 
+						  entry_print_data(*pos, out, e);
+						  break;
+				}
+				break;
+
+				/* don't know? echo it. */
+			default:
+				fputc(*pos, out);
+				break;
+		}
+	}
+
+	return;
 }
 
 /**
@@ -186,11 +303,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
 		entry_print(stdout, '+', (struct entry*)data);
-		if (opt_null) {
+		/*if (opt_null) {
 			putc('\0', stdout);
 		} else {
 			putc('\n', stdout);
-		}
+		}*/
 		return FALSE;
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
@@ -203,20 +320,20 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 					return FALSE;
 				}
 				entry_print(stdout, '+', (struct entry*)data);
-				if (opt_null) {
+				/*if (opt_null) {
 					putc('\0', stdout);
 				} else {
 					putc('\n', stdout);
-				}
+				}*/
 				return FALSE;
 			default: /* INC_DUMP */
 				if (((struct entry*)data)->f_mtime > opt_timestamp) {
 					entry_print(stdout, '+', (struct entry*)data);
-					if (opt_null) {
+					/*if (opt_null) {
 						putc('\0', stdout);
 					} else {
 						putc('\n', stdout);
-					}
+					}*/
 				}
 				return FALSE;
 		}
@@ -236,11 +353,13 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 	}
 
 	entry_print(stdout, '-', (struct entry*)data);
+/*
 	if (opt_null) {
 		putc('\0', stdout);
 	} else {
 		putc('\n', stdout);
 	}
+*/
 	return FALSE;
 }
 

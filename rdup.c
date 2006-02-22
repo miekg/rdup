@@ -6,13 +6,16 @@
 #include "rdup.h"
 
 /* options */
-gboolean opt_null = FALSE;          /* delimit all in/output with \0  */
-gboolean opt_onefilesystem = FALSE; /* stay on one filesystem */
-gboolean opt_nobackup = TRUE;       /* don't ignore .nobackup files */
-gint opt_verbose = 0;       /* be more verbose */
-gboolean opt_contents = FALSE;      /* cat the file content to stdout */
-size_t opt_size  = 0;               /* only output files smaller then <size> */
-time_t opt_timestamp = 0;  /* timestamp file */
+gboolean opt_null = FALSE;                  /* delimit all in/output with \0  */
+gboolean opt_onefilesystem = FALSE;         /* stay on one filesystem */
+gboolean opt_nobackup = TRUE;               /* don't ignore .nobackup files */
+gboolean opt_removed = FALSE; 		    /* wether to print removed files */
+gboolean opt_modified = FALSE; 		    /* wether to print modified files */
+char *opt_format = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
+gint opt_verbose = 0;                       /* be more verbose */
+gboolean opt_contents = FALSE;              /* cat the file content to stdout */
+size_t opt_size  = 0;                       /* only output files smaller then <size> */
+time_t opt_timestamp = 0;                   /* timestamp file */
 /* signals */
 sig_atomic_t sig = 0;
 
@@ -34,8 +37,11 @@ usage(FILE *f)
 	fprintf(f, "   DIR\t\tdirectory or directories to dump\n");
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
+	fprintf(f, "   -F FORMAT\tuse specified format string\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -V\t\tprint version\n");
+	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
+	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
 	fprintf(f, "   -c\t\tconcatenate the content of the file to standard output\n");
 	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");
 	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
@@ -190,9 +196,12 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "chVnN:s:vqx0")) != -1) {
+	while ((c = getopt (argc, argv, "rmchVnN:s:vqx0F:")) != -1) {
 		switch (c)
 		{
+			case 'F':
+				opt_format = optarg;
+				break;
 			case 'h':
 				usage(stdout);
 				exit(EXIT_SUCCESS);
@@ -220,6 +229,14 @@ main(int argc, char **argv)
 				if (opt_verbose > 2) {
 					opt_verbose = 2;
 				}
+				break;
+			case 'r':
+				opt_removed = TRUE;
+				opt_modified = FALSE;
+				break;
+			case 'm':
+				opt_removed = FALSE;
+				opt_modified = TRUE;
 				break;
 			case 'x':
 				opt_onefilesystem = TRUE;
