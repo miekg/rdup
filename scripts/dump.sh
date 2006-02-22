@@ -17,7 +17,6 @@ d=`date +%Y%m`
 etc=0
 exclude=""
 
-## ${variablename#pattern}  strip leading space
 while getopts ":b:eh" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;

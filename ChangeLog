@@ -7,8 +7,7 @@
    * Added -m: only show new/modified files
      (Both from Aaron Bader)
    * output changes:
-     -directory size is always zero
-   * -c was removed: use %C in the -F format string
+     - directory size is always set to zero
    * Documentation was updated to reflect the current code
 
 

@@ -36,6 +36,7 @@ usage(FILE *f)
 	fprintf(f, "   DIR\t\tdirectory or directories to dump\n");
 	fprintf(f, "\nOptions:\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
+	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
 	fprintf(f, "   -F FORMAT\tuse specified format string\n");
 	fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
 	fprintf(f, "   -V\t\tprint version\n");
@@ -43,9 +44,8 @@ usage(FILE *f)
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
 	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");
-	fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
 	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
-	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE byes\n");
+	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE bytes\n");
 	fprintf(f, "   -v\t\tbe more verbose (two times for more verbosity)\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
