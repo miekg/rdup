@@ -146,6 +146,13 @@ remote_mirror() {
                         typ=2;
                 fi
 
+                echo "m{"$mode"}"
+                echo "u{"$uid"}"
+                echo "g{"$gid"}"
+                echo "l{"$psize"}"
+                echo "s{"$fsize"}"
+                echo "p{"$path"}"
+
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in

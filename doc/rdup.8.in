@@ -63,7 +63,8 @@ Print rdup's version.
 .TP
 .B \-c
 Concatenate the files' contents to standard output. This sets
-the FORMAT string to: %p%m %u %g %l %s %n%C"
+the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
+
 .TP
 .B \-v
 Be more verbose. If specified another time, \fBrdup\fR will be even
