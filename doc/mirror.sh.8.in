@@ -1,17 +1,17 @@
 '\" t
-.TH MIRROR 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH MIRROR.SH 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-mirror \- mirror the files from the list on standard input
+mirror.sh \- mirror the files from the list on standard input
 
 .SH SYNOPSIS
-.B mirror
+.B mirror.sh
 [
 .IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBmirror\fR copies the files it gets from standard input to the directory
+\fBmirror.sh\fR copies the files it gets from standard input to the directory
 specified with the \-b option. This script \fIimplements\fR the backup policy. 
 .PP
 If a file already exists in the backup directory it will be moved and
@@ -26,11 +26,15 @@ Alternate backup directory. Defaults to /vol/backup/`hostname`.
 Encrypt the files when backing up using the contents of keyfile as
 an encryption key.
 .TP
+.B \-c 
+Used in conjunction with \fBrdup\fR's \-c. This will allow
+\fBmirror.sh\fR to be used for remote backups.
+.TP
 .B \-z
 Gzip the contents of the files while backing up.
 .TP
-.B \-N
-Dry-run, don't touch the filesystem, but echo what you want to do.
+.B \-v
+Echo the files processed to standard error.
 .TP
 .B \-h
 Short help message.
@@ -40,4 +44,4 @@ Short help message.
 the backup file system.
 
 .SH SEE ALSO
-diff(1), hist(1), yesterday(1), rdup(8)
+hist.sh(1), yesterday.sh(1), rdup(8)
