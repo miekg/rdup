@@ -71,7 +71,7 @@ timestamp.
 
 If we were not piping the output to 'mirror.sh' we would see:
 -33152 0 0 0 bin/blaat
-+16832 1000 1000 4096 bin/.svn
++16832 1000 1000 0 bin/.svn
 
 Saying that 'bin/blaat' is to be removed. bin/.svn is always printed
 because that is a directory. The mirror.sh script will update the
