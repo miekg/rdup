@@ -1,7 +1,6 @@
 TODO: 
 
 :rdup util: 
-o valgrind and g_free
 
 :tests:
 o do a make install test
@@ -18,9 +17,6 @@ o Encryption: it changes the file size! This means it cannot be
 o where to place to aux. scripts? /usr/lib/rdup ??
 o bandwidth limiting: cstream
 
-:cron:
-o port over some scripts from hdup2 to remove old backups
-
 :gtk: (if ever)
 o graphic (GTK) frontend? What would it do?
         - specify what to backup
@@ -30,8 +26,14 @@ o graphic (GTK) frontend? What would it do?
         - yesterday.sh frontend
         - hist.sh frontend (or in nautilus?)
 
-
 DONE:
+o valgrind and g_free
+  done, could use another look, but I find it acceptable
+  22 Feb 2006
+  
+o port over some scripts from hdup2 to remove old backups
+  22 Feb - not doing it
+
 o ignore or handle signals? Needed to decide what to do with the FILELIST
   and the timestamp, at least sigpipe, fail gracefully.
   25 Jan - we just exit

@@ -3,16 +3,11 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 #
-# Exclude certain FILES from getting back upped 
-# use bash' regular expressions to avoid forking grep
-# watch out with this, if you remove parent directories
-# without removing the files, you will get problem when
-# trying mirror the files
+# grep on rdup's output
 
 declare -a fileexcludelist
 declare -a direxcludelist
 fileexcludelist=".slide_img.* .thumb_img.*"
-#direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/ tmp/"
 direxcludelist="^/lost+found/ ^/proc/ ^/dev/ ^/sys/ .Trash/ .Cache/"
 
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
