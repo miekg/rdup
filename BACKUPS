@@ -1,9 +1,9 @@
 1/ BACKUPS WITH RDUP
 
 o local mirroring backups
-o local tar.gz backups (hdup)
-o remote mirroring backups
-o USB/FireWire HD backups
+o local tar.gz backups (hdup) (todo, code is 50% there) 
+o remote mirroring backups    (todo, code is there)
+o USB/FireWire HD backups     (todo, code is there)
 
 1/ HOW TO MAKE BACKUPS
 
