@@ -49,7 +49,7 @@ cat(FILE *fp, char *filename)
 		return FALSE;
 	}
 	
-	while (!feof(file)) {
+	while (!feof(file) && (!ferror(file))) {
 		if (sig != 0) {
 			signal_abort(sig);
 		}

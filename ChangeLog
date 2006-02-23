@@ -13,6 +13,7 @@
      - directory size is always set to zero
    * Documentation was updated to reflect the current code
    * strerror() is now also printed when syscalls fail
+   * add ferror check to cat() in gfunc.c
    * renamed excl.sh to rdgrep.sh (rdup-grep)
    * various small bits: typo's, check for signals more often
 
