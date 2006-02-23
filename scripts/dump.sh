@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# create a (mirror) backup in /vol/backup/`hostname`
+# figure out of the dump should be a full one or incremental
+
+
 usage() {
         echo "$0 [OPTIONS] NAME DIR [DIR ...]"
         echo 

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# create a dump on a external harddisk
+
 ##
 # For each HOST you should define the directories to backup 
 ##
