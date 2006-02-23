@@ -5,23 +5,6 @@ o local tar.gz backups (hdup)
 o remote mirroring backups
 o USB/FireWire HD backups
 
-TODO DOC....
-
-What they have incommon
-
-
-Difference
-
-Placement of Files
-# dump.sh?
-/etc/timestamp /etc/filelist files
-
-
-
-
-
-
-
 1/ HOW TO MAKE BACKUPS
 
 1. What directories do you want to backup?
