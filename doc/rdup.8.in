@@ -92,10 +92,10 @@ The following escape sequences are understood by \fBrdup\fR:
         'm': mode from lstat(2)
         'u': uid 
         'g': gid 
-        'l': length of the path name
-        's': size of the file/link (zero if directory)
+        'l': path name length
+        's': file size (zero if directory)
         'n': path 
-        't': time of modification (in seconds from epoch)
+        't': time of modification (seconds from epoch)
         'T': 'type' - 'd'/'l'/'-' for directory, link or file.
         'C': the content of the file/link (none for directories)
 .PP
