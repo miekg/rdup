@@ -1,7 +1,7 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
 SHS=mirror.sh tools/hist.sh tools/yesterday.sh
-MAN=doc/rdup.8,in doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1 doc/catch.sh.1 doc/throw.sh.1
+MAN=doc/rdup.8 doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
@@ -41,7 +41,6 @@ realclean: clean
 	rm -f rdup.h
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
-	rm -f ${SHS}
 	rm -f ${MAN}
 
 distclean: realclean
