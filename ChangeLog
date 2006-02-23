@@ -1,5 +1,7 @@
-   Feb 2006: 0.2.2 Miek <miek@miek.nl>
+23 Feb 2006: 0.2.2 Miek <miek@miek.nl>
    -- major feature release --
+   * output changes:
+     - directory size is always set to zero
    * Added -F FORMAT option that allows you 
      to specify the exact output of rdup 
      (Patch from Aaron Bader)
@@ -9,11 +11,9 @@
    * -0 semantics changed: now only applies to 
      the internal filelist. If you want a NULL use
      '\0' in the -F FORMAT string
-   * output changes:
-     - directory size is always set to zero
    * Documentation was updated to reflect the current code
-   * strerror() is now also printed when syscalls fail
-   * add ferror check to cat() in gfunc.c
+   * strerror() is now also printed more often
+   * add ferror() check to cat() in gfunc.c
    * renamed excl.sh to rdgrep.sh (rdup-grep)
    * various small bits: typo's, check for signals more often.
 
