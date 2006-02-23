@@ -15,7 +15,7 @@
    * strerror() is now also printed when syscalls fail
    * add ferror check to cat() in gfunc.c
    * renamed excl.sh to rdgrep.sh (rdup-grep)
-   * various small bits: typo's, check for signals more often
+   * various small bits: typo's, check for signals more often.
 
 
 16 Feb 2006: 0.2.1 Miek <miek@miek.nl>
