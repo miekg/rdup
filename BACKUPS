@@ -45,3 +45,13 @@ files are put in place.
 
 Incremental backups can be run as often as you want. The tools
 yesterday.sh and hist.sh can be used to retrieve old files.
+
+2/ REMOTE BACKUPS
+
+rdup -N timestamp HOMELIST ~ | ssh user@otherhost mirror.sh -c
+
+or if you want bandwidth limitation:
+
+rdup -N timestamp HOMELIST ~ |
+ssh user@otherhost mirror.sh -c
+
