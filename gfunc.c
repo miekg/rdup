@@ -51,6 +51,7 @@ cat(FILE *fp, char *filename)
 	
 	while (!feof(file) && (!ferror(file))) {
 		if (sig != 0) {
+			fclose(file);
 			signal_abort(sig);
 		}
 		
@@ -58,9 +59,11 @@ cat(FILE *fp, char *filename)
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
 			fprintf(stderr, "** Write failure `%s\': %s\n", 
 					filename, strerror(errno));
+			fclose(file);
 			return FALSE;
 		}
 	}
+	fclose(file);
 	return TRUE;
 }
 

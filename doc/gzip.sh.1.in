@@ -1,0 +1,20 @@
+'\" t
+.TH GZIP.SH 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+        
+.SH NAME
+gzip.sh, compress \-  compress files received from \fBrdup -c\fR
+
+.SH SYNOPSIS
+.B gzip.sh
+
+.SH DESCRIPTION
+\fBgzip.sh\fR compresses the data it receives from \fBrdup\fR with gzip.
+.PP
+For example,
+.PP
+        rdup -c list ~/Documents | gzip.sh | mirror.sh -c -b /tmp/storage
+.PP
+Note the \fI-c\fR option for \fBmirror.sh\fR.
+
+.SH SEE ALSO
+crypt.sh(1) and mirror.sh(8).

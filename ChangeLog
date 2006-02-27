@@ -1,3 +1,12 @@
+   Mar 2006: 0.2.3 Miek <miek@miek.nl>
+   * bug: close files when catting them in cat().
+   * Added gzip.sh + manual page
+   * Added crypt.sh + manual page
+     (both utils are not installed by default)
+   * removed zipped/crypt feature from mirror,
+     use rdup -c | crypt.sh | mirror -c 
+
+
 23 Feb 2006: 0.2.2 Miek <miek@miek.nl>
    -- major feature release --
    * output changes:

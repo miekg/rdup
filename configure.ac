@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdup, 0.2.2, miek@miek.nl, rdup)
+AC_INIT(rdup, 0.2.3, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
@@ -40,6 +40,8 @@ AC_CONFIG_FILES([Makefile
                  doc/mirror.sh.8
                  doc/rdup.8
                  doc/hist.sh.1
-                 doc/yesterday.sh.1])
+                 doc/yesterday.sh.1
+                 doc/crypt.sh.1
+                 doc/gzip.sh.1])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
