@@ -44,7 +44,7 @@ usage(FILE *f)
 	fprintf(f, "   -c\t\tconcatenate the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
-	fprintf(f, "   -n\t\tdo not look at " NOBACKUP " files\n");
+	fprintf(f, "   -n\t\tignore " NOBACKUP " files\n");
 	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE bytes\n");
 	fprintf(f, "   -v\t\tbe more verbose (two times for more verbosity)\n");

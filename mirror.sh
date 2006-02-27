@@ -62,12 +62,6 @@ local_mirror() {
         do
                 dump=${mode:0:1}                # to add or remove
                 mode=${mode:1}                  # st_mode bits
-
-                if [[ -z $mode ]]; then
-                        echo "** Mode can not be empty"
-                        exit 1;
-                fi
-
                 bits=$(($mode & $S_MMASK))      # permission bits
                 bits=`printf "%o" $bits`        # and back to octal again
                 typ=0
@@ -141,12 +135,6 @@ remote_mirror() {
         do
                 dump=${mode:0:1}        # to add or remove
                 mode=${mode:1}          # st_mode bits
-        
-                if [[ -z $mode ]]; then
-                        echo "** Mode can not be empty"
-                        exit 1;
-                fi
-                
                 bits=$(($mode & $S_MMASK)) # permission bits
                 bits=`printf "%o" $bits` # and back to octal again
                 typ=0
