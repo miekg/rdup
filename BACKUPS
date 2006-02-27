@@ -48,10 +48,10 @@ yesterday.sh and hist.sh can be used to retrieve old files.
 
 2/ REMOTE BACKUPS
 
-rdup -N timestamp HOMELIST ~ | ssh user@otherhost mirror.sh -c
+In both examples the backup will be placed in /vol/backup.
+
+rdup -N timestamp HOMELIST ~ | ssh user@otherhost mirror.sh -c 
 
 or if you want bandwidth limitation:
 
-rdup -N timestamp HOMELIST ~ |
-ssh user@otherhost mirror.sh -c
-
+rdup -N timestamp HOMELIST ~ | cstream | ssh user@otherhost mirror.sh -c

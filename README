@@ -48,7 +48,7 @@ Then we find the numeric user id and numeric group id. Then the
 filesize in bytes and as last the there is the pathname.
 
 To do a real backup you can use:
-rm -f timestamp
+rm -f timestamp && \
 rdup -N timestamp FILELIST dir | ./mirror.sh -b /vol/backup/
 
 'mirror.sh' is a shell script which looks at the filetype and acts
@@ -87,20 +87,17 @@ files and symbolic links. See the example script 'mirror.sh' for an
 implementation.
 
 You want gzipped backups?
-for i in `rdup FILELIST /home`; do
-        cat $i | gzip -c > /vol/backup/$i
-done
+rdup -c FILELIST /home | gzip.sh | mirror.sh -c 
+
+        gzip.sh is included in the rdup tarball.
 
 You want encrypted backups?
-for i in `rdup FILELIST /home`; do 
-        cat $i | mcrypt -F -k 'secret' -a blowfish --mode stream  > /vol/backup/$i
-done
+rdup -c FILELIST /home | crypt.sh KEYFILE | mirror.sh -c 
+
+        crypt.sh is included in the rdup tarball.
 
 You want encrypted/gzipped backups?
-for i in `rdup FILELIST /home`; do
-        cat $i | gzip -c | \ 
-        mcrypt -F -k 'secret' -a blowfish --mode stream  > /vol/backup/$i
-done
+rdup -c FILELIST /home | crypt.sh KEYFILE | gzip.sh | mirror.sh -c 
 
 You want a gzipped tar file of your files?
 rdup FILELIST /home > tar_list && \
