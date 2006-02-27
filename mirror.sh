@@ -9,8 +9,6 @@
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
-keyfile=""
-gzip=0
 remote=0
 verbose=0
 idir=0; ireg=0; ilnk=0; irm=0
@@ -50,8 +48,6 @@ usage() {
         echo OPTIONS
         echo " -c      process the file content also (rdup -c). Remote backups"
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
-        echo " -z      gzip regular files before backing up"
-        echo " -k KEY  use the file KEY as encryption key (todo)"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
 }
@@ -82,13 +78,7 @@ local_mirror() {
                                         suffix=`mirror_suffix "$backupdir/$path"`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                if [[ $gzip -eq 1 ]]; then
-                                        cat "$path" | gzip -c > "$backupdir/$path"
-                                elif [[ ! -z $keyfile ]]; then
-                                        mcrypt -F -k "$keyfile" -a "$alg" --mode stream "$path" > "$backupdir/$path"
-                                else 
-                                        cat "$path" > "$backupdir/$path"
-                                fi
+                                cat "$path" > "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 ftsize=$(($ftsize + $fsize))
@@ -211,12 +201,10 @@ remote_mirror() {
         echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":czNhb:k:" options; do
+while getopts ":cNhb:" options; do
         case $options in
                 c) remote=1;;
                 b) backupdir=$OPTARG;;
-                z) gzip=1;;
-                k) keyfile=$OPTARG;;
                 v) verbose=1;;
                 h) usage && exit;;
                 \?) usage && exit;;
@@ -228,17 +216,6 @@ if [ -z $backupdir ]; then
         backupdir="/vol/backup/`hostname`"
 fi
 backupdir=$backupdir/`date +%Y%m`
-
-if [[ ! -z $keyfile ]]; then
-        if [[ ! -z $gzip ]]; then
-                echo "** Options -z and -k can not be mixed"
-                exit 1
-        fi
-        if [[ ! -f $keyfile ]]; then
-                echo "** Can not open key file"
-                exit 1
-        fi
-fi
 
 if [[ $remote -eq 0 ]]; then
         local_mirror
