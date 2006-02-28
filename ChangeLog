@@ -5,7 +5,15 @@
      (both utils are not installed by default)
    * removed zipped/crypt feature from mirror,
      use rdup -c | crypt.sh | mirror -c 
-
+   * simplified yesterday.sh and hist.sh
+     added -d switch to hist.sh
+   * The default algorithm for encryption is set 
+     to blowfish - if you want to change this you'll
+     have to edit the scripts.
+   * crawler.c; removed the filestack, and added files
+     directory to the tree, this elimintas half a the
+     mallocs. Should also be quicker. As a result rdup
+     is somewhat more complicated.
 
 23 Feb 2006: 0.2.2 Miek <miek@miek.nl>
    -- major feature release --

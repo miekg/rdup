@@ -39,6 +39,7 @@
 #define NULL_DUMP       0
 #define DIR_SEP         '/'
 #define VALUE           (void*)1 /* g_tree_lookup returns this in rdup */
+#define NO_PRINT        (void*)2 /* don't print values with this flag */
 #define F_STACKSIZE    200
 #define D_STACKSIZE    100
 
@@ -60,6 +61,12 @@ struct substract {
         GTree *b;
 };
 
+struct remove_path {
+        GTree *tree;
+        size_t len;
+        char *path;
+};
+
 /* gfunc.c */
 gint gfunc_equal(gconstpointer a, gconstpointer b);
 gboolean gfunc_free(gpointer data, gpointer value, gpointer usr);
@@ -67,4 +74,5 @@ gboolean gfunc_write(gpointer data, gpointer value, gpointer fp);
 gboolean gfunc_backup(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_remove(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_substract(gpointer data, gpointer value, gpointer diff);
+gboolean gfunc_remove_path(gpointer data, gpointer value, gpointer path);
 #endif  /* _RDUP_H */

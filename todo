@@ -23,7 +23,7 @@ o graphic (GTK) frontend? What would it do?
 DONE:
 o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
-  do something with it
+  do something with it. yesterday.sh was updated as well.
   28 Feb 2006 - see crypt.sh and gzip.sh
 
 o valgrind and g_free

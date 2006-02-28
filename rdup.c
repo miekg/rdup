@@ -19,7 +19,7 @@ time_t opt_timestamp       = 0;                       /* timestamp file */
 sig_atomic_t sig           = 0;
 
 /* crawler.c */
-gboolean dir_crawl(GTree *t, char *path);
+void dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
@@ -301,7 +301,7 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 		/* descend into the dark, misty directory */
-		(void)dir_crawl(backup, crawl);
+		dir_crawl(backup, crawl);
 		g_free(crawl);
 	}
 	remove = g_tree_substract(curtree, backup); 

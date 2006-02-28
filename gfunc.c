@@ -186,6 +186,7 @@ void
 entry_print(FILE *out, char plusmin, struct entry *e)
 {
 	char *pos;
+
 	if ((plusmin == '+') && (opt_modified == FALSE)) 
 		return;
 	if ((plusmin == '-') && (opt_removed == FALSE)) 
@@ -247,9 +248,12 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 gboolean 
 gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
-	if (sig != 0) {
+	if (sig != 0)
 		signal_abort(sig);
-	}
+
+	if (value == NO_PRINT) 
+		return FALSE;
+
 	/* mode_path */
 	/* this is used to create our filelist */
 	fprintf((FILE*) fp, "%d %s", 
@@ -270,9 +274,12 @@ gboolean
 gfunc_backup(gpointer data, __attribute__((unused)) gpointer value, 
 		__attribute__((unused)) gpointer usr)
 {
-	if (sig != 0) {
+	if (sig != 0) 
 		signal_abort(sig);
-	}
+
+	/* .nobackup seen, don't print it */
+	if (value == NO_PRINT) 
+		return FALSE;
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
 		entry_print(stdout, '+', (struct entry*)data);
@@ -306,10 +313,15 @@ gboolean
 gfunc_remove(gpointer data, __attribute__((unused)) gpointer value, 
 		__attribute__((unused)) gpointer usr)
 {
-	if (sig != 0) {
+	if (sig != 0) 
 		signal_abort(sig);
-	}
 
+#if 0
+	/* should have these here!! */
+	if (value == NO_PRINT)
+		return FALSE;
+
+#endif
 	entry_print(stdout, '-', (struct entry*)data);
 	return FALSE;
 }
@@ -322,9 +334,8 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 {
 	gint e;
 
-	if (sig != 0) {
+	if (sig != 0)
 		signal_abort(sig);
-	}
 
 	e = strcmp(((struct entry*)a)->f_name,
 			((struct entry*)b)->f_name);
@@ -336,6 +347,26 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 		}
 	}
 	return e;
+}
+
+/**
+ * used in the crawler, remove specific paths
+ */
+gboolean
+gfunc_remove_path(gpointer data, gpointer value, gpointer r)
+{
+	gint e;
+	struct remove_path *rem = (struct remove_path *)r;
+
+	if (sig != 0) 
+		signal_abort(sig);
+
+	e = strncmp(((struct entry*)data)->f_name, rem->path, rem->len);
+	
+	if (!e) {
+		g_tree_replace(rem->tree, (gpointer) data, NO_PRINT);
+	}
+	return FALSE;
 }
 
 /**
@@ -352,9 +383,8 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 {
 	gpointer v;
 
-	if (sig != 0) {
+	if (sig != 0)
 		signal_abort(sig);
-	}
 
 	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
 
