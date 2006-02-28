@@ -15,7 +15,7 @@ if [[ -z $1 ]]; then
         exit 1
 fi
 if [[ ! -r $1 ]]; then
-        echo "** Cannot read \`$1': failed" > /dev/fd/2
+        echo "** Cannot read keyfile \`$1': failed" > /dev/fd/2
         exit 1
 fi
 

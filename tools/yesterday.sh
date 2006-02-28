@@ -18,7 +18,7 @@ usage() {
         echo " -k KEY      use the file KEY as decryption key"
         echo " -c          copy the backed up file over the current file"
         echo " -C          copy the backed up file over the current file, if they differ"
-        echo " -d          show a diff with the backed up file "
+        echo " -d          show a diff(1) with the backed up file "
         echo " -z          backup file is gzipped"
         echo " -h          this help"
 }
@@ -78,10 +78,17 @@ while getopts ":n:b:k:cCNdhz" o; do
                 \?) usage && exit;;
         esac
 done
-if [ -z $backupdir ]; then
+if [[ -z $backupdir ]]; then
         backupdir="/vol/backup/`hostname`"
 fi
 shift $((OPTIND - 1))
+
+if [[ ! -z $keyfile ]]; then
+        if [[ ! -r $1 ]]; then
+                echo "** Cannot read keyfile \`$1': failed" > /dev/fd/2
+                exit 1
+        fi
+fi
 
 for file in $@
 do
@@ -106,12 +113,19 @@ do
                 continue
         fi
         if [[ $diff -eq 1 ]]; then
+                [[ -d $backupfile ]] && continue
+                
                 echo diff -u `basename $backupfile` `basename $file`
                 if [[ $gzip -eq 1 ]]; then
-                [[ ! -d $backupfile ]] && zcat $backupfile | diff -u - $file
-                         continue;
+                        zcat $backupfile | diff -u - $file
+                        continue
                 fi
-                [[ ! -d $backupfile ]] && diff -u $backupfile $file
+                if [[ ! -z $keyfile ]]; then
+                        cat $backupfile | mdecrypt -F -f "$keyfile" -a blowfish | \
+                                diff -u - $file
+                        continue
+                fi
+                diff -u $backupfile $file
                 continue
         fi
 
