@@ -9,11 +9,7 @@ o do a make install test
 o documentation updates
 
 :shell:
-o Encryption: it changes the file size! This means it cannot be
-  directory done in a pipe - you first need to encrypt it and then
-  do something with it
 o where to place to aux. scripts? /usr/lib/rdup ??
-o bandwidth limiting: cstream
 
 :gtk: (if ever)
 o graphic (GTK) frontend? What would it do?
@@ -25,6 +21,11 @@ o graphic (GTK) frontend? What would it do?
         - hist.sh frontend (or in nautilus?)
 
 DONE:
+o Encryption: it changes the file size! This means it cannot be
+  directory done in a pipe - you first need to encrypt it and then
+  do something with it
+  28 Feb 2006 - see crypt.sh and gzip.sh
+
 o valgrind and g_free
   done, could use another look, but I find it acceptable
   22 Feb 2006
