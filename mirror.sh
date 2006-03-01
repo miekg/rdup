@@ -33,6 +33,10 @@ mirror_create_top() {
         for d in $dirs; do
                 if [[ ! -d $d ]]; then
                         mkdir -m 755 "$d"
+			if [[ $? -ne 0 ]]; then
+				echo "** Cannot mkdir \`$d'"
+				exit 1
+			fi
                         chown root:backup "$d"
                 fi
         done
@@ -137,6 +141,7 @@ remote_mirror() {
                 fi
 
 # debugging - the output of rdup should perfectly match our reads
+#echo "$dump$mode $uid $gid $psize $fsize"
 #                echo "m{"$mode"}"
 #                echo "u{"$uid"}"
 #                echo "g{"$gid"}"
