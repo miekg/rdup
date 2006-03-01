@@ -8,8 +8,9 @@ o do a make install test
 :doc:
 o documentation updates
 
-:shell:
+:scripts:
 o where to place to aux. scripts? /usr/lib/rdup ??
+o multiple backups same hosts, check incremental/full fails
 
 :gtk: (if ever)
 o graphic (GTK) frontend? What would it do?
