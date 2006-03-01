@@ -47,7 +47,7 @@ usage(FILE *f)
 	fprintf(f, "   -n\t\tignore " NOBACKUP " files\n");
 	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE bytes\n");
-	fprintf(f, "   -v\t\tbe more verbose (two times for more verbosity)\n");
+	fprintf(f, "   -v\t\tbe more verbose\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "\nFORMAT:\n");
 	fprintf(f, "   The following escape sequences are recognized:\n");
@@ -320,15 +320,6 @@ main(int argc, char **argv)
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
-
-	if (opt_verbose > 1) 
-		fprintf(stderr, "** DIRECTORIES :");
-	for (i = 1; i < argc; i++) {
-		if (opt_verbose > 1) 
-			fprintf(stderr, " %s", argv[i]);
-	}
-	if (opt_verbose > 1)
-		fprintf(stderr, "\n");
 
 	exit(EXIT_SUCCESS);
 }

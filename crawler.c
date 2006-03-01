@@ -142,7 +142,7 @@ dir_crawl(GTree *t, char *path)
 
 			if (opt_nobackup  && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
-				if (opt_verbose > 1) {
+				if (opt_verbose > 0) {
 					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", path);
 				}
 				/* remove all files found in this path */

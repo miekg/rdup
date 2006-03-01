@@ -67,8 +67,9 @@ the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
 
 .TP
 .B \-v
-Be more verbose. If specified another time, \fBrdup\fR will be even
-more verbose.
+Be more verbose. 
+When used, processed .nobackup files will be
+printed to standard error. 
 .TP
 .B \-x
 Stay on the local filesystem.

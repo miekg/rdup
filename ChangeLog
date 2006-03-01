@@ -6,14 +6,15 @@
      MALLOCs, cutting rdup's memory req. It is not faster.
    * Added gzip.sh + manual page
    * Added crypt.sh + manual page
-     (both utils are not installed by default)
-   * removed zipped/crypt feature from mirror,
+   * Removed zipped/crypt feature from mirror,
      use rdup -c | crypt.sh | mirror -c 
-   * simplified yesterday.sh and hist.sh
-     added -d switch to hist.sh
+   * Simplified yesterday.sh and hist.sh
+   * Added -d switch to hist.sh
    * The default algorithm for encryption is set 
      to blowfish - if you want to change this you'll
      have to edit the scripts.
+   * removed the printing of directories when finished. Totally
+     unneeded.
 
 23 Feb 2006: 0.2.2 Miek <miek@miek.nl>
    -- major feature release --

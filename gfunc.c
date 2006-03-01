@@ -211,9 +211,8 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 						  fputc(plusmin, out); 
 						  break;
 					case 'C':
-						  if (plusmin == '+') {
+						  if (plusmin == '+') 
 						  	entry_cat_data(out, e);
-						  }
 						  break;
 					default: 
 						  entry_print_data(out, *pos, e);
@@ -316,7 +315,7 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 	if (sig != 0) 
 		signal_abort(sig);
 
-	/* should have these here!! */
+	/* should not have these here!! */
 	if (value == NO_PRINT) {
 		fprintf(stderr, "** Internal error: NO_PRINT in remove tree!\n");
 		return FALSE;
@@ -355,16 +354,14 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 gboolean
 gfunc_remove_path(gpointer data, gpointer value, gpointer r)
 {
-	gint e;
-	struct remove_path *rem = (struct remove_path *)r;
-
 	if (sig != 0) 
 		signal_abort(sig);
 
-	e = strncmp(((struct entry*)data)->f_name, rem->path, rem->len);
-	
-	if (!e) {
-		g_tree_replace(rem->tree, (gpointer) data, NO_PRINT);
+	if ( !strncmp(((struct entry*)data)->f_name, 
+			((struct remove_path *)r)->path, 
+			((struct remove_path *)r)->len)) {
+		g_tree_replace(
+			((struct remove_path *)r)->tree, (gpointer) data, NO_PRINT);
 	}
 	return FALSE;
 }
