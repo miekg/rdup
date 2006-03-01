@@ -1,22 +1,60 @@
-RDUP DESIGN DOC
+/RDUP DESIGN DOC
 
+1/ GOALS
+        1) Keep it Simple
+        2) Fast
+        3) Small
 
-crawler
+2/ HIGH LEVEL
 
-        the crawler decends into the directories.
+    Full dump:
+        1) Crawl all directories, and print all the names found to standard
+           output.
+        2) Write a filelist with all the names found when crawling.
+
+    Incremental dump:
+        1) Read in the filelist that was written when doing a full dump.
+        2) Crawl all the directories again.
+        3) Diff 1) and 2) to get two lists; one of removed items and one
+           of added/modified items.
+        4) Write the removed items to standard output
+        5) Write the modified/new items to standard output.
+        6) Write a new filelist.
+
+3/ C FILES
+crawler.c
+        The crawler recursively decends into directories.
+
+        Each found item (file, directory) is placed into 
+        a GTree with a value of VALUE (only the keys are 
+        used by rdup).
 
         When a .nobackup is found the entry's value is changed
         from VALUE to NO_PRINT. The functions that write the
         list know that NO_PRINT values should not be written
         nor printed. 
         (The entry could no simple be removed, becaused that
-        messed up the GTree).
+        messed up the flow of the GTree).
 
         So in rdup each item (a path) can have three values:
-        NULL - initial value, used by GTree to signal 'not found'
-        VALUE - rdup uses this to differentiate between 'not found'
-                and found items
-        NO_PRINT - don't print items with these values
+        NULL     
+                initial value, used by GTree to signal 'not found'.
+        VALUE 
+                rdup uses this to differentiate between 'not found'
+                and found items.
+        NO_PRINT
+                don't print items with these values.
+
+gfunc.c
+        This file contain all the function that operate on GTree's.
 
 
-list from disk
+getdelim.c  
+        A getdelim() implemenation for systems that don't have the GNU
+        one.
+
+rdup.c 
+        Contains main() and a few functions that do some setting up.
+
+signal.c
+        Contains a signal handling function.
