@@ -39,6 +39,7 @@ if [[ -z $BACKUPDIR ]]; then
         BACKUPDIR="/vol/backup/$HOSTNAME" 
 fi
 
+# where to put the admin files.
 if [[ $etc -eq 0 ]]; then
         ETC="/etc/rdup"
 else
@@ -56,8 +57,9 @@ if [[ -z $@ ]]; then
         exit 1
 fi
 
+# check the first directory in the list
 mkdir -p "$BACKUPDIR"
-if [[ ! -d "$BACKUPDIR_DATE" ]]; then
+if [[ ! -d "$BACKUPDIR_DATE/$1" ]]; then
         # kill the timestamp and inc list
         mkdir -p "$BACKUPDIR_DATE"
         rm -f "$LIST"

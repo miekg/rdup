@@ -11,6 +11,7 @@ o documentation updates
 :scripts:
 o where to place to aux. scripts? /usr/lib/rdup ??
 o multiple backups same hosts, check incremental/full fails
+o depend on 'ls -o' in hist.sh, could use some portability love
 
 :gtk: (if ever)
 o graphic (GTK) frontend? What would it do?
