@@ -1,5 +1,6 @@
    Mar 2006: 0.2.3 Miek <miek@miek.nl>
-   * bug: close files when catting them in cat().
+   * gfunc.c: close files when catting them in cat().
+   * crawler.c: use DIR_SEP everywhere
    * Added gzip.sh + manual page
    * Added crypt.sh + manual page
      (both utils are not installed by default)

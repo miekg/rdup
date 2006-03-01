@@ -290,7 +290,7 @@ main(int argc, char **argv)
 	curtree = g_tree_read_file(fplist);
 
 	for (i = 1; i < argc; i++) {
-		if (argv[i][0] != '/') {
+		if (argv[i][0] != DIR_SEP) {
 			crawl = g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]);
 		} else {
 			crawl = g_strdup(argv[i]);

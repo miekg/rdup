@@ -316,12 +316,12 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 	if (sig != 0) 
 		signal_abort(sig);
 
-#if 0
 	/* should have these here!! */
-	if (value == NO_PRINT)
+	if (value == NO_PRINT) {
+		fprintf(stderr, "** Internal error: NO_PRINT in remove tree!\n");
 		return FALSE;
+	}
 
-#endif
 	entry_print(stdout, '-', (struct entry*)data);
 	return FALSE;
 }

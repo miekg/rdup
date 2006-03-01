@@ -50,9 +50,9 @@ dir_prepend(GTree *t, char *path)
 	len   = strlen(path);
 
 	/* add closing / */
-	if (path2[len - 1] != '/') {
+	if (path2[len - 1] != DIR_SEP) {
 		path2 = g_realloc(path2, len + 2);
-		path2[len] = '/';
+		path2[len] = DIR_SEP;
 		path2[len + 1] = '\0';
 	}
 
@@ -72,7 +72,7 @@ dir_prepend(GTree *t, char *path)
 		e.f_size      = s.st_size;
 		
 		g_tree_replace(t, (gpointer) entry_dup(&e), VALUE);
-		*c = '/';
+		*c = DIR_SEP;
 		p = c++;
 	}
 	g_free(path2);

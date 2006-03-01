@@ -40,7 +40,6 @@
 #define DIR_SEP         '/'
 #define VALUE           (void*)1 /* g_tree_lookup returns this in rdup */
 #define NO_PRINT        (void*)2 /* don't print values with this flag */
-#define F_STACKSIZE    200
 #define D_STACKSIZE    100
 
 #define LIST_MINSIZE   6
