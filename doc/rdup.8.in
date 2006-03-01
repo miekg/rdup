@@ -64,12 +64,13 @@ Print rdup's version.
 .B \-c
 Concatenate the files' contents to standard output. This sets
 the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
-
 .TP
 .B \-v
 Be more verbose. 
-When used, processed .nobackup files will be
-printed to standard error. 
+When used once, processed .nobackup files will be
+printed to standard error. When used twice each path will also be
+printed to standard error. This is usefull in case of a remote
+backup (\fI\-c\fR) where the normal output is not seen.
 .TP
 .B \-x
 Stay on the local filesystem.

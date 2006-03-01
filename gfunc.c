@@ -10,6 +10,7 @@
 extern gboolean opt_null;
 extern gboolean opt_removed;
 extern gboolean opt_modified;
+extern gint opt_verbose;
 extern char *opt_format;
 extern time_t opt_timestamp;
 extern size_t opt_size;
@@ -191,6 +192,14 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		return;
 	if ((plusmin == '-') && (opt_removed == FALSE)) 
 		return;
+
+	if (opt_verbose > 1) {
+		fputc('*', stderr);
+		fputc('*', stderr);
+		fputc(' ', stderr);
+		fputc(plusmin, stderr);
+		fprintf(stderr, " %s\n", e->f_name);
+	}
 
 	for (pos = opt_format; *pos != '\0';  ++pos) {
 		switch (*pos) {

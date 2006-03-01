@@ -6,6 +6,8 @@
      MALLOCs, cutting down on rdup's memory req. 
      It is not faster (rdup is I/O bound)
    * removed the printing of directories when finished.
+   * -vv now print the processed files to standard error.
+     Usefull when doing a remove backup
    :Scripts:
    * Added gzip.sh + manual page
    * Added crypt.sh + manual page
