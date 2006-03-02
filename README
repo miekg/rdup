@@ -6,6 +6,9 @@ Run: autoreconf && ./configure && make
 rdup depends on Glib to build. Glib is the lowlevel C library of the
 GTK project. Configure will check for this.
 
+Note: some of the rdup utils script depend on Gnu tools, and might
+not work as expected on FreeBSD/OpenBSD/etc.
+
 2/ DIFFERENCE WITH RSYNC
 
 While rsync really works well, I wanted to have the ability to gzip
