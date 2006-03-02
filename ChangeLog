@@ -1,15 +1,15 @@
-   Mar 2006: 0.2.3 Miek <miek@miek.nl>
-   -- major feature enhancements --
-   * gfunc.c: close files when catting them in cat().
-   * gfunc.c: size check should come before switch.
-   * crawler.c: use DIR_SEP everywhere
+02 Mar 2006: 0.2.3 Miek <miek@miek.nl>
+   -- features and bugfixes --
+   * gfunc.c: bug, close files when catting them in cat().
+   * gfunc.c: bug, size check should come before switch.
+   * crawler.c: bug, use DIR_SEP everywhere
    * crawler.c: removed the filestack, and added files
      directly to the tree, this eliminates half a the
-     MALLOCs, cutting down on rdup's memory req. 
+     mallocs, cutting down on rdup's memory req. 
      It is not faster (rdup is I/O bound)
    * rdup.c: removed the printing of directories when finished.
-   * rdup.c: -vv now print the processed files to standard error.
-     Usefull when doing a remove backup
+   * rdup.c: -vv now prints the processed files to standard error.
+     (Usefull when doing a remote backup)
    * scripts: Added gzip.sh + manual page
    * scripts: Added crypt.sh + manual page
    * scripts: Removed zipped/crypt feature from mirror,

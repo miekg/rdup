@@ -9,6 +9,7 @@ o do a make install test
 o documentation updates
 
 :scripts:
+o portability again, we now depend on gnu stat
 o where to place to aux. scripts? /usr/lib/rdup ??
 o multiple backups same hosts, check incremental/full fails
 o depend on 'ls -o' in hist.sh, could use some portability love
