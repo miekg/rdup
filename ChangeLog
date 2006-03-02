@@ -1,5 +1,6 @@
    Mar 2006: 0.2.3 Miek <miek@miek.nl>
    * gfunc.c: close files when catting them in cat().
+   * gfunc.c: size check should come before switch.
    * crawler.c: use DIR_SEP everywhere
    * crawler.c: removed the filestack, and added files
      directly to the tree, this eliminates half a the

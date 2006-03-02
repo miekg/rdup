@@ -295,13 +295,13 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
 			S_ISLNK(((struct entry*)data)->f_mode)) {
+
+		if (opt_size != 0 && ((struct entry*)data)->f_size >
+				opt_size) {
+			return FALSE;
+		}
 		switch (opt_timestamp) {
 			case NULL_DUMP:
-				if (opt_size != 0 &&
-						((struct entry*)data)->f_size >
-						opt_size) {
-					return FALSE;
-				}
 				entry_print(stdout, '+', (struct entry*)data);
 				return FALSE;
 			default: /* INC_DUMP */

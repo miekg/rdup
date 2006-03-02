@@ -12,8 +12,13 @@ o documentation updates
 o where to place to aux. scripts? /usr/lib/rdup ??
 o multiple backups same hosts, check incremental/full fails
 o depend on 'ls -o' in hist.sh, could use some portability love
+o split up rdgrep.sh in dir and file grep (and link grep?)
 
-:gtk: (if ever)
+:hdup2:
+o make complete hdup2 clone based on rdup
+  see hdup2 directory
+
+:gtk: 
 o graphic (GTK) frontend? What would it do?
         - specify what to backup
         - to where
