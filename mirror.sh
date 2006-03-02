@@ -75,7 +75,7 @@ local_mirror() {
                         case $typ in
                                 0)      # REG
                                 if [[ -f "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix "$backupdir/$path"`
+                                        suffix=`mirror_suffix "\"$backupdir/$path\""`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cat "$path" > "$backupdir/$path"
