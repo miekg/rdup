@@ -20,6 +20,7 @@ usage() {
 d=`date +%Y%m`
 etc=0
 exclude=""
+PROGNAME=$0
 
 while getopts ":b:eh" o; do
         case $o in
@@ -32,7 +33,7 @@ while getopts ":b:eh" o; do
 done
 shift $((OPTIND - 1))
 if [[ -z $1 ]]; then
-        echo "** NAME is mandatory" > /dev/fd/2
+        echo "** $0: NAME is mandatory" > /dev/fd/2
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
@@ -53,7 +54,7 @@ LIST="$ETC/$HOSTNAME.$NAME.list"
 # DIRS in $@
 shift
 if [[ -z $@ ]]; then
-        echo "** No directories to backup" > /dev/fd/2
+        echo "** $PROGNAME: No directories to backup" > /dev/fd/2
         exit 1
 fi
 
