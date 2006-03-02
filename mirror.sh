@@ -33,10 +33,6 @@ mirror_create_top() {
         for d in $dirs; do
                 if [[ ! -d $d ]]; then
                         mkdir -m 755 "$d"
-			if [[ $? -ne 0 ]]; then
-				echo "** Cannot mkdir \`$d'"
-				exit 1
-			fi
                         chown root:backup "$d"
                 fi
         done
