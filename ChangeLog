@@ -1,4 +1,5 @@
    Mar 2006: 0.2.3 Miek <miek@miek.nl>
+   -- major feature enhancements --
    * gfunc.c: close files when catting them in cat().
    * gfunc.c: size check should come before switch.
    * crawler.c: use DIR_SEP everywhere
@@ -6,19 +7,21 @@
      directly to the tree, this eliminates half a the
      MALLOCs, cutting down on rdup's memory req. 
      It is not faster (rdup is I/O bound)
-   * removed the printing of directories when finished.
-   * -vv now print the processed files to standard error.
+   * rdup.c: removed the printing of directories when finished.
+   * rdup.c: -vv now print the processed files to standard error.
      Usefull when doing a remove backup
-   :Scripts:
-   * Added gzip.sh + manual page
-   * Added crypt.sh + manual page
-   * Removed zipped/crypt feature from mirror,
+   * scripts: Added gzip.sh + manual page
+   * scripts: Added crypt.sh + manual page
+   * scripts: Removed zipped/crypt feature from mirror,
      use rdup -c | crypt.sh | mirror -c 
-   * Simplified yesterday.sh and hist.sh
-   * Added -d switch to hist.sh
-   * The default algorithm for encryption is set 
+   * scripts: Simplified yesterday.sh and hist.sh
+   * scripts: Added -d switch to hist.sh
+   * scripts: The default algorithm for encryption is set 
      to blowfish - if you want to change this you'll
      have to edit the scripts.
+   * scripts: mirror.sh: added quotes around file names to protect
+     spaces.
+
 
 23 Feb 2006: 0.2.2 Miek <miek@miek.nl>
    -- major feature release --
