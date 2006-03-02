@@ -85,11 +85,7 @@ local_mirror() {
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-				if [[ $? -ne 0 ]]; then
-					echo "** Cannot create directory"
-					exit 1
-				fi
+                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 idir=$(($idir + 1))
@@ -172,10 +168,6 @@ remote_mirror() {
                                 1)      # DIR
                                 # size should be 0
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-				if [[ $? -ne 0 ]]; then
-					echo "** Cannot create directory"
-					exit 1
-				fi
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chmod $bits "$backupdir/$path"
                                 idir=$(( $idir + 1))
