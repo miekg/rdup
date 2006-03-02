@@ -11,7 +11,7 @@ S_MMASK=4095    # octal: 00007777, mask to get permission
 
 TMPDIR=`mktemp -d "/tmp/rdup.backup.XXXXXX"`
 if [[ $? -ne 0 ]]; then
-        echo "** mktemp failed" > /dev/fd/2
+        echo "** $0: mktemp failed" > /dev/fd/2
         exit 1
 fi
 chmod 700 $TMPDIR

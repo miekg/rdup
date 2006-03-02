@@ -85,7 +85,7 @@ shift $((OPTIND - 1))
 
 if [[ ! -z $keyfile ]]; then
         if [[ ! -r $1 ]]; then
-                echo "** Cannot read keyfile \`$1': failed" > /dev/fd/2
+                echo "** 0$: Cannot read keyfile \`$1': failed" > /dev/fd/2
                 exit 1
         fi
 fi
