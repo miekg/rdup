@@ -16,10 +16,8 @@ ftsize=0
 ts=`date +%s` # gnuism
 
 mirror_suffix() {
-        fulldate=`ls -l "$@" | awk ' { print $6 $7 } '`
-        dd=${fulldate:8:2}
-        tt=${fulldate:10}
-        echo "+$dd.$tt"
+	s=$(stat -c '%y' "$@")
+	echo "+${s:8:2}.${s:14:5}"
 }
 
 mirror_create_top() {
@@ -75,7 +73,7 @@ local_mirror() {
                         case $typ in
                                 0)      # REG
                                 if [[ -f "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix "\"$backupdir/$path\""`
+                                        suffix=`mirror_suffix "$backupdir/$path"`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cat "$path" > "$backupdir/$path"
@@ -92,7 +90,7 @@ local_mirror() {
                                 ;;
                                 2)      # LNK
                                 if [[ -L "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix $backupdir/$path`
+                                        suffix=`mirror_suffix "$backupdir/$path"`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cp -a "$path" "$backupdir/$path"
@@ -104,7 +102,7 @@ local_mirror() {
                         # remove. It could be the stuff is not there, don't
                         # error on that.
                         if [[ -e "$backupdir/$path" ]]; then
-                                suffix=`mirror_suffix $backupdir/$path`
+                                suffix=`mirror_suffix "$backupdir/$path"`
                                 mv "$backupdir/$path" "$backupdir/$path$suffix"
                         fi
                         irm=$(($irm + 1))
@@ -150,7 +148,7 @@ remote_mirror() {
                         case $typ in
                                 0)      # REG
                                 if [[ -f "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix $backupdir/$path`
+                                        suffix=`mirror_suffix "$backupdir/$path"`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 if [[ $fsize -ne 0 ]]; then
@@ -174,7 +172,7 @@ remote_mirror() {
                                 ;;
                                 2)      # LNK, target is in the content! 
                                 if [[ -L "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix $backupdir/$path`
+                                        suffix=`mirror_suffix "$backupdir/$path"`
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 target=`head -c $fsize`
@@ -186,7 +184,7 @@ remote_mirror() {
                 else
                         # remove
                         if [[ -e "$backupdir/$path" ]]; then
-                                suffix=`mirror_suffix $backupdir/$path`
+                                suffix=`mirror_suffix "$backupdir/$path"`
                                 mv "$backupdir/$path" "$backupdir/$pathsuffix"
                         fi
                         irm=$(( $irm + 1))
@@ -213,7 +211,7 @@ while getopts ":cNhb:" options; do
 done
 shift $((OPTIND - 1))
 
-if [ -z $backupdir ]; then
+if [ -z "$backupdir" ]; then
         backupdir="/vol/backup/`hostname`"
 fi
 backupdir=$backupdir/`date +%Y%m`
