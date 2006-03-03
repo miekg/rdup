@@ -9,6 +9,16 @@ S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 
+cleanup() {
+        echo "** Signal received, exiting" > /dev/fd/2
+        if [[ ! -z $TMPDIR ]]; then
+                rm -rf $TMPDIR
+        fi
+        exit 1
+}
+# trap at least these
+trap cleanup SIGINT SIGPIPE
+
 TMPDIR=`mktemp -d "/tmp/rdup.backup.XXXXXX"`
 if [[ $? -ne 0 ]]; then
         echo "** $0: mktemp failed" > /dev/fd/2
