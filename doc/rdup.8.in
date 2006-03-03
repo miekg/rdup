@@ -85,6 +85,16 @@ to directories.
 Delimit FILELIST with NULL's instead of a newline. Use '\\0' in the
 FORMAT string to change \fBrdup\fR's output.
 
+.SH BACKUPS
+With:
+        rm -f timestamp && rdup -N timestamp LIST DIR
+
+All full-dump filelist is printed to standard output. And with:
+
+        rdup -N timestamp LIST DIR
+
+An incremental dump filelist is printed.
+
 .SH FORMAT
 The default format \fBrdup\fR uses is: "%p%m %u %g %l %s %n\\n"
 .PP
