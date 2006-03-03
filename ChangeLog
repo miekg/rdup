@@ -1,3 +1,6 @@
+       2006: 0.2.4 Miek <miek@miek.nl>
+
+
 02 Mar 2006: 0.2.3 Miek <miek@miek.nl>
    -- features and bugfixes --
    * gfunc.c: bug, close files when catting them in cat().
