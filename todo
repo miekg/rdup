@@ -11,8 +11,6 @@ o documentation updates
 :scripts:
 o portability again, we now depend on gnu stat
 o where to place to aux. scripts? /usr/lib/rdup ??
-o multiple backups same hosts, check incremental/full fails
-o depend on 'ls -o' in hist.sh, could use some portability love
 o split up rdgrep.sh in dir and file grep (and link grep?)
 
 :hdup2:
@@ -29,6 +27,12 @@ o graphic (GTK) frontend? What would it do?
         - hist.sh frontend (or in nautilus?)
 
 DONE:
+o depend on 'ls -o' in hist.sh, could use some portability love
+  5 Mar 2006; we now depend on stat...
+
+o multiple backups same hosts, check incremental/full fails
+  5 Mar 2006; check existance for 1 dir deeper
+
 o Encryption: it changes the file size! This means it cannot be
   directory done in a pipe - you first need to encrypt it and then
   do something with it. yesterday.sh was updated as well.

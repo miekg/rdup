@@ -1,4 +1,6 @@
        2006: 0.2.4 Miek <miek@miek.nl>
+   -- bugfixes and polish --
+   * mirror.sh: use chown -h for symlinks
 
 
 02 Mar 2006: 0.2.3 Miek <miek@miek.nl>
