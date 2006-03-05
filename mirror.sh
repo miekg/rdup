@@ -94,7 +94,7 @@ local_mirror() {
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cp -a "$path" "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path"
+                                chown -h $uid:$gid "$backupdir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
