@@ -16,8 +16,8 @@ ftsize=0
 ts=`date +%s` # gnuism
 
 mirror_suffix() {
-	s=$(stat -c '%y' "$@")
-	echo "+${s:8:2}.${s:14:5}"
+	s=$(stat -c '%y' "$@")  # gnuism
+	echo "+${s:8:2}.${s:11:5}"
 }
 
 mirror_create_top() {

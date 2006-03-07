@@ -33,7 +33,7 @@ recent() {
 
         for i in `seq $1 -1 0`; do
                 suffix=`datesago $i`
-                dayfix=${suffix:6:8}  # mshared.sh has the def.
+                dayfix=${suffix:6:8}  # +MONTHDAY.HH:MM
                 yyyymm=${suffix:0:6}
                 # first check with suffix
                 files=`ls "$backupdir"/$yyyymm/"$2"+$dayfix.* 2>/dev/null`
