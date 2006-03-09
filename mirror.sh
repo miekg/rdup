@@ -6,6 +6,8 @@
 # This script implement a mirroring backup scheme
 # -c is used for remote mirroring
 
+set -o nounset.
+
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
@@ -14,6 +16,7 @@ verbose=0
 idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
 ts=`date +%s` # gnuism
+backupdir=""
 
 mirror_suffix() {
 	s=$(stat -c '%y' "$@")  # gnuism
