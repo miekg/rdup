@@ -6,7 +6,7 @@
 # This script implement a mirroring backup scheme
 # -c is used for remote mirroring
 
-set -o nounset.
+set -o nounset
 
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
