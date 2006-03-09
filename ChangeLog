@@ -1,7 +1,7 @@
-       2006: 0.2.4 Miek <miek@miek.nl>
-   -- bugfixes and polish --
+09 Mar 2006: 0.2.4 Miek <miek@miek.nl>
+   -- bugfixes --
    * mirror.sh: use chown -h for symlinks
-   * mirorr.sh: mirror_suffix() use +DD.HH:MM (Graham King)
+   * mirorr.sh: mirror_suffix() use +DD.HH:MM again (Graham King)
 
 02 Mar 2006: 0.2.3 Miek <miek@miek.nl>
    -- features and bugfixes --
