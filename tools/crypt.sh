@@ -5,6 +5,8 @@
 #
 # zip rdup -c's output
 
+set -o nounset
+
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
@@ -20,7 +22,7 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 # 1 argument keyfile used for encryption
-if [[ -z $1 ]]; then
+if [[ $# -eq 0 ]]; then
         echo "** $0: Need a keyfile as argument" > /dev/fd/2
         exit 1
 fi

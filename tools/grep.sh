@@ -5,6 +5,8 @@
 #
 # grep on rdup's output
 
+set -o nounset
+
 declare -a fileexcludelist
 declare -a direxcludelist
 fileexcludelist=".slide_img.* .thumb_img.*"

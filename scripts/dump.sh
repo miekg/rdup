@@ -3,6 +3,7 @@
 # create a (mirror) backup in /vol/backup/`hostname`
 # figure out of the dump should be a full one or incremental
 
+set -o nounset
 
 usage() {
         echo "$0 [OPTIONS] NAME DIR [DIR ...]"
@@ -21,18 +22,19 @@ d=`date +%Y%m`
 etc=0
 exclude=""
 PROGNAME=$0
+BACKUPDIR=""
 
 while getopts ":b:eh" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 e) etc=1;;
-                x) exclude=$$OPTARG;;
+                x) exclude=$OPTARG;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
-if [[ -z $1 ]]; then
+if [[ $# -eq 0 ]]; then
         echo "** $0: NAME is mandatory" > /dev/fd/2
         exit 1
 fi

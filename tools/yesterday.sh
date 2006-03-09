@@ -5,6 +5,8 @@
 #
 # inspired by yesterday of plan9
 
+set -o nounset
+
 usage() {
         echo "$0 [OPTIONS] FILE [FILE ...]"
         echo
@@ -64,6 +66,7 @@ keyfile=""
 gzip=0
 copy=0
 Ccopy=0
+backupdir=""
 
 while getopts ":n:b:k:cCNdhz" o; do
         case $o in

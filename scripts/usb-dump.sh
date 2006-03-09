@@ -2,6 +2,8 @@
 
 # create a dump on a external harddisk
 
+set -o nounset
+
 ##
 # For each HOST you should define the directories to backup 
 ##

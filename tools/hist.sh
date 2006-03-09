@@ -5,6 +5,8 @@
 #
 # inspired by hist of plan9 
 
+set -o nounset
+
 usage() {
         echo "$0 [OPTIONS] FILE [FILE ...]"
         echo
@@ -23,6 +25,7 @@ monthsago() {
 }
 
 diff=0
+backupdir=""
 while getopts ":b:hd" o; do
         case $o in
                 b) backupdir=$OPTARG;;
