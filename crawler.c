@@ -140,7 +140,7 @@ dir_crawl(GTree *t, char *path)
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 
-			if (opt_nobackup  && !strcmp(dent->d_name, NOBACKUP)) {
+			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
 				if (opt_verbose > 0) {
 					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", path);
@@ -151,6 +151,7 @@ dir_crawl(GTree *t, char *path)
 				rp.path = path;
 				g_tree_foreach(t, gfunc_remove_path, (gpointer)&rp);
 				
+				/* add .nobackup back */
 				g_tree_replace(t, (gpointer) entry_dup(&pop), VALUE);
 				g_free(dirstack);
 				closedir(dir);

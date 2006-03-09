@@ -1,5 +1,6 @@
 09 Mar 2006: 0.2.4 Miek <miek@miek.nl>
    -- bugfixes --
+   * crawler.c: when finding .nobackup don't remove the parent directory
    * mirror.sh: use chown -h for symlinks
    * mirorr.sh: mirror_suffix() use +DD.HH:MM again (Graham King)
    * all scripts: enabled set -o nounset, to catch unbound vars
