@@ -9,13 +9,20 @@ set -o nounset
 ##
 case $HOSTNAME in
         elektron*)
-        DIRS="/home/miekg/bin"
+        DIRS="/home/miekg/"
         ;;
 
         floep*)
-        DIRS=
+        DIRS=""
         ;;
+        *)
+        # no such host
+        zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for \`$HOSTNAME\'"
+        exit 1
 esac
+##
+# Don't need to edit anything below this line
+##
 
 if [ ! -x /usr/sbin/rdup ]; then 
         zenity --error --title "rdup @ $HOSTNAME" --text "rdup can not be found"
@@ -38,7 +45,7 @@ if [[ -z $DIRS ]]; then
 fi
 
 # only to get root 
-gksudo -m "Perform backup of $HOSTNAME to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
+gksudo -m "Perform backup of \`$HOSTNAME\' to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
 if [[ $? -ne 0 ]]; then
         exit
 fi
