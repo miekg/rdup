@@ -50,10 +50,10 @@ BACKUPDIR="$mountpath/$HOSTNAME"
 BACKUPDIR_DATE="$mountpath/$HOSTNAME/$d"
 
 # create top-level backup dir
-sudo mkdir -p $BACKUPDIR
+sudo mkdir -m 755 -p $BACKUPDIR
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         # kill the timestamp and inc list
-        sudo mkdir -p "$BACKUPDIR_DATE"
+        sudo mkdir -m755 -p "$BACKUPDIR_DATE"
         sudo rm -f "$LIST"
         sudo rm -f "$STAMP"
         TEXT="Full dump of $HOSTNAME completed"

@@ -61,10 +61,10 @@ if [[ -z $@ ]]; then
 fi
 
 # check the first directory in the list
-mkdir -p "$BACKUPDIR"
+mkdir -m 755 -p "$BACKUPDIR"            # gnuism?
 if [[ ! -d "$BACKUPDIR_DATE/$1" ]]; then
         # kill the timestamp and inc list
-        mkdir -p "$BACKUPDIR_DATE"
+        mkdir -m 755 -p "$BACKUPDIR_DATE"
         rm -f "$LIST"
         rm -f "$STAMP"
         echo "** Full dump" > /dev/fd/2
