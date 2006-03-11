@@ -17,7 +17,7 @@ case $HOSTNAME in
         ;;
         *)
         # no such host
-        zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for \`$HOSTNAME\'"
+        zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for <b>$HOSTNAME</b>"
         exit 1
 esac
 ##
@@ -45,7 +45,7 @@ if [[ -z $DIRS ]]; then
 fi
 
 # only to get root 
-gksudo -m "Perform backup of \`$HOSTNAME\' to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
+gksudo -m "Perform backup of <b>$HOSTNAME</b> to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
 if [[ $? -ne 0 ]]; then
         exit
 fi
@@ -63,9 +63,9 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         sudo mkdir -m755 -p "$BACKUPDIR_DATE"
         sudo rm -f "$LIST"
         sudo rm -f "$STAMP"
-        TEXT="Full dump of $HOSTNAME completed"
+        TEXT="<i>Full dump</i> of <b>HOSTNAME</b> completed"
 else
-        TEXT="Incremental dump of $HOSTNAME completed"
+        TEXT="<i>Incremental dump</i> of <b>$HOSTNAME</b> completed"
 fi
 
 sudo /usr/sbin/rdup -N $STAMP $LIST $DIRS |\
