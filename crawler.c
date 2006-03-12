@@ -99,7 +99,7 @@ dir_crawl(GTree *t, char *path)
 	struct entry **dirstack = g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
-		fprintf(stderr, "** Cannot enter `%s\n\': %s", path,
+		fprintf(stderr, "** Cannot enter directory `%s\': %s", path,
 				strerror(errno));
 		g_free(dirstack);
 		return;

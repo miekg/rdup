@@ -194,10 +194,7 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		return;
 
 	if (opt_verbose > 1) {
-		fputc('*', stderr);
-		fputc('*', stderr);
-		fputc(' ', stderr);
-		fputc(plusmin, stderr);
+		fputs("** ", stderr); fputc(plusmin, stderr);
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 

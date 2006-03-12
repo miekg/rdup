@@ -196,7 +196,7 @@ main(int argc, char **argv)
 	opterr = 0;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
-		fprintf(stderr, "** For safety reasons " PROGNAME " will not run suid/sgid\n");
+		fprintf(stderr, "** Will not run suid/sgid for safety reasons\n");
 		exit(EXIT_FAILURE);
         }
 
