@@ -4,6 +4,7 @@ xx XXX 2006: 0.2.5 Miek <miek@miek.nl>
    * error messages cleanup
    * indent is used to force my coding style
    * added purge.sh script for deleting older backups
+   * dump.sh and purge.sh now both have a manual page
 
 
 10 Mar 2006: 0.2.4 Miek <miek@miek.nl>
