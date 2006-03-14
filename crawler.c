@@ -96,7 +96,8 @@ dir_crawl(GTree *t, char *path)
 	gint32 d = 0;
 	gint32 dstack_size = D_STACKSIZE; /* realloc when hit */
 	gint32 dstack_cnt  = 1;
-	struct entry **dirstack = g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
+	struct entry **dirstack = 
+		g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
 		fprintf(stderr, "** Cannot enter directory `%s\': %s", path,
