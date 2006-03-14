@@ -11,7 +11,7 @@ usage() {
         echo NAME - suffix for filelist and timestamp files
         echo DIR \ - directories to back up
         echo
-        echo OPTIONS
+        echo OPTIONS:
         echo "-b DIR     backup directory. Default: /vol/backup/HOSTNAME"
         echo "-e         filelist and timestamp are put in backup directory"
         echo "-x SCRIPT  use SCRIPT as exclude script"
@@ -24,7 +24,7 @@ exclude=""
 PROGNAME=$0
 BACKUPDIR=""
 
-while getopts ":b:eh" o; do
+while getopts ":b:x:eh" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 e) etc=1;;
