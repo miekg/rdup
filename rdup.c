@@ -24,7 +24,9 @@ gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
 /* no matter what, this prototype is correct */
+#ifndef HAVE_GETDELIM
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+#endif
 
 static void
 usage(FILE *f) 
@@ -41,7 +43,7 @@ usage(FILE *f)
 	fprintf(f, "   \t\tdefaults to: \"%%p%%m %%u %%g %%l %%s %%n\\n\"\n");
 	fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
 	fprintf(f, "   -V\t\tprint version\n");
-	fprintf(f, "   -c\t\tconcatenate the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
+	fprintf(f, "   -c\t\tcat the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
 	fprintf(f, "   -h\t\tgives this help\n");
 	fprintf(f, "   -m\t\tonly print new/modified files (overrides -r)\n");
 	fprintf(f, "   -n\t\tignore " NOBACKUP " files\n");
@@ -212,8 +214,7 @@ main(int argc, char **argv)
 	}
 
 	while ((c = getopt (argc, argv, "crmhVnN:s:vqx0F:")) != -1) {
-		switch (c)
-		{
+		switch (c) {
 			case 'F':
 				opt_format = optarg;
 				break;
