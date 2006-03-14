@@ -109,7 +109,8 @@ dir_crawl(GTree *t, char *path)
 	/* get device */
 	if (fstat(dirfd(dir), &s) != 0) {
 		fprintf(stderr, 
-			"** Cannot determine holding device of the directory `%s\': %s\n", path, strerror(errno));
+			"** Cannot determine holding device of the directory `%s\': %s\n", 
+			path, strerror(errno));
 		closedir(dir);
 		g_free(dirstack);
 		return;
@@ -144,7 +145,8 @@ dir_crawl(GTree *t, char *path)
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
 				if (opt_verbose > 0) {
-					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", path);
+					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", 
+							path);
 				}
 				/* remove all files found in this path */
 				rp.tree = t;
@@ -182,12 +184,14 @@ dir_crawl(GTree *t, char *path)
 
 			if (d++ % dstack_size == 0) {
 				dirstack = g_realloc(dirstack, 
-						++dstack_cnt * dstack_size * sizeof(struct entry *));
+						++dstack_cnt * dstack_size * 
+						sizeof(struct entry *));
 			}
 			g_free(curpath);
 			continue;
 		} else {
-			fprintf(stderr, "** Neither file nor directory `%s\'\n", curpath);
+			fprintf(stderr, "** Neither file nor directory `%s\'\n", 
+					curpath);
 			g_free(curpath);
 		}
 	}
