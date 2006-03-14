@@ -1,0 +1,59 @@
+'\" t
+.TH DUMP.SH 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+dump.sh \- dump a filesystem for a specifc host
+
+.SH SYNOPSIS
+.B dump.sh
+[
+.IR OPTIONS
+]
+NAME
+DIR
+[
+DIR
+]
+
+.SH DESCRIPTION
+\fBdump.sh\fR is a frontend for `mirror.sh' and `rdup'. It will backup
+all directories given on the command line. It tries to be smart with
+respect to a full dump or an incremental dump. If the directories to
+be backed up \fIdo not exist\fR in the backup directory a full dump
+is assumed. Otherwise an incremental dump is performed.
+.PP
+Making local backups is as simple as:
+      dump.sh $HOSTNAME ~ 
+.PP
+The \fBNAME\fR argument speficies a prefix for the
+timestamp and filelist files. If you use multiple \fBdump.sh\fR commands
+they should have an unique \fINAME\fR argument.
+.PP
+\fBDIR\fR is the directory to be backed up. Multiple directories
+are allowed on the command line.
+.PP
+The default backup location is `/vol/backup/`hostname''.
+
+.SH OPTIONS
+.TP 
+.B \-b backupdir
+Alternate backup directory. Defaults to /vol/backup/`hostname`.
+.TP
+.B \-x script
+Use \fBscripT\fR as exclude script. This script is inserted in the
+`rdup'-pipeline. See grep.sh(1) for an example of such a script.
+.TP
+.B \-e
+Store the the timestamp and filelist files together with the backup.
+This allows for backups to USB-drives and such. Normally they
+are stored in `/etc/rdup'.
+.TP
+.B \-h
+Show a short help message.
+
+.SH FILES
+/vol/backup/`hostname`, or the directory specified with \-b, root of
+the backup file system.
+
+.SH SEE ALSO
+hist.sh(1), yesterday.sh(1), rdup(8), grep.sh(1) and purge.sh(8).

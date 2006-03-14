@@ -7,6 +7,8 @@ o do a make install test
 
 :doc:
 o documentation updates
+o argument get .IR and \fI and \fR
+o option are BOLD
 
 :scripts:
 o portability again, we now depend on gnu stat
