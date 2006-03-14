@@ -14,7 +14,7 @@ usage() {
         echo
         echo FILE - look for this file in the backup dir
         echo
-        echo OPTIONS
+        echo OPTIONS:
         echo " -n DAYSAGO  go back DAYSAGO days"
         echo " -b DIR      use DIR as the backup directory, YYYYMM will be added"
         echo " -k KEY      use the file KEY as decryption key"
