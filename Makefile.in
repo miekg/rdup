@@ -1,9 +1,9 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
-SHS=mirror.sh tools/hist.sh tools/yesterday.sh tools/crypt.sh tools/gzip.sh \
-	tools/dump.sh tools/purge.sh
-MAN=doc/rdup.8 doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1 doc/crypt.sh.1 doc/gzip.sh.1 \
-	doc/dump/.sh.8 doc/purge.sh.8
+SHS=tools/hist.sh tools/yesterday.sh tools/crypt.sh tools/gzip.sh tools/dump.sh tools/purge.sh
+CMD=rdup mirror.sh 
+MAN8=doc/rdup.8 doc/mirror.sh.8 doc/dump.sh.8 doc/purge.sh.8
+MAN1=doc/hist.sh.1 doc/yesterday.sh.1 doc/crypt.sh.1 doc/gzip.sh.1 
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
@@ -18,6 +18,7 @@ GLIB_LIBS       = @GLIB_LIBS@
 CFLAGS =-Wall @CFLAGS@ @DEFS@ -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 INSTALL = ./install-sh -c
 INSTALL_DATA = $(INSTALL) -m 644
+
 
 .PHONY:	clean install all uninstall
 
@@ -55,29 +56,13 @@ install: rdup
 	mkdir -p ${DESTDIR}${sysconfdir}/rdup
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${mandir}/man8
-	${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
-	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
-	${INSTALL} tools/dump.sh ${DESTDIR}${sbindir}/dump.sh
-	${INSTALL} tools/purge.sh ${DESTDIR}${sbindir}/purge.sh
-	${INSTALL} tools/hist.sh ${DESTDIR}${sbindir}/hist.sh
-	${INSTALL} tools/yesterday.sh ${DESTDIR}${sbindir}/yesterday.sh
-	${INSTALL} tools/crypt.sh ${DESTDIR}${sbindir}/crypt.sh
-	${INSTALL} tools/gzip.sh ${DESTDIR}${sbindir}/gzip.sh
-	${INSTALL_DATA} doc/rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
-	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.sh.8
-	${INSTALL_DATA} doc/dump.sh.8 ${DESTDIR}${mandir}/man8/dump.sh.8
-	${INSTALL_DATA} doc/purge.sh.8 ${DESTDIR}${mandir}/man8/purge.sh.8
-	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.sh.1
-	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.sh.1
-	${INSTALL_DATA} doc/crypt.sh.1 ${DESTDIR}${mandir}/man1/crypt.sh.1
-	${INSTALL_DATA} doc/gzip.sh.1 ${DESTDIR}${mandir}/man1/gzip.sh.1
+	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/$$i ; done
+	for i in ${SHS}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
+	for i in ${MAN8}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man8/`basename $$i` ; done
+	for i in ${MAN1}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 
 uninstall:
-	rm -f ${DESTDIR}${sbindir}/rdup
-	rm -f ${DESTDIR}${sbindir}/yesterday.sh
-	rm -f ${DESTDIR}${sbindir}/hist.sh
-	rm -f ${DESTDIR}${sbindir}/mirror.sh
-	rm -f ${DESTDIR}${mandir}/man8/rdup.8
-	rm -f ${DESTDIR}${mandir}/man8/bmirror.8
-	rm -f ${DESTDIR}${mandir}/man1/yesterday.1
-	rm -f ${DESTDIR}${mandir}/man1/hist.1
+	for i in ${CMD}; do rm -f ${DESTDIR}${sbindir}/$$i ; done
+	for i in ${SHS}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
+	for i in ${MAN8}; do rm -f ${DESTDIR}${mandir}/man8/`basename $$i` ; done
+	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
