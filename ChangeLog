@@ -3,6 +3,7 @@ xx XXX 2006: 0.2.5 Miek <miek@miek.nl>
    * usbdump.sh: be more informative on failed backups
    * error messages cleanup
    * indent is used to force my coding style
+   * added purge.sh script for deleting older backups
 
 
 10 Mar 2006: 0.2.4 Miek <miek@miek.nl>

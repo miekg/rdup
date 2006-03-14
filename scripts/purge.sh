@@ -20,6 +20,19 @@ monthsago() {
         echo `date --date "$1 months ago" +%Y%m` # YYYYMM
 }
 
+question () {
+    printf "%s (y/n) " "$*"
+    read answer
+    case "$answer" in
+        [Yy]|[Yy][Ee][Ss])
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 BACKUPDIR=""
 MONTHS=2
 while getopts ":b:x:h" o; do
@@ -37,8 +50,17 @@ if [[ $# -eq 0 ]]; then
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
-        BACKUPDIR="/vol/backup/$HOSTNAME"
+        BACKUPDIR="/vol/backup/"
 fi
 if [[ $MONTHS -lt 2 ]]; then
         echo "** $0: Will not delete backups less than 2 months old" > /dev/fd/2
 fi
+
+# setup the backup directory
+BACKUPDIR=$BACKUPDIR/$1
+D=`monthsago $MONTHS`
+DEL=$BACKUPDIR/$D
+
+question "Continue and remove $DEL?" || exit 1
+
+rm -rf $DEL
