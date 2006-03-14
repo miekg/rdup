@@ -45,7 +45,8 @@ cat(FILE *fp, char *filename)
 	size_t i;
 		
 	if ((file = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "** Could not open '%s\': %s\n", filename, strerror(errno));
+		fprintf(stderr, "** Could not open '%s\': %s\n", filename, 
+				strerror(errno));
 		return FALSE;
 	}
 	
@@ -291,7 +292,8 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 		entry_print(stdout, '+', (struct entry*)data);
 		return FALSE;
 	} 
-	if (S_ISREG(((struct entry*)data)->f_mode) || S_ISLNK(((struct entry*)data)->f_mode)) {
+	if (S_ISREG(((struct entry*)data)->f_mode) || 
+			S_ISLNK(((struct entry*)data)->f_mode)) {
 		if (opt_size != 0 && ((struct entry*)data)->f_size > opt_size) {
 			return FALSE;
 		}
@@ -359,7 +361,8 @@ gfunc_remove_path(gpointer data, gpointer value, gpointer r)
 	if (sig != 0) 
 		signal_abort(sig);
 
-	if (!strncmp(((struct entry*)data)->f_name, ((struct remove_path *)r)->path, ((struct remove_path *)r)->len)) {
+	if (!strncmp(((struct entry*)data)->f_name, 
+				((struct remove_path *)r)->path, ((struct remove_path *)r)->len)) {
 	
 		/* don't remove the directory itself */
 		if (S_ISDIR( ((struct entry*)data)->f_mode))

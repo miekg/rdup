@@ -122,7 +122,8 @@ g_tree_read_file(FILE *fp)
 
 	while ((getdelim(&buf, &s, delim, fp)) != -1) {
 		if (s < LIST_MINSIZE) {
-			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", l);
+			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", 
+					l);
 			continue;
 		}
 		if (!opt_null) {
@@ -136,7 +137,8 @@ g_tree_read_file(FILE *fp)
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
-			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", l);
+			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", 
+					l);
 			continue;
 		}
 
@@ -234,7 +236,8 @@ main(int argc, char **argv)
 				/* re-touch the timestamp file, if rdup fails
 				 * the user needs to have something */
 				if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
-					fprintf(stderr, "** Could not create timestamp file: %s\n",
+					fprintf(stderr, 
+						"** Could not create timestamp file: %s\n",
 							optarg);
 					exit(EXIT_FAILURE);
 				}
