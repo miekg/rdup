@@ -1,5 +1,5 @@
 '\" t
-.TH MIRROR.SH 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH MIRROR.SH 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 mirror.sh \- mirror the files from the list on standard input
@@ -20,7 +20,7 @@ will get a suffix. This suffix is of the form: '+DD.HH:MM'.
 .SH OPTIONS
 .TP 
 .B \-b backupdir
-Alternate backup directory. Defaults to /vol/backup/`hostname`.
+Alternate backup directory. Defaults to `/vol/backup/$HOSTNAME'.
 .TP
 .B \-k keyfile
 Encrypt the files when backing up using the contents of keyfile as
@@ -40,7 +40,7 @@ Echo the files processed to standard error.
 Short help message.
 
 .SH FILES
-/vol/backup/`hostname`, or the directory specified with \-b, root of
+`/vol/backup/$HOSTNAME`, or the directory specified with \-b, root of
 the backup file system.
 
 .SH SEE ALSO

@@ -1,7 +1,9 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
-SHS=mirror.sh tools/hist.sh tools/yesterday.sh tools/crypt.sh tools/gzip.sh
-MAN=doc/rdup.8 doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1 doc/crypt.sh.1 doc/gzip.sh.1
+SHS=mirror.sh tools/hist.sh tools/yesterday.sh tools/crypt.sh tools/gzip.sh \
+	tools/dump.sh tools/purge.sh
+MAN=doc/rdup.8 doc/mirror.sh.8 doc/hist.sh.1 doc/yesterday.sh.1 doc/crypt.sh.1 doc/gzip.sh.1 \
+	doc/dump/.sh.8 doc/purge.sh.8
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
@@ -55,13 +57,16 @@ install: rdup
 	mkdir -p ${DESTDIR}${mandir}/man8
 	${INSTALL} rdup ${DESTDIR}${sbindir}/rdup
 	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
-	${INSTALL} mirror.sh ${DESTDIR}${sbindir}/mirror.sh
+	${INSTALL} tools/dump.sh ${DESTDIR}${sbindir}/dump.sh
+	${INSTALL} tools/purge.sh ${DESTDIR}${sbindir}/purge.sh
 	${INSTALL} tools/hist.sh ${DESTDIR}${sbindir}/hist.sh
 	${INSTALL} tools/yesterday.sh ${DESTDIR}${sbindir}/yesterday.sh
 	${INSTALL} tools/crypt.sh ${DESTDIR}${sbindir}/crypt.sh
 	${INSTALL} tools/gzip.sh ${DESTDIR}${sbindir}/gzip.sh
 	${INSTALL_DATA} doc/rdup.8 ${DESTDIR}${mandir}/man8/rdup.8
 	${INSTALL_DATA} doc/mirror.sh.8 ${DESTDIR}${mandir}/man8/mirror.sh.8
+	${INSTALL_DATA} doc/dump.sh.8 ${DESTDIR}${mandir}/man8/dump.sh.8
+	${INSTALL_DATA} doc/purge.sh.8 ${DESTDIR}${mandir}/man8/purge.sh.8
 	${INSTALL_DATA} doc/yesterday.sh.1 ${DESTDIR}${mandir}/man1/yesterday.sh.1
 	${INSTALL_DATA} doc/hist.sh.1 ${DESTDIR}${mandir}/man1/hist.sh.1
 	${INSTALL_DATA} doc/crypt.sh.1 ${DESTDIR}${mandir}/man1/crypt.sh.1

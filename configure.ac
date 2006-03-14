@@ -39,6 +39,8 @@ AC_CONFIG_FILES([Makefile
                  rdup.h
                  doc/mirror.sh.8
                  doc/rdup.8
+                 doc/dump.sh.8
+                 doc/purge.sh.8
                  doc/hist.sh.1
                  doc/yesterday.sh.1
                  doc/crypt.sh.1

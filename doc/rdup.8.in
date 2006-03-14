@@ -48,15 +48,15 @@ Don't honor .nobackup files. Normally if such files are found the directory is n
 printed to standard output, now it is.
 .TP
 .TP
-.B \-F FORMAT
-Specify a printf-style format to use. See \fBFORMAT\fR below.
+.B \-F format
+Specify a printf-style format to use. See \fBformaT\fR below.
 .TP
 .B \-N timestamp
-use the m_time of file TIMESTAMP as the timestamp to decide what to
-include in the incremental backup list. If TIMESTAMP does not exist
+use the m_time of file \fBtimestamp\fR as the timestamp to decide what to
+include in the incremental backup list. If \fBtimestamp\fR does not exist
 of full dump is performed. 
 .B rdup
-will create TIMESTAMP before it starts printing the file list.
+will create \fBtimestamp\fR before it starts printing the file list.
 .TP
 .B \-V
 Print rdup's version.
@@ -75,15 +75,15 @@ backup (\fI\-c\fR) where the normal output is not seen.
 .B \-x
 Stay on the local filesystem.
 .TP
-.B \-s SIZE
-Only output files smaller then SIZE bytes. This can be used to limit
+.B \-s size
+Only output files smaller then \fBsize\fR bytes. This can be used to limit
 the amount of data to be transferred when doing a remote backup.
 This option \fIonly\fR applies to files and symbolic links, \fInot\fR
 to directories.
 .TP
 .B \-0
-Delimit FILELIST with NULL's instead of a newline. Use '\\0' in the
-FORMAT string to change \fBrdup\fR's output.
+Delimit \fBfilelist\fR with NULL's instead of a newline. Use '\\0' in the
+\fBformat\fR string to change \fBrdup\fR's output.
 
 .SH BACKUPS
 With:
