@@ -45,8 +45,7 @@ cat(FILE *fp, char *filename)
 	size_t i;
 		
 	if ((file = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "** Could not open '%s\': %s\n",
-				filename, strerror(errno));
+		fprintf(stderr, "** Could not open '%s\': %s\n", filename, strerror(errno));
 		return FALSE;
 	}
 	
@@ -264,8 +263,7 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 
 	/* mode_path */
 	/* this is used to create our filelist */
-	fprintf((FILE*) fp, "%d %s", 
-			(int) ((struct entry*)data)->f_mode,
+	fprintf((FILE*) fp, "%d %s", (int) ((struct entry*)data)->f_mode, 
 			(char*) ((struct entry*)data)->f_name);
 	if (opt_null) {
 		putc('\0', fp);
