@@ -12,12 +12,7 @@ o option are BOLD
 
 :scripts:
 o portability again, we now depend on gnu stat
-o where to place to aux. scripts? /usr/lib/rdup ??
 o split up rdgrep.sh in dir and file grep (and link grep?)
-
-:hdup2:
-o make complete hdup2 clone based on rdup
-  see hdup2 directory
 
 :gtk: 
 o graphic (GTK) frontend? What would it do?
@@ -28,7 +23,16 @@ o graphic (GTK) frontend? What would it do?
         - yesterday.sh frontend
         - hist.sh frontend (or in nautilus?)
 
+LOW PRIO:
+:hdup2:
+o make complete hdup2 clone based on rdup
+  see hdup2 directory
+  I want to see this, but I don't have enough time for this.
+
 DONE:
+o where to place to aux. scripts? /usr/lib/rdup ??
+  14 Mar 2006: I just place them in /usr/sbin
+
 o depend on 'ls -o' in hist.sh, could use some portability love
   5 Mar 2006; we now depend on stat...
 
