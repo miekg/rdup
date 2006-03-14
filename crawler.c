@@ -96,7 +96,8 @@ dir_crawl(GTree *t, char *path)
 	gint32 d = 0;
 	gint32 dstack_size = D_STACKSIZE; /* realloc when hit */
 	gint32 dstack_cnt  = 1;
-	struct entry **dirstack = g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
+	struct entry **dirstack = 
+		g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
 		fprintf(stderr, "** Cannot enter directory `%s\': %s", path,
@@ -107,7 +108,8 @@ dir_crawl(GTree *t, char *path)
 
 	/* get device */
 	if (fstat(dirfd(dir), &s) != 0) {
-		fprintf(stderr, "** Cannot determine holding device of the directory `%s\': %s\n", path,
+		fprintf(stderr, 
+			"** Cannot determine holding device of the directory `%s\': %s\n", path,
 				strerror(errno));
 		closedir(dir);
 		g_free(dirstack);
@@ -143,7 +145,8 @@ dir_crawl(GTree *t, char *path)
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
 				if (opt_verbose > 0) {
-					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", path);
+					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", 
+							path);
 				}
 				/* remove all files found in this path */
 				rp.tree = t;
@@ -164,7 +167,8 @@ dir_crawl(GTree *t, char *path)
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
-				fprintf(stderr, "** Walking into different filesystem\n");
+				fprintf(stderr, 
+						"** Walking into different filesystem\n");
 				g_free(curpath);
 				continue;
 			}
@@ -180,7 +184,8 @@ dir_crawl(GTree *t, char *path)
 
 			if (d++ % dstack_size == 0) {
 				dirstack = g_realloc(dirstack, 
-						++dstack_cnt * dstack_size * sizeof(struct entry *));
+						++dstack_cnt * dstack_size * 
+						sizeof(struct entry *));
 			}
 			g_free(curpath);
 			continue;

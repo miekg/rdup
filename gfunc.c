@@ -98,7 +98,8 @@ entry_cat_data(FILE *fp, struct entry *e)
  * print an escape sequence correctly 
  */
 static void
-entry_print_escape(char n, FILE *out) {
+entry_print_escape(char n, FILE *out) 
+{
 	switch (n) {
 		case 'a': 
 			fputc('\a', out); 
@@ -137,7 +138,8 @@ entry_print_escape(char n, FILE *out) {
  * print arbitrary data field 
  */
 static void
-entry_print_data(FILE *out, char n, struct entry *e) {
+entry_print_data(FILE *out, char n, struct entry *e) 
+{
 	switch (n) {
 		case 'n': 
 			fputs(e->f_name, out);		
@@ -194,7 +196,8 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		return;
 
 	if (opt_verbose > 1) {
-		fputs("** ", stderr); fputc(plusmin, stderr);
+		fputs("** ", stderr); 
+		fputc(plusmin, stderr);
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 
@@ -342,12 +345,10 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 	if (sig != 0)
 		signal_abort(sig);
 
-	e = strcmp(((struct entry*)a)->f_name,
-			((struct entry*)b)->f_name);
+	e = strcmp(((struct entry*)a)->f_name, ((struct entry*)b)->f_name);
 
 	if (e == 0) {
-		if (((struct entry*)a)->f_mode == 
-				((struct entry*)b)->f_mode) {
+		if (((struct entry*)a)->f_mode == ((struct entry*)b)->f_mode) {
 			return 0;
 		}
 	}
