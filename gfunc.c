@@ -362,7 +362,8 @@ gfunc_remove_path(gpointer data, gpointer value, gpointer r)
 		signal_abort(sig);
 
 	if (!strncmp(((struct entry*)data)->f_name, 
-				((struct remove_path *)r)->path, ((struct remove_path *)r)->len)) {
+				((struct remove_path *)r)->path, 
+				((struct remove_path *)r)->len)) {
 	
 		/* don't remove the directory itself */
 		if (S_ISDIR( ((struct entry*)data)->f_mode))
