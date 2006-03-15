@@ -30,8 +30,8 @@ Alternate backup directory. Defaults to `/vol/backup/$HOSTNAME`.
 .B \-x num
 Delete the backup of \fBNUM\fR months ago. This defaults to 2.
 .TP
-.B \-i
-Ask whether to continue or not.
+.B \-y
+Don't ask whether to continue, but go ahead and delete the backups.
 .TP
 .B \-h
 Show a short help message.

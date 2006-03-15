@@ -13,7 +13,7 @@ usage() {
         echo OPTIONS:
         echo "-b DIR     backup directory. Default: /vol/backup/HOSTNAME"
         echo "-x NUM     delete backups from X months ago, defaults to 2"
-        echo "-i         interactive, ask whether to continue"
+        echo "-y         yes, remove my backups and don't ask questionse"
         echo "-h         this help"
 }
 
@@ -36,12 +36,12 @@ question () {
 
 BACKUPDIR=""
 MONTHS=2
-ASK=0
-while getopts ":b:x:hi" o; do
+ASK=1
+while getopts ":b:x:hy" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 x) MONTHS=$OPTARG;;
-                i) ASK=1;;
+                y) ASK=0;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac
