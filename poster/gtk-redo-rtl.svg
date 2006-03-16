@@ -14,9 +14,9 @@ Changes to this document may compromise the structure of this palette.
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docbase="/usr/share/icons/dlg-neu/scalable/stock"
+   sodipodi:docbase="/home/miekg/svn/rdup/trunk/poster"
    sodipodi:docname="gtk-redo-rtl.svg"
-   inkscape:version="0.42"
+   inkscape:version="0.43"
    sodipodi:version="0.32"
    id="Etiquette"
    height="128"
@@ -82,8 +82,8 @@ Changes to this document may compromise the structure of this palette.
      gridspacingx="8.0000000pt"
      showgrid="false"
      inkscape:current-layer="Etiquette"
-     inkscape:window-y="25"
-     inkscape:window-x="111"
+     inkscape:window-y="91"
+     inkscape:window-x="311"
      inkscape:window-height="656"
      inkscape:window-width="844"
      inkscape:cy="55.917553"
@@ -371,7 +371,7 @@ Changes to this document may compromise the structure of this palette.
        x2="-63.000000"
        y1="-4.8393440"
        x1="-87.500000"
-       gradientTransform="matrix(1.790127,0.000000,0.000000,1.790127,175.1659,-5.508120)"
+       gradientTransform="matrix(1.790127,0,0,1.790127,284.4139,-17.17538)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient2217"
        xlink:href="#linearGradient2230"
@@ -392,9 +392,4 @@ Changes to this document may compromise the structure of this palette.
      d="M 5.5513575,43.272838 C 22.706732,30.592773 41.204722,17.912706 58.360099,5.2326411 C 58.210927,11.945617 58.061738,18.658593 57.912567,25.371569 C 111.91473,32.979608 117.13593,94.291456 116.53923,122.03842 C 107.73776,82.655631 76.559729,62.516702 57.912567,62.964235 C 57.763396,69.229678 57.614207,75.495123 57.465035,81.760567 C 40.160469,68.931323 22.855921,56.102082 5.5513575,43.272838 z "
      id="path1381"
      sodipodi:nodetypes="ccccccc" />
-  <path
-     style="fill:url(#linearGradient2217);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:0.25000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
-     d="M 8.6840768,43.272838 C 24.646043,31.786190 40.608006,20.299544 56.569971,8.8128950 C 56.420795,14.779984 56.271616,20.747075 56.122440,26.714164 C 74.471240,28.951822 85.659534,38.349989 93.715105,45.510497 C 60.896112,57.295498 32.999966,57.444677 8.6840768,43.272838 z "
-     id="path3015"
-     sodipodi:nodetypes="ccccc" />
 </svg>
