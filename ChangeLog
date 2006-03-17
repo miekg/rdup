@@ -1,12 +1,13 @@
-xx XXX 2006: 0.2.5 Miek <miek@miek.nl>
-   -- ?????? --
+18 Mar 2006: 0.2.5 Miek <miek@miek.nl>
+   -- bugfixes --
    * usbdump.sh: be more informative on failed backups
    * error messages cleanup
-   * indent is used to force my coding style
+   * indent is used to force coding style
    * added purge.sh script for deleting older backups
    * dump.sh and purge.sh now both have a manual page
      and are moved to the tools/ directory
    * patch for mirror.sh (add missing $) (Pavel Mracek)
+   * Makefile is cleanup
 
 
 10 Mar 2006: 0.2.4 Miek <miek@miek.nl>
