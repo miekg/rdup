@@ -188,7 +188,7 @@ remote_mirror() {
                         # remove
                         if [[ -e "$backupdir/$path" ]]; then
                                 suffix=`mirror_suffix "$backupdir/$path"`
-                                mv "$backupdir/$path" "$backupdir/$pathsuffix"
+                                mv "$backupdir/$path" "$backupdir/$path$suffix"
                         fi
                         irm=$(( $irm + 1))
                 fi

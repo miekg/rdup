@@ -5,6 +5,8 @@ xx XXX 2006: 0.2.5 Miek <miek@miek.nl>
    * indent is used to force my coding style
    * added purge.sh script for deleting older backups
    * dump.sh and purge.sh now both have a manual page
+     and are moved to the tools/ directory
+   * patch for mirror.sh (add missing $) (Pavel Mracek)
 
 
 10 Mar 2006: 0.2.4 Miek <miek@miek.nl>
