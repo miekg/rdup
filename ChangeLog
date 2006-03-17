@@ -1,3 +1,8 @@
+xx xxx 2006: 0.2.6 Miek <miek@miek.nl>
+   -- whatever --
+   * something
+
+
 18 Mar 2006: 0.2.5 Miek <miek@miek.nl>
    -- bugfixes --
    * usbdump.sh: be more informative on failed backups
