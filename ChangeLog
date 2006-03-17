@@ -7,7 +7,7 @@
    * dump.sh and purge.sh now both have a manual page
      and are moved to the tools/ directory
    * patch for mirror.sh (add missing $) (Pavel Mracek)
-   * Makefile is cleanup
+   * Makefile cleanup
 
 
 10 Mar 2006: 0.2.4 Miek <miek@miek.nl>
