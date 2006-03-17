@@ -194,6 +194,7 @@ remote_mirror() {
                 fi
         done 
         te=`date +%s`
+        # /dev/fd/2 is not available remotely
         echo "** #REG FILES  : $ireg"
         echo "** #DIRECTORIES: $idir"
         echo "** #LINKS      : $ilnk"
