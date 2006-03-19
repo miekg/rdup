@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create a dump on a external harddisk
 

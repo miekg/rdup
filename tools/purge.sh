@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Purge older backup directories
 # -b directory -x X : X months ago

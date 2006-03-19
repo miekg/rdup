@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create a (mirror) backup in /vol/backup/`hostname`
 # figure out of the dump should be a full one or incremental
