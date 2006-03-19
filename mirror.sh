@@ -17,6 +17,15 @@ idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
 ts=`date +%s` # gnuism
 backupdir=""
+PROGNAME=$0
+
+cleanup() {
+        # can also happen when running remotely (no /dev/fd/2)
+        echo "** $PROGNAME: Signal received while processing \`$path', exiting" 
+        exit 1
+}
+# trap at least these
+trap cleanup SIGINT SIGPIPE
 
 mirror_suffix() {
 	s=$(stat -c '%y' "$@")  # gnuism
@@ -40,7 +49,7 @@ mirror_create_top() {
 }
 
 usage() {
-        echo "$0 [OPTIONS]"
+        echo "$PROGNAME [OPTIONS]"
         echo
         echo Mirror the filelist from rdup
         echo

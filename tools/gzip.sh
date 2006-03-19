@@ -10,9 +10,10 @@ set -o nounset
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
+newsize=0
 
 cleanup() {
-        echo "** Signal received, exiting" > /dev/fd/2
+        echo "** $0: Signal received while processing \`$path', exiting" > /dev/fd/2
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
@@ -47,7 +48,6 @@ do
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
                                 head -c $fsize | gzip -c > $TMPDIR/file.$$.gz
-
                                 newsize=`stat --format "%s" $TMPDIR/file.$$.gz`
                                 echo "$dump$mode $uid $gid $psize $newsize"
                                 echo -n "$path"

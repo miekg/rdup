@@ -6,7 +6,7 @@
 set -o nounset
 
 usage() {
-        echo "$0 [OPTIONS] NAME DIR [DIR ...]"
+        echo "$PROGNAME [OPTIONS] NAME DIR [DIR ...]"
         echo 
         echo NAME - suffix for filelist and timestamp files
         echo DIR \ - directories to back up
@@ -23,6 +23,7 @@ etc=0
 exclude=""
 PROGNAME=$0
 BACKUPDIR=""
+PROGNAME=$0
 
 while getopts ":b:x:eh" o; do
         case $o in
@@ -35,7 +36,7 @@ while getopts ":b:x:eh" o; do
 done
 shift $((OPTIND - 1))
 if [[ $# -eq 0 ]]; then
-        echo "** $0: NAME is mandatory" > /dev/fd/2
+        echo "** $PROGNAME: NAME is mandatory" > /dev/fd/2
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then

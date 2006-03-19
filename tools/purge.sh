@@ -4,9 +4,10 @@
 # -b directory -x X : X months ago
 
 set -o nounset
+PROGNAME=$0
 
 usage() {
-        echo "$0 [OPTIONS] HOST" 
+        echo "$PROGNAME [OPTIONS] HOST" 
         echo
         echo HOST - delete backups from this host
         echo
@@ -49,14 +50,14 @@ done
 shift $((OPTIND - 1))
 
 if [[ $# -eq 0 ]]; then
-        echo "** $0: HOST is mandatory" > /dev/fd/2
+        echo "** $PROGNAME: HOST is mandatory" > /dev/fd/2
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
         BACKUPDIR="/vol/backup/"
 fi
 if [[ $MONTHS -lt 2 ]]; then
-        echo "** $0: Will not delete backups less than 2 months old" > /dev/fd/2
+        echo "** $PROGNAME: Will not delete backups less than 2 months old" > /dev/fd/2
 fi
 
 # setup the backup directory
@@ -65,11 +66,11 @@ D=`monthsago $MONTHS`
 DEL=$BACKUPDIR/$D
 
 if [[ $ASK -eq 1 ]]; then
-        question "Continue and remove $DEL?" || exit 1
+        question "** $PROGNAME: Continue and remove $DEL?" || exit 1
 fi
 
 if [[ -z $DEL ]]; then
-        echo "** $0: No directory?" > /dev/fd/2
+        echo "** $PROGNAME: No directory?" > /dev/fd/2
         exit 1
 fi
 

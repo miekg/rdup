@@ -12,7 +12,7 @@ S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 
 cleanup() {
-        echo "** Signal received, exiting" > /dev/fd/2
+        echo "** $0: Signal received while processing \`$path', exiting" > /dev/fd/2
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
