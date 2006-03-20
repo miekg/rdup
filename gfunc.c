@@ -82,7 +82,7 @@ entry_cat_data(FILE *fp, struct entry *e)
 	}
 	if (S_ISLNK(e->f_mode)) {
 		char buf[BUFSIZE + 1];
-		size_t i;
+		ssize_t i;
 		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
 			fprintf(stderr, "** Error reading link %s: '%s\'\n", e->f_name,
 					strerror(errno));
@@ -294,7 +294,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) || 
 			S_ISLNK(((struct entry*)data)->f_mode)) {
-		if (opt_size != 0 && ((struct entry*)data)->f_size > opt_size) {
+		if (opt_size != 0 && ((struct entry*)data)->f_size > (ssize_t)opt_size) {
 			return FALSE;
 		}
 		switch (opt_timestamp) {
@@ -356,7 +356,7 @@ gfunc_equal(gconstpointer a, gconstpointer b)
  * used in the crawler, remove specific paths
  */
 gboolean
-gfunc_remove_path(gpointer data, gpointer value, gpointer r)
+gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointer r)
 {
 	if (sig != 0) 
 		signal_abort(sig);
