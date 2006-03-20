@@ -10,8 +10,9 @@
 \title{\rdup{} -- Easy (personal) Backups}
 \date{}
 \maketitle
+\thispagestyle{empty}
 
-\section{Abstract}
+\section*{Abstract}
 GPL 
 small
 scripts implement backup 
@@ -20,7 +21,7 @@ The homepage of rdup is located at:
 
 
 
-\section{Backups}
+\section*{Backups}
 In an ideal world backups would not be necessary, with an unlimited
 amount of memory and non failing hard disk and some form of version
 management we would always be able to retrieve past versions of our files.
@@ -49,7 +50,7 @@ Taking these requirements and thinking them through, the
 conclusion is that the best backup program... does not backup anything.
 Hence: \rdup
 
-\section{What is \rdup}
+\section*{What is \rdup}
 \rdup{} is an utility inspired by \cmd{rsync} and the 
 plan9 \footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
 way of doing backups. As said, \rdup{} does not create backups. It only
@@ -80,7 +81,7 @@ for making and managing backups. When all backups are mirrored on a
 remote system and the disk of that system is made read-only available on 
 the network, you have a complete network based backup system.
 
-\section{Examples of Backups with rdup}
+\section*{Examples of Backups with rdup}
 The most simple use of \rdup is to mirror your files to
 another partition. The following pipe line creates a
 full dump:
