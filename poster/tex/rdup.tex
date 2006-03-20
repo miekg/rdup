@@ -1,0 +1,93 @@
+\documentclass{article}
+
+\newcommand{\rdup}{\textbf{rdup}}
+\newcommand{\cmd}[1]{\texttt{#1}}
+\newcommand{\url}[1]{\texttt{#1}}
+
+\begin{document}
+\pagestyle{empty}
+
+\title{\rdup{} -- Easy (personal) Backups}
+\date{}
+\maketitle
+
+\section{Abstract}
+GPL 
+small
+scripts implement backup 
+The homepage of rdup is located at: 
+\url{http://www.miek.nl/projects/rdup/index.html}
+
+
+
+\section{Backups}
+In an ideal world backups would not be necessary, with an unlimited
+amount of memory and non failing hard disk and some form of version
+management we would always be able to retrieve past versions of our files.
+\paragraph{}
+Unfortunately we do need backups.
+\paragraph{}
+Although the act of backing up may seems trivial (just copy some files
+to another medium), a number of constraints make it more difficult. 
+Backups may need to be compressed, or encrypted. Backups might be copied
+to another hosts. Backups may need to be split up in such a way that
+each piece will fit on a CD or DVD. Incremental backups need to be
+supported. And, one of the more important ones: recovery of backed up
+files should be easy.  Also backup tools should be file system agnostic
+and should be very flexible in their use.
+
+A lot of backup programs only provide a subset of these requirements or
+focus on one or two items. Others will do everything and make setting up
+and usage a pain.
+
+A backup tool should not re-invent the wheel.  This means that it should
+try to use \cmd{ssh} for file transfers and not create a whole new
+mechanism to do secure authentication. A program like \cmd{tar} can be
+used to pack files, other tools can be used for encryption. 
+
+Taking these requirements and thinking them through, the
+conclusion is that the best backup program... does not backup anything.
+Hence: \rdup
+
+\section{What is \rdup}
+\rdup{} is an utility inspired by \cmd{rsync} and the 
+plan9 \footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
+way of doing backups. As said, \rdup{} does not create backups. It only
+prints a list of files that are changed, or all files in case of a null
+dump, to standard output.
+
+Subsequent programs in a shell pipe line can be used to actually
+implement to backup scheme. Currently implemented is a local and
+remote mirroring capability (with optional compression and/or
+encryption), a \cmd{tar} based setup (which is in turn based upon
+hdup2 \footnote{\url{http://www.miek.nl/projects/hdup2/index.html}}), 
+and a external (USB) drive backup. Turn on the drive and your backup starts.
+
+Note that restoring files when mirrored is as easy as 'cp'-ing the
+backed up file to the original location. Two shell scripts are
+also provided inspect the backed up files. 
+\begin{description}
+        \item[\cmd{hist.sh} --]{
+                list the history of the backed up file, show the size
+                and the backup date,}
+        \item[\cmd{yesterday.sh} --]{
+                generate a \cmd{diff}, show the file and optional copy 
+                the file to another directory.}
+\end{description}
+
+Together with \cmd{mirror.sh} these scripts provide a complete system
+for making and managing backups. When all backups are mirrored on a
+remote system and the disk of that system is made read-only available on 
+the network, you have a complete network based backup system.
+
+\section{Examples of Backups with rdup}
+The most simple use of \rdup is to mirror your files to
+another partition. The following pipe line creates a
+full dump:
+\begin{quote}
+\begin{verbatim}
+rdup -N timestamp HOMELIST ~ | mirror.sh -b /vol/backup
+\end{verbatim}
+\end{quote}
+
+\end{document}

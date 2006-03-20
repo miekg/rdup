@@ -1,3 +1,11 @@
+\documentclass{report}
+
+
+
+\begin{document}
+
+
+drawn to specific parts in the picture.
 ===== Abstract ====
 Easy (Personal) Backups with rdup
 
@@ -54,23 +62,4 @@ http://www.miek.nl/projects/rdup/index.html
 References:
 [plan9] http://plan9.escet.urjc.es/magic/man2html/4/fs
 [hdup2] http://www.miek.nl/projects/hdup2/index.html
-
-===== Rough Poster Sketch ====
-
-3 part setup: left, middle and right:
-Goal of the poster: get people thinking about backups and
-  how they might use rdup for their personal backups.
-
-
-Left:
-Somewhat general explanation about backups, archiving and short
-time backups (mirroring).
-
-Middle:
-Picture of the rdup "architecture". In the center sits rdup and around
-it hover some other elements: remote hard disk, external hard disk and 
-some offline media.
-
-Right:
-This part explains what is seen in the middle picture. Arrows will be
-drawn to specific parts in the picture.
+\end{document}
