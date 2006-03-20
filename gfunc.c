@@ -24,16 +24,13 @@ signal_abort(int signal)
 {
 	switch(signal) {
 		case SIGPIPE:
-			fprintf(stderr, "** %s: SIGPIPE received, exiting\n", 
-					PROGNAME);
+			fprintf(stderr, "** %s: SIGPIPE received, exiting\n", PROGNAME);
 			break;
 		case SIGINT:
-			fprintf(stderr, "** %s: SIGINT received, exiting\n", 
-					PROGNAME);
+			fprintf(stderr, "** %s: SIGINT received, exiting\n", PROGNAME);
 			break;
 		default:
-			fprintf(stderr, "** %s: Unknown signal reveived, exiting\n",
-					PROGNAME);
+			fprintf(stderr, "** %s: Unknown signal reveived, exiting\n", PROGNAME);
 			break;
 	}
 	exit(EXIT_FAILURE);
