@@ -63,13 +63,11 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         sudo mkdir -m755 -p "$BACKUPDIR_DATE"
         sudo rm -f "$LIST"
         sudo rm -f "$STAMP"
-        TEXT="<i>Full dump</i> of <b>HOSTNAME</b> completed"
+        TEXT="<i>Full</i> dump of <b>$HOSTNAME</b> in progress"
 else
-        TEXT="<i>Incremental dump</i> of <b>$HOSTNAME</b> completed"
+        TEXT="<i>Incremental</i> dump of <b>$HOSTNAME</b> in progress"
 fi
 
 sudo /usr/sbin/rdup -N $STAMP $LIST $DIRS |\
-sudo /usr/sbin/mirror.sh -b $BACKUPDIR 2>&1 |\
-mail -s "$TEXT" root@localhost
-# backup completed
-zenity --info --title "rdup @ $HOSTNAME" --text "$TEXT"
+sudo /usr/sbin/mirror.sh -v -b $BACKUPDIR 2>&1 |\
+zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"

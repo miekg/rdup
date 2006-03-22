@@ -213,7 +213,7 @@ remote_mirror() {
         echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":cNhb:" options; do
+while getopts ":cvhb:" options; do
         case $options in
                 c) remote=1;;
                 b) backupdir=$OPTARG;;
