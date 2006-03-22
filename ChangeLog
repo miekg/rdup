@@ -4,7 +4,9 @@ xx xxx 2006: 0.2.6 Miek <miek@miek.nl>
      they now echo what file they were processing when 
      they received the signal
    * mirror.sh: actually accept -v as an option
-   * usbdump.sh: display (zenity) progress dialog when backing up
+   * usb-dump.sh: display (zenity) progress dialog when backing up
+     moved usb-dump.sh to tools/
+   * scripts/ directory was removed
      
 
 18 Mar 2006: 0.2.5 Miek <miek@miek.nl>
