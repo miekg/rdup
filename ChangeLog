@@ -3,6 +3,7 @@ xx xxx 2006: 0.2.6 Miek <miek@miek.nl>
    * more signal handling was added to the shell scripts, 
      they now echo what file they were processing.
    * mirror.sh: accept -v as an option
+   * usbdump.sh: display progress dialog when backing up
      
 
 18 Mar 2006: 0.2.5 Miek <miek@miek.nl>

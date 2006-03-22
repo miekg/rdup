@@ -63,9 +63,9 @@ if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         sudo mkdir -m755 -p "$BACKUPDIR_DATE"
         sudo rm -f "$LIST"
         sudo rm -f "$STAMP"
-        TEXT="<i>Full</i> dump of <b>$HOSTNAME</b> in progress"
+        TEXT="<i>Full</i> dump of <b>$HOSTNAME</b>: $DIRS"
 else
-        TEXT="<i>Incremental</i> dump of <b>$HOSTNAME</b> in progress"
+        TEXT="<i>Incremental</i> dump of <b>$HOSTNAME</b>: $DIRS"
 fi
 
 sudo /usr/sbin/rdup -N $STAMP $LIST $DIRS |\
