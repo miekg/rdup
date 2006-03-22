@@ -203,6 +203,30 @@ Various shells scripts are included with rdup. These script actually
 implement the backup scheme. Currently included are various remote
 backup scripts, a local mirroring scheme and an implementation of hdup2
 
+.SH EXAMPLES
+
+.SS FULL DUMP OF /HOME 
+rdup /tmp/HOMELIST ~ | mirror.sh -b /vol/backup
+
+.SS FULL GZIPPED DUMP OF /HOME
+rdup -c /tmp/HOMELIST ~ | gzip.sh | mirror.sh -c -b /vol/backup
+
+.SS FULL REMOTE DUMP OF /HOME
+rdup -c /tmp/HOMELIST ~ | ssh miekg@example.com mirror.sh -c -b /vol/backup
+
+.SS FULL ENCRYPTED REMOTE DUMP OF /HOME
+rdup -c /tmp/HOMELIST ~ | crypt.sh KEYFILE | 
+ssh miekg@example.com mirror.sh -c -b /vol/backup
+
+.SS FULL ENCRYPTED, GZIPPED REMOTE DUMP OF /HOME
+This is my favorite:
+
+rdup -c /tmp/HOMELIST ~ | crypt.sh KEYFILE | gzip.sh | 
+ssh miekg@example.com mirror.sh -c -b /vol/backup
+
+.SH SEE ALSO
+hist.sh(1), yesterday.sh(1), mirror.sh(8) and dump.sh(8).
+
 .SH AUTHOR
 Written by Miek Gieben. 
 

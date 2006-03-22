@@ -1,0 +1,27 @@
+'\" t
+.TH USB-DUMP.SH 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+usb-dump.sh \- dump a filesystem to where this script is located
+
+.SH SYNOPSIS
+.B usb-dump.sh
+
+.SH DESCRIPTION
+\fBusb-dump.sh\fR is a graphical front-end for `mirror.sh' and `rdup'.
+Its main purpose is that it is used as `autorun.sh' on removeable media.
+This way you can backup automaticaly when you power on or insert such
+media.
+.PP
+The backup will be stored in the directory where \fBusb-dump.sh\fR is
+called from - usually this is in the root of the removeable media.
+.PP
+The script must be edited to be really usefull - as there is no
+way to give it options (when run as `autorun.sh') the directories
+to be backed up \fImust\fR be specifed at the top of the script.
+
+.SH FILES
+`pwd`/`hostname` is the default location for the backups.
+
+.SH SEE ALSO
+hist.sh(1), yesterday.sh(1), rdup(8), grep.sh(1) and purge.sh(8).
