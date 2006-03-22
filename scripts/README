@@ -1,6 +1,0 @@
-Small wrapper scripts around rdup.
-        dump.sh         -  create backup
-                           will find out for itself where and how
-        usbdump.sh      -  create a backup on a USB disk
-                           rename this as autostart.sh
-        purge.sh        -  purge old backups
