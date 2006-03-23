@@ -7,6 +7,7 @@ xx xxx 2006: 0.2.6 Miek <miek@miek.nl>
    * usb-dump.sh: display (zenity) progress dialog when backing up
      moved usb-dump.sh to tools/
    * scripts/ directory was removed
+   * rename usb-dump.sh to dump-here.sh, as that is what it does
      
 
 18 Mar 2006: 0.2.5 Miek <miek@miek.nl>
