@@ -4,6 +4,7 @@
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
 
+\textheight 210mm
 
 \begin{document}
 \pagestyle{empty}
@@ -15,19 +16,18 @@
 \thispagestyle{empty}
 
 \paragraph{Abstract}
-\rdup{} is small utility which, together with some scripts, can
+\rdup{} is small GPL licensed utility which, together with some scripts, can
 be easily used to setup and maintain backups. These can either be local
 of networked backups. Encryption and compression is also supported.
 The homepage of \rdup{} is located at: \\
-\url{http://www.miek.nl/projects/rdup/index.html}. \rdup{} is licensed
-under the GPL.
+\url{http://www.miek.nl/projects/rdup/index.html}.
 
 \paragraph{Backups}
 In an ideal world backups would not be necessary, with an unlimited
 amount of memory and non failing hard disk and some form of version
 management we would always be able to retrieve past versions of our files.
 \begin{quote}
-Unfortunately we do need backups.
+\emph{Unfortunately we do need backups.}
 \end{quote}
 Although the act of backing up may seem trivial (just copy some files
 to another medium), a number of constraints make it more difficult. 
@@ -49,13 +49,13 @@ Hence: \rdup
 
 \paragraph{What is \rdup?}
 \rdup{} is an utility inspired by \cmd{rsync} and the 
-plan9 \footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
+\cmd{plan9}\footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
 way of doing backups. As said, \rdup{} does not create backups. It only
 prints a list of files that are changed, or all files in case of a null
 dump, to standard output. A sample of \rdup's output can be viewed in
 figure \ref{fig1:rdup}.
 
-\begin{figure}[h!]
+\begin{figure}[hbt]
 \begin{verbatim}
 +16877 1000 1000 11 0 /home/miekg
 +16877 1000 1000 15 0 /home/miekg/svn
