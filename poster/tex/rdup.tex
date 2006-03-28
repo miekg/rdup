@@ -1,46 +1,42 @@
-\documentclass{article}
+\documentclass[a4, 10pt]{article}
 
 \newcommand{\rdup}{\textbf{rdup}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
 
+
 \begin{document}
 \pagestyle{empty}
 
 \title{\rdup{} -- Easy (personal) Backups}
-\author{Miek Gieben\\miek\@miek.nl}
+\author{Miek Gieben\\miek@miek.nl}
 \date{}
 \maketitle
 \thispagestyle{empty}
 
-\section*{Abstract}
-GPL 
-small
-scripts implement backup 
-The homepage of rdup is located at: 
-\url{http://www.miek.nl/projects/rdup/index.html}
+\paragraph{Abstract}
+\rdup{} is small utility which, together with some scripts, can
+be easily used to setup and maintain backups. These can either be local
+of networked backups. Encryption and compression is also supported.
+The homepage of \rdup{} is located at: \\
+\url{http://www.miek.nl/projects/rdup/index.html}. \rdup{} is licensed
+under the GPL.
 
-
-
-\section*{Backups}
+\paragraph{Backups}
 In an ideal world backups would not be necessary, with an unlimited
 amount of memory and non failing hard disk and some form of version
 management we would always be able to retrieve past versions of our files.
-\paragraph{}
+\begin{quote}
 Unfortunately we do need backups.
-\paragraph{}
-Although the act of backing up may seems trivial (just copy some files
+\end{quote}
+Although the act of backing up may seem trivial (just copy some files
 to another medium), a number of constraints make it more difficult. 
-Backups may need to be compressed, or encrypted. Backups might be copied
-to another hosts. Backups may need to be split up in such a way that
+Backups may need to be compressed or encrypted. Backups might be copied
+to another host. Backups may need to be split up in such a way that
 each piece will fit on a CD or DVD. Incremental backups need to be
 supported. And, one of the more important ones: recovery of backed up
 files should be easy.  Also backup tools should be file system agnostic
-and should be very flexible in their use.
-
-A lot of backup programs only provide a subset of these requirements or
-focus on one or two items. Others will do everything and make setting up
-and usage a pain.
+and should be very flexible and simple in their use.
 
 A backup tool should not re-invent the wheel.  This means that it should
 try to use \cmd{ssh} for file transfers and not create a whole new
@@ -51,37 +47,42 @@ Taking these requirements and thinking them through, the
 conclusion is that the best backup program... does not backup anything.
 Hence: \rdup
 
-\section*{What is \rdup}
+\paragraph{What is \rdup?}
 \rdup{} is an utility inspired by \cmd{rsync} and the 
 plan9 \footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
 way of doing backups. As said, \rdup{} does not create backups. It only
 prints a list of files that are changed, or all files in case of a null
-dump, to standard output.
+dump, to standard output. A sample of \rdup's output can be viewed in
+figure \ref{fig1:rdup}.
+
+\begin{figure}[h!]
+\begin{verbatim}
++16877 1000 1000 11 0 /home/miekg
++16877 1000 1000 15 0 /home/miekg/svn
++16832 1000 1000 20 0 /home/miekg/svn/rdup
++16832 1000 1000 26 0 /home/miekg/svn/rdup/trunk
+\end{verbatim}
+\caption{Typical output from \rdup.}
+\label{fig1:rdup}
+\end{figure}
 
 Subsequent programs in a shell pipe line can be used to actually
-implement to backup scheme. A few scripts are included with rdup, 
-the most important once are:
+implement to backup scheme. A few scripts are included with \rdup, 
+the most important ones are:
 \begin{description}
         \item[\cmd{mirror.sh} --]{
-                mirror/copies each file to the backup directory, this is
-                one of the more important utilities. Remote mirroring
-                is also possible,}
+                mirror/copies each file to the backup directory, remote 
+                mirroring is also possible,}
         \item[\cmd{gzip.sh} --]{
                 a compression filter,}
         \item[\cmd{crypt.sh} --]{
                 an encryption filter,}
-        \item[\cmd{dump.sh} --]{
-                a wrapper script around \cmd{rdup} and \cmd{mirror.sh}
-                which automatically determines wether to create a full
-                or incremental dump.}
 \end{description}
 
-Also included is
-a \cmd{tar} based setup (which is in turn based upon
-hdup2 \footnote{\url{http://www.miek.nl/projects/hdup2/index.html}}), 
-and a external (USB) drive backup: "Turn on the drive and your backup
-starts."
+Also included is a \cmd{tar} based setup and an external (USB) drive
+backup: "Turn on the drive and your backup starts."
 
+\paragraph{Restoring}
 Note that restoring files when mirrored is as easy as 'cp'-ing the
 backed up file to the original location. Two shell scripts are
 also provided inspect the backed up files:
@@ -94,18 +95,43 @@ also provided inspect the backed up files:
                 the file to another directory.}
 \end{description}
 
-Together with \cmd{mirror.sh} these scripts provide a complete system
-for making and managing backups. When all backups are mirrored on a
-remote system and the disk of that system is made read-only available on 
-the network, you have a complete network based backup system. 
+Together these scripts provide a complete system
+for creating and managing backups. When all backups are mirrored on a
+remote system and the disk of that system is made read-only available to
+the network, you have a complete network based backup system.
 
-\section*{Examples of Backups with rdup}
-The most simple use of \rdup is to mirror your files to
-another partition. The following pipe line creates a
-full dump:
+\paragraph{Examples of Backups with \rdup}
+The most simple use of \rdup{} is to mirror files to
+another partition. The files \cmd{timestamp} and \cmd{FILELIST} or
+both created by \rdup:
 \begin{quote}
 \begin{verbatim}
-rdup -N timestamp HOMELIST ~ | mirror.sh -b /vol/backup
+rdup -N timestamp FILELIST /home | mirror.sh -b /vol/backup
+\end{verbatim}
+\end{quote}
+
+\noindent If you want to remotely store your backups (note the \cmd{-c} switch which makes
+\rdup{} include the files' content in its output):
+\begin{quote}
+\begin{verbatim}
+rdup -c -N timestamp FILELIST /home | \
+ssh miekg@example.nl mirror.sh -c -b /vol/backup
+\end{verbatim}
+\end{quote}
+
+\noindent With \cmd{gzip.sh} files can be compressed:
+\begin{quote}
+\begin{verbatim}
+rdup -c -N timestamp FILELIST /home | gzip.sh | \
+ssh miekg@example.nl mirror.sh -c -b /vol/backup
+\end{verbatim}
+\end{quote}
+
+\noindent And with \cmd{crypt.sh} files are encrypted:
+\begin{quote}
+\begin{verbatim}
+rdup -c -N timestamp FILELIST /home | crypt.sh secret.file | \
+ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
 
