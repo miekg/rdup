@@ -8,6 +8,7 @@
 \pagestyle{empty}
 
 \title{\rdup{} -- Easy (personal) Backups}
+\author{Miek Gieben\\miek\@miek.nl}
 \date{}
 \maketitle
 \thispagestyle{empty}
@@ -58,11 +59,28 @@ prints a list of files that are changed, or all files in case of a null
 dump, to standard output.
 
 Subsequent programs in a shell pipe line can be used to actually
-implement to backup scheme. Currently implemented is a local and
-remote mirroring capability (with optional compression and/or
-encryption), a \cmd{tar} based setup (which is in turn based upon
+implement to backup scheme. A few scripts are included with rdup, 
+the most important once are:
+\begin{description}
+        \item[\cmd{mirror.sh} --]{
+                mirror/copies each file to the backup directory, this is
+                one of the more important utilities. Remote mirroring
+                is also possible,}
+        \item[\cmd{gzip.sh} --]{
+                a compression filter,}
+        \item[\cmd{crypt.sh} --]{
+                an encryption filter,}
+        \item[\cmd{dump.sh} --]{
+                a wrapper script around \cmd{rdup} and \cmd{mirror.sh}
+                which automatically determines wether to create a full
+                or incremental dump.}
+\end{description}
+
+Also included is
+a \cmd{tar} based setup (which is in turn based upon
 hdup2 \footnote{\url{http://www.miek.nl/projects/hdup2/index.html}}), 
-and a external (USB) drive backup. Turn on the drive and your backup starts.
+and a external (USB) drive backup: "Turn on the drive and your backup
+starts."
 
 Note that restoring files when mirrored is as easy as 'cp'-ing the
 backed up file to the original location. Two shell scripts are
@@ -79,7 +97,7 @@ also provided inspect the backed up files:
 Together with \cmd{mirror.sh} these scripts provide a complete system
 for making and managing backups. When all backups are mirrored on a
 remote system and the disk of that system is made read-only available on 
-the network, you have a complete network based backup system.
+the network, you have a complete network based backup system. 
 
 \section*{Examples of Backups with rdup}
 The most simple use of \rdup is to mirror your files to
