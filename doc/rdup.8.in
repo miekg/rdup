@@ -227,6 +227,9 @@ ssh miekg@example.com mirror.sh -c -b /vol/backup
 .SH SEE ALSO
 hist.sh(1), yesterday.sh(1), mirror.sh(8) and dump.sh(8).
 
+.SH BUGS
+\fBrdup\fR needs a logo.
+
 .SH AUTHOR
 Written by Miek Gieben. 
 
