@@ -1,9 +1,9 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
 SHS=tools/hist.sh tools/yesterday.sh tools/crypt.sh tools/gzip.sh tools/dump.sh tools/purge.sh \
-tools/dump-here.sh
+tools/dump-here.sh tools/restore.sh
 CMD=rdup mirror.sh 
-MAN8=doc/rdup.8 doc/mirror.sh.8 doc/dump.sh.8 doc/purge.sh.8 doc/dump-here.sh.8
+MAN8=doc/rdup.8 doc/mirror.sh.8 doc/dump.sh.8 doc/purge.sh.8 doc/dump-here.sh.8 doc/restore.sh.8
 MAN1=doc/hist.sh.1 doc/yesterday.sh.1 doc/crypt.sh.1 doc/gzip.sh.1 
 
 prefix  = @prefix@

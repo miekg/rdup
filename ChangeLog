@@ -7,8 +7,10 @@ xx xxx 2006: 0.2.6 Miek <miek@miek.nl>
    * mirror.sh: handle filetype changes better 
    * usb-dump.sh: display (zenity) progress dialog when backing up
      moved usb-dump.sh to tools/
+   * hist.sh: correctly count backwards x months
    * scripts/ directory was removed
    * rename usb-dump.sh to dump-here.sh, as that is what it does
+   * added: restore.sh restore an entire backed up directory.
      
 
 18 Mar 2006: 0.2.5 Miek <miek@miek.nl>

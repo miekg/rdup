@@ -13,7 +13,6 @@ o option are BOLD
 :scripts:
 o portability again, we now depend on gnu stat
 o split up rdgrep.sh in dir and file grep (and link grep?)
-o type changes: go from file to directory
 
 :gtk: 
 o graphic (GTK) frontend? What would it do?

@@ -21,7 +21,8 @@ usage() {
 }
 
 monthsago() {
-       echo `date --date "$1 months ago" +%Y%m` # YYYYMM
+        # from data's info page
+        echo `date --date "$(date +%Y-%m-15) $1 months ago" +%Y%m` # YYYYMM
 }
 
 diff=0

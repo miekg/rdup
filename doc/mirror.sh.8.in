@@ -16,6 +16,8 @@ specified with the \-b option. This script \fIimplements\fR the backup policy.
 .PP
 If a file already exists in the backup directory it will be moved and
 will get a suffix. This suffix is of the form: '+DD.HH:MM'. 
+.PP
+`hist.sh' and `yesterday.sh' also work on files with this same suffix.
 
 .SH OPTIONS
 .TP 

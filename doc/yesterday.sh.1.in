@@ -38,7 +38,7 @@ Run diff to compare the dump files with the named files.
 Select the dump daysago prior to the current day.
 .TP
 .B \-z
-backupped file is gzipped.
+Backed up file is gzipped.
 
 .SH EXAMPLES
 See what's changed in the last week in your profile:
