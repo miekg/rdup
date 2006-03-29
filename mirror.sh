@@ -80,12 +80,15 @@ local_mirror() {
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
+                if [[ -e "$backupdir/$path" ]]; then
+                        suffix=`mirror_suffix "$backupdir/$path"`
+                fi
+
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in
                                 0)      # REG
-                                if [[ -f "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix "$backupdir/$path"`
+                                if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cat "$path" > "$backupdir/$path"
@@ -95,14 +98,18 @@ local_mirror() {
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
+                                # check for fileTYPE changes
+                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
+                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
+                                fi
+
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                if [[ -L "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix "$backupdir/$path"`
+                                if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cp -a "$path" "$backupdir/$path"
@@ -111,10 +118,9 @@ local_mirror() {
                                 ;;
                         esac
                 else
-                        # remove. It could be the stuff is not there, don't
+                        # move. It could be the stuff is not there, don't
                         # error on that.
                         if [[ -e "$backupdir/$path" ]]; then
-                                suffix=`mirror_suffix "$backupdir/$path"`
                                 mv "$backupdir/$path" "$backupdir/$path$suffix"
                         fi
                         irm=$(($irm + 1))
@@ -146,6 +152,8 @@ remote_mirror() {
                         typ=2;
                 fi
 
+                # check sanity of data?
+
 # debugging - the output of rdup should perfectly match our reads
 #echo "$dump$mode $uid $gid $psize $fsize"
 #                echo "m{"$mode"}"
@@ -155,12 +163,15 @@ remote_mirror() {
 #                echo "s{"$fsize"}"
 #                echo "p{"$path"}"
 
+                if [[ -e "$backupdir/$path" ]]; then
+                        suffix=`mirror_suffix "$backupdir/$path"`
+                fi
+
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in
                                 0)      # REG
-                                if [[ -f "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix "$backupdir/$path"`
+                                if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 if [[ $fsize -ne 0 ]]; then
@@ -176,6 +187,11 @@ remote_mirror() {
                                 ireg=$(( $ireg + 1))
                                 ;;
                                 1)      # DIR
+                                # check for fileTYPE changes
+                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
+                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
+                                fi
+
                                 # size should be 0
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
@@ -183,8 +199,7 @@ remote_mirror() {
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
-                                if [[ -L "$backupdir/$path" ]]; then
-                                        suffix=`mirror_suffix "$backupdir/$path"`
+                                if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 target=`head -c $fsize`
@@ -196,7 +211,6 @@ remote_mirror() {
                 else
                         # remove
                         if [[ -e "$backupdir/$path" ]]; then
-                                suffix=`mirror_suffix "$backupdir/$path"`
                                 mv "$backupdir/$path" "$backupdir/$path$suffix"
                         fi
                         irm=$(( $irm + 1))

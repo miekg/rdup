@@ -4,6 +4,7 @@ xx xxx 2006: 0.2.6 Miek <miek@miek.nl>
      they now echo what file they were processing when 
      they received the signal
    * mirror.sh: actually accept -v as an option
+   * mirror.sh: handle filetype changes better 
    * usb-dump.sh: display (zenity) progress dialog when backing up
      moved usb-dump.sh to tools/
    * scripts/ directory was removed
