@@ -28,6 +28,7 @@ usage() {
 ## find the closest file to the one N days ago
 ## if there are multiple return the latest
 ## blaat           -n0 -> this one
+## blaat+05:6:10   -n4 -> blaat
 ## blaat+05:6:10   -n5 -> this one
 ## blaat+07:6:10   -n7 -> this one
 recent() {
