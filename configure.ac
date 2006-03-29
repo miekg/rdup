@@ -42,7 +42,6 @@ AC_CONFIG_FILES([Makefile
                  doc/dump.sh.8
                  doc/dump-here.sh.8
                  doc/purge.sh.8
-                 doc/restore.sh.8
                  doc/hist.sh.1
                  doc/yesterday.sh.1
                  doc/crypt.sh.1
