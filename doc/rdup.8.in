@@ -200,8 +200,28 @@ Where \fBaaa/def\fR is a symbolic link that points to 'b'
 
 .SH SCRIPTS
 Various shells scripts are included with rdup. These script actually
-implement the backup scheme. Currently included are various remote
-backup scripts, a local mirroring scheme and an implementation of hdup2
+implement the backup scheme. The more important ones are:
+.TP
+.B mirror.sh
+the main backup script that implements a mirroring backup. It also used
+for remote backups (with the -c switch).
+.TP
+.B gzip.sh
+acts as a compression filter.
+.TP
+.B crypt.sh
+acts as a encryption filter.
+.TP
+.B dump.sh
+a wrapper script around `mirror.sh' and `rdup' that creates
+a backup.
+.TP
+.B hist.sh
+inspect the backup history of a particulair file.
+.TP
+.B yesterday.sh
+restore files from the backups, show diffs, etc.
+
 
 .SH EXAMPLES
 
