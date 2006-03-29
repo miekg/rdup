@@ -34,7 +34,7 @@ to another medium), a number of constraints make it more difficult.
 Backups may need to be compressed or encrypted. Backups might be copied
 to another host. Backups may need to be split up in such a way that
 each piece will fit on a CD or DVD. Incremental backups need to be
-supported. And, one of the more important ones: recovery of backed up
+supported. And, often neglected: recovery of backed up
 files should be easy.  Also backup tools should be file system agnostic
 and should be very flexible and simple in their use.
 
@@ -85,7 +85,7 @@ backup: "Turn on the drive and your backup starts."
 \paragraph{Restoring}
 Note that restoring files when mirrored is as easy as 'cp'-ing the
 backed up file to the original location. Two shell scripts are
-also provided inspect the backed up files:
+also provided to inspect the backed up files:
 \begin{description}
         \item[\cmd{hist.sh} --]{
                 list the history of the backed up file, show the size
