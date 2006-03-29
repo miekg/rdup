@@ -11,12 +11,12 @@ cd $1
 
 
 for i in *; do 
-        echo "["$i"]"
-        if [[ $i =~ "\\+.+\\..+:.+$" ]]; then
-                echo "extension"
+        if [[ $i =~ "\\+(.+)\\.(.+):(.+)$" ]]; then
+                days=${BASH_REMATCH[1]}
+                hour=${BASH_REMATCH[2]}
+                min=${BASH_REMATCH[3]}
+                continue;
         fi
-#re-create the local directory sctructure and populate it with files
 
-
-#        link/dir/file
+        echo "["$i"]"
 done
