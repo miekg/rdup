@@ -1,7 +1,9 @@
    Apr 2006: 0.2.7 Miek <miek@miek.nl>
    -- bugfixes --
    * re-touch the timestamp file at the end. This way an interupted
-   backup can be re-run because all the rdup files still untouched.
+     backup can be re-run because all the rdup files still untouched.
+   * update mirror.sh manpage: removed -z -k from the manual
+   * yesterday.sh: work correctly with directories
    
 
 30 Mar 2006: 0.2.6 Miek <miek@miek.nl>

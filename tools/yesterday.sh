@@ -39,13 +39,13 @@ recent() {
                 dayfix=${suffix:6:8}  # +MONTHDAY.HH:MM
                 yyyymm=${suffix:0:6}
                 # first check with suffix
-                files=`ls "$backupdir"/$yyyymm/"$2"+$dayfix.* 2>/dev/null`
+                files=`ls -d "$backupdir"/$yyyymm/"$2"+$dayfix.* 2>/dev/null`
                 if [[ ! -z $files ]]; then
                         echo $files | sort -n -r | head -1
                         return
                 fi
         done
-        files=`ls "$backupdir"/$yyyymm/"$2" 2>/dev/null`
+        files=`ls -d "$backupdir"/$yyyymm/"$2" 2>/dev/null`
         if [[ -z $files ]]; then
                 return
         else
@@ -103,6 +103,10 @@ do
                 file=`pwd`/$file
         fi
         backupfile=`recent $daysago $file`
+
+        if [[ -z $backupfile ]]; then
+                continue;
+        fi
 
         # print
         if [[ $copy -eq 1 ]]; then
