@@ -182,6 +182,7 @@ main(int argc, char **argv)
 	int 	c;
 	char 	*crawl;
 	char    pwd[BUFSIZE + 1];
+	char    *time;
 
 	struct sigaction sa;
 
@@ -197,6 +198,7 @@ main(int argc, char **argv)
 	backup  = g_tree_new(gfunc_equal);
 	remove  = NULL;
 	opterr = 0;
+	time = NULL;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
 		fprintf(stderr, "** Will not run suid/sgid for safety reasons\n");
@@ -233,14 +235,7 @@ main(int argc, char **argv)
 				break;
 			case 'N': 
 				opt_timestamp = timestamp(optarg);
-				/* re-touch the timestamp file, if rdup fails
-				 * the user needs to have something */
-				if (creat(optarg, S_IRUSR | S_IWUSR) == -1) {
-					fprintf(stderr, 
-						"** Could not create timestamp file: %s\n",
-							optarg);
-					exit(EXIT_FAILURE);
-				}
+				time = optarg;
 				break;
 			case 'v':
 				opt_verbose++; 
@@ -317,6 +312,13 @@ main(int argc, char **argv)
 	ftruncate(fileno(fplist), 0);  
 	g_tree_foreach(backup, gfunc_write, fplist);
 	fclose(fplist); 
+	/* re-touch the timestamp file */
+	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
+		fprintf(stderr, 
+			"** Could not create timestamp file `%s\': %s\n", time,
+			strerror(errno));
+		exit(EXIT_FAILURE);
+	}
 
 	g_tree_foreach(curtree, gfunc_free, NULL);
 	g_tree_foreach(backup, gfunc_free, NULL);
