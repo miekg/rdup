@@ -24,16 +24,9 @@ will get a suffix. This suffix is of the form: '+DD.HH:MM'.
 .B \-b backupdir
 Alternate backup directory. Defaults to `/vol/backup/$HOSTNAME'.
 .TP
-.B \-k keyfile
-Encrypt the files when backing up using the contents of keyfile as
-an encryption key.
-.TP
 .B \-c 
 Used in conjunction with \fBrdup\fR's \-c. This will allow
 \fBmirror.sh\fR to be used for remote backups.
-.TP
-.B \-z
-Gzip the contents of the files while backing up.
 .TP
 .B \-v
 Echo the files processed to standard error.
