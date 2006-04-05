@@ -6,10 +6,11 @@
 # Print a filelist suitable for Restore a entire backed up directory
 # +MONTHDAY (restore to MONTHDAY's state)
 
-set -o nounset
+#set -o nounset
 
 monthday=0
 max=0
+min=99
 prevfile=""
 name=""
 PROGNAME=$0
@@ -29,6 +30,16 @@ usage() {
         echo
         echo OPTIONS:
         echo "-h        this help"
+}
+
+reset_vars() {
+        # don't love these implicit globals
+        pmode=$mode
+        puid=$uid
+        pgid=$gid 
+        ppsize=$psize
+        pfsize=$fsize
+        prevfile="$name"
 }
 
 while getopts "h" o; do
@@ -58,32 +69,92 @@ if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
         exit 1
 fi
 
+i=0
+declare -a d    # version day
+declare -a m    # version min
+declare -a s    # version sec
 declare -a path
 while read mode uid gid psize fsize path
 do
         if [[ "$path" =~ "(.+)\\+(.+)\\.(.+):(.+)$" ]]; then
+
                 name=${BASH_REMATCH[1]}
-                days=$((10#${BASH_REMATCH[2]})) # force base 10
+                d[$i]=$((10#${BASH_REMATCH[2]})) # force base 10
+                m[$i]=$((10#${BASH_REMATCH[3]})) # force base 10
+                s[$i]=$((10#${BASH_REMATCH[4]})) # force base 10
+
+                if [[ ${d[$i]} -gt $max ]]; then
+                        max=${d[$i]}
+                fi
+                if [[ ${d[$i]} -lt $min ]]; then
+                        min=${d[$i]}
+                fi
+                i=$((i + 1))
         else 
                 name="$path"
-                days=99
         fi
 
         if [[ "$prevfile" != "$name" ]]; then
                 # new name
-                echo "$pmode $puid $pgid $ppsize $pnewsize"
-                echo -n "$prevfile"
-                max=0
-        else 
-                if [[ ($days -le $monthday) && $days -gt $max ]]; then
-                        max=$days
+                d[$i]=99    # guardian
+
+                # a lot of if's here to extract the correct file wrt the
+                # monthday given on the cmd line - we need to check the
+                # interval of the files we got in the backup and extract
+                # the correct one
+                        
+                if [[ $min -gt $max || $monthday -eq 0 ]]; then
+                        # no versions where seen, use the last one if defined
+                        if [[ ! -z "$prevfile" ]]; then
+                                echo "$prevfile"
+                        fi
+                        
+                else
+                        if [[ $monthday -lt $min ]]; then
+                                # before any of the versions, use $min
+                                printf "%s+%02d.%02d:%02d\n" "$prevfile" $min ${m[0]} ${s[0]}
+                                reset_vars
+                                max=0; min=99
+                                i=0
+                                continue
+                        fi
+
+                        if [[ $monthday -gt $max ]]; then
+                                # after any of the versions, use the
+                                # plain one
+                                echo "$prevfile"
+                                reset_vars
+                                max=0; min=99
+                                i=0
+                                continue
+                        fi
+                        
+                        # still alive, our day number must be in
+                        # the array, check for a match, assume an
+                        # ordered array!
+                        i=0
+                        for j in ${d[@]}; do 
+                                if [[ $j -eq 99 ]]; then
+                                        break 
+                                fi
+                                if [[ $j -eq $monthday ]]; then
+                                        printf "%s+%02d.%02d:%02d\n" "$prevfile" ${d[$i]} ${m[$i]} ${s[$i]}
+                                        break
+                                fi
+                                if [[ $j -gt $monthday ]]; then
+                                        # previous one
+                                        i=$(($i - 1))
+                                        printf "%s+%02d.%02d:%02d\n" "$prevfile" ${d[$i]} ${m[$i]} ${s[$i]} 
+                                        break 
+                                fi
+                                i=$(($i + 1))
+                        done
                 fi
+                
+#               echo "$pmode $puid $pgid $ppsize $pfsize $prevfile"
+#               echo $prevfile
+                max=0; min=99
+                i=0
         fi
-        
-        pmode=$mode
-        puid=$uid
-        pgid=$gid 
-        ppsize=$psize
-        pfsize=$fsize
-        prevfile="$name"
+        reset_vars
 done
