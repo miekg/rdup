@@ -4,6 +4,7 @@
      backup can be re-run because all the rdup files are still untouched.
    * update mirror.sh manpage: removed -z -k from the manual
    * yesterday.sh: work correctly with directories
+   * use cp -RP (works on FreeBSD) (ghostcorps (at) gmail.com)
    
 
 30 Mar 2006: 0.2.6 Miek <miek@miek.nl>

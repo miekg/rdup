@@ -23,7 +23,6 @@ etc=0
 exclude=""
 PROGNAME=$0
 BACKUPDIR=""
-PROGNAME=$0
 
 while getopts ":b:x:eh" o; do
         case $o in

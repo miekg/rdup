@@ -51,9 +51,7 @@ mirror_create_top() {
 usage() {
         echo "$PROGNAME [OPTIONS]"
         echo
-        echo Mirror the filelist from rdup
-        echo
-        echo FILE - search for this file in the backup directory
+        echo Mirror the files in the filelist from rdup
         echo
         echo OPTIONS
         echo " -c      process the file content also (rdup -c). Remote backups"
@@ -112,7 +110,7 @@ local_mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                cp -a "$path" "$backupdir/$path"
+                                cp -RP "$path" "$backupdir/$path"
                                 chown -h $uid:$gid "$backupdir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
