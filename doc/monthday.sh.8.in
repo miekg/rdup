@@ -1,41 +1,29 @@
 '\" t
-.TH RESTORE.SH 1 "2 Jan 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH MONTHDAY.SH 1 "2 Jan 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-restore.sh \- restore an entire backed up directory
+monthday.sh \- select files from the backup
 
 .SH SYNOPSIS
-.B restore.sh
+.B monthday.sh
 [
 .IR OPTIONS
 ]
-.IR BACKUPDIR
 [
-.IR DIR
+.IR +DAY
 ]
 
 .SH DESCRIPTION
-\fBrestore.sh\fR restores an entire backed up directory (recusively) to
-another directory. This allows one to return to a previous state of a
-filesystem. 
+\fBmonthday.sh\fR does not restore anything. It only "greps" the correct
+files from the backup (or any other directory).
 .PP
-By default \fBrestore.sh\fR will restore to the last backed up state,
-i.e the file you'll get when you run `yesterday.sh' without options.
-.PP
-Backed up files will be copied as-is, not unzipping are decryption will 
-be attempted.
+The \fI+DAY\fR is used as follows:
+EXPLANATION
 
 .SH OPTIONS
 .TP
-.B \-b backupdir
-Alternate backup directory. Defaults to /vol/backup/`hostname`.
-.TP
-.B \-n daysago
-Select the dump daysago prior to the current day.
-
-.SH FILES
-Root of the dump file system defaults to /vol/backup/`hostname`, but can
-be any location.
+.B \-h 
+Provide a small help message.
 
 .SH SEE ALSO
 diff(1), hist.sh(1), yesterday(1) and rdup(8)
