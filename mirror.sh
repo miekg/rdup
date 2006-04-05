@@ -54,7 +54,7 @@ usage() {
         echo Mirror the files in the filelist from rdup
         echo
         echo OPTIONS
-        echo " -c      process the file content also (rdup -c). Remote backups"
+        echo " -c      process the file content also (rdup -c), for remote backups"
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
