@@ -77,7 +77,6 @@ declare -a path
 while read mode uid gid psize fsize path
 do
         if [[ "$path" =~ "(.+)\\+(.+)\\.(.+):(.+)$" ]]; then
-
                 name=${BASH_REMATCH[1]}
                 d[$i]=$((10#${BASH_REMATCH[2]})) # force base 10
                 m[$i]=$((10#${BASH_REMATCH[3]})) # force base 10
@@ -106,12 +105,14 @@ do
                 if [[ $min -gt $max || $monthday -eq 0 ]]; then
                         # no versions where seen, use the last one if defined
                         if [[ ! -z "$prevfile" ]]; then
+                                echo -n "$pmode $puid $pgid $ppsize $pfsize"
                                 echo "$prevfile"
                         fi
                         
                 else
                         if [[ $monthday -lt $min ]]; then
                                 # before any of the versions, use $min
+                                echo -n "$pmode $puid $pgid $ppsize $pfsize"
                                 printf "%s+%02d.%02d:%02d\n" "$prevfile" $min ${m[0]} ${s[0]}
                                 reset_vars
                                 max=0; min=99
@@ -122,6 +123,7 @@ do
                         if [[ $monthday -gt $max ]]; then
                                 # after any of the versions, use the
                                 # plain one
+                                echo -n "$pmode $puid $pgid $ppsize $pfsize"
                                 echo "$prevfile"
                                 reset_vars
                                 max=0; min=99
@@ -138,21 +140,20 @@ do
                                         break 
                                 fi
                                 if [[ $j -eq $monthday ]]; then
+                                        echo -n "$pmode $puid $pgid $ppsize $pfsize"
                                         printf "%s+%02d.%02d:%02d\n" "$prevfile" ${d[$i]} ${m[$i]} ${s[$i]}
                                         break
                                 fi
                                 if [[ $j -gt $monthday ]]; then
                                         # previous one
                                         i=$(($i - 1))
+                                        echo -n "$pmode $puid $pgid $ppsize $pfsize"
                                         printf "%s+%02d.%02d:%02d\n" "$prevfile" ${d[$i]} ${m[$i]} ${s[$i]} 
                                         break 
                                 fi
                                 i=$(($i + 1))
                         done
                 fi
-                
-#               echo "$pmode $puid $pgid $ppsize $pfsize $prevfile"
-#               echo $prevfile
                 max=0; min=99
                 i=0
         fi
