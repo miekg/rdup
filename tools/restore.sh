@@ -6,7 +6,7 @@
 # Print a filelist suitable for Restore a entire backed up directory
 # +MONTHDAY (restore to MONTHDAY's state)
 
-#set -o nounset
+set -o nounset
 
 monthday=0
 max=0
