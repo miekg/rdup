@@ -15,10 +15,33 @@ monthday.sh \- select files from the backup
 
 .SH DESCRIPTION
 \fBmonthday.sh\fR does not restore anything. It only "greps" the correct
-files from the backup (or any other directory).
+files from the backup (or any other directory). If no argument is given
+\fI+DAY\fR defaults to zero 0.
 .PP
 The \fI+DAY\fR is used as follows:
-EXPLANATION
+.PP
+if zero then \fBmonthday.sh\fR will only select the latest files. Those
+are the ones without any +DD.MM:HH suffix.
+.PP
+if non zero then \fBmonthday.sh\fR will select those files up until the
+value of \fI+DAY\fR. This boils down to the following, in this
+order:
+.TP 
+.B o
+if \fI+DAY\fR is less then the smallest monthday suffix then
+print the file with that suffix.
+.TP 
+.B o
+if \fI+DAY\fR is larger then the largest monthday suffix then
+print the file without any suffix.
+.TP 
+.B o
+if the monthday suffix equals \fI+DAY\fR then print that file
+.TP 
+.B o
+if the \fI+DAY\fR sits in the interval of monthday suffixes
+then print the file that has the highest suffix, just
+next to \fI+DAY\fR.
 
 .SH OPTIONS
 .TP
