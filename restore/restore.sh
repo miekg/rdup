@@ -14,7 +14,7 @@ S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 remote=0
 verbose=0
-idir=0; ireg=0; ilnk=0; irm=0
+idir=0; ireg=0; ilnk=0;
 ftsize=0
 ts=`date +%s` # gnuism
 backupdir=""
@@ -29,18 +29,18 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 usage() {
-        echo "$PROGNAME [OPTIONS]"
+        echo "$PROGNAME [OPTIONS] DIRECTORY"
         echo
-        echo Mirror the files in the filelist from rdup
+        echo Restore files from the filelist to DIRECTORY
+        echo If DIRECTORY does not exist it is created
         echo
         echo OPTIONS
-        echo " -c      process the file content also (rdup -c), for remote backups"
-        echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
+        echo " -c      process the file content also (rdup -c), for remote restores"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
 }
 
-local_mirror() {
+local_restore() {
         declare -a path # catch spacing in the path
         while read mode uid gid psize fsize path
         do
@@ -57,10 +57,6 @@ local_mirror() {
                 fi
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
-
-                if [[ -e "$backupdir/$path" ]]; then
-                        suffix=`mirror_suffix "$backupdir/$path"`
-                fi
 
                 if [[ $dump == "+" ]]; then
                         # add
@@ -96,25 +92,19 @@ local_mirror() {
                                 ;;
                         esac
                 else
-                        # move. It could be the stuff is not there, don't
-                        # error on that.
-                        if [[ -e "$backupdir/$path" ]]; then
-                                mv "$backupdir/$path" "$backupdir/$path$suffix"
-                        fi
-                        irm=$(($irm + 1))
+                        echo "** Ignoring removed file: \`$path\'" > /dev/fd/2
                 fi
         done 
         te=`date +%s`
         echo "** #REG FILES  : $ireg" > /dev/fd/2
         echo "** #DIRECTORIES: $idir" > /dev/fd/2
         echo "** #LINKS      : $ilnk" > /dev/fd/2
-        echo "** #(RE)MOVED  : $irm" > /dev/fd/2
         echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
         echo "** STORED IN   : $backupdir" > /dev/fd/2
         echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }
 
-remote_mirror() {
+remote_restore() {
         while read mode uid gid psize fsize
         do
                 dump=${mode:0:1}        # to add or remove
@@ -140,10 +130,6 @@ remote_mirror() {
 #                echo "l{"$psize"}"
 #                echo "s{"$fsize"}"
 #                echo "p{"$path"}"
-
-                if [[ -e "$backupdir/$path" ]]; then
-                        suffix=`mirror_suffix "$backupdir/$path"`
-                fi
 
                 if [[ $dump == "+" ]]; then
                         # add
@@ -187,11 +173,7 @@ remote_mirror() {
                                 ;;
                         esac
                 else
-                        # remove
-                        if [[ -e "$backupdir/$path" ]]; then
-                                mv "$backupdir/$path" "$backupdir/$path$suffix"
-                        fi
-                        irm=$(( $irm + 1))
+                        echo "** Ignoring removed file: \`$path\'"
                 fi
         done 
         te=`date +%s`
@@ -199,16 +181,14 @@ remote_mirror() {
         echo "** #REG FILES  : $ireg"
         echo "** #DIRECTORIES: $idir"
         echo "** #LINKS      : $ilnk"
-        echo "** #(RE)MOVED  : $irm"
         echo "** SIZE        : $(($ftsize / 1024 )) KB"
         echo "** STORED IN   : $backupdir"
         echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":cvhb:" options; do
+while getopts ":cvh" options; do
         case $options in
                 c) remote=1;;
-                b) backupdir=$OPTARG;;
                 v) verbose=1;;
                 h) usage && exit;;
                 \?) usage && exit;;
@@ -216,13 +196,8 @@ while getopts ":cvhb:" options; do
 done
 shift $((OPTIND - 1))
 
-if [ -z "$backupdir" ]; then
-        backupdir="/vol/backup/`hostname`"
-fi
-backupdir=$backupdir/`date +%Y%m`
-
 if [[ $remote -eq 0 ]]; then
-        local_mirror
+        local_restore
 else
-        remote_mirror
+        remote_restore
 fi
