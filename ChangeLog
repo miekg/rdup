@@ -8,6 +8,9 @@
    * crypt.sh accepts -d options: decrypt
    Porting:
    * use cp -RP (works on FreeBSD) (ghostcorps (at) gmail.com)
+   Restore:
+   * Added rorrim.sh
+   * Added monthday.sh
    
 
 30 Mar 2006: 0.2.6 Miek <miek@miek.nl>

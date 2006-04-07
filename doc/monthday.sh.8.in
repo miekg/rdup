@@ -51,4 +51,4 @@ next to \fI+DAY\fR.
 Provide a small help message.
 
 .SH SEE ALSO
-restore.sh(8), hist.sh(1) and yesterday.sh(1)
+rorrim.sh(8), hist.sh(1) and yesterday.sh(1)
