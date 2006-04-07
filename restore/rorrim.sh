@@ -13,10 +13,10 @@ S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 remote=0
 verbose=0
-idir=0; ireg=0; ilnk=0; irm=0
+idir=0; ireg=0; ilnk=0
 ftsize=0
 ts=`date +%s` # gnuism
-backupdir=""
+restoredir=""
 PROGNAME=$0
 
 cleanup() {
@@ -56,17 +56,10 @@ local_mirror() {
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
-                if [[ -e "$backupdir/$path" ]]; then
-                        suffix=`mirror_suffix "$backupdir/$path"`
-                fi
-
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in
                                 0)      # REG
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
                                 cat "$path" > "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
@@ -75,38 +68,25 @@ local_mirror() {
                                 ;;
                                 1)      # DIR
                                 # check for fileTYPE changes
-                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
                                 cp -RP "$path" "$backupdir/$path"
                                 chown -h $uid:$gid "$backupdir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
                 else
-                        # move. It could be the stuff is not there, don't
-                        # error on that.
-                        if [[ -e "$backupdir/$path" ]]; then
-                                mv "$backupdir/$path" "$backupdir/$path$suffix"
-                        fi
-                        irm=$(($irm + 1))
+                        echo "** $PROGNAME: ignoring remove of \`$path\'"
                 fi
         done 
         te=`date +%s`
         echo "** #REG FILES  : $ireg" > /dev/fd/2
         echo "** #DIRECTORIES: $idir" > /dev/fd/2
         echo "** #LINKS      : $ilnk" > /dev/fd/2
-        echo "** #(RE)MOVED  : $irm" > /dev/fd/2
         echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
         echo "** STORED IN   : $backupdir" > /dev/fd/2
         echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
@@ -147,9 +127,6 @@ remote_mirror() {
                         # add
                         case $typ in
                                 0)      # REG
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
                                         head -c $fsize > "$backupdir/$path"
@@ -163,21 +140,12 @@ remote_mirror() {
                                 ireg=$(( $ireg + 1))
                                 ;;
                                 1)      # DIR
-                                # check for fileTYPE changes
-                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-
-                                # size should be 0
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chmod $bits "$backupdir/$path"
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
                                 target=`head -c $fsize`
                                 ln -sf "$target" "$backupdir/$path" 
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
@@ -185,11 +153,7 @@ remote_mirror() {
                                 ;;
                         esac
                 else
-                        # remove
-                        if [[ -e "$backupdir/$path" ]]; then
-                                mv "$backupdir/$path" "$backupdir/$path$suffix"
-                        fi
-                        irm=$(( $irm + 1))
+                        echo "** $PROGNAME: ignoring remove of \`$path\'"
                 fi
         done 
         te=`date +%s`
@@ -197,7 +161,6 @@ remote_mirror() {
         echo "** #REG FILES  : $ireg"
         echo "** #DIRECTORIES: $idir"
         echo "** #LINKS      : $ilnk"
-        echo "** #(RE)MOVED  : $irm"
         echo "** SIZE        : $(($ftsize / 1024 )) KB"
         echo "** STORED IN   : $backupdir"
         echo "** ELAPSED     : $(($te - $ts)) s"
