@@ -28,9 +28,10 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 usage() {
-        echo "$PROGNAME [OPTIONS]"
+        echo "$PROGNAME [OPTIONS] DIRECTORY"
         echo
-        echo Restore the files in the filelist from rdup
+        echo Restore the files in the filelist from rdup to DIRECTORY
+        echo DIRECTORY is created when it does not exist
         echo
         echo OPTIONS
         echo " -c      process the file content also (rdup -c), for remote backups"
@@ -38,7 +39,7 @@ usage() {
         echo " -h      this help"
 }
 
-local_mirror() {
+local_restore() {
         declare -a path # catch spacing in the path
         while read mode uid gid psize fsize path
         do
@@ -80,7 +81,7 @@ local_mirror() {
                                 ;;
                         esac
                 else
-                        echo "** $PROGNAME: ignoring remove of \`$path\'"
+                        echo "** $PROGNAME: ignoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
@@ -92,7 +93,7 @@ local_mirror() {
         echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }
 
-remote_mirror() {
+remote_restore() {
         while read mode uid gid psize fsize
         do
                 dump=${mode:0:1}        # to add or remove
@@ -153,7 +154,7 @@ remote_mirror() {
                                 ;;
                         esac
                 else
-                        echo "** $PROGNAME: ignoring remove of \`$path\'"
+                        echo "** $PROGNAME: IGnoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
@@ -175,6 +176,20 @@ while getopts ":cvh" options; do
         esac
 done
 shift $((OPTIND - 1))
+
+# 1 argument keyfile used for encryption
+if [[ $# -eq 0 ]]; then
+        echo "** $PROGNAME: Need a directory as argument" > /dev/fd/2
+        exit 1
+fi
+if [[ -f $1 ]]; then
+        echo "** $PROGNAME: Cannot restore to \`$'" > /dev/fd/2
+        exit 1
+fi
+
+if [[ ! -e $1 ]]; then
+        mkdir $1
+fi
 
 if [[ $remote -eq 0 ]]; then
         local_restore
