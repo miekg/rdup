@@ -15,9 +15,9 @@ usage() {
         echo FILE - search for this file in the backup directory
         echo
         echo OPTIONS:
-        echo "-b DIR  backup directory. Default: /vol/backup/HOSTNAME"
-        echo "-d      causes diff(1) to be run for each adjacent pair of backupped files "
-        echo "-h      this help"
+        echo " -b DIR  backup directory. Default: /vol/backup/HOSTNAME"
+        echo " -d      causes diff(1) to be run for each adjacent pair of backupped files "
+        echo " -h      this help"
 }
 
 monthsago() {

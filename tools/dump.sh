@@ -12,10 +12,10 @@ usage() {
         echo DIR \ - directories to back up
         echo
         echo OPTIONS:
-        echo "-b DIR     backup directory. Default: /vol/backup/HOSTNAME"
-        echo "-e         filelist and timestamp are put in backup directory"
-        echo "-x SCRIPT  use SCRIPT as exclude script"
-        echo "-h         this help"
+        echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
+        echo " -e         filelist and timestamp are put in backup directory"
+        echo " -x SCRIPT  use SCRIPT as exclude script"
+        echo " -h         this help"
 }
 
 d=`date +%Y%m`

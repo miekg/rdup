@@ -21,6 +21,13 @@ pgid=""
 ppsize=""
 pfsize=""
 
+cleanup() {
+        echo "** $PROGNAME: Signal received while processing \`$path', exiting" > /dev/fd/2
+        exit 1
+}
+# trap at least these
+trap cleanup SIGINT SIGPIPE
+
 usage() {
         echo "$PROGNAME [OPTIONS] [+DAY]"
         echo
@@ -29,7 +36,7 @@ usage() {
         echo +DAY - restore up to this month day
         echo
         echo OPTIONS:
-        echo "-h        this help"
+        echo " -h        this help"
 }
 
 reset_vars() {

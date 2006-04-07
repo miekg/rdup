@@ -6,6 +6,9 @@ gzip.sh, compress \-  compress files received from \fBrdup -c\fR
 
 .SH SYNOPSIS
 .B gzip.sh
+[
+.IR -d
+]
 
 .SH DESCRIPTION
 \fBgzip.sh\fR compresses the data it receives from \fBrdup\fR with gzip.
@@ -15,6 +18,11 @@ For example,
         rdup -c list ~/Documents | gzip.sh | mirror.sh -c -b /tmp/storage
 .PP
 Note the \fI-c\fR option for \fBmirror.sh\fR.
+
+.SH OPTIONS
+.TP
+.B \-d
+decompress the files
 
 .SH SEE ALSO
 crypt.sh(1) and mirror.sh(8).

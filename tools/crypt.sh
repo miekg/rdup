@@ -10,9 +10,11 @@ set -o nounset
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
+PROGNAME=$0
+OPT=""
 
 cleanup() {
-        echo "** $0: Signal received while processing \`$path', exiting" > /dev/fd/2
+        echo "** $PROGNAME: Signal received while processing \`$path', exiting" > /dev/fd/2
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
@@ -21,13 +23,32 @@ cleanup() {
 # trap at least these
 trap cleanup SIGINT SIGPIPE
 
+usage() {
+        echo "$PROGNAME [-d]"
+        echo
+        echo "encrypt or decrypt the file's contents"
+        echo
+        echo OPTIONS:
+        echo " -d        decrypt the files"
+        echo " -h        this help"
+}
+
+while getopts "dh" o; do
+        case $o in
+                d) OPT="-d";;
+                h) usage && exit;;
+                \?) usage && exit;;
+        esac
+done
+shift $((OPTIND - 1))
+
 # 1 argument keyfile used for encryption
 if [[ $# -eq 0 ]]; then
-        echo "** $0: Need a keyfile as argument" > /dev/fd/2
+        echo "** $PROGNAME: Need a keyfile as argument" > /dev/fd/2
         exit 1
 fi
 if [[ ! -r $1 ]]; then
-        echo "** $0: Cannot read keyfile \`$1': failed" > /dev/fd/2
+        echo "** $PROGNAME: Cannot read keyfile \`$1': failed" > /dev/fd/2
         exit 1
 fi
 
@@ -57,7 +78,7 @@ do
                         if [[ $fsize -ne 0 ]]; then
                                 # catch 'n crypt
                                 head -c $fsize | \
-                                mcrypt -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
+                                mcrypt $OPT -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
                                 exit 1
 
                                 newsize=`stat --format "%s" $TMPDIR/file.$$.enc`

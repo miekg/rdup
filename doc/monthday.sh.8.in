@@ -14,11 +14,13 @@ monthday.sh \- select files from the backup
 ]
 
 .SH DESCRIPTION
+\fBmonthday.sh\fR is part of the restore utilities of \fBrdup\fR.
+.PP
 \fBmonthday.sh\fR does not restore anything. It only "greps" the correct
 files from the backup (or any other directory). If no argument is given
 \fI+DAY\fR defaults to zero 0.
 .PP
-The \fI+DAY\fR is used as follows:
+The \fI+DAY\fR argument is used as follows:
 .PP
 if zero then \fBmonthday.sh\fR will only select the latest files. Those
 are the ones without any +DD.MM:HH suffix.
@@ -49,4 +51,4 @@ next to \fI+DAY\fR.
 Provide a small help message.
 
 .SH SEE ALSO
-diff(1), hist.sh(1), yesterday(1) and rdup(8)
+restore.sh(8), hist.sh(1) and yesterday.sh(1)

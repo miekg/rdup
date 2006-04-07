@@ -12,10 +12,10 @@ usage() {
         echo HOST - delete backups from this host
         echo
         echo OPTIONS:
-        echo "-b DIR     backup directory. Default: /vol/backup/HOSTNAME"
-        echo "-x NUM     delete backups from X months ago, defaults to 2"
-        echo "-y         yes, remove my backups and don't ask questionse"
-        echo "-h         this help"
+        echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
+        echo " -x NUM     delete backups from X months ago, defaults to 2"
+        echo " -y         yes, remove my backups and don't ask questionse"
+        echo " -h         this help"
 }
 
 monthsago() {
