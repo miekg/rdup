@@ -17,7 +17,7 @@ verbose=0
 idir=0; ireg=0; ilnk=0;
 ftsize=0
 ts=`date +%s` # gnuism
-backupdir=""
+restoredir=""
 PROGNAME=$0
 
 cleanup() {
@@ -62,32 +62,20 @@ local_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-                                cat "$path" > "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path"
-                                chmod $bits "$backupdir/$path"
+                                cat "$path" > "$restoredir/$path"
+                                chown $uid:$gid "$restoredir/$path"
+                                chmod $bits "$restoredir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
-                                # check for fileTYPE changes
-                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
-                                chown $uid:$gid "$backupdir/$path"
-                                chmod $bits "$backupdir/$path"
+                                chown $uid:$gid "$restoredir/$path"
+                                chmod $bits "$restoredir/$path"
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-                                cp -RP "$path" "$backupdir/$path"
-                                chown -h $uid:$gid "$backupdir/$path"
+                                cp -RP "$path" "$restoredir/$path"
+                                chown -h $uid:$gid "$restoredir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
@@ -100,7 +88,7 @@ local_restore() {
         echo "** #DIRECTORIES: $idir" > /dev/fd/2
         echo "** #LINKS      : $ilnk" > /dev/fd/2
         echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
-        echo "** STORED IN   : $backupdir" > /dev/fd/2
+        echo "** RESTORED TO : $restoredir" > /dev/fd/2
         echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }
 
@@ -135,40 +123,27 @@ remote_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
-                                        head -c $fsize > "$backupdir/$path"
+                                        head -c $fsize > "$restoredir/$path"
                                 else 
                                         # empty
-                                        touch "$backupdir/$path"
+                                        touch "$restoredir/$path"
                                 fi
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chmod $bits "$backupdir/$path"
+                                chown $uid:$gid "$restoredir/$path" 2>/dev/null
+                                chmod $bits "$restoredir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(( $ireg + 1))
                                 ;;
                                 1)      # DIR
-                                # check for fileTYPE changes
-                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-
-                                # size should be 0
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chmod $bits "$backupdir/$path"
+                                chown $uid:$gid "$restoredir/$path" 2>/dev/null
+                                chmod $bits "$restoredir/$path"
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
                                 target=`head -c $fsize`
-                                ln -sf "$target" "$backupdir/$path" 
-                                chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
+                                ln -sf "$target" "$restoredir/$path" 
+                                chown -h $uid:$gid "$restoredir/$path" 2>/dev/null
                                 ilnk=$(( $ilnk + 1))
                                 ;;
                         esac
@@ -182,7 +157,7 @@ remote_restore() {
         echo "** #DIRECTORIES: $idir"
         echo "** #LINKS      : $ilnk"
         echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        echo "** STORED IN   : $backupdir"
+        echo "** RESTORED TO : $restoredir"
         echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
@@ -195,6 +170,23 @@ while getopts ":cvh" options; do
         esac
 done
 shift $((OPTIND - 1))
+
+# 1 argument keyfile used for encryption
+if [[ $# -eq 0 ]]; then
+        echo "** $PROGNAME: Need a directory as argument" > /dev/fd/2
+        exit 1
+fi
+if [[ -f $1 ]]; then
+        echo "** $PROGNAME: \`$1' is a file" > /dev/fd/2
+        exit 1
+fi
+
+if [[ ! -e $1 ]]; then
+        mkdir $1
+fi
+
+restoredir=$1
+
 
 if [[ $remote -eq 0 ]]; then
         local_restore
