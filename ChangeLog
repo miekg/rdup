@@ -5,11 +5,11 @@
    * update mirror.sh manpage: removed -z -k from the manual
    * yesterday.sh: work correctly with directories
    * gzip.sh accepts -d option: decompress
-   * crypt.sh accepts -d options: decrypt
+   * crypt.sh accepts -d option: decrypt
    Porting:
    * use cp -RP (works on FreeBSD) (ghostcorps (at) gmail.com)
    Restore:
-   * Added rorrim.sh
+   * Added rorrim.sh (this was restore.sh)
    * Added monthday.sh
    
 

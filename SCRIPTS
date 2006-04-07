@@ -2,5 +2,23 @@ There a quite a few script included with rdup, they break down in
 a few categories, namely:
 
 o mirror scripts
+  mirror.sh
+
 o auxilary support scripts
+     o crypt.sh
+     o gzip.sh
+     o greps.h
+
 o restore scripts
+  single files:
+      o hist.sh
+      o yesterday.sh
+  mass restore:
+      o rorrim.sh
+        
+o  meta-wrapper scripts:
+      o dump.sh - uses rdup and mirror.sh to locally dump the files
+        to the backup filesystem.
+      o restore.sh - uses rdup and rorrim.sh to locally restore files.
+      o dump-here.sh - uses rdup and mirror.sh to dump the files
+        to the directory where dump-here.sh lives.
