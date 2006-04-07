@@ -37,6 +37,8 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  rdup.h
+                 doc/restore.sh.8
+                 doc/monthday.sh.8
                  doc/mirror.sh.8
                  doc/rdup.8
                  doc/dump.sh.8
