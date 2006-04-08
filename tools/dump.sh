@@ -24,6 +24,10 @@ exclude=""
 PROGNAME=$0
 BACKUPDIR=""
 
+_echo2() {
+        echo "** $PROGNAME: $1" > /dev/fd/2
+}
+
 while getopts ":b:x:eh" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
@@ -35,7 +39,7 @@ while getopts ":b:x:eh" o; do
 done
 shift $((OPTIND - 1))
 if [[ $# -eq 0 ]]; then
-        echo "** $PROGNAME: NAME is mandatory" > /dev/fd/2
+        echo "NAME is mandatory"
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
@@ -56,7 +60,7 @@ LIST="$ETC/$HOSTNAME.$NAME.list"
 # DIRS in $@
 shift
 if [[ -z $@ ]]; then
-        echo "** $PROGNAME: No directories to backup" > /dev/fd/2
+        echo "No directories to backup" 
         exit 1
 fi
 
@@ -67,9 +71,9 @@ if [[ ! -d "$BACKUPDIR_DATE/$1" ]]; then
         mkdir -m 755 -p "$BACKUPDIR_DATE"
         rm -f "$LIST"
         rm -f "$STAMP"
-        echo "** Full dump" > /dev/fd/2
+        _echo2 "Full dump"
 else
-        echo "** Incremental dump" > /dev/fd/2
+        _echo2 "Incremental dump"
 fi
 
 if [[ ! -z $exclude ]]; then

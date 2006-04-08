@@ -14,8 +14,12 @@ newsize=0
 OPT=""          # gzip or gunzip
 PROGNAME=$0
 
+_echo2() {
+        echo "** $PROGNAME: $1" > /dev/fd/2
+}
+
 cleanup() {
-        echo "** $PROGNAME: Signal received while processing \`$path', exiting" > /dev/fd/2
+        _echo2 "Signal received while processing \`$path', exiting"
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
@@ -45,7 +49,7 @@ shift $((OPTIND - 1))
 
 TMPDIR=`mktemp -d "/tmp/rdup.backup.XXXXXX"`
 if [[ $? -ne 0 ]]; then
-        echo "** $0: mktemp failed" > /dev/fd/2
+        _echo2 "Mktemp failed" > /dev/fd/2
         exit 1
 fi
 chmod 700 $TMPDIR

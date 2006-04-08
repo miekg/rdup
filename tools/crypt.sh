@@ -13,8 +13,12 @@ S_MMASK=4095    # octal: 00007777, mask to get permission
 PROGNAME=$0
 OPT=""
 
+_echo2() {
+        echo "** $PROGNAME: $1" > /dev/fd/2
+}
+
 cleanup() {
-        echo "** $PROGNAME: Signal received while processing \`$path', exiting" > /dev/fd/2
+        _echo2 "Signal received while processing \`$path', exiting"
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
@@ -44,17 +48,17 @@ shift $((OPTIND - 1))
 
 # 1 argument keyfile used for encryption
 if [[ $# -eq 0 ]]; then
-        echo "** $PROGNAME: Need a keyfile as argument" > /dev/fd/2
+        _echo2 "Need a keyfile as argument"
         exit 1
 fi
 if [[ ! -r $1 ]]; then
-        echo "** $PROGNAME: Cannot read keyfile \`$1': failed" > /dev/fd/2
+        _echo2 "Cannot read keyfile \`$1': failed"
         exit 1
 fi
 
 TMPDIR=`mktemp -d "/tmp/rdup.backup.XXXXXX"`
 if [[ $? -ne 0 ]]; then
-        echo "** $0: mktemp failed" > /dev/fd/2
+        _echo2 "** $0: mktemp failed" 
         exit 1
 fi
 chmod 700 $TMPDIR

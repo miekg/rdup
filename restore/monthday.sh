@@ -21,8 +21,12 @@ pgid=""
 ppsize=""
 pfsize=""
 
+_echo2() {
+        echo "** $PROGNAME: $1" > /dev/fd/2
+}
+
 cleanup() {
-        echo "** $PROGNAME: Signal received while processing \`$path', exiting" > /dev/fd/2
+        _echo2 "Signal received while processing \`$path', exiting" 
         exit 1
 }
 # trap at least these
@@ -62,17 +66,17 @@ if [[ $# -eq 1 ]]; then
         if [[ $1 =~ "\\+(.+)" ]]; then
                 monthday=${BASH_REMATCH[1]}
                 if [[ ! $monthday =~ "[0-9]+" ]]; then
-                        echo "** $PROGNAME: +DAY must be numerical" > /dev/fd/2
+                        _echo2 "+DAY must be numerical"
                         exit 1
                 fi
         else
-                echo "** $PROGNAME: Need a +DAY argument" > /dev/fd/2
+                _echo2 "Need a +DAY argument"
                 exit 1
         fi
 fi
 
 if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
-        echo "** $PROGNAME: +DAY out of bounds" > /dev/fd/2
+        _echo2 "+DAY out of bounds [0..31]"
         exit 1
 fi
 

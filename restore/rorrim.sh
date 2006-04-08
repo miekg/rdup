@@ -20,9 +20,17 @@ restoredir=""
 newpath=""
 PROGNAME=$0
 
+_echo() {
+        echo "** $1"
+}
+
+_echo2() {
+        echo "** $1" > /dev/fd/2
+}
+
 cleanup() {
         # can also happen when running remotely (no /dev/fd/2)
-        echo "** $PROGNAME: Signal received while processing \`$path', exiting" 
+        _echo2 "$PROGNAME: Signal received while processing \`$path', exiting"
         exit 1
 }
 # trap at least these
@@ -70,6 +78,7 @@ local_restore() {
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
+                newpath=sanitize $path
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed
                 # from disk. If this is the case, skip it
@@ -102,16 +111,16 @@ local_restore() {
                                 ;;
                         esac
                 else
-                        echo "** $PROGNAME: ignoring removal of \`$path\'"
+                        _echo2 "$PROGNAME: Ignoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
-        echo "** #REG FILES  : $ireg" > /dev/fd/2
-        echo "** #DIRECTORIES: $idir" > /dev/fd/2
-        echo "** #LINKS      : $ilnk" > /dev/fd/2
-        echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
-        echo "** STORED IN   : $restoredir" > /dev/fd/2
-        echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
+        _echo2 "#REG FILES  : $ireg" 
+        _echo2 "#DIRECTORIES: $idir" 
+        _echo2 "#LINKS      : $ilnk" 
+        _echo2 "SIZE        : $(($ftsize / 1024 )) KB" 
+        _echo2 "STORED IN   : $restoredir" 
+        _echo2 "ELAPSED     : $(($te - $ts)) s" 
 }
 
 remote_restore() {
@@ -180,17 +189,17 @@ remote_restore() {
                                 ;;
                         esac
                 else
-                        echo "** $PROGNAME: Ignoring removal of \`$path\'"
+                        _echo "$PROGNAME: Ignoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
         # /dev/fd/2 is not available remotely
-        echo "** #REG FILES  : $ireg"
-        echo "** #DIRECTORIES: $idir"
-        echo "** #LINKS      : $ilnk"
-        echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        echo "** STORED IN   : $restoredir"
-        echo "** ELAPSED     : $(($te - $ts)) s"
+        _echo "#REG FILES  : $ireg"
+        _echo "#DIRECTORIES: $idir"
+        _echo "#LINKS      : $ilnk"
+        _echo "SIZE        : $(($ftsize / 1024 )) KB"
+        _echo "STORED IN   : $restoredir"
+        _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
 while getopts ":cvh" options; do
@@ -205,11 +214,11 @@ shift $((OPTIND - 1))
 
 # 1 argument keyfile used for encryption
 if [[ $# -eq 0 ]]; then
-        echo "** $PROGNAME: Need a directory as argument" > /dev/fd/2
+        _echo "$PROGNAME: Need a directory as argument"
         exit 1
 fi
 if [[ -f $1 ]]; then
-        echo "** $PROGNAME: Cannot restore to \`$'" > /dev/fd/2
+        _echo "$PROGNAME: Cannot restore to \`$'" 
         exit 1
 fi
 

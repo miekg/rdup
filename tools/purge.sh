@@ -6,6 +6,10 @@
 set -o nounset
 PROGNAME=$0
 
+_echo2() {
+        echo "** $PROGNAME: $1" > /dev/fd/2
+}
+
 usage() {
         echo "$PROGNAME [OPTIONS] HOST" 
         echo
@@ -50,14 +54,14 @@ done
 shift $((OPTIND - 1))
 
 if [[ $# -eq 0 ]]; then
-        echo "** $PROGNAME: HOST is mandatory" > /dev/fd/2
+        _echo2 "HOST is mandatory"
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
         BACKUPDIR="/vol/backup/"
 fi
 if [[ $MONTHS -lt 2 ]]; then
-        echo "** $PROGNAME: Will not delete backups less than 2 months old" > /dev/fd/2
+        _echo2 "Will not delete backups less than 2 months old" 
 fi
 
 # setup the backup directory
@@ -70,7 +74,7 @@ if [[ $ASK -eq 1 ]]; then
 fi
 
 if [[ -z $DEL ]]; then
-        echo "** $PROGNAME: No directory?" > /dev/fd/2
+        _echo2 "** $PROGNAME: No directory?" 
         exit 1
 fi
 

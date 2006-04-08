@@ -19,9 +19,17 @@ ts=`date +%s` # gnuism
 backupdir=""
 PROGNAME=$0
 
+_echo() {
+        echo "** $1" 
+}
+
+_echo2() {
+        echo "** $1" > /dev/fd/2
+}
+
 cleanup() {
         # can also happen when running remotely (no /dev/fd/2)
-        echo "** $PROGNAME: Signal received while processing \`$path', exiting" 
+        _echo "$PROGNAME: Signal received while processing \`$path', exiting" 
         exit 1
 }
 # trap at least these
@@ -125,13 +133,13 @@ local_mirror() {
                 fi
         done 
         te=`date +%s`
-        echo "** #REG FILES  : $ireg" > /dev/fd/2
-        echo "** #DIRECTORIES: $idir" > /dev/fd/2
-        echo "** #LINKS      : $ilnk" > /dev/fd/2
-        echo "** #(RE)MOVED  : $irm" > /dev/fd/2
-        echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
-        echo "** STORED IN   : $backupdir" > /dev/fd/2
-        echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
+        _echo2 "#REG FILES  : $ireg"
+        _echo2 "#DIRECTORIES: $idir"
+        _echo2 "#LINKS      : $ilnk"
+        _echo2 "#(RE)MOVED  : $irm" 
+        _echo2 "SIZE        : $(($ftsize / 1024 )) KB" 
+        _echo2 "STORED IN   : $backupdir" 
+        _echo2 "ELAPSED     : $(($te - $ts)) s"
 }
 
 remote_mirror() {
@@ -180,7 +188,7 @@ remote_mirror() {
                                         touch "$backupdir/$path"
                                 fi
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chmod $bits "$backupdir/$path"
+                                chmod $bits "$backupdir/$path" 
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(( $ireg + 1))
                                 ;;
@@ -193,7 +201,7 @@ remote_mirror() {
                                 # size should be 0
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chmod $bits "$backupdir/$path"
+                                chmod $bits "$backupdir/$path" 
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
@@ -216,13 +224,13 @@ remote_mirror() {
         done 
         te=`date +%s`
         # /dev/fd/2 is not available remotely
-        echo "** #REG FILES  : $ireg"
-        echo "** #DIRECTORIES: $idir"
-        echo "** #LINKS      : $ilnk"
-        echo "** #(RE)MOVED  : $irm"
-        echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        echo "** STORED IN   : $backupdir"
-        echo "** ELAPSED     : $(($te - $ts)) s"
+        _echo "** #REG FILES  : $ireg"
+        _echo "** #DIRECTORIES: $idir"
+        _echo "** #LINKS      : $ilnk"
+        _echo "** #(RE)MOVED  : $irm"
+        _echo "** SIZE        : $(($ftsize / 1024 )) KB"
+        _echo "** STORED IN   : $backupdir"
+        _echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
 while getopts ":cvhb:" options; do
