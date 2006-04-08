@@ -38,6 +38,17 @@ usage() {
         echo " -h        this help"
 }
 
+_stat_size() {
+        case $OSTYPE in
+                linux*)
+                        echo $(stat --format "%s" "$@")
+                ;;
+                freebsd*)
+                        echo $(stat -f "%z" "$@")
+                ;;
+        esac
+}
+
 while getopts "dh" o; do
         case $o in
                 d) OPT="-d";;
@@ -73,7 +84,7 @@ do
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
                                 head -c $fsize | gzip $OPT -c > $TMPDIR/file.$$.gz
-                                newsize=`stat --format "%s" $TMPDIR/file.$$.gz`
+                                newsize=_stat_size $TMPDIR/file.$$.gz
                                 echo "$dump$mode $uid $gid $psize $newsize"
                                 echo -n "$path"
                                 cat $TMPDIR/file.$$.gz

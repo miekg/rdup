@@ -36,8 +36,16 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 mirror_suffix() {
-	s=$(stat -c '%y' "$@")  # gnuism
-	echo "+${s:8:2}.${s:11:5}"
+        case $OSTYPE in
+                linux*)
+                        s=$(stat -c '%y' "$@")  
+                        echo "+${s:8:2}.${s:11:5}"
+                ;;
+                freebsd*)
+                        s=$(stat -f '%Sm' "$@")
+                        echo "+${s:4:2}.${s:7:5}"
+                ;;
+        esac
 }
 
 mirror_create_top() {

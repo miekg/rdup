@@ -37,6 +37,17 @@ usage() {
         echo " -h        this help"
 }
 
+_stat_size() {
+        case $OSTYPE in
+                linux*)
+                        echo $(stat --format "%s" "$@")
+                ;;
+                freebsd*)
+                        echo $(stat -f "%z" "$@")
+                ;;
+        esac
+}
+
 while getopts "dh" o; do
         case $o in
                 d) OPT="-d";;
@@ -85,7 +96,7 @@ do
                                 mcrypt $OPT -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
                                 exit 1
 
-                                newsize=`stat --format "%s" $TMPDIR/file.$$.enc`
+                                newsize=_stat_size $TMPDIR/file.$$.enc
                                 echo "$dump$mode $uid $gid $psize $newsize"
                                 echo -n "$path"
                                 cat $TMPDIR/file.$$.enc
