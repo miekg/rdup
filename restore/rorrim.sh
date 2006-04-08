@@ -59,7 +59,6 @@ sanitize() {
         echo $name
 }
 
-
 local_restore() {
         declare -a path # catch spacing in the path
         while read mode uid gid psize fsize path
@@ -78,7 +77,9 @@ local_restore() {
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
+                # create the new filename
                 newpath=sanitize $path
+
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed
                 # from disk. If this is the case, skip it
@@ -91,22 +92,22 @@ local_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                cat "$path" > "$restoredir/$path"
-                                chown $uid:$gid "$restoredir/$path"
-                                chmod $bits "$restoredir/$path"
+                                cat "$path" > "$restoredir/$newpath"
+                                chown $uid:$gid "$restoredir/$newpath"
+                                chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
                                 # check for fileTYPE changes
-                                [[ ! -d "$restoredir/$path" ]] && mkdir -p "$restoredir/$path" 
-                                chown $uid:$gid "$restoredir/$path"
-                                chmod $bits "$restoredir/$path"
+                                [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath" 
+                                chown $uid:$gid "$restoredir/$newpath"
+                                chmod $bits "$restoredir/$newpath"
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                cp -RP "$path" "$restoredir/$path"
-                                chown -h $uid:$gid "$restoredir/$path"
+                                cp -RP "$path" "$restoredir/$newpath"
+                                chown -h $uid:$gid "$restoredir/$newpath"
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
@@ -140,15 +141,16 @@ remote_restore() {
                 fi
 
                 # check sanity of data?
+#               echo "$dump$mode $uid $gid $psize $fsize"
+#               echo "m{"$mode"}"
+#               echo "u{"$uid"}"
+#               echo "g{"$gid"}"
+#               echo "l{"$psize"}"
+#               echo "s{"$fsize"}"
+#               echo "p{"$path"}"
 
-# debugging - the output of rdup should perfectly match our reads
-#echo "$dump$mode $uid $gid $psize $fsize"
-#                echo "m{"$mode"}"
-#                echo "u{"$uid"}"
-#                echo "g{"$gid"}"
-#                echo "l{"$psize"}"
-#                echo "s{"$fsize"}"
-#                echo "p{"$path"}"
+                # create the new filename
+                newpath=sanitize $path
 
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed
@@ -158,33 +160,32 @@ remote_restore() {
                         continue
                 fi
 
-
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in
                                 0)      # REG
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
-                                        head -c $fsize > "$restoredir/$path"
+                                        head -c $fsize > "$restoredir/$newpath"
                                 else 
                                         # empty
-                                        touch "$restoredir/$path"
+                                        touch "$restoredir/$newpath"
                                 fi
-                                chown $uid:$gid "$restoredir/$path" 2>/dev/null
-                                chmod $bits "$restoredir/$path"
+                                chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
+                                chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(( $ireg + 1))
                                 ;;
                                 1)      # DIR
-                                [[ ! -d "$restoredir/$path" ]] && mkdir -p "$restoredir/$path"
-                                chown $uid:$gid "$restoredir/$path" 2>/dev/null
-                                chmod $bits "$restoredir/$path"
+                                [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath"
+                                chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
+                                chmod $bits "$restoredir/$newpath"
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
                                 target=`head -c $fsize`
-                                ln -sf "$target" "$restoredir/$path" 
-                                chown -h $uid:$gid "$restoredir/$path" 2>/dev/null
+                                ln -sf "$target" "$restoredir/$newpath" 
+                                chown -h $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 ilnk=$(( $ilnk + 1))
                                 ;;
                         esac
