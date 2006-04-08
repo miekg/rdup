@@ -17,6 +17,7 @@ idir=0; ireg=0; ilnk=0
 ftsize=0
 ts=`date +%s` # gnuism
 restoredir=""
+newpath=""
 PROGNAME=$0
 
 cleanup() {
@@ -39,6 +40,18 @@ usage() {
         echo " -h      this help"
 }
 
+# return a pathname with suffix: +DD.MM:HH
+sanitize() {
+        name=""
+        if [[ "$1" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
+                name=${BASH_REMATCH[1]}
+        else
+                name=$1
+        fi
+        echo $name
+}
+
+
 local_restore() {
         declare -a path # catch spacing in the path
         while read mode uid gid psize fsize path
@@ -57,26 +70,34 @@ local_restore() {
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
+                # it can be that the file without extension does not 
+                # exist in the backup directory because it is removed
+                # from disk. If this is the case, skip it
+                #
+                if [[ ! -e $path ]]; then
+                        continue
+                fi
+
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in
                                 0)      # REG
-                                cat "$path" > "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path"
-                                chmod $bits "$backupdir/$path"
+                                cat "$path" > "$restoredir/$path"
+                                chown $uid:$gid "$restoredir/$path"
+                                chmod $bits "$restoredir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
                                 # check for fileTYPE changes
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
-                                chown $uid:$gid "$backupdir/$path"
-                                chmod $bits "$backupdir/$path"
+                                [[ ! -d "$restoredir/$path" ]] && mkdir -p "$restoredir/$path" 
+                                chown $uid:$gid "$restoredir/$path"
+                                chmod $bits "$restoredir/$path"
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                cp -RP "$path" "$backupdir/$path"
-                                chown -h $uid:$gid "$backupdir/$path"
+                                cp -RP "$path" "$restoredir/$path"
+                                chown -h $uid:$gid "$restoredir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
@@ -89,7 +110,7 @@ local_restore() {
         echo "** #DIRECTORIES: $idir" > /dev/fd/2
         echo "** #LINKS      : $ilnk" > /dev/fd/2
         echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
-        echo "** STORED IN   : $backupdir" > /dev/fd/2
+        echo "** STORED IN   : $restoredir" > /dev/fd/2
         echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }
 
@@ -120,9 +141,14 @@ remote_restore() {
 #                echo "s{"$fsize"}"
 #                echo "p{"$path"}"
 
-                if [[ -e "$backupdir/$path" ]]; then
-                        suffix=`mirror_suffix "$backupdir/$path"`
+                # it can be that the file without extension does not 
+                # exist in the backup directory because it is removed
+                # from disk. If this is the case, skip it
+                #
+                if [[ ! -e $path ]]; then
+                        continue
                 fi
+
 
                 if [[ $dump == "+" ]]; then
                         # add
@@ -130,31 +156,31 @@ remote_restore() {
                                 0)      # REG
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
-                                        head -c $fsize > "$backupdir/$path"
+                                        head -c $fsize > "$restoredir/$path"
                                 else 
                                         # empty
-                                        touch "$backupdir/$path"
+                                        touch "$restoredir/$path"
                                 fi
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chmod $bits "$backupdir/$path"
+                                chown $uid:$gid "$restoredir/$path" 2>/dev/null
+                                chmod $bits "$restoredir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(( $ireg + 1))
                                 ;;
                                 1)      # DIR
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chmod $bits "$backupdir/$path"
+                                [[ ! -d "$restoredir/$path" ]] && mkdir -p "$restoredir/$path"
+                                chown $uid:$gid "$restoredir/$path" 2>/dev/null
+                                chmod $bits "$restoredir/$path"
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
                                 target=`head -c $fsize`
-                                ln -sf "$target" "$backupdir/$path" 
-                                chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
+                                ln -sf "$target" "$restoredir/$path" 
+                                chown -h $uid:$gid "$restoredir/$path" 2>/dev/null
                                 ilnk=$(( $ilnk + 1))
                                 ;;
                         esac
                 else
-                        echo "** $PROGNAME: IGnoring removal of \`$path\'"
+                        echo "** $PROGNAME: Ignoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
@@ -163,7 +189,7 @@ remote_restore() {
         echo "** #DIRECTORIES: $idir"
         echo "** #LINKS      : $ilnk"
         echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        echo "** STORED IN   : $backupdir"
+        echo "** STORED IN   : $restoredir"
         echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
@@ -190,6 +216,7 @@ fi
 if [[ ! -e $1 ]]; then
         mkdir $1
 fi
+restoredir=$1
 
 if [[ $remote -eq 0 ]]; then
         local_restore

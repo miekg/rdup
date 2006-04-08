@@ -83,7 +83,7 @@ declare -a s    # version sec
 declare -a path
 while read mode uid gid psize fsize path
 do
-        if [[ "$path" =~ "(.+)\\+(.+)\\.(.+):(.+)$" ]]; then
+        if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                 name=${BASH_REMATCH[1]}
                 d[$i]=$((10#${BASH_REMATCH[2]})) # force base 10
                 m[$i]=$((10#${BASH_REMATCH[3]})) # force base 10
