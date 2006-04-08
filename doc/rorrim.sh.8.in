@@ -1,5 +1,5 @@
 '\" t
-.TH RESTORE.SH 1 "2 Jan 2006" "0.2.6" "rdup utils"
+.TH RORRIM.SH 1 "2 Jan 2006" "0.2.6" "rdup utils"
 
 .SH NAME
 rorrim.sh \- restore an entire backed up directory
@@ -21,6 +21,12 @@ differences are:
 When a filename with a backup suffix (+DD.MM:SS) is seen, the contents
 of that file is copied, but the suffix is removed from the filename. 
 Leaving the restored directory in its original state.
+.TP
+.B o
+It can be that the file without the suffix does not exist in the
+backup directory. This is possible when the file has permanently
+be deleted from the filesystem. If this is the case the file in 
+question is skipped from the restore.
 .TP
 .B o
 There is no default location to restore to. A restore directory
