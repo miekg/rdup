@@ -25,7 +25,7 @@ monthsago() {
         case $OSTYPE in
                 linux*)
                 # from data's info page
-                echo $(date --date "$(date +%Y-%m-15) $1 months ago" +%Y%mr)
+                echo $(date --date "$(date +%Y-%m-15) $1 months ago" +%Y%m)
                 ;;
                 freebsd*)
                 echo $(date -v -$1m "+%Y%m")
@@ -62,12 +62,12 @@ do
         for i in 0 1 2 3; do
                 yyyymm=`monthsago $i`
                 b=$backupdir/$yyyymm
-
                 # print them
                 for f in $b/$file $b/$file+??.??:?? ; do
                         [[ ! -e $f ]] && continue
 
                         if [[ -d $f ]]; then
+
                                 ls -ldh $f | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }'
                                 continue
                         fi
