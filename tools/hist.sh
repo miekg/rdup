@@ -72,7 +72,7 @@ do
                                 continue
                         fi
                         
-                        ls -l $f | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }'
+                        ls -lh $f | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }'
 
                         [[ ! -z $prev ]] && [[ $diff -eq 1 ]] && \
                                 diff -u $prev $f
