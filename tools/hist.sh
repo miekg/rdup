@@ -56,15 +56,15 @@ do
                 b=$backupdir/$yyyymm
         
                 # print them
-                for f in $b$file $b$file+??.??:?? ; do
+                for f in $b/$file $b/$file+??.??:?? ; do
                         [[ ! -e $f ]] && continue
 
                         if [[ -d $f ]]; then
-                                ls -odh $f | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
+                                ls -ldh $f | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }'
                                 continue
                         fi
                         
-                        ls -o $f | awk ' { print $5" "$6" "$7" "$8" "$9$4 }'
+                        ls -l $f | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }'
 
                         [[ ! -z $prev ]] && [[ $diff -eq 1 ]] && \
                                 diff -u $prev $f
