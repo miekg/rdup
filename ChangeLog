@@ -11,6 +11,7 @@
    * mirror.sh: use cp -RP (works on FreeBSD) (ghostcorps (at) gmail.com)
    * mirror.sh: use $OSTYPE to ease portability
    * hist.sh: use freebsd's date and some ls foo
+   * yesterday.sh: started port, stuck on 'seq' and 'jot'
    Restore:
    * Added rorrim.sh (this was restore.sh)
    * Added monthday.sh

@@ -34,7 +34,7 @@ usage() {
 recent() {
         if [[ $1 -ge 32 ]]; then return; fi
 
-        for i in `seq $1 -1 0`; do
+        for i in $(seq $1 -1 0); do
                 suffix=`datesago $i`
                 dayfix=${suffix:6:8}  # +MONTHDAY.HH:MM
                 yyyymm=${suffix:0:6}
@@ -56,7 +56,15 @@ recent() {
 
 ## calculate the date back in time $1 days ago
 datesago() {
-        echo `date --date "$1 days ago" +%Y%m%d` # YYYYMMDD
+        # YYYYMMDD
+        case $OSTYPE in
+                linux*)
+                echo $(date --date "$1 days ago" +%Y%m%d) 
+                ;;
+                freebsd*)
+                echo $(date -v -$1d +%Y%m%d)
+                ;;
+        esac
 }
 
 
@@ -89,7 +97,7 @@ shift $((OPTIND - 1))
 
 if [[ ! -z $keyfile ]]; then
         if [[ ! -r $1 ]]; then
-                echo "** 0$: Cannot read keyfile \`$1': failed" > /dev/fd/2
+                echo "** $0: Cannot read keyfile \`$1': failed" > /dev/fd/2
                 exit 1
         fi
 fi
