@@ -21,8 +21,16 @@ usage() {
 }
 
 monthsago() {
-        # from data's info page
-        echo `date --date "$(date +%Y-%m-15) $1 months ago" +%Y%m` # YYYYMM
+        # in YYYYMM
+        case $OSTYPE in
+                linux*)
+                # from data's info page
+                echo $(date --date "$(date +%Y-%m-15) $1 months ago" +%Y%mr)
+                ;;
+                freebsd*)
+                echo $(date -v -$1m "+%Y%m")
+                ;;
+        esac
 }
 
 diff=0
@@ -54,7 +62,7 @@ do
         for i in 0 1 2 3; do
                 yyyymm=`monthsago $i`
                 b=$backupdir/$yyyymm
-        
+
                 # print them
                 for f in $b/$file $b/$file+??.??:?? ; do
                         [[ ! -e $f ]] && continue
