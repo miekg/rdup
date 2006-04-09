@@ -7,7 +7,7 @@ o mirror scripts
 o auxilary support scripts
      o crypt.sh
      o gzip.sh
-     o greps.h
+     o grep.sh
 
 o restore scripts
   single files:
