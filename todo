@@ -3,34 +3,29 @@ TODO:
 :rdup util: 
 
 :tests:
-o do a make install test
 
 :doc:
-o documentation updates
-o argument get .IR and \fI and \fR
-o option are BOLD
 
 :scripts:
-o split up rdgrep.sh in dir and file grep (and link grep?)
-o check relative filenames: hist.sh ../blaat
 
-:gtk: 
-o graphic (GTK) frontend? What would it do?
-        - specify what to backup
-        - to where
-        - how often, cron interface
-        - systray info bubble - when doing backups
-        - yesterday.sh frontend
-        - hist.sh frontend (or in nautilus?)
+:porting:
 
 
-LOW PRIO:
+:LOW PRIO:
 :hdup2:
 o make complete hdup2 clone based on rdup
   see hdup2 directory
   I want to see this, but I don't have enough time for this.
 
-DONE:
+:scripts:
+o split up rdgrep.sh in dir and file grep?
+
+
+
+:DONE:
+o check relative filenames: hist.sh ../blaat
+  09 Apr 2006: done, just works :)
+
 o ported mirror.sh and hist.sh and yesterday.sh
   09 Apr 2006: done
 
