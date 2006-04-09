@@ -6,9 +6,11 @@
    * yesterday.sh: work correctly with directories
    * gzip.sh accepts -d option: decompress
    * crypt.sh accepts -d option: decrypt
+   * hist.sh: print "d " for directories and replace the backup dir with ...
    Porting:
-   * use cp -RP (works on FreeBSD) (ghostcorps (at) gmail.com)
-   * use $OSTYPE to ease portability
+   * mirror.sh: use cp -RP (works on FreeBSD) (ghostcorps (at) gmail.com)
+   * mirror.sh: use $OSTYPE to ease portability
+   * hist.sh: use freebsd's date and some ls foo
    Restore:
    * Added rorrim.sh (this was restore.sh)
    * Added monthday.sh
