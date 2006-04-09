@@ -67,7 +67,6 @@ datesago() {
         esac
 }
 
-
 # default values
 daysago=0
 diff=0
@@ -145,5 +144,6 @@ do
                 continue
         fi
 
-        echo $backupfile
+        # remove the backup dir 
+        echo $backupfile | sed "s|$backupdir|\.\.\.|g"
 done
