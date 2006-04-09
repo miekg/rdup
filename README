@@ -3,11 +3,16 @@
 Run: autoreconf && ./configure && make
 (Tested on Linux/FreeBSD)
 
-rdup depends on Glib to build. Glib is the lowlevel C library of the
-GTK project. Configure will check for this.
+rdup depends on:
+o Glib to build. Glib is the lowlevel C library of the
+  GTK project. Configure will check for this.
+o Bash3 for the scripts. They use some of the advanced regexp features
+  that are only available in Bash3.
 
 Note: some of the rdup utils script depend on Gnu tools, and might
-not work as expected on FreeBSD/OpenBSD/etc.
+not work as expected on FreeBSD/OpenBSD/etc. 
+
+Currently rdup is tested on Linux (Ubuntu) and FreeBSD.
 
 2/ DIFFERENCE WITH RSYNC
 
