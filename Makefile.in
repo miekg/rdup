@@ -49,7 +49,7 @@ realclean: clean
 	rm -f rdup.h
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
-	rm -f ${MAN}
+	rm -f ${MAN1} ${MAN8}
 
 distclean: realclean
 	rm -f configure
