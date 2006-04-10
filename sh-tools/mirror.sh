@@ -43,7 +43,8 @@ mirror_suffix() {
                 ;;
                 freebsd*)
                         s=$(stat -f '%Sm' "$@")
-                        echo "+${s:4:2}.${s:7:5}"
+                        # add prefix 0
+                        printf "+%02d.%s" ${s:4:2} ${s:7:5}
                 ;;
         esac
 }

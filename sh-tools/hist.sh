@@ -63,21 +63,21 @@ do
                 yyyymm=`monthsago $i`
                 b=$backupdir/$yyyymm
                 # print them
-                for f in $b$file $b$file+??.??:?? ; do
-                        [[ ! -e $f ]] && continue
+                for f in $b$file $b$file\+??.??:?? ; do
+                        [[ ! -e "$f" ]] && continue
 
-                        if [[ -d $f ]]; then
-                                ls -ldh $f | awk ' { print "d "$6" "$7" "$8" "$9" "$10" "$5 }' |\
+                        if [[ -d "$f" ]]; then
+                                ls -ldh "$f" | awk ' { print "d "$6" "$7" "$8" "$9" "$10" "$5 }' |\
                                 sed "s|$b|\.\.\.|g"
                                 continue
                         fi
-                        ls -lh $f | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }' |\
+                        ls -lh "$f" | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }' |\
                         sed "s|$b|\.\.\.|g"
 
                         [[ ! -z $prev ]] && [[ $diff -eq 1 ]] && \
-                                diff -u $prev $f
+                                diff -u "$prev" "$f"
 
-                        prev=$f
+                        prev="$f"
                 done
         done
 done
