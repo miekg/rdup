@@ -48,7 +48,7 @@ usage() {
         echo " -h      this help"
 }
 
-# return a pathname with suffix: +DD.MM:HH
+# return a pathname without the suffix: +DD.MM:HH
 sanitize() {
         name=""
         if [[ "$1" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
