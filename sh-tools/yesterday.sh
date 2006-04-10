@@ -43,7 +43,6 @@ recent() {
         if [[ $1 -ge 32 ]]; then return; fi
 
         for i in $(_seq $1) ; do
-                echo $i
                 suffix=`datesago $i`
                 dayfix=${suffix:6:8}  # +MONTHDAY.HH:MM
                 yyyymm=${suffix:0:6}
@@ -152,7 +151,5 @@ do
                 diff -u $backupfile $file
                 continue
         fi
-
-        # remove the backup dir 
         echo $backupfile | sed "s|$backupdir|\.\.\.|g"
 done
