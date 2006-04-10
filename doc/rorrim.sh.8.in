@@ -39,8 +39,9 @@ filesystem.
 By default \fBrorrim.sh\fR will restore to the last backed up state,
 i.e the file you'll get when you run `yesterday.sh' without options.
 .PP
-Backed up files will be copied as-is, not unzipping are decryption will 
-be attempted.
+Backed up files will be copied as-is, no unzipping or decryption will 
+be attempted. See gzip.sh(1) and crypt.sh(1) for compression and
+decryption.
 
 .SH OPTIONS
 .TP
