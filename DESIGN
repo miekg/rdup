@@ -8,8 +8,8 @@
 2/ HIGH LEVEL
 
     Full dump:
-        1) Crawl all directories, and print all the names found to standard
-           output.
+        1) Crawl all directories, and print all the names found to
+           standard output.
         2) Write a filelist with all the names found when crawling.
 
     Incremental dump:
@@ -20,34 +20,32 @@
         4) Write the removed items to standard output
         5) Write the modified/new items to standard output.
         6) Write a new filelist.
+        7) Touch the timestamp file
 
 3/ C FILES
 crawler.c
         The crawler recursively decends into directories.
 
-        Each found item (file, directory) is placed into 
-        a GTree with a value of VALUE (only the keys are 
-        used by rdup).
+        Each found item (file, link or directory) is placed into a GTree
+        with a value of VALUE (only the keys are used by rdup).
 
-        When a .nobackup is found the entry's value is changed
-        from VALUE to NO_PRINT. The functions that write the
-        list know that NO_PRINT values should not be written
-        nor printed. 
-        (The entry could no simple be removed, becaused that
-        messed up the flow of the GTree).
+        When a .nobackup is found the entry's value is changed from
+        VALUE to NO_PRINT. The functions that write the list know that
+        NO_PRINT values should not be written nor printed.  (The entry
+        could not simple be removed, becaused that messed up the flow of
+        the GTree).
 
         So in rdup each item (a path) can have three values:
         NULL     
                 initial value, used by GTree to signal 'not found'.
         VALUE 
-                rdup uses this to differentiate between 'not found'
-                and found items.
-        NO_PRINT
+                rdup uses this to differentiate between 'not found' and
+                found items.
+        NO_PRINT 
                 don't print items with these values.
 
 gfunc.c
         This file contain all the function that operate on GTree's.
-
 
 getdelim.c  
         A getdelim() implemenation for systems that don't have the GNU
@@ -58,3 +56,9 @@ rdup.c
 
 signal.c
         Contains a signal handling function.
+
+4/ SCRIPTS
+
+A reference implementation of some backup and restore scripts is
+included. These scripts are written in bash version 3. But they
+can also easily be made in perl, ruby or python.
