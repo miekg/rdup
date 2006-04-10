@@ -1,0 +1,42 @@
+'\" t
+.TH GREP.SH 1 "10 Apr 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+        
+.SH NAME
+grep.sh, grep \-  apply a regular expression on \fBrdup\fR's filelsit
+
+.SH SYNOPSIS
+.B grep.sh
+[
+.IR OPTIONS
+]
+.IR REGEXP
+
+.SH DESCRIPTION
+\fBgrep.sh\fR applies a regular expression on the filename part in the
+output of \fBrdup\fR.
+.PP
+For example,
+.PP
+        rdup /dev/null ~/Documents | grep.sh -f 'z$' 
+.PP
+lists those files that end in a 'z'.
+
+.SH OPTIONS
+.TP
+.B \-a
+Match files, links and directories.
+.TP
+.B \-d
+Only match directories.
+.TP
+.B \-f
+Only match files and links. This is the default.
+.TP
+.B \-h
+Short help message.
+
+.SH BUGS
+\fBrdup\fR \fI\-c\fR output is not supported.
+
+.SH SEE ALSO
+rdup(8)

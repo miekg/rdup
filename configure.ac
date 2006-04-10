@@ -47,6 +47,7 @@ AC_CONFIG_FILES([Makefile
                  doc/hist.sh.1
                  doc/yesterday.sh.1
                  doc/crypt.sh.1
-                 doc/gzip.sh.1])
+                 doc/gzip.sh.1
+                 doc/grep.sh.1])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

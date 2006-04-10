@@ -8,6 +8,7 @@
    * gzip.sh accepts -d option: decompress
    * crypt.sh accepts -d option: decrypt
    * hist.sh: print "d " for directories and replace the backup dir with ... 
+   * grep.sh: match files,links/directories. Install it by default
    Source dir layout:
    * rename tools -> sh-tools, there is room for scripts in other
    languages
