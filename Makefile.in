@@ -1,10 +1,13 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
-SHS=tools/mirror.sh tools/hist.sh tools/yesterday.sh tools/crypt.sh tools/gzip.sh \
-tools/dump.sh tools/purge.sh tools/dump-here.sh 
 CMD=rdup 
-MAN8=doc/rdup.8 doc/mirror.sh.8 doc/dump.sh.8 doc/purge.sh.8 doc/dump-here.sh.8 
-MAN1=doc/hist.sh.1 doc/yesterday.sh.1 doc/crypt.sh.1 doc/gzip.sh.1 
+SHS_IN=mirror.sh hist.sh yesterday.sh crypt.sh gzip.sh dump.sh purge.sh dump-here.sh 
+MAN8_IN=rdup.8 mirror.sh.8 dump.sh.8 purge.sh.8 dump-here.sh.8 
+MAN1_IN=hist.sh.1 yesterday.sh.1 crypt.sh.1 gzip.sh.1 
+
+SHS=$(addprefix sh-tools/, $(SHS_IN))
+MAN8=$(addprefix doc/, $(MAN8_IN))
+MAN1=$(addprefix doc/, $(MAN1_IN))
 
 prefix  = @prefix@
 exec_prefix = @exec_prefix@
@@ -20,8 +23,7 @@ CFLAGS =-Wall -W -Werror @CFLAGS@ @DEFS@ -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FIL
 INSTALL = ./install-sh -c
 INSTALL_DATA = $(INSTALL) -m 644
 
-
-.PHONY:	clean install all uninstall
+.PHONY:	all clean install all uninstall
 
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<

@@ -3,7 +3,7 @@
 # To extract the files from this archive, save it to some FILE, remove
 # everything before the `!/bin/sh' line above, then type `sh FILE'.
 #
-# Made on 2006-02-22 23:31 CET by <miekg@elektron>.
+# Made on 2006-04-10 10:08 CEST by <miekg@elektron>.
 # Source directory was `/home/miekg/svn/rdup/trunk/test/001_run.dir'.
 #
 # Existing files will *not* be overwritten unless `-c' is specified.
@@ -13,7 +13,7 @@
 # ------ ---------- ------------------------------------------
 #    280 -rw------- 001_run.dsc
 #    119 -rw------- 001_run.help
-#    619 -rw------- 001_run.test
+#    626 -rw------- 001_run.test
 #
 save_IFS="${IFS}"
 IFS="${IFS}:"
@@ -63,7 +63,7 @@ else
 fi
 rm -f 200112312359.59 123123592001.59 123123592001.5 1231235901 $$.touch
 #
-if mkdir _sh05223; then
+if mkdir _sh18480; then
   $echo 'x -' 'creating lock directory'
 else
   $echo 'failed to create lock directory'
@@ -155,24 +155,24 @@ echo $TPKG_BUILD
 cd $TPKG_BUILD
 X
 X./rdup -V && \
-echo "test" | cat /dev/null | ./mirror.sh 2>/dev/null && \
+echo "test" | cat /dev/null | ./tool/smirror.sh 2>/dev/null && \
 X./tools/yesterday.sh && \
-X./tools/hist.sh
+X./tools/hist.sh 
 SHAR_EOF
-  (set 20 06 02 22 23 31 26 '001_run.test'; eval "$shar_touch") &&
+  (set 20 06 04 10 10 08 46 '001_run.test'; eval "$shar_touch") &&
   chmod 0600 '001_run.test' ||
   $echo 'restore of' '001_run.test' 'failed'
   if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
   && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
     md5sum -c << SHAR_EOF >/dev/null 2>&1 \
     || $echo '001_run.test:' 'MD5 check failed'
-133da528b4475e3ac560af279e8ae8b9  001_run.test
+e907543e2b9c4ea69aca5d9e5b0c6cb5  001_run.test
 SHAR_EOF
   else
     shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '001_run.test'`"
-    test 619 -eq "$shar_count" ||
-    $echo '001_run.test:' 'original size' '619,' 'current size' "$shar_count!"
+    test 626 -eq "$shar_count" ||
+    $echo '001_run.test:' 'original size' '626,' 'current size' "$shar_count!"
   fi
 fi
-rm -fr _sh05223
+rm -fr _sh18480
 exit 0
