@@ -44,7 +44,7 @@ usage() {
 }
 
 reset_vars() {
-        # don't love these implicit globals
+        # don't you love these implicit globals
         pmode=$mode
         puid=$uid
         pgid=$gid 
@@ -81,6 +81,7 @@ if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
 fi
 
 i=0
+declare -a n    # filename
 declare -a d    # version day
 declare -a m    # version min
 declare -a s    # version sec
@@ -89,6 +90,7 @@ while read mode uid gid psize fsize path
 do
         if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                 name=${BASH_REMATCH[1]}
+                n[$i]=${BASH_REMATCH[1]}
                 d[$i]=$((10#${BASH_REMATCH[2]})) # force base 10
                 m[$i]=$((10#${BASH_REMATCH[3]})) # force base 10
                 s[$i]=$((10#${BASH_REMATCH[4]})) # force base 10
@@ -115,16 +117,13 @@ do
                         
                 if [[ $min -gt $max || $monthday -eq 0 ]]; then
                         # no versions where seen, use the last one if defined
-                        if [[ ! -z "$prevfile" ]]; then
-                                echo -n "$pmode $puid $pgid $ppsize $pfsize "
-                                echo "$prevfile"
-                        fi
-                        
+                        echo -n "$mode $uid $gid $psize $fsize "
+                        echo "$name"
                 else
                         if [[ $monthday -lt $min ]]; then
                                 # before any of the versions, use $min
                                 echo -n "$pmode $puid $pgid $ppsize $pfsize "
-                                printf "%s+%02d.%02d:%02d\n" "$prevfile" $min ${m[0]} ${s[0]}
+                                printf "%s+%02d.%02d:%02d\n" "${n[0]}" $min ${m[0]} ${s[0]}
                                 reset_vars
                                 max=0; min=99
                                 i=0
@@ -152,14 +151,14 @@ do
                                 fi
                                 if [[ $j -eq $monthday ]]; then
                                         echo -n "$pmode $puid $pgid $ppsize $pfsize "
-                                        printf "%s+%02d.%02d:%02d\n" "$prevfile" ${d[$i]} ${m[$i]} ${s[$i]}
+                                        printf "%s+%02d.%02d:%02d\n" "${n[$i]}" ${d[$i]} ${m[$i]} ${s[$i]}
                                         break
                                 fi
                                 if [[ $j -gt $monthday ]]; then
                                         # previous one
                                         i=$(($i - 1))
                                         echo -n "$pmode $puid $pgid $ppsize $pfsize "
-                                        printf "%s+%02d.%02d:%02d\n" "$prevfile" ${d[$i]} ${m[$i]} ${s[$i]} 
+                                        printf "%s+%02d.%02d:%02d\n" "${n[$i]}" ${d[$i]} ${m[$i]} ${s[$i]} 
                                         break 
                                 fi
                                 i=$(($i + 1))

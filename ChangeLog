@@ -20,6 +20,7 @@
    Restore:
    * Added rorrim.sh (this was restore.sh) - restore files to a dir
    * Added monthday.sh - select files to restore
+     [still only lightly tested, please help test]
    
 
 30 Mar 2006: 0.2.6 Miek <miek@miek.nl>

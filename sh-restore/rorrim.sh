@@ -78,7 +78,7 @@ local_restore() {
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
                 # create the new filename
-                newpath=sanitize $path
+                newpath=$(sanitize "$path")
 
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed
@@ -213,7 +213,6 @@ while getopts ":cvh" options; do
 done
 shift $((OPTIND - 1))
 
-# 1 argument keyfile used for encryption
 if [[ $# -eq 0 ]]; then
         _echo "$PROGNAME: Need a directory as argument"
         exit 1
