@@ -7,10 +7,10 @@
    * gzip.sh accepts -d option: decompress
    * crypt.sh accepts -d option: decrypt
    * hist.sh: print "d " for directories and replace the backup dir with ... 
-   Src dir Layout:
+   Source dir layout:
    * rename tools -> sh-tools, there is room for scripts in other
    languages
-   * rename restore -> sh-restore, same story
+   * rename restore -> sh-restore, same here
    Porting:
    * mirror.sh/rorrim.sh: use cp -RP (works on FreeBSD) 
     (ghostcorps (at) gmail.com)
