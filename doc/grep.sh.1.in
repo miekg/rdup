@@ -13,7 +13,8 @@ grep.sh, grep \-  apply a regular expression on \fBrdup\fR's filelsit
 
 .SH DESCRIPTION
 \fBgrep.sh\fR applies a regular expression on the filename part in the
-output of \fBrdup\fR.
+output of \fBrdup\fR. REGEXP is a POSIX regular expression as documented
+in regex(3). 
 .PP
 For example,
 .PP
@@ -36,7 +37,7 @@ Only match files and links. This is the default.
 Short help message.
 
 .SH BUGS
-\fBrdup\fR \fI\-c\fR output is not supported.
+\fBrdup\fR \fI\-c\fR output is not (yet) supported.
 
 .SH SEE ALSO
-rdup(8)
+rdup(8) and regex(3).
