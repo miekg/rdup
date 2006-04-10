@@ -28,7 +28,7 @@ usage() {
 _seq() {
         j=$1
         while [[ $j -ge 0 ]] ; do
-                echo -n "$j "
+                echo $j
                 j=$(($j - 1))
         done
 }
@@ -43,6 +43,7 @@ recent() {
         if [[ $1 -ge 32 ]]; then return; fi
 
         for i in $(_seq $1) ; do
+                echo $i
                 suffix=`datesago $i`
                 dayfix=${suffix:6:8}  # +MONTHDAY.HH:MM
                 yyyymm=${suffix:0:6}

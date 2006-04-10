@@ -133,7 +133,8 @@ dir_crawl(GTree *t, char *path)
 			continue;
 		}
 
-		if (!S_ISDIR(s.st_mode)) {
+
+		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) {
 			pop.f_name      = curpath;
 			pop.f_name_size = curpath_len;
 			pop.f_uid       = s.st_uid;
