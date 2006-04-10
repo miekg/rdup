@@ -4,6 +4,8 @@
      backup can be re-run because all the rdup files are still untouched.
    * rdup: really give an error on non-supported files
    * doc: update mirror.sh manpage: removed -z -k from the manual
+   * doc: added gzip.sh manpage
+   * doc: added rorirm.sh manpage
    * yesterday.sh: work correctly with directories
    * gzip.sh accepts -d option: decompress
    * crypt.sh accepts -d option: decrypt
