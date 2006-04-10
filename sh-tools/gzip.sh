@@ -72,10 +72,10 @@ do
         typ=0
         path=`head -c $psize`   # gets the path
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
-                typ=1;
+                typ=1
         fi
         if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
-                typ=2;
+                typ=2
         fi
         if [[ $dump == "+" ]]; then
                 # add

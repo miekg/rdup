@@ -37,7 +37,7 @@ Only match files and links. This is the default.
 Short help message.
 
 .SH BUGS
-\fBrdup\fR \fI\-c\fR output is not (yet) supported.
+\fBrdup\fR \fI\-c\fR output is not supported.
 
 .SH SEE ALSO
 rdup(8) and regex(3).
