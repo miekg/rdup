@@ -10,9 +10,11 @@ o Bash3 for the scripts. They use some of the advanced regexp features
   that are only available in Bash3.
 
 Note: some of the rdup utils script depend on Gnu tools, and might
-not work as expected on FreeBSD/OpenBSD/etc. 
+not work as expected on *BSD.
+For *BSD you might want to create a link from /bin/bash to
+/usr/local/bin/bash, or edit all the scripts to use the correct bash.
 
-Currently rdup is tested on Linux (Ubuntu) and FreeBSD.
+Currently rdup and all its scripts are tested on Linux and FreeBSD.
 
 2/ DIFFERENCE WITH RSYNC
 
