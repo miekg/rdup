@@ -16,7 +16,7 @@
     (ghostcorps (at) gmail.com)
    * mirror.sh/hist.sh/yesterday.sh: use $OSTYPE to ease portability
    * hist.sh/yesterday.sh: use freebsd's date and some ls foo
-   * yesterday.sh: started port, stuck on 'seq' and 'jot'
+   * yesterday.sh: use shell code to mimic 'seq'
    Restore:
    * Added rorrim.sh (this was restore.sh) - restore files to a dir
    * Added monthday.sh - select files to restore

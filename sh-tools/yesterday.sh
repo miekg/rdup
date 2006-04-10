@@ -25,6 +25,14 @@ usage() {
         echo " -h          this help"
 }
 
+_seq() {
+        j=$1
+        while [[ $j -ge 0 ]] ; do
+                echo -n "$j "
+                j=$(($j - 1))
+        done
+}
+
 ## find the closest file to the one N days ago
 ## if there are multiple return the latest
 ## blaat           -n0 -> this one
@@ -34,7 +42,7 @@ usage() {
 recent() {
         if [[ $1 -ge 32 ]]; then return; fi
 
-        for i in $(seq $1 -1 0); do
+        for i in $(_seq $1) ; do
                 suffix=`datesago $i`
                 dayfix=${suffix:6:8}  # +MONTHDAY.HH:MM
                 yyyymm=${suffix:0:6}
