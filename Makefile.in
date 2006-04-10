@@ -2,10 +2,12 @@ OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
 HDR=rdup.h 
 CMD=rdup 
 SHS_IN=mirror.sh hist.sh yesterday.sh crypt.sh gzip.sh dump.sh purge.sh dump-here.sh 
-MAN8_IN=rdup.8 mirror.sh.8 dump.sh.8 purge.sh.8 dump-here.sh.8 
+RES_IN=rorrim.sh monthday.sh
+MAN8_IN=rdup.8 mirror.sh.8 dump.sh.8 purge.sh.8 dump-here.sh.8 monthday.sh.8 rorrim.sh.8
 MAN1_IN=hist.sh.1 yesterday.sh.1 crypt.sh.1 gzip.sh.1 
 
 SHS=$(addprefix sh-tools/, $(SHS_IN))
+RES=$(addprefix sh-restore/, $(RES_IN))
 MAN8=$(addprefix doc/, $(MAN8_IN))
 MAN1=$(addprefix doc/, $(MAN1_IN))
 
@@ -29,7 +31,7 @@ INSTALL_DATA = $(INSTALL) -m 644
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 all:	rdup
-	chmod +x $(SHS)
+	chmod +x $(SHS) $(RES)
 
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
