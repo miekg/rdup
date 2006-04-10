@@ -2,7 +2,7 @@
 .TH GREP.SH 1 "10 Apr 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-grep.sh, grep \-  apply a regular expression on \fBrdup\fR's filelsit
+grep.sh, grep \-  apply a regular expression on \fBrdup\fR's filelist
 
 .SH SYNOPSIS
 .B grep.sh

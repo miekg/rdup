@@ -1,4 +1,4 @@
-   Apr 2006: 0.2.7 Miek <miek@miek.nl>
+11 Apr 2006: 0.2.7 Miek <miek@miek.nl>
    -- bugfixes + restore features --
    * rdup: re-touch the timestamp file at the end. This way an interupted
      backup can be re-run because all the rdup files are still untouched.
