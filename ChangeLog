@@ -6,7 +6,11 @@
    * yesterday.sh: work correctly with directories
    * gzip.sh accepts -d option: decompress
    * crypt.sh accepts -d option: decrypt
-   * hist.sh: print "d " for directories and replace the backup dir with ...
+   * hist.sh: print "d " for directories and replace the backup dir with ... 
+   Src dir Layout:
+   * rename tools -> sh-tools, there is room for scripts in other
+   languages
+   * rename restore -> sh-restore, same story
    Porting:
    * mirror.sh/rorrim.sh: use cp -RP (works on FreeBSD) 
     (ghostcorps (at) gmail.com)
