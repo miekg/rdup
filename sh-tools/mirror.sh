@@ -159,7 +159,7 @@ remote_mirror() {
                 bits=$(($mode & $S_MMASK)) # permission bits
                 bits=`printf "%o" $bits` # and back to octal again
                 typ=0
-                path=`head -c $psize`   # gets the path
+                path=`head -c $psize`   # get the path
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
                 fi
