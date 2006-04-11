@@ -45,7 +45,7 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: 0.2.8 (rdup-utils)"
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 reset_vars() {
