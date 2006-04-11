@@ -6,6 +6,7 @@
 # zip rdup -c's output
 
 set -o nounset
+RDUP_VERSION=0.2.7
 
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
@@ -40,7 +41,7 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: 0.2.8 (rdup-utils)"
+        echo "$PROGNAME: $RDUP_VERSION (rdup-utils)"
 }
 
 _stat_size() {

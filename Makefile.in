@@ -18,7 +18,6 @@ sbindir=@sbindir@
 mandir=@mandir@
 sysconfdir=@sysconfdir@
 
-EDIT_VER=sed -e 's,\@PACKAGE_VERSION\@,@PACKAGE_VERSION@,g'
 GCC=@CC@
 GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
@@ -38,9 +37,8 @@ rdup:	${OBJ} ${HDR}
 	strip rdup
 
 scripts:
-	for i in ${SHS}; do ${EDIT_VER} $$i > $$i.bak && mv $$i.bak $$i ; done
-	for i in ${RES}; do ${EDIT_VER} $$i > $$i.bak && mv $$i.bak $$i ; done
 	chmod +x $(SHS) $(RES)
+
 clean:
 	rm -f *.o
 	rm -f rdup

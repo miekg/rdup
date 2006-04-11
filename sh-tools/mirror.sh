@@ -8,6 +8,7 @@
 
 set -o nounset
 
+RDUP_VERSION=0.2.7
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
@@ -79,7 +80,7 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: 0.2.8 (rdup-utils)"
+        echo "$PROGNAME: $RDUP_VERSION (rdup-utils)"
 }
 
 local_mirror() {

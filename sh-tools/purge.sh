@@ -5,6 +5,7 @@
 
 set -o nounset
 PROGNAME=$0
+RDUP_VERSION=0.2.7
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
@@ -24,7 +25,7 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: 0.2.8 (rdup-utils)"
+        echo "$PROGNAME: $RDUP_VERSION (rdup-utils)"
 }
 
 monthsago() {

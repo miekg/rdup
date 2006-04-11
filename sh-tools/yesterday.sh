@@ -6,6 +6,7 @@
 # inspired by yesterday of plan9
 
 set -o nounset
+RDUP_VERSION=0.2.7
 
 usage() {
         echo "$0 [OPTIONS] FILE [FILE ...]"
@@ -27,7 +28,7 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: 0.2.8 (rdup-utils)"
+        echo "$PROGNAME: $RDUP_VERSION (rdup-utils)"
 }
 
 _seq() {
