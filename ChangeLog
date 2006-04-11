@@ -4,17 +4,16 @@
      backup can be re-run because all the rdup files are still untouched.
    * rdup: really give an error on non-supported files
    * doc: update mirror.sh manpage: removed -z -k from the manual
-   * doc: added gzip.sh manpage
-   * doc: added rorirm.sh manpage
+   * doc: added gzip.sh, rorrim.sh and grep.sh manpage
    * yesterday.sh: work correctly with directories
-   * gzip.sh accepts -d option: decompress
-   * crypt.sh accepts -d option: decrypt
+   * yesterday.sh: replace backup directory with ...
    * hist.sh: print "d " for directories and replace the backup dir with ... 
+   * gzip.sh: accept -d option: decompress
+   * crypt.sh: accept -d option: decrypt
    * grep.sh: match files,links/directories. Install it by default
    Source dir layout:
-   * rename tools -> sh-tools, there is room for scripts in other
-   languages
-   * rename restore -> sh-restore, same here
+   * rename tools -> sh-tools, there is room for scripts in other languages
+   * rename restore -> sh-restore, room for other languages
    Porting:
    * mirror.sh/rorrim.sh: use cp -RP (works on FreeBSD) 
     (ghostcorps (at) gmail.com)
