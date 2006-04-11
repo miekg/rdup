@@ -7,7 +7,7 @@ gzip.sh, compress \-  compress files received from \fBrdup -c\fR
 .SH SYNOPSIS
 .B gzip.sh
 [
-.IR -d
+.IR OPTIONS
 ]
 
 .SH DESCRIPTION
@@ -22,7 +22,10 @@ Note the \fI-c\fR option for \fBmirror.sh\fR.
 .SH OPTIONS
 .TP
 .B \-d
-decompress the files
+Decompress the files.
+.TP
+.B \-V
+Show the version.
 
 .SH SEE ALSO
 crypt.sh(1) and mirror.sh(8).

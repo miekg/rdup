@@ -31,8 +31,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
-all:	rdup
-	chmod +x $(SHS) $(RES)
+all:	rdup scripts
 
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
@@ -40,6 +39,8 @@ rdup:	${OBJ} ${HDR}
 
 scripts:
 	for i in ${SHS}; do ${EDIT_VER} $$i > $$i.bak && mv $$i.bak $$i ; done
+	for i in ${RES}; do ${EDIT_VER} $$i > $$i.bak && mv $$i.bak $$i ; done
+	chmod +x $(SHS) $(RES)
 clean:
 	rm -f *.o
 	rm -f rdup

@@ -35,6 +35,9 @@ Only match files and links. This is the default.
 .TP
 .B \-h
 Short help message.
+.TP
+.B \-V
+Show the version.
 
 .SH BUGS
 \fBrdup\fR \fI\-c\fR output is not supported.

@@ -54,6 +54,9 @@ Echo the files processed to standard error.
 .TP
 .B \-h
 Short help message.
+.TP
+.B \-V
+Show the version.
 
 .SH SEE ALSO
 diff(1), hist.sh(1), yesterday(1), gzip.sh(1) and rdup(8).

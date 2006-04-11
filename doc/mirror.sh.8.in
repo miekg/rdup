@@ -33,6 +33,9 @@ Echo the files processed to standard error.
 .TP
 .B \-h
 Short help message.
+.TP
+.B \-V
+Show the version.
 
 .SH FILES
 `/vol/backup/$HOSTNAME`, or the directory specified with \-b, root of

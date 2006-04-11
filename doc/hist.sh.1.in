@@ -42,6 +42,9 @@ The backupped file is gzipped
 .B \-k keyfile
 Decrypt the files when looking at them using the contents of keyfile as
 an decryption key.
+.TP
+.B \-V
+Show the version.
 
 .SH EXAMPLES
 Examine changes in block.c:

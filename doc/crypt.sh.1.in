@@ -8,11 +8,11 @@ crypt.sh, encrypt \- encrypt files received from \fBrdup -c\fR
 .B crypt.sh
 .IR KEYFILE
 [
-.IR -d
+.IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBcrypt.sh\fR encrypts the data it receives from \fBrdup\fR with the
+\fBcrypt.sh\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
 key contained in \fIKEYFILE\fR.
 .PP
 For example,
@@ -24,7 +24,10 @@ Note the \fI-c\fR option for \fBmirror.sh\fR.
 .SH OPTIONS
 .TP
 .B \-d
-decrypt the files
+Decrypt the files.
+.TP
+.B \-V
+Show the version.
 
 .SH SEE ALSO
 gzip.sh(1) and mirror.sh(8).

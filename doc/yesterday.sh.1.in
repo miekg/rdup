@@ -39,6 +39,9 @@ Select the dump daysago prior to the current day.
 .TP
 .B \-z
 Backed up file is gzipped.
+.TP
+.B \-V
+Show the version.
 
 .SH EXAMPLES
 See what's changed in the last week in your profile:

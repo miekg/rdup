@@ -35,6 +35,9 @@ Don't ask whether to continue, but go ahead and delete the backups.
 .TP
 .B \-h
 Show a short help message.
+.TP
+.B \-V
+Show the version.
 
 .SH EXAMPLE
 If today would be the 14th of March 2006, the

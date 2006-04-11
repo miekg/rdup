@@ -50,6 +50,9 @@ are stored in `/etc/rdup'.
 .TP
 .B \-h
 Show a short help message.
+.TP
+.B \-V
+Show the version.
 
 .SH FILES
 /vol/backup/`hostname`, or the directory specified with \-b, root of

@@ -20,7 +20,7 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
+        echo "$PROGNAME: 0.2.8 (rdup-utils)"
 }
 
 d=`date +%Y%m`
