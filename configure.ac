@@ -48,6 +48,15 @@ AC_CONFIG_FILES([Makefile
                  doc/yesterday.sh.1
                  doc/crypt.sh.1
                  doc/gzip.sh.1
-                 doc/grep.sh.1])
+                 doc/grep.sh.1
+                 sh-tools/crypt.sh
+                 sh-tools/dump-here.sh
+                 sh-tools/dump.sh
+                 sh-tools/grep.sh
+                 sh-tools/gzip.sh
+                 sh-tools/hist.sh
+                 sh-tools/mirror.sh
+                 sh-tools/purge.sh
+                 sh-tools/yesterday.sh])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
