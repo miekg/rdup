@@ -1,5 +1,5 @@
 '\" t
-.TH RORRIM.SH 1 "2 Jan 2006" "0.2.6" "rdup utils"
+.TH RORRIM.SH 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rorrim.sh \- restore an entire backed up directory

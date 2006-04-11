@@ -1,3 +1,7 @@
+00 xxx 2006: 0.2.8 Miek <miek@miek.nl
+   -- x --
+
+
 11 Apr 2006: 0.2.7 Miek <miek@miek.nl>
    -- bugfixes + restore features --
    * rdup: re-touch the timestamp file at the end. This way an interupted
