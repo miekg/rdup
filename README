@@ -1,9 +1,11 @@
 1/ TO BUILD
 
-Run: autoreconf && ./configure && make
-(Tested on Linux/FreeBSD)
+Run: 
+autoreconf && ./configure && make (Linux)
+autoheader259 && autoconf259 && ./configure && gmake (FreeBSD)
 
 rdup depends on:
+o Gmake for compilation
 o Glib to build. Glib is the lowlevel C library of the
   GTK project. Configure will check for this.
 o Bash3 for the scripts. They use some of the advanced regexp features
