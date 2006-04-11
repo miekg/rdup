@@ -20,6 +20,11 @@ usage() {
         echo " -x NUM     delete backups from X months ago, defaults to 2"
         echo " -y         yes, remove my backups and don't ask questionse"
         echo " -h         this help"
+        echo " -V         print version"        
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 monthsago() {
@@ -42,11 +47,12 @@ question () {
 BACKUPDIR=""
 MONTHS=2
 ASK=1
-while getopts ":b:x:hy" o; do
+while getopts ":b:x:hyV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 x) MONTHS=$OPTARG;;
                 y) ASK=0;;
+                V) version && exit;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac

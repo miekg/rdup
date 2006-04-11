@@ -23,6 +23,11 @@ usage() {
         echo " -d          show a diff(1) with the backed up file "
         echo " -z          backup file is gzipped"
         echo " -h          this help"
+        echo " -V          print version"        
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 _seq() {
@@ -84,7 +89,7 @@ copy=0
 Ccopy=0
 backupdir=""
 
-while getopts ":n:b:k:cCNdhz" o; do
+while getopts ":n:b:k:cCNdhzV" o; do
         case $o in
                 b) backupdir=$OPTARG;;
                 n) daysago=$OPTARG;;
@@ -94,6 +99,7 @@ while getopts ":n:b:k:cCNdhz" o; do
                 c) copy=1;;
                 C) Ccopy=1;;
                 h) usage && exit;;
+                V) version && exit;;
                 \?) usage && exit;;
         esac
 done

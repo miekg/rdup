@@ -37,14 +37,20 @@ usage() {
         echo " -a        match files/links and directories"
         echo " -d        match directories"
         echo " -h        this help"
+        echo " -V        print version"        
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 MODE="f" # default to file mode
-while getopts "adfhc" o; do
+while getopts ":adfhcV" o; do
         case $o in
                 a) MODE="a";;
                 d) MODE="d";;
                 f) MODE="f";;
+                V) version && exit;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac

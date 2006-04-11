@@ -46,6 +46,11 @@ usage() {
         echo " -c      process the file content also (rdup -c), for remote backups"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
+        echo " -V      print version"
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 # return a pathname without the suffix: +DD.MM:HH
@@ -203,10 +208,11 @@ remote_restore() {
         _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":cvh" options; do
+while getopts ":cvVh" options; do
         case $options in
                 c) remote=1;;
                 v) verbose=1;;
+                V) version && exit;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac

@@ -36,6 +36,11 @@ usage() {
         echo OPTIONS:
         echo " -d        decompress the files"
         echo " -h        this help"
+        echo " -V        print version"        
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 _stat_size() {
@@ -49,10 +54,11 @@ _stat_size() {
         esac
 }
 
-while getopts "dh" o; do
+while getopts ":dhV" o; do
         case $o in
                 d) OPT="-d";;
                 h) usage && exit;;
+                V) version && exit;;
                 \?) usage && exit;;
         esac
 done

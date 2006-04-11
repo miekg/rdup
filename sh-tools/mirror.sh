@@ -75,6 +75,11 @@ usage() {
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
+        echo " -V      print version"        
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 local_mirror() {
@@ -242,11 +247,12 @@ remote_mirror() {
         _echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":cvhb:" options; do
+while getopts ":cvhb:V" options; do
         case $options in
                 c) remote=1;;
                 b) backupdir=$OPTARG;;
                 v) verbose=1;;
+                V) version && exit;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac

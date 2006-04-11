@@ -41,6 +41,11 @@ usage() {
         echo
         echo OPTIONS:
         echo " -h        this help"
+        echo " -V        print version"
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 reset_vars() {
@@ -53,9 +58,10 @@ reset_vars() {
         prevfile="$name"
 }
 
-while getopts "h" o; do
+while getopts ":Vh" o; do
         case $o in
                 h) usage && exit;;
+                V) version && exit;;
                 \?) usage && exit;;
         esac
 done

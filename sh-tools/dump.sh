@@ -16,6 +16,11 @@ usage() {
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -x SCRIPT  use SCRIPT as exclude script"
         echo " -h         this help"
+        echo " -V         print version"
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 d=`date +%Y%m`
@@ -28,11 +33,12 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":b:x:eh" o; do
+while getopts ":b:x:ehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 e) etc=1;;
                 x) exclude=$OPTARG;;
+                V) version && exit;;
                 h) usage && exit;;
                 \?) usage && exit;;
         esac
