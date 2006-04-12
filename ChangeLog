@@ -1,6 +1,8 @@
 00 xxx 2006: 0.2.8 Miek <miek@miek.nl
    -- x --
    * support -V in all scripts
+   * made ruby implemenation of mirror.sh: mirror.rb
+   * planning a diff based backup, don't move the file, but diff it
 
 11 Apr 2006: 0.2.7 Miek <miek@miek.nl>
    -- bugfixes + restore features --
