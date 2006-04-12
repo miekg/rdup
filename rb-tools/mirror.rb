@@ -41,15 +41,22 @@ STDIN.each do |line|
                         stat.mtime.min)
         rescue SystemCallError
                 suffix = NIL
+                stat = NIL
         end
 
         case type
         when REG
                 print "REG", path, suffix, "\n"
-        when DIR 
-                print "DIR", path, suffix, "\n"
+                if suffix != NIL then
+                        puts "moving\n"
+                end
         when LNK
                 print "LNK", path, suffix, "\n"
+                if suffix != NIL then
+                        puts "moving\n"
+                end
+        when DIR 
+                print "DIR", path, suffix, "\n"
         end
 
         
