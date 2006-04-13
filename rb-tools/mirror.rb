@@ -22,6 +22,10 @@ STDIN.each do |line|
         dump = mode[0,1]
         mode = mode[1..-1]
         bits = mode.to_i & S_MMASK
+        bits = sprintf("%o", bits)
+
+        print bits,"\n"
+        
         type = REG
         if mode.to_i & S_ISDIR == S_ISDIR then
                 type = DIR
@@ -32,6 +36,7 @@ STDIN.each do |line|
 
         if (mode && uid && gid && psize && fsize && path) == NIL then
                 STDERR.puts "Error\n"
+                next
         end
 
         begin
@@ -44,22 +49,36 @@ STDIN.each do |line|
                 stat = NIL
         end
 
-        case type
-        when REG
-                print "REG", path, suffix, "\n"
-                if suffix != NIL then
-                        puts "moving\n"
+        if dump == "+" then
+                case type
+                when REG
+                        File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
+                        copy_file(path, backupdir + path, preserve = true, dereference = false)
+                        File.chmod(bits, backupdir + path)
+                when LNK
+                        File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
+                        copy_file(path, backupdir + path, preserve = true, dereference = false)
+                        File.chmod(bits, backupdir + path)
+                when LNK
+                when DIR 
+                        if suffix != NIL then
+                                if stat.symlink? or stat.file? then
+                                        File.rename(backupdir + path, backupdir + path + suffix) 
+                                end
+                        end
+                        if ! test(?d, backupdir + path) then
+                                Dir.mkdir(backupdir + path)
+                                File.chmod(bits, backupdir + path)
+                        end
                 end
-        when LNK
-                print "LNK", path, suffix, "\n"
-                if suffix != NIL then
-                        puts "moving\n"
+                begin
+                        File.lchown(uid.to_i, gid.to_i, backupdir + path)
+                rescue SystemCallError
+                        print "error"
                 end
-        when DIR 
-                print "DIR", path, suffix, "\n"
+        else 
+                # move it
+                File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
         end
-
-        
-
 
 end
