@@ -14,6 +14,9 @@ DIR = 1
 LNK = 2
 
 backupdir="/tmp/storage/200604"
+Dir.mkdir "/tmp/storage" if ! test(?d, "/tmp/storage")
+Dir.mkdir "/tmp/storage/200604" if ! test(?d, "/tmp/storage/200604")
+
 
 STDIN.each do |line|
         mode, uid, gid, psize, fsize, path = line.chomp.split(/ /)
@@ -24,8 +27,8 @@ STDIN.each do |line|
         bits = mode.to_i & S_MMASK
         bits = sprintf("%o", bits)
 
-        print bits,"\n"
-        
+        STDERR.print "[",bits,"]"
+
         type = REG
         if mode.to_i & S_ISDIR == S_ISDIR then
                 type = DIR
