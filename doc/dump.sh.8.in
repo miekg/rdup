@@ -37,7 +37,8 @@ The default backup location is `/vol/backup/`hostname''.
 .SH OPTIONS
 .TP 
 .B \-b backupdir
-Alternate backup directory. Defaults to /vol/backup/`hostname`.
+Alternate backup directory. Defaults to /vol/backup/`hostname`. The
+current date in the format YYYYMM is added automatically.
 .TP
 .B \-x script
 Use \fBscript\fR as exclude script. This script is inserted in the
