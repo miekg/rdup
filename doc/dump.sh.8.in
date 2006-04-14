@@ -40,7 +40,7 @@ The default backup location is `/vol/backup/`hostname''.
 Alternate backup directory. Defaults to /vol/backup/`hostname`.
 .TP
 .B \-x script
-Use \fBscripT\fR as exclude script. This script is inserted in the
+Use \fBscript\fR as exclude script. This script is inserted in the
 `rdup'-pipeline. See grep.sh(1) for an example of such a script.
 .TP
 .B \-e
