@@ -3,6 +3,7 @@
    * Support -V in all scripts
    * Made ruby implemenation of mirror.sh: mirror.rb
    * Planning a diff based backup, don't move the file, but diff it
+   * -q switch added: quote backslashes.
    
 
 11 Apr 2006: 0.2.7 Miek <miek@miek.nl>
