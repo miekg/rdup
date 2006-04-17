@@ -81,11 +81,6 @@ to directories.
 Delimit \fBfilelist\fR with NULL's instead of a newline. Use '\\0' in the
 \fBformat\fR string to change \fBrdup\fR's output.
 .TP
-.B \-q
-Quote backslashes in filenames. As the output of rdup is send to shell
-scripts it is necessary to quote backslashes, i.e. \\ -> \\\\.
-
-.TP
 .B \-x
 Stay on the local filesystem.
 

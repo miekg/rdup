@@ -1,7 +1,6 @@
 00 xxx 2006: 0.2.8 Miek <miek@miek.nl
    -- x --
    * Support -V in all scripts
-   * Added -q (quote) to quote backslashes
    * Made ruby implemenation of mirror.sh: mirror.rb
    * Planning a diff based backup, don't move the file, but diff it
    
