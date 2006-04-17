@@ -33,7 +33,7 @@ usage(FILE *f)
 	fprintf(f, "USAGE: %s [OPTION...] FILELIST DIR...\n", PROGNAME);
 	fprintf(f, "%s generates a full or incremental file list, this\n", PROGNAME);
 	fprintf(f, "list can be used to implement a (incremental) backup scheme.\n");
-	fprintf(f, "\n   FILELIST\tfile list\n");
+	fprintf(f, "\n   FILELIST\tfile to store filenames\n");
 	fprintf(f, "   DIR\t\tdirectory or directories to dump\n");
 	fprintf(f, "\nOPTIONS:\n");
 	fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
