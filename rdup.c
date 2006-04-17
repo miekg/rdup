@@ -11,11 +11,12 @@ gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* wether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* wether to print modified files */
+gboolean opt_quote         = FALSE; 		      /* whether to quota \ -> \\ */
 char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
+char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file */
-/* signals */
 sig_atomic_t sig           = 0;
 
 /* crawler.c */
@@ -23,7 +24,7 @@ void dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
-/* no matter what, this prototype is correct */
+/* getdelim.c */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 
 static void
@@ -49,6 +50,7 @@ usage(FILE *f)
 	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE bytes\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
+	fprintf(f, "   -q\t\tquote backslashes in filenames\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "\nFORMAT:\n");
 	fprintf(f, "   The following escape sequences are recognized:\n");
@@ -216,7 +218,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "crmhVnN:s:vqx0F:")) != -1) {
+	while ((c = getopt (argc, argv, "crmhVnN:s:vqx0F:q")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -253,6 +255,9 @@ main(int argc, char **argv)
 				break;
 			case 'x':
 				opt_onefilesystem = TRUE;
+				break;
+			case 'q':
+				opt_quote = TRUE;
 				break;
 			case '0':
 				opt_null = TRUE;

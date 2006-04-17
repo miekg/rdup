@@ -10,8 +10,10 @@
 extern gboolean opt_null;
 extern gboolean opt_removed;
 extern gboolean opt_modified;
+extern gboolean opt_quote;
 extern gint opt_verbose;
 extern char *opt_format;
+extern char qstr[];
 extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
@@ -36,7 +38,40 @@ signal_abort(int signal)
 	exit(EXIT_FAILURE);
 }
 
+/*
+ * quote backslashes - so that shell programs can deal with
+ * the output. This uses static memory for speed.
+ */
+static char *
+quote(char *f)
+{
+	char *j;
+	size_t i;
 
+	if (!opt_quote) {
+		return f;
+	}
+
+	for(i = 0, j = f; *j; j++) {
+		if (*j == '\\') {
+			qstr[i++] = '\\';
+		}
+		qstr[i++] = *j;
+		if (i > (BUFSIZE - 2)) {
+			fprintf(stderr, "** %s: Name to long, chopping\n", PROGNAME);
+			qstr[BUFSIZE] = '\0';
+			return qstr;
+		}
+
+	}
+	qstr[i] = '\0';
+
+	return qstr;
+}
+
+/*
+ * cat the files' contents
+ */
 static gboolean
 cat(FILE *fp, char *filename)
 {
@@ -142,7 +177,7 @@ entry_print_data(FILE *out, char n, struct entry *e)
 {
 	switch (n) {
 		case 'n': 
-			fputs(e->f_name, out);		
+			fputs(quote(e->f_name), out);		
 			break;
 		case 'l': 
 			fprintf(out, "%zd", e->f_name_size);	

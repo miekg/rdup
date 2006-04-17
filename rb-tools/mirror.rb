@@ -61,8 +61,8 @@ STDIN.each do |line|
                 when LNK
                         File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
                         copy_file(path, backupdir + path, preserve = true, dereference = false)
-                        File.chmod(bits, backupdir + path)
-                when LNK
+                        #File.chmod(bits, backupdir + path) # we
+                        #preserve the bits, might not be needed
                 when DIR 
                         if suffix != NIL then
                                 if stat.symlink? or stat.file? then

@@ -40,14 +40,6 @@ backups.
 
 .SH OPTIONS
 .TP
-.B \-h
-Give an overview of the options.
-.TP
-.B \-n
-Don't honor .nobackup files. Normally if such files are found the directory is not
-printed to standard output, now it is.
-.TP
-.TP
 .B \-F format
 Specify a printf-style format to use. See \fBformaT\fR below.
 .TP
@@ -61,6 +53,13 @@ will create \fBtimestamp\fR before it starts printing the file list.
 .B \-V
 Print rdup's version.
 .TP
+.B \-h
+Give an overview of the options.
+.TP
+.B \-n
+Don't honor .nobackup files. Normally if such files are found the directory is not
+printed to standard output, now it is.
+.TP
 .B \-c
 Concatenate the files' contents to standard output. This sets
 the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
@@ -72,9 +71,6 @@ printed to standard error. When used twice each path will also be
 printed to standard error. This is usefull in case of a remote
 backup (\fI\-c\fR) where the normal output is not seen.
 .TP
-.B \-x
-Stay on the local filesystem.
-.TP
 .B \-s size
 Only output files smaller then \fBsize\fR bytes. This can be used to limit
 the amount of data to be transferred when doing a remote backup.
@@ -84,6 +80,14 @@ to directories.
 .B \-0
 Delimit \fBfilelist\fR with NULL's instead of a newline. Use '\\0' in the
 \fBformat\fR string to change \fBrdup\fR's output.
+.TP
+.B \-q
+Quote backslashes in filenames. As the output of rdup is send to shell
+scripts it is necessary to quote backslashes, i.e. \\ -> \\\\.
+
+.TP
+.B \-x
+Stay on the local filesystem.
 
 .SH BACKUPS
 With:
