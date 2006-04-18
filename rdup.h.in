@@ -53,7 +53,7 @@ struct entry {
         mode_t f_mode;
         time_t f_mtime;
         off_t f_size;
-        size_t f_slash;       /* counts the number of backslashes, for -q */
+        size_t f_bslash;       /* counts the number of backslashes, for -q */
 };
 
 struct substract {

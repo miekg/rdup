@@ -24,7 +24,7 @@ entry_dup(struct entry *f)
         g->f_mode       = f->f_mode;
 	g->f_mtime      = f->f_mtime;
 	g->f_size       = f->f_size;
-	g->f_slash      = f->f_slash;
+	g->f_bslash      = f->f_bslash;
         return g;
 }
 
@@ -87,9 +87,9 @@ dir_prepend(GTree *t, char *path)
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
 		if (opt_slash) {
-			e.f_slash = count_slashes(e.f_name);
+			e.f_bslash = count_slashes(e.f_name);
 		} else {
-			e.f_slash = 0;
+			e.f_bslash = 0;
 		}
 		
 		g_tree_replace(t, (gpointer) entry_dup(&e), VALUE);
@@ -164,9 +164,9 @@ dir_crawl(GTree *t, char *path)
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 			if (opt_slash) {
-				pop.f_slash = count_slashes(pop.f_name);
+				pop.f_bslash = count_slashes(pop.f_name);
 			} else {
-				pop.f_slash = 0;
+				pop.f_bslash = 0;
 			}
 
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
@@ -209,10 +209,10 @@ dir_crawl(GTree *t, char *path)
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
 			if (opt_slash) {
-				dirstack[d]->f_slash = 
+				dirstack[d]->f_bslash = 
 					count_slashes(dirstack[d]->f_name);
 			} else {
-				dirstack[d]->f_slash = 0;
+				dirstack[d]->f_bslash = 0;
 			}
 
 			if (d++ % dstack_size == 0) {

@@ -179,7 +179,7 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			fputs(quote(e->f_name), out);		
 			break;
 		case 'l': 
-			fprintf(out, "%zd", e->f_name_size + e->f_slash);	
+			fprintf(out, "%zd", e->f_name_size + e->f_bslash);	
 			break;
 		case 'u': 
 			fprintf(out, "%d", e->f_uid);		
