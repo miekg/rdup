@@ -14,36 +14,34 @@ DIR = 1
 LNK = 2
 
 STDIN.each do |line|
-        mode, uid, gid, psize, fsize = line.chomp.split(/ /, 5)
-        path = line.chomp
+# isn't there a more easy way to do this?
+  all = line.chomp.scan(/(.*?) (.*?) (.*?) (.*?) (.*?) (.*)/)
+  mode  = all[0][0]
+  uid   = all[0][1]
+  gid   = all[0][2]
+  psize = all[0][3]
+  fsize = all[0][4]
+  path  = all[0][5]
 
-        # parse what we've got again
-        dump = mode[0,1]
-        mode = mode[1..-1]
-        bits = mode.to_i & S_MMASK
+  # parse what we've got again
+  dump = mode[0,1]
+  mode = mode[1..-1]
+  bits = mode.to_i & S_MMASK
 
-        type = REG
-        if mode.to_i & S_ISDIR == S_ISDIR then
-                type = DIR
-        end
-        if mode.to_i & S_ISLNK == S_ISLNK then
-                type = LNK
-        end
+  type = REG
+  type = DIR if mode.to_i & S_ISDIR == S_ISDIR
+  type = LNK if mode.to_i & S_ISLNK == S_ISLNK
 
-        newpath = @path
-
-        if dump == "+" then
-                File.chmod(bits, "testfile")
-                case type
-                when REG
-                        STDOUT.print "REG ", mode," ", bits," ", path,"\n"
-                when LNK
-                        STDOUT.print "LNK ", mode, " ",bits," ", path,"\n"
-                when DIR 
-                        STDOUT.print "DIR ", mode," ", bits," ", path,"\n"
-                end
-        else 
-                STDOUT.print "move","\n"
-        end
+  if dump == "+" then
+          case type
+          when REG
+                  STDOUT.print "REG ", mode," ", bits,"[", path,"]\n"
+          when LNK
+                  STDOUT.print "LNK ", mode, " ",bits,"[", path,"]\n"
+          when DIR 
+                  STDOUT.print "DIR ", mode," ", bits,"[", path,"]\n"
+          end
+  else 
+          STDOUT.print "move","\n"
+  end
 end
-File.chmod(448, "testfile");
