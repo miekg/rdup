@@ -1,9 +1,6 @@
 #!/usr/bin/ruby
 
-#while $word1, $word2 = STDIN.gets
-#        print $word1
-#        print $word2
-#end
+require "fileutils"
 
 S_MMASK = 4095
 S_ISDIR = 16384 
@@ -17,7 +14,6 @@ backupdir="/tmp/storage/200604"
 Dir.mkdir "/tmp/storage" if ! test(?d, "/tmp/storage")
 Dir.mkdir "/tmp/storage/200604" if ! test(?d, "/tmp/storage/200604")
 
-
 STDIN.each do |line|
         mode, uid, gid, psize, fsize, path = line.chomp.split(/ /)
 
@@ -25,9 +21,6 @@ STDIN.each do |line|
         dump = mode[0,1]
         mode = mode[1..-1]
         bits = mode.to_i & S_MMASK
-        bits = sprintf("%o", bits)
-
-        STDERR.print "[",bits,"]"
 
         type = REG
         if mode.to_i & S_ISDIR == S_ISDIR then
@@ -42,6 +35,8 @@ STDIN.each do |line|
                 next
         end
 
+       STDERR.print mode, " ", path, "\n"
+        
         begin
                 stat = File.lstat(backupdir + path)
                 suffix = sprintf("+%02d.%02d:%02d", stat.mtime.day, 
@@ -56,11 +51,11 @@ STDIN.each do |line|
                 case type
                 when REG
                         File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
-                        copy_file(path, backupdir + path, preserve = true, dereference = false)
+                        FileUtils.copy_file(path, backupdir + path, preserve = true, dereference = false)
                         File.chmod(bits, backupdir + path)
                 when LNK
                         File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
-                        copy_file(path, backupdir + path, preserve = true, dereference = false)
+                        FileUtils.copy_file(path, backupdir + path, preserve = true, dereference = false)
                         #File.chmod(bits, backupdir + path) # we
                         #preserve the bits, might not be needed
                 when DIR 
