@@ -2,13 +2,8 @@
 
 require "fileutils"
 
-S_MMASK = 4095
-S_ISDIR = 16384 
-S_ISLNK = 40960 
-
-REG = 0
-DIR = 1
-LNK = 2
+S_MMASK = 4095; S_ISDIR = 16384; S_ISLNK = 40960 
+REG = 0; DIR = 1; LNK = 2
 
 backupdir="/tmp/storage/200604"
 Dir.mkdir "/tmp/storage" if ! test(?d, "/tmp/storage")
@@ -23,6 +18,7 @@ STDIN.each do |line|
   fsize = all[0][4]
   path  = all[0][5]
 
+  # reparse mode, could also be done above
   dump = mode[0,1]
   mode = mode[1..-1]
   bits = mode.to_i & S_MMASK
@@ -39,20 +35,14 @@ STDIN.each do |line|
     stat = NIL
   end
 
-  STDOUT.print type, mode, bits, "[",path,"]\n"
-  next
-
   if dump == "+" then
     case type
       when REG
         File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
         FileUtils.copy_file(path, backupdir + path, preserve = true, dereference = false)
-        File.chmod(bits, backupdir + path)
       when LNK
         File.rename(backupdir + path, backupdir + path + suffix) if suffix != NIL
         FileUtils.copy_file(path, backupdir + path, preserve = true, dereference = false)
-        #File.chmod(bits, backupdir + path) # we
-        #preserve the bits, might not be needed
       when DIR 
         if suffix != NIL then
           if stat.symlink? or stat.file? then
