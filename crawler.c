@@ -223,8 +223,10 @@ dir_crawl(GTree *t, char *path)
 			g_free(curpath);
 			continue;
 		} else {
-			fprintf(stderr, "** Neither file nor directory `%s\'\n", 
+			if (opt_verbose > 0) {
+				fprintf(stderr, "** Neither file nor directory `%s\'\n", 
 					curpath);
+			}
 			g_free(curpath);
 		}
 	}
