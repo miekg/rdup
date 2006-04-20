@@ -2,9 +2,8 @@
    -- x --
    * scripts: support -V in all scripts
    * rdup: -q switch added: quote backslashes.
-   * Made ruby implemenation of mirror.sh: mirror.rb
-   * Planning a diff based backup, don't move the file, but diff it
-   
+   * made ruby implemenation of mirror.sh: mirror.rb
+   * mirror.sh: use cp, not cat for moving file locally
 
 11 Apr 2006: 0.2.7 Miek <miek@miek.nl>
    -- bugfixes + restore features --

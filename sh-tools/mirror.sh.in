@@ -111,7 +111,7 @@ local_mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                cat "$path" > "$backupdir/$path"
+                                cp -RP "$path" > "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 ftsize=$(($ftsize + $fsize))
