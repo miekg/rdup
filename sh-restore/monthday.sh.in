@@ -6,8 +6,6 @@
 # Print a filelist suitable for Restore a entire backed up directory
 # +MONTHDAY (restore to MONTHDAY's state)
 
-set -o nounset
-
 monthday=0
 max=0
 min=99
@@ -35,7 +33,7 @@ trap cleanup SIGINT SIGPIPE
 usage() {
         echo "$PROGNAME [OPTIONS] [+DAY]"
         echo
-        echo print a list suitable for restoring
+        echo Print a list suitable for restoring
         echo
         echo +DAY - restore up to this month day
         echo
@@ -62,7 +60,7 @@ while getopts ":Vh" o; do
         case $o in
                 h) usage && exit;;
                 V) version && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))

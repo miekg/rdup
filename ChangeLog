@@ -7,6 +7,7 @@
    * mirror.sh: with -c, don't print "**" twice
    * mirror.sh: use cp, not cat for moving file locally
    * hist.sh, yesterday.sh: fix unbound vars
+   * hist.sh: implemented -z and -k 
    * rdup: -q switch added: quote backslashes.
    * tests: better test for running all components
    * tests: added gzip.sh test
