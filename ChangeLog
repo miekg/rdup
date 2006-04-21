@@ -2,6 +2,7 @@
    -- bugfixes --
    * scripts: support -V in all scripts
    * scripts: print "invalid option" to stderr, on error
+   * scripts: disable 'set -o nounset' as is clashes with getopt
    * gzip.sh, crypt.sh: fix a bug in new size calculation 
      (reported by Erland Isaksson)
    * mirror.sh: with -c, don't print "**" twice
