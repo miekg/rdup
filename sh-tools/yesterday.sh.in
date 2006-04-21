@@ -6,6 +6,7 @@
 # inspired by yesterday of plan9
 
 set -o nounset
+PROGNAME=$0
 
 usage() {
         echo "$0 [OPTIONS] FILE [FILE ...]"
@@ -100,7 +101,7 @@ while getopts ":n:b:k:cCNdhzV" o; do
                 C) Ccopy=1;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 if [[ -z $backupdir ]]; then

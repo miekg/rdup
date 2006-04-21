@@ -6,6 +6,7 @@
 # inspired by hist of plan9 
 
 set -o nounset
+PROGNAME=$0
 
 usage() {
         echo "$0 [OPTIONS] FILE [FILE ...]"
@@ -46,7 +47,7 @@ while getopts ":b:hdV" o; do
                 d) diff=1;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 if [ -z $backupdir ]; then

@@ -30,7 +30,9 @@ trap cleanup SIGINT SIGPIPE
 usage() {
         echo "$PROGNAME [-d]"
         echo
-        echo "encrypt or decrypt the file's contents"
+        echo "Encrypt or decrypt the file's contents"
+        echo "There is no -c option, as crypt.sh always works"
+        echo "on the content"
         echo
         echo OPTIONS:
         echo " -d        decrypt the files"
@@ -58,7 +60,7 @@ while getopts "dVh" o; do
                 d) OPT="-d";;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
@@ -102,7 +104,7 @@ do
                                 mcrypt $OPT -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
                                 exit 1
 
-                                newsize=_stat_size $TMPDIR/file.$$.enc
+                                newsize=$(_stat_size $TMPDIR/file.$$.enc)
                                 echo "$dump$mode $uid $gid $psize $newsize"
                                 echo -n "$path"
                                 cat $TMPDIR/file.$$.enc
@@ -114,7 +116,7 @@ do
                         fi
                         ;;
                         1)      # DIR
-                        echo "$dump$mode $uid $gid $psize $newsize"
+                        echo "$dump$mode $uid $gid $psize $size"
                         echo -n "$path"
                         ;;
                         2)      # LNK, target is in the content!

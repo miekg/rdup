@@ -31,7 +31,9 @@ trap cleanup SIGINT SIGPIPE
 usage() {
         echo "$PROGNAME [-d]"
         echo
-        echo "compress or decompress the file's contents"
+        echo "Compress or decompress the file's contents"
+        echo "There is no -c option, as gzip.sh always works"
+        echo "on the content"
         echo
         echo OPTIONS:
         echo " -d        decompress the files"
@@ -59,7 +61,7 @@ while getopts ":dhV" o; do
                 d) OPT="-d";;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option" ; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
@@ -90,7 +92,7 @@ do
                         if [[ $fsize -ne 0 ]]; then
                                 # catch
                                 head -c $fsize | gzip $OPT -c > $TMPDIR/file.$$.gz
-                                newsize=_stat_size $TMPDIR/file.$$.gz
+                                newsize=$(_stat_size $TMPDIR/file.$$.gz)
                                 echo "$dump$mode $uid $gid $psize $newsize"
                                 echo -n "$path"
                                 cat $TMPDIR/file.$$.gz
@@ -102,7 +104,7 @@ do
                         fi
                         ;;
                         1)      # DIR
-                        echo "$dump$mode $uid $gid $psize $newsize"
+                        echo "$dump$mode $uid $gid $psize $fsize"
                         echo -n "$path"
                         ;;
                         2)      # LNK, target is in the content!

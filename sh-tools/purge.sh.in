@@ -13,6 +13,8 @@ _echo2() {
 usage() {
         echo "$PROGNAME [OPTIONS] HOST" 
         echo
+        echo Delete older backups
+        echo
         echo HOST - delete backups from this host
         echo
         echo OPTIONS:
@@ -54,7 +56,7 @@ while getopts ":b:x:hyV" o; do
                 y) ASK=0;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))

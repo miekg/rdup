@@ -8,6 +8,8 @@ set -o nounset
 usage() {
         echo "$PROGNAME [OPTIONS] NAME DIR [DIR ...]"
         echo 
+        echo "This is a wrapper around rdup and mirror.sh"
+        echo
         echo NAME - suffix for filelist and timestamp files
         echo DIR \ - directories to back up
         echo
@@ -40,7 +42,7 @@ while getopts ":b:x:ehV" o; do
                 x) exclude=$OPTARG;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))

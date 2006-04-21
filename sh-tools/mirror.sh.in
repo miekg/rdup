@@ -238,13 +238,13 @@ remote_mirror() {
         done 
         te=`date +%s`
         # /dev/fd/2 is not available remotely
-        _echo "** #REG FILES  : $ireg"
-        _echo "** #DIRECTORIES: $idir"
-        _echo "** #LINKS      : $ilnk"
-        _echo "** #(RE)MOVED  : $irm"
-        _echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        _echo "** STORED IN   : $backupdir"
-        _echo "** ELAPSED     : $(($te - $ts)) s"
+        _echo "#REG FILES  : $ireg"
+        _echo "#DIRECTORIES: $idir"
+        _echo "#LINKS      : $ilnk"
+        _echo "#(RE)MOVED  : $irm"
+        _echo "SIZE        : $(($ftsize / 1024 )) KB"
+        _echo "STORED IN   : $backupdir"
+        _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
 while getopts ":cvhb:V" options; do
@@ -254,7 +254,7 @@ while getopts ":cvhb:V" options; do
                 v) verbose=1;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))

@@ -1,9 +1,18 @@
-00 xxx 2006: 0.2.8 Miek <miek@miek.nl
-   -- x --
+YY Apr 2006: 0.2.8 Miek <miek@miek.nl
+   -- bugfixes --
    * scripts: support -V in all scripts
-   * rdup: -q switch added: quote backslashes.
-   * made ruby implemenation of mirror.sh: mirror.rb
+   * scripts: print invalid option to stderr, on error
+   * gzip.sh, crypt.sh: fix a bug in new size calculation 
+     (reported by Erland Isaksson)
+   * mirror.sh: with -c, don't print "**" twice
    * mirror.sh: use cp, not cat for moving file locally
+   * hist.sh, yesterday.sh: fix unbound vars
+   * rdup: -q switch added: quote backslashes.
+   * tests: better test for running all components
+   * tests: added gzip.sh test
+   * tests: added crypt.sh test
+   * Made ruby implemenation of mirror.sh: mirror.rb (proof of concept)
+   
 
 11 Apr 2006: 0.2.7 Miek <miek@miek.nl>
    -- bugfixes + restore features --
