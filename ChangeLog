@@ -12,6 +12,7 @@
    * tests: better test for running all components
    * tests: added gzip.sh test
    * tests: added crypt.sh test
+   * tests: added run restore scripts test
    * Made ruby implemenation of mirror.sh: mirror.rb (proof of concept)
    
 
