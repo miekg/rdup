@@ -1,7 +1,7 @@
-YY Apr 2006: 0.2.8 Miek <miek@miek.nl
+22 Apr 2006: 0.2.8 Miek <miek@miek.nl
    -- bugfixes --
    * scripts: support -V in all scripts
-   * scripts: print invalid option to stderr, on error
+   * scripts: print "invalid option" to stderr, on error
    * gzip.sh, crypt.sh: fix a bug in new size calculation 
      (reported by Erland Isaksson)
    * mirror.sh: with -c, don't print "**" twice
