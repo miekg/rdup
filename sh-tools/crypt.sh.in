@@ -116,7 +116,7 @@ do
                         fi
                         ;;
                         1)      # DIR
-                        echo "$dump$mode $uid $gid $psize $size"
+                        echo "$dump$mode $uid $gid $psize $fsize"
                         echo -n "$path"
                         ;;
                         2)      # LNK, target is in the content!
