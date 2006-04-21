@@ -64,7 +64,7 @@ sanitize() {
 
 local_restore() {
         declare -a path # catch spacing in the path
-        while read mode uid gid psize fsize path
+        while read -r mode uid gid psize fsize path
         do
                 dump=${mode:0:1}                # to add or remove
                 mode=${mode:1}                  # st_mode bits
@@ -95,7 +95,7 @@ local_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                cp -RP "$path" > "$restoredir/$newpath"
+                                cp -RP "$path" "$restoredir/$newpath"
                                 chown $uid:$gid "$restoredir/$newpath"
                                 chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))
@@ -128,7 +128,7 @@ local_restore() {
 }
 
 remote_restore() {
-        while read mode uid gid psize fsize
+        while read -r mode uid gid psize fsize
         do
                 dump=${mode:0:1}        # to add or remove
                 mode=${mode:1}          # st_mode bits

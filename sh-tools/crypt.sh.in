@@ -80,7 +80,7 @@ if [[ $? -ne 0 ]]; then
 fi
 chmod 700 $TMPDIR
 
-while read mode uid gid psize fsize
+while read -r mode uid gid psize fsize
 do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits

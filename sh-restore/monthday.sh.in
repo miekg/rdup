@@ -93,7 +93,7 @@ declare -a d    # version day
 declare -a m    # version min
 declare -a s    # version sec
 declare -a path
-while read mode uid gid psize fsize path
+while read -r mode uid gid psize fsize path
 do
         if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                 name=${BASH_REMATCH[1]}

@@ -61,7 +61,7 @@ fi
 REGEXP=$1
 
 declare -a path # catch spacing in the path
-while read mode uid gid psize fsize path
+while read -r mode uid gid psize fsize path
 do
         dump=${mode:0:1}        
         mode=${mode:1}         

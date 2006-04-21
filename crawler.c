@@ -8,7 +8,6 @@
 
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
-extern gboolean opt_slash;
 extern gint opt_verbose;
 
 static struct entry *
@@ -24,7 +23,6 @@ entry_dup(struct entry *f)
         g->f_mode       = f->f_mode;
 	g->f_mtime      = f->f_mtime;
 	g->f_size       = f->f_size;
-	g->f_bslash      = f->f_bslash;
         return g;
 }
 
@@ -33,20 +31,6 @@ entry_free(struct entry *f)
 {
 	g_free(f->f_name);
 	g_free(f);
-}
-
-static size_t
-count_slashes(char *f)
-{
-	char *j;
-	size_t i;
-
-	for(i = 0, j = f; *j; j++) {
-		if (*j == '\\') {
-			i++;
-		}
-	}
-	return i;
 }
 
 /**
@@ -86,11 +70,6 @@ dir_prepend(GTree *t, char *path)
 		e.f_mtime     = s.st_mtime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
-		if (opt_slash) {
-			e.f_bslash = count_slashes(e.f_name);
-		} else {
-			e.f_bslash = 0;
-		}
 		
 		g_tree_replace(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
@@ -163,11 +142,6 @@ dir_crawl(GTree *t, char *path)
 			pop.f_mtime     = s.st_mtime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
-			if (opt_slash) {
-				pop.f_bslash = count_slashes(pop.f_name);
-			} else {
-				pop.f_bslash = 0;
-			}
 
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
@@ -208,12 +182,6 @@ dir_crawl(GTree *t, char *path)
 			dirstack[d]->f_mtime      = s.st_mtime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
-			if (opt_slash) {
-				dirstack[d]->f_bslash = 
-					count_slashes(dirstack[d]->f_name);
-			} else {
-				dirstack[d]->f_bslash = 0;
-			}
 
 			if (d++ % dstack_size == 0) {
 				dirstack = g_realloc(dirstack, 

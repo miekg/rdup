@@ -11,7 +11,6 @@ gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
-gboolean opt_slash  	   = FALSE; 	     	      /* whether to quote backslashes */
 char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
@@ -50,7 +49,6 @@ usage(FILE *f)
 	fprintf(f, "   -r\t\tonly print removed files (overrides -m)\n");
 	fprintf(f, "   -s SIZE\tonly output files smaller then SIZE bytes\n");
 	fprintf(f, "   -v\t\tbe more verbose\n");
-	fprintf(f, "   -q\t\tquote backslashes in filenames\n");
 	fprintf(f, "   -x\t\tstay in local file system\n");
 	fprintf(f, "\nFORMAT:\n");
 	fprintf(f, "   The following escape sequences are recognized:\n");
@@ -255,9 +253,6 @@ main(int argc, char **argv)
 				break;
 			case 'x':
 				opt_onefilesystem = TRUE;
-				break;
-			case 'q':
-				opt_slash = TRUE;
 				break;
 			case '0':
 				opt_null = TRUE;
