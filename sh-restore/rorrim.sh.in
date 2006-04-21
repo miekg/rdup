@@ -95,7 +95,7 @@ local_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                cat "$path" > "$restoredir/$newpath"
+                                cp -RP "$path" > "$restoredir/$newpath"
                                 chown $uid:$gid "$restoredir/$newpath"
                                 chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))

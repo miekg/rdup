@@ -1,7 +1,8 @@
 TODO: 
 
 Make rdup work with 1 backup directory, where people can forever
-incrementally dump files to.
+incrementally dump files to. This applies more to the scripts then
+to rdup.
 
 :rdup util: 
 
