@@ -38,6 +38,7 @@ usage() {
         echo +DAY - restore up to this month day
         echo
         echo OPTIONS:
+        echo " -c        work with the files' contents (rdup -c)"
         echo " -h        this help"
         echo " -V        print version"
 }
@@ -56,8 +57,10 @@ reset_vars() {
         prevfile="$name"
 }
 
+remote=0
 while getopts ":Vh" o; do
         case $o in
+                c) remote=1;;
                 h) usage && exit;;
                 V) version && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;

@@ -47,6 +47,12 @@ next to \fI+DAY\fR.
 
 .SH OPTIONS
 .TP
+.B \-c
+Work with the files' contents (rdup -c). The files contents will not
+be modified. This option will allow you to pipe the restored files
+to \fBgzip.sh -d\fR or \fBcrypt.sh -d\fR to restore a zipped or
+encrypted backup.
+.TP
 .B \-h 
 Provide a small help message.
 .TP
