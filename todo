@@ -1,5 +1,8 @@
 TODO: 
 
+Make rdup work with 1 backup directory, where people can forever
+incrementally dump files to.
+
 :rdup util: 
 
 :tests:
@@ -7,7 +10,7 @@ TODO:
 :doc:
 
 :scripts:
--z for unzip in hist.sh, yesterday.sh
+add -c to monthday.sh
 
 :porting:
 
@@ -19,6 +22,9 @@ o make complete hdup2 clone based on rdup
 
 
 :DONE:
+0 -z for unzip in hist.sh, yesterday.sh
+  21 Apr 2006: done
+
 o split up rdgrep.sh in dir and file grep?
   10 Apr 2006: done
   
