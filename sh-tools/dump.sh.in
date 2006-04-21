@@ -3,8 +3,6 @@
 # create a (mirror) backup in /vol/backup/`hostname`
 # figure out of the dump should be a full one or incremental
 
-set -o nounset
-
 usage() {
         echo "$PROGNAME [OPTIONS] NAME DIR [DIR ...]"
         echo 

@@ -3,7 +3,6 @@
 # Purge older backup directories
 # -b directory -x X : X months ago
 
-set -o nounset
 PROGNAME=$0
 
 _echo2() {

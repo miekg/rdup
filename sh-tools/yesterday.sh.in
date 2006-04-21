@@ -5,7 +5,6 @@
 #
 # inspired by yesterday of plan9
 
-set -o nounset
 PROGNAME=$0
 
 usage() {
@@ -95,13 +94,13 @@ while getopts ":n:b:k:cCNdhzV" o; do
                 b) backupdir=$OPTARG;;
                 n) daysago=$OPTARG;;
                 d) diff=1;;
-                K) keyfile=$OPTARG;;
+                k) keyfile=$OPTARG;;
                 z) gzip=1;;
                 c) copy=1;;
                 C) Ccopy=1;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) _echo2 "Invalid option"; usage && exit;;
+                \?) echo "** $0: Invalid option" >/dev/fd/2; usage && exit;;
         esac
 done
 if [[ -z $backupdir ]]; then
@@ -150,9 +149,9 @@ do
                         zcat $backupfile | diff -u - $file
                         continue
                 fi
-                if [[ ! -z $keyfile ]]; then
+                if [[ ! -z "$keyfile" ]]; then
                         cat $backupfile | mdecrypt -F -f "$keyfile" -a blowfish | \
-                                diff -u - $file
+                                diff -u - "$file"
                         continue
                 fi
                 diff -u $backupfile $file

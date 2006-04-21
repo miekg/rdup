@@ -5,7 +5,6 @@
 #
 # inspired by hist of plan9 
 
-set -o nounset
 PROGNAME=$0
 
 usage() {
@@ -18,6 +17,8 @@ usage() {
         echo OPTIONS:
         echo " -b DIR  backup directory. Default: /vol/backup/HOSTNAME"
         echo " -d      causes diff(1) to be run for each adjacent pair of backupped files "
+        echo " -k KEY  use the file KEY as decryption key"
+        echo " -z      backup file is gzipped"
         echo " -h      this help"
         echo " -V      print version"        
 }
@@ -40,14 +41,18 @@ monthsago() {
 }
 
 diff=0
+gzip=0
+keyfile=""
 backupdir=""
-while getopts ":b:hdV" o; do
+while getopts ":b:hdVzk" o; do
         case $o in
                 b) backupdir=$OPTARG;;
                 d) diff=1;;
+                z) gzip=1;;
+                k) keyfile=$OPTARG;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) _echo2 "Invalid option"; usage && exit;;
+                \?) echo "** $0: Invalid option" > /dev/fd/2; usage && exit;;
         esac
 done
 if [ -z $backupdir ]; then
@@ -81,9 +86,19 @@ do
                         ls -lh "$f" | awk ' { print $6" "$7" "$8" "$9" "$10" "$5 }' |\
                         sed "s|$b|\.\.\.|g"
 
-                        [[ ! -z $prev ]] && [[ $diff -eq 1 ]] && \
-                                diff -u "$prev" "$f"
-
+                        if [[ $diff -eq 1 ]]; then
+                                if [[ ! -z $prev ]]; then
+                                        if [[ $gzip -eq 1 ]]; then
+                                                zcat "$prev" | diff -u - "$f"
+                                        fi
+                                        if [[ ! -z "$keyfile" ]]; then
+                                                cat "$prev" | \
+                                                mdecrypt -F -f "$keyfile" -a blowfish | \
+                                                diff -u - "$file"
+                                        fi
+                                        diff -u "$prev" "$f"
+                                fi
+                        fi
                         prev="$f"
                 done
         done

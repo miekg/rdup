@@ -5,8 +5,6 @@
 #
 # grep on rdup's output
 
-set -o nounset
-
 PROGNAME=$0
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
