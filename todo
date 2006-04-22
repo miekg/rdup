@@ -1,10 +1,19 @@
 TODO: 
 
-Make rdup work with 1 backup directory, where people can forever
-incrementally dump files to. This applies more to the scripts then
-to rdup.
+:longer term - and harder:
+o make rdup work with 1 backup directory, where people can forever
+  incrementally dump files to. This applies more to the scripts then
+  to rdup.
+:hdup2:
+o make complete hdup2 clone based on rdup
+  see hdup2 directory
+  I want to see this, but I don't have enough time for this.
 
-:rdup util: 
+:0.2.9:
+o monthday.c support
+o sh-lib for common functions
+
+:rdup utils: 
 
 :tests:
 
@@ -16,10 +25,6 @@ add -c to monthday.sh
 :porting:
 
 :LOW PRIO:
-:hdup2:
-o make complete hdup2 clone based on rdup
-  see hdup2 directory
-  I want to see this, but I don't have enough time for this.
 
 
 :DONE:
