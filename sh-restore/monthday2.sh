@@ -107,6 +107,9 @@ chmod 700 $TMPDIR
 # store everything you get, until we hit
 # a new name. Then process what we've got
 # and get on with the newer one
+#
+# all the filenames are received in ascending
+# order
 
 while read -r mode uid gid psize fsize
 do
@@ -128,12 +131,33 @@ do
                 # a new file has been seen. Figure out what to
                 # do with the old one
                 if [[ "$prevfile" != "$name" ]]; then
+                        
+# monthday := 0 need to be handled
+                        # check minimum
+                        if [[ $monthday -lt ${_month[0]} ]]; then
+                                # before any version, use the 0 one
+                                out_file_and_content 0
+                                clear and continue with the rest
+                        fi
+                        if [[ $monthday -gt ${_month[$i]} ]]; then
+                                # after any of the versions, use the
+                                # plain one
+                                out_file_and_content $i
+                                clear and continue with the rest
+                        fi
+                        
+
+                        
                         for j in $(_seq $i); do
                                 if [[ $monthday -eq ${_month[$j]} ]]; then
                                         # exact match
-                                        output_file_and_content         
+                                        output_file_and_content $j       
+                                        clear and continue with the rest
                                 fi
+                                if larger then we must use the previous 
+                                        one;
                         done
+
                 fi
 
 
