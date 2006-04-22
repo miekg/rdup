@@ -13,7 +13,7 @@ remote=0
 verbose=0
 idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
-ts=`date +%s` # gnuism
+ts=`date +%s` 
 backupdir=""
 PROGNAME=$0
 

@@ -3,8 +3,8 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 #
-# This script implement a mirroring backup scheme
-# -c is used for remote mirroring
+# This script implement restoring a backup
+# it is the opposite of mirror.sh
 
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
@@ -13,7 +13,7 @@ remote=0
 verbose=0
 idir=0; ireg=0; ilnk=0
 ftsize=0
-ts=`date +%s` # gnuism
+ts=`date +%s`
 restoredir=""
 newpath=""
 PROGNAME=$0
