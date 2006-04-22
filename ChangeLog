@@ -1,8 +1,13 @@
+xx May 2006: 0.2.9 Miek <miek@miek.nl>
+  -- ?? --
+
+
+
 22 Apr 2006: 0.2.8 Miek <miek@miek.nl>
    -- bugfixes --
-   * scripts: support -V in all scripts
+   * scripts: support -V (version) in all scripts
    * scripts: print "invalid option" when encountered to stderr
-   * scripts: disable 'set -o nounset' as is clashes with getopt
+   * scripts: disable 'set -o nounset' as it clashes with getopt
    * scripts: use read -r to allow for backslashes in filenames
    * gzip.sh, crypt.sh: fix a bug in new size calculation 
      (reported by Erland Isaksson)
