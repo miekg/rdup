@@ -59,14 +59,8 @@ _seq() {
 
 # echo the file's status line to stdout
 print_file_status() {
-        # echo status line
         echo -n "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
-        # echo pathname, if month == 0, there is no suffix
-        if [[ ${_month[$1]} -eq 0  ]]; then
-                echo "${_path[$1]}"
-        else
-                printf "%s+%02d.%02d:%02d\n" "${_path[$1]}" ${_month[$1]} ${_hour[$1]} ${_min[$1]}
-        fi
+        echo "${_path[$1]}"
 }
 
 # cat the file's content to stdout
@@ -91,7 +85,6 @@ cat_file() {
 # remove the files stored sofar
 rm_tmp_files() {
         for j in $(_seq $1); do
-                # dirs aren't created
                 rm -f "${_tmp_path[$j]}"
         done
 }
@@ -107,8 +100,8 @@ store() {
         h=${basename##*/}
         _tmp_path[$i]="$TMPDIR/$h.$i"
         _month[$i]=$mo
-        _hour[$i]=$ho
-        _min[$i]=$mi
+
+        prevfile=$basename
 
         if [[ $remote -eq 0 ]]; then
                 return
@@ -147,8 +140,6 @@ local_restore() {
         declare -a _path
         declare -a _tmp_path
         declare -a _month
-        declare -a _hour
-        declare -a _min
 
         # store everything you get, until we hit
         # a new name. Then process what we've got
@@ -162,20 +153,15 @@ local_restore() {
                 if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                         basename=${BASH_REMATCH[1]}
                         mo=$((10#${BASH_REMATCH[2]})) # force base 10
-                        ho=$((10#${BASH_REMATCH[3]})) # idem
-                        mi=$((10#${BASH_REMATCH[4]})) # idem
                 else 
                         basename="$path"
                         mo=0
-                        ho=0
-                        mi=0
                 fi
 
                 # first hit
                 if [[ -z "$prevfile" ]]; then
                         store $i
                         i=$(($i + 1))
-                        prevfile=$basename
                         continue
                 fi
 
@@ -228,9 +214,8 @@ local_restore() {
                                 continue
                         fi
                 else 
-                        store $i
                         i=$(($i + 1))
-                        prevfile=$basename
+                        store $i
                 fi
         done
         # this is need for the last file we've just read
@@ -278,8 +263,6 @@ remote_restore() {
         declare -a _path
         declare -a _tmp_path
         declare -a _month
-        declare -a _hour
-        declare -a _min
         # work dir
         TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
         if [[ $? -ne 0 ]]; then
@@ -302,20 +285,15 @@ remote_restore() {
                 if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                         basename=${BASH_REMATCH[1]}
                         mo=$((10#${BASH_REMATCH[2]})) # force base 10
-                        ho=$((10#${BASH_REMATCH[3]})) # idem
-                        mi=$((10#${BASH_REMATCH[4]})) # idem
                 else 
                         basename="$path"
                         mo=0
-                        ho=0
-                        mi=0
                 fi
 
                 # first hit
                 if [[ -z "$prevfile" ]]; then
                         store $i
                         i=$(($i + 1))
-                        prevfile=$basename
                         continue
                 fi
 
@@ -380,9 +358,8 @@ remote_restore() {
                                 continue
                         fi
                 else 
-                        store $i
                         i=$(($i + 1))
-                        prevfile=$basename
+                        store $i
                 fi
         done
         # this is need for the last file we've just read
