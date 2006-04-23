@@ -153,7 +153,7 @@ remote_restore() {
 #               echo "p{"$path"}"
 
                 # create the new filename
-                newpath=sanitize $path
+                newpath=$(sanitize "$path")
 
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed

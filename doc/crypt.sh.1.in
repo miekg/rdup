@@ -35,4 +35,4 @@ Decrypt the files.
 Show the version.
 
 .SH SEE ALSO
-gzip.sh(1) and mirror.sh(8).
+gzip.sh(1), mirror.sh(8) and mcrypt(1).

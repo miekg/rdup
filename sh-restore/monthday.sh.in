@@ -59,8 +59,13 @@ _seq() {
 
 # echo the file's status line to stdout
 print_file_status() {
-        echo -n "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
-        echo "${_path[$1]}"
+        if [[ $remote -eq 0 ]]; then
+                echo -n "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
+                echo "${_path[$1]}"
+        else
+                echo "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
+                echo -n "${_path[$1]}"
+        fi
 }
 
 # cat the file's content to stdout
@@ -74,7 +79,7 @@ cat_file() {
         fi
         case $typ in
                 0|2)      # REG | LNK
-                cat ${_tmp_path[$1]}
+                cat "${_tmp_path[$1]}"
                 ;;
                 1)      # DIR
                 # no content
