@@ -110,6 +110,10 @@ store() {
         _hour[$i]=$ho
         _min[$i]=$mi
 
+        if [[ $remote -eq 0 ]]; then
+                return
+        fi
+
         typ=0
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1;
@@ -133,8 +137,303 @@ store() {
         esac
 }
 
+local_restore() {
+        i=0
+        declare -a _mode
+        declare -a _uid
+        declare -a _gid
+        declare -a _psize
+        declare -a _fsize
+        declare -a _path
+        declare -a _tmp_path
+        declare -a _month
+        declare -a _hour
+        declare -a _min
+
+        # store everything you get, until we hit
+        # a new name. Then process what we've got
+        # and get on with the newer one
+        #
+        # all the filenames are received in ascending
+        # order
+
+        while read -r mode uid gid psize fsize path
+        do
+                if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
+                        basename=${BASH_REMATCH[1]}
+                        mo=$((10#${BASH_REMATCH[2]})) # force base 10
+                        ho=$((10#${BASH_REMATCH[3]})) # idem
+                        mi=$((10#${BASH_REMATCH[4]})) # idem
+                else 
+                        basename="$path"
+                        mo=0
+                        ho=0
+                        mi=0
+                fi
+
+                # first hit
+                if [[ -z "$prevfile" ]]; then
+                        store $i
+                        i=$(($i + 1))
+                        prevfile=$basename
+                        continue
+                fi
+
+                if [[ "$prevfile" != "$basename" ]]; then
+                        # a new file has been seen. Figure out what to
+                        # do with the ones we have
+
+                        # the first one is the one without suffix
+                        if [[ $monthday -eq 0 ]]; then
+                                print_file_status 0
+                                i=0; store $i
+                                continue
+                        fi
+
+                        if [[ $monthday -gt ${_month[$i]} ]]; then
+                                # after any of the versions, use the
+                                # plain one
+                                print_file_status 0
+                                i=0; store $i
+                                continue
+                        fi
+                        
+                        for j in $(_seq $i); do
+                                if [[ $monthday -eq ${_month[$j]} ]]; then
+                                        # exact match
+                                        print_file_status $j       
+                                        i=0; store $i
+                                        continue
+                                fi
+                                if [[ $monthday -gt ${_month[$j]} ]]; then
+                                        x=$(($j - 1))
+                                        print_file_status $x
+                                        i=0; store $i
+                                        continue
+                                fi
+                        done
+                        
+                        # nothing matched, because $monthday is smaller
+                        # than any of the months we have, use the first
+                        # stored version.
+
+                        if [[ ${_month[1]} -eq 0 ]]; then
+                                _echo2 "Huh this should have a value!"
+                                print_file_status 0
+                                i=0; store $i
+                                continue
+                        else 
+                                print_file_status 1
+                                i=0; store $i
+                                continue
+                        fi
+                else 
+                        store $i
+                        i=$(($i + 1))
+                        prevfile=$basename
+                fi
+        done
+        # this is need for the last file we've just read
+        if [[ $monthday -eq 0 ]]; then
+                print_file_status 0
+                clean_exit
+        fi
+        if [[ $monthday -gt ${_month[$i]} ]]; then
+                # after any of the versions, use the
+                # plain one
+                print_file_status 0
+                clean_exit
+        fi
+
+        for j in $(_seq $i); do
+                if [[ $monthday -eq ${_month[$j]} ]]; then
+                        # exact match
+                        print_file_status $j       
+                        clean_exit
+                fi
+                if [[ $monthday -gt ${_month[$j]} ]]; then
+                        x=$(($j - 1))
+                        print_file_status $x
+                        clean_exit
+                fi
+        done
+
+        if [[ ${_month[1]} -eq 0 ]]; then
+                _echo2 "Huh this should have a value!"
+                print_file_status 0
+                clean_exit
+        else 
+                print_file_status 1
+                clean_exit
+        fi
+}
+
+remote_restore() {
+        i=0
+        declare -a _mode
+        declare -a _uid
+        declare -a _gid
+        declare -a _psize
+        declare -a _fsize
+        declare -a _path
+        declare -a _tmp_path
+        declare -a _month
+        declare -a _hour
+        declare -a _min
+        # work dir
+        TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
+        if [[ $? -ne 0 ]]; then
+                _echo2 "Mktemp failed" 
+                exit 1
+        fi
+        chmod 700 $TMPDIR
+
+        # store everything you get, until we hit
+        # a new name. Then process what we've got
+        # and get on with the newer one
+        #
+        # all the filenames are received in ascending
+        # order
+
+        while read -r mode uid gid psize fsize
+        do
+                path=$(head -c $psize)
+                
+                if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
+                        basename=${BASH_REMATCH[1]}
+                        mo=$((10#${BASH_REMATCH[2]})) # force base 10
+                        ho=$((10#${BASH_REMATCH[3]})) # idem
+                        mi=$((10#${BASH_REMATCH[4]})) # idem
+                else 
+                        basename="$path"
+                        mo=0
+                        ho=0
+                        mi=0
+                fi
+
+                # first hit
+                if [[ -z "$prevfile" ]]; then
+                        store $i
+                        i=$(($i + 1))
+                        prevfile=$basename
+                        continue
+                fi
+
+                if [[ "$prevfile" != "$basename" ]]; then
+                        # a new file has been seen. Figure out what to
+                        # do with the ones we have
+
+                        # the first one is the one without suffix
+                        if [[ $monthday -eq 0 ]]; then
+                                print_file_status 0
+                                cat_file 0
+                                rm_tmp_files $i
+                                i=0; store $i
+                                continue
+                        fi
+
+                        if [[ $monthday -gt ${_month[$i]} ]]; then
+                                # after any of the versions, use the
+                                # plain one
+                                print_file_status 0
+                                cat_file 0
+                                rm_tmp_files $i
+                                i=0; store $i
+                                continue
+                        fi
+                        
+                        for j in $(_seq $i); do
+                                if [[ $monthday -eq ${_month[$j]} ]]; then
+                                        # exact match
+                                        print_file_status $j       
+                                        cat_file $j
+                                        rm_tmp_files $i
+                                        i=0; store $i
+                                        continue
+                                fi
+                                if [[ $monthday -gt ${_month[$j]} ]]; then
+                                        x=$(($j - 1))
+                                        print_file_status $x
+                                        cat_file $x
+                                        rm_tmp_files $i
+                                        i=0; store $i
+                                        continue
+                                fi
+                        done
+                        
+                        # nothing matched, because $monthday is smaller
+                        # than any of the months we have, use the first
+                        # stored version.
+
+                        if [[ ${_month[1]} -eq 0 ]]; then
+                                _echo2 "Huh this should have a value!"
+                                print_file_status 0
+                                cat_file 0
+                                rm_tmp_files $i
+                                i=0; store $i
+                                continue
+                        else 
+                                print_file_status 1
+                                cat_file 1
+                                rm_tmp_files $i
+                                i=0; store $i
+                                continue
+                        fi
+                else 
+                        store $i
+                        i=$(($i + 1))
+                        prevfile=$basename
+                fi
+        done
+        # this is need for the last file we've just read
+        if [[ $monthday -eq 0 ]]; then
+                print_file_status 0
+                cat_file 0
+                rm_tmp_files $i
+                clean_exit
+        fi
+        if [[ $monthday -gt ${_month[$i]} ]]; then
+                # after any of the versions, use the
+                # plain one
+                print_file_status 0
+                cat_file 0
+                rm_tmp_files $i
+                clean_exit
+        fi
+
+        for j in $(_seq $i); do
+                if [[ $monthday -eq ${_month[$j]} ]]; then
+                        # exact match
+                        print_file_status $j       
+                        cat_file $j
+                        rm_tmp_files $i
+                        clean_exit
+                fi
+                if [[ $monthday -gt ${_month[$j]} ]]; then
+                        x=$(($j - 1))
+                        print_file_status $x
+                        cat_file $x
+                        rm_tmp_files $i
+                        clean_exit
+                fi
+        done
+
+        if [[ ${_month[1]} -eq 0 ]]; then
+                _echo2 "Huh this should have a value!"
+                print_file_status 0
+                cat_file 0
+                rm_tmp_files $i
+                clean_exit
+        else 
+                print_file_status 1
+                cat_file 1
+                rm_tmp_files $i
+                clean_exit
+        fi
+}
+
 remote=0
-while getopts ":Vh" o; do
+while getopts ":Vch" o; do
         case $o in
                 c) remote=1;;
                 h) usage && exit;;
@@ -163,165 +462,8 @@ if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
         exit 1
 fi
 
-i=0
-declare -a _mode
-declare -a _uid
-declare -a _gid
-declare -a _psize
-declare -a _fsize
-declare -a _path
-declare -a _tmp_path
-declare -a _month
-declare -a _hour
-declare -a _min
-# work dir
-TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
-if [[ $? -ne 0 ]]; then
-        _echo2 "Mktemp failed" 
-        exit 1
+if [[ $remote -eq 0 ]]; then
+        local_restore
+else
+        remote_restore
 fi
-chmod 700 $TMPDIR
-
-# store everything you get, until we hit
-# a new name. Then process what we've got
-# and get on with the newer one
-#
-# all the filenames are received in ascending
-# order
-
-while read -r mode uid gid psize fsize
-do
-        path=$(head -c $psize)
-        
-        if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
-                basename=${BASH_REMATCH[1]}
-                mo=$((10#${BASH_REMATCH[2]})) # force base 10
-                ho=$((10#${BASH_REMATCH[3]})) # idem
-                mi=$((10#${BASH_REMATCH[4]})) # idem
-        else 
-                basename="$path"
-                mo=0
-                ho=0
-                mi=0
-        fi
-
-        # first hit
-        if [[ -z "$prevfile" ]]; then
-                store $i
-                i=$(($i + 1))
-                prevfile=$basename
-                continue
-        fi
-
-        if [[ "$prevfile" != "$basename" ]]; then
-                # a new file has been seen. Figure out what to
-                # do with the ones we have
-
-                # the first one is the one without suffix
-                if [[ $monthday -eq 0 ]]; then
-                        print_file_status 0
-                        cat_file 0
-                        rm_tmp_files $i
-                        i=0; store $i
-                        continue
-                fi
-
-                if [[ $monthday -gt ${_month[$i]} ]]; then
-                        # after any of the versions, use the
-                        # plain one
-                        print_file_status 0
-                        cat_file 0
-                        rm_tmp_files $i
-                        i=0; store $i
-                        continue
-                fi
-                
-                for j in $(_seq $i); do
-                        if [[ $monthday -eq ${_month[$j]} ]]; then
-                                # exact match
-                                print_file_status $j       
-                                cat_file $j
-                                rm_tmp_files $i
-                                i=0; store $i
-                                continue
-                        fi
-                        if [[ $monthday -gt ${_month[$j]} ]]; then
-                                x=$(($j - 1))
-                                print_file_status $x
-                                cat_file $x
-                                rm_tmp_files $i
-                                i=0; store $i
-                                continue
-                        fi
-                done
-                
-                # nothing matched, because $monthday is smaller
-                # than any of the months we have, use the first
-                # stored version.
-
-                if [[ ${_month[1]} -eq 0 ]]; then
-                        _echo2 "Huh this should have a value!"
-                        print_file_status 0
-                        cat_file 0
-                        rm_tmp_files $i
-                        i=0; store $i
-                        continue
-                else 
-                        print_file_status 1
-                        cat_file 1
-                        rm_tmp_files $i
-                        i=0; store $i
-                        continue
-                fi
-        else 
-                store $i
-                i=$(($i + 1))
-                prevfile=$basename
-        fi
-done
-# this is need for the last file we've just read
-if [[ $monthday -eq 0 ]]; then
-        print_file_status 0
-        cat_file 0
-        rm_tmp_files $i
-        clean_exit
-fi
-if [[ $monthday -gt ${_month[$i]} ]]; then
-        # after any of the versions, use the
-        # plain one
-        print_file_status 0
-        cat_file 0
-        rm_tmp_files $i
-        clean_exit
-fi
-
-for j in $(_seq $i); do
-        if [[ $monthday -eq ${_month[$j]} ]]; then
-                # exact match
-                print_file_status $j       
-                cat_file $j
-                rm_tmp_files $i
-                clean_exit
-        fi
-        if [[ $monthday -gt ${_month[$j]} ]]; then
-                x=$(($j - 1))
-                print_file_status $x
-                cat_file $x
-                rm_tmp_files $i
-                clean_exit
-        fi
-done
-
-if [[ ${_month[1]} -eq 0 ]]; then
-        _echo2 "Huh this should have a value!"
-        print_file_status 0
-        cat_file 0
-        rm_tmp_files $i
-        clean_exit
-else 
-        print_file_status 1
-        cat_file 1
-        rm_tmp_files $i
-        clean_exit
-fi
-
