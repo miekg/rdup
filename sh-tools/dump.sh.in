@@ -15,6 +15,8 @@ usage() {
         echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -x SCRIPT  use SCRIPT as exclude script"
+        echo " -z         compress all files"
+        echo " -k KEYFILE encrypt all files"
         echo " -h         this help"
         echo " -V         print version"
 }
@@ -25,19 +27,21 @@ version() {
 
 d=`date +%Y%m`
 etc=0
-exclude=""
 PROGNAME=$0
 BACKUPDIR=""
+gzip=0
+KEYFILE=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":b:x:ehV" o; do
+while getopts ":b:k:zehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 e) etc=1;;
-                x) exclude=$OPTARG;;
+                k) KEYFILE=$OPTARG;;
+                z) gzip=1;;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
@@ -50,6 +54,11 @@ if [[ $# -eq 0 ]]; then
 fi
 if [[ -z $BACKUPDIR ]]; then
         BACKUPDIR="/vol/backup/$HOSTNAME" 
+fi
+
+if [[ ! -z "$KEYFILE" && ! -r "$KEYFILE" ]]; then
+        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
+        exit 1
 fi
 
 # where to put the admin files.
@@ -82,8 +91,16 @@ else
         _echo2 "Incremental dump"
 fi
 
-if [[ ! -z $exclude ]]; then
-        /usr/sbin/rdup -N $STAMP $LIST $@ | $exclude | /usr/sbin/mirror.sh -b "$BACKUPDIR"
+if [[ -z "$KEYFILE" ]]; then
+        if [[ $gzip -eq 0 ]]; then
+                rdup -N $STAMP $LIST $@ | mirror.sh -b "$BACKUPDIR"
+        else 
+                rdup -c -N $STAMP $LIST $@ | gzip.sh | mirror.sh -c -b "$BACKUPDIR"
+        fi
 else
-        /usr/sbin/rdup -N $STAMP $LIST $@ | /usr/sbin/mirror.sh -b "$BACKUPDIR"
+        if [[ $gzip -eq 0 ]]; then
+                rdup -c -N $STAMP $LIST $@ | crypt.sh $KEYFILE | mirror.sh -c -b "$BACKUPDIR"
+        else 
+                rdup -c -N $STAMP $LIST $@ | gzip.sh | crypt.sh $KEYFILE | mirror.sh -c -b "$BACKUPDIR"
+        fi
 fi

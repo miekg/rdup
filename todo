@@ -11,26 +11,27 @@ o make complete hdup2 clone based on rdup
 
 :0.2.9:
 o monthday prints versions while it should not
-o dump.sh add -z and -k
 
 :rdup utils: 
-grep.sh: implement -c option
+o better error messages if somebody forgets a -c or something
 
 :tests:
 
 :doc:
 
 :scripts:
-add -c to monthday.sh
-add -z/-k to dump.sh
-add -c to grep.sh
-add -c to gzip/crypt
 
 :porting:
 
 :LOW PRIO:
 
 :DONE:
+o add -c to gzip/crypt
+  23 Apr 2006: done
+
+o dump.sh add -z and -k
+  23 Apr 2006: done
+
 o monthday -c support
   23 Apr 2006: done
 

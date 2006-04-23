@@ -26,7 +26,7 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 usage() {
-        echo "$PROGNAME [-d]"
+        echo "$PROGNAME [OPTIONS]"
         echo
         echo "Encrypt or decrypt the file's contents"
         echo
@@ -98,7 +98,7 @@ do
                         if [[ $fsize -ne 0 ]]; then
                                 # catch 'n crypt
                                 head -c $fsize | \
-                                mcrypt $OPT -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
+                                mcrypt -q $OPT -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
                                 exit 1
 
                                 newsize=$(_stat_size $TMPDIR/file.$$.enc)

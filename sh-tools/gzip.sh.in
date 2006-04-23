@@ -27,7 +27,7 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 usage() {
-        echo "$PROGNAME [-d]"
+        echo "$PROGNAME [OPTIONS]"
         echo
         echo "Compress or decompress the file's contents"
         echo

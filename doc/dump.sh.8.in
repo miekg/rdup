@@ -40,9 +40,15 @@ The default backup location is `/vol/backup/`hostname''.
 Alternate backup directory. Defaults to /vol/backup/`hostname`. The
 current date in the format YYYYMM is added automatically.
 .TP
-.B \-x script
-Use \fBscript\fR as exclude script. This script is inserted in the
-`rdup'-pipeline. See grep.sh(1) for an example of such a script.
+.B \-k keyfile
+Encrypt the files while backing up with \fIkeyfile\fR. This option
+inserts \fBcrypt.sh keyfile\fR in the pipeline. If both \fI-z\fR and
+\fI-k\fR are given a file is first zipped and then encrypted.
+.TP
+.B \-z
+Compress the files while backing up. This option
+inserts \fBgzip.sh\fR in the pipeline. If both \fI-z\fR and
+\fI-k\fR are given a file is first zipped and then encrypted.
 .TP
 .B \-e
 Store the the timestamp and filelist files together with the backup.
