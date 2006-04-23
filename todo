@@ -10,11 +10,11 @@ o make complete hdup2 clone based on rdup
   I want to see this, but I don't have enough time for this.
 
 :0.2.9:
-o monthday prints empty line?
 o monthday prints versions while it should not
 o dump.sh add -z and -k
 
 :rdup utils: 
+grep.sh: implement -c option
 
 :tests:
 
