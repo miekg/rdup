@@ -1,6 +1,6 @@
 01 May 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --
-   * gzip.sh, crypt.sh: ignore '-c' option
+   * gzip.sh, crypt.sh: ignore and accept '-c' option
    * crypt.sh: use mcrypt -q
    * monthday.sh: implement -c option 
      script has completely been rewritten
