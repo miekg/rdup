@@ -4,6 +4,7 @@ TODO:
 o make rdup work with 1 backup directory, where people can forever
   incrementally dump files to. This applies more to the scripts then
   to rdup.
+
 :hdup2:
 o make complete hdup2 clone based on rdup
   see hdup2 directory
@@ -21,8 +22,6 @@ merging rorrim.sh and mirror.sh because they really really do
 the same thing
 
 :porting:
-
-:LOW PRIO:
 
 :DONE:
 o add -c to gzip/crypt

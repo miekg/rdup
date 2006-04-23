@@ -1,5 +1,5 @@
-xx May 2006: 0.2.9 Miek <miek@miek.nl>
-  -- ?? --
+01 May 2006: 0.2.9 Miek <miek@miek.nl>
+  -- bugfixes + restore updates --
    * gzip.sh, crypt.sh: ignore '-c' option
    * crypt.sh: use mcrypt -q
    * monthday.sh: implement -c option 
@@ -9,6 +9,7 @@ xx May 2006: 0.2.9 Miek <miek@miek.nl>
    * dump.sh: support -z (compress) and -k (encrypt) options
    * removed grep.sh from rdup-utils
    * tests: added monthday +0 restore test
+
 
 22 Apr 2006: 0.2.8 Miek <miek@miek.nl>
    -- bugfixes --
