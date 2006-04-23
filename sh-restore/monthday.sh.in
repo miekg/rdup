@@ -184,18 +184,26 @@ local_restore() {
                                 continue
                         fi
                         
+                        # need 1 loop, for exact match
+                        # another for in between match
                         for j in $(_seq $i); do
                                 if [[ $monthday -eq ${_month[$j]} ]]; then
                                         # exact match
                                         print_file_status $j       
                                         i=0; store $i
-                                        continue
+                                        continue 2
                                 fi
-                                if [[ $monthday -gt ${_month[$j]} ]]; then
+                        done
+                        # get in between value
+                        for j in $(_seq $i); do
+                                if [[ ${_month[$j]} -gt $monthday ]]; then
                                         x=$(($j - 1))
+                                        if [[ $x -lt 0 ]]; then 
+                                                x=0
+                                        fi
                                         print_file_status $x
                                         i=0; store $i
-                                        continue
+                                        continue 2
                                 fi
                         done
                         
@@ -320,6 +328,8 @@ remote_restore() {
                                 continue
                         fi
                         
+                        # need 1 loop, for exact match
+                        # another for in between match
                         for j in $(_seq $i); do
                                 if [[ $monthday -eq ${_month[$j]} ]]; then
                                         # exact match
@@ -327,15 +337,21 @@ remote_restore() {
                                         cat_file $j
                                         rm_tmp_files $i
                                         i=0; store $i
-                                        continue
+                                        continue 2
                                 fi
-                                if [[ $monthday -gt ${_month[$j]} ]]; then
+                        done
+                        # get in between value
+                        for j in $(_seq $i); do
+                                if [[ ${_month[$j]} -gt $monthday ]]; then
                                         x=$(($j - 1))
+                                        if [[ $x -lt 0 ]]; then 
+                                                x=0
+                                        fi
                                         print_file_status $x
                                         cat_file $x
                                         rm_tmp_files $i
                                         i=0; store $i
-                                        continue
+                                        continue 2
                                 fi
                         done
                         

@@ -1,8 +1,9 @@
 xx May 2006: 0.2.9 Miek <miek@miek.nl>
   -- ?? --
    * gzip.sh, crypt.sh: ignore '-c' option
-   * monthday.sh: implement -c option
-   * monthday.sH: also process the last file
+   * monthday.sh: implement -c option 
+     script has completely been rewritten
+   * monthday.sh: also process the last file
    * removed grep.sh from rdup-utils
    * tests: added monthday +0 restore test
 

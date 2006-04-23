@@ -10,7 +10,7 @@ o make complete hdup2 clone based on rdup
   I want to see this, but I don't have enough time for this.
 
 :0.2.9:
-o monthday prints versions while it should not
+o monthday -c/monthday tweaks
 
 :rdup utils: 
 o better error messages if somebody forgets a -c or something
