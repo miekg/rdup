@@ -6,25 +6,19 @@
 # Print a filelist suitable for Restore a entire backed up directory
 # +MONTHDAY (restore to MONTHDAY's state)
 
+S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
+S_ISLNK=40960   # octal: 0120000
+S_MMASK=4095    # octal: 00007777, mask to get permission
 monthday=0
-max=0
-min=99
 prevfile=""
-name=""
 PROGNAME=$0
-# previous vars
-pmode=""
-puid=""
-pgid=""
-ppsize=""
-pfsize=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
 cleanup() {
-        _echo2 "Signal received while processing \`$path', exiting" 
+        _echo2 "Signal received while processing \`$basename', exiting" 
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
@@ -38,7 +32,7 @@ usage() {
         echo
         echo Print a list suitable for restoring
         echo
-        echo +DAY - restore up to this month day
+        echo +DAY - restore up to this month day, default to 0
         echo
         echo OPTIONS:
         echo " -c        work with the files' contents (rdup -c)"
@@ -64,13 +58,28 @@ print_file_status() {
 
 # cat the file's content to stdout
 cat_file() {
-        cat ${_tmp_path[$1]}
+        typ=0
+        if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
+                typ=1;
+        fi
+        if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
+                typ=2;
+        fi
+        case $typ in
+                0|2)      # REG | LNK
+                cat ${_tmp_path[$1]}
+                ;;
+                1)      # DIR
+                # no content
+                ;;
+        esac
 }
 
 # remove the files stored sofar
 rm_tmp_files() {
-        for j in ${_seq $1}; do
-                rm -f ${_tmp_path[$j]}
+        for j in $(_seq $1); do
+                # dirs aren't created
+                rm -f "${_tmp_path[$j]}"
         done
 }
 
@@ -81,19 +90,41 @@ store() {
         _psize[$i]=$psize
         _fsize[$i]=$fsize
         _path[$i]="$path"
-        _tmp_path[$i]="$TMPDIR/$basename.$i"
+        # don't store the entire path, only the last name
+        h="$TMPDIR/$basename.$i"
+        _tmp_path[$i]="${h##*/}"
         _month[$i]=$mo
         _hour[$i]=$ho
         _min[$i]=$mi
-        # catch the current file's contents
-        head -c $fsize > "${_tmp_path[$i]}"
+
+        typ=0
+        if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
+                typ=1;
+        fi
+        if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
+                typ=2;
+        fi
+        case $typ in
+                0|2)      # REG | LNK
+                if [[ $fsize -ne 0 ]]; then
+                      # catch
+                      head -c $fsize > "${_tmp_path[$i]}"
+                else
+                      # empty
+                      touch "${_tmp_path[$i]}"
+                fi
+                ;;
+                1)      # DIR
+                # there is no content
+                ;;
+        esac
 }
 
 _seq() {
-        j=$1
-        while [[ $j -ge 0 ]] ; do
+        j=0
+        while [[ $j -lt $1 ]] ; do
                 echo $j
-                j=$(($j - 1))
+                j=$(($j + 1))
         done
 }
 
@@ -139,9 +170,9 @@ declare -a _month
 declare -a _hour
 declare -a _min
 # work dir
-TMPDIR=`mktemp -d "/tmp/rdup.backup.XXXXXX"`
+TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
 if [[ $? -ne 0 ]]; then
-        _echo2 "Mktemp failed" > /dev/fd/2
+        _echo2 "Mktemp failed" 
         exit 1
 fi
 chmod 700 $TMPDIR
@@ -169,7 +200,17 @@ do
                 mi=0
         fi
 
-        if [[ ! -z "$prevfile" && "$prevfile" != "$basename" ]]; then
+        if [[ -z "$prevfile" ]]; then
+                # first hit
+                echo "halleo" > /dev/fd/2
+                store $i
+                i=$(($i + 1))
+                prevfile=$basename
+                continue;
+        fi
+
+
+        if [[ "$prevfile" != "$basename" ]]; then
                 # a new file has been seen. Figure out what to
                 # do with the ones we have
 

@@ -265,7 +265,7 @@ main(int argc, char **argv)
 				}
 				break;
 			default:
-				fprintf(stderr, "** Uknown option `%c\'\n", c);
+				fprintf(stderr, "** Uknown option seen\n");
 				exit(EXIT_FAILURE);
 		}
 	}
