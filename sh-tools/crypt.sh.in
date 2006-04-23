@@ -29,13 +29,12 @@ usage() {
         echo "$PROGNAME [-d]"
         echo
         echo "Encrypt or decrypt the file's contents"
-        echo "There is no -c option, as crypt.sh always works"
-        echo "on the content"
         echo
         echo OPTIONS:
-        echo " -d        decrypt the files"
-        echo " -h        this help"
-        echo " -V        print version"
+        echo " -c    ignored as crypt.sh always works on content"
+        echo " -d    decrypt the files"
+        echo " -h    this help"
+        echo " -V    print version"
 }
 
 version() {
@@ -53,7 +52,7 @@ _stat_size() {
         esac
 }
 
-while getopts "dVh" o; do
+while getopts ":cdVh" o; do
         case $o in
                 d) OPT="-d";;
                 h) usage && exit;;

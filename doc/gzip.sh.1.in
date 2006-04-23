@@ -21,6 +21,11 @@ Note the \fI-c\fR option for \fBmirror.sh\fR.
 
 .SH OPTIONS
 .TP
+.B \-c
+This option is ignored, \fBgzip.sh\fR always works on the files'
+content. This "feature" was added because all rdup-util scripts have
+such an option.
+.TP
 .B \-d
 Decompress the files.
 .TP

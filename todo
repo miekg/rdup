@@ -21,6 +21,9 @@ o sh-lib for common functions
 
 :scripts:
 add -c to monthday.sh
+add -z/-k to dump.sh
+add -c to grep.sh
+add -c to gzip/crypt
 
 :porting:
 

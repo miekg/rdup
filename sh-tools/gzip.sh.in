@@ -30,13 +30,12 @@ usage() {
         echo "$PROGNAME [-d]"
         echo
         echo "Compress or decompress the file's contents"
-        echo "There is no -c option, as gzip.sh always works"
-        echo "on the content"
         echo
         echo OPTIONS:
-        echo " -d        decompress the files"
-        echo " -h        this help"
-        echo " -V        print version"        
+        echo " -c    ignored as gzip.sh always works on content"
+        echo " -d    decompress the files"
+        echo " -h    this help"
+        echo " -V    print version"        
 }
 
 version() {
@@ -54,7 +53,7 @@ _stat_size() {
         esac
 }
 
-while getopts ":dhV" o; do
+while getopts ":cdhV" o; do
         case $o in
                 d) OPT="-d";;
                 h) usage && exit;;

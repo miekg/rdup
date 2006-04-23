@@ -27,6 +27,11 @@ lists those files that end in a 'z'.
 .B \-a
 Match files, links and directories.
 .TP
+.B \-c
+This option is ignored, \fBgrep.sh\fR always works on the files'
+content. This "feature" was added because all rdup-util scripts have
+such an option.
+.TP
 .B \-d
 Only match directories.
 .TP

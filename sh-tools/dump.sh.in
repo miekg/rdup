@@ -83,7 +83,7 @@ else
 fi
 
 if [[ ! -z $exclude ]]; then
-        /usr/sbin/rdup -N $STAMP $LIST $@ | $exclude | /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup -N $STAMP $LIST $@ | $exclude | /usr/sbin/mirror.sh -b "$BACKUPDIR"
 else
-        /usr/sbin/rdup -N $STAMP $LIST $@ | /usr/sbin/mirror.sh -b $BACKUPDIR
+        /usr/sbin/rdup -N $STAMP $LIST $@ | /usr/sbin/mirror.sh -b "$BACKUPDIR"
 fi
