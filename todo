@@ -10,8 +10,7 @@ o make complete hdup2 clone based on rdup
   I want to see this, but I don't have enough time for this.
 
 :0.2.9:
-o monthday.c support
-o sh-lib for common functions
+o monthday prints empty line?
 
 :rdup utils: 
 
@@ -29,9 +28,11 @@ add -c to gzip/crypt
 
 :LOW PRIO:
 
-
 :DONE:
-0 -z for unzip in hist.sh, yesterday.sh
+o monthday -c support
+  23 Apr 2006: done
+
+o -z for unzip in hist.sh, yesterday.sh
   21 Apr 2006: done
 
 o split up rdgrep.sh in dir and file grep?
