@@ -3,7 +3,7 @@
 # To extract the files from this archive, save it to some FILE, remove
 # everything before the `!/bin/sh' line above, then type `sh FILE'.
 #
-# Made on 2006-04-23 20:33 CEST by <miekg@elektron>.
+# Made on 2006-04-23 20:35 CEST by <miekg@elektron>.
 # Source directory was `/home/miekg/svn/rdup/trunk/test/001_run.dir'.
 #
 # Existing files will *not* be overwritten unless `-c' is specified.
@@ -63,7 +63,7 @@ else
 fi
 rm -f 200112312359.59 123123592001.59 123123592001.5 1231235901 $$.touch
 #
-if mkdir _sh06325; then
+if mkdir _sh13055; then
   $echo 'x -' 'creating lock directory'
 else
   $echo 'failed to create lock directory'
@@ -158,19 +158,19 @@ cd $TPKG_BUILD
 X
 X./rdup -V && \
 X./$T/crypt.sh -V && \
-X./$T/grep.sh -V && \
+X./$T/gzip.sh -V && \
 X./$T/mirror.sh -V && \
 X./$T/hist.sh -V && \
 X./$T/yesterday.sh -V
 SHAR_EOF
-  (set 20 06 04 23 20 33 05 '001_run.test'; eval "$shar_touch") &&
+  (set 20 06 04 23 20 35 13 '001_run.test'; eval "$shar_touch") &&
   chmod 0600 '001_run.test' ||
   $echo 'restore of' '001_run.test' 'failed'
   if ( md5sum --help 2>&1 | grep 'sage: md5sum \[' ) >/dev/null 2>&1 \
   && ( md5sum --version 2>&1 | grep -v 'textutils 1.12' ) >/dev/null; then
     md5sum -c << SHAR_EOF >/dev/null 2>&1 \
     || $echo '001_run.test:' 'MD5 check failed'
-b7c1cf7b1110292f97b1a5394ca0a505  001_run.test
+5b4bb48623bc5c44363dd918b20fdc03  001_run.test
 SHAR_EOF
   else
     shar_count="`LC_ALL= LC_CTYPE= LANG= wc -c < '001_run.test'`"
@@ -178,5 +178,5 @@ SHAR_EOF
     $echo '001_run.test:' 'original size' '638,' 'current size' "$shar_count!"
   fi
 fi
-rm -fr _sh06325
+rm -fr _sh13055
 exit 0
