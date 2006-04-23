@@ -7,14 +7,14 @@ o mirror scripts
 o auxilary support scripts
      o crypt.sh
      o gzip.sh
-     o grep.sh
 
 o restore scripts
   single files:
       o hist.sh
       o yesterday.sh
   mass restore:
-      o rorrim.sh
+      o rorrim.sh       --      opposite of mirrir.sh
+      o monthday.sh     --      select what to restore
         
 o  meta-wrapper scripts:
       o dump.sh - uses rdup and mirror.sh to locally dump the files

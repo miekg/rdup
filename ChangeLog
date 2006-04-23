@@ -9,6 +9,7 @@
    * dump.sh: support -z (compress) and -k (encrypt) options
    * removed grep.sh from rdup-utils
    * tests: added monthday +0 restore test
+   * install monthday.sh and rorrim.sh also
 
 
 22 Apr 2006: 0.2.8 Miek <miek@miek.nl>
