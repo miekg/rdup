@@ -115,16 +115,6 @@ You want a gzipped tar file of your files?
 rdup FILELIST /home > tar_list && \
 tar --create --T list -z --file myhostbackup.tar.gz
 
-You want to exclude certain files?
-for i in `rdup FILELIST /home | grep -v \*.bak`; do 
-         cat $i > /vol/backup/$i
-done
-
-You want to include certain files?
-for i in `rdup FILELIST /home | grep important`; do 
-         cat $i > /vol/backup/$i
-done
-
 You want to dump your files on a remote machine?
 rdup FILELIST /home > list
 rsync --files-from=list user@remotehost.nl
