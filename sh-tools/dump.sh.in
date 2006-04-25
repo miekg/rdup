@@ -97,15 +97,15 @@ if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
                 @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/mirror.sh -b "$BACKUPDIR"
         else 
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @bindir@/gzip.sh | \
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
                 @sbindir@/mirror.sh -c -b "$BACKUPDIR"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @bindir@/crypt.sh $KEYFILE | \
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/crypt.sh $KEYFILE | \
                 @sbindir@/mirror.sh -c -b "$BACKUPDIR"
         else 
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @bindir@/gzip.sh |\
-                @bindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
+                @sbindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh -c -b "$BACKUPDIR"
         fi
 fi
