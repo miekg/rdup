@@ -1,3 +1,7 @@
+xx YY 2006: 0.2.10 Miek <miek@miek.nl>
+  -- what o what --
+
+
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --
    * gzip.sh, crypt.sh: ignore and accept '-c' option
