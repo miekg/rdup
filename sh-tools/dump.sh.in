@@ -3,6 +3,9 @@
 # create a (mirror) backup in /vol/backup/`hostname`
 # figure out of the dump should be a full one or incremental
 
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
 usage() {
         echo "$PROGNAME [OPTIONS] NAME DIR [DIR ...]"
         echo 
@@ -14,7 +17,6 @@ usage() {
         echo OPTIONS:
         echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
         echo " -e         filelist and timestamp are put in backup directory"
-        echo " -x SCRIPT  use SCRIPT as exclude script"
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
         echo " -h         this help"
@@ -93,14 +95,17 @@ fi
 
 if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
-                rdup -N $STAMP $LIST $@ | mirror.sh -b "$BACKUPDIR"
+                @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/mirror.sh -b "$BACKUPDIR"
         else 
-                rdup -c -N $STAMP $LIST $@ | gzip.sh | mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @bindir@/gzip.sh | \
+                @sbindir@/mirror.sh -c -b "$BACKUPDIR"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
-                rdup -c -N $STAMP $LIST $@ | crypt.sh $KEYFILE | mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @bindir@/crypt.sh $KEYFILE | \
+                @sbindir@/mirror.sh -c -b "$BACKUPDIR"
         else 
-                rdup -c -N $STAMP $LIST $@ | gzip.sh | crypt.sh $KEYFILE | mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @bindir@/gzip.sh |\
+                @bindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh -c -b "$BACKUPDIR"
         fi
 fi

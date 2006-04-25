@@ -2,6 +2,9 @@
 
 # create a dump on a external harddisk
 
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
 ##
 # For each HOST you should define the directories to backup 
 ##
@@ -22,7 +25,7 @@ esac
 # Don't need to edit anything below this line
 ##
 
-if [ ! -x /usr/sbin/rdup ]; then 
+if [ ! -x @sbindir@/rdup ]; then 
         zenity --error --title "rdup @ $HOSTNAME" --text "rdup can not be found"
         exit 1
 fi
@@ -66,6 +69,6 @@ else
         TEXT="<i>Incremental</i> dump of <b>$HOSTNAME</b>: $DIRS"
 fi
 
-sudo /usr/sbin/rdup -N $STAMP $LIST $DIRS |\
-sudo /usr/sbin/mirror.sh -v -b $BACKUPDIR 2>&1 |\
+sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
+sudo @sbindir@/mirror.sh -v -b $BACKUPDIR 2>&1 |\
 zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"

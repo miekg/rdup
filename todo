@@ -19,12 +19,14 @@ o better error messages if somebody forgets a -c or something
 
 :scripts:
 merging rorrim.sh and mirror.sh because they really really do
-the same thing
-paths in scripts
+the same thing?
 
 :porting:
 
 :DONE:
+o paths in scripts
+  25 Apr 2006: added @sbindir@/@bindir@ to them
+
 o add -c to gzip/crypt
   23 Apr 2006: done
 
