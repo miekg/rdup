@@ -1,4 +1,4 @@
-01 May 2006: 0.2.9 Miek <miek@miek.nl>
+25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --
    * gzip.sh, crypt.sh: ignore and accept '-c' option
    * crypt.sh: use mcrypt -q to be more silent
@@ -8,7 +8,7 @@
    * rorrim.sh: -c (remote) fixes and other tweaks
    * dump.sh: support -z (compress) and -k (encrypt) options
    * dump.sh: fix the path to rdup and mirror.sh (Timur Vafin)
-   * removed grep.sh from rdup-utils
+   * grep.sh: removed from rdup-utils
    * tests: added monthday +0 restore test
    * install monthday.sh and rorrim.sh by default
 
