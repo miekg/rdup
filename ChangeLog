@@ -1,8 +1,9 @@
 xx YY 2006: 0.2.10 Miek <miek@miek.nl>
   -- what o what --
    * formalize file handling in rdup:
-     - plain files are accepted on the cmd line
-     - if files/dir do not exist rdup skips them, instead
+     - plain files are accepted on the cmd line (they
+       already were, but generated a warning)
+     - if files/dirs do not exist rdup skips them, instead
        of quiting
    * rdup.8: documentation updates, and make it more clear
      that rdup handles file arguments just fine.
