@@ -62,3 +62,9 @@ signal.c
 A reference implementation of some backup and restore scripts is
 included. These scripts are written in bash version 3. But they
 can also easily be made in perl, ruby or python.
+
+All scripts share a simular setup: 
+   o Parse the output from rdup
+   o Check whether the current line is a directory, link or file
+   o Act accordingly
+   o Continue with next line or EOF
