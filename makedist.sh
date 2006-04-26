@@ -158,6 +158,7 @@ rm -f rdup-$version/tar-exclude
 rm -f rdup-$version/config.log 
 rm -f rdup-$version/config.status
 rm -f rdup-$version/tags 
+rm -rf rdup-$version/tex 
 
 info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
