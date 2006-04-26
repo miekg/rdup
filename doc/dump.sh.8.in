@@ -10,14 +10,14 @@ dump.sh \- dump a filesystem for a specifc host
 .IR OPTIONS
 ]
 NAME
-DIR
+DIR|FILE
 [
-DIR
+DIR|FILE
 ]
 
 .SH DESCRIPTION
 \fBdump.sh\fR is a frontend for `mirror.sh' and `rdup'. It will backup
-all directories given on the command line. It tries to be smart with
+all directories and files given on the command line. It tries to be smart with
 respect to a full dump or an incremental dump. If the directories to
 be backed up \fIdo not exist\fR in the backup directory a full dump
 is assumed. Otherwise an incremental dump is performed.

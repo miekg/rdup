@@ -12,13 +12,14 @@ timestamp
 .IR OPTIONS
 ]
 .IR FILELIST 
-.IR DIRS ...
+.IR DIRS/FILES ...
 
 .SH DESCRIPTION
 \fBrdup\fR is a utility inspired by rsync and the plan9 way of doing
 backups. \fBrdup\fR itself does not backup anything. It only prints
 a list of files that are changed, or all files in case of a null dump.
-All paths printed are absolute.
+It also handles files that are removed, allowing for correct incremental 
+backups. All paths printed are absolute.
 .PP
 \fBrdup\fR prints a filelist to standard output. This list is relative
 to FILELIST. Subsequent programs in a pipe line can be used to actually
@@ -26,12 +27,19 @@ implement to backup scheme. If FILELIST is empty or non existant all
 files in DIR are dumped. This is the same as a null dump. After a run
 a new FILELIST is written. No warning is given when FILELIST is an
 existing file, it just gets overwritten by \fBrdup\fR. New runs will
-print out only those files that have actually changed since the last
-run, thereby making incremental backups possible.
+print out only those files that have actually changed or are removed
+since the last run, thereby making incremental backups possible.
 .PP
 Files are checked for changes by comparing the m_time (modification time),
 if this time is NEWER than the m_time of FILELIST the pathname is printed
-to standard output. All errors are written to standard error.
+to standard output. When files are removed they are also printed to 
+standard output, but they are prefixed with a '-'. See 
+.B FORMAT
+below.
+All errors are written to standard error.
+.PP
+If the directorie or file does not exist, they are skipped and a
+warning is emitted.
 .PP
 The general idea is to be very unix like and create a bunch of simple programs
 which each do a their specific thing very well. With \fBrdup\fR and a
@@ -41,14 +49,16 @@ backups.
 .SH OPTIONS
 .TP
 .B \-F format
-Specify a printf-style format to use. See \fBformaT\fR below.
+Specify a printf-style format to use. See \fBFORMAT\fR below.
 .TP
 .B \-N timestamp
 use the m_time of file \fBtimestamp\fR as the timestamp to decide what to
 include in the incremental backup list. If \fBtimestamp\fR does not exist
 of full dump is performed. 
 .B rdup
-will create \fBtimestamp\fR before it starts printing the file list.
+will create/touch \fBtimestamp\fR after it has printed the file list.
+This means if something goes wrong, you still have the original
+timestamp.
 .TP
 .B \-V
 Print rdup's version.

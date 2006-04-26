@@ -294,9 +294,10 @@ main(int argc, char **argv)
 			crawl = g_strdup(argv[i]);
 		}
 
-		/* add dirs leading up the backup dir */
-		if (! dir_prepend(backup, crawl)) {
-			exit(EXIT_FAILURE);
+		/* add dirs leading up the dir/file */
+		if (!dir_prepend(backup, crawl)) {
+			fprintf(stderr, "** Skipping `%s\'\n", crawl);
+			continue;
 		}
 		/* descend into the dark, misty directory */
 		dir_crawl(backup, crawl);

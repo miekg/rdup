@@ -21,7 +21,9 @@ way to give it options (when run as `autorun.sh') the directories
 to be backed up \fImust\fR be specifed at the top of the script.
 
 .SH FILES
-`pwd`/`hostname` is the default location for the backups.
+`pwd`/`hostname` is the default location for the backups. That is:
+where ever \fBdump-here.sh\fR is located is taken as the backup
+directory.
 
 .SH SEE ALSO
 hist.sh(1), yesterday.sh(1), rdup(8), grep.sh(1) and purge.sh(8).

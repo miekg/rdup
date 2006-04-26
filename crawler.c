@@ -59,7 +59,7 @@ dir_prepend(GTree *t, char *path)
 	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
-			fprintf(stderr, "** Could not stat dirpath `%s\': %s\n", path2,
+			fprintf(stderr, "** Could not stat path `%s\': %s\n", path2,
 					strerror(errno));
 			return FALSE;
 		}
@@ -83,6 +83,7 @@ void
 dir_crawl(GTree *t, char *path)
 {
 	DIR 		*dir;
+	FILE 		*f;
 	struct dirent 	*dent;
 	struct entry    *directory;
 	char 		*curpath;
@@ -100,7 +101,16 @@ dir_crawl(GTree *t, char *path)
 		g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
-		fprintf(stderr, "** Cannot enter directory `%s\': %s", path,
+		/* files are also allowed, check for this, if it isn't
+		 * give the error
+		 */
+		if ((f = fopen(path, "r"))) {
+			fclose(f);
+			g_free(dirstack);
+			return;
+		}
+		
+		fprintf(stderr, "** Cannot enter directory `%s\': %s\n", path,
 				strerror(errno));
 		g_free(dirstack);
 		return;
