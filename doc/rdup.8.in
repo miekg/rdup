@@ -74,6 +74,14 @@ printed to standard output, now it is.
 Concatenate the files' contents to standard output. This sets
 the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
 .TP
+.B \-r
+Only print removed files; entries that start with a `\-'. This 
+option unsets \-m.
+.TP
+.B \-m
+Only print modified/new files; entries that start with a `+'. This
+option unsets \-r.
+.TP
 .B \-v
 Be more verbose. 
 When used once, processed .nobackup files will be

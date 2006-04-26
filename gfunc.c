@@ -193,10 +193,13 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 {
 	char *pos;
 
-	if ((plusmin == '+') && (opt_modified == FALSE)) 
+	if ((plusmin == '+') && (opt_modified == FALSE)) {
 		return;
-	if ((plusmin == '-') && (opt_removed == FALSE)) 
+	}
+
+	if ((plusmin == '-') && (opt_removed == FALSE)) {
 		return;
+	}
 
 	if (opt_verbose > 1) {
 		fputs("** ", stderr); 
