@@ -7,6 +7,7 @@
        of quiting
    * rdup.8: documentation updates, and make it more clear
      that rdup handles file arguments just fine.
+   * man rdup.8: add -r/-m options to it
 
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --
