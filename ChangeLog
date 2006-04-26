@@ -1,5 +1,5 @@
-xx YY 2006: 0.2.10 Miek <miek@miek.nl>
-  -- what o what --
+01 May 2006: 0.2.10 Miek <miek@miek.nl>
+  -- tiny bugfixes --
    * formalize file handling in rdup:
      - plain files are accepted on the cmd line (they
        already were, but generated a warning)
