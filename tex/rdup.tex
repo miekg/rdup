@@ -65,6 +65,7 @@ prints a list of files that are changed, or all files in case of a null
 dump, to standard output. 
 
 \section{Scheme Implemented in Current Scripts}
+\label{sec:scheme implemented in current scripts}
 One full backup each month, incremental updates after that.
 
 
@@ -78,11 +79,12 @@ Bash version 3, but any language can be used to write them.
 \section{C Core}
 The main \rdup{} program is written in about 1000 lines of C code. Its
 main purpose is to crawl the filesystem and to calculate which files
-need to be removed and what files are new or modified. And print that
-list to standard output.
+need to be removed and what files are new or modified. That list is then
+printed to standard output.
 
 \section{Scripts}
-The current shell scripts implement the backup and restore policy.
+The current shell scripts implement the backup and restore policy. See
+Section \ref{sec:scheme implemented in current scripts}
 The are quite a few of them:
 \begin{description}
 \item[\cmd{crypt.sh}]{-- encrypt/decrypt the files' contents,}
@@ -91,7 +93,7 @@ The are quite a few of them:
 \item[\cmd{dump.sh}]{-- convience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
 \end{description}
 
-And for restoring we have;
+And for restoring we have:
 \begin{description}
 \item[\cmd{hist.sh}]{-- inspect the backup history of a file,}
 \item[\cmd{yesterday.sh}]{-- restore files from the backup,}
@@ -101,7 +103,8 @@ And for restoring we have;
 \end{description}
 
 Note that \cmd{gzip.sh} and \cmd{crypt.sh} can be used for 
-both backing up and restoring.
+both backing up and restoring. See section \ref{sec: restore examples}
+for some examples.
 
 \section{How Does \rdup{} Work?}
 The data \rdup{} puts out is depicted in Figure \ref{fig:rdup output}.
@@ -121,7 +124,7 @@ The data \rdup{} puts out is depicted in Figure \ref{fig:rdup output}.
 Even with this short list we can explain \rdup's output. When no
 output changing options are given to \rdup{} it will output seven
 columns:
-\begin{itemize}
+\begin{enumerate}
 \item{\textbf{+/-} -- whether this path should be added (+) or removed
 (-),}
 \item{\textbf{mode} -- the file's protection and mode bits,}
@@ -130,7 +133,7 @@ columns:
 \item{\textbf{path size} -- the length of the path,}
 \item{\textbf{file size} -- the size of the file,}
 \item{\textbf{path} -- the full pathname.}
-\end{itemize}
+\end{enumerate}
 
 \section{Remote Usage}
 Figure \ref{fig:rdup -c output} shows \rdup's output with the
@@ -162,7 +165,11 @@ content is printed for files that are to be removed.
 
 \chapter{Making Backups}
 The most simple use of \rdup{} is to mirror files to
-another partition. The files \cmd{timestamp} and \cmd{FILELIST} are
+another partition. The following command does the following:
+1. explain
+2. more explanation
+
+Note: The files \cmd{timestamp} and \cmd{FILELIST} are
 both created by \rdup:
 \begin{quote}
 \begin{verbatim}
@@ -230,5 +237,8 @@ Together these scripts provide a complete system
 for creating and managing backups. When all backups are mirrored on a
 remote system and the disk of that system is made read-only available to
 the network, you have a complete network based backup system.
+
+\section{Restore Examples}
+\ref{sec: restore examples}
 
 \end{document}
