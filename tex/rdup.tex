@@ -1,30 +1,40 @@
-\documentclass[a4, 10pt]{article}
+\documentclass[a4paper, openany]{memoir}
 
 \newcommand{\rdup}{\textbf{rdup}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
 
-\textheight 210mm
-
+%%\pagestyle{compagnion}
+%% this is really cool
+\pagestyle{ruled}
+\chapterstyle{demo}
 \begin{document}
-\pagestyle{empty}
 
-\title{\rdup{} -- Easy (Personal) Backups}
-\author{Miek Gieben\\miek@miek.nl}
-\date{}
-\maketitle
-\thispagestyle{empty}
-
-\paragraph{Abstract}
+%%\title{\rdup{} -- Easy (Personal) Backups}
+%%\author{Miek Gieben\\miek@miek.nl}
+%%\date{}
+%%\maketitle
+\section*{Abstract}
 \rdup{} is small, GPL licensed utility which, together with some scripts, can
 be easily used to setup and maintain backups. These can either be local
 of networked backups. Encryption and compression is also supported.
 The homepage of \rdup{} is located at: \\
 \url{http://www.miek.nl/projects/rdup/index.html}.
 
-\paragraph{Backups}
+Currently \rdup{} runs on Linux and on FreeBSD. Because \rdup{} is
+small porting it to other platforms should be relatively easy.
+
+In this document we detail how \rdup{} works, out of which components
+it consists and how to actually use it to make backups.
+
+
+\tableofcontents
+
+\chapter{Introduction to \rdup}
+
+\section{Backups}
 In an ideal world backups would not be necessary, with an un\-limited
-amount of memory and non failing hard disk and some form of version
+amount of memory, non failing hard disks and some form of version
 management we would always be able to retrieve past versions of our files.
 \begin{quote}
 \emph{Unfortunately we do need backups.}
@@ -47,60 +57,110 @@ Taking these requirements and thinking them through, the
 conclusion is that the best backup program... does not backup anything.
 Hence: \rdup
 
-\paragraph{What is \rdup?}
+\section{Rational Behind \rdup}
 \rdup{} is an utility inspired by \cmd{rsync} and the 
 \cmd{plan9}\footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
 way of doing backups. As said, \rdup{} does not create backups. It only
 prints a list of files that are changed, or all files in case of a null
-dump, to standard output. A sample of \rdup's output can be viewed in
-Figure \ref{fig1:rdup}.
+dump, to standard output. 
 
+\section{Scheme Implemented in Current Scripts}
+One full backup each month, incremental updates after that.
+
+
+\chapter{Components of \rdup}
+
+\rdup{} consits out of two parts, small core written in C and
+a number of scripts. The current scripts are written in 
+Bash version 3, but any language can be used to write them.
+
+
+\section{C Core}
+The main \rdup{} program is written in about 1000 lines of C code. Its
+main purpose is to crawl the filesystem and to calculate which files
+need to be removed and what files are new or modified. And print that
+list to standard output.
+
+\section{Scripts}
+The current shell scripts implement the backup and restore policy.
+The are quite a few of them:
+\begin{description}
+\item[\cmd{crypt.sh}]{-- encrypt/decrypt the files' contents,}
+\item[\cmd{gzip.sh}]{-- compress/decrypt the files' contents,}
+\item[\cmd{mirror.sh}]{-- store the backup to its backup directory,}
+\item[\cmd{dump.sh}]{-- convience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
+\end{description}
+
+And for restoring we have;
+\begin{description}
+\item[\cmd{hist.sh}]{-- inspect the backup history of a file,}
+\item[\cmd{yesterday.sh}]{-- restore files from the backup,}
+\item[\cmd{rorrim.sh}]{-- place to-be-restored files in a directory,}
+\item[\cmd{monthday.sh}]{-- select files from the backup,}
+\item[\cmd{purge.sh}]{-- example backup delete scipt.}
+\end{description}
+
+Note that \cmd{gzip.sh} and \cmd{crypt.sh} can be used for 
+both backing up and restoring.
+
+\section{How Does \rdup{} Work?}
+The data \rdup{} puts out is depicted in Figure \ref{fig:rdup output}.
 \begin{figure}[hbt]
 \begin{verbatim}
 +16877 1000 1000 11 0 /home/miekg
 +16877 1000 1000 15 0 /home/miekg/svn
 +16832 1000 1000 20 0 /home/miekg/svn/rdup
 +16832 1000 1000 26 0 /home/miekg/svn/rdup/trunk
++33216 1000 1000 30 31 /home/miekg/svn/rdup/trunk/apt
+-33216 1000 1000 29 72 /home/miekg/svn/rdup/trunk/nc
 \end{verbatim}
-\caption{Typical output from \rdup.}
-\label{fig1:rdup}
+\caption{A short listing of typical output from \rdup.}
+\label{fig:rdup output}
 \end{figure}
 
-Subsequent programs in a shell pipe line can be used to actually
-implement to backup scheme. A few scripts are included with \rdup, 
-the most important ones are:
-\begin{description}
-        \item[\cmd{mirror.sh} --]{
-                mirror/copies each file to the backup directory, remote 
-                mirroring is also possible,}
-        \item[\cmd{gzip.sh} --]{
-                a compression filter,}
-        \item[\cmd{crypt.sh} --]{
-                an encryption filter.}
-\end{description}
+Even with this short list we can explain \rdup's output. When no
+output changing options are given to \rdup{} it will output seven
+columns:
+\begin{itemize}
+\item{\textbf{+/-} -- whether this path should be added (+) or removed
+(-),}
+\item{\textbf{mode} -- the file's protection and mode bits,}
+\item{\textbf{uid} -- numeric user id,}
+\item{\textbf{gid} -- numeric group id,}
+\item{\textbf{path size} -- the length of the path,}
+\item{\textbf{file size} -- the size of the file,}
+\item{\textbf{path} -- the full pathname.}
+\end{itemize}
 
-Also included is a \cmd{tar} based setup and an external (USB) drive
-backup: "Turn on the drive and your backup starts."
+\section{Remote Usage}
+Figure \ref{fig:rdup -c output} shows \rdup's output with the
+\textbf{-c} switch. With this switch the contents of each file is also
+printed to standard output.
 
-\paragraph{Restoring}
-Note that restoring files when mirrored is as easy as 'cp'-ing the
-backed up file to the original location. Two shell scripts are
-also provided to inspect the backed up files:
-\begin{description}
-        \item[\cmd{hist.sh} --]{
-                list the history of the backed up file, show the size
-                and the backup date,}
-        \item[\cmd{yesterday.sh} --]{
-                generate a \cmd{diff}, show the file and optional copy 
-                the file to another directory.}
-\end{description}
+\begin{figure}[hbt]
+\begin{verbatim}
++16877 1000 1000 11 0 
+/home/miekg
++16877 1000 1000 15 0 
+/home/miekg/svn
++16832 1000 1000 20 0 
+/home/miekg/svn/rdup
++16832 1000 1000 26 0 
+/home/miekg/svn/rdup/trunk
++33216 1000 1000 30 31 
+/home/miekg/svn/rdup/trunk/apt#!/bin/bash script of 31 bytes ...
+-33216 1000 1000 29 0 
+/home/miekg/svn/rdup/trunk/nc
+\end{verbatim}
+\caption{A short listing of output from \rdup{} -c.}
+\label{fig:rdup -c output}
+\end{figure}
 
-Together these scripts provide a complete system
-for creating and managing backups. When all backups are mirrored on a
-remote system and the disk of that system is made read-only available to
-the network, you have a complete network based backup system.
+Two things are different: after the file size a newline is printed, then
+the full pathname and then the file's contents.  For obvious reasons no
+content is printed for files that are to be removed.
 
-\paragraph{Examples of Backups with \rdup}
+\chapter{Making Backups}
 The most simple use of \rdup{} is to mirror files to
 another partition. The files \cmd{timestamp} and \cmd{FILELIST} are
 both created by \rdup:
@@ -134,5 +194,41 @@ rdup -c -N timestamp FILELIST /home | crypt.sh secret.file | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
+
+\noindent Now with both encryption and compression and we 
+send our files to remote server with bandwidth limiting; we
+only allow 10Kb per second:
+\begin{quote}
+\begin{verbatim}
+rdup -c -N timestamp FILELIST /home | gzip.sh |\
+crypt.sh secret.file | cstream -t 10240 | \
+ssh miekg@example.nl mirror.sh -c -b /vol/backup
+\end{verbatim}
+\end{quote}
+
+\section{Local Backups}
+
+
+\section{Remote Backups}
+
+
+\chapter{Restoring Backups}
+
+Note that restoring files when mirrored is as easy as 'cp'-ing the
+backed up file to the original location. Two shell scripts are
+also provided to inspect the backed up files:
+\begin{description}
+        \item[\cmd{hist.sh} --]{
+                list the history of the backed up file, show the size
+                and the backup date,}
+        \item[\cmd{yesterday.sh} --]{
+                generate a \cmd{diff}, show the file and optional copy 
+                the file to another directory.}
+\end{description}
+
+Together these scripts provide a complete system
+for creating and managing backups. When all backups are mirrored on a
+remote system and the disk of that system is made read-only available to
+the network, you have a complete network based backup system.
 
 \end{document}
