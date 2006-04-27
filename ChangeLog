@@ -1,6 +1,6 @@
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes --
-   * formalize file handling in rdup:
+   * rdup: formalize file handling in rdup:
      - plain files are accepted on the cmd line (they
        already were, but generated a warning)
      - if files/dirs do not exist rdup skips them, instead
@@ -8,6 +8,7 @@
    * rdup.8: documentation updates, and make it more clear
      that rdup handles file arguments just fine.
    * man rdup.8: add -r/-m options to it
+
 
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --
