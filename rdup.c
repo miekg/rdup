@@ -29,7 +29,7 @@ ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 static void
 usage(FILE *f) 
 {	
-	fprintf(f, "USAGE: %s [OPTION...] FILELIST DIR...\n", PROGNAME);
+	fprintf(f, "USAGE: %s [OPTION...] FILELIST DIR|FILE...\n", PROGNAME);
 	fprintf(f, "%s generates a full or incremental file list, this\n", PROGNAME);
 	fprintf(f, "list can be used to implement a (incremental) backup scheme.\n");
 	fprintf(f, "\n   FILELIST\tfile to store filenames\n");

@@ -66,7 +66,7 @@ mirror_create_top() {
 usage() {
         echo "$PROGNAME [OPTIONS]"
         echo
-        echo Mirror the files in the filelist from rdup
+        echo Mirror the files from the filelist of rdup
         echo
         echo OPTIONS
         echo " -c      process the file content also (rdup -c), for remote backups"

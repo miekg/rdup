@@ -7,7 +7,7 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 
 usage() {
-        echo "$PROGNAME [OPTIONS] NAME DIR [DIR ...]"
+        echo "$PROGNAME [OPTIONS] [+DAY] FRM_DIRECTORY TO_DIRECTORY"
         echo 
         echo "This is a wrapper around rdup and rorrim.sh"
         echo
@@ -15,8 +15,6 @@ usage() {
         echo DIR \ - directories to back up
         echo
         echo OPTIONS:
-        echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
-        echo " -e         filelist and timestamp are put in backup directory"
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
         echo " -h         this help"
