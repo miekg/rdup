@@ -2,7 +2,7 @@
   -- tiny bugfixes --
    * rdup: formalize file handling in rdup:
      - plain files are accepted on the cmd line (they
-       already were, but generated a warning)
+       already were, but generated a (harmless) warning)
      - if files/dirs do not exist rdup skips them, instead
        of quiting
    * rdup.8: documentation updates, and make it more clear

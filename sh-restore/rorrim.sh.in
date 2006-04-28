@@ -102,7 +102,6 @@ local_restore() {
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
-                                # check for fileTYPE changes
                                 [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath" 
                                 chown $uid:$gid "$restoredir/$newpath"
                                 chmod $bits "$restoredir/$newpath"
