@@ -13,6 +13,7 @@ o make complete hdup2 clone based on rdup
 :rdup utils: 
 o better error messages if somebody forgets a -c or something
 o make meta restore script: restore.sh in line with dump.sh
+o make dump.sh and restore.sh work with a -c option
 
 :tests:
 :doc:

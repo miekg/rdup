@@ -50,6 +50,7 @@ AC_CONFIG_FILES([Makefile
                  doc/gzip.sh.1
                  sh-restore/rorrim.sh
                  sh-restore/monthday.sh
+                 sh-restore/restore.sh
                  sh-tools/crypt.sh
                  sh-tools/dump-here.sh
                  sh-tools/dump.sh

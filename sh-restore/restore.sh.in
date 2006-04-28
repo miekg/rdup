@@ -1,0 +1,111 @@
+#!/bin/bash
+
+# restore a backup to a directory
+# try to be as smart of dump.sh
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+usage() {
+        echo "$PROGNAME [OPTIONS] NAME DIR [DIR ...]"
+        echo 
+        echo "This is a wrapper around rdup and rorrim.sh"
+        echo
+        echo NAME - suffix for filelist and timestamp files
+        echo DIR \ - directories to back up
+        echo
+        echo OPTIONS:
+        echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
+        echo " -e         filelist and timestamp are put in backup directory"
+        echo " -z         compress all files"
+        echo " -k KEYFILE encrypt all files"
+        echo " -h         this help"
+        echo " -V         print version"
+}
+
+version() {
+        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
+}
+
+d=`date +%Y%m`
+etc=0
+PROGNAME=$0
+BACKUPDIR=""
+gzip=0
+KEYFILE=""
+
+_echo2() {
+        echo "** $PROGNAME: $1" > /dev/fd/2
+}
+
+while getopts ":b:k:zehV" o; do
+        case $o in
+                b) BACKUPDIR=$OPTARG;;
+                e) etc=1;;
+                k) KEYFILE=$OPTARG;;
+                z) gzip=1;;
+                V) version && exit;;
+                h) usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
+        esac
+done
+shift $((OPTIND - 1))
+if [[ $# -eq 0 ]]; then
+        echo "NAME is mandatory"
+        exit 1
+fi
+if [[ -z $BACKUPDIR ]]; then
+        BACKUPDIR="/vol/backup/$HOSTNAME" 
+fi
+
+if [[ ! -z "$KEYFILE" && ! -r "$KEYFILE" ]]; then
+        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
+        exit 1
+fi
+
+# where to put the admin files.
+if [[ $etc -eq 0 ]]; then
+        ETC="/etc/rdup"
+else
+        ETC="$BACKUPDIR"
+fi
+
+NAME=$1  
+BACKUPDIR_DATE="$BACKUPDIR/$d"
+STAMP="$ETC/$HOSTNAME.$NAME.timestamp"
+LIST="$ETC/$HOSTNAME.$NAME.list"
+# DIRS in $@
+shift
+if [[ -z $@ ]]; then
+        echo "No directories to backup" 
+        exit 1
+fi
+
+# check the first directory in the list
+mkdir -m 755 -p "$BACKUPDIR"           
+if [[ ! -d "$BACKUPDIR_DATE/$1" ]]; then
+        # kill the timestamp and inc list
+        mkdir -m 755 -p "$BACKUPDIR_DATE"
+        rm -f "$LIST"
+        rm -f "$STAMP"
+        _echo2 "Full dump"
+else
+        _echo2 "Incremental dump"
+fi
+
+if [[ -z "$KEYFILE" ]]; then
+        if [[ $gzip -eq 0 ]]; then
+                @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/mirror.sh -b "$BACKUPDIR"
+        else 
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
+                @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+        fi
+else
+        if [[ $gzip -eq 0 ]]; then
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/crypt.sh $KEYFILE | \
+                @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+        else 
+                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
+                @sbindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+        fi
+fi

@@ -14,7 +14,7 @@ rorrim.sh \- restore an entire backed up directory
 .SH DESCRIPTION
 \fBrorrim.sh\fR is part of the restore utilities of \fBrdup\fR.
 .PP
-\fBrorrim.sh\fR is almost equal to \fBmirror.sh\fR, the only major
+\fBrorrim.sh\fR is almost equal to \fBmirror.sh\fR, the major
 differences are:
 .TP
 .B o
@@ -24,8 +24,8 @@ Leaving the restored directory in its original state.
 .TP
 .B o
 It can be that the file without the suffix does not exist in the
-backup directory. This is possible when the file has permanently
-be deleted from the filesystem. If this is the case the file in 
+backup directory. This is possible when the file has been permanently
+deleted from the filesystem. If this is the case the file in 
 question is skipped from the restore.
 .TP
 .B o
@@ -36,10 +36,10 @@ must be explicitly given on the command line.
 another directory. This allows one to return to a previous state of a
 filesystem. 
 .PP
-By default \fBrorrim.sh\fR will restore to the last backed up state,
-i.e the file you'll get when you run `yesterday.sh' without options.
+\fBrorrim.sh\fR will restore the files it receives on standard input,
+just like \fBmirror.sh\fR does for backups.
 .PP
-Backed up files will be copied as-is, no unzipping or decryption will 
+Restored files will be copied as-is, no unzipping or decryption will 
 be attempted. See gzip.sh(1) and crypt.sh(1) for compression and
 decryption.
 
@@ -47,7 +47,10 @@ decryption.
 .TP
 .B \-c
 Used in conjunction with \fBrdup\fR's \-c. This will allow
-\fBrorrim.sh\fR to be used for remote restores.
+\fBrorrim.sh\fR to be used for remote restores. This option 
+is also used when a backup is compressed or encrypted. By piping
+\fBrdup\fR's output through \fBgzip.sh -d\fR and/or \fBcrypt.sh -d\fR
+the original files can be retrieved.
 .TP
 .B \-v
 Echo the files processed to standard error.
@@ -57,6 +60,13 @@ Short help message.
 .TP
 .B \-V
 Show the version.
+
+.SH EXAMPLES
+Restore a subversion repository to /tmp/SVN:
+
+rdup /dev/null /vol/backup/elektron/200604/var/svn/rdup | monthday.sh |
+rorrim.sh /tmp/SVN
+
 
 .SH SEE ALSO
 diff(1), hist.sh(1), yesterday(1), gzip.sh(1) and rdup(8).
