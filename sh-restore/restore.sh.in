@@ -83,15 +83,15 @@ if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
                 @sbindir@/rdup -n /dev/null "$frm_dir" | @sbindir@/rorrim.sh "$to_dir"
         else 
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh | \
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh -d | \
                 @sbindir@/rorrim.sh -c "$to_dir"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh $KEYFILE | \
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh -d  $KEYFILE | \
                 @sbindir@/rorrim.sh -c "$to_dir"
         else 
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh |\
-                @sbindir@/crypt.sh $KEYFILE | @sbindir@/rorrim.sh -c "$to_dir"
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh -d $KEYFILE | \ 
+                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh -c "$to_dir"
         fi
 fi

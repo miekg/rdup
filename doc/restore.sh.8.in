@@ -18,35 +18,27 @@ TO_DIRECTORY
 TODO TODO
 
 .SH DESCRIPTION
-\fBdump.sh\fR is a frontend for `mirror.sh' and `rdup'. It will backup
-all directories and files given on the command line. It tries to be smart with
-respect to a full dump or an incremental dump. If the directories to
-be backed up \fIdo not exist\fR in the backup directory a full dump
-is assumed. Otherwise an incremental dump is performed.
+\fBrestore.sh\fR is a frontend for `rorrim.sh' and `rdup'. It will
+restore from \fIFROM_DIRECTORY\fR to \fITO_DIRECTORY\fR.
+For the \fI+DAY\fR argument, see the rorrim(8) manual page.
+
 .PP
-Making local backups is as simple as:
-      dump.sh $HOSTNAME ~ 
-.PP
-The \fBNAME\fR argument speficies a prefix for the
-timestamp and filelist files. If you use multiple \fBdump.sh\fR commands
-they should have an unique \fINAME\fR argument.
-.PP
-\fBDIR\fR is the directory to be backed up. Multiple directories
-are allowed on the command line.
-.PP
-The default backup location is `/vol/backup/`hostname''.
+Restoring from a backup is as simple as:
+      restoer.sh /vol/backup/elektron/200604/home /tmp/home
 
 .SH OPTIONS
 .TP
 .B \-k keyfile
-Encrypt the files while backing up with \fIkeyfile\fR. This option
-inserts \fBcrypt.sh keyfile\fR in the pipeline. If both \fI-z\fR and
-\fI-k\fR are given a file is first zipped and then encrypted.
+Decrypt the files while restoring with \fIkeyfile\fR. This option
+inserts \fBcrypt.sh -d keyfile\fR in the pipeline. If both \fI-z\fR and
+\fI-k\fR are given a file is first decrypted and then unzipped. This 
+is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
 .B \-z
-Compress the files while backing up. This option
-inserts \fBgzip.sh\fR in the pipeline. If both \fI-z\fR and
-\fI-k\fR are given a file is first zipped and then encrypted.
+Decompress the files while restoring. This option
+inserts \fBgzip.sh -d\fR in the pipeline. If both \fI-z\fR and
+\fI-k\fR are given a file is first decrypted and then unzipped. This 
+is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
 .B \-h
 Show a short help message.
