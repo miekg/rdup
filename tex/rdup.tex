@@ -21,7 +21,7 @@ of networked backups. Encryption and compression is also supported.
 The homepage of \rdup{} is located at: \\
 \url{http://www.miek.nl/projects/rdup/index.html}.
 
-Currently \rdup{} runs on Linux and on FreeBSD. Because \rdup{} is
+Currently \rdup{} runs on Linux and FreeBSD. Because \rdup{} is
 small porting it to other platforms should be relatively easy.
 
 In this document we detail how \rdup{} works, out of which components
@@ -54,15 +54,15 @@ mechanism to do secure authentication. A program like \cmd{tar} can be
 used to pack files, other tools can be used for encryption. 
 
 Taking these requirements and thinking them through, the
-conclusion is that the best backup program... does not backup anything.
+conclusion is that the best backup program\ldots does not backup anything.
 Hence: \rdup
 
 \section{Rational Behind \rdup}
 \rdup{} is an utility inspired by \cmd{rsync} and the 
 \cmd{plan9}\footnote{http://plan9.escet.urjc.es/magic/man2html/4/fs} 
 way of doing backups. As said, \rdup{} does not create backups. It only
-prints a list of files that are changed, or all files in case of a null
-dump, to standard output. 
+prints a list of files that are changed or removed. Or all files in case
+of a null dump, to standard output. 
 
 \section{Scheme Implemented in Current Scripts}
 \label{sec:scheme implemented in current scripts}
@@ -75,7 +75,6 @@ One full backup each month, incremental updates after that.
 a number of scripts. The current scripts are written in 
 Bash version 3, but any language can be used to write them.
 
-
 \section{C Core}
 The main \rdup{} program is written in about 1000 lines of C code. Its
 main purpose is to crawl the filesystem and to calculate which files
@@ -83,8 +82,8 @@ need to be removed and what files are new or modified. That list is then
 printed to standard output.
 
 \section{Scripts}
-The current shell scripts implement the backup and restore policy. See
-Section \ref{sec:scheme implemented in current scripts}
+The current shell scripts implement the backup and restore policy, see
+Section \ref{sec:scheme implemented in current scripts}.
 The are quite a few of them:
 \begin{description}
 \item[\cmd{crypt.sh}]{-- encrypt/decrypt the files' contents,}
@@ -98,12 +97,12 @@ And for restoring we have:
 \item[\cmd{hist.sh}]{-- inspect the backup history of a file,}
 \item[\cmd{yesterday.sh}]{-- restore files from the backup,}
 \item[\cmd{rorrim.sh}]{-- place to-be-restored files in a directory,}
-\item[\cmd{monthday.sh}]{-- select files from the backup,}
+\item[\cmd{monthday.sh}]{-- select files to restore from the backup,}
 \item[\cmd{purge.sh}]{-- example backup delete scipt.}
 \end{description}
 
 Note that \cmd{gzip.sh} and \cmd{crypt.sh} can be used for 
-both backing up and restoring. See section \ref{sec: restore examples}
+both backing up and restoring. See section \ref{sec:restore examples}
 for some examples.
 
 \section{How Does \rdup{} Work?}
@@ -115,7 +114,7 @@ The data \rdup{} puts out is depicted in Figure \ref{fig:rdup output}.
 +16832 1000 1000 20 0 /home/miekg/svn/rdup
 +16832 1000 1000 26 0 /home/miekg/svn/rdup/trunk
 +33216 1000 1000 30 31 /home/miekg/svn/rdup/trunk/apt
--33216 1000 1000 29 72 /home/miekg/svn/rdup/trunk/nc
+-33216 1000 1000 29 0 /home/miekg/svn/rdup/trunk/nc
 \end{verbatim}
 \caption{A short listing of typical output from \rdup.}
 \label{fig:rdup output}
@@ -131,7 +130,7 @@ columns:
 \item{\textbf{uid} -- numeric user id,}
 \item{\textbf{gid} -- numeric group id,}
 \item{\textbf{path size} -- the length of the path,}
-\item{\textbf{file size} -- the size of the file,}
+\item{\textbf{file size} -- the size of the file (zero when deleted),}
 \item{\textbf{path} -- the full pathname.}
 \end{enumerate}
 
@@ -165,10 +164,11 @@ content is printed for files that are to be removed.
 
 \chapter{Making Backups}
 The most simple use of \rdup{} is to mirror files to
-another partition. The following command does the following:
-1. explain
-2. more explanation
-
+another partition/directory. The following example first
+creates a file list using \rdup{} which is then piped to 
+\cmd{mirror.sh} which processes each entry and stores the
+files in 
+\texttt{/vol/backup/`\$HOSTNAME`/YYYYMM}.
 Note: The files \cmd{timestamp} and \cmd{FILELIST} are
 both created by \rdup:
 \begin{quote}
@@ -239,6 +239,6 @@ remote system and the disk of that system is made read-only available to
 the network, you have a complete network based backup system.
 
 \section{Restore Examples}
-\ref{sec: restore examples}
+\label{sec:restore examples}
 
 \end{document}
