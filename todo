@@ -14,9 +14,13 @@ o make complete hdup2 clone based on rdup
 o better error messages if somebody forgets a -c or something
 o make dump.sh and restore.sh work with a -c option
   put ssh in it, remote dump/restore
+  
+  This doubles the options at the bottom of these scripts,
+  but it is cool and gives hdup a run for its money.
+
 o when not root, don't chown... ? Or at least show no errors
 o restore.sh: multiple restore directories?
-o restore.sh: -n always on??
+o restore.sh: -n always on?? Yeah, dump.sh doesn't do this...
 o restore.sh, dump.sh -v: so show files
 o restore.sh: -p option, to cut off a few leading dirs, just as patch?
 
