@@ -12,7 +12,6 @@ o make complete hdup2 clone based on rdup
 
 :rdup utils: 
 o better error messages if somebody forgets a -c or something
-o make meta restore script: restore.sh in line with dump.sh
 o make dump.sh and restore.sh work with a -c option
 o when not root, don't chown... ? Or at least show no errors
 o restore.sh: multiple restore directories?
@@ -22,12 +21,16 @@ o restore.sh: -n always on??
 :doc:
 :porting:
 
-:DONE:
-
-o NOT DONE: merging rorrim.sh and mirror.sh because they really really do
+:NOT DONR:
+o merging rorrim.sh and mirror.sh because they really really do
   the same thing? Add -r switch, for restore???
   They are too different to make this practical - it is better to have
   2 scripts, then to have 1 scripts that is too complex.
+
+:DONE:
+
+o make meta restore script: restore.sh in line with dump.sh
+  28 Apr: started script, looks very much like dump.sh
 
 o paths in scripts
   25 Apr 2006: added @sbindir@/@bindir@ to them
