@@ -11,8 +11,9 @@ usage() {
         echo 
         echo "This is a wrapper around rdup and rorrim.sh"
         echo
-        echo NAME - suffix for filelist and timestamp files
-        echo DIR \ - directories to back up
+        echo +DAY          - restore up to this month day, defaults to 0
+        echo FRM_DIRECTORY - restore from this directory
+        echo TO_DIRECTORY  - restore to this directory
         echo
         echo OPTIONS:
         echo " -z         compress all files"
@@ -72,10 +73,6 @@ if [[ ! -d "$frm_dir" ]]; then
 fi
 if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
         _echo2 "+DAY out of bounds [0..31]"
-        exit 1
-fi
-if [[ ! -d "$to_dir" ]]; then
-        _echo2 "Cannot restore to \`$to_dir'"
         exit 1
 fi
 

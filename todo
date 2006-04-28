@@ -13,16 +13,18 @@ o make complete hdup2 clone based on rdup
 :rdup utils: 
 o better error messages if somebody forgets a -c or something
 o make dump.sh and restore.sh work with a -c option
+  put ssh in it, remote dump/restore
 o when not root, don't chown... ? Or at least show no errors
 o restore.sh: multiple restore directories?
 o restore.sh: -n always on??
 o restore.sh, dump.sh -v: so show files
+o restore.sh: -p option, to cut off a few leading dirs, just as patch?
 
 :tests:
 :doc:
 :porting:
 
-:NOT DONR:
+:NOT DONE:
 o merging rorrim.sh and mirror.sh because they really really do
   the same thing? Add -r switch, for restore???
   They are too different to make this practical - it is better to have

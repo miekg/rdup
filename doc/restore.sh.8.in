@@ -24,7 +24,7 @@ For the \fI+DAY\fR argument, see the rorrim(8) manual page.
 
 .PP
 Restoring from a backup is as simple as:
-      restoer.sh /vol/backup/elektron/200604/home /tmp/home
+      restore.sh /vol/backup/elektron/200604/home /tmp/home
 
 .SH OPTIONS
 .TP
