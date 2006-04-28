@@ -257,7 +257,16 @@ inspect the backup history of a particulair file.
 .TP
 .B yesterday.sh
 restore files from the backups, show diffs, etc.
-
+.TP
+.B monthday.sh
+select files from a specific day in the month from a backup
+.TP
+.B rorrim.sh
+restore files from a backup.
+.TP
+.B restore.sh
+a wrapper scripts around `rdup', `monthday.sh' and `rorrim.sh' to
+easy restoring.
 
 .SH EXAMPLES
 

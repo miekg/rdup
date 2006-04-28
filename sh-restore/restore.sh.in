@@ -26,20 +26,19 @@ version() {
 }
 
 d=`date +%Y%m`
-etc=0
 PROGNAME=$0
-BACKUPDIR=""
 gzip=0
 KEYFILE=""
+monthday=0
+frm_dir=""
+to_dir=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":b:k:zehV" o; do
+while getopts ":k:zhV" o; do
         case $o in
-                b) BACKUPDIR=$OPTARG;;
-                e) etc=1;;
                 k) KEYFILE=$OPTARG;;
                 z) gzip=1;;
                 V) version && exit;;
@@ -48,62 +47,51 @@ while getopts ":b:k:zehV" o; do
         esac
 done
 shift $((OPTIND - 1))
-if [[ $# -eq 0 ]]; then
-        echo "NAME is mandatory"
-        exit 1
-fi
-if [[ -z $BACKUPDIR ]]; then
-        BACKUPDIR="/vol/backup/$HOSTNAME" 
-fi
 
-if [[ ! -z "$KEYFILE" && ! -r "$KEYFILE" ]]; then
-        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
-        exit 1
-fi
-
-# where to put the admin files.
-if [[ $etc -eq 0 ]]; then
-        ETC="/etc/rdup"
+# +DAY argument
+if [[ $1 =~ "\\+(.+)" ]]; then
+        monthday=${BASH_REMATCH[1]}
+        if [[ ! $monthday =~ "[0-9]+" ]]; then
+                _echo2 "+DAY must be numerical"
+                exit 1
+        fi
+        frm_dir=$2
+        to_dir=$3
 else
-        ETC="$BACKUPDIR"
+        # no monthday argument
+        frm_dir=$1
+        to_dir=$2
 fi
-
-NAME=$1  
-BACKUPDIR_DATE="$BACKUPDIR/$d"
-STAMP="$ETC/$HOSTNAME.$NAME.timestamp"
-LIST="$ETC/$HOSTNAME.$NAME.list"
-# DIRS in $@
-shift
-if [[ -z $@ ]]; then
-        echo "No directories to backup" 
+if [[ -z "$frm_dir" || -z "$to_dir" ]]; then
+        _echo2 "Need both directory arguments"
         exit 1
 fi
-
-# check the first directory in the list
-mkdir -m 755 -p "$BACKUPDIR"           
-if [[ ! -d "$BACKUPDIR_DATE/$1" ]]; then
-        # kill the timestamp and inc list
-        mkdir -m 755 -p "$BACKUPDIR_DATE"
-        rm -f "$LIST"
-        rm -f "$STAMP"
-        _echo2 "Full dump"
-else
-        _echo2 "Incremental dump"
+if [[ ! -d "$frm_dir" ]]; then
+        _echo2 "Cannot restore from \`$frm_dir'"
+        exit 1
+fi
+if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
+        _echo2 "+DAY out of bounds [0..31]"
+        exit 1
+fi
+if [[ ! -d "$to_dir" ]]; then
+        _echo2 "Cannot restore to \`$to_dir'"
+        exit 1
 fi
 
 if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/mirror.sh -b "$BACKUPDIR"
+                @sbindir@/rdup -n /dev/null "$frm_dir" | @sbindir@/rorrim.sh "$to_dir"
         else 
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
-                @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh | \
+                @sbindir@/rorrim.sh -c "$to_dir"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/crypt.sh $KEYFILE | \
-                @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh $KEYFILE | \
+                @sbindir@/rorrim.sh -c "$to_dir"
         else 
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
-                @sbindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh -c -b "$BACKUPDIR"
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh |\
+                @sbindir@/crypt.sh $KEYFILE | @sbindir@/rorrim.sh -c "$to_dir"
         fi
 fi
