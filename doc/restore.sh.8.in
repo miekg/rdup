@@ -40,6 +40,9 @@ inserts \fBgzip.sh -d\fR in the pipeline. If both \fI-z\fR and
 \fI-k\fR are given a file is first decrypted and then unzipped. This 
 is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
+.B \-v
+Echo the files processed to standard error.
+.TP
 .B \-h
 Show a short help message.
 .TP

@@ -18,6 +18,7 @@ usage() {
         echo OPTIONS:
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
+        echo " -v         echo the files processed to stderr"
         echo " -h         this help"
         echo " -V         print version"
 }
@@ -33,15 +34,17 @@ KEYFILE=""
 monthday=0
 frm_dir=""
 to_dir=""
+verbose=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":k:zhV" o; do
+while getopts ":k:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 z) gzip=1;;
+                v) verbose="-v";;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
@@ -78,17 +81,18 @@ fi
 
 if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n /dev/null "$frm_dir" | @sbindir@/rorrim.sh "$to_dir"
+                @sbindir@/rdup -n /dev/null "$frm_dir" | \
+                @sbindir@/rorrim.sh $verbose "$to_dir"
         else 
                 @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh -d | \
-                @sbindir@/rorrim.sh -c "$to_dir"
+                @sbindir@/rorrim.sh $verbose -c "$to_dir"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
                 @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh -d  $KEYFILE | \
-                @sbindir@/rorrim.sh -c "$to_dir"
+                @sbindir@/rorrim.sh $verbose -c "$to_dir"
         else 
                 @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh -d $KEYFILE | \ 
-                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh -c "$to_dir"
+                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $verbose -c "$to_dir"
         fi
 fi

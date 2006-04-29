@@ -55,6 +55,9 @@ Store the the timestamp and filelist files together with the backup.
 This allows for backups to USB-drives and such. Normally they
 are stored in `/etc/rdup'.
 .TP
+.B \-v
+Echo the files processed to standard error.
+.TP
 .B \-h
 Show a short help message.
 .TP
