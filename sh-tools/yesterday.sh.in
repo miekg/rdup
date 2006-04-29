@@ -131,13 +131,13 @@ do
 
         # print
         if [[ $copy -eq 1 ]]; then
-                cp -f -RP $backupfile $file
+                cp -RP $backupfile $file
                 continue
         fi
         if [[ $Ccopy -eq 1 ]]; then
                 cmp $backupfile $file > /dev/null
                 if [[ $? ]]; then
-                        cp -f -RP $backupfile $file
+                        cp -RP $backupfile $file
                 fi
                 continue
         fi

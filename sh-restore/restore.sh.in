@@ -82,17 +82,24 @@ fi
 if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
                 @sbindir@/rdup -n /dev/null "$frm_dir" | \
+                @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/rorrim.sh $verbose "$to_dir"
         else 
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/gzip.sh -d | \
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | \
+                @sbindir@/monthday.sh +$monthday | \
+                @sbindir@/gzip.sh -d | \
                 @sbindir@/rorrim.sh $verbose -c "$to_dir"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh -d  $KEYFILE | \
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" | \
+                @sbindir@/monthday.sh +$monthday | \
+                @sbindir@/crypt.sh -d  $KEYFILE | \
                 @sbindir@/rorrim.sh $verbose -c "$to_dir"
         else 
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | @sbindir@/crypt.sh -d $KEYFILE | \ 
+                @sbindir@/rdup -n -c /dev/null "$frm_dir" |
+                @sbindir@/monthday.sh +$monthday | \
+                @sbindir@/crypt.sh -d $KEYFILE | \ 
                 @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $verbose -c "$to_dir"
         fi
 fi

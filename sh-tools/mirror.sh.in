@@ -109,7 +109,7 @@ local_mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                cp -f -RP "$path" "$backupdir/$path"
+                                cp -RP "$path" "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 ftsize=$(($ftsize + $fsize))
@@ -130,7 +130,7 @@ local_mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                cp -f -RP "$path" "$backupdir/$path"
+                                cp -RP "$path" "$backupdir/$path"
                                 chown -h $uid:$gid "$backupdir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
