@@ -11,8 +11,8 @@ usage() {
         echo 
         echo "This is a wrapper around rdup, rorrim.sh and monthday.sh"
         echo
-        echo +DAY       - restore up to this month day, defaults to 0
-        echo -t TO_DIR  - restore to this directory
+        echo "+DAY       - restore up to this month day, defaults to 0"
+        echo "-t TO_DIR  - restore to this directory"
         echo "FROM_DIR   - restore from these directorie(s)"
         echo
         echo OPTIONS:
@@ -39,7 +39,7 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":k:zhVv" o; do
+while getopts ":k:t:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;
@@ -62,7 +62,7 @@ if [[ $1 =~ "\\+(.+)" ]]; then
         # rest of the arguments is frm_dir
         shift
 fi
-if [[ "$to_dir" ]]; then
+if [[ -z "$to_dir" ]]; then
         _echo2 "Need a directory to restore to"
         exit 1
 fi

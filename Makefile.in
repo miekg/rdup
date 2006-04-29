@@ -59,7 +59,7 @@ distclean: realclean
 	rm -f *.tar.bz2
 	rm -f *.tar.gz
 
-install: rdup 
+install: all
 	mkdir -p ${DESTDIR}${sysconfdir}/rdup
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${mandir}/man8

@@ -19,9 +19,6 @@ o make dump.sh and restore.sh work with a -c option
   but it is cool and gives hdup a run for its money.
 
 o when not root, don't chown... ? Or at least show no errors
-o restore.sh: multiple restore directories?
-o restore.sh: -n always on?? Yeah, dump.sh doesn't do this...
-o restore.sh, dump.sh -v: so show files
 o restore.sh: -p option, to cut off a few leading dirs, just as patch?
   should be implemented in rorrim.sh
 
@@ -35,7 +32,15 @@ o merging rorrim.sh and mirror.sh because they really really do
   They are too different to make this practical - it is better to have
   2 scripts, then to have 1 scripts that is too complex.
 
+o restore.sh: -n always on?? Yeah, dump.sh doesn't do this...
+  not needed
+
 :DONE:
+o restore.sh, dump.sh -v: so show files
+  29 Apr: fixed
+
+o restore.sh: multiple restore directories?
+  29 Apr: fixed
 
 o make meta restore script: restore.sh in line with dump.sh
   28 Apr: started script, looks very much like dump.sh
