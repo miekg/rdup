@@ -13,11 +13,8 @@ o make complete hdup2 clone based on rdup
 :rdup utils: 
 o better error message if somebody forgets a -c or something
 o make dump.sh and restore.sh work with a -c option
-  put ssh in it, remote dump/restore
-  
-  This doubles the options at the bottom of these scripts,
-  but it is cool and gives hdup a run for its money.
-
+  put ssh in it, remote dump/restore. Ala @miekg@elektron.atoom.net
+  from hdup. 
 o when not root, don't chown... ? Or at least show no errors
 o restore.sh: -p option, to cut off a few leading dirs, just as patch?
   should be implemented in rorrim.sh

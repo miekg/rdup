@@ -20,11 +20,11 @@ newpath=""
 PROGNAME=$0
 
 _echo() {
-        echo "** $1"
+        echo "$PROGNAME: ** $1"
 }
 
 _echo2() {
-        echo "** $1" > /dev/fd/2
+        echo "$PROGNAME: ** $1" > /dev/fd/2
 }
 
 cleanup() {
@@ -116,16 +116,16 @@ local_restore() {
                                 ;;
                         esac
                 else
-                        _echo2 "$PROGNAME: Ignoring removal of \`$path\'"
+                        _echo2 "Ignoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
-        _echo2 "#REG FILES  : $ireg" 
-        _echo2 "#DIRECTORIES: $idir" 
-        _echo2 "#LINKS      : $ilnk" 
-        _echo2 "SIZE        : $(($ftsize / 1024 )) KB" 
-        _echo2 "STORED IN   : $restoredir" 
-        _echo2 "ELAPSED     : $(($te - $ts)) s" 
+        echo "** #REG FILES  : $ireg" > /dev/fd/2
+        echo "** #DIRECTORIES: $idir" > /dev/fd/2
+        echo "** #LINKS      : $ilnk" > /dev/fd/2
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
+        echo "** STORED IN   : $restoredir" > /dev/fd/2
+        echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
 }
 
 remote_restore() {
@@ -199,12 +199,12 @@ remote_restore() {
         done 
         te=`date +%s`
         # /dev/fd/2 is not available remotely
-        _echo "#REG FILES  : $ireg"
-        _echo "#DIRECTORIES: $idir"
-        _echo "#LINKS      : $ilnk"
-        _echo "SIZE        : $(($ftsize / 1024 )) KB"
-        _echo "RESTORED TO : $restoredir"
-        _echo "ELAPSED     : $(($te - $ts)) s"
+        echo "** #REG FILES  : $ireg"
+        echo "** #DIRECTORIES: $idir"
+        echo "** #LINKS      : $ilnk"
+        echo "** SIZE        : $(($ftsize / 1024 )) KB"
+        echo "** RESTORED TO : $restoredir"
+        echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
 while getopts ":cvVhp:" options; do
@@ -220,18 +220,25 @@ done
 shift $((OPTIND - 1))
 
 if [[ $# -eq 0 ]]; then
-        _echo "$PROGNAME: Need a directory as argument"
+        _echo2 "Need a directory as argument"
         exit 1
 fi
 if [[ -f $1 ]]; then
-        _echo "$PROGNAME: Cannot restore to \`$'" 
+        _echo "Cannot restore to \`$'" 
         exit 1
 fi
-
+if [[ ! $dirstrip =~ "[0-9]+" ]]; then
+        _echo2 "Argument to -p must be numeric"
+        exit 1
+fi
+if [[ $dirstrip -lt 0 || $dirstrip -gt 1=9 ]]; then
+        _echo2 "-p argument out of bounds [0..10]"
+        exit 1
+fi
 if [[ ! -e $1 ]]; then
         mkdir $1
         if [[ $? -ne 0 ]]; then
-                _echo "$PROGNAME: Cannot create \`$1'"
+                _echo "Cannot create \`$1'"
                 exit 1
         fi
 fi
