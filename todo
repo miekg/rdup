@@ -10,6 +10,8 @@ o make complete hdup2 clone based on rdup
   see hdup2 directory
   I want to see this, but I don't have enough time for this.
 
+o dirsplit
+
 :rdup utils: 
 o better error message if somebody forgets a -c or something
 o make dump.sh and restore.sh work with a -c option
