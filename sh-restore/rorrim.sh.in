@@ -201,7 +201,7 @@ remote_restore() {
         _echo "#DIRECTORIES: $idir"
         _echo "#LINKS      : $ilnk"
         _echo "SIZE        : $(($ftsize / 1024 )) KB"
-        _echo "STORED IN   : $restoredir"
+        _echo "RESTORED TO : $restoredir"
         _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
