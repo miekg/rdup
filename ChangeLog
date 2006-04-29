@@ -12,7 +12,7 @@
      see the tex/ directory.
    * restore.sh: added this as a wrapper around rdup and monthday
      and rorrim.sh
-
+   * scripts: use cp -f -RP to force copy
 
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --

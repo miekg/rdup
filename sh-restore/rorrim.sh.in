@@ -95,7 +95,7 @@ local_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                cp -RP "$path" "$restoredir/$newpath"
+                                cp -f -RP "$path" "$restoredir/$newpath"
                                 chown $uid:$gid "$restoredir/$newpath"
                                 chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))
@@ -108,7 +108,7 @@ local_restore() {
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                cp -RP "$path" "$restoredir/$newpath"
+                                cp -f -RP "$path" "$restoredir/$newpath"
                                 chown -h $uid:$gid "$restoredir/$newpath"
                                 ilnk=$(($ilnk + 1))
                                 ;;
