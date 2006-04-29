@@ -12,21 +12,33 @@ restore.sh \- restore a filesystem from a specific directory
 [
 +DAY
 ]
-FROM_DIRECTORY
-TO_DIRECTORY
-
-TODO TODO
+.IR \-t
+.IR TO_DIR
+FROM_DIR
+[
+FROM_DIR ...
+]
 
 .SH DESCRIPTION
-\fBrestore.sh\fR is a frontend for `rorrim.sh' and `rdup'. It will
-restore from \fIFROM_DIRECTORY\fR to \fITO_DIRECTORY\fR.
-For the \fI+DAY\fR argument, see the rorrim(8) manual page.
+\fBrestore.sh\fR is a frontend for `rorrim.sh', `monthday.sh' and `rdup'. It will
+restore from all the \fIFROM_DIR\fRs to \fITO_DIR\fR.
+
+.PP
+For the \fI+DAY\fR argument, see the rorrim.sh(8) manual page.
 
 .PP
 Restoring from a backup is as simple as:
-      restore.sh /vol/backup/elektron/200604/home /tmp/home
+      restore.sh -t /tmp/home /vol/backup/elektron/200604/home
+
+Note: The restored files "inherit" the `/vol/backup/elektron/200604'
+prefix. So the restored files are found in the directory:
+`/tmp/home/vol/backup/elektron/200604/home'
 
 .SH OPTIONS
+.TP
+.B \-t TO_DIR
+This option is mandatory. It specifies the directory where the backup
+should be restored in.
 .TP
 .B \-k keyfile
 Decrypt the files while restoring with \fIkeyfile\fR. This option

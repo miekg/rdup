@@ -11,7 +11,7 @@ o make complete hdup2 clone based on rdup
   I want to see this, but I don't have enough time for this.
 
 :rdup utils: 
-o better error messages if somebody forgets a -c or something
+o better error message if somebody forgets a -c or something
 o make dump.sh and restore.sh work with a -c option
   put ssh in it, remote dump/restore
   
@@ -23,6 +23,7 @@ o restore.sh: multiple restore directories?
 o restore.sh: -n always on?? Yeah, dump.sh doesn't do this...
 o restore.sh, dump.sh -v: so show files
 o restore.sh: -p option, to cut off a few leading dirs, just as patch?
+  should be implemented in rorrim.sh
 
 :tests:
 :doc:

@@ -10,8 +10,8 @@
    * man rdup.8: add -r/-m options to it
    * doc: started tex documentation about rdup and its usage, 
      see the tex/ directory.
-   * restore.sh: added this as a wrapper around rdup and monthday
-     and rorrim.sh
+   * NEW: restore.sh: added this as a wrapper around rdup and
+     monthday.sh and rorrim.sh
 
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --

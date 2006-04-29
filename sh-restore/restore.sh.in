@@ -7,13 +7,13 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 
 usage() {
-        echo "$PROGNAME [OPTIONS] [+DAY] FRM_DIRECTORY TO_DIRECTORY"
+        echo "$PROGNAME [OPTIONS] [+DAY] -t TO_DIR FROM_DIR [FROM_DIR ...]"
         echo 
-        echo "This is a wrapper around rdup and rorrim.sh"
+        echo "This is a wrapper around rdup, rorrim.sh and monthday.sh"
         echo
-        echo +DAY          - restore up to this month day, defaults to 0
-        echo FRM_DIRECTORY - restore from this directory
-        echo TO_DIRECTORY  - restore to this directory
+        echo +DAY       - restore up to this month day, defaults to 0
+        echo -t TO_DIR  - restore to this directory
+        echo "FROM_DIR   - restore from these directorie(s)"
         echo
         echo OPTIONS:
         echo " -z         compress all files"
@@ -32,7 +32,6 @@ PROGNAME=$0
 gzip=0
 KEYFILE=""
 monthday=0
-frm_dir=""
 to_dir=""
 verbose=""
 
@@ -43,6 +42,7 @@ _echo2() {
 while getopts ":k:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
+                t) to_dir=$OPTARG;;
                 z) gzip=1;;
                 v) verbose="-v";;
                 V) version && exit;;
@@ -59,19 +59,11 @@ if [[ $1 =~ "\\+(.+)" ]]; then
                 _echo2 "+DAY must be numerical"
                 exit 1
         fi
-        frm_dir=$2
-        to_dir=$3
-else
-        # no monthday argument
-        frm_dir=$1
-        to_dir=$2
+        # rest of the arguments is frm_dir
+        shift
 fi
-if [[ -z "$frm_dir" || -z "$to_dir" ]]; then
-        _echo2 "Need both directory arguments"
-        exit 1
-fi
-if [[ ! -d "$frm_dir" ]]; then
-        _echo2 "Cannot restore from \`$frm_dir'"
+if [[ "$to_dir" ]]; then
+        _echo2 "Need a directory to restore to"
         exit 1
 fi
 if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
@@ -81,23 +73,23 @@ fi
 
 if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n /dev/null "$frm_dir" | \
+                @sbindir@/rdup -n /dev/null "$@" | \
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/rorrim.sh $verbose "$to_dir"
         else 
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | \
+                @sbindir@/rdup -n -c /dev/null "$@" | \
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/gzip.sh -d | \
                 @sbindir@/rorrim.sh $verbose -c "$to_dir"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" | \
+                @sbindir@/rdup -n -c /dev/null "@$" | \
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/crypt.sh -d  $KEYFILE | \
                 @sbindir@/rorrim.sh $verbose -c "$to_dir"
         else 
-                @sbindir@/rdup -n -c /dev/null "$frm_dir" |
+                @sbindir@/rdup -n -c /dev/null "$@" |
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/crypt.sh -d $KEYFILE | \ 
                 @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $verbose -c "$to_dir"
