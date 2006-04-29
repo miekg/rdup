@@ -11,6 +11,7 @@ S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 remote=0
 verbose=0
+dirstrip=0
 idir=0; ireg=0; ilnk=0
 ftsize=0
 ts=`date +%s`
@@ -43,6 +44,7 @@ usage() {
         echo OPTIONS
         echo " -c      process the file content also (rdup -c), for remote backups"
         echo " -v      echo the files processed to stderr"
+        echo " -p num  strip \`num' leading components from file names"
         echo " -h      this help"
         echo " -V      print version"
 }
@@ -205,10 +207,11 @@ remote_restore() {
         _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":cvVh" options; do
+while getopts ":cvVhp:" options; do
         case $options in
                 c) remote=1;;
                 v) verbose=1;;
+                p) dirstrip=$OPTARG;;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;

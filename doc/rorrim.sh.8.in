@@ -52,6 +52,10 @@ is also used when a backup is compressed or encrypted. By piping
 \fBrdup\fR's output through \fBgzip.sh -d\fR and/or \fBcrypt.sh -d\fR
 the original files can be retrieved.
 .TP
+.B \-p NUM
+Strip NUM leading components of the file names. When restoring you can 
+use this option to strip of the default backup path (`/vol/backup/...').
+.TP
 .B \-v
 Echo the files processed to standard error.
 .TP
