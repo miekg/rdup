@@ -227,7 +227,7 @@ fi
 
 if [[ ! -e $1 ]]; then
         mkdir $1
-        if [[ $? -ne 0] ]]; then
+        if [[ $? -ne 0 ]]; then
                 _echo "$PROGNAME: Cannot create \`$1'"
                 exit 1
         fi
