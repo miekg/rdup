@@ -1,5 +1,5 @@
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
-  -- tiny bugfixes --
+  -- tiny bugfixes + restore updates --
    * rdup: formalize file handling in rdup:
      - plain files are accepted on the cmd line (they
        already were, but generated a (harmless) warning)
@@ -12,6 +12,9 @@
      see the tex/ directory.
    * NEW: restore.sh: added this as a wrapper around rdup and
      monthday.sh and rorrim.sh
+   * restore.sh, rorrim.sh: -p NUM (strip leading path components
+     implmented)
+
 
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
   -- bugfixes + restore updates --

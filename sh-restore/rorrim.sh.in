@@ -20,11 +20,11 @@ newpath=""
 PROGNAME=$0
 
 _echo() {
-        echo "$PROGNAME: ** $1"
+        echo "** $PROGNAME: $1"
 }
 
 _echo2() {
-        echo "$PROGNAME: ** $1" > /dev/fd/2
+        echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
 cleanup() {
@@ -98,6 +98,14 @@ local_restore() {
 
                 # create the new filename
                 newpath=$(sanitize "$path")
+                
+                # -p NUM argument
+                newpath=$(_strip $dirstrip "$newpath")
+
+                if [[ -z "$newpath" ]]; then
+                        # discard, because the whole name was stripped
+                        continue
+                fi
 
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed
@@ -158,6 +166,8 @@ remote_restore() {
                         typ=2;
                 fi
 
+                [[ $verbose -eq 1 ]] && echo $path
+
                 # check sanity of data?
 #               echo "$dump$mode $uid $gid $psize $fsize"
 #               echo "m{"$mode"}"
@@ -169,6 +179,14 @@ remote_restore() {
 
                 # create the new filename
                 newpath=$(sanitize "$path")
+                DISCARD=0
+                # -p NUM argument
+                newpath=$(_strip $dirstrip "$newpath")
+
+                if [[ -z "$newpath" ]]; then
+                        # discard, because the whole name was stripped
+                        DISCARD=1
+                fi
 
                 # it can be that the file without extension does not 
                 # exist in the backup directory because it is removed
@@ -184,7 +202,12 @@ remote_restore() {
                                 0)      # REG
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
-                                        head -c $fsize > "$restoredir/$newpath"
+                                        if [[ $DISCARD -eq 1 ]]; then
+                                                head -c $fsize > /dev/null
+                                                continue
+                                        else
+                                                head -c $fsize > "$restoredir/$newpath"
+                                        fi
                                 else 
                                         # empty
                                         touch "$restoredir/$newpath"
@@ -195,6 +218,9 @@ remote_restore() {
                                 ireg=$(( $ireg + 1))
                                 ;;
                                 1)      # DIR
+                                if [[ $DISCARD -eq 1 ]]; then
+                                        continue
+                                fi
                                 [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath"
                                 chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 chmod $bits "$restoredir/$newpath"
@@ -202,6 +228,9 @@ remote_restore() {
                                 ;;
                                 2)      # LNK, target is in the content! 
                                 target=`head -c $fsize`
+                                if [[ $DISCARD -eq 1 ]]; then
+                                        continue
+                                fi
                                 ln -sf "$target" "$restoredir/$newpath" 
                                 chown -h $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 ilnk=$(( $ilnk + 1))

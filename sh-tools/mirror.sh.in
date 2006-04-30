@@ -171,8 +171,9 @@ remote_mirror() {
                         typ=2;
                 fi
 
-                # check sanity of data?
+                [[ $verbose -eq 1 ]] && echo $path
 
+                # check sanity of data?
 # debugging - the output of rdup should perfectly match our reads
 #echo "$dump$mode $uid $gid $psize $fsize"
 #                echo "m{"$mode"}"
