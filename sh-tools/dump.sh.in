@@ -16,6 +16,7 @@ usage() {
         echo
         echo OPTIONS:
         echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
+        echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
@@ -35,6 +36,7 @@ BACKUPDIR=""
 gzip=0
 verbose=""
 KEYFILE=""
+remote=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
@@ -43,8 +45,9 @@ _echo2() {
 while getopts ":b:k:vzehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
-                e) etc=1;;
                 k) KEYFILE=$OPTARG;;
+                c) remote=$OPTARG;;
+                e) etc=1;;
                 z) gzip=1;;
                 v) verbose="-v";;
                 V) version && exit;;
@@ -96,19 +99,44 @@ else
         _echo2 "Incremental dump"
 fi
 
-if [[ -z "$KEYFILE" ]]; then
-        if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/mirror.sh $verbose -b "$BACKUPDIR"
-        else 
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
-                @sbindir@/mirror.sh $verbose -c -b "$BACKUPDIR"
+if [[ -z "$remote" ]]; then
+        # no remote 
+        if [[ -z "$KEYFILE" ]]; then
+                if [[ $gzip -eq 0 ]]; then
+                        @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/mirror.sh $verbose -b "$BACKUPDIR"
+                else 
+                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
+                        @sbindir@/mirror.sh $verbose -c -b "$BACKUPDIR"
+                fi
+        else
+                if [[ $gzip -eq 0 ]]; then
+                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/crypt.sh $KEYFILE | \
+                        @sbindir@/mirror.sh $verbose -c -b "$BACKUPDIR"
+                else 
+                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
+                        @sbindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh $verbose -c -b "$BACKUPDIR"
+                fi
         fi
 else
-        if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/crypt.sh $KEYFILE | \
-                @sbindir@/mirror.sh $verbose -c -b "$BACKUPDIR"
-        else 
-                @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
-                @sbindir@/crypt.sh $KEYFILE | @sbindir@/mirror.sh $verbose -c -b "$BACKUPDIR"
+        # remote 
+        if [[ -z "$KEYFILE" ]]; then
+                if [[ $gzip -eq 0 ]]; then
+                        @sbindir@/rdup -N $STAMP $LIST $@ | \
+                        # compress stream here
+                        ssh -x -C "$remote" mirror.sh $verbose -b "$BACKUPDIR"
+                else 
+                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
+                        ssh -x "$remote" | mirror.sh $verbose -c -b "$BACKUPDIR"
+                fi
+        else
+                if [[ $gzip -eq 0 ]]; then
+                        @sbindir@/rdup -c -N $STAMP $LIST $@ | \
+                        @sbindir@/crypt.sh $KEYFILE | \
+                        ssh -x -C "$remote" mirror.sh $verbose -c -b "$BACKUPDIR"
+                else 
+                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
+                        @sbindir@/crypt.sh $KEYFILE | 
+                        ssh -x "$remote" mirror.sh $verbose -c -b "$BACKUPDIR"
+                fi
         fi
 fi

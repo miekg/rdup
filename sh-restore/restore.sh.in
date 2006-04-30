@@ -16,9 +16,10 @@ usage() {
         echo "FROM_DIR   - restore from these directorie(s)"
         echo
         echo OPTIONS:
-        echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
+        echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -p num     strip \`num' leading components from file names"
+        echo " -z         compress all files"
         echo " -v         echo the files processed to stderr"
         echo " -h         this help"
         echo " -V         print version"
@@ -36,6 +37,7 @@ monthday=0
 to_dir=""
 verbose=""
 dirstrip=""
+remote=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
@@ -45,6 +47,7 @@ while getopts ":k:t:p:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;
+                c) remote=$OPTARG;;
                 z) gzip=1;;
                 p) dirstrip=$OPTARG;;
                 v) verbose="-v";;
@@ -85,27 +88,56 @@ if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
         exit 1
 fi
 
-if [[ -z "$KEYFILE" ]]; then
-        if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n /dev/null "$@" | \
-                @sbindir@/monthday.sh +$monthday | \
-                @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
-        else 
-                @sbindir@/rdup -n -c /dev/null "$@" | \
-                @sbindir@/monthday.sh +$monthday | \
-                @sbindir@/gzip.sh -d | \
-                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+if [[ -z "$remote" ]]; then
+        # no remote
+        if [[ -z "$KEYFILE" ]]; then
+                if [[ $gzip -eq 0 ]]; then
+                        @sbindir@/rdup -n /dev/null "$@" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
+                else 
+                        @sbindir@/rdup -n -c /dev/null "$@" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/gzip.sh -d | \
+                        @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                fi
+        else
+                if [[ $gzip -eq 0 ]]; then
+                        @sbindir@/rdup -n -c /dev/null "@$" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/crypt.sh -d  $KEYFILE | \
+                        @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                else 
+                        @sbindir@/rdup -n -c /dev/null "$@" |
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/crypt.sh -d $KEYFILE | \ 
+                        @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                fi
         fi
 else
-        if [[ $gzip -eq 0 ]]; then
-                @sbindir@/rdup -n -c /dev/null "@$" | \
-                @sbindir@/monthday.sh +$monthday | \
-                @sbindir@/crypt.sh -d  $KEYFILE | \
-                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
-        else 
-                @sbindir@/rdup -n -c /dev/null "$@" |
-                @sbindir@/monthday.sh +$monthday | \
-                @sbindir@/crypt.sh -d $KEYFILE | \ 
-                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+        # remote
+        if [[ -z "$KEYFILE" ]]; then
+                if [[ $gzip -eq 0 ]]; then
+                        ssh -x -C "$remote" rdup -n /dev/null "$@" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
+                else 
+                        ssh -x "$remote" rdup -n -c /dev/null "$@" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/gzip.sh -d | \
+                        @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                fi
+        else
+                if [[ $gzip -eq 0 ]]; then
+                        ssh -x -C "$remote" rdup -n -c /dev/null "$@" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/crypt.sh -d  $KEYFILE | \
+                        @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                else 
+                        ssh -x "$remote" rdup -n -c /dev/null "$@" | \
+                        @sbindir@/monthday.sh +$monthday | \
+                        @sbindir@/crypt.sh -d $KEYFILE | \ 
+                        @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                fi
         fi
 fi

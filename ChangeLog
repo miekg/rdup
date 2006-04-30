@@ -1,5 +1,5 @@
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
-  -- tiny bugfixes + restore updates --
+  -- tiny bugfixes + major restore updates --
    * rdup: formalize file handling in rdup:
      - plain files are accepted on the cmd line (they
        already were, but generated a (harmless) warning)
@@ -7,13 +7,15 @@
        of quiting
    * rdup.8: documentation updates, and make it more clear
      that rdup handles file arguments just fine.
-   * man rdup.8: add -r/-m options to it
-   * doc: started tex documentation about rdup and its usage, 
-     see the tex/ directory.
    * NEW: restore.sh: added this as a wrapper around rdup and
      monthday.sh and rorrim.sh
-   * REMOVED: purge.sh, I want to focus on dump/restore. Every body
+   * REMOVED: purge.sh, I want to focus on dump/restore. Everyone
      can write a rm -rf script
+   * dump.sh, restore.sh: added -c user@remote switch to ease in 
+     remote backups and remote restores.
+   * man rdup.8: added -r/-m options.
+   * doc: started tex documentation about rdup and its usage, 
+     see the tex/ directory.
    * restore.sh, rorrim.sh: -p NUM (strip leading path components
      implmented)
 
