@@ -21,8 +21,8 @@ a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
 backups. All paths printed are absolute.
 .PP
-\fBrdup\fR prints a filelist to standard output. This list is relative
-to FILELIST. Subsequent programs in a pipe line can be used to actually
+\fBrdup\fR prints a filelist to standard output. 
+Subsequent programs in a pipe line can be used to actually
 implement to backup scheme. If FILELIST is empty or non existant all
 files in DIR are dumped. This is the same as a null dump. After a run
 a new FILELIST is written. No warning is given when FILELIST is an
@@ -71,7 +71,7 @@ Don't honor .nobackup files. Normally if such files are found the directory is n
 printed to standard output, now it is.
 .TP
 .B \-c
-Concatenate the files' contents to standard output. This sets
+Print the files' contents to standard output. This sets
 the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
 .TP
 .B \-r
@@ -266,7 +266,7 @@ restore files from a backup.
 .TP
 .B restore.sh
 a wrapper scripts around `rdup', `monthday.sh' and `rorrim.sh' to
-easy restoring.
+ease restoring.
 
 .SH EXAMPLES
 

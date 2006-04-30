@@ -10,7 +10,7 @@ o make complete hdup2 clone based on rdup
   see hdup2 directory
   I want to see this, but I don't have enough time for this.
 
-o dirsplit
+o dirsplit, handy util for making dvd sized backups
 
 :rdup utils: 
 o better error message if somebody forgets a -c or something
