@@ -271,29 +271,29 @@ ease restoring.
 .SH EXAMPLES
 
 .SS BACKUPS
-\fBdump.sh\fR is a wrapper for these pipelines:
+\fBdump.sh\fR is a wrapper which implements these (and more) pipelines:
 
 .SS full dump of /home 
-rdup /tmp/HOMELIST ~ | mirror.sh -b /vol/backup
+rdup /tmp/HOMELIST ~ | mirror.sh \-b /vol/backup
 
 .SS full gzipped dump of /home
-rdup -c /tmp/HOMELIST ~ | gzip.sh | mirror.sh -c -b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | gzip.sh | mirror.sh \-c \-b /vol/backup
 
 .SS full remote dump of /home
-rdup -c /tmp/HOMELIST ~ | ssh miekg@example.com mirror.sh -c -b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | ssh miekg@example.com mirror.sh \-c \-b /vol/backup
 
 .SS full encrypted remote dump of /home
-rdup -c /tmp/HOMELIST ~ | crypt.sh KEYFILE | 
-ssh miekg@example.com mirror.sh -c -b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | crypt.sh KEYFILE | 
+ssh miekg@example.com mirror.sh \-c \-b /vol/backup
 
 .SS full encrypted, gzipped remote dump of /home
 This is my favorite:
 
-rdup -c /tmp/HOMELIST ~ | crypt.sh KEYFILE | gzip.sh | 
-ssh miekg@example.com mirror.sh -c -b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | crypt.sh KEYFILE | gzip.sh | 
+ssh miekg@example.com mirror.sh \-c \-b /vol/backup
 
 .SS RESTORES
-\fBrestore.sh\fR is a wrapper for these pipelines:
+\fBrestore.sh\fR is a wrapper which implements these (and more) pipelines:
 
 .SS restore of /home to /tmp/restore
 rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh |
@@ -305,19 +305,19 @@ rorrim.sh /tmp/restore
 
 .SS restore of /home but leading 4 paths components stripped
 rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh |
-rorrim.sh -p4 /tmp/restore
+rorrim.sh \-p4 /tmp/restore
 
 .SS restore of gzipped backup
-rdup -c /dev/null /vol/backup/HOST/200604/home | monthday.sh -c |
-rorrim.sh -c /tmp/restore
+rdup \-c /dev/null /vol/backup/HOST/200604/home | monthday.sh \-c |
+rorrim.sh \-c /tmp/restore
 
 .SS remote restore
-ssh miekg@example.com rdup -c /dev/null /vol/backup/me/200605/home |
-montday.sh -c | rorrim.sh -c /tmp/restore
+ssh miekg@example.com rdup \-c /dev/null /vol/backup/me/200605/home |
+montday.sh \-c | rorrim.sh \-c /tmp/restore
 
 .SS remote restore of encrypted backup
-ssh miekg@example.com rdup -c /dev/null /vol/backup/me/200605/home |
-montday.sh -c | crypt.sh -d SECRET_KEY | rorrim.sh -c /tmp/restore
+ssh miekg@example.com rdup \-c /dev/null /vol/backup/me/200605/home |
+montday.sh \-c | crypt.sh \-d SECRET_KEY | rorrim.sh \-c /tmp/restore
 
 .SH SEE ALSO
 hist.sh(1), yesterday.sh(1), mirror.sh(8), dump.sh(8) and restore.sh(8).

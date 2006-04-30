@@ -21,18 +21,19 @@ FROM_DIR ...
 
 .SH DESCRIPTION
 \fBrestore.sh\fR is a frontend for `rorrim.sh', `monthday.sh' and `rdup'. It will
-restore from all the \fIFROM_DIR\fRs to \fITO_DIR\fR.
+restore everything under \fIFROM_DIR\fRs to \fITO_DIR\fR.
 
 .PP
 For the \fI+DAY\fR argument, see the rorrim.sh(8) manual page.
 
 .PP
 Restoring from a backup is as simple as:
-      restore.sh -t /tmp/home /vol/backup/elektron/200604/home
+      restore.sh \-t /tmp/home /vol/backup/elektron/200604/home
 
 Note: The restored files "inherit" the `/vol/backup/elektron/200604'
 prefix. So the restored files are found in the directory:
-`/tmp/home/vol/backup/elektron/200604/home'
+`/tmp/home/vol/backup/elektron/200604/home'. You can chop off those
+first few path components with the \-p switch.
 
 .SH OPTIONS
 .TP
@@ -40,16 +41,28 @@ prefix. So the restored files are found in the directory:
 This option is mandatory. It specifies the directory where the backup
 should be restored in.
 .TP
+.B \-c user@remotehost
+Pull a backup from a remote host. This will create a pipeline of the
+form: 
+
+ssh \fIuser@remotehost\fR rdup \-c /dev/null \fIFROM_DIR\fR |
+montday.sh \-c \fI+DAY\fR | rorrim.sh \-c \fITO_DIR\fR
+
+There is no provisioning for \fBssh\fR so unless you have configured
+\fBssh\fR to work without a passphrase you will be asked to supply one.
+Also note that path on the remote host should be set in such a way that all
+the rdup-util scripts can be found.
+.TP
 .B \-k keyfile
 Decrypt the files while restoring with \fIkeyfile\fR. This option
-inserts \fBcrypt.sh -d keyfile\fR in the pipeline. If both \fI-z\fR and
-\fI-k\fR are given a file is first decrypted and then unzipped. This 
+inserts \fBcrypt.sh \-d keyfile\fR in the pipeline. If both \fI\-z\fR and
+\fI\-k\fR are given a file is first decrypted and then unzipped. This 
 is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
 .B \-z
 Decompress the files while restoring. This option
-inserts \fBgzip.sh -d\fR in the pipeline. If both \fI-z\fR and
-\fI-k\fR are given a file is first decrypted and then unzipped. This 
+inserts \fBgzip.sh \-d\fR in the pipeline. If both \fI\-z\fR and
+\fI\-k\fR are given a file is first decrypted and then unzipped. This 
 is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
 .B \-p NUM
@@ -72,4 +85,4 @@ Show the version.
 .SS REMOTE RESTORE
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), rdup(8), grep.sh(1) and purge.sh(8).
+hist.sh(1), yesterday.sh(1), rdup(8) and grep.sh(1).

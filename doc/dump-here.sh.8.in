@@ -26,4 +26,4 @@ where ever \fBdump-here.sh\fR is located is taken as the backup
 directory.
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), rdup(8), grep.sh(1) and purge.sh(8).
+hist.sh(1), yesterday.sh(1), rdup(8) and grep.sh(1).
