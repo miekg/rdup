@@ -50,7 +50,7 @@ montday.sh \-c \fI+DAY\fR | rorrim.sh \-c \fITO_DIR\fR
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
-Also note that path on the remote host should be set in such a way that all
+Also note that the PATH on the remote host should be set in such a way that all
 the rdup-util scripts can be found.
 .TP
 .B \-k keyfile
