@@ -18,6 +18,7 @@ usage() {
         echo OPTIONS:
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
+        echo " -p num     strip \`num' leading components from file names"
         echo " -v         echo the files processed to stderr"
         echo " -h         this help"
         echo " -V         print version"
@@ -34,16 +35,18 @@ KEYFILE=""
 monthday=0
 to_dir=""
 verbose=""
+dirstrip=""
 
 _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":k:t:zhVv" o; do
+while getopts ":k:t:p:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;
                 z) gzip=1;;
+                p) dirstrip=$OPTARG;;
                 v) verbose="-v";;
                 V) version && exit;;
                 h) usage && exit;;
@@ -51,6 +54,17 @@ while getopts ":k:t:zhVv" o; do
         esac
 done
 shift $((OPTIND - 1))
+
+if [[ ! $dirstrip =~ "[0-9]+" ]]; then
+        _echo2 "Argument to -p must be numeric"
+        exit 1
+fi
+if [[ $dirstrip -lt 0 || $dirstrip -gt 10 ]]; then
+        _echo2 "-p argument out of bounds [0..10]"
+        exit 1
+fi
+# fix the argument string
+dirstrip="-p $dirstrip"
 
 # +DAY argument
 if [[ $1 =~ "\\+(.+)" ]]; then
@@ -75,23 +89,23 @@ if [[ -z "$KEYFILE" ]]; then
         if [[ $gzip -eq 0 ]]; then
                 @sbindir@/rdup -n /dev/null "$@" | \
                 @sbindir@/monthday.sh +$monthday | \
-                @sbindir@/rorrim.sh $verbose "$to_dir"
+                @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
         else 
                 @sbindir@/rdup -n -c /dev/null "$@" | \
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/gzip.sh -d | \
-                @sbindir@/rorrim.sh $verbose -c "$to_dir"
+                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
         fi
 else
         if [[ $gzip -eq 0 ]]; then
                 @sbindir@/rdup -n -c /dev/null "@$" | \
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/crypt.sh -d  $KEYFILE | \
-                @sbindir@/rorrim.sh $verbose -c "$to_dir"
+                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
         else 
                 @sbindir@/rdup -n -c /dev/null "$@" |
                 @sbindir@/monthday.sh +$monthday | \
                 @sbindir@/crypt.sh -d $KEYFILE | \ 
-                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $verbose -c "$to_dir"
+                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
         fi
 fi

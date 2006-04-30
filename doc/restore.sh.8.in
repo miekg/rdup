@@ -52,6 +52,10 @@ inserts \fBgzip.sh -d\fR in the pipeline. If both \fI-z\fR and
 \fI-k\fR are given a file is first decrypted and then unzipped. This 
 is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
+.B \-p NUM
+Strip NUM leading components of the file names. See rorrim.sh(8) for
+more details.
+.TP
 .B \-v
 Echo the files processed to standard error.
 .TP

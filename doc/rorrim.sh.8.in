@@ -55,6 +55,9 @@ the original files can be retrieved.
 .B \-p NUM
 Strip NUM leading components of the file names. When restoring you can 
 use this option to strip of the default backup path (`/vol/backup/...').
+For instance if the backed up files is:
+/vol/backup/elektron/200604/home/miekg/bin, a \-p value of 4 will reduce
+this to /home/miekg/bin.
 .TP
 .B \-v
 Echo the files processed to standard error.
@@ -73,4 +76,4 @@ rorrim.sh /tmp/SVN
 
 
 .SH SEE ALSO
-diff(1), hist.sh(1), yesterday(1), gzip.sh(1) and rdup(8).
+diff(1), hist.sh(1), yesterday(1), gzip.sh(1), restore.sh(8) and rdup(8).

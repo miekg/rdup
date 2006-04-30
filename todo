@@ -18,8 +18,6 @@ o make dump.sh and restore.sh work with a -c option
   put ssh in it, remote dump/restore. Ala @miekg@elektron.atoom.net
   from hdup. 
 o when not root, don't chown... ? Or at least show no errors
-o restore.sh: -p option, to cut off a few leading dirs, just as patch?
-  should be implemented in rorrim.sh
 
 :tests:
 :doc:
@@ -35,6 +33,10 @@ o restore.sh: -n always on?? Yeah, dump.sh doesn't do this...
   not needed
 
 :DONE:
+o restore.sh: -p option, to cut off a few leading dirs, just as patch?
+  should be implemented in rorrim.sh
+  30 Apr: implemented in rorrim.sh
+
 o restore.sh, dump.sh -v: so show files
   29 Apr: fixed
 
