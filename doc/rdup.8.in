@@ -270,27 +270,57 @@ ease restoring.
 
 .SH EXAMPLES
 
-.SS FULL DUMP OF /HOME 
+.SS BACKUPS
+\fBdump.sh\fR is a wrapper for these pipelines:
+
+.SS full dump of /home 
 rdup /tmp/HOMELIST ~ | mirror.sh -b /vol/backup
 
-.SS FULL GZIPPED DUMP OF /HOME
+.SS full gzipped dump of /home
 rdup -c /tmp/HOMELIST ~ | gzip.sh | mirror.sh -c -b /vol/backup
 
-.SS FULL REMOTE DUMP OF /HOME
+.SS full remote dump of /home
 rdup -c /tmp/HOMELIST ~ | ssh miekg@example.com mirror.sh -c -b /vol/backup
 
-.SS FULL ENCRYPTED REMOTE DUMP OF /HOME
+.SS full encrypted remote dump of /home
 rdup -c /tmp/HOMELIST ~ | crypt.sh KEYFILE | 
 ssh miekg@example.com mirror.sh -c -b /vol/backup
 
-.SS FULL ENCRYPTED, GZIPPED REMOTE DUMP OF /HOME
+.SS full encrypted, gzipped remote dump of /home
 This is my favorite:
 
 rdup -c /tmp/HOMELIST ~ | crypt.sh KEYFILE | gzip.sh | 
 ssh miekg@example.com mirror.sh -c -b /vol/backup
 
+.SS RESTORES
+\fBrestore.sh\fR is a wrapper for these pipelines:
+
+.SS restore of /home to /tmp/restore
+rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh |
+rorrim.sh /tmp/restore
+
+.SS restore of /home to state of the 15th of the month
+rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh +15 |
+rorrim.sh /tmp/restore
+
+.SS restore of /home but leading 4 paths components stripped
+rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh |
+rorrim.sh -p4 /tmp/restore
+
+.SS restore of gzipped backup
+rdup -c /dev/null /vol/backup/HOST/200604/home | monthday.sh -c |
+rorrim.sh -c /tmp/restore
+
+.SS remote restore
+ssh miekg@example.com rdup -c /dev/null /vol/backup/me/200605/home |
+montday.sh -c | rorrim.sh -c /tmp/restore
+
+.SS remote restore of encrypted backup
+ssh miekg@example.com rdup -c /dev/null /vol/backup/me/200605/home |
+montday.sh -c | crypt.sh -d SECRET_KEY | rorrim.sh -c /tmp/restore
+
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), mirror.sh(8) and dump.sh(8).
+hist.sh(1), yesterday.sh(1), mirror.sh(8), dump.sh(8) and restore.sh(8).
 
 .SH BUGS
 \fBrdup\fR needs a logo.

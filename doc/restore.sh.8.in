@@ -65,7 +65,11 @@ Show a short help message.
 .B \-V
 Show the version.
 
-.SH FILES
+.SH EXAMPLES
+.SS LOCAL RESTORE
+
+
+.SS REMOTE RESTORE
 
 .SH SEE ALSO
 hist.sh(1), yesterday.sh(1), rdup(8), grep.sh(1) and purge.sh(8).
