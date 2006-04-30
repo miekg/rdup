@@ -12,6 +12,8 @@
      see the tex/ directory.
    * NEW: restore.sh: added this as a wrapper around rdup and
      monthday.sh and rorrim.sh
+   * REMOVED: purge.sh, I want to focus on dump/restore. Every body
+     can write a rm -rf script
    * restore.sh, rorrim.sh: -p NUM (strip leading path components
      implmented)
 

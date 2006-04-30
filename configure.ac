@@ -44,7 +44,6 @@ AC_CONFIG_FILES([Makefile
                  doc/rdup.8
                  doc/dump.sh.8
                  doc/dump-here.sh.8
-                 doc/purge.sh.8
                  doc/hist.sh.1
                  doc/yesterday.sh.1
                  doc/crypt.sh.1
@@ -58,7 +57,6 @@ AC_CONFIG_FILES([Makefile
                  sh-tools/gzip.sh
                  sh-tools/hist.sh
                  sh-tools/mirror.sh
-                 sh-tools/purge.sh
                  sh-tools/yesterday.sh])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
