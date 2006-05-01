@@ -1,5 +1,14 @@
 TODO: 
 
+:rdup utils: 
+o better error message if somebody forgets a -c or something
+o when not root, don't chown... ? Or at least show no errors
+  more general: -q switch
+
+:tests:
+:doc:
+:porting:
+
 :longer term - and harder:
 o make the rdup-utils work with 1 backup directory, where people can
   forever incrementally dump files to. This applies more to the scripts
@@ -12,28 +21,16 @@ o make complete hdup2 clone based on rdup
 
 o dirsplit, handy util for making dvd sized backups
 
-:rdup utils: 
-o better error message if somebody forgets a -c or something
+:NOT DONE:
+o merging of rorrim.sh and mirror.sh 
+o restore.sh: -n always on. No dump.sh doesn't do this
+
+:DONE:
 o make dump.sh and restore.sh work with a -c option
   put ssh in it, remote dump/restore. Ala @miekg@elektron.atoom.net
   from hdup. 
-o when not root, don't chown... ? Or at least show no errors
-  more general: -q switch
+  1 May: added: -c miekg@elektron.atoom.net has become the syntax
 
-:tests:
-:doc:
-:porting:
-
-:NOT DONE:
-o merging rorrim.sh and mirror.sh because they really really do
-  the same thing? Add -r switch, for restore???
-  They are too different to make this practical - it is better to have
-  2 scripts, then to have 1 scripts that is too complex.
-
-o restore.sh: -n always on?? Yeah, dump.sh doesn't do this...
-  not needed
-
-:DONE:
 o restore.sh: -p option, to cut off a few leading dirs, just as patch?
   should be implemented in rorrim.sh
   30 Apr: implemented in rorrim.sh and in restore.sh
