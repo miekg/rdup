@@ -2,8 +2,9 @@ TODO:
 
 :rdup utils: 
 o better error message if somebody forgets a -c or something
-o when not root, don't chown... ? Or at least show no errors
+o when not root, don't chown? Or at least show no errors
   more general: -q switch
+o dump/restore: bandwidth shaping?
 
 :tests:
 :doc:

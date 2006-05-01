@@ -49,6 +49,25 @@ usage() {
         echo " -V      print version"
 }
 
+sanity_check() {
+        if [[ ! "$mode" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: mode must be numeric"
+                exit 1
+        fi
+        if [[ ! "$psize" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: psize must be numeric"
+                exit 1
+        fi
+        if [[ ! "$fsize" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: fsize must be numeric"
+                exit 1
+        fi
+        if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: uid or gid must be numeric"
+                exit 1
+        fi
+}
+
 version() {
         echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
@@ -87,6 +106,9 @@ local_restore() {
                 bits=$(($mode & $S_MMASK))      # permission bits
                 bits=`printf "%o" $bits`        # and back to octal again
                 typ=0
+
+                sanity_check
+
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
                 fi
@@ -158,6 +180,9 @@ remote_restore() {
                 bits=$(($mode & $S_MMASK)) # permission bits
                 bits=`printf "%o" $bits` # and back to octal again
                 typ=0
+
+                sanity_check
+
                 path=`head -c $psize`   # gets the path
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
@@ -167,15 +192,6 @@ remote_restore() {
                 fi
 
                 [[ $verbose -eq 1 ]] && echo $path
-
-                # check sanity of data?
-#               echo "$dump$mode $uid $gid $psize $fsize"
-#               echo "m{"$mode"}"
-#               echo "u{"$uid"}"
-#               echo "g{"$gid"}"
-#               echo "l{"$psize"}"
-#               echo "s{"$fsize"}"
-#               echo "p{"$path"}"
 
                 # create the new filename
                 newpath=$(sanitize "$path")

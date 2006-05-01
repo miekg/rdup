@@ -38,6 +38,29 @@ usage() {
         echo " -V    print version"        
 }
 
+sanity_check() {
+        if [[ $dump != "+" && $dump != "-" ]]; then
+                _echo2 "$PROGNAME: dump must be + or -"
+                exit 1
+        fi
+        if [[ ! "$mode" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: mode must be numeric"
+                exit 1
+        fi
+        if [[ ! "$psize" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: psize must be numeric"
+                exit 1
+        fi
+        if [[ ! "$fsize" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: fsize must be numeric"
+                exit 1
+        fi
+        if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
+                _echo2 "$PROGNAME: uid or gid must be numeric"
+                exit 1
+        fi
+}
+
 version() {
         echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
@@ -75,6 +98,7 @@ do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits
         typ=0
+        sanity_check
         path=$(head -c $psize)   # gets the path
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1

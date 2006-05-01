@@ -319,17 +319,24 @@ montday.sh \-c | rorrim.sh \-c /tmp/restore
 ssh miekg@example.com rdup \-c /dev/null /vol/backup/me/200605/home |
 montday.sh \-c | crypt.sh \-d SECRET_KEY | rorrim.sh \-c /tmp/restore
 
-.SH SEE ALSO
-hist.sh(1), yesterday.sh(1), mirror.sh(8), dump.sh(8) and restore.sh(8).
-
-.SH BUGS
-\fBrdup\fR needs a logo.
+.SH USEFULL EXTERNAL TOOLS
+As \fBrdup\fR only prints names it depends on external tools and scripts
+to make it really usefull. Luckily there are lots of those:
+.TP
+.B o cstream 
+a tool the implement bandwidth shaping (for remote backups).
+.TP
+.B o dirsplit 
+split a directory into DVD sized volumes for easy burning.
 
 .SH AUTHOR
 Written by Miek Gieben. 
 
 .SH REPORTING BUGS
 Report bugs to <miek@miek.nl>. 
+
+.SH SEE ALSO
+hist.sh(1), yesterday.sh(1), mirror.sh(8), dump.sh(8) and restore.sh(8).
 
 .SH COPYRIGHT
 Copyright (C) 2005, 2006 Miek Gieben. This is free software. There is NO
