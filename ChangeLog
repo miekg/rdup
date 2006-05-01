@@ -18,6 +18,7 @@
      see the tex/ directory.
    * restore.sh, rorrim.sh: -p NUM (strip leading path components
      implmented)
+   * Both dump.sh -c and restore.sh need testing.
 
 
 25 Apr 2006: 0.2.9 Miek <miek@miek.nl>
