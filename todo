@@ -4,6 +4,8 @@ TODO:
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
 o dump/restore: bandwidth shaping?
+o dump/restore: use attr to set userspace uid/gid on the files
+  to make the restore work?
 
 :tests:
 :doc:
