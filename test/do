@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in *.tpkg; do 
+        tpkg -a ../../ $i
+done
