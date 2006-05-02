@@ -71,7 +71,7 @@ Don't honor .nobackup files. Normally if such files are found the directory is n
 printed to standard output, now it is.
 .TP
 .B \-a
-Read the uid and gid information from the file's extended attributes:
+Read the uid and gid information from the file's extended user attributes:
 \'r_uid' and 'r_gid'. This option only works if \fBrdup\fR was built with
 xattr support.
 

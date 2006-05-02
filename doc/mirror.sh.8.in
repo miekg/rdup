@@ -20,6 +20,17 @@ will get a suffix. This suffix is of the form: '+DD.HH:MM'.
 `hist.sh' and `yesterday.sh' also work on files with this same suffix.
 
 .SH OPTIONS
+.TP
+.B \-a
+Write the uid and gid information to the file's extended user attributes:
+\'r_uid' and 'r_gid'. This option only works if \fBrattr\fR is available
+on the system.
+
+This option is usefull when storing a remote backup. Normally these
+backups are transferred by a non-root user. This user will not be able
+to correctly set all uid/gid information. As a workaround
+\fBmirror.sh\fR will set the extended user attributes to the uid/gid as
+it got them from standard input.
 .TP 
 .B \-b backupdir
 Alternate backup directory. Defaults to `/vol/backup/$HOSTNAME'.

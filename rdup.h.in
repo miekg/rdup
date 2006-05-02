@@ -50,8 +50,8 @@
 #define LIST_SPACEPOS  5
 
 /* extended attributes */
-#define R_UID           "r_uid"
-#define R_GID           "g_gid"
+#define R_UID           "user.r_uid"
+#define R_GID           "user.r_gid"
 #define ATTR_SIZE       10
 
 struct entry {
