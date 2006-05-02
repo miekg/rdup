@@ -45,7 +45,8 @@ read_attr_uid(char *path, uid_t u)
 		return (uid_t)atoi(buf);
 	} else {
 		if (opt_verbose > 0) {
-			fprintf(stderr, "** No uid xattr found for `%s\', using stat(2) value\n", 
+			fprintf(stderr, 
+				"** No uid xattr found for `%s\', using stat(2) value\n", 
 				path);
 		}
 		return u;
@@ -64,7 +65,8 @@ read_attr_gid(char *path, gid_t g)
 		return (gid_t)atoi(buf);
 	} else {
 		if (opt_verbose > 0) {
-			fprintf(stderr, "** No gid xattr found for `%s\', using stat(2) value\n", 
+			fprintf(stderr, 
+				"** No gid xattr found for `%s\', using stat(2) value\n", 
 				path);
 		}
 		return g;
