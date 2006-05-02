@@ -4,8 +4,6 @@ TODO:
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
 o dump/restore: bandwidth shaping?
-o dump/restore: use attr to set userspace uid/gid on the files
-  to make the restore work?
 
 :tests:
 :doc:
@@ -27,6 +25,10 @@ o merging of rorrim.sh and mirror.sh
 o restore.sh: -n always on. No dump.sh doesn't do this
 
 :DONE:
+o dump/restore: use attr to set userspace uid/gid on the files
+  to make the restore work?
+  2 May: done and fixed. Only for linux atm
+
 o better error message if somebody forgets a -c or something
   1 May: sanity_check function which checks the important variables
 
