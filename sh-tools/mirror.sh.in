@@ -38,8 +38,8 @@ check_attr() {
                 *)
                 attr_there=0
                 ;;
+        esac
 }
-                
 
 cleanup() {
         # can also happen when running remotely (no /dev/fd/2)
@@ -314,6 +314,8 @@ while getopts ":cvhb:V" options; do
         esac
 done
 shift $((OPTIND - 1))
+
+check_attr
 
 if [ -z "$backupdir" ]; then
         backupdir="/vol/backup/`hostname`"
