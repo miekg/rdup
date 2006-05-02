@@ -44,8 +44,10 @@ read_attr_uid(char *path, uid_t u)
 	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
 		return (uid_t)atoi(buf);
 	} else {
-		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", 
-			path);
+		if (opt_verbose > 0) {
+			fprintf(stderr, "** No uid xattr found for `%s\', using stat(2) value\n", 
+				path);
+		}
 		return u;
 	}
 #else
@@ -61,8 +63,10 @@ read_attr_gid(char *path, gid_t g)
 	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
 		return (gid_t)atoi(buf);
 	} else {
-		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", 
-			path);
+		if (opt_verbose > 0) {
+			fprintf(stderr, "** No gid xattr found for `%s\', using stat(2) value\n", 
+				path);
+		}
 		return g;
 	}
 #else
