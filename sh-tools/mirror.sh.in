@@ -15,6 +15,7 @@ verbose=0
 idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
 attr=0          # use attr to save original uid/gid
+attr_there=0
 ts=`date +%s` 
 backupdir=""
 PROGNAME=$0
@@ -27,6 +28,19 @@ _echo2() {
         echo "** $1" > /dev/fd/2
 }
 
+# check if attr can be found
+check_attr() {
+        case $OSTYPE in
+                linux*)
+                `which attr` > /dev/null
+                attr_there=$?  # 0 or 1
+                ;;
+                *)
+                attr_there=0
+                ;;
+}
+                
+
 cleanup() {
         # can also happen when running remotely (no /dev/fd/2)
         _echo "$PROGNAME: Signal received while processing \`$path', exiting" 
@@ -36,12 +50,20 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 set_attr_uid() {
+        if [[ $attr_there -eq 0 ]]; then
+                _echo "$PROGNAME: Can not set extended attributes"
+                return
+        fi
         value=$1
         shift
         attr -q -s r_uid -V$1 "$@"      
 }
 
 set_attr_gid() {
+        if [[ $attr_there -eq 0 ]]; then
+                _echo "$PROGNAME: Can not set extended attributes"
+                return
+        fi
         value=$1
         shift
         attr -q -s r_gid -V$1 "$@"      
