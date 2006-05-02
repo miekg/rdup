@@ -5,6 +5,8 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl
      the script quits
    * -a flag: read extended attributes to restore uid/gid 
      (usefull for remote backups)
+   * added -a flag to mirror.sh. This is the only script that
+     needs it
 
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes + major restore updates --
