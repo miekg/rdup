@@ -21,6 +21,7 @@ sysconfdir=@sysconfdir@
 GCC=@CC@
 GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
+LIBS=@LIBS@
 CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644

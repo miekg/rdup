@@ -11,6 +11,9 @@ gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
+#ifdef HAVE_ATTR_XATTR_H
+gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
+#endif /* HAVE_ATTR_XATTR_H */
 char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
@@ -41,6 +44,9 @@ usage(FILE *f)
 	fprintf(f, "   \t\tdefaults to: \"%%p%%m %%u %%g %%l %%s %%n\\n\"\n");
 	fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
 	fprintf(f, "   -V\t\tprint version\n");
+#ifdef HAVE_ATTR_XATTR_H
+	fprintf(f, "   -a\t\tread uid/gid from extended attributes\n");
+#endif /* HAVE_ATTR_XATTR_H */
 	fprintf(f, 
 		"   -c\t\tcat the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
 	fprintf(f, "   -h\t\tgives this help\n");
@@ -216,10 +222,15 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "crmhVnN:s:vqx0F:")) != -1) {
+	while ((c = getopt (argc, argv, "acrmhVnN:s:vqx0F:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
+				break;
+			case 'a':
+#ifdef HAVE_ATTR_XATTR_H
+				opt_attr = TRUE;
+#endif /* HAVE_ATTR_XATTR_H */
 				break;
 			case 'c':
 				opt_format = "%p%m %u %g %l %s\n%n%C";

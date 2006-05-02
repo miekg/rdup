@@ -8,6 +8,9 @@
 
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
+#ifdef HAVE_ATTR_XATTR_H
+extern gboolean opt_attr;
+#endif /* HAVE_ATTR_XATTR_H */
 extern gint opt_verbose;
 
 static struct entry *
@@ -31,6 +34,38 @@ entry_free(struct entry *f)
 {
 	g_free(f->f_name);
 	g_free(f);
+}
+
+static uid_t 
+read_attr_uid(char *path, uid_t u)
+{
+#ifdef HAVE_ATTR_XATTR_H
+	char buf[ATTR_SIZE];
+	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
+		return (uid_t)atoi(buf);
+	} else {
+		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", path);
+		return u;
+	}
+#else
+	return u;
+#endif /* HAVE_ATTR_XATTR_H */
+}
+
+static gid_t 
+read_attr_gid(char *path, gid_t g)
+{
+#ifdef HAVE_ATTR_XATTR_H
+	char buf[ATTR_SIZE];
+	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
+		return (gid_t)atoi(buf);
+	} else {
+		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", path);
+		return g;
+	}
+#else
+	return 0;
+#endif /* HAVE_ATTR_XATTR_H */
 }
 
 /**
@@ -65,8 +100,13 @@ dir_prepend(GTree *t, char *path)
 		}
 		e.f_name      = path2;
 		e.f_name_size = strlen(path2);
-		e.f_uid       = s.st_uid;
-		e.f_gid       = s.st_gid;
+		if (opt_attr) {
+			e.f_uid = read_attr_uid(e.f_name, s.st_uid);
+			e.f_gid = read_attr_gid(e.f_name, s.st_gid);
+		} else {
+			e.f_uid       = s.st_uid;
+			e.f_gid       = s.st_gid;
+		}
 		e.f_mtime     = s.st_mtime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
@@ -147,8 +187,13 @@ dir_crawl(GTree *t, char *path)
 		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) {
 			pop.f_name      = curpath;
 			pop.f_name_size = curpath_len;
-			pop.f_uid       = s.st_uid;
-			pop.f_gid       = s.st_gid;
+			if (opt_attr) {
+				pop.f_uid       = read_attr_uid(pop.f_name, s.st_uid);
+				pop.f_gid       = read_attr_gid(pop.f_name, s.st_gid);
+			} else {
+				pop.f_uid       = s.st_uid;
+				pop.f_gid       = s.st_gid;
+			}
 			pop.f_mtime     = s.st_mtime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
@@ -187,8 +232,13 @@ dir_crawl(GTree *t, char *path)
 			dirstack[d] = g_malloc(sizeof(struct entry));
 			dirstack[d]->f_name       = g_strdup(curpath); 
 			dirstack[d]->f_name_size  = curpath_len;
-			dirstack[d]->f_uid        = s.st_uid;
-			dirstack[d]->f_gid        = s.st_gid;
+			if (opt_attr) {
+				dirstack[d]->f_uid = read_attr_uid(dirstack[d]->f_name, s.st_uid);
+				dirstack[d]->f_gid = read_attr_gid(dirstack[d]->f_name, s.st_gid);
+			} else {
+				dirstack[d]->f_uid = s.st_uid;
+				dirstack[d]->f_gid = s.st_gid;
+			}
 			dirstack[d]->f_mtime      = s.st_mtime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;

@@ -31,6 +31,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#ifdef HAVE_ATTR_XATTR_H
+#include <attr/xattr.h>
+#endif /* HAVE_ATTR_XATTR_H */
+
 #define VERSION     "@PACKAGE_VERSION@"
 #define PROGNAME    "@PACKAGE_NAME@"
 
@@ -44,6 +48,11 @@
 
 #define LIST_MINSIZE   6
 #define LIST_SPACEPOS  5
+
+/* extended attributes */
+#define R_UID           "r_uid"
+#define R_GID           "g_gid"
+#define ATTR_SIZE       10
 
 struct entry {
         char *f_name;
