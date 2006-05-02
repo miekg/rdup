@@ -53,6 +53,7 @@
 #define R_UID           "user.r_uid"
 #define R_GID           "user.r_gid"
 #define ATTR_SIZE       10
+#define R_MAX_ID        2147483646  /* 2 ^ 31 - 2 */
 
 struct entry {
         char *f_name;

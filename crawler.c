@@ -40,8 +40,16 @@ read_attr_uid(__attribute__((unused))
 {
 #ifdef HAVE_ATTR_XATTR_H
 	char buf[ATTR_SIZE];
+	uid_t x;
+
 	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
-		return (uid_t)atoi(buf);
+		x = (uid_t)atoi(buf);
+		if (x > R_MAX_ID) {
+			fprintf(stderr, "** Too large uid `%zd\' for `%s\', truncating\n", (size_t)x,
+				path);
+			return R_MAX_ID;
+		}
+		return x;
 	} else {
 		if (opt_verbose > 0) {
 			fprintf(stderr, "** No uid xattr for `%s\'\n", path);
@@ -59,8 +67,16 @@ read_attr_gid(__attribute__((unused))
 {
 #ifdef HAVE_ATTR_XATTR_H
 	char buf[ATTR_SIZE];
+	gid_t x;
+
 	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
-		return (gid_t)atoi(buf);
+		x = (gid_t)atoi(buf);
+		if (x > R_MAX_ID) {
+			fprintf(stderr, "** Too large gid `%zd\' for `%s\', truncating\n", (size_t)x,
+				path);
+			return R_MAX_ID;
+		}
+		return x;
 	} else {
 		if (opt_verbose > 0) {
 			fprintf(stderr, "** No gid xattr for `%s\'\n", path);

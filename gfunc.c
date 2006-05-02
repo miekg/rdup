@@ -151,10 +151,10 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			fprintf(out, "%zd", e->f_name_size);	
 			break;
 		case 'u': 
-			fprintf(out, "%d", e->f_uid);		
+			fprintf(out, "%zd", (size_t) e->f_uid);		
 			break;
 		case 'g': 
-			fprintf(out, "%d", e->f_gid);		
+			fprintf(out, "%zd", (size_t) e->f_gid);		
 			break;
 		case 'm': 
 			fprintf(out, "%d", e->f_mode);	
