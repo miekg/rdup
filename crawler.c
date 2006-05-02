@@ -44,9 +44,7 @@ read_attr_uid(__attribute__((unused))
 		return (uid_t)atoi(buf);
 	} else {
 		if (opt_verbose > 0) {
-			fprintf(stderr, 
-				"** No uid xattr for `%s\'\n", 
-				path);
+			fprintf(stderr, "** No uid xattr for `%s\'\n", path);
 		}
 		return u;
 	}
@@ -65,9 +63,7 @@ read_attr_gid(__attribute__((unused))
 		return (gid_t)atoi(buf);
 	} else {
 		if (opt_verbose > 0) {
-			fprintf(stderr, 
-				"** No gid xattr for `%s\'\n", 
-				path);
+			fprintf(stderr, "** No gid xattr for `%s\'\n", path);
 		}
 		return g;
 	}
