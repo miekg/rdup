@@ -35,7 +35,8 @@ entry_free(struct entry *f)
 }
 
 static uid_t 
-read_attr_uid(__attribute__((unused)) char *path, __attribute__((unused)) uid_t u)
+read_attr_uid(__attribute__((unused)) char *path, 
+	__attribute__((unused)) uid_t u)
 {
 #ifdef HAVE_ATTR_XATTR_H
 	char buf[ATTR_SIZE];
@@ -55,7 +56,8 @@ read_attr_uid(__attribute__((unused)) char *path, __attribute__((unused)) uid_t 
 }
 
 static gid_t 
-read_attr_gid(__attribute__((unused)) char *path, __attribute__((unused)) gid_t g)
+read_attr_gid(__attribute__((unused)) char *path, 
+	__attribute__((unused)) gid_t g)
 {
 #ifdef HAVE_ATTR_XATTR_H
 	char buf[ATTR_SIZE];
