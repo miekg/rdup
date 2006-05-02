@@ -11,9 +11,7 @@ gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
-#ifdef HAVE_ATTR_XATTR_H
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
-#endif /* HAVE_ATTR_XATTR_H */
 char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */

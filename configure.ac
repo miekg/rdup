@@ -14,7 +14,7 @@ AC_PROG_MAKE_SET
 
 AM_PATH_GLIB_2_0(2.0.0)
 AC_CHECK_LIB(attr, lgetxattr,, [
-        AC_MSG_WARN([No xattr support. Not enabling -x])
+        AC_MSG_WARN([No xattr support. Not enabling -a])
         ]
 )
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])
