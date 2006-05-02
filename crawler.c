@@ -45,8 +45,9 @@ read_attr_uid(__attribute__((unused))
 	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
 		x = (uid_t)atoi(buf);
 		if (x > R_MAX_ID) {
-			fprintf(stderr, "** Too large uid `%zd\' for `%s\', truncating\n", (size_t)x,
-				path);
+			fprintf(stderr, 
+			"** Too large uid `%zd\' for `%s\', truncating\n", 
+				(size_t)x, path);
 			return R_MAX_ID;
 		}
 		return x;
@@ -72,8 +73,8 @@ read_attr_gid(__attribute__((unused))
 	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
-			fprintf(stderr, "** Too large gid `%zd\' for `%s\', truncating\n", (size_t)x,
-				path);
+			fprintf(stderr, "** Too large gid `%zd\' for `%s\', truncating\n", 
+				(size_t)x, path);
 			return R_MAX_ID;
 		}
 		return x;
