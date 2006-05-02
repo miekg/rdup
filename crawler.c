@@ -44,7 +44,8 @@ read_attr_uid(char *path, uid_t u)
 	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
 		return (uid_t)atoi(buf);
 	} else {
-		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", path);
+		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", 
+			path);
 		return u;
 	}
 #else
@@ -60,7 +61,8 @@ read_attr_gid(char *path, gid_t g)
 	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
 		return (gid_t)atoi(buf);
 	} else {
-		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", path);
+		fprintf(stderr, "** No xattr found for `%s\', taking stat(2) value\n", 
+			path);
 		return g;
 	}
 #else
@@ -233,8 +235,10 @@ dir_crawl(GTree *t, char *path)
 			dirstack[d]->f_name       = g_strdup(curpath); 
 			dirstack[d]->f_name_size  = curpath_len;
 			if (opt_attr) {
-				dirstack[d]->f_uid = read_attr_uid(dirstack[d]->f_name, s.st_uid);
-				dirstack[d]->f_gid = read_attr_gid(dirstack[d]->f_name, s.st_gid);
+				dirstack[d]->f_uid = 
+					read_attr_uid(dirstack[d]->f_name, s.st_uid);
+				dirstack[d]->f_gid = 
+					read_attr_gid(dirstack[d]->f_name, s.st_gid);
 			} else {
 				dirstack[d]->f_uid = s.st_uid;
 				dirstack[d]->f_gid = s.st_gid;
