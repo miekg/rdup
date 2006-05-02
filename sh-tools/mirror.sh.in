@@ -9,10 +9,12 @@
 S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
+
 remote=0
 verbose=0
 idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
+attr=0          # use attr to save original uid/gid
 ts=`date +%s` 
 backupdir=""
 PROGNAME=$0
@@ -32,6 +34,18 @@ cleanup() {
 }
 # trap at least these
 trap cleanup SIGINT SIGPIPE
+
+set_attr_uid() {
+        value=$1
+        shift
+        attr -q -s r_uid -V$1 "$@"      
+}
+
+set_attr_gid() {
+        value=$1
+        shift
+        attr -q -s r_gid -V$1 "$@"      
+}
 
 mirror_suffix() {
         case $OSTYPE in
@@ -268,6 +282,7 @@ remote_mirror() {
 
 while getopts ":cvhb:V" options; do
         case $options in
+                a) attr=1;;
                 c) remote=1;;
                 b) backupdir=$OPTARG;;
                 v) verbose=1;;
