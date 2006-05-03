@@ -126,26 +126,58 @@ else
         # remote
         if [[ -z "$KEYFILE" ]]; then
                 if [[ $gzip -eq 0 ]]; then
-                        ssh -x -C "$remote" rdup -n /dev/null "$@" | \
-                        @sbindir@/monthday.sh +$monthday | \
-                        @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
+                        if [[ -z $bwidth ]]; then
+                                ssh -x -C "$remote" rdup -n /dev/null "$@" | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
+                        else
+                                ssh -x -C "$remote" rdup -n /dev/null "$@" | \
+                                $cstream -t $bwidth | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
+
+                        fi
                 else 
-                        ssh -x "$remote" rdup -n -c /dev/null "$@" | \
-                        @sbindir@/monthday.sh +$monthday | \
-                        @sbindir@/gzip.sh -d | \
-                        @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        if [[ -z $bwidth ]]; then
+                                ssh -x "$remote" rdup -n -c /dev/null "$@" | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/gzip.sh -d | \
+                                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        else
+                                ssh -x "$remote" rdup -n -c /dev/null "$@" | \
+                                $cstream -t $bwidth | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/gzip.sh -d | \
+                                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        fi
                 fi
         else
                 if [[ $gzip -eq 0 ]]; then
-                        ssh -x -C "$remote" rdup -n -c /dev/null "$@" | \
-                        @sbindir@/monthday.sh +$monthday | \
-                        @sbindir@/crypt.sh -d  $KEYFILE | \
-                        @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        if [[ -z $bwidth ]]; then
+                                ssh -x -C "$remote" rdup -n -c /dev/null "$@" | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/crypt.sh -d  $KEYFILE | \
+                                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        else
+                                ssh -x -C "$remote" rdup -n -c /dev/null "$@" | \
+                                $cstream -t $bwidth | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/crypt.sh -d  $KEYFILE | \
+                                @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        fi
                 else 
-                        ssh -x "$remote" rdup -n -c /dev/null "$@" | \
-                        @sbindir@/monthday.sh +$monthday | \
-                        @sbindir@/crypt.sh -d $KEYFILE | \ 
-                        @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        if [[ -z $bwidth ]]; then
+                                ssh -x "$remote" rdup -n -c /dev/null "$@" | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/crypt.sh -d $KEYFILE | \ 
+                                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        else
+                                ssh -x "$remote" rdup -n -c /dev/null "$@" | \
+                                $cstream -t $bwidth | \
+                                @sbindir@/monthday.sh +$monthday | \
+                                @sbindir@/crypt.sh -d $KEYFILE | \ 
+                                @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $verbose -c "$to_dir"
+                        fi
                 fi
         fi
 fi
