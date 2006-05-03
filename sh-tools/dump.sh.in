@@ -18,7 +18,7 @@ usage() {
         echo OPTIONS:
         echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
-        echo " -t NUM     limit transfer to NUM bytes/second. See cstream(1)."
+        echo " -l NUM     limit transfer to NUM bytes/second. See cstream(1)."
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
@@ -45,12 +45,12 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":b:k:vzehV" o; do
+while getopts ":b:k:l:vzehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 k) KEYFILE=$OPTARG;;
                 c) remote=$OPTARG;;
-                t) bwidth=$OPTARG;;
+                l) bwidth=$OPTARG;;
                 e) etc=1;;
                 z) gzip=1;;
                 v) verbose="-v";;
@@ -72,7 +72,10 @@ if [[ ! -z "$KEYFILE" && ! -r "$KEYFILE" ]]; then
         _echo2 "Cannot read keyfile \`$KEYFILE': failed"
         exit 1
 fi
-
+if [[ ! -z $bwidth && -z $cstream ]]; then
+        _echo2 "Bandwidth shaping not enabled: cstream not found"
+        exit 1
+fi
 # where to put the admin files.
 if [[ $etc -eq 0 ]]; then
         ETC="/etc/rdup"

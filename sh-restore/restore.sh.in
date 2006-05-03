@@ -20,7 +20,7 @@ usage() {
         echo " -k KEYFILE encrypt all files"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -p NUM     strip \`num' leading components from file names"
-        echo " -t NUM     limit transfer to NUM bytes/second. See cstream(1)."
+        echo " -l NUM     limit transfer to NUM bytes/second. See cstream(1)."
         echo " -z         compress all files"
         echo " -v         echo the files processed to stderr"
         echo " -h         this help"
@@ -46,12 +46,12 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":k:t:p:zhVv" o; do
+while getopts ":k:l:p:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;
                 c) remote=$OPTARG;;
-                t) bwidth=$OPTARG;;
+                l) bwidth=$OPTARG;;
                 z) gzip=1;;
                 p) dirstrip=$OPTARG;;
                 v) verbose="-v";;
@@ -68,6 +68,10 @@ if [[ ! $dirstrip =~ "[0-9]+" ]]; then
 fi
 if [[ $dirstrip -lt 0 || $dirstrip -gt 10 ]]; then
         _echo2 "-p argument out of bounds [0..10]"
+        exit 1
+fi
+if [[ ! -z $bwidth && -z $cstream ]]; then
+        _echo2 "Bandwidth shaping not enabled: cstream not found"
         exit 1
 fi
 # fix the argument string
