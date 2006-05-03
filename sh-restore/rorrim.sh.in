@@ -44,7 +44,7 @@ usage() {
         echo OPTIONS
         echo " -c      process the file content also (rdup -c), for remote backups"
         echo " -v      echo the files processed to stderr"
-        echo " -p num  strip \`num' leading components from file names"
+        echo " -p NUM  strip \`NUM' leading components from file names"
         echo " -h      this help"
         echo " -V      print version"
 }

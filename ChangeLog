@@ -7,6 +7,8 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl>
      (usefull for remote backups) [Linux only atm]
    * added -a flag to mirror.sh. This is the only script that
      needs it [Linux only atm]
+   * bandwidth shaping was added to dump.sh and restore.sh. This
+     relies entirely on cstream.
 
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes + major restore updates --

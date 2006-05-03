@@ -26,9 +26,10 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 usage() {
-        echo "$PROGNAME [OPTIONS]"
+        echo "$PROGNAME [OPTIONS] KEYFILE"
         echo
-        echo "Encrypt or decrypt the file's contents"
+        echo "Encrypt or decrypt the file's contents with the"
+        echo "key stored in KEYFILE"
         echo
         echo OPTIONS:
         echo " -c    ignored as crypt.sh always works on content"

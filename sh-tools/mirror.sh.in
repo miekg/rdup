@@ -19,6 +19,7 @@ attr_there=0
 ts=`date +%s` 
 backupdir=""
 PROGNAME=$0
+cstream=@cstream@
 
 _echo() {
         echo "** $1" 
