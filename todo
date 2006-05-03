@@ -3,7 +3,6 @@ TODO:
 :rdup utils: 
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
-o dump/restore: bandwidth shaping?
 
 :tests:
 :doc:
@@ -25,6 +24,9 @@ o merging of rorrim.sh and mirror.sh
 o restore.sh: -n always on. No dump.sh doesn't do this
 
 :DONE:
+o dump/restore: bandwidth shaping?
+  3 May: done, see the -l flag in both scripts
+
 o dump/restore: use attr to set userspace uid/gid on the files
   to make the restore work?
   2 May: done and fixed. Only for linux atm

@@ -1,5 +1,5 @@
 xx May 2006: 0.2.11 Miek <miek@miek.nl>
-  -- updates --
+  -- major feature enhancement --
    * scripts: implemented sanity checks on the
      data received. If there is any inconsistency
      the script quits
@@ -8,7 +8,7 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl>
    * added -a flag to mirror.sh. This is the only script that
      needs it [Linux only atm]
    * bandwidth shaping was added to dump.sh and restore.sh. This
-     relies entirely on cstream.
+     relies entirely on cstream. Use the -l flag to enable this
 
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes + major restore updates --
