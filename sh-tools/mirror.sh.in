@@ -37,6 +37,7 @@ check_attr() {
                 ;;
                 *)
                 attr_there=0
+                _echo "$PROGNAME: Can not set extended attributes"
                 ;;
         esac
 }
@@ -51,22 +52,32 @@ trap cleanup SIGINT SIGPIPE
 
 set_attr_uid() {
         if [[ $attr_there -eq 0 ]]; then
-                _echo "$PROGNAME: Can not set extended attributes"
                 return
         fi
         value=$1
         shift
-        attr -q -s r_uid -V$1 "$@"      
+        case $OSTYPE in
+                linux*)
+                attr -q -s r_uid -V$1 "$@"      
+                ;;
+                *)
+                ;;
+        esac
 }
 
 set_attr_gid() {
         if [[ $attr_there -eq 0 ]]; then
-                _echo "$PROGNAME: Can not set extended attributes"
                 return
         fi
         value=$1
         shift
-        attr -q -s r_gid -V$1 "$@"      
+        case $OSTYPE in
+                linux*)
+                attr -q -s r_gid -V$1 "$@"      
+                ;;
+                *)
+                ;;
+        esac
 }
 
 mirror_suffix() {
