@@ -33,7 +33,7 @@ _echo2() {
 check_attr() {
         case $OSTYPE in
                 linux*)
-                `which attr` > /dev/null
+                which attr > /dev/null
                 attr_there=$?  # 0 or 1
                 ;;
                 *)
@@ -59,7 +59,7 @@ set_attr_uid() {
         shift
         case $OSTYPE in
                 linux*)
-                attr -q -s r_uid -V$1 "$@"      
+                attr -q -s r_uid -V$value "$@"      
                 ;;
                 *)
                 ;;
@@ -74,7 +74,7 @@ set_attr_gid() {
         shift
         case $OSTYPE in
                 linux*)
-                attr -q -s r_gid -V$1 "$@"      
+                attr -q -s r_gid -V$value "$@"      
                 ;;
                 *)
                 ;;

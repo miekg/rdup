@@ -20,7 +20,7 @@ usage() {
         echo " -k KEYFILE encrypt all files"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -p NUM     strip \`num' leading components from file names"
-        echo " -l NUM     limit transfer to NUM bytes/second. See cstream(1)'s -t"
+        echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
         echo " -z         compress all files"
         echo " -v         echo the files processed to stderr"
         echo " -h         this help"
@@ -46,7 +46,7 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":k:l:p:zhVv" o; do
+while getopts ":c:k:l:p:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;
@@ -127,11 +127,11 @@ else
         if [[ -z "$KEYFILE" ]]; then
                 if [[ $gzip -eq 0 ]]; then
                         if [[ -z $bwidth ]]; then
-                                ssh -x -C "$remote" rdup -n /dev/null "$@" | \
+                                ssh -x -C "$remote" rdup -n -c /dev/null "$@" | \
                                 @sbindir@/monthday.sh +$monthday | \
                                 @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
                         else
-                                ssh -x -C "$remote" rdup -n /dev/null "$@" | \
+                                ssh -x -C "$remote" rdup -n -c /dev/null "$@" | \
                                 $cstream -t $bwidth | \
                                 @sbindir@/monthday.sh +$monthday | \
                                 @sbindir@/rorrim.sh $dirstrip $verbose "$to_dir"
