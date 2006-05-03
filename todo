@@ -7,6 +7,7 @@ o when not root, don't chown? Or at least show no errors
 :tests:
 :doc:
 :porting:
+port extended attributes to FreeBSD
 
 :longer term - and harder:
 o make the rdup-utils work with 1 backup directory, where people can
