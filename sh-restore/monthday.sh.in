@@ -48,19 +48,19 @@ usage() {
 sanity_check() {
         # slighty different then in the sh-tools
         if [[ ! "$mode" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: mode must be numeric"
+                _echo2 "mode must be numeric"
                 exit 1
         fi
         if [[ ! "$psize" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: psize must be numeric"
+                _echo2 "psize must be numeric"
                 exit 1
         fi
         if [[ ! "$fsize" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: fsize must be numeric"
+                _echo2 "fsize must be numeric"
                 exit 1
         fi
         if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: uid or gid must be numeric"
+                _echo2 "uid or gid must be numeric"
                 exit 1
         fi
 }

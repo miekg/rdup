@@ -1,18 +1,21 @@
 xx May 2006: 0.2.11 Miek <miek@miek.nl>
-  -- major feature enhancement + bugfixes --
+  -- major feature enhancement + major bugfixes --
    - I consider rdup now feature complete -
+   * dump.sh, restore.sh: make remote backups really work
    * scripts: implemented sanity checks on the
      data received. If there is any inconsistency
      the script quits
-   * dump.sh, restore.sh: major bugfixes
+   extended attributes
    * added -a flag to mirror.sh. This is the only script that
      needs it [Linux only atm]
    * -a flag: read extended attributes to restore uid/gid 
      (usefull for remote backups) [Linux only atm]
+
    * bandwidth shaping was added to dump.sh and restore.sh. This
      relies entirely on cstream. Use the -l bytes/s flag to enable this
-   * dump.sh, restore.sh: added -s SIZE flags, which is given to rdup
    * assorted bugfixes and polish (as Ubuntu calls it)
+   * rorrim.sh, monthday.sh: cosmetic fixes
+   todo * dump.sh, restore.sh: added -s SIZE flags, which is given to rdup
 
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes + major restore updates --
