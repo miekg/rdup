@@ -79,6 +79,11 @@ Show a short help message.
 .B \-V
 Show the version.
 
+.SH EXAMPLES
+.SS local backup
+
+.SS remote backup
+
 .SH FILES
 /vol/backup/`hostname`, or the directory specified with \-b, root of
 the backup file system.

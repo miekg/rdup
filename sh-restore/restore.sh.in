@@ -47,7 +47,7 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":c:k:l:p:zhVv" o; do
+while getopts ":c:k:l:p:t:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;

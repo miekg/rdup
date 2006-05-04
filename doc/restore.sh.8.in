@@ -83,10 +83,10 @@ Show a short help message.
 Show the version.
 
 .SH EXAMPLES
-.SS LOCAL RESTORE
+.SS local restore
 
 
-.SS REMOTE RESTORE
+.SS remote restore
 
 .SH SEE ALSO
 hist.sh(1), yesterday.sh(1), rdup(8) and grep.sh(1).
