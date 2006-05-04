@@ -19,6 +19,7 @@ usage() {
         echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
+        echo " -s SIZE    limit output to files smaller than SIZE"
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -z         compress all files"
         echo " -k KEYFILE encrypt all files"
