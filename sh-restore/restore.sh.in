@@ -39,7 +39,7 @@ KEYFILE=""
 monthday=0
 to_dir=""
 verbose=""
-dirstrip=""
+dirstrip=0
 remote=""
 bwidth=""
 
