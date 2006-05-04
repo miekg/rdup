@@ -12,7 +12,7 @@ usage() {
         echo 
         echo "This is a wrapper around rdup and mirror.sh"
         echo
-        echo NAME - suffix for filelist and timestamp files
+        echo NAME - prefix for filelist and timestamp files
         echo DIR \ - directories to back up
         echo
         echo OPTIONS:
