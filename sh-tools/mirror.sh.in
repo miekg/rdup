@@ -158,9 +158,13 @@ local_mirror() {
         do
                 dump=${mode:0:1}                # to add or remove
                 mode=${mode:1}                  # st_mode bits
+
+                sanity_check
+
                 bits=$(($mode & $S_MMASK))      # permission bits
                 bits=`printf "%o" $bits`        # and back to octal again
                 typ=0
+
 
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
@@ -169,7 +173,6 @@ local_mirror() {
                         typ=2;
                 fi
 
-                sanity_check
                 
                 [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
 
@@ -234,10 +237,14 @@ remote_mirror() {
         do
                 dump=${mode:0:1}        # to add or remove
                 mode=${mode:1}          # st_mode bits
+                path=$(head -c $psize)   # get the path
+
+                sanity_check
+
                 bits=$(($mode & $S_MMASK)) # permission bits
                 bits=`printf "%o" $bits` # and back to octal again
                 typ=0
-                path=$(head -c $psize)   # get the path
+
 
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
@@ -245,8 +252,6 @@ remote_mirror() {
                 if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
                         typ=2;
                 fi
-
-                sanity_check
 
                 [[ $verbose -eq 1 ]] && echo $path
 

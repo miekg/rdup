@@ -98,8 +98,9 @@ do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits
         typ=0
-        sanity_check
         path=$(head -c $psize)   # gets the path
+
+        sanity_check
         if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                 typ=1
         fi

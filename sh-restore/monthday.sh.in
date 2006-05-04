@@ -315,9 +315,9 @@ remote_restore() {
 
         while read -r mode uid gid psize fsize
         do
-                sanity_check
-
                 path=$(head -c $psize)
+
+                sanity_check
                 
                 if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                         basename=${BASH_REMATCH[1]}

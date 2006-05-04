@@ -2,9 +2,8 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl>
   -- major feature enhancement + major bugfixes --
    - I consider rdup now feature complete -
    * dump.sh, restore.sh: make remote backups really work
-   * scripts: implemented sanity checks on the
-     data received. If there is any inconsistency
-     the script quits
+   * scripts: implemented sanity checks on the data received. 
+     If there is any inconsistency the script quits
    extended attributes
    * added -a flag to mirror.sh. This is the only script that
      needs it [Linux only atm]
