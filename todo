@@ -4,6 +4,9 @@ TODO:
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
 
+:rdup:
+print 'rdup' in warnings
+
 :tests:
 :doc:
 :porting:

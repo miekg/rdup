@@ -245,7 +245,6 @@ remote_mirror() {
                 bits=`printf "%o" $bits` # and back to octal again
                 typ=0
 
-
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
                 fi
@@ -294,7 +293,7 @@ remote_mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                target=`head -c $fsize`
+                                target=$(head -c $fsize)
                                 ln -sf "$target" "$backupdir/$path" 
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
                                 ilnk=$(( $ilnk + 1))

@@ -110,7 +110,6 @@ local_restore() {
                 bits=`printf "%o" $bits`        # and back to octal again
                 typ=0
 
-
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
                 fi
@@ -178,7 +177,7 @@ remote_restore() {
         while read -r mode uid gid psize fsize
         do
                 dump=${mode:0:1}        # to add or remove
-                path=`head -c $psize`   # gets the path
+                path=$(head -c $psize)   # gets the path
                 mode=${mode:1}          # st_mode bits
 
                 sanity_check
@@ -186,7 +185,6 @@ remote_restore() {
                 bits=$(($mode & $S_MMASK)) # permission bits
                 bits=`printf "%o" $bits` # and back to octal again
                 typ=0
-
 
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
@@ -247,7 +245,7 @@ remote_restore() {
                                 idir=$(( $idir + 1))
                                 ;;
                                 2)      # LNK, target is in the content! 
-                                target=`head -c $fsize`
+                                target=$(head -c $fsize)
                                 if [[ $DISCARD -eq 1 ]]; then
                                         continue
                                 fi

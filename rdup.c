@@ -126,8 +126,8 @@ g_tree_read_file(FILE *fp)
 
 	while ((getdelim(&buf, &s, delim, fp)) != -1) {
 		if (s < LIST_MINSIZE) {
-			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", 
-					l);
+			fprintf(stderr, "** %s: Corrupt entry in filelist at line: %zd\n", 
+					PROGNAME, l);
 			continue;
 		}
 		if (!opt_null) {
@@ -141,8 +141,8 @@ g_tree_read_file(FILE *fp)
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
-			fprintf(stderr, "** Corrupt entry in filelist at line: %zd\n", 
-					l);
+			fprintf(stderr, "** %s: Corrupt entry in filelist at line: %zd\n", 
+					PROGNAME, l);
 			continue;
 		}
 
@@ -205,17 +205,19 @@ main(int argc, char **argv)
 	time = NULL;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
-		fprintf(stderr, "** Will not run suid/sgid for safety reasons\n");
+		fprintf(stderr, "** %s: Will not run suid/sgid for safety reasons\n",
+				PROGNAME);
 		exit(EXIT_FAILURE);
         }
 
 	if (!getcwd(pwd, BUFSIZE)) {
-		fprintf(stderr, "** Could not get current working directory\n");
+		fprintf(stderr, "** %s: Could not get current working directory\n",
+				PROGNAME);
 		exit(EXIT_FAILURE);
 	}
 	for(c = 0; c < argc; c++) {
 		if (strlen(argv[c]) > BUFSIZE) {
-			fprintf(stderr, "** Argument length overrun\n");
+			fprintf(stderr, "** %s: Argument length overrun\n", PROGNAME);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -269,12 +271,13 @@ main(int argc, char **argv)
 			case 's':
 				opt_size = atoi(optarg);
 				if (opt_size == 0) {
-					fprintf(stderr, "** -s requires a numerical value\n");
+					fprintf(stderr, "** %s: -s requires a numerical value\n",
+							PROGNAME);
 					exit(EXIT_FAILURE);
 				}
 				break;
 			default:
-				fprintf(stderr, "** Uknown option seen\n");
+				fprintf(stderr, "** %s: Uknown option seen\n", PROGNAME);
 				exit(EXIT_FAILURE);
 		}
 	}
@@ -287,8 +290,8 @@ main(int argc, char **argv)
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {
-		fprintf(stderr, "** Could not open filelist `%s\': %s\n", argv[0],
-				strerror(errno));
+		fprintf(stderr, "** %s: Could not open filelist `%s\': %s\n", PROGNAME, 
+				argv[0], strerror(errno));
 		exit(EXIT_FAILURE);
 	} else {
 		rewind(fplist);
@@ -305,7 +308,7 @@ main(int argc, char **argv)
 
 		/* add dirs leading up the dir/file */
 		if (!dir_prepend(backup, crawl)) {
-			fprintf(stderr, "** Skipping `%s\'\n", crawl);
+			fprintf(stderr, "** %s: Skipping `%s\'\n", crawl, PROGNAME);
 			continue;
 		}
 		/* descend into the dark, misty directory */
@@ -325,8 +328,8 @@ main(int argc, char **argv)
 	/* re-touch the timestamp file */
 	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
 		fprintf(stderr, 
-			"** Could not create timestamp file `%s\': %s\n", time,
-			strerror(errno));
+			"** %s: Could not create timestamp file `%s\': %s\n", PROGNAME, 
+			time, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 

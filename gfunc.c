@@ -48,8 +48,8 @@ cat(FILE *fp, char *filename)
 	size_t i;
 		
 	if ((file = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "** Could not open '%s\': %s\n", filename, 
-				strerror(errno));
+		fprintf(stderr, "** %s: Could not open '%s\': %s\n", PROGNAME, 
+				filename, strerror(errno));
 		return FALSE;
 	}
 	
@@ -61,8 +61,8 @@ cat(FILE *fp, char *filename)
 		
 		i = fread(buf, sizeof(char), BUFSIZE, file);
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
-			fprintf(stderr, "** Write failure `%s\': %s\n", 
-					filename, strerror(errno));
+			fprintf(stderr, "** %s: Write failure `%s\': %s\n", 
+					PROGNAME, filename, strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
@@ -87,8 +87,8 @@ entry_cat_data(FILE *fp, struct entry *e)
 		char buf[BUFSIZE + 1];
 		ssize_t i;
 		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-			fprintf(stderr, "** Error reading link %s: '%s\'\n", e->f_name,
-					strerror(errno));
+			fprintf(stderr, "** %s: Error reading link %s: '%s\'\n", PROGNAME,
+					e->f_name, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		buf[i] = '\0';
@@ -329,7 +329,8 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 
 	/* should not have these here!! */
 	if (value == NO_PRINT) {
-		fprintf(stderr, "** Internal error: NO_PRINT in remove tree!\n");
+		fprintf(stderr, "** %s: Internal error: NO_PRINT in remove tree!\n",
+				PROGNAME);
 		return FALSE;
 	}
 
