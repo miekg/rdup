@@ -1,6 +1,6 @@
 xx May 2006: 0.2.11 Miek <miek@miek.nl>
   -- major feature enhancement + bugfixes --
-   * I consider rdup now feature complete
+   - I consider rdup now feature complete -
    * scripts: implemented sanity checks on the
      data received. If there is any inconsistency
      the script quits
@@ -12,6 +12,7 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl>
    * bandwidth shaping was added to dump.sh and restore.sh. This
      relies entirely on cstream. Use the -l bytes/s flag to enable this
    * dump.sh, restore.sh: added -s SIZE flags, which is given to rdup
+   * assorted bugfixes and polish (as Ubuntu calls it)
 
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes + major restore updates --
