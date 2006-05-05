@@ -84,4 +84,6 @@ gboolean gfunc_backup(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_remove(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_substract(gpointer data, gpointer value, gpointer diff);
 gboolean gfunc_remove_path(gpointer data, gpointer value, gpointer path);
+/* rdup.c */
+void msg(const char *fmt, ...);
 #endif  /* _RDUP_H */

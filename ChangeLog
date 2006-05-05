@@ -13,6 +13,7 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl>
      relies entirely on cstream. Use the -l bytes/s flag to enable this
    * assorted bugfixes and polish (as Ubuntu calls it)
    * rorrim.sh, monthday.sh: cosmetic fixes
+   * added a msg function to remove all fprintfs
 
 01 May 2006: 0.2.10 Miek <miek@miek.nl>
   -- tiny bugfixes + major restore updates --

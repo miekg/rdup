@@ -25,13 +25,13 @@ signal_abort(int signal)
 {
 	switch(signal) {
 		case SIGPIPE:
-			fprintf(stderr, "** %s: SIGPIPE received, exiting\n", PROGNAME);
+			msg("SIGPIPE received, exiting");
 			break;
 		case SIGINT:
-			fprintf(stderr, "** %s: SIGINT received, exiting\n", PROGNAME);
+			msg("SIGINT received, exiting");
 			break;
 		default:
-			fprintf(stderr, "** %s: Unknown signal reveived, exiting\n", PROGNAME);
+			msg("Unhandled signal reveived, exiting");
 			break;
 	}
 	exit(EXIT_FAILURE);
@@ -48,8 +48,7 @@ cat(FILE *fp, char *filename)
 	size_t i;
 		
 	if ((file = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "** %s: Could not open '%s\': %s\n", PROGNAME, 
-				filename, strerror(errno));
+		msg("Could not open '%s\': %s", filename, strerror(errno));
 		return FALSE;
 	}
 	
@@ -61,8 +60,7 @@ cat(FILE *fp, char *filename)
 		
 		i = fread(buf, sizeof(char), BUFSIZE, file);
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
-			fprintf(stderr, "** %s: Write failure `%s\': %s\n", 
-					PROGNAME, filename, strerror(errno));
+			msg("Write failure `%s\': %s", filename, strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
@@ -87,8 +85,8 @@ entry_cat_data(FILE *fp, struct entry *e)
 		char buf[BUFSIZE + 1];
 		ssize_t i;
 		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-			fprintf(stderr, "** %s: Error reading link %s: '%s\'\n", 
-					PROGNAME, e->f_name, strerror(errno));
+			msg("Error reading link %s: '%s\'", e->f_name, 
+				strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		buf[i] = '\0';
@@ -330,8 +328,7 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 
 	/* should not have these here!! */
 	if (value == NO_PRINT) {
-		fprintf(stderr, "** %s: Internal error: NO_PRINT in remove tree!\n",
-				PROGNAME);
+		msg("Internal error: NO_PRINT in remove tree!");
 		return FALSE;
 	}
 

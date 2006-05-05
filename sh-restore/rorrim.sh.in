@@ -174,7 +174,6 @@ local_restore() {
 }
 
 remote_restore() {
-        declare -a path # catch spacing in the path
         while read -r mode uid gid psize fsize
         do
                 dump=${mode:0:1}        # to add or remove
@@ -207,14 +206,6 @@ remote_restore() {
                         DISCARD=1
                 fi
 
-                # it can be that the file without extension does not 
-                # exist in the backup directory because it is removed
-                # from disk. If this is the case, skip it
-                #
-                if [[ ! -e $path ]]; then
-                        continue
-                fi
-
                 if [[ $dump == "+" ]]; then
                         # add
                         case $typ in
@@ -229,6 +220,9 @@ remote_restore() {
                                         fi
                                 else 
                                         # empty
+                                        if [[ $DISCARD -eq 1 ]]; then
+                                                continue
+                                        fi
                                         touch "$restoredir/$newpath"
                                 fi
                                 chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
