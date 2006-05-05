@@ -46,7 +46,7 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":b:k:l:c:vzehV" o; do
+while getopts ":b:k:l:c:s:vzehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG;;
                 k) KEYFILE=$OPTARG;;
@@ -55,6 +55,7 @@ while getopts ":b:k:l:c:vzehV" o; do
                 e) etc=1;;
                 z) gzip=1;;
                 v) verbose="-v";;
+                s) echo todo;;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;

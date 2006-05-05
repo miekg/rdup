@@ -47,7 +47,7 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":c:k:l:p:t:zhVv" o; do
+while getopts ":c:k:l:p:t:s:zhVv" o; do
         case $o in
                 k) KEYFILE=$OPTARG;;
                 t) to_dir=$OPTARG;;
@@ -56,6 +56,7 @@ while getopts ":c:k:l:p:t:zhVv" o; do
                 z) gzip=1;;
                 p) dirstrip=$OPTARG;;
                 v) verbose="-v";;
+                s) echo todo;;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
