@@ -126,7 +126,8 @@ g_tree_read_file(FILE *fp)
 
 	while ((getdelim(&buf, &s, delim, fp)) != -1) {
 		if (s < LIST_MINSIZE) {
-			fprintf(stderr, "** %s: Corrupt entry in filelist at line: %zd\n", 
+			fprintf(stderr, 
+				"** %s: Corrupt entry in filelist at line: %zd\n", 
 					PROGNAME, l);
 			continue;
 		}
@@ -141,7 +142,8 @@ g_tree_read_file(FILE *fp)
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
-			fprintf(stderr, "** %s: Corrupt entry in filelist at line: %zd\n", 
+			fprintf(stderr, 
+				"** %s: Corrupt entry in filelist at line: %zd\n", 
 					PROGNAME, l);
 			continue;
 		}
