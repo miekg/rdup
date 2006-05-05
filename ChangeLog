@@ -3,13 +3,10 @@ xx May 2006: 0.2.11 Miek <miek@miek.nl>
    * rdup is now feature complete
    * dump.sh, restore.sh: make remote backups really work
    * scripts: implemented sanity checks on the data received. 
-     If there is any inconsistency the script quits
-   extended attributes:
-   * mirror.sh: added -a flag, only needed here. [linux only atm]
+   extended attributes: [linux only atm]
+   * mirror.sh: added -a flag, only needed here.
    * rdup: -a flag: read extended attributes to restore uid/gid 
-     (usefull for remote backups) [linux only atm]
-   * bandwidth shaping was added to dump.sh and restore.sh. This
-     relies entirely on cstream. Use the -l bytes/s flag to enable this
+   * bandwidth shaping was added to dump.sh and restore.sh, depends a cstream
    * rorrim.sh, monthday.sh: cosmetic fixes
    * rdup: added a msg function to remove all fprintfs
    * documentation was updated and improved
