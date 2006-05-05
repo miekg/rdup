@@ -201,8 +201,6 @@ remote_restore() {
                 # -p NUM argument
                 newpath=$(_strip $dirstrip "$newpath")
 
-                [[ $verbose -eq 1 ]] && echo $newpath
-
                 if [[ -z "$newpath" ]]; then
                         # discard, because the whole name was stripped
                         DISCARD=1
