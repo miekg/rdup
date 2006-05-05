@@ -1,4 +1,4 @@
-xx May 2006: 0.2.11 Miek <miek@miek.nl>
+05 May 2006: 0.2.11 Miek <miek@miek.nl>
   -- major feature enhancement + major bugfixes --
    * rdup is now feature complete
    * dump.sh, restore.sh: make remote backups really work
