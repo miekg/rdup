@@ -46,14 +46,15 @@ read_attr_uid(__attribute__((unused))
 		x = (uid_t)atoi(buf);
 		if (x > R_MAX_ID) {
 			fprintf(stderr, 
-				"** Too large uid `%zd\' for `%s\', truncating\n", 
-				(size_t)x, path);
+				"** %s: Too large uid `%zd\' for `%s\', truncating\n", 
+				PROGNAME, (size_t)x, path);
 			return R_MAX_ID;
 		}
 		return x;
 	} else {
 		if (opt_verbose > 0) {
-			fprintf(stderr, "** No uid xattr for `%s\'\n", path);
+			fprintf(stderr, "** %s: No uid xattr for `%s\'\n", PROGNAME, 
+				path);
 		}
 		return u;
 	}
@@ -74,14 +75,15 @@ read_attr_gid(__attribute__((unused))
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
 			fprintf(stderr, 
-				"** Too large gid `%zd\' for `%s\', truncating\n", 
-				(size_t)x, path);
+				"** %s: Too large gid `%zd\' for `%s\', truncating\n", 
+				PROGNAME, (size_t)x, path);
 			return R_MAX_ID;
 		}
 		return x;
 	} else {
 		if (opt_verbose > 0) {
-			fprintf(stderr, "** No gid xattr for `%s\'\n", path);
+			fprintf(stderr, "** %s: No gid xattr for `%s\'\n", path,
+				PROGNAME);
 		}
 		return g;
 	}
@@ -116,8 +118,8 @@ dir_prepend(GTree *t, char *path)
 	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
-			fprintf(stderr, "** Could not stat path `%s\': %s\n", path2,
-					strerror(errno));
+			fprintf(stderr, "** %s: Could not stat path `%s\': %s\n", PROGNAME, 
+					path2, strerror(errno));
 			return FALSE;
 		}
 		e.f_name      = path2;
@@ -172,8 +174,8 @@ dir_crawl(GTree *t, char *path)
 			return;
 		}
 		
-		fprintf(stderr, "** Cannot enter directory `%s\': %s\n", path,
-				strerror(errno));
+		fprintf(stderr, "** %s: Cannot enter directory `%s\': %s\n", PROGNAME, 
+				path, strerror(errno));
 		g_free(dirstack);
 		return;
 	}
@@ -181,8 +183,8 @@ dir_crawl(GTree *t, char *path)
 	/* get device */
 	if (fstat(dirfd(dir), &s) != 0) {
 		fprintf(stderr, 
-			"** Cannot determine holding device of the directory `%s\': %s\n", 
-			path, strerror(errno));
+			"** %s: Cannot determine holding device of the directory `%s\': %s\n", 
+			PROGNAME, path, strerror(errno));
 		closedir(dir);
 		g_free(dirstack);
 		return;
@@ -199,12 +201,11 @@ dir_crawl(GTree *t, char *path)
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
-			fprintf(stderr, "** Could not stat path `%s\': %s\n", curpath,
-					strerror(errno));
+			fprintf(stderr, "** %s: Could not stat path `%s\': %s\n", PROGNAME,
+					curpath, strerror(errno));
 			g_free(curpath);
 			continue;
 		}
-
 
 		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) {
 			pop.f_name      = curpath;
@@ -223,8 +224,8 @@ dir_crawl(GTree *t, char *path)
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
 				if (opt_verbose > 0) {
-					fprintf(stderr, "** " NOBACKUP " in '%s\'\n", 
-							path);
+					fprintf(stderr, "%s: ** " NOBACKUP " in '%s\'\n", 
+							PROGNAME, path);
 				}
 				/* remove all files found in this path */
 				rp.tree = t;
@@ -238,7 +239,6 @@ dir_crawl(GTree *t, char *path)
 				closedir(dir);
 				return;
 			}
-
 			g_tree_replace(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);
 			continue;
@@ -246,7 +246,8 @@ dir_crawl(GTree *t, char *path)
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
 				fprintf(stderr, 
-						"** Walking into different filesystem\n");
+						"** %s: Walking into different filesystem\n",
+						PROGNAME);
 				g_free(curpath);
 				continue;
 			}
@@ -276,8 +277,8 @@ dir_crawl(GTree *t, char *path)
 			continue;
 		} else {
 			if (opt_verbose > 0) {
-				fprintf(stderr, "** Neither file nor directory `%s\'\n", 
-					curpath);
+				fprintf(stderr, "** %s: Neither file nor directory `%s\'\n", 
+					PROGNAME, curpath);
 			}
 			g_free(curpath);
 		}

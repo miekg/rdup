@@ -217,7 +217,6 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 				/* emit data */
 			case '%':
 				++pos;
-
 				switch (*pos) {
 					case '%':
 						  fputc('%', out); 
@@ -226,8 +225,9 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 						  fputc(plusmin, out); 
 						  break;
 					case 'C':
-						  if (plusmin == '+') 
+						  if (plusmin == '+') {
 						  	entry_cat_data(out, e);
+						  }
 						  break;
 					default: 
 						  entry_print_data(out, *pos, e);
@@ -300,6 +300,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 	} 
 	if (S_ISREG(((struct entry*)data)->f_mode) || 
 			S_ISLNK(((struct entry*)data)->f_mode)) {
+
 		if (opt_size != 0 && ((struct entry*)data)->f_size > (ssize_t)opt_size) {
 			return FALSE;
 		}
