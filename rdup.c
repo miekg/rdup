@@ -296,8 +296,7 @@ main(int argc, char **argv)
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {
-		msg("Could not open filelist `%s\': %s", argv[0], 
-			strerror(errno));
+		msg("Could not open filelist `%s\': %s", argv[0], strerror(errno));
 		exit(EXIT_FAILURE);
 	} else {
 		rewind(fplist);
@@ -333,8 +332,7 @@ main(int argc, char **argv)
 	fclose(fplist); 
 	/* re-touch the timestamp file */
 	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
-		msg("Could not create timestamp file `%s\': %s", time, 
-			strerror(errno));
+		msg("Could not create timestamp file `%s\': %s", time, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 

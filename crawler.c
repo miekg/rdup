@@ -45,7 +45,8 @@ read_attr_uid(__attribute__((unused))
 	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
 		x = (uid_t)atoi(buf);
 		if (x > R_MAX_ID) {
-			msg("Too large uid `%zd\' for `%s\', truncating", (size_t)x, path);
+			msg("Too large uid `%zd\' for `%s\', truncating", (size_t)x, 
+				path);
 			return R_MAX_ID;
 		}
 		return x;
@@ -71,7 +72,8 @@ read_attr_gid(__attribute__((unused))
 	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
-			msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, path);
+			msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, 
+					path);
 			return R_MAX_ID;
 		}
 		return x;
@@ -112,8 +114,7 @@ dir_prepend(GTree *t, char *path)
 	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
-			msg("Could not stat path `%s\': %s", path2, 
-					strerror(errno));
+			msg("Could not stat path `%s\': %s", path2, strerror(errno));
 			return FALSE;
 		}
 		e.f_name      = path2;
@@ -193,8 +194,7 @@ dir_crawl(GTree *t, char *path)
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
-			msg("Could not stat path `%s\': %s", curpath, 
-					strerror(errno));
+			msg("Could not stat path `%s\': %s", curpath, strerror(errno));
 			g_free(curpath);
 			continue;
 		}
