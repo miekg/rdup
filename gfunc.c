@@ -87,8 +87,8 @@ entry_cat_data(FILE *fp, struct entry *e)
 		char buf[BUFSIZE + 1];
 		ssize_t i;
 		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-			fprintf(stderr, "** %s: Error reading link %s: '%s\'\n", PROGNAME,
-					e->f_name, strerror(errno));
+			fprintf(stderr, "** %s: Error reading link %s: '%s\'\n", 
+					PROGNAME, e->f_name, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		buf[i] = '\0';

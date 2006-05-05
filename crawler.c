@@ -118,8 +118,8 @@ dir_prepend(GTree *t, char *path)
 	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if(lstat(path2, &s) != 0) {
-			fprintf(stderr, "** %s: Could not stat path `%s\': %s\n", PROGNAME, 
-					path2, strerror(errno));
+			fprintf(stderr, "** %s: Could not stat path `%s\': %s\n", 
+					PROGNAME, path2, strerror(errno));
 			return FALSE;
 		}
 		e.f_name      = path2;
@@ -201,8 +201,8 @@ dir_crawl(GTree *t, char *path)
 
 		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
-			fprintf(stderr, "** %s: Could not stat path `%s\': %s\n", PROGNAME,
-					curpath, strerror(errno));
+			fprintf(stderr, "** %s: Could not stat path `%s\': %s\n", 
+					PROGNAME, curpath, strerror(errno));
 			g_free(curpath);
 			continue;
 		}
@@ -277,7 +277,8 @@ dir_crawl(GTree *t, char *path)
 			continue;
 		} else {
 			if (opt_verbose > 0) {
-				fprintf(stderr, "** %s: Neither file nor directory `%s\'\n", 
+				fprintf(stderr, 
+					"** %s: Neither file nor directory `%s\'\n", 
 					PROGNAME, curpath);
 			}
 			g_free(curpath);
