@@ -3,10 +3,9 @@ TODO:
 :rdup utils: 
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
+o make the size and limit modifier understand k/m/g suffixes
 
 :rdup:
-print 'rdup' in warnings
-
 :tests:
 :doc:
 :porting:

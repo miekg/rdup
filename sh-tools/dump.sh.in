@@ -135,7 +135,7 @@ else
                                 # do compress stream here
                                 ssh -x -C "$remote" mirror.sh $verbose -c -b "$BACKUPDIR"
                         else
-                                @sbindir@/rdup -N $STAMP $LIST $@ | \
+                                @sbindir@/rdup -c -N $STAMP $LIST $@ | \
                                 $cstream -t $bwidth | \
                                 ssh -x -C "$remote" mirror.sh $verbose -c -b "$BACKUPDIR"
                         fi
