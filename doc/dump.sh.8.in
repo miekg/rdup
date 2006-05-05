@@ -80,13 +80,27 @@ Show a short help message.
 Show the version.
 
 .SH EXAMPLES
-.SS local backup
+.SS LOCAL BACKUP 
+Dumping my homedir to the backup:
 
-.SS remote backup
+        dump.sh MIEK ~
+
+Dumping /home to the backup:
+        
+        dump.sh ALL /home
+      
+.SS REMOTE BACKUP
+Dumping my homedir to the remote backup:
+
+        dump.sh -c miekg@remote MIEK ~
+
+Dumping /home to the remote backup:
+        
+        dump.sh -c miekg@remote ALL /home
 
 .SH FILES
 /vol/backup/`hostname`, or the directory specified with \-b, root of
 the backup file system.
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), rdup(8) and grep.sh(1).
+hist.sh(1), yesterday.sh(1) and rdup(8).

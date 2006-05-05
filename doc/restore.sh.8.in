@@ -83,10 +83,18 @@ Show a short help message.
 Show the version.
 
 .SH EXAMPLES
-.SS local restore
+
+.SS LOCAL RESTORE
+Restoring from my local backup:
+
+        restore.sh -t /tmp/restore /vol/backup/elektron/200604/home/miekg/bin
 
 
-.SS remote restore
+.SS REMOTE RESTORE
+Restoring from a remote server:
+
+         restore.sh -c miekg@remote -t /tmp/restore ~/bin
+
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), rdup(8) and grep.sh(1).
+hist.sh(1), yesterday.sh(1) and rdup(8).
