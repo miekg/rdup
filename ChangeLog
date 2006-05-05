@@ -1,3 +1,8 @@
+xx May 2006: 0.2.12 Miek <miek@miek.nl>
+  -- bugfixes and ... --
+
+
+
 05 May 2006: 0.2.11 Miek <miek@miek.nl>
   -- major feature enhancement + major bugfixes --
    * rdup is now feature complete
@@ -6,7 +11,8 @@
    extended attributes: [linux only atm]
    * mirror.sh: added -a flag, only needed here.
    * rdup: -a flag: read extended attributes to restore uid/gid 
-   * bandwidth shaping was added to dump.sh and restore.sh, depends a cstream
+   * bandwidth shaping was added to dump.sh and restore.sh, depends on
+     cstream
    * rorrim.sh, monthday.sh: cosmetic fixes
    * rdup: added a msg function to remove all fprintfs
    * documentation was updated and improved
