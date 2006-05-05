@@ -8,6 +8,8 @@ o make the size and limit modifier understand k/m/g suffixes
 :rdup:
 :tests:
 :doc:
+update documentation, to let people use -t
+
 :porting:
 port extended attributes to FreeBSD
 
