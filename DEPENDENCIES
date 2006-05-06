@@ -1,0 +1,13 @@
+Rdup is a small program, which depends on a number of a other programs
+to make it all work. The dependencies are listed here:
+
+Mandatory:
+o libglib (core C gtk library)
+o bash, version 3. For the shell scrips
+
+Optional:
+o libattr (extended attributes library)
+o attr    (extended attributes utility)
+o cstream (bandwidth shaping)
+o mcrypt  (encryption)
+o gzip    (compression)
