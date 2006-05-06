@@ -8,7 +8,7 @@ o limit modifier understand k/m/g suffixes
 :rdup:
 :tests:
 :doc:
-update documentation, to let people use -t
+update documentation, to let people use -t for ssh. done a little
 
 :porting:
 port extended attributes to FreeBSD

@@ -46,6 +46,12 @@ which each do a their specific thing very well. With \fBrdup\fR and a
 small shell script (50 lines) one can implement encrypted and compressed
 backups.
 
+.SH BACKUP POLICY
+As \fBrdup\fR doesn't backup anything, the backup policy; what you
+backup, how you backup, how often and how you restore; is all left
+to the scripts. See the Section \fBSCRIPTS\fR for a run down on what
+\fBrdup\fR's backup policy is.
+
 .SH OPTIONS
 .TP
 .B \-F format
