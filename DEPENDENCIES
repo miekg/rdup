@@ -6,6 +6,7 @@ o libglib (core C gtk library)
 o bash, version 3. For the shell scrips
 
 Optional:
+o ssh     (remote backups and restores)
 o libattr (extended attributes library)
 o attr    (extended attributes utility)
 o cstream (bandwidth shaping)
