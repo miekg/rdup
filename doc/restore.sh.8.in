@@ -65,6 +65,10 @@ inserts \fBgzip.sh \-d\fR in the pipeline. If both \fI\-z\fR and
 \fI\-k\fR are given a file is first decrypted and then unzipped. This 
 is ofcourse the opposite of what \fBdump.sh\fR does.
 .TP
+.B \-a
+Enable extended attributes. Rad the uid/gid to the extended user
+attributes r_uid and r_gid.
+.TP
 .B -l num
 Limit the transfer to 'num' bytes/second. This option is given to
 \fBcstream\fR. See the manual page of cstream at the \-t option.

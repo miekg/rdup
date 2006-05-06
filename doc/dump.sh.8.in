@@ -60,6 +60,10 @@ inserts \fBcrypt.sh keyfile\fR in the pipeline. If both \fI-z\fR and
 Limit the transfer to 'num' bytes/second. This option is given to 
 \fBcstream\fR. See the manual page of cstream at the \-t option.
 .TP
+.B \-a
+Enable extended attributes. Write the uid/gid to the extended user
+attributes r_uid and r_gid.
+.TP
 .B \-z
 Compress the files while backing up. This option
 inserts \fBgzip.sh\fR in the pipeline. If both \fI-z\fR and
