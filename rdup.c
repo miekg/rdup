@@ -299,6 +299,5 @@ main(int argc, char **argv)
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
-
 	exit(EXIT_SUCCESS);
 }
