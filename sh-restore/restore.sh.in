@@ -20,7 +20,6 @@ usage() {
         echo " -k KEYFILE encrypt all files"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -p NUM     strip NUM leading components from file names"
-        echo " -s SIZE    limit output to files smaller than SIZE"
         echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
         echo " -a         read extended attributes r_uid/_rgid"
         echo " -z         compress all files"

@@ -293,7 +293,11 @@ rdup /tmp/HOMELIST ~ | mirror.sh \-b /vol/backup
 rdup \-c /tmp/HOMELIST ~ | gzip.sh | mirror.sh \-c \-b /vol/backup
 
 .SS full remote dump of /home
-rdup \-c /tmp/HOMELIST ~ | ssh miekg@example.com mirror.sh \-c \-b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | ssh \-t \-C miekg@example.com mirror.sh \-c \-b /vol/backup
+
+Note the use of \fI-t\fR and \fI-C\fR here; \fI\-t\fR forces pseudo tty
+allocation, this makes echo to standard error work on remote machines.
+The \fI\-C\fR compresses the stream.
 
 .SS full encrypted remote dump of /home
 rdup \-c /tmp/HOMELIST ~ | crypt.sh KEYFILE | 

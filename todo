@@ -3,7 +3,7 @@ TODO:
 :rdup utils: 
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
-o make the size and limit modifier understand k/m/g suffixes
+o limit modifier understand k/m/g suffixes
 
 :rdup:
 :tests:
