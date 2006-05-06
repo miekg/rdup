@@ -1,4 +1,4 @@
-OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o
+OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o
 HDR=rdup.h 
 CMD=rdup 
 SHS_IN=mirror.sh hist.sh yesterday.sh crypt.sh gzip.sh dump.sh dump-here.sh

@@ -84,7 +84,7 @@ read_attr_gid(__attribute__((unused))
 		return g;
 	}
 #else
-	return 0;
+	return g;
 #endif /* HAVE_ATTR_XATTR_H */
 }
 
