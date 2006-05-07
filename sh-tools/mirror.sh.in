@@ -220,8 +220,8 @@ local_mirror() {
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
                                         # if we're not read we need this
                                         # otherwise we can't access the dir
-                                        _echo2 "Chmod-ing to 700"
-                                        $bits="700"
+                                        _echo2 "Chmod \`$backupdir/$path' to 700"
+                                        bits="700"
                                 fi
                                 chmod $bits "$backupdir/$path"
                                 idir=$(($idir + 1))
@@ -315,8 +315,8 @@ remote_mirror() {
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
                                         # if we're not read we need this
                                         # otherwise we can't access the dir
-                                        _echo2 "Chmod-ing to 700"
-                                        $bits="700"
+                                        _echo2 "Chmod \`$backupdir/$path' to 700"
+                                        bits="700"
                                 fi
                                 chmod $bits "$backupdir/$path" 
                                 idir=$(( $idir + 1))
