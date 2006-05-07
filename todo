@@ -5,6 +5,8 @@ o when not root, don't chown? Or at least show no errors
   more general: -q switch
 o limit modifier understand k/m/g suffixes
 o argument parsing more sane
+o -e (store lists in backup dir) does not work with remote backups
+o all echo's should go to stdout, stderr is not available 
 
 :rdup:
 :tests:

@@ -22,11 +22,7 @@ PROGNAME=$0
 cstream=@cstream@
 
 _echo() {
-        echo "** $1" 
-}
-
-_echo2() {
-        echo "** $1" > /dev/fd/2
+        echo "** $PROGNAME: $1" 
 }
 
 # check if attr can be found
@@ -42,14 +38,14 @@ check_attr() {
                 ;;
                 *)
                 attr_there=0
-                _echo "$PROGNAME: Can not set extended attributes"
+                _echo "Can not set extended attributes"
                 ;;
         esac
 }
 
 cleanup() {
         # can also happen when running remotely (no /dev/fd/2)
-        _echo "$PROGNAME: Signal received while processing \`$path', exiting" 
+        _echo "Signal received while processing \`$path', exiting" 
         exit 1
 }
 # trap at least these
@@ -143,28 +139,28 @@ usage() {
 }
 
 version() {
-        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
+        _echo "@PACKAGE_VERSION@ (rdup-utils)"
 }
 
 sanity_check() {
         if [[ $dump != "+" && $dump != "-" ]]; then
-                _echo2 "$PROGNAME: dump must be + or -"
+                _echo "dump must be + or -"
                 exit 1
         fi
         if [[ ! "$mode" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: mode must be numeric"
+                _echo "mode must be numeric"
                 exit 1
         fi
         if [[ ! "$psize" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: psize must be numeric"
+                _echo "psize must be numeric"
                 exit 1
         fi
         if [[ ! "$fsize" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: fsize must be numeric"
+                _echo "fsize must be numeric"
                 exit 1
         fi
         if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: uid or gid must be numeric"
+                _echo "uid or gid must be numeric"
                 exit 1
         fi
 }
@@ -244,13 +240,13 @@ local_mirror() {
                 fi
         done 
         te=`date +%s`
-        _echo2 "#REG FILES  : $ireg"
-        _echo2 "#DIRECTORIES: $idir"
-        _echo2 "#LINKS      : $ilnk"
-        _echo2 "#(RE)MOVED  : $irm" 
-        _echo2 "SIZE        : $(($ftsize / 1024 )) KB" 
-        _echo2 "STORED IN   : $backupdir" 
-        _echo2 "ELAPSED     : $(($te - $ts)) s"
+        echo "** #REG FILES  : $ireg"
+        echo "** #DIRECTORIES: $idir"
+        echo "** #LINKS      : $ilnk"
+        echo "** #(RE)MOVED  : $irm" 
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" 
+        echo "** STORED IN   : $backupdir" 
+        echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
 remote_mirror() {
@@ -333,13 +329,13 @@ remote_mirror() {
         done 
         te=`date +%s`
         # /dev/fd/2 is not available remotely
-        _echo "#REG FILES  : $ireg"
-        _echo "#DIRECTORIES: $idir"
-        _echo "#LINKS      : $ilnk"
-        _echo "#(RE)MOVED  : $irm"
-        _echo "SIZE        : $(($ftsize / 1024 )) KB"
-        _echo "STORED IN   : $backupdir"
-        _echo "ELAPSED     : $(($te - $ts)) s"
+        echo "** #REG FILES  : $ireg"
+        echo "** #DIRECTORIES: $idir"
+        echo "** #LINKS      : $ilnk"
+        echo "** #(RE)MOVED  : $irm"
+        echo "** SIZE        : $(($ftsize / 1024 )) KB"
+        echo "** STORED IN   : $backupdir"
+        echo "** ELAPSED     : $(($te - $ts)) s"
 }
 
 while getopts ":acvhb:V" options; do
@@ -350,7 +346,7 @@ while getopts ":acvhb:V" options; do
                 v) verbose=1;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) _echo2 "$PROGNAME: Invalid option"; usage && exit;;
+                \?) _echo "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
