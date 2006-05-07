@@ -216,6 +216,13 @@ local_mirror() {
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chown_attr $uid $gid "$backupdir/$path" 
+
+                                if [[ $UID -ne 0 && $bits -eq 0 ]]; then
+                                        # if we're not read we need this
+                                        # otherwise we can't access the dir
+                                        _echo2 "Chmod-ing to 700"
+                                        $bits="700"
+                                fi
                                 chmod $bits "$backupdir/$path"
                                 idir=$(($idir + 1))
                                 ;;
@@ -304,6 +311,13 @@ remote_mirror() {
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chown_attr $uid $gid "$backupdir/$path" 
+
+                                if [[ $UID -ne 0 && $bits -eq 0 ]]; then
+                                        # if we're not read we need this
+                                        # otherwise we can't access the dir
+                                        _echo2 "Chmod-ing to 700"
+                                        $bits="700"
+                                fi
                                 chmod $bits "$backupdir/$path" 
                                 idir=$(( $idir + 1))
                                 ;;

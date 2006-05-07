@@ -5,6 +5,8 @@ xx May 2006: 0.2.12 Miek <miek@miek.nl>
    * mirror.sh, dump.sh: completed extended attribute support
    * mirror.sh: don't echo to stderr, this fails remotely
    * when mv-ing extended attributes are preserverd
+   * mirror.sh, rorrim.sh: when not root and a directory
+     would get 000 permissions, change that to 700
 
 
 05 May 2006: 0.2.11 Miek <miek@miek.nl>
