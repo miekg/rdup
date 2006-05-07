@@ -3,7 +3,7 @@ to make it all work. The dependencies are listed here:
 
 Mandatory:
 o libglib (core C gtk library)
-o bash, version 3. For the shell scrips
+o bash, version 3. For the (shell) rdup-utils
 
 Optional:
 o ssh     (remote backups and restores)
