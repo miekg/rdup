@@ -154,8 +154,8 @@ local_restore() {
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
                                         # if we're not read we need this
                                         # otherwise we can't access the dir
-                                        _echo2 "Chmod-ing to 700"
-                                        $bits="700"
+                                         _echo2 "Chmod \`$restoredir/$newpath' to 700"
+                                        bits="700"
                                 fi
                                 chmod $bits "$restoredir/$newpath"
                                 idir=$(($idir + 1))
@@ -246,8 +246,8 @@ remote_restore() {
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
                                         # if we're not read we need this
                                         # otherwise we can't access the dir
-                                        _echo2 "Chmod-ing to 700"
-                                        $bits="700"
+                                        _echo2 "Chmod \`$restoredir/$newpath' to 700"
+                                        bits="700"
                                 fi
                                 chmod $bits "$restoredir/$newpath"
                                 idir=$(( $idir + 1))
