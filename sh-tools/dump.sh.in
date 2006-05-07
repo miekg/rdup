@@ -149,20 +149,20 @@ else
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | \
                                 # do compress stream here
-                                ssh -t -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         else
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | \
                                 $cstream -t $bwidth | \
-                                ssh -t -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         fi
                 else 
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
-                                ssh -t -x "$remote" | mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" | mirror.sh $a $v -c -b "$BACKUPDIR"
                         else
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
                                 $cstream -t $bwidth | \
-                                ssh -t -x "$remote" | mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" | mirror.sh $a $v -c -b "$BACKUPDIR"
                         fi
                 fi
         else
@@ -170,23 +170,23 @@ else
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | \
                                 @sbindir@/crypt.sh $KEYFILE | \
-                                ssh -t -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         else
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | \
                                 @sbindir@/crypt.sh $KEYFILE | \
                                 $cstream -t $bwidth | \
-                                ssh -t -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         fi
                 else 
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
                                 @sbindir@/crypt.sh $KEYFILE | 
-                                ssh -t -x "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         else
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
                                 @sbindir@/crypt.sh $KEYFILE | 
                                 $cstream -t $bwidth | \
-                                ssh -t -x "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         fi
 
                 fi
