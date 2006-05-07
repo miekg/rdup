@@ -32,7 +32,7 @@ void usage(FILE *f);
 static void
 msg_va_list(const char *fmt, va_list args)
 {
-        fprintf(stderr, "** %s", PROGNAME);
+        fprintf(stderr, "** %s: ", PROGNAME);
         vfprintf(stderr, fmt, args);
         fprintf(stderr, "\n");
 }

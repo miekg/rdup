@@ -47,11 +47,27 @@ _echo2() {
         echo "** $PROGNAME: $1" > /dev/fd/2
 }
 
-while getopts ":b:k:l:c:s:vzehV" o; do
+while getopts ":ab:k:l:c:s:vzehV" o; do
         case $o in
-                b) BACKUPDIR=$OPTARG;;
-                k) KEYFILE=$OPTARG;;
-                c) remote=$OPTARG;;
+                b) BACKUPDIR=$OPTARG
+                if [[ -z $BACKUPDIR ]]; then
+                        _echo2 "-b needs an argument"
+                        exit 1
+                fi;;
+                k) KEYFILE=$OPTARG
+                if [[ -z $KEYFILE ]]; then
+                        _echo2 "-k needs an argument"
+                        exit 1
+                fi
+                if [[ ! -r "$KEYFILE" ]]; then
+                        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
+                        exit 1
+                fi;;
+                c) remote=$OPTARG
+                if [[ -z $remote ]]; then
+                        _echo2 "-c needs an argument"
+                        exit 1
+                fi;;
                 l) bwidth=$OPTARG;;
                 e) etc=1;;
                 z) gzip=1;;
@@ -72,10 +88,6 @@ if [[ -z $BACKUPDIR ]]; then
         BACKUPDIR="/vol/backup/$HOSTNAME" 
 fi
 
-if [[ ! -z "$KEYFILE" && ! -r "$KEYFILE" ]]; then
-        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
-        exit 1
-fi
 if [[ ! -z $bwidth && -z $cstream ]]; then
         _echo2 "Bandwidth shaping not enabled: cstream not found"
         exit 1
