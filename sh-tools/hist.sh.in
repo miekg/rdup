@@ -8,7 +8,7 @@
 PROGNAME=$0
 
 usage() {
-        echo "$0 [OPTIONS] FILE [FILE ...]"
+        echo "$PROGNAME [OPTIONS] FILE [FILE ...]"
         echo
         echo Print file history from the dump
         echo 
@@ -52,7 +52,7 @@ while getopts ":b:hdVzk" o; do
                 k) keyfile=$OPTARG;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) echo "** $0: Invalid option" > /dev/fd/2; usage && exit;;
+                \?) echo "** $PROGNAME: Invalid option" > /dev/fd/2; usage && exit;;
         esac
 done
 if [ -z $backupdir ]; then

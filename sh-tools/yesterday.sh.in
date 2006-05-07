@@ -8,7 +8,7 @@
 PROGNAME=$0
 
 usage() {
-        echo "$0 [OPTIONS] FILE [FILE ...]"
+        echo "$PROGNAME [OPTIONS] FILE [FILE ...]"
         echo
         echo Print/restore files from the dump
         echo

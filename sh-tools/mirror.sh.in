@@ -318,7 +318,7 @@ remote_mirror() {
         _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts ":cvhb:V" options; do
+while getopts "a:cvhb:V" options; do
         case $options in
                 a) attr=1;;
                 c) remote=1;;
@@ -326,7 +326,7 @@ while getopts ":cvhb:V" options; do
                 v) verbose=1;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) _echo2 "Invalid option"; usage && exit;;
+                \?) _echo2 "$PROGNAME: Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
