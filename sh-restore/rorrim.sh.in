@@ -143,20 +143,20 @@ local_restore() {
                         case $typ in
                                 0)      # REG
                                 cp -RP "$path" "$restoredir/$newpath"
-                                chown $uid:$gid "$restoredir/$newpath"
+                                chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
                                 [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath" 
-                                chown $uid:$gid "$restoredir/$newpath"
+                                chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 chmod $bits "$restoredir/$newpath"
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
                                 cp -RP "$path" "$restoredir/$newpath"
-                                chown -h $uid:$gid "$restoredir/$newpath"
+                                chown -h $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac

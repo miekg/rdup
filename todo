@@ -4,6 +4,7 @@ TODO:
 o when not root, don't chown? Or at least show no errors
   more general: -q switch
 o limit modifier understand k/m/g suffixes
+o argument parsing more sane
 
 :rdup:
 :tests:

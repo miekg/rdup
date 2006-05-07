@@ -34,7 +34,11 @@ check_attr() {
         case $OSTYPE in
                 linux*)
                 which attr > /dev/null
-                attr_there=$?  # 0 or 1
+                if [[ $? -eq 0 ]]; then
+                        attr_there=1
+                else
+                        attr_there=0
+                fi
                 ;;
                 *)
                 attr_there=0
@@ -79,6 +83,19 @@ set_attr_gid() {
                 *)
                 ;;
         esac
+}
+
+# set the extended attributes
+chown_attr() {
+        uid=$1
+        gid=$2
+        shift; shift
+
+        if [[ $attr -eq 0 ]]; then
+                return
+        fi
+        set_attr_uid $uid "$@"
+        set_attr_gid $gid "$@"
 }
 
 mirror_suffix() {
@@ -165,7 +182,6 @@ local_mirror() {
                 bits=`printf "%o" $bits`        # and back to octal again
                 typ=0
 
-
                 if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
                         typ=1;
                 fi
@@ -185,10 +201,13 @@ local_mirror() {
                         case $typ in
                                 0)      # REG
                                 if [[ -e "$backupdir/$path" ]]; then
+                                        # attributes are preserved when
+                                        # moving
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cp -RP "$path" "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path"
+                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
                                 chmod $bits "$backupdir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(($ireg + 1))
@@ -200,7 +219,8 @@ local_mirror() {
                                 fi
 
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
-                                chown $uid:$gid "$backupdir/$path"
+                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
                                 chmod $bits "$backupdir/$path"
                                 idir=$(($idir + 1))
                                 ;;
@@ -209,7 +229,8 @@ local_mirror() {
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 cp -RP "$path" "$backupdir/$path"
-                                chown -h $uid:$gid "$backupdir/$path"
+                                chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
@@ -273,6 +294,7 @@ remote_mirror() {
                                         touch "$backupdir/$path"
                                 fi
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
                                 chmod $bits "$backupdir/$path" 
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(( $ireg + 1))
@@ -286,6 +308,7 @@ remote_mirror() {
                                 # size should be 0
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
                                 chmod $bits "$backupdir/$path" 
                                 idir=$(( $idir + 1))
                                 ;;
@@ -296,6 +319,7 @@ remote_mirror() {
                                 target=$(head -c $fsize)
                                 ln -sf "$target" "$backupdir/$path" 
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
                                 ilnk=$(( $ilnk + 1))
                                 ;;
                         esac

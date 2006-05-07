@@ -1,6 +1,9 @@
 xx May 2006: 0.2.12 Miek <miek@miek.nl>
-  -- bugfixes and ... --
+  -- small bugfixes --
    * dump.sh, restore.sh: add -a flag
+   * mirror.sh, rorrim.sh: silence chown errors
+   * mirror.sh, dump.sh: completed extended attribute support
+   * when mv-ing extended attributes are preserverd
 
 
 05 May 2006: 0.2.11 Miek <miek@miek.nl>
