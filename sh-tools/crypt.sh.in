@@ -12,7 +12,7 @@ PROGNAME=$0
 OPT=""
 
 _echo2() {
-        echo "** $PROGNAME: $1" > /dev/fd/2
+        echo "** $PROGNAME: $1" >&2
 }
 
 cleanup() {

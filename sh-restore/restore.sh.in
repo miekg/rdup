@@ -46,7 +46,7 @@ a=""
 s=""
 
 _echo2() {
-        echo "** $PROGNAME: $1" > /dev/fd/2
+        echo "** $PROGNAME: $1" >&2
 }
 
 while getopts ":ac:k:l:p:t:s:zhVv" o; do

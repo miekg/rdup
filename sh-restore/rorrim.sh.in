@@ -24,11 +24,10 @@ _echo() {
 }
 
 _echo2() {
-        echo "** $PROGNAME: $1" > /dev/fd/2
+        echo "** $PROGNAME: $1" >&2
 }
 
 cleanup() {
-        # can also happen when running remotely (no /dev/fd/2)
         _echo2 "$PROGNAME: Signal received while processing \`$path', exiting"
         exit 1
 }
@@ -117,7 +116,7 @@ local_restore() {
                         typ=2;
                 fi
                 
-                [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
+                [[ $verbose -eq 1 ]] && echo $path >&2
 
                 # create the new filename
                 newpath=$(sanitize "$path")
@@ -165,12 +164,12 @@ local_restore() {
                 fi
         done 
         te=`date +%s`
-        echo "** #REG FILES  : $ireg" > /dev/fd/2
-        echo "** #DIRECTORIES: $idir" > /dev/fd/2
-        echo "** #LINKS      : $ilnk" > /dev/fd/2
-        echo "** SIZE        : $(($ftsize / 1024 )) KB" > /dev/fd/2
-        echo "** STORED IN   : $restoredir" > /dev/fd/2
-        echo "** ELAPSED     : $(($te - $ts)) s" > /dev/fd/2
+        echo "** #REG FILES  : $ireg" >&2
+        echo "** #DIRECTORIES: $idir" >&2
+        echo "** #LINKS      : $ilnk" >&2
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
+        echo "** STORED IN   : $restoredir" >&2
+        echo "** ELAPSED     : $(($te - $ts)) s" >&2
 }
 
 remote_restore() {
@@ -193,7 +192,7 @@ remote_restore() {
                         typ=2;
                 fi
 
-                [[ $verbose -eq 1 ]] && echo $path
+                [[ $verbose -eq 1 ]] && echo $path >&2
 
                 # create the new filename
                 newpath=$(sanitize "$path")
@@ -250,17 +249,16 @@ remote_restore() {
                                 ;;
                         esac
                 else
-                        _echo "$PROGNAME: Ignoring removal of \`$path\'"
+                        _echo2 "$PROGNAME: Ignoring removal of \`$path\'"
                 fi
         done 
         te=`date +%s`
-        # /dev/fd/2 is not available remotely
-        echo "** #REG FILES  : $ireg"
-        echo "** #DIRECTORIES: $idir"
-        echo "** #LINKS      : $ilnk"
-        echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        echo "** RESTORED TO : $restoredir"
-        echo "** ELAPSED     : $(($te - $ts)) s"
+        echo "** #REG FILES  : $ireg" >&2
+        echo "** #DIRECTORIES: $idir" >&2
+        echo "** #LINKS      : $ilnk" >&2
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
+        echo "** RESTORED TO : $restoredir" >&2
+        echo "** ELAPSED     : $(($te - $ts)) s" >&2
 }
 
 while getopts ":cvVhp:" options; do
@@ -280,7 +278,7 @@ if [[ $# -eq 0 ]]; then
         exit 1
 fi
 if [[ -f $1 ]]; then
-        _echo "Cannot restore to \`$'" 
+        _echo2 "Cannot restore to \`$'" 
         exit 1
 fi
 if [[ ! $dirstrip =~ "[0-9]+" ]]; then
@@ -294,7 +292,7 @@ fi
 if [[ ! -e $1 ]]; then
         mkdir $1
         if [[ $? -ne 0 ]]; then
-                _echo "Cannot create \`$1'"
+                _echo2 "Cannot create \`$1'"
                 exit 1
         fi
 fi

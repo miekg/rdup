@@ -44,7 +44,7 @@ a=""
 v=""
 
 _echo2() {
-        echo "** $PROGNAME: $1" > /dev/fd/2
+        echo "** $PROGNAME: $1" >&2
 }
 
 while getopts ":ab:k:l:c:s:vzehV" o; do
@@ -81,7 +81,7 @@ while getopts ":ab:k:l:c:s:vzehV" o; do
 done
 shift $((OPTIND - 1))
 if [[ $# -eq 0 ]]; then
-        echo "NAME is mandatory"
+        _echo2 "NAME is mandatory"
         exit 1
 fi
 if [[ -z $BACKUPDIR ]]; then
@@ -106,7 +106,7 @@ LIST="$ETC/$HOSTNAME.$NAME.list"
 # DIRS in $@
 shift
 if [[ -z $@ ]]; then
-        echo "No directories to backup" 
+        _echo2 "No directories to backup" 
         exit 1
 fi
 

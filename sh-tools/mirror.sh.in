@@ -21,8 +21,8 @@ backupdir=""
 PROGNAME=$0
 cstream=@cstream@
 
-_echo() {
-        echo "** $PROGNAME: $1" 
+_echo2() {
+        echo "** $PROGNAME: $1" >&2
 }
 
 # check if attr can be found
@@ -38,14 +38,13 @@ check_attr() {
                 ;;
                 *)
                 attr_there=0
-                _echo "Can not set extended attributes"
+                _echo2 "Can not set extended attributes"
                 ;;
         esac
 }
 
 cleanup() {
-        # can also happen when running remotely (no /dev/fd/2)
-        _echo "Signal received while processing \`$path', exiting" 
+        _echo2 "Signal received while processing \`$path', exiting" 
         exit 1
 }
 # trap at least these
@@ -139,28 +138,28 @@ usage() {
 }
 
 version() {
-        _echo "@PACKAGE_VERSION@ (rdup-utils)"
+        echo "** $PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 sanity_check() {
         if [[ $dump != "+" && $dump != "-" ]]; then
-                _echo "dump must be + or -"
+                _echo2 "dump must be + or -"
                 exit 1
         fi
         if [[ ! "$mode" =~ "[0-9]+" ]]; then
-                _echo "mode must be numeric"
+                _echo2 "mode must be numeric"
                 exit 1
         fi
         if [[ ! "$psize" =~ "[0-9]+" ]]; then
-                _echo "psize must be numeric"
+                _echo2 "psize must be numeric"
                 exit 1
         fi
         if [[ ! "$fsize" =~ "[0-9]+" ]]; then
-                _echo "fsize must be numeric"
+                _echo2 "fsize must be numeric"
                 exit 1
         fi
         if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
-                _echo "uid or gid must be numeric"
+                _echo2 "uid or gid must be numeric"
                 exit 1
         fi
 }
@@ -186,7 +185,7 @@ local_mirror() {
                 fi
 
                 
-                [[ $verbose -eq 1 ]] && echo $path > /dev/fd/2
+                [[ $verbose -eq 1 ]] && echo $path >&2
 
                 if [[ -e "$backupdir/$path" ]]; then
                         suffix=`mirror_suffix "$backupdir/$path"`
@@ -240,13 +239,13 @@ local_mirror() {
                 fi
         done 
         te=`date +%s`
-        echo "** #REG FILES  : $ireg"
-        echo "** #DIRECTORIES: $idir"
-        echo "** #LINKS      : $ilnk"
-        echo "** #(RE)MOVED  : $irm" 
-        echo "** SIZE        : $(($ftsize / 1024 )) KB" 
-        echo "** STORED IN   : $backupdir" 
-        echo "** ELAPSED     : $(($te - $ts)) s"
+        echo "** #REG FILES  : $ireg" >&2
+        echo "** #DIRECTORIES: $idir" >&2
+        echo "** #LINKS      : $ilnk" >&2
+        echo "** #(RE)MOVED  : $irm"  >&2
+        echo "** SIZE        : $(($ftsize / 1024 )) KB"  >&2
+        echo "** STORED IN   : $backupdir"  >&2
+        echo "** ELAPSED     : $(($te - $ts)) s" >&2
 }
 
 remote_mirror() {
@@ -269,7 +268,7 @@ remote_mirror() {
                         typ=2;
                 fi
 
-                [[ $verbose -eq 1 ]] && echo $path
+                [[ $verbose -eq 1 ]] && echo $path >&2
 
                 if [[ -e "$backupdir/$path" ]]; then
                         suffix=`mirror_suffix "$backupdir/$path"`
@@ -328,14 +327,13 @@ remote_mirror() {
                 fi
         done 
         te=`date +%s`
-        # /dev/fd/2 is not available remotely
-        echo "** #REG FILES  : $ireg"
-        echo "** #DIRECTORIES: $idir"
-        echo "** #LINKS      : $ilnk"
-        echo "** #(RE)MOVED  : $irm"
-        echo "** SIZE        : $(($ftsize / 1024 )) KB"
-        echo "** STORED IN   : $backupdir"
-        echo "** ELAPSED     : $(($te - $ts)) s"
+        echo "** #REG FILES  : $ireg" >&2
+        echo "** #DIRECTORIES: $idir" >&2
+        echo "** #LINKS      : $ilnk" >&2
+        echo "** #(RE)MOVED  : $irm" >&2
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
+        echo "** STORED IN   : $backupdir" >&2
+        echo "** ELAPSED     : $(($te - $ts)) s" >&2
 }
 
 while getopts ":acvhb:V" options; do
@@ -346,7 +344,7 @@ while getopts ":acvhb:V" options; do
                 v) verbose=1;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) _echo "Invalid option"; usage && exit;;
+                \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))

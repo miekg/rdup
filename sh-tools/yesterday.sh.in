@@ -100,7 +100,7 @@ while getopts ":n:b:k:cCNdhzV" o; do
                 C) Ccopy=1;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) echo "** $0: Invalid option" >/dev/fd/2; usage && exit;;
+                \?) echo "** $0: Invalid option" >&2; usage && exit;;
         esac
 done
 if [[ -z $backupdir ]]; then
@@ -110,7 +110,7 @@ shift $((OPTIND - 1))
 
 if [[ ! -z $keyfile ]]; then
         if [[ ! -r $1 ]]; then
-                echo "** $0: Cannot read keyfile \`$1': failed" > /dev/fd/2
+                echo "** $0: Cannot read keyfile \`$1': failed" >&2
                 exit 1
         fi
 fi
