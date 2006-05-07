@@ -318,7 +318,7 @@ remote_mirror() {
         _echo "ELAPSED     : $(($te - $ts)) s"
 }
 
-while getopts "a:cvhb:V" options; do
+while getopts ":acvhb:V" options; do
         case $options in
                 a) attr=1;;
                 c) remote=1;;
