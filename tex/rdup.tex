@@ -193,52 +193,55 @@ files in
 \texttt{/vol/backup/`\$HOSTNAME`/YYYYMM}.
 Note: The files \cmd{timestamp} and \cmd{FILELIST} are
 both created by \rdup:
+\begin{enumerate}
+\item
 \begin{quote}
-1.
 \begin{verbatim}
 rdup -N timestamp FILELIST /home | mirror.sh -b /vol/backup
 \end{verbatim}
 \end{quote}
 
-\noindent If you want to remotely store your backups (note the \cmd{-c} switch which makes
+\item
+If you want to remotely store your backups (note the \cmd{-c} switch which makes
 \rdup{} include the files' content in its output):
 \begin{quote}
-2.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
 
-\noindent With \cmd{gzip.sh} files can be compressed:
+\item
+With \cmd{gzip.sh} files can be compressed:
 \begin{quote}
-3.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | gzip.sh | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
 
-\noindent And with \cmd{crypt.sh} files are encrypted:
+\item
+And with \cmd{crypt.sh} files are encrypted:
 \begin{quote}
-4.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | crypt.sh secret.file | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
 
-\noindent Now with both encryption and compression and we 
+\item
+Now with both encryption and compression and we 
 send our files to remote server with bandwidth limiting; we
 only allow 10Kb per second:
 \begin{quote}
-5.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | gzip.sh |\
 crypt.sh secret.file | cstream -t 10240 | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
+
+\end{enumerate}
 
 \section{Using \cmd{dump.sh}}
 \cmd{dump.sh} is a wrapper script to make things more easy. If we redo
@@ -259,18 +262,20 @@ single files from the backup. If you want to restore an entire directory
 you will need the other restore scripts. Note that for restoring we
 also use \cmd{rdup}.
 
-\noindent If you want to restore your local backup to \path{/tmp/test}.
+\begin{enumerate}
+\item
+If you want to restore your local backup to \path{/tmp/test}.
 Note the use of \path{/dev/null} for \rdup's filelist, as this is not
 needed when restoring. The +0 argument to \cmd{monthday.sh} denotes
 that the latest files from the backup should be selected:
 \begin{quote}
-1.
 \begin{verbatim}
 rdup /dev/null /vol/backup/elektron/200605/home/miekg | \
 monthday.sh +0 |\
 rorrim.sh /tmp/test
 \end{verbatim}
 \end{quote}
+\end{enumerate}
 
 This also works remotely.
 
