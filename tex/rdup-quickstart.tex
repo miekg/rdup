@@ -10,15 +10,13 @@
 \chapterstyle{demo}
 \begin{document}
 
-\chapter*{\rdup{} Quick Start}
-A small guide into setting up and running \rdup{} to make backups. It
+\chapter*{\rdup: Quick Start}
+This is a small guide into setting up and running \rdup{} to make backups. It
 supports: incremental, compressed, encrypted remote backups and
-restores. Mailing-list information can be found at:
-\path{http://atoom.net/cgi-bin/mailman/listinfo/rdup}
+restores. Website: \url{www.miek.nl/projects/rdup}
 
 \subsection*{\textit{Setup}}
-Get \rdup{} from \url{www.miek.nl/projects/rdup}. Configure and install
-it:
+Get \rdup{} from its website. Configure and install it:
 \begin{verbatim}
 ./configure && make && sudo make install
 \end{verbatim}
@@ -27,7 +25,7 @@ is mounted under \path{/vol/backup}.
 
 \subsection*{\textit{Backup}}
 The most convenient way to use \rdup{} is to use the wrapper
-script \cmd{dump.sh}, synopsis:\\
+script \cmd{dump.sh}. Synopsis:\\
 \cmd{dump.sh [ OPTIONS ] NAME DIR|FILE [ DIR|FILE ]}
 \begin{itemize}
 \item
@@ -44,15 +42,15 @@ host:\\
 
 \subsection*{\textit{Restore}}
 The most convenient way to restore with \rdup{} is by using
-the script \cmd{restore.sh}, synopsis:\\
+the script \cmd{restore.sh}. Synopsis:\\
 \cmd{restore.sh [ OPTIONS ] [ +DAY ] -t TO\_DIR FROM\_DIR [ FROM\_DIR ]}
 \begin{itemize}
 \item
-Restore to the latest backup from May 2006, to \path{/tmp/restore}:\\
+Restore from the latest backup from May 2006, to \path{/tmp/restore}:\\
 \cmd{restore.sh +0 -t /tmp/restore \\
 /vol/backup/elektron/200605/home/miekg}
 \item
-Restore to the latest remote backup from May 2006. This backup
+Restore from the latest remote backup from May 2006. This backup
 is encrypted:\\
 \cmd{restore.sh +0 -k secret -c user@example.nl -t /tmp/restore \\
 /vol/backup/elektron/200605/home/miekg}
