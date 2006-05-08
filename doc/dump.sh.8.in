@@ -73,6 +73,8 @@ inserts \fBgzip.sh\fR in the pipeline. If both \fI-z\fR and
 Store the the timestamp and filelist files together with the backup.
 This allows for backups to USB-drives and such. Normally they
 are stored in `/etc/rdup'.
+
+This option cannot be used when doing a remote backup.
 .TP
 .B \-v
 Echo the files processed to standard error.

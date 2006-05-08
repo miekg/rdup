@@ -3,6 +3,8 @@
 \newcommand{\rdup}{\textbf{rdup}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
+\newcommand{\path}[1]{\texttt{#1}}
+\newcommand{\flag}[1]{\textit{#1}}
 
 %%\pagestyle{compagnion}
 %% this is really cool
@@ -26,7 +28,6 @@ small porting it to other platforms should be relatively easy.
 
 In this document we detail how \rdup{} works, out of which components
 it consists and how to actually use it to make backups.
-
 
 \tableofcontents
 
@@ -68,6 +69,8 @@ of a null dump, to standard output.
 \label{sec:scheme implemented in current scripts}
 One full backup each month, incremental updates after that.
 
+TODO
+
 
 \chapter{Components of \rdup}
 
@@ -98,7 +101,8 @@ And for restoring we have:
 \item[\cmd{yesterday.sh}]{-- restore files from the backup,}
 \item[\cmd{rorrim.sh}]{-- place to-be-restored files in a directory,}
 \item[\cmd{monthday.sh}]{-- select files to restore from the backup,}
-\item[\cmd{purge.sh}]{-- example backup delete scipt.}
+\item[\cmd{restore.sh}]{-- convience wrapper around \cmd{rdup},
+\cmd{monthday.sh} and \cmd{rorrim.sh}.} 
 \end{description}
 
 Note that \cmd{gzip.sh} and \cmd{crypt.sh} can be used for 
@@ -120,7 +124,7 @@ The data \rdup{} puts out is depicted in Figure \ref{fig:rdup output}.
 \label{fig:rdup output}
 \end{figure}
 
-Even with this short list we can explain \rdup's output. When no
+With this short list we can explain \rdup's output. When no
 output changing options are given to \rdup{} it will output seven
 columns:
 \begin{enumerate}
@@ -130,7 +134,7 @@ columns:
 \item{\textbf{uid} -- numeric user id,}
 \item{\textbf{gid} -- numeric group id,}
 \item{\textbf{path size} -- the length of the path,}
-\item{\textbf{file size} -- the size of the file (zero when deleted),}
+\item{\textbf{file size} -- the size of the file (zero when removed),}
 \item{\textbf{path} -- the full pathname.}
 \end{enumerate}
 
@@ -162,6 +166,24 @@ Two things are different: after the file size a newline is printed, then
 the full pathname and then the file's contents.  For obvious reasons no
 content is printed for files that are to be removed.
 
+\section{Remote backups and file ownership}
+When remotely storing a backup the following is a common problem.
+Normally you would be making the upload as a non-root user for safety
+reasons. This user has limited capablities and can not set the ownership
+of files to (for instance) root:root. This will probably lead to a
+remote backup where all ownership is set to user:user. When such a
+backup is restored, \rdup{} is no way of knowning what the original
+ownership was. This reduces the usefullness of remote backups.
+
+As a solution \rdup{} has a \flag{-a} flag which reads the
+extended user attributes with the original ownership (uid/gid).
+These attributes are set by \cmd{mirror.sh} when making the backup.
+
+The attributes are named "r\_uid" and "r\_gid". When instructed to
+do so \rdup{} will read the extended attributes. Next it will 
+substitute the attributes in the uid and gid fields of its
+normal output.
+
 \chapter{Making Backups}
 The most simple use of \rdup{} is to mirror files to
 another partition/directory. The following example first
@@ -172,6 +194,7 @@ files in
 Note: The files \cmd{timestamp} and \cmd{FILELIST} are
 both created by \rdup:
 \begin{quote}
+1.
 \begin{verbatim}
 rdup -N timestamp FILELIST /home | mirror.sh -b /vol/backup
 \end{verbatim}
@@ -180,6 +203,7 @@ rdup -N timestamp FILELIST /home | mirror.sh -b /vol/backup
 \noindent If you want to remotely store your backups (note the \cmd{-c} switch which makes
 \rdup{} include the files' content in its output):
 \begin{quote}
+2.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
@@ -188,6 +212,7 @@ ssh miekg@example.nl mirror.sh -c -b /vol/backup
 
 \noindent With \cmd{gzip.sh} files can be compressed:
 \begin{quote}
+3.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | gzip.sh | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
@@ -196,6 +221,7 @@ ssh miekg@example.nl mirror.sh -c -b /vol/backup
 
 \noindent And with \cmd{crypt.sh} files are encrypted:
 \begin{quote}
+4.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | crypt.sh secret.file | \
 ssh miekg@example.nl mirror.sh -c -b /vol/backup
@@ -206,6 +232,7 @@ ssh miekg@example.nl mirror.sh -c -b /vol/backup
 send our files to remote server with bandwidth limiting; we
 only allow 10Kb per second:
 \begin{quote}
+5.
 \begin{verbatim}
 rdup -c -N timestamp FILELIST /home | gzip.sh |\
 crypt.sh secret.file | cstream -t 10240 | \
@@ -213,32 +240,41 @@ ssh miekg@example.nl mirror.sh -c -b /vol/backup
 \end{verbatim}
 \end{quote}
 
-\section{Local Backups}
-
-
-\section{Remote Backups}
-
+\section{Using \cmd{dump.sh}}
+\cmd{dump.sh} is a wrapper script to make things more easy. If we redo
+the examples from above,we get:
+\begin{enumerate}
+\item{\cmd{dump.sh mybackup /home}}
+\item{\cmd{dump.sh -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{dump.sh -z -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{dump.sh -k secret.file -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{dump.sh -k secret.file -z -l 10240 -c miekg@example.nl mybackup-remote /home}}
+\end{enumerate}
+Note that is a backup is to be compressed and encrypted (-k and -z are
+both given), it will be first compressed and the encrypted.
 
 \chapter{Restoring Backups}
+With the commands \cmd{hist.sh} and \cmd{yesterday.sh} you can restore
+single files from the backup. If you want to restore an entire directory
+you will need the other restore scripts. Note that for restoring we
+also use \cmd{rdup}.
 
-Note that restoring files when mirrored is as easy as 'cp'-ing the
-backed up file to the original location. Two shell scripts are
-also provided to inspect the backed up files:
-\begin{description}
-        \item[\cmd{hist.sh} --]{
-                list the history of the backed up file, show the size
-                and the backup date,}
-        \item[\cmd{yesterday.sh} --]{
-                generate a \cmd{diff}, show the file and optional copy 
-                the file to another directory.}
-\end{description}
+\noindent If you want to restore your local backup to \path{/tmp/test}.
+Note the use of \path{/dev/null} for \rdup's filelist, as this is not
+needed when restoring. The +0 argument to \cmd{monthday.sh} denotes
+that the latest files from the backup should be selected:
+\begin{quote}
+1.
+\begin{verbatim}
+rdup /dev/null /vol/backup/elektron/200605/home/miekg | \
+monthday.sh +0 |\
+rorrim.sh /tmp/test
+\end{verbatim}
+\end{quote}
 
-Together these scripts provide a complete system
-for creating and managing backups. When all backups are mirrored on a
-remote system and the disk of that system is made read-only available to
-the network, you have a complete network based backup system.
+This also works remotely.
 
-\section{Restore Examples}
-\label{sec:restore examples}
+
+\section{Using \cmd{restore.sh}}
 
 \end{document}

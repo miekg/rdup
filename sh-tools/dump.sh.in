@@ -96,6 +96,10 @@ fi
 if [[ $etc -eq 0 ]]; then
         ETC="/etc/rdup"
 else
+        if [[ ! -z $remote ]]; then
+                _echo2 "The -e option is not compatible with -c"
+                exit 1
+        fi
         ETC="$BACKUPDIR"
 fi
 

@@ -1,20 +1,16 @@
 TODO: 
 
 :rdup utils: 
-o when not root, don't chown? Or at least show no errors
-  more general: -q switch
 o limit modifier understand k/m/g suffixes
-o argument parsing more sane
-o -e (store lists in backup dir) does not work with remote backups
-o all echo's should go to stdout, stderr is not available 
 
 :rdup:
 :tests:
 :doc:
-update documentation, to let people use -t for ssh. done a little
+o quickstart (a5 format) for how make backups and how to restore
+  dump.sh examples + restore.sh examples, hist.sh, yesterday.sh
 
 :porting:
-port extended attributes to FreeBSD
+o port extended attributes to FreeBSD
 
 :longer term - and harder:
 o make the rdup-utils work with 1 backup directory, where people can
@@ -25,13 +21,23 @@ o make the rdup-utils work with 1 backup directory, where people can
 o make complete hdup2 clone based on rdup
   see hdup2 directory. Not finished, I have limited time for this
 
-o dirsplit, handy util for making dvd sized backups
-
 :NOT DONE:
 o merging of rorrim.sh and mirror.sh 
 o restore.sh: -n always on. No dump.sh doesn't do this
+o make hist and yesterday understand -c flag? - makes no sense
+
 
 :DONE:
+o -e (store lists in backup dir) does not work with remote backups
+  8 May: fixed, disallow it
+
+o when not root, don't chown? Or at least show no errors
+  more general: -q switch
+  7 May: all chown errors are redirected to >&2
+
+o all echo's should go to stdout, stderr is not available 
+  7 May: done
+
 o dump/restore: bandwidth shaping?
   3 May: done, see the -l flag in both scripts
 
