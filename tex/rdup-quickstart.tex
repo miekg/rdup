@@ -10,11 +10,11 @@
 \chapterstyle{demo}
 \begin{document}
 
-\chapter*{\rdup{} Quick start}
+\chapter*{\rdup{} Quick Start}
 A small guide into setting up and running \rdup{} to make backups. It
 supports: incremental, compressed, encrypted remote backups and
 restores. Mailing-list information can be found at:
-\path{www.miek.nl/project/rdup/mail}
+\path{http://atoom.net/cgi-bin/mailman/listinfo/rdup}
 
 \subsection*{\textit{Setup}}
 Get \rdup{} from \url{www.miek.nl/projects/rdup}. Configure and install
@@ -38,7 +38,7 @@ Dump compressed \path{/home} to \path{/vol/backup}:\\
 \cmd{dump.sh -z home /home} 
 \item
 Dump encrypted \path{/home} to \path{/vol/backup} at remote
-machine:\\
+host:\\
 \cmd{dump.sh -k secret -c user@example.nl remote.home /home}
 \end{itemize}
 
