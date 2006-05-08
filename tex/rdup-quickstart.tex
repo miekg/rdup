@@ -1,27 +1,61 @@
-\documentclass[a5paper, openany]{memoir}
-
+\documentclass[a4paper, openany]{memoir}
 \newcommand{\rdup}{\textbf{rdup}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
 \newcommand{\path}[1]{\texttt{#1}}
 \newcommand{\flag}[1]{\textit{#1}}
-
-%%\pagestyle{compagnion}
-%% this is really cool
+%% hack to disable page numbering
+\renewcommand{\thepage}{}
 \pagestyle{ruled}
 \chapterstyle{demo}
 \begin{document}
 
-%%\title{\rdup{} -- Easy (Personal) Backups}
-%%\author{Miek Gieben\\miek@miek.nl}
-%%\date{}
-%%\maketitle
+\chapter*{\rdup{} Quick start}
+A small guide into setting up and running \rdup{} to make backups. It
+supports: incremental, compressed, encrypted remote backups and
+restores. Mailing-list information can be found at:
+\path{www.miek.nl/project/rdup/mail}
 
-\chapter{Quickstart to \rdup}
+\subsection*{\textit{Setup}}
+Get \rdup{} from \url{www.miek.nl/projects/rdup}. Configure and install
+it:
+\begin{verbatim}
+./configure && make && sudo make install
+\end{verbatim}
+In the rest of this quick start I'll assume the backup partition
+is mounted under \path{/vol/backup}.
 
-A small guide into setting up and running \rdup{} to make backups.
+\subsection*{\textit{Backup}}
+The most convenient way to use \rdup{} is to use the wrapper
+script \cmd{dump.sh}, synopsis:\\
+\cmd{dump.sh [ OPTIONS ] NAME DIR|FILE [ DIR|FILE ]}
+\begin{itemize}
+\item
+Dump \path{/home} to \path{/vol/backup}:\\
+\cmd{dump.sh home /home} 
+\item
+Dump compressed \path{/home} to \path{/vol/backup}:\\
+\cmd{dump.sh -z home /home} 
+\item
+Dump encrypted \path{/home} to \path{/vol/backup} at remote
+machine:\\
+\cmd{dump.sh -k secret -c user@example.nl remote.home /home}
+\end{itemize}
 
-
-
+\subsection*{\textit{Restore}}
+The most convenient way to restore with \rdup{} is by using
+the script \cmd{restore.sh}, synopsis:\\
+\cmd{restore.sh [ OPTIONS ] [ +DAY ] -t TO\_DIR FROM\_DIR [ FROM\_DIR ]}
+\begin{itemize}
+\item
+Restore to the latest backup from May 2006, to \path{/tmp/restore}:\\
+\cmd{restore.sh +0 -t /tmp/restore \\
+/vol/backup/elektron/200605/home/miekg}
+\item
+Restore to the latest remote backup from May 2006. This backup
+is encrypted:\\
+\cmd{restore.sh +0 -k secret -c user@example.nl -t /tmp/restore \\
+/vol/backup/elektron/200605/home/miekg}
+\end{itemize}
 
 \end{document}

@@ -74,7 +74,7 @@ TODO
 
 \chapter{Components of \rdup}
 
-\rdup{} consits out of two parts, small core written in C and
+\rdup{} consist out of two parts, small core written in C and
 a number of scripts. The current scripts are written in 
 Bash version 3, but any language can be used to write them.
 
@@ -92,7 +92,7 @@ The are quite a few of them:
 \item[\cmd{crypt.sh}]{-- encrypt/decrypt the files' contents,}
 \item[\cmd{gzip.sh}]{-- compress/decrypt the files' contents,}
 \item[\cmd{mirror.sh}]{-- store the backup to its backup directory,}
-\item[\cmd{dump.sh}]{-- convience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
+\item[\cmd{dump.sh}]{-- convenience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
 \end{description}
 
 And for restoring we have:
@@ -101,7 +101,7 @@ And for restoring we have:
 \item[\cmd{yesterday.sh}]{-- restore files from the backup,}
 \item[\cmd{rorrim.sh}]{-- place to-be-restored files in a directory,}
 \item[\cmd{monthday.sh}]{-- select files to restore from the backup,}
-\item[\cmd{restore.sh}]{-- convience wrapper around \cmd{rdup},
+\item[\cmd{restore.sh}]{-- convenience wrapper around \cmd{rdup},
 \cmd{monthday.sh} and \cmd{rorrim.sh}.} 
 \end{description}
 
@@ -169,11 +169,11 @@ content is printed for files that are to be removed.
 \section{Remote backups and file ownership}
 When remotely storing a backup the following is a common problem.
 Normally you would be making the upload as a non-root user for safety
-reasons. This user has limited capablities and can not set the ownership
+reasons. This user has limited capabilities and can not set the ownership
 of files to (for instance) root:root. This will probably lead to a
 remote backup where all ownership is set to user:user. When such a
-backup is restored, \rdup{} is no way of knowning what the original
-ownership was. This reduces the usefullness of remote backups.
+backup is restored, \rdup{} is no way of knowing what the original
+ownership was. This reduces the usefulness of remote backups.
 
 As a solution \rdup{} has a \flag{-a} flag which reads the
 extended user attributes with the original ownership (uid/gid).
