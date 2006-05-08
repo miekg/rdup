@@ -11,9 +11,10 @@
 \begin{document}
 
 \chapter*{\rdup: Quick Start}
-This is a small guide into setting up and running \rdup{} to make backups. It
-supports: incremental, compressed, encrypted remote backups and
-restores. Website: \url{www.miek.nl/projects/rdup}
+This is a small guide about setting up and running \rdup{} to make
+backups. \rdup{}
+supports incremental, compressed, encrypted, local, remote  backups and
+restores. See \url{www.miek.nl/projects/rdup} for more information.
 
 \subsection*{\textit{Setup}}
 Get \rdup{} from its website. Configure and install it:
@@ -29,8 +30,8 @@ script \cmd{dump.sh}. Synopsis:\\
 \cmd{dump.sh [ OPTIONS ] NAME DIR|FILE [ DIR|FILE ]}
 \begin{itemize}
 \item
-Dump \path{/home} to \path{/vol/backup}:\\
-\cmd{dump.sh home /home} 
+Dump \path{/home} to your USB disk on \path{/media/usbdisk}:\\
+\cmd{dump.sh -e -b /media/usbdisk home.usb /home}
 \item
 Dump compressed \path{/home} to \path{/vol/backup}:\\
 \cmd{dump.sh -z home /home} 
