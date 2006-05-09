@@ -26,8 +26,12 @@ Making local backups is as simple as:
       dump.sh $HOSTNAME ~ 
 .PP
 The \fBNAME\fR argument speficies a prefix for the
-timestamp and filelist files. If you use multiple \fBdump.sh\fR commands
-they should have an unique \fINAME\fR argument.
+timestamp and filelist files. These are stored, by default, in
+`@sysconfdir@/rdup'. With the \fB\-e\fR option you can store them
+with your backup.
+
+If you use multiple \fBdump.sh\fR commands
+they should have an unique \fINAME\fR argument. 
 .PP
 \fBDIR\fR is the directory to be backed up. Multiple directories
 are allowed on the command line.

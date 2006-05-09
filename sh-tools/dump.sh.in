@@ -114,11 +114,18 @@ if [[ -z $@ ]]; then
         exit 1
 fi
 
-# check the first directory in the list
+# this needs to be done differently
 mkdir -m 755 -p "$BACKUPDIR"           
-if [[ ! -d "$BACKUPDIR_DATE/$1" ]]; then
+mkdir -m 755 -p "$BACKUPDIR_DATE"
+# add pwd if the path was relative
+if [[ ${1:0:1} == "/" ]]; then
+        dest="$1"
+else
+        dest="`pwd`/$1"
+fi
+# check what we should do
+if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
         # kill the timestamp and inc list
-        mkdir -m 755 -p "$BACKUPDIR_DATE"
         rm -f "$LIST"
         rm -f "$STAMP"
         _echo2 "Full dump"
@@ -126,8 +133,7 @@ else
         _echo2 "Incremental dump"
 fi
 
-if [[ -z "$remote" ]]; then
-        # no remote 
+if [[ -z "$remote" ]]; then      # no remote 
         if [[ -z "$KEYFILE" ]]; then
                 if [[ $gzip -eq 0 ]]; then
                         @sbindir@/rdup -N $STAMP $LIST $@ | \
@@ -136,7 +142,7 @@ if [[ -z "$remote" ]]; then
                         @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
                         @sbindir@/mirror.sh $v $a -c -b "$BACKUPDIR"
                 fi
-        else
+        else    # with keyfile
                 if [[ $gzip -eq 0 ]]; then
                         @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/crypt.sh $KEYFILE | \
                         @sbindir@/mirror.sh $v $a -c -b "$BACKUPDIR"
@@ -146,8 +152,7 @@ if [[ -z "$remote" ]]; then
                         @sbindir@/mirror.sh $a $v -c -b "$BACKUPDIR"
                 fi
         fi
-else
-        # remote 
+else     # remote 
         if [[ -z "$KEYFILE" ]]; then
                 if [[ $gzip -eq 0 ]]; then
                         if [[ -z $bwidth ]]; then
@@ -159,7 +164,7 @@ else
                                 $cstream -t $bwidth | \
                                 ssh -x -C "$remote" mirror.sh $a $v -c -b "$BACKUPDIR"
                         fi
-                else 
+                else    # with gzip
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
                                 ssh -x "$remote" | mirror.sh $a $v -c -b "$BACKUPDIR"
@@ -169,7 +174,7 @@ else
                                 ssh -x "$remote" | mirror.sh $a $v -c -b "$BACKUPDIR"
                         fi
                 fi
-        else
+        else # with keyfile
                 if [[ $gzip -eq 0 ]]; then
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup -c -N $STAMP $LIST $@ | \
