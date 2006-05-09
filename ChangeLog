@@ -1,4 +1,4 @@
-xx May 2006: 0.2.12 Miek <miek@miek.nl>
+10 May 2006: 0.2.12 Miek <miek@miek.nl>
   -- bugfixes --
    * dump.sh: fix a bug in detecting whether to do a
      full or an incremental dump (Bram de Kruijff)
