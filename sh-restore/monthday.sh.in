@@ -200,7 +200,6 @@ local_restore() {
                         # or it has a suffix, indicating the
                         # file should be deleted
                         if [[ $monthday -eq 0 ]]; then
-                                echo "${_path[0]}" >&2
                                 if [[ ! "${_path[0]}" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
                                         # no suffix
                                         print_file_status 0
