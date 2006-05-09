@@ -6,8 +6,6 @@ o limit modifier understand k/m/g suffixes
 :rdup:
 :tests:
 :doc:
-o quickstart (a5 format) for how make backups and how to restore
-  dump.sh examples + restore.sh examples, hist.sh, yesterday.sh
 
 :porting:
 o port extended attributes to FreeBSD
@@ -28,6 +26,10 @@ o make hist and yesterday understand -c flag? - makes no sense
 
 
 :DONE:
+o quickstart (a5 format) for how make backups and how to restore
+  dump.sh examples + restore.sh examples, hist.sh, yesterday.sh
+  8 Mau: made small 1 page doc
+
 o -e (store lists in backup dir) does not work with remote backups
   8 May: fixed, disallow it
 
