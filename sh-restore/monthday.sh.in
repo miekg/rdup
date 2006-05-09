@@ -349,8 +349,11 @@ remote_restore() {
 
                         # the first one is the one without suffix
                         if [[ $monthday -eq 0 ]]; then
-                                print_file_status 0
-                                cat_file 0
+                                if [[ ! "${_path[0]}" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
+                                        # no suffix
+                                        print_file_status 0
+                                        cat_file 0
+                                fi
                                 rm_tmp_files $i
                                 i=0; store $i
                                 continue
@@ -418,8 +421,11 @@ remote_restore() {
         done
         # this is need for the last file we've just read
         if [[ $monthday -eq 0 ]]; then
-                print_file_status 0
-                cat_file 0
+                if [[ ! "${_path[0]}" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
+                        # no suffix
+                        print_file_status 0
+                        cat_file 0
+                fi
                 rm_tmp_files $i
                 clean_exit
         fi
