@@ -35,12 +35,15 @@ they should have an unique \fINAME\fR argument.
 
 Furher more, \fINAME\fR has no relevance to the actual backup, this
 is determined by the directories you backup.
-
+.PP
 .PP
 \fBDIR\fR is the directory to be backed up. Multiple directories
 are allowed on the command line.
 .PP
 The default backup location is `/vol/backup/`hostname''.
+.PP
+See mirror.sh(8) for more information on how the files are placed
+in the backup.
 
 .SH OPTIONS
 .TP 

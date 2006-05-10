@@ -2,6 +2,9 @@ TODO:
 
 :rdup utils: 
 o limit modifier understand k/m/g suffixes
+o remove NAME as req arg from dump.sh, new argument -N ala rdup
+o use full hostname not the short one. $HOST is just used...
+o check if monthday.sh handles multiple changes on 1 day
 
 :rdup:
 :tests:

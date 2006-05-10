@@ -15,7 +15,9 @@ mirror.sh \- mirror the files from the list on standard input
 specified with the \-b option. This script \fIimplements\fR the backup policy. 
 .PP
 If a file already exists in the backup directory it will be moved and
-will get a suffix. This suffix is of the form: '+DD.HH:MM'. 
+will get a suffix. This suffix is of the form: '+DD.HH:MM'. This suffix
+is thus accurate to the minute. Multiple changes to files within one
+minute are never caught by \fBmirror.sh\fR.
 .PP
 `hist.sh' and `yesterday.sh' also work on files with this same suffix.
 
