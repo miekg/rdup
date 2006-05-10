@@ -3,7 +3,6 @@ TODO:
 :rdup utils: 
 o limit modifier understand k/m/g suffixes
 o remove NAME as req arg from dump.sh, new argument -N ala rdup
-o use full hostname not the short one. $HOST is just used...
 o check if monthday.sh handles multiple changes on 1 day
 
 :rdup:
@@ -24,8 +23,11 @@ o make complete hdup2 clone based on rdup
 
 :NOT DONE:
 o merging of rorrim.sh and mirror.sh 
+  way to different to make this worth the trouble
 o restore.sh: -n always on. No dump.sh doesn't do this
 o make hist and yesterday understand -c flag? - makes no sense
+o use full hostname not the short one. $HOST is just used...
+  $HOST is way easier and more portable as it is in bash
 
 
 :DONE:
