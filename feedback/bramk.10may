@@ -1,0 +1,175 @@
+From bramk@atoom.net  Wed May 10 00:27:01 2006
+Return-Path: <bramk@atoom.net>
+X-Original-To: miek@miek.nl
+Delivered-To: miek@miek.nl
+Received: by elektron.atoom.net (Postfix, from userid 1003)
+	id AB30D5801A0A; Wed, 10 May 2006 00:27:01 +0200 (CEST)
+Date: Wed, 10 May 2006 00:27:01 +0200
+To: Miek Gieben <miek@miek.nl>
+Subject: Re: rdup
+Message-ID: <20060509222701.GA17912@atoom.net>
+References: <20060508214910.GA16596@atoom.net> <20060509083716.GH8495@miek.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20060509083716.GH8495@miek.nl>
+User-Agent: Mutt/1.5.11
+From: bramk@atoom.net (Bram de Kruijff)
+Status: RO
+X-Status: A
+Content-Length: 5186
+Lines: 152
+
+On Tue, May 09, 2006 at 10:37:16AM +0200, Miek Gieben wrote:
+> [On 08 May, @23:49, Bram de Kruijff wrote in "rdup ..."]
+> > Yo,
+> > 
+> > heb nog niet alles kunnen testen, maar alvast een paar vraagjes/opmerkingen :)
+> > 
+> > * NAME komt niet terug in de BACKUP_DIR dus..
+> 
+> Jep, ik heb meteen de eerste paragraphen van rdup manual page geupdate
+> om dit wat duidelijk te maken. Per default komen die files in
+> /etc/rdup te staan. Zie ook de -e switch om ze bij je backup neer te
+> zetten.
+
+* Wat betreft die $NAME in het pad opnemen. Dit vind ik gewoon erg
+vreemd;
+
+   33  sudo rm -Rf /vol/backup/
+   34  sudo rm -Rf /etc/rdup/koon.*
+
+bramk@koon:~$ sudo dump.sh TESTRDUP testRdup
+** /usr/sbin/dump.sh: Full dump
+
+bramk@koon:~$ sudo dump.sh TESTRDUP2 testRdup
+** /usr/sbin/dump.sh: Incremental dump
+
+Ik geef een (required) NAME op en rdup gebruikt ook een andere timestamp
+en list getuige de /etc/rdup entries, maar zegt toch een Incremental dump
+te doen wat bij nadere inspectie inderdaad dan ook het geval blijkt te
+zijn... gaat er bij mij niet in ;)
+
+
+> > bramk@koon:~$ sudo dump.sh -z TESTRDUP /home/bramk/testRdup/ 
+> > bramk@koon:~$ file /vol/backup/koon/200605/home/bramk/testRdup/testme.txt
+> > /vol/backup/koon/200605/home/bramk/testRdup/testme.txt: gzip compressed data, from Unix
+> > 
+> > bramk@koon:~$ sudo dump.sh TESTRDUP /home/bramk/testRdup/ 
+> > bramk@koon:~$ file /vol/backup/koon/200605/home/bramk/testRdup/testme.txt
+> > /vol/backup/koon/200605/home/bramk/testRdup/testme.txt: gzip compressed data, from Unix
+> > 
+> > ... Hoe bepaal je uberhaupt dat je moet unzippen bij de restore? Ik neem aan dat ik als sysadmin moet 'onthouden' dat ik met -z heb ge-backuped? Ik neem aan dat dit issue ook bij -k gaat optreden.
+> 
+> ja, bij -z kun je nog slim zijn en "iets" on-the-fly proberen, maar dat
+> kun ook mis gaan, bij files die al gezipped zijn. Bij -k zijn die
+> problemen alleen maar groter, omdat je dan ook nog ffkes ergens een
+> sleutel vandaan moet halen. In hdup is dit opgelost met een config
+> filetje, zoiets zou hier ook nog kunnen.
+
+Ik begrijp dat ik hier de grenzen opzoek :P maar toch..
+
+   66  sudo rm -Rf /vol/backup/
+   67  sudo rm -Rf /etc/rdup/koon.*
+   68  sudo dump.sh TESTRDUP testRdup
+   69  touch testRdup/testme2.txt
+   70  sudo dump.sh TESTRDUP testRdup
+   71  vim testRdup/testme2.txt
+   72  sudo dump.sh -z TESTRDUP testRdup
+
+bramk@koon:~$ ls -l /vol/backup/koon/200605/home/bramk/testRdup
+total 8
+-rw-r--r-- 1 bramk bramk 31 2006-05-10 02:01 testme2.txt
+-rw-r--r-- 1 bramk bramk  0 2006-05-10 02:01 testme2.txt+10.02:01
+-rw-r--r-- 1 bramk bramk 10 2006-05-10 02:00 testme.txt
+
+
+Op dit punt testme2.txt dus in gzip format en de rest niet. Jij kun nu
+niet bepalen wat wel of niet te unzippen (misschien was het origineel al
+gzip-ed). Als ik een gewone restore doe blijft testme2.txt in gzip
+format. Dat is niet ok en als ik -z doe...
+
+bramk@koon:~$ sudo restore.sh -z -t out
+/vol/backup/koon/200605/home/bramk/testRdup/
+
+gzip: stdin: not in gzip format
+
+
+... met als gevolg dat de ge-restorede testme.txt leeg blijft! 
+
+Zou je niet moeten administreren of een backup ($NAME) -z of -k ofzo
+gebruikt en als dat wijzigd opnieuw beginnen met een fulldump?
+
+
+> > * heo zie je een delete?
+> 
+> in principe doordat je alleen nog maar de file hebt met extensie, dus
+> die +DD.HH:MM. De originele file bestaat niet meer in je backup.
+
+maar dan kun je hem dus nooit meer restoren(?) Zie dit scenario...
+
+   33  sudo rm -Rf /vol/backup/
+   34  sudo rm -Rf /etc/rdup/koon.*
+
+bramk@koon:~$ ls -l testRdup
+total 4
+-rw-r--r-- 1 bramk bramk 10 2006-05-10 01:42 testme.txt
+
+   52  sudo dump.sh TESTRDUP testRdup
+   53  touch testRdup/testme1.txt
+   54  sudo dump.sh TESTRDUP testRdup
+   55  vim testRdup/testme1.txt
+   56  sudo dump.sh TESTRDUP testRdup
+
+
+bramk@koon:~$ ls -l /vol/backup/koon/200605/home/bramk/testRdup
+total 12
+-rw-r--r-- 1 bramk bramk  3 2006-05-10 01:43 testme1.txt
+-rw-r--r-- 1 bramk bramk  0 2006-05-10 01:43 testme1.txt+10.01:43
+-rw-r--r-- 1 bramk bramk 10 2006-05-10 01:42 testme.txt
+-rw-r--r-- 1 bramk bramk  9 2006-05-10 01:42 testme.txt+10.01:42
+
+   57  rm testRdup/testme1.txt
+   58  sudo dump.sh TESTRDUP testRdup
+
+bramk@koon:~$ ls -l /vol/backup/koon/200605/home/bramk/testRdup
+total 12
+-rw-r--r-- 1 bramk bramk  3 2006-05-10 01:43 testme1.txt+10.01:43
+-rw-r--r-- 1 bramk bramk 10 2006-05-10 01:42 testme.txt
+-rw-r--r-- 1 bramk bramk  9 2006-05-10 01:42 testme.txt+10.01:42
+
+In dit geval ben ik dus de laatste versie van testme1.txt kwijt terwijl
+ik deze toch had ge-backupped?
+
+
+> > * NAME opnemen in backup path / andere NAME is andere backup 
+> 
+> Valt over de steigelen, ik neig nu nog naar 't zo laten.
+
+zie mijn eerste punt ;)
+
+> 
+> > * volledige hostname gebruiken 
+> 
+> als in: elektron.atoom.net
+> 
+> kan ik mee leven :)
+
+ik ook :)
+
+> > * subdir per timestamp
+> 
+> snap ik niet, hoe bedoel je dat?
+
+ik overzie de problematiek nog niet helemaal ben ik bang, maar ik bedoel
+iets als volgt..
+
+/vol/backup/koon.atoom.net/$NAME/200505230155/.... <fulldump>
+/vol/backup/koon.atoom.net/$NAME/200505230251/.... <diff tov fulldump>
+
+
+Leg het me een keer uit in de kroeg nu ik iig begrijp hoe het werkt :)
+
+tijd voor bed!
+Bram
+
