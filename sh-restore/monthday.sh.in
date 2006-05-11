@@ -79,12 +79,18 @@ _seq() {
 
 # echo the file's status line to stdout
 print_file_status() {
-        if [[ $remote -eq 0 ]]; then
-                echo -n "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
-                echo "${_path[$1]}"
+        if [[ $1 -le 0 ]]; then
+                i=0
         else
-                echo "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
-                echo -n "${_path[$1]}"
+                i=$1
+        fi
+
+        if [[ $remote -eq 0 ]]; then
+                echo -n "${_mode[$i]} ${_uid[$i]} ${_gid[$i]} ${_psize[$i]} ${_fsize[$i]} "
+                echo "${_path[$i]}"
+        else
+                echo "${_mode[$i]} ${_uid[$i]} ${_gid[$i]} ${_psize[$i]} ${_fsize[$i]} "
+                echo -n "${_path[$i]}"
         fi
 }
 
@@ -230,9 +236,6 @@ local_restore() {
                         for j in $(_seq $i); do
                                 if [[ ${_month[$j]} -gt $monthday ]]; then
                                         x=$(($j - 1))
-                                        if [[ $x -lt 0 ]]; then 
-                                                x=0
-                                        fi
                                         print_file_status $x
                                         i=0; store $i
                                         continue 2
@@ -279,6 +282,8 @@ local_restore() {
                         print_file_status $j       
                         clean_exit
                 fi
+        done
+        for j in $(_seq $i); do
                 if [[ $monthday -gt ${_month[$j]} ]]; then
                         x=$(($j - 1))
                         print_file_status $x
@@ -445,6 +450,8 @@ remote_restore() {
                         rm_tmp_files $i
                         clean_exit
                 fi
+        done
+        for j in $(_seq $i); do
                 if [[ $monthday -gt ${_month[$j]} ]]; then
                         x=$(($j - 1))
                         print_file_status $x
