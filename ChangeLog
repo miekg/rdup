@@ -1,4 +1,6 @@
 xx Jun 2006: 0.2.13 Miek <miek@miek.nl>
+   * dump.sh: drop req. argument NAME. This is now an
+     opion: -N NAME
 
 
 10 May 2006: 0.2.12 Miek <miek@miek.nl>

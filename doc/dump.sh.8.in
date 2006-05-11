@@ -9,7 +9,6 @@ dump.sh \- dump a filesystem for a specifc host
 [
 .IR OPTIONS
 ]
-NAME
 DIR|FILE
 [
 DIR|FILE
@@ -23,24 +22,12 @@ be backed up \fIdo not exist\fR in the backup directory a full dump
 is assumed. Otherwise an incremental dump is performed.
 .PP
 Making local backups is as simple as:
-      dump.sh $HOSTNAME ~ 
-.PP
-The \fBNAME\fR argument speficies a prefix for the
-timestamp and filelist files. These are stored, by default, in
-`@sysconfdir@/rdup'. With the \fB\-e\fR option you can store them
-with your backup. 
-
-If you use multiple \fBdump.sh\fR commands
-they should have an unique \fINAME\fR argument. 
-
-Furher more, \fINAME\fR has no relevance to the actual backup, this
-is determined by the directories you backup.
-.PP
+      dump.sh ~ 
 .PP
 \fBDIR\fR is the directory to be backed up. Multiple directories
 are allowed on the command line.
 .PP
-The default backup location is `/vol/backup/`hostname''.
+The default backup location is `/vol/backup/$HOSTNAME'.
 .PP
 See mirror.sh(8) for more information on how the files are placed
 in the backup.
@@ -50,6 +37,24 @@ in the backup.
 .B \-b backupdir
 Alternate backup directory. Defaults to /vol/backup/`hostname`. The
 current date in the format YYYYMM is added automatically.
+.TP
+.B \-N name
+The \fIname\fR speficies an optional prefix for the
+timestamp and filelist files. These are stored, by default, in
+`@sysconfdir@/rdup'. With the \fB\-e\fR option you can store them
+with your backup. 
+
+Normally the filelist and timestamp files are named like this:
+
+$HOSTNAME.`basename DIR`.list and
+$HOSTNAME.`basename DIR`.timestamp
+
+where DIR is the first directory or file on the command line. Thus:
+\fBdump.sh\fR /home/miekg/bin, will lead to the following names:
+
+elektron.bin.list and
+elektron.bin.timestamp
+
 .TP
 .B \-c user@remotehost
 Restore a backup on a remote host. This will create a pipeline of the
@@ -100,20 +105,20 @@ Show the version.
 .SS LOCAL BACKUP 
 Dumping my homedir to the backup:
 
-        dump.sh MIEK ~
+        dump.sh ~
 
-Dumping /home to the backup:
+Dumping /var/lib to the backup:
         
-        dump.sh ALL /home
+        dump.sh /var/lib
       
 .SS REMOTE BACKUP
 Dumping my homedir to the remote backup:
 
-        dump.sh -c miekg@remote MIEK ~
+        dump.sh -c miekg@remote ~
 
 Dumping /home to the remote backup:
         
-        dump.sh -c miekg@remote ALL /home
+        dump.sh -c miekg@remote /home
 
 .SH FILES
 /vol/backup/`hostname`, or the directory specified with \-b, root of
