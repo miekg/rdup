@@ -2,9 +2,8 @@ TODO:
 
 :rdup utils: 
 o limit modifier understand k/m/g suffixes
-o remove NAME as req arg from dump.sh, new argument -N ala rdup
 o check if monthday.sh handles multiple changes on 1 day
-o make it more efficient
+
 
 :rdup:
 :tests:
@@ -17,6 +16,10 @@ o port extended attributes to FreeBSD
 o make the rdup-utils work with 1 backup directory, where people can
   forever incrementally dump files to. This applies more to the scripts
   then to rdup. Right now all scripts work on backupdir/YYYYMM 
+
+o make it more efficient
+  rewrite in ruby? Fold some of the scripts into eachother so we
+  don't shuffle the data around that much.
 
 :hdup2:
 o make complete hdup2 clone based on rdup
@@ -32,9 +35,12 @@ o use full hostname not the short one. $HOST is just used...
 
 
 :DONE:
+o remove NAME as req arg from dump.sh, new argument -N ala rdup
+  12 May: implemented
+
 o quickstart (a5 format) for how make backups and how to restore
   dump.sh examples + restore.sh examples, hist.sh, yesterday.sh
-  8 Mau: made small 1 page doc
+  8 May: made small 1 page doc
 
 o -e (store lists in backup dir) does not work with remote backups
   8 May: fixed, disallow it
