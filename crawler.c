@@ -111,9 +111,9 @@ dir_prepend(GTree *t, char *path)
 		path2[len + 1] = '\0';
 	}
 
-	for(p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
+	for (p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
-		if(lstat(path2, &s) != 0) {
+		if (lstat(path2, &s) != 0) {
 			msg("Could not stat path `%s\': %s", path2, strerror(errno));
 			return FALSE;
 		}

@@ -4,6 +4,7 @@ TODO:
 o limit modifier understand k/m/g suffixes
 o remove NAME as req arg from dump.sh, new argument -N ala rdup
 o check if monthday.sh handles multiple changes on 1 day
+o make it more efficient
 
 :rdup:
 :tests:

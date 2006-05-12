@@ -1,6 +1,9 @@
 xx Jun 2006: 0.2.13 Miek <miek@miek.nl>
-   * dump.sh: drop req. argument NAME. This is now an
-     opion: -N NAME
+   * dump.sh: drop req. argument NAME. This is now an opion: -N NAME
+   * monthday.sh: rewritten again...this time hopefully for the last
+     time. It now is simpeler and local_restore and remote_restore
+     are identical.
+   * rdup: when a file changes size during the printing, skip it
 
 
 10 May 2006: 0.2.12 Miek <miek@miek.nl>

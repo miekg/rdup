@@ -51,7 +51,7 @@ cat(FILE *fp, char *filename)
 		msg("Could not open '%s\': %s", filename, strerror(errno));
 		return FALSE;
 	}
-	
+
 	while (!feof(file) && (!ferror(file))) {
 		if (sig != 0) {
 			fclose(file);
@@ -189,6 +189,7 @@ void
 entry_print(FILE *out, char plusmin, struct entry *e)
 {
 	char *pos;
+	struct stat s;
 
 	if ((plusmin == '+') && (opt_modified == FALSE)) {
 		return;
@@ -202,6 +203,22 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		fputs("** ", stderr); 
 		fputc(plusmin, stderr);
 		fprintf(stderr, " %s\n", e->f_name);
+	}
+	/* do your check here ?? */
+
+	/* check if the file has changed since we first
+	 * visited it. If so, skip it as it will tear
+	 * up the entire print. Esp. when also printing
+	 * the contents. The recheck here, minimizes the
+	 * race
+	 */
+	if (lstat(e->f_name, &s) != 0) {
+		msg("Could not stat, skipping `%s\': %s", e->f_name, strerror(errno));
+		return;
+	}
+	if (e->f_size != s.st_size) {
+		msg("File size has changed, skipping `%s\'", e->f_name);
+		return;
 	}
 
 	for (pos = opt_format; *pos != '\0';  ++pos) {
