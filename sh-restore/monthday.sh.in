@@ -167,15 +167,7 @@ remote_restore() {
         declare -a _month_s; declare -a _month_e # monthday interval
         declare -a _base
 
-        # the mktmp and the different while loop is the ONLY
-        # difference with local_restore
-        TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
-        if [[ $? -ne 0 ]]; then
-                _echo2 "Mktemp failed"
-                exit 1
-        fi
-        chmod 700 $TMPDIR
-
+        # the next 3 lines are the difference with local_restore...
         while read -r mode uid gid psize fsize
         do
                 path=$(head -c $psize)
@@ -381,5 +373,12 @@ fi
 if [[ $remote -eq 0 ]]; then
         local_restore
 else
+        TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
+        if [[ $? -ne 0 ]]; then
+                _echo2 "Mktemp failed"
+                exit 1
+        fi
+        chmod 700 $TMPDIR
+
         remote_restore
 fi
