@@ -192,9 +192,14 @@ dir_crawl(GTree *t, char *path)
 		curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
 		curpath_len = strlen(curpath);
 
-		/* we're statting the file */
 		if(lstat(curpath, &s) != 0) {
 			msg("Could not stat path `%s\': %s", curpath, strerror(errno));
+			g_free(curpath);
+			continue;
+		}
+
+		if (strchr(curpath, '\n')) {
+			msg("Newline (\\n) found in path `%s\', skipping", curpath);
 			g_free(curpath);
 			continue;
 		}
