@@ -166,10 +166,11 @@ sanity_check() {
 
 local_mirror() {
         declare -a path # catch spacing in the path
-        while read -r mode uid gid psize fsize path
+        while read -r mode uid gid psize fsize
         do
                 dump=${mode:0:1}                # to add or remove
                 mode=${mode:1}                  # st_mode bits
+                path=$(head -c $psize)   
 
                 sanity_check
 
@@ -260,7 +261,8 @@ remote_mirror() {
         do
                 dump=${mode:0:1}        # to add or remove
                 mode=${mode:1}          # st_mode bits
-                path=$(head -c $psize)   # get the path
+                path=$(head -c $psize)   # get the path, like this to
+                                         # fetch new line
 
                 sanity_check
 
