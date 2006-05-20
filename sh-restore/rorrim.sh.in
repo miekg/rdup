@@ -96,12 +96,13 @@ sanitize() {
         echo $name
 }
 
-local_restore() {
+_restore() {
         declare -a path # catch spacing in the path
-        while read -r mode uid gid psize fsize path
+        while read -r mode uid gid psize fsize
         do
                 dump=${mode:0:1}                # to add or remove
                 mode=${mode:1}                  # st_mode bits
+                path=$(head -c $psize)          # gets the path
 
                 sanity_check
 
@@ -126,7 +127,15 @@ local_restore() {
 
                 if [[ -z "$newpath" ]]; then
                         # discard, because the whole name was stripped
-                        continue
+                        if [[ $remote -eq 1 ]]; then
+                                if [[ $fsize -eq 0 ]]; then
+                                        continue
+                                else
+                                        head -c $fsize > /dev/null
+                                fi
+                        else
+                                continue
+                        fi
                 fi
 
                 # it can be that the file without extension does not 
@@ -141,7 +150,13 @@ local_restore() {
                         # add
                         case $typ in
                                 0)      # REG
-                                cp -RP "$path" "$restoredir/$newpath"
+                                if [[ $remote -eq 1 ]]; then
+                                        if [[ $fsize -ne 0 ]]; then
+                                                head -c $fsize > "$restoredir/$newpath"
+                                        fi
+                                else
+                                        cp -RP "$path" "$restoredir/$newpath"
+                                fi
                                 chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 chmod $bits "$restoredir/$newpath"
                                 ftsize=$(($ftsize + $fsize))
@@ -161,7 +176,12 @@ local_restore() {
                                 idir=$(($idir + 1))
                                 ;;
                                 2)      # LNK
-                                cp -RP "$path" "$restoredir/$newpath"
+                                if [[ $remote -eq 1 ]]; then
+                                        target=$(head -c $fsize)
+                                        ln -sf "$target" "$restoredir/$newpath" 
+                                else
+                                        cp -RP "$path" "$restoredir/$newpath"
+                                fi
                                 chown -h $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 ilnk=$(($ilnk + 1))
                                 ;;
@@ -176,102 +196,6 @@ local_restore() {
         echo "** #LINKS      : $ilnk" >&2
         echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
         echo "** STORED IN   : $restoredir" >&2
-        echo "** ELAPSED     : $(($te - $ts)) s" >&2
-}
-
-remote_restore() {
-        while read -r mode uid gid psize fsize
-        do
-                dump=${mode:0:1}        # to add or remove
-                path=$(head -c $psize)   # gets the path
-                mode=${mode:1}          # st_mode bits
-
-                sanity_check
-
-                bits=$(($mode & $S_MMASK)) # permission bits
-                bits=`printf "%o" $bits` # and back to octal again
-                typ=0
-
-                if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
-                        typ=1;
-                fi
-                if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
-                        typ=2;
-                fi
-
-                [[ $verbose -eq 1 ]] && echo $path >&2
-
-                # create the new filename
-                newpath=$(sanitize "$path")
-                DISCARD=0
-                # -p NUM argument
-                newpath=$(_strip $dirstrip "$newpath")
-
-                if [[ -z "$newpath" ]]; then
-                        # discard, because the whole name was stripped
-                        DISCARD=1
-                fi
-
-                if [[ $dump == "+" ]]; then
-                        # add
-                        case $typ in
-                                0)      # REG
-                                if [[ $fsize -ne 0 ]]; then
-                                        # catch
-                                        if [[ $DISCARD -eq 1 ]]; then
-                                                head -c $fsize > /dev/null
-                                                continue
-                                        else
-                                                head -c $fsize > "$restoredir/$newpath"
-                                        fi
-                                else 
-                                        # empty
-                                        if [[ $DISCARD -eq 1 ]]; then
-                                                continue
-                                        fi
-                                        touch "$restoredir/$newpath"
-                                fi
-                                chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
-                                chmod $bits "$restoredir/$newpath"
-                                ftsize=$(($ftsize + $fsize))
-                                ireg=$(( $ireg + 1))
-                                ;;
-                                1)      # DIR
-                                if [[ $DISCARD -eq 1 ]]; then
-                                        continue
-                                fi
-                                [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath"
-                                chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
-
-                                if [[ $UID -ne 0 && $bits -eq 0 ]]; then
-                                        # if we're not read we need this
-                                        # otherwise we can't access the dir
-                                        _echo2 "Chmod \`$restoredir/$newpath' to 700"
-                                        bits="700"
-                                fi
-                                chmod $bits "$restoredir/$newpath"
-                                idir=$(( $idir + 1))
-                                ;;
-                                2)      # LNK, target is in the content! 
-                                target=$(head -c $fsize)
-                                if [[ $DISCARD -eq 1 ]]; then
-                                        continue
-                                fi
-                                ln -sf "$target" "$restoredir/$newpath" 
-                                chown -h $uid:$gid "$restoredir/$newpath" 2>/dev/null
-                                ilnk=$(( $ilnk + 1))
-                                ;;
-                        esac
-                else
-                        _echo2 "$PROGNAME: Ignoring removal of \`$path\'"
-                fi
-        done 
-        te=`date +%s`
-        echo "** #REG FILES  : $ireg" >&2
-        echo "** #DIRECTORIES: $idir" >&2
-        echo "** #LINKS      : $ilnk" >&2
-        echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
-        echo "** RESTORED TO : $restoredir" >&2
         echo "** ELAPSED     : $(($te - $ts)) s" >&2
 }
 
@@ -311,9 +235,4 @@ if [[ ! -e $1 ]]; then
         fi
 fi
 restoredir=$1
-
-if [[ $remote -eq 0 ]]; then
-        local_restore
-else
-        remote_restore
-fi
+_restore

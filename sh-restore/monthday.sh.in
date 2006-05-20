@@ -158,7 +158,7 @@ store() {
         esac
 }
 
-remote_restore() {
+_restore() {
         i=0
         declare -a _mode
         declare -a _uid; declare -a _gid
@@ -167,98 +167,10 @@ remote_restore() {
         declare -a _month_s; declare -a _month_e # monthday interval
         declare -a _base
 
-        # the next 3 lines are the difference with local_restore...
         while read -r mode uid gid psize fsize
         do
                 path=$(head -c $psize)
 
-                sanity_check
-
-                if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
-                        basename=${BASH_REMATCH[1]}
-                        mo=$((10#${BASH_REMATCH[2]})) # force base 10
-                else 
-                        basename="$path"
-                        mo=32
-                fi
-
-                store
-
-                if [[ $i -eq 0 ]]; then
-                        # first one read
-                        i=$(($i + 1))
-                        continue;
-                fi
-                prev=$(($i - 1))
-
-                if [[ ${_base[$i]} == ${_base[$prev]} ]]; then
-                        _month_s[$i]=${_month_e[$prev]}
-                        if [[ ${_month_s[$i]} -eq 32 ]]; then
-                                # end of month marker, make this 0 for
-                                # practical purposes
-                                _month_s[$i]=0
-                        fi
-                        i=$(($i + 1))
-                        continue;
-                else           
-                        x=$(($i - 1))                     
-                        smallest_interval=100
-                        p=""
-                        for j in $(_seq $x); do
-                                if [[ $monthday -gt ${_month_s[$j]} &&
-                                        $monthday -le ${_month_e[$j]}
-                                        ]]; then
-
-                                        interval=$((${_month_e[$j]} - ${_month_s[$j]}))
-                                        if [[ $interval -lt $smallest_interval ]]; then
-                                                smallest_interval=$interval
-                                                p=$j
-                                        fi
-                                fi
-                        done
-
-                        if [[ ! -z $p ]]; then 
-                                print_file_status $p
-                                rm_tmp_files $x
-                        fi      
-                        # yes, zero, store, set to 1
-                        i=0; store; i=1
-                fi
-        done
-        # last one
-        x=$(($i - 1))                     
-        smallest_interval=100
-        p=""
-        for j in $(_seq $x); do
-                if [[ $monthday -gt ${_month_s[$j]} &&
-                        $monthday -le ${_month_e[$j]}
-                        ]]; then
-
-                        interval=$((${_month_e[$j]} - ${_month_s[$j]}))
-                        if [[ $interval -lt $smallest_interval ]]; then
-                                smallest_interval=$interval
-                                p=$j
-                        fi
-                fi
-        done
-
-        if [[ ! -z $p ]]; then 
-                print_file_status $p
-                rm_tmp_files $x
-        fi      
-}
-
-local_restore() {
-        i=0
-        declare -a _mode
-        declare -a _uid; declare -a _gid
-        declare -a _psize; declare -a _fsize
-        declare -a _path; declare -a _tmp_path
-        declare -a _month_s; declare -a _month_e # monthday interval
-        declare -a _base
-
-        while read -r mode uid gid psize fsize path
-        do
                 sanity_check
 
                 if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
@@ -371,7 +283,7 @@ if [[ $monthday -eq 0 ]]; then
 fi
 
 if [[ $remote -eq 0 ]]; then
-        local_restore
+        _restore
 else
         TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
         if [[ $? -ne 0 ]]; then
@@ -379,6 +291,5 @@ else
                 exit 1
         fi
         chmod 700 $TMPDIR
-
-        remote_restore
+        _restore
 fi

@@ -12,7 +12,7 @@ gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup 
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
-char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
+char *opt_format 	   = "%p%m %u %g %l %s\n%n"; /* default format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
