@@ -1,11 +1,8 @@
 xx Jun 2006: 0.2.20 Miek <miek@miek.nl>
    -- BACKWARD INCOMPATIBLE CHANGES --
-   -- bugfixes and improvements --
-   * the output was changed to make it more alike to
-     remote output. This simplifies scripting. All scripts
-     get twice as small. The new format is:
-     "%p%m %u %g %l %s\n%n"
    * dump.sh: drop req. argument NAME. This is now an opion: -N NAME
+
+   -- bugfixes and improvements --
    * monthday.sh: rewritten again...this time hopefully for the last
      time. It now is simpeler and local_restore and remote_restore
      are identical.

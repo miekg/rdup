@@ -164,13 +164,12 @@ sanity_check() {
         fi
 }
 
-_mirror() {
+local_mirror() {
         declare -a path # catch spacing in the path
-        while read -r mode uid gid psize fsize
+        while read -r mode uid gid psize fsize path
         do
                 dump=${mode:0:1}                # to add or remove
                 mode=${mode:1}                  # st_mode bits
-                path=$(head -c $psize)   
 
                 sanity_check
 
@@ -200,18 +199,7 @@ _mirror() {
                                         # moving
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-
-                                if [[ $remote -eq 1 ]]; then
-                                        if [[ $fsize -ne 0 ]]; then
-                                                # catch
-                                                head -c $fsize > "$backupdir/$path"
-                                        else 
-                                                # empty
-                                                touch "$backupdir/$path"
-                                        fi
-                                else
-                                        cp -RP "$path" "$backupdir/$path"
-                                fi
+                                cp -RP "$path" "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chown_attr $uid $gid "$backupdir/$path" 
                                 chmod $bits "$backupdir/$path"
@@ -241,16 +229,7 @@ _mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                
-                                if [[ $remote -eq 1 ]]; then
-                                        if [[ -e "$backupdir/$path" ]]; then
-                                                mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                        fi
-                                        target=$(head -c $fsize)
-                                        ln -sf "$target" "$backupdir/$path" 
-                                else
-                                        cp -RP "$path" "$backupdir/$path"
-                                fi
+                                cp -RP "$path" "$backupdir/$path"
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chown_attr $uid $gid "$backupdir/$path" 
                                 ilnk=$(($ilnk + 1))
@@ -275,6 +254,102 @@ _mirror() {
         echo "** ELAPSED     : $(($te - $ts)) s" >&2
 }
 
+remote_mirror() {
+        while read -r mode uid gid psize fsize
+        do
+                dump=${mode:0:1}        # to add or remove
+                mode=${mode:1}          # st_mode bits
+                path=$(head -c $psize)   # get the path, like this to
+                                         # fetch new line
+
+                sanity_check
+
+                bits=$(($mode & $S_MMASK)) # permission bits
+                bits=`printf "%o" $bits` # and back to octal again
+                typ=0
+
+                if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
+                        typ=1;
+                fi
+                if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
+                        typ=2;
+                fi
+
+                [[ $verbose -eq 1 ]] && echo $path >&2
+
+                if [[ -e "$backupdir/$path" ]]; then
+                        suffix=`mirror_suffix "$backupdir/$path"`
+                fi
+
+                if [[ $dump == "+" ]]; then
+                        # add
+                        case $typ in
+                                0)      # REG
+                                if [[ -e "$backupdir/$path" ]]; then
+                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
+                                fi
+                                if [[ $fsize -ne 0 ]]; then
+                                        # catch
+                                        head -c $fsize > "$backupdir/$path"
+                                else 
+                                        # empty
+                                        touch "$backupdir/$path"
+                                fi
+                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
+                                chmod $bits "$backupdir/$path" 
+                                ftsize=$(($ftsize + $fsize))
+                                ireg=$(( $ireg + 1))
+                                ;;
+                                1)      # DIR
+                                # check for fileTYPE changes
+                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
+                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
+                                fi
+
+                                # size should be 0
+                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
+                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
+
+                                if [[ $UID -ne 0 && $bits -eq 0 ]]; then
+                                        # if we're not read we need this
+                                        # otherwise we can't access the dir
+                                        _echo2 "Chmod \`$backupdir/$path' to 700"
+                                        bits="700"
+                                fi
+                                chmod $bits "$backupdir/$path" 
+                                idir=$(( $idir + 1))
+                                ;;
+                                2)      # LNK, target is in the content! 
+                                if [[ -e "$backupdir/$path" ]]; then
+                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
+                                fi
+                                target=$(head -c $fsize)
+                                ln -sf "$target" "$backupdir/$path" 
+                                chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
+                                chown_attr $uid $gid "$backupdir/$path" 
+                                ilnk=$(( $ilnk + 1))
+                                ;;
+                        esac
+                else
+                        # remove
+                        if [[ -e "$backupdir/$path" ]]; then
+                                mv "$backupdir/$path" "$backupdir/$path$suffix"
+                        fi
+                        irm=$(( $irm + 1))
+                fi
+        done 
+        te=`date +%s`
+        echo "** #REG FILES  : $ireg" >&2
+        echo "** #DIRECTORIES: $idir" >&2
+        echo "** #LINKS      : $ilnk" >&2
+        echo "** #(RE)MOVED  : $irm" >&2
+        echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
+        echo "** STORED IN   : $backupdir" >&2
+        echo "** ELAPSED     : $(($te - $ts)) s" >&2
+}
+
 while getopts ":acvhb:V" options; do
         case $options in
                 a) attr=1;;
@@ -294,4 +369,9 @@ if [ -z "$backupdir" ]; then
         backupdir="/vol/backup/`hostname`"
 fi
 backupdir=$backupdir/`date +%Y%m`
-_mirror
+
+if [[ $remote -eq 0 ]]; then
+        local_mirror
+else
+        remote_mirror
+fi

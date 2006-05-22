@@ -3,12 +3,9 @@ TODO:
 :rdup utils: 
 o limit modifier understand k/m/g suffixes
 o check if monthday.sh handles multiple changes on 1 day
-o redo the shell based poc in ruby
+
 
 :rdup:
-o make rdup use a seperator when catting contents, this will
-  speed up things and eliminates a race.
-
 :tests:
 :doc:
 
