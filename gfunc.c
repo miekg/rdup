@@ -210,10 +210,10 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 	 * visited it. If so, skip it as it will tear
 	 * up the entire print. Esp. when also printing
 	 * the contents. The recheck here, minimizes the
-	 * race
+	 * race, it's NOT GONE!!
 	 */
 	if (lstat(e->f_name, &s) != 0) {
-		msg("Could not stat, skipping `%s\': %s", e->f_name, strerror(errno));
+		msg("Could not stat path `%s\': %s", e->f_name, strerror(errno));
 		return;
 	}
 	if (e->f_size != s.st_size) {
