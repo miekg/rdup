@@ -204,8 +204,6 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		fputc(plusmin, stderr);
 		fprintf(stderr, " %s\n", e->f_name);
 	}
-	/* do your check here ?? */
-
 	/* check if the file has changed since we first
 	 * visited it. If so, skip it as it will tear
 	 * up the entire print. Esp. when also printing
