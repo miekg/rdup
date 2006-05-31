@@ -204,19 +204,24 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		fputc(plusmin, stderr);
 		fprintf(stderr, " %s\n", e->f_name);
 	}
-	/* check if the file has changed since we first
-	 * visited it. If so, skip it as it will tear
-	 * up the entire print. Esp. when also printing
-	 * the contents. The recheck here, minimizes the
-	 * race, it's NOT GONE!!
-	 */
-	if (lstat(e->f_name, &s) != 0) {
-		msg("Could not stat path `%s\': %s", e->f_name, strerror(errno));
-		return;
-	}
-	if (e->f_size != s.st_size) {
-		msg("File size has changed, skipping `%s\'", e->f_name);
-		return;
+	
+	if (!S_ISDIR(e->f_mode)) {
+		/* check if the file has changed since we first
+		 * visited it. If so, skip it as it will tear
+		 * up the entire print. Esp. when also printing
+		 * the contents. The recheck here, minimizes the
+		 * race, it's NOT GONE!!
+		 *
+		 * This is not a problem for directories
+		 */
+		if (lstat(e->f_name, &s) != 0) {
+			msg("Could not stat path `%s\': %s", e->f_name, strerror(errno));
+			return;
+		}
+		if (e->f_size != s.st_size) {
+			msg("File size has changed, skipping `%s\'", e->f_name);
+			return;
+		}
 	}
 
 	for (pos = opt_format; *pos != '\0';  ++pos) {
