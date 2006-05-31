@@ -215,7 +215,8 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		 * This is not a problem for directories
 		 */
 		if (lstat(e->f_name, &s) != 0) {
-			msg("Could not stat path `%s\': %s", e->f_name, strerror(errno));
+			msg("Could not stat path `%s\': %s", e->f_name, 
+				strerror(errno));
 			return;
 		}
 		if (e->f_size != s.st_size) {
