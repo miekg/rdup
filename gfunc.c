@@ -145,13 +145,13 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			fputs(e->f_name, out);		
 			break;
 		case 'l': 
-			fprintf(out, "%zd", e->f_name_size);	
+			fprintf(out, "%ld", (unsigned long)e->f_name_size);	
 			break;
 		case 'u': 
-			fprintf(out, "%zd", (size_t) e->f_uid);		
+			fprintf(out, "%ld", (unsigned long)e->f_uid);		
 			break;
 		case 'g': 
-			fprintf(out, "%zd", (size_t) e->f_gid);		
+			fprintf(out, "%ld", (unsigned long) e->f_gid);		
 			break;
 		case 'm': 
 			fprintf(out, "%d", e->f_mode);	
@@ -205,7 +205,7 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 	
-	if (!S_ISDIR(e->f_mode)) {
+	if (!S_ISDIR(e->f_mode) && plusmin == '+') {
 		/* check if the file has changed since we first
 		 * visited it. If so, skip it as it will tear
 		 * up the entire print. Esp. when also printing

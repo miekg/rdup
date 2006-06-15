@@ -3,7 +3,9 @@ xx Jun 2006: 0.2.14 Miek <miek@miek.nl>
    * Added user/ directory for user contributed scripts:
      added gzip.pl and mirror.pl both from Mark J Hewitt
      These are up to 50 times faster than the shell scripts!
+     But less tested. 
    * Don't re-check directories for changed files sizes
+   * Compilation fix for gcc 2.95; don't use %zd in printf
 
 26 May 2006: 0.2.13 Miek <miek@miek.nl>
    -- BACKWARD INCOMPATIBLE CHANGES --
