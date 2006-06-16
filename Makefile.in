@@ -68,6 +68,7 @@ install: all
 	mkdir -p ${DESTDIR}${mandir}/man8
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/$$i ; done
 	for i in ${SHS}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
+	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${RES}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${MAN8}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man8/`basename $$i` ; done
 	for i in ${MAN1}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done
@@ -75,6 +76,7 @@ install: all
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${sbindir}/$$i ; done
 	for i in ${SHS}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
+	for i in ${PRL}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${RES}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${MAN8}; do rm -f ${DESTDIR}${mandir}/man8/`basename $$i` ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done

@@ -312,11 +312,12 @@ sub usage
     print " -v      print the files processed to stderr\n";
     print " -h      this help\n";
     print " -V      print version\n";
+    exit;
 }
 
 sub version
 {
-    print "** $progName: @PACKAGE_VERSION@ (rdup-utils)i\n";
+    print "** $progName: @PACKAGE_VERSION@ (rdup-utils)\n";
     exit;
 }
 

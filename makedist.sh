@@ -99,9 +99,6 @@ fi
 info "SVNROOT  is $SVNROOT"
 info "SNAPSHOT is $SNAPSHOT"
 
-#question "Do you wish to continue with these settings?" || error "User abort."
-
-
 # Creating temp directory
 info "Creating temporary working directory"
 temp_dir=`mktemp -d rdup-dist-XXXXXX`
@@ -120,6 +117,7 @@ rm -r autom4te* || error_cleanup "Failed to remove autoconf cache directory."
 rm -rf patches  || error_cleanup "Failed to remove patches directory."
 rm -rf poster/icons   || error_cleanup "Failed to remove poster/icons directory."
 rm -rf feedback   || error_cleanup "Failed to remove feedback directory."
+rm -rf rb-tools   || error_cleanup "Failed to remove rb-tools directory."
 
 find . -name .c-mode-rc.el -exec rm {} \;
 find . -name .cvsignore -exec rm {} \;
@@ -157,7 +155,6 @@ rm -rf rdup-$version/.svn
 rm -f rdup-$version/core
 rm -f rdup-$version/tar-exclude
 rm -f rdup-$version/config.log 
-rm -f rdup-$version/rb-tools
 rm -f rdup-$version/config.status
 rm -f rdup-$version/tags 
 #rm -rf rdup-$version/tex 

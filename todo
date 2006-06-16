@@ -8,6 +8,7 @@ o check if monthday.sh handles multiple changes on 1 day
 :rdup:
 :tests:
 :doc:
+manpages for the perl versions?
 
 :porting:
 o port extended attributes to FreeBSD
