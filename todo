@@ -7,6 +7,8 @@ o check if monthday.sh handles multiple changes on 1 day
 
 :rdup:
 :tests:
+add conformence test; symlinks etc.
+
 :doc:
 manpages for the perl versions?
 
