@@ -42,7 +42,7 @@ rdup:	${OBJ} ${HDR}
 	strip rdup
 
 scripts:
-	chmod +x $(SHS) $(RES) $(PRL)
+	chmod +x $(SHS) $(RES) $(PRL) $(WRP)
 
 clean:
 	rm -f *.o
