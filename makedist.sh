@@ -157,6 +157,7 @@ rm -rf rdup-$version/.svn
 rm -f rdup-$version/core
 rm -f rdup-$version/tar-exclude
 rm -f rdup-$version/config.log 
+rm -f rdup-$version/rb-tools
 rm -f rdup-$version/config.status
 rm -f rdup-$version/tags 
 #rm -rf rdup-$version/tex 
