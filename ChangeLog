@@ -1,5 +1,6 @@
-xx Jun 2006: 0.2.14 Miek <miek@miek.nl>
+18 Jun 2006: 0.2.14 Miek <miek@miek.nl>
    -- bugfixes and new features --
+   -- dump.sh uses the perl scrips!!! --
    * dump.sh now used the perl scripts!
    * Added pl-tools/ directory for perl contributed scripts:
      added gzip.pl and mirror.pl both from Mark J Hewitt
