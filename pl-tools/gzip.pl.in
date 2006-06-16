@@ -96,7 +96,7 @@ sub usage
 
 sub version
 {
-    print "$progName: 0.2.14 (rdup-utils)\n";
+    print "$progName: @PACKAGE_VERSION@ (rdup-utils)\n";
     exit;
 }
 

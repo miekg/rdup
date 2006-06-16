@@ -62,6 +62,9 @@ AC_CONFIG_FILES([Makefile
                  sh-tools/gzip.sh
                  sh-tools/hist.sh
                  sh-tools/mirror.sh
-                 sh-tools/yesterday.sh])
+                 sh-tools/yesterday.sh
+                 pl-tools/gzip.pl
+                 pl-tools/mirror.pl
+                 ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
