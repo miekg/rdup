@@ -2,11 +2,13 @@ OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o
 HDR=rdup.h 
 CMD=rdup 
 SHS_IN=mirror.sh hist.sh yesterday.sh crypt.sh gzip.sh dump.sh dump-here.sh
+PRL_IN=gzip.pl mirror.pl
 RES_IN=rorrim.sh monthday.sh restore.sh
 MAN8_IN=rdup.8 mirror.sh.8 dump.sh.8 dump-here.sh.8 monthday.sh.8 rorrim.sh.8 restore.sh.8
 MAN1_IN=hist.sh.1 yesterday.sh.1 crypt.sh.1 gzip.sh.1
 
 SHS=$(addprefix sh-tools/, $(SHS_IN))
+PRL=$(addprefix pl-tools/, $(PRL_IN))
 RES=$(addprefix sh-restore/, $(RES_IN))
 MAN8=$(addprefix doc/, $(MAN8_IN))
 MAN1=$(addprefix doc/, $(MAN1_IN))
@@ -38,7 +40,7 @@ rdup:	${OBJ} ${HDR}
 	strip rdup
 
 scripts:
-	chmod +x $(SHS) $(RES)
+	chmod +x $(SHS) $(RES) $(PRL)
 
 clean:
 	rm -f *.o
