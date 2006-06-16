@@ -36,7 +36,7 @@ my $remote = $opt{'c'};			# Find content in pipe for -c
 my $hostname = `hostname`;		# This hostname
 chomp $hostname;
                                         # Location of backup root in local filesystem
-my $backupDir = (defined $opt{'b'} ? $opt{'b'} : "/vol/backup/" . $hostname) . "/" . sprintf "%04d%02d", 1900+$year, $mon;
+my $backupDir = (defined $opt{'b'} ? $opt{'b'} : "/vol/backup/" . $hostname) . "/" . sprintf "%04d%02d", 1900+$year, 1+$mon;
 
 my $attr_there = check_attr();		# Can we set extended attributes?
 
