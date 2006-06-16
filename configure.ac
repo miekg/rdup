@@ -53,12 +53,12 @@ AC_CONFIG_FILES([Makefile
                  doc/yesterday.sh.1
                  doc/crypt.sh.1
                  doc/gzip.sh.1
+                 sh-wrapper/restore.sh
+                 sh-wrapper/dump-here.sh
+                 sh-wrapper/dump.sh
                  sh-restore/rorrim.sh
                  sh-restore/monthday.sh
-                 sh-restore/restore.sh
                  sh-tools/crypt.sh
-                 sh-tools/dump-here.sh
-                 sh-tools/dump.sh
                  sh-tools/gzip.sh
                  sh-tools/hist.sh
                  sh-tools/mirror.sh

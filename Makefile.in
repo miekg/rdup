@@ -2,13 +2,15 @@ OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o
 HDR=rdup.h 
 CMD=rdup 
 SHS_IN=mirror.sh hist.sh yesterday.sh crypt.sh gzip.sh dump.sh dump-here.sh
+WRP_IN=dump.sh dump-here.sh restore.sh
 PRL_IN=gzip.pl mirror.pl
-RES_IN=rorrim.sh monthday.sh restore.sh
+RES_IN=rorrim.sh monthday.sh
 MAN8_IN=rdup.8 mirror.sh.8 dump.sh.8 dump-here.sh.8 monthday.sh.8 rorrim.sh.8 restore.sh.8
 MAN1_IN=hist.sh.1 yesterday.sh.1 crypt.sh.1 gzip.sh.1
 
 SHS=$(addprefix sh-tools/, $(SHS_IN))
 PRL=$(addprefix pl-tools/, $(PRL_IN))
+WRP=$(addprefix sh-wrappers/, $(WRP_IN))
 RES=$(addprefix sh-restore/, $(RES_IN))
 MAN8=$(addprefix doc/, $(MAN8_IN))
 MAN1=$(addprefix doc/, $(MAN1_IN))
@@ -67,6 +69,7 @@ install: all
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${mandir}/man8
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/$$i ; done
+	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${SHS}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${RES}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
@@ -75,6 +78,7 @@ install: all
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${sbindir}/$$i ; done
+	for i in ${WRP}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${SHS}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${PRL}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${RES}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
