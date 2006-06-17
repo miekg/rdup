@@ -3,13 +3,14 @@
    * Added pl-tools/ directory for perl contributed scripts:
      added gzip.pl and mirror.pl both from Mark J Hewitt
      These are up to 50 times faster than the shell scripts!
-   * Installed the perl scripts also
+   * Install the perl scripts also
    * Don't re-check directories for changed files sizes
      and only check for files that are to be added.
    * Compilation fix for gcc 2.95; don't use %zd in printf
    * Remove rb-tools dir from distribution - not uses & not finished
    * moved wrapper scripts (dump.sh, dump-here.sh and restore.sh) to
      sh-wrapper/ directory
+
 
 26 May 2006: 0.2.13 Miek <miek@miek.nl>
    -- BACKWARD INCOMPATIBLE CHANGES --
