@@ -127,7 +127,7 @@ sub local_mirror
 		{			# We only have a suffix if the file exists
 		    rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
 		}
-		symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $linkTarget: $!";
+		symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
 		chown $uid, $gid, $target;
 		chown_attr($uid, $gid, $target);
 		$ilnk++;
