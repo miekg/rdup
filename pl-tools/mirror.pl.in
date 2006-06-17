@@ -75,10 +75,9 @@ sub local_mirror
     while (($_ = <STDIN>))
     {
 	chomp;
-	my($mode, $uid, $gid, $psize, $fsize, @path_arr) = split;
+	my($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
 	my $dump = substr($mode, 0, 1);
 	my $modebits = substr($mode, 1);
-        my $path = join " ", @path_arr;
 
 	sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
 
