@@ -1,20 +1,19 @@
-\documentclass[a4paper, openany]{memoir}
+\documentclass[a4paper, openany]{blocksbook}
 \newcommand{\rdup}{\textbf{rdup}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
 \newcommand{\path}[1]{\texttt{#1}}
 \newcommand{\flag}[1]{\textit{#1}}
-%% hack to disable page numbering
-\renewcommand{\thepage}{}
-\pagestyle{ruled}
-\chapterstyle{demo}
 \begin{document}
 
 \chapter*{\rdup: Quick Start}
 This is a small guide about setting up and running \rdup{} to make
 backups. \rdup{}
 supports incremental, compressed, encrypted, local, remote  backups and
-restores. 
+restores. All these feature can (and or) implemented in scripts to
+implement an actual backup scheme. The core \rdup{} utility does
+nothing but to print out the files names that are to be backed up.
+
 See \url{www.miek.nl/projects/rdup} for more information.
 
 \subsection*{\textit{Setup}}
@@ -23,23 +22,24 @@ Get \rdup{} from its website. Configure and install it:
 ./configure && make && sudo make install
 \end{verbatim}
 \rdup{} by default creates a full dump once a month and 
-daily incrementals after that (if desired).
+daily incrementals after that (if desired). But this is
+all in the hands of the user.
 
 \subsection*{\textit{Backup}}
 The most convenient way to use \rdup{} is to use the wrapper
 script \cmd{dump.sh}. Synopsis:\\
-\cmd{dump.sh [ OPTIONS ] NAME DIR|FILE [ DIR|FILE ]}
+\cmd{dump.sh [ OPTIONS ] DIR|FILE [ DIR|FILE ]}
 \begin{itemize}
 \item
 Dump \path{/home} to your USB disk on \path{/media/usbdisk}:\\
-\cmd{dump.sh -e -b /media/usbdisk home.usb /home}
+\cmd{dump.sh -e -b /media/usbdisk /home}
 \item
 Dump compressed \path{/home} to \path{/vol/backup}:\\
-\cmd{dump.sh -z home /home} 
+\cmd{dump.sh -z /home} 
 \item
 Dump encrypted \path{/home} to \path{/vol/backup} at remote
 host:\\
-\cmd{dump.sh -k secret\_file -c user@example.nl remote.home /home}
+\cmd{dump.sh -k secret\_file -c user@example.nl /home}
 \end{itemize}
 
 \subsection*{\textit{Restore}}
