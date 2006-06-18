@@ -1,16 +1,20 @@
 18 Jun 2006: 0.2.14 Miek <miek@miek.nl>
    -- bugfixes and new features --
+   -- dump.sh now uses mirror.pl! --
+   scripts:
    * dump.sh now wraps around miror.pl, gzip.pl and crypt.sh
+   * dump-here.sh also uses mirror.pl
+   * dump-here.sh must be edited before use (added exit 1)
    * Added pl-tools/ directory for perl contributed scripts:
      added gzip.pl and mirror.pl both from Mark J Hewitt
-     These are up to 50 times faster than the shell scripts!
-   * Install the perl scripts also
-   * Don't re-check directories for changed files sizes
-     and only check for files that are to be added.
-   * Compilation fix for gcc 2.95; don't use %zd in printf
    * Remove rb-tools dir from distribution - not uses & not finished
    * moved wrapper scripts (dump.sh, dump-here.sh and restore.sh) to
      sh-wrapper/ directory
+     These are up to 50 times faster than the shell scripts!
+   rdup:
+   * Don't re-check directories for changed files sizes
+     and only check for files that are to be added.
+   * Compilation fix for gcc 2.95; don't use %zd in printf
 
 
 26 May 2006: 0.2.13 Miek <miek@miek.nl>
