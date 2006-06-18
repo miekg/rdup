@@ -12,15 +12,15 @@ case $HOSTNAME in
         elektron*)
         DIRS="/home/miekg/Documents"
         ;;
-
-        floep*)
-        DIRS=""
-        ;;
         *)
         # no such host
         zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for <b>$HOSTNAME</b>"
         exit 1
 esac
+
+echo "You need to edit this script, exiting"
+exit 1 # remove this 
+
 ##
 # Don't need to edit anything below this line
 ##
