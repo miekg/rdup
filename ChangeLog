@@ -1,8 +1,8 @@
 18 Jun 2006: 0.2.14 Miek <miek@miek.nl>
    -- bugfixes and new features --
-   -- dump.sh now uses mirror.pl! --
    scripts:
    * dump.sh now wraps around miror.pl, gzip.pl and crypt.sh
+   backed out
    * dump-here.sh also uses mirror.pl
    * dump-here.sh must be edited before use (added exit 1)
    * Added pl-tools/ directory for perl contributed scripts:
