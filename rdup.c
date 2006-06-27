@@ -285,7 +285,7 @@ main(int argc, char **argv)
 	g_tree_foreach(backup, gfunc_backup, NULL);
 
 	/* write new filelist */
-	ftruncate(fileno(fplist), 0);  
+	(void)ftruncate(fileno(fplist), 0);  
 	g_tree_foreach(backup, gfunc_write, fplist);
 	fclose(fplist); 
 	/* re-touch the timestamp file */

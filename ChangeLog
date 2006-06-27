@@ -1,9 +1,6 @@
 18 Jun 2006: 0.2.14 Miek <miek@miek.nl>
    -- bugfixes and new features --
    scripts:
-   * dump.sh now wraps around miror.pl, gzip.pl and crypt.sh
-   backed out
-   * dump-here.sh also uses mirror.pl
    * dump-here.sh must be edited before use (added exit 1)
    * Added pl-tools/ directory for perl contributed scripts:
      added gzip.pl and mirror.pl both from Mark J Hewitt
@@ -15,6 +12,7 @@
    * Don't re-check directories for changed files sizes
      and only check for files that are to be added.
    * Compilation fix for gcc 2.95; don't use %zd in printf
+   * RPM creation fix: (void)ftruncate
 
 
 26 May 2006: 0.2.13 Miek <miek@miek.nl>
