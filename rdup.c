@@ -241,7 +241,7 @@ main(int argc, char **argv)
 				}
 				break;
 			default:
-				msg("Uknown option seen");
+				msg("Unknown option seen");
 				exit(EXIT_FAILURE);
 		}
 	}
