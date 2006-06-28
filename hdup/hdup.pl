@@ -116,12 +116,11 @@ foreach my $sec ($cfg->Sections) {
 }
 # copy over the defaults of [global]
 
-
 # make the directories
 
 # SCHEME is NULL
 my $TARFILE = "$HOST-$DATE.tar.gz";
-my $rdupcmd = "/home/miekg/svn/rdup/trunk/rdup -q $HOST-list " . join(' ', @{$rec{$HOST}->{DIR}});
+my $rdupcmd = "rdup $HOST-list " . join(' ', @{$rec{$HOST}->{DIR}});
 my $tarcmd  = "tar --create --gzip --no-recursion --file $TARFILE --files-from -";
 
 my $rdup = open(RDUP, "$rdupcmd |")  or die "Couldn't fork rdup: $!\n";
