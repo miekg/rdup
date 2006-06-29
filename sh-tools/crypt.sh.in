@@ -108,7 +108,7 @@ do
         dump=${mode:0:1}        # to add or remove
         mode=${mode:1}          # st_mode bits
         typ=0
-        path=$(head -c $psize)   # gets the path
+        read -r -n $psize path  # get the path
 
         sanity_check
 
@@ -124,7 +124,7 @@ do
                         0)      # REG
                         if [[ $fsize -ne 0 ]]; then
                                 # catch 'n crypt
-                                head -c $fsize | \
+                                dd bs=1 count=$fsize 2>/dev/null | \
                                 mcrypt -q $OPT -F -f "$1" -a blowfish > $TMPDIR/file.$$.enc || \
                                 exit 1
 
@@ -144,7 +144,7 @@ do
                         echo -n "$path"
                         ;;
                         2)      # LNK, target is in the content!
-                        target=`head -c $fsize`
+                        read -r -n $fsize target
                         echo "$dump$mode $uid $gid $psize $fsize"
                         echo -n "$path"
                         echo -n "$target"
