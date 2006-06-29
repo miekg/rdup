@@ -259,8 +259,7 @@ remote_mirror() {
         do
                 dump=${mode:0:1}        # to add or remove
                 mode=${mode:1}          # st_mode bits
-                path=$(head -c $psize)   # get the path, like this to
-                                         # fetch new line
+                read -r -n $psize path  # get the path
 
                 sanity_check
 
@@ -290,7 +289,7 @@ remote_mirror() {
                                 fi
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
-                                        head -c $fsize > "$backupdir/$path"
+                                        dd bs=1 count=$fsize of="$backupdir/$path" 2> /dev/null
                                 else 
                                         # empty
                                         touch "$backupdir/$path"
@@ -325,7 +324,7 @@ remote_mirror() {
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
-                                target=$(head -c $fsize)
+                                read -r -n $fsize target
                                 ln -sf "$target" "$backupdir/$path" 
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
                                 chown_attr $uid $gid "$backupdir/$path" 
