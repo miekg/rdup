@@ -285,7 +285,10 @@ main(int argc, char **argv)
 	g_tree_foreach(backup, gfunc_backup, NULL);
 
 	/* write new filelist */
-	(void)ftruncate(fileno(fplist), 0);  
+	if (ftruncate(fileno(fplist), 0) != 0) {
+		msg("Could not truncate filelist file `%s\': %s", argv[0], 
+			strerror(errno));
+	}
 	g_tree_foreach(backup, gfunc_write, fplist);
 	fclose(fplist); 
 	/* re-touch the timestamp file */

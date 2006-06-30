@@ -1,4 +1,4 @@
-18 Jun 2006: 0.2.14 Miek <miek@miek.nl>
+1 Jul 2006: 0.2.14 Miek <miek@miek.nl>
    -- misc. bugfixes and new features --
    scripts:
    * use dd for "catching" the files' content
@@ -17,6 +17,7 @@
    * Don't re-check directories for changed files sizes
      and only check for files that are to be added.
    * Compilation fix for gcc 2.95; don't use %zd in printf
+   * check return value of ftruncate()
 
 
 26 May 2006: 0.2.13 Miek <miek@miek.nl>
