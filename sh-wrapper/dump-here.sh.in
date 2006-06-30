@@ -72,3 +72,5 @@ fi
 sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
 sudo @sbindir@/mirror.sh -v -b $BACKUPDIR 2>&1 |\
 zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"
+
+exit 0

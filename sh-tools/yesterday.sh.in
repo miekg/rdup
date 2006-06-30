@@ -23,7 +23,7 @@ usage() {
         echo " -d          show a diff(1) with the backed up file "
         echo " -z          backup file is gzipped"
         echo " -h          this help"
-        echo " -V          print version"        
+        echo " -V          print version"
 }
 
 version() {
@@ -72,7 +72,7 @@ datesago() {
         # YYYYMMDD
         case $OSTYPE in
                 linux*)
-                echo $(date --date "$1 days ago" +%Y%m%d) 
+                echo $(date --date "$1 days ago" +%Y%m%d)
                 ;;
                 freebsd*)
                 echo $(date -v -$1d +%Y%m%d)
@@ -143,7 +143,7 @@ do
         fi
         if [[ $diff -eq 1 ]]; then
                 [[ -d $backupfile ]] && continue
-                
+
                 echo diff -u `basename $backupfile` `basename $file`
                 if [[ $gzip -eq 1 ]]; then
                         zcat $backupfile | diff -u - $file
@@ -159,3 +159,4 @@ do
         fi
         echo $backupfile | sed "s|$backupdir|\.\.\.|g"
 done
+exit 0

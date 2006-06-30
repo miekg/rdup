@@ -35,7 +35,7 @@ usage() {
         echo " -c    ignored as gzip.sh always works on content"
         echo " -d    decompress the files"
         echo " -h    this help"
-        echo " -V    print version"        
+        echo " -V    print version"
 }
 
 sanity_check() {
@@ -130,7 +130,7 @@ do
                         echo -n "$path"
                         ;;
                         2)      # LNK, target is in the content!
-                        read -r -n $fsize target 
+                        read -r -n $fsize target
                         echo "$dump$mode $uid $gid $psize $fsize"
                         echo -n "$path"
                         echo -n "$target"
@@ -144,3 +144,4 @@ do
 done
 
 rm -rf $TMPDIR
+exit 0

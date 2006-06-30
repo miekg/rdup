@@ -115,12 +115,12 @@ local_restore() {
                 if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
                         typ=2;
                 fi
-                
+
                 [[ $verbose -eq 1 ]] && echo $path >&2
 
                 # create the new filename
                 newpath=$(sanitize "$path")
-                
+
                 # -p NUM argument
                 newpath=$(_strip $dirstrip "$newpath")
 
@@ -129,7 +129,7 @@ local_restore() {
                         continue
                 fi
 
-                # it can be that the file without extension does not 
+                # it can be that the file without extension does not
                 # exist in the backup directory because it is removed
                 # from disk. If this is the case, skip it
                 #
@@ -148,7 +148,7 @@ local_restore() {
                                 ireg=$(($ireg + 1))
                                 ;;
                                 1)      # DIR
-                                [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath" 
+                                [[ ! -d "$restoredir/$newpath" ]] && mkdir -p "$restoredir/$newpath"
                                 chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
 
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
@@ -169,7 +169,7 @@ local_restore() {
                 else
                         _echo2 "Ignoring removal of \`$path\'"
                 fi
-        done 
+        done
         te=`date +%s`
         echo "** #REG FILES  : $ireg" >&2
         echo "** #DIRECTORIES: $idir" >&2
@@ -220,7 +220,7 @@ remote_restore() {
                                 0)      # REG
                                 if [[ $fsize -ne 0 ]]; then
                                         head -c $fsize > "$restoredir/$newpath"
-                                else 
+                                else
                                         touch "$restoredir/$newpath"
                                 fi
                                 chown $uid:$gid "$restoredir/$newpath" 2>/dev/null
@@ -241,9 +241,9 @@ remote_restore() {
                                 chmod $bits "$restoredir/$newpath"
                                 idir=$(( $idir + 1))
                                 ;;
-                                2)      # LNK, target is in the content! 
+                                2)      # LNK, target is in the content!
                                 target=$(head -c $fsize)
-                                ln -sf "$target" "$restoredir/$newpath" 
+                                ln -sf "$target" "$restoredir/$newpath"
                                 chown -h $uid:$gid "$restoredir/$newpath" 2>/dev/null
                                 ilnk=$(( $ilnk + 1))
                                 ;;
@@ -251,7 +251,7 @@ remote_restore() {
                 else
                         _echo2 "Ignoring removal of \`$path\'"
                 fi
-        done 
+        done
         te=`date +%s`
         echo "** #REG FILES  : $ireg" >&2
         echo "** #DIRECTORIES: $idir" >&2
@@ -278,7 +278,7 @@ if [[ $# -eq 0 ]]; then
         exit 1
 fi
 if [[ -f $1 ]]; then
-        _echo2 "Cannot restore to \`$'" 
+        _echo2 "Cannot restore to \`$'"
         exit 1
 fi
 if [[ ! $dirstrip =~ "[0-9]+" ]]; then

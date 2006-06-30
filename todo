@@ -1,6 +1,10 @@
 TODO: 
 
 :rdup utils: 
+o use booleans in stead of integers
+o kill whitespace
+o use read and dd in restore scripts
+o refactor the scripts
 o limit modifier understand k/m/g suffixes
 o check if monthday.sh handles multiple changes on 1 day
 o split off rdup-utils and rdup-core

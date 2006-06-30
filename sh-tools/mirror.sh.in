@@ -10,13 +10,13 @@ S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
 S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 
-remote=0
-verbose=0
+remote=false
+verbose=false
 idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
-attr=0          # use attr to save original uid/gid
-attr_there=0
-ts=`date +%s` 
+attr=false          # use attr to save original uid/gid
+attr_there=false
+ts=`date +%s`
 backupdir=""
 PROGNAME=$0
 cstream=@cstream@
@@ -29,36 +29,35 @@ _echo2() {
 check_attr() {
         case $OSTYPE in
                 linux*)
-                which attr > /dev/null
-                if [[ $? -eq 0 ]]; then
-                        attr_there=1
+                if which attr > /dev/null; then
+                        attr_there=true
                 else
-                        attr_there=0
+                        attr_there=false
                 fi
                 ;;
                 *)
-                attr_there=0
+                attr_there=false
                 _echo2 "Can not set extended attributes"
                 ;;
         esac
 }
 
 cleanup() {
-        _echo2 "Signal received while processing \`$path', exiting" 
+        _echo2 "Signal received while processing \`$path', exiting"
         exit 1
 }
 # trap at least these
 trap cleanup SIGINT SIGPIPE
 
 set_attr_uid() {
-        if [[ $attr_there -eq 0 ]]; then
+        if $attr_there; then
                 return
         fi
         value=$1
         shift
         case $OSTYPE in
                 linux*)
-                attr -q -s r_uid -V$value "$@"      
+                attr -q -s r_uid -V$value "$@"
                 ;;
                 *)
                 ;;
@@ -66,14 +65,14 @@ set_attr_uid() {
 }
 
 set_attr_gid() {
-        if [[ $attr_there -eq 0 ]]; then
+        if $attr_there; then
                 return
         fi
         value=$1
         shift
         case $OSTYPE in
                 linux*)
-                attr -q -s r_gid -V$value "$@"      
+                attr -q -s r_gid -V$value "$@"
                 ;;
                 *)
                 ;;
@@ -86,7 +85,7 @@ chown_attr() {
         gid=$2
         shift; shift
 
-        if [[ $attr -eq 0 ]]; then
+        if $attr; then
                 return
         fi
         set_attr_uid $uid "$@"
@@ -96,7 +95,7 @@ chown_attr() {
 mirror_suffix() {
         case $OSTYPE in
                 linux*)
-                        s=$(stat -c '%y' "$@")  
+                        s=$(stat -c '%y' "$@")
                         echo "+${s:8:2}.${s:11:5}"
                 ;;
                 freebsd*)
@@ -134,7 +133,7 @@ usage() {
         echo " -b DIR  use DIR as the backup directory, YYYYMM will be added"
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
-        echo " -V      print version"        
+        echo " -V      print version"
 }
 
 version() {
@@ -183,7 +182,7 @@ local_mirror() {
                 if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
                         typ=2;
                 fi
-                
+
                 [[ $verbose -eq 1 ]] && echo $path >&2
 
                 if [[ -e "$backupdir/$path" ]]; then
@@ -201,7 +200,7 @@ local_mirror() {
                                 fi
                                 cp -RP "$path" "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path" 
+                                chown_attr $uid $gid "$backupdir/$path"
                                 chmod $bits "$backupdir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(($ireg + 1))
@@ -212,9 +211,9 @@ local_mirror() {
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
 
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path" 
+                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path" 
+                                chown_attr $uid $gid "$backupdir/$path"
 
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
                                         # if we're not read we need this
@@ -231,7 +230,7 @@ local_mirror() {
                                 fi
                                 cp -RP "$path" "$backupdir/$path"
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path" 
+                                chown_attr $uid $gid "$backupdir/$path"
                                 ilnk=$(($ilnk + 1))
                                 ;;
                         esac
@@ -243,7 +242,7 @@ local_mirror() {
                         fi
                         irm=$(($irm + 1))
                 fi
-        done 
+        done
         te=`date +%s`
         echo "** #REG FILES  : $ireg" >&2
         echo "** #DIRECTORIES: $idir" >&2
@@ -290,13 +289,13 @@ remote_mirror() {
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
                                         dd bs=1 count=$fsize of="$backupdir/$path" 2> /dev/null
-                                else 
+                                else
                                         # empty
                                         touch "$backupdir/$path"
                                 fi
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path" 
-                                chmod $bits "$backupdir/$path" 
+                                chown_attr $uid $gid "$backupdir/$path"
+                                chmod $bits "$backupdir/$path"
                                 ftsize=$(($ftsize + $fsize))
                                 ireg=$(( $ireg + 1))
                                 ;;
@@ -309,7 +308,7 @@ remote_mirror() {
                                 # size should be 0
                                 [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
                                 chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path" 
+                                chown_attr $uid $gid "$backupdir/$path"
 
                                 if [[ $UID -ne 0 && $bits -eq 0 ]]; then
                                         # if we're not read we need this
@@ -317,17 +316,17 @@ remote_mirror() {
                                         _echo2 "Chmod \`$backupdir/$path' to 700"
                                         bits="700"
                                 fi
-                                chmod $bits "$backupdir/$path" 
+                                chmod $bits "$backupdir/$path"
                                 idir=$(( $idir + 1))
                                 ;;
-                                2)      # LNK, target is in the content! 
+                                2)      # LNK, target is in the content!
                                 if [[ -e "$backupdir/$path" ]]; then
                                         mv "$backupdir/$path" "$backupdir/$path$suffix"
                                 fi
                                 read -r -n $fsize target
-                                ln -sf "$target" "$backupdir/$path" 
+                                ln -sf "$target" "$backupdir/$path"
                                 chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path" 
+                                chown_attr $uid $gid "$backupdir/$path"
                                 ilnk=$(( $ilnk + 1))
                                 ;;
                         esac
@@ -338,7 +337,7 @@ remote_mirror() {
                         fi
                         irm=$(( $irm + 1))
                 fi
-        done 
+        done
         te=`date +%s`
         echo "** #REG FILES  : $ireg" >&2
         echo "** #DIRECTORIES: $idir" >&2
@@ -351,10 +350,10 @@ remote_mirror() {
 
 while getopts ":acvhb:V" options; do
         case $options in
-                a) attr=1;;
-                c) remote=1;;
+                a) attr=true;;
+                c) remote=true;;
                 b) backupdir=$OPTARG;;
-                v) verbose=1;;
+                v) verbose=true;;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
@@ -369,8 +368,9 @@ if [ -z "$backupdir" ]; then
 fi
 backupdir=$backupdir/`date +%Y%m`
 
-if [[ $remote -eq 0 ]]; then
-        local_mirror
-else
+if $remote; then
         remote_mirror
+else
+        local_mirror
 fi
+exit 0

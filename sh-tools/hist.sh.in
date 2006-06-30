@@ -3,7 +3,7 @@
 # Copyright (c) 2005, 2006 Miek Gieben
 # See LICENSE for the license
 #
-# inspired by hist of plan9 
+# inspired by hist of plan9
 
 PROGNAME=$0
 
@@ -11,7 +11,7 @@ usage() {
         echo "$PROGNAME [OPTIONS] FILE [FILE ...]"
         echo
         echo Print file history from the dump
-        echo 
+        echo
         echo FILE - search for this file in the backup directory
         echo
         echo OPTIONS:
@@ -20,7 +20,7 @@ usage() {
         echo " -k KEY  use the file KEY as decryption key"
         echo " -z      backup file is gzipped"
         echo " -h      this help"
-        echo " -V      print version"        
+        echo " -V      print version"
 }
 
 version() {
@@ -103,3 +103,4 @@ do
                 done
         done
 done
+exit 0

@@ -10,6 +10,9 @@
    * Remove rb-tools dir from distribution - not uses & not finished
    * moved wrapper scripts (dump.sh, dump-here.sh and restore.sh) to
      sh-wrapper/ directory
+   * implement good bash coding (Remarks from Bob Proulx)
+     use booleans in the scripts
+     kill whitespace
    rdup:
    * Don't re-check directories for changed files sizes
      and only check for files that are to be added.

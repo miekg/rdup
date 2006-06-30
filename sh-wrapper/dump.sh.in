@@ -201,3 +201,5 @@ else     # remote
                 fi
         fi
 fi
+
+exit 0
