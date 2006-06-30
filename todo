@@ -8,6 +8,7 @@ o refactor the scripts
 o limit modifier understand k/m/g suffixes
 o check if monthday.sh handles multiple changes on 1 day
 o split off rdup-utils and rdup-core
+o add -x switch to dump.sh
 
 :rdup:
 :tests:
