@@ -16,7 +16,6 @@ idir=0; ireg=0; ilnk=0; irm=0
 ftsize=0
 attr=false          # use attr to save original uid/gid
 attr_there=false
-ts=`date +%s`
 backupdir=""
 PROGNAME=$0
 cstream=@cstream@
@@ -50,7 +49,7 @@ cleanup() {
 trap cleanup SIGINT SIGPIPE
 
 set_attr_uid() {
-        if $attr_there; then
+        if ! $attr_there; then
                 return
         fi
         value=$1
@@ -65,7 +64,7 @@ set_attr_uid() {
 }
 
 set_attr_gid() {
-        if $attr_there; then
+        if ! $attr_there; then
                 return
         fi
         value=$1
@@ -85,7 +84,7 @@ chown_attr() {
         gid=$2
         shift; shift
 
-        if $attr; then
+        if ! $attr; then
                 return
         fi
         set_attr_uid $uid "$@"
@@ -163,129 +162,40 @@ sanity_check() {
         fi
 }
 
-local_mirror() {
-        declare -a path # catch spacing in the path
-        while read -r mode uid gid psize fsize path
-        do
-                dump=${mode:0:1}                # to add or remove
-                mode=${mode:1}                  # st_mode bits
+_mirror() {
+        dump=${mode:0:1}                # to add or remove
+        mode=${mode:1}                  # st_mode bits
 
-                sanity_check
+        $remote && read -r -n $psize path  # get the path
 
-                bits=$(($mode & $S_MMASK))      # permission bits
-                bits=`printf "%o" $bits`        # and back to octal again
-                typ=0
+        sanity_check
 
-                if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
-                        typ=1;
-                fi
-                if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
-                        typ=2;
-                fi
+        bits=$(($mode & $S_MMASK))      # permission bits
+        bits=`printf "%o" $bits`        # and back to octal again
+        typ=0
 
-                [[ $verbose -eq 1 ]] && echo $path >&2
+        if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
+                typ=1;
+        fi
+        if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
+                typ=2;
+        fi
 
-                if [[ -e "$backupdir/$path" ]]; then
-                        suffix=`mirror_suffix "$backupdir/$path"`
-                fi
+        $verbose && echo $path >&2
 
-                if [[ $dump == "+" ]]; then
-                        # add
-                        case $typ in
-                                0)      # REG
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        # attributes are preserved when
-                                        # moving
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-                                cp -RP "$path" "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path"
-                                chmod $bits "$backupdir/$path"
-                                ftsize=$(($ftsize + $fsize))
-                                ireg=$(($ireg + 1))
-                                ;;
-                                1)      # DIR
-                                # check for fileTYPE changes
-                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
+        if [[ -e "$backupdir/$path" ]]; then
+                suffix=`mirror_suffix "$backupdir/$path"`
+        fi
 
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path"
-
-                                if [[ $UID -ne 0 && $bits -eq 0 ]]; then
-                                        # if we're not read we need this
-                                        # otherwise we can't access the dir
-                                        _echo2 "Chmod \`$backupdir/$path' to 700"
-                                        bits="700"
-                                fi
-                                chmod $bits "$backupdir/$path"
-                                idir=$(($idir + 1))
-                                ;;
-                                2)      # LNK
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-                                cp -RP "$path" "$backupdir/$path"
-                                chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path"
-                                ilnk=$(($ilnk + 1))
-                                ;;
-                        esac
-                else
-                        # move. It could be the stuff is not there, don't
-                        # error on that.
+        if [[ $dump == "+" ]]; then
+                # add
+                case $typ in
+                        0)      # REG
                         if [[ -e "$backupdir/$path" ]]; then
+                                # attributes are preserved when moving
                                 mv "$backupdir/$path" "$backupdir/$path$suffix"
                         fi
-                        irm=$(($irm + 1))
-                fi
-        done
-        te=`date +%s`
-        echo "** #REG FILES  : $ireg" >&2
-        echo "** #DIRECTORIES: $idir" >&2
-        echo "** #LINKS      : $ilnk" >&2
-        echo "** #(RE)MOVED  : $irm"  >&2
-        echo "** SIZE        : $(($ftsize / 1024 )) KB"  >&2
-        echo "** STORED IN   : $backupdir"  >&2
-        echo "** ELAPSED     : $(($te - $ts)) s" >&2
-}
-
-remote_mirror() {
-        while read -r mode uid gid psize fsize
-        do
-                dump=${mode:0:1}        # to add or remove
-                mode=${mode:1}          # st_mode bits
-                read -r -n $psize path  # get the path
-
-                sanity_check
-
-                bits=$(($mode & $S_MMASK)) # permission bits
-                bits=`printf "%o" $bits` # and back to octal again
-                typ=0
-
-                if [[ $(($mode & $S_ISDIR)) == $S_ISDIR ]]; then
-                        typ=1;
-                fi
-                if [[ $(($mode & $S_ISLNK)) == $S_ISLNK ]]; then
-                        typ=2;
-                fi
-
-                [[ $verbose -eq 1 ]] && echo $path >&2
-
-                if [[ -e "$backupdir/$path" ]]; then
-                        suffix=`mirror_suffix "$backupdir/$path"`
-                fi
-
-                if [[ $dump == "+" ]]; then
-                        # add
-                        case $typ in
-                                0)      # REG
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
+                        if $remote; then
                                 if [[ $fsize -ne 0 ]]; then
                                         # catch
                                         dd bs=1 count=$fsize of="$backupdir/$path" 2> /dev/null
@@ -293,59 +203,59 @@ remote_mirror() {
                                         # empty
                                         touch "$backupdir/$path"
                                 fi
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path"
-                                chmod $bits "$backupdir/$path"
-                                ftsize=$(($ftsize + $fsize))
-                                ireg=$(( $ireg + 1))
-                                ;;
-                                1)      # DIR
-                                # check for fileTYPE changes
-                                if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
+                        else
+                                cp -RP "$path" "$backupdir/$path"
+                        fi
 
-                                # size should be 0
-                                [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
-                                chown $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                        chown_attr $uid $gid "$backupdir/$path"
+                        chmod $bits "$backupdir/$path"
+                        ftsize=$(($ftsize + $fsize))
+                        ireg=$(($ireg + 1))
+                        ;;
+                        1)      # DIR
+                        # check for fileTYPE changes
+                        if [ -f "$backupdir/$path" -o -L "$backupdir/$path" ]; then
+                                mv "$backupdir/$path" "$backupdir/$path$suffix"
+                        fi
 
-                                if [[ $UID -ne 0 && $bits -eq 0 ]]; then
-                                        # if we're not read we need this
-                                        # otherwise we can't access the dir
-                                        _echo2 "Chmod \`$backupdir/$path' to 700"
-                                        bits="700"
-                                fi
-                                chmod $bits "$backupdir/$path"
-                                idir=$(( $idir + 1))
-                                ;;
-                                2)      # LNK, target is in the content!
-                                if [[ -e "$backupdir/$path" ]]; then
-                                        mv "$backupdir/$path" "$backupdir/$path$suffix"
-                                fi
-                                read -r -n $fsize target
-                                ln -sf "$target" "$backupdir/$path"
-                                chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
-                                chown_attr $uid $gid "$backupdir/$path"
-                                ilnk=$(( $ilnk + 1))
-                                ;;
-                        esac
-                else
-                        # remove
+                        [[ ! -d "$backupdir/$path" ]] && mkdir -p "$backupdir/$path"
+                        chown $uid:$gid "$backupdir/$path" 2>/dev/null
+                        chown_attr $uid $gid "$backupdir/$path"
+
+                        if [[ $UID -ne 0 && $bits -eq 0 ]]; then
+                                # if we're not read we need this
+                                # otherwise we can't access the dir
+                                _echo2 "Chmod \`$backupdir/$path' to 700"
+                                bits="700"
+                        fi
+                        chmod $bits "$backupdir/$path"
+                        idir=$(($idir + 1))
+                        ;;
+                        2)      # LNK
                         if [[ -e "$backupdir/$path" ]]; then
                                 mv "$backupdir/$path" "$backupdir/$path$suffix"
                         fi
-                        irm=$(( $irm + 1))
+                        if $remote; then
+                                read -r -n $fsize target
+                                ln -sf "$target" "$backupdir/$path"
+                        else
+                                cp -RP "$path" "$backupdir/$path"
+                        fi
+                        chown -h $uid:$gid "$backupdir/$path" 2>/dev/null
+                        chown_attr $uid $gid "$backupdir/$path"
+                        ilnk=$(($ilnk + 1))
+                        ;;
+                esac
+        else
+                # move. It could be the stuff is not there, don't
+                # error on that.
+                if [[ -e "$backupdir/$path" ]]; then
+                        mv "$backupdir/$path" "$backupdir/$path$suffix"
                 fi
-        done
-        te=`date +%s`
-        echo "** #REG FILES  : $ireg" >&2
-        echo "** #DIRECTORIES: $idir" >&2
-        echo "** #LINKS      : $ilnk" >&2
-        echo "** #(RE)MOVED  : $irm" >&2
-        echo "** SIZE        : $(($ftsize / 1024 )) KB" >&2
-        echo "** STORED IN   : $backupdir" >&2
-        echo "** ELAPSED     : $(($te - $ts)) s" >&2
+                irm=$(($irm + 1))
+        fi
+
 }
 
 while getopts ":acvhb:V" options; do
@@ -368,9 +278,26 @@ if [ -z "$backupdir" ]; then
 fi
 backupdir=$backupdir/`date +%Y%m`
 
+ts=`date +%s`
 if $remote; then
-        remote_mirror
+        while read -r mode uid gid psize fsize
+        do
+                _mirror
+        done
 else
-        local_mirror
+        declare -a path # catch spacing
+        while read -r mode uid gid psize fsize path
+        do
+                _mirror
+        done
 fi
+te=`date +%s`
+
+echo "** #REG FILES  : $ireg" >&2
+echo "** #DIRECTORIES: $idir" >&2
+echo "** #LINKS      : $ilnk" >&2
+echo "** #(RE)MOVED  : $irm"  >&2
+echo "** SIZE        : $(($ftsize / 1024 )) KB"  >&2
+echo "** STORED IN   : $backupdir"  >&2
+echo "** ELAPSED     : $(($te - $ts)) s" >&2
 exit 0
