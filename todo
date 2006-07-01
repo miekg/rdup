@@ -1,13 +1,9 @@
 TODO: 
 
 :rdup utils: 
-o use booleans in stead of integers
-o kill whitespace
-o use read and dd in restore scripts
-o refactor the scripts
 o limit modifier understand k/m/g suffixes
 o check if monthday.sh handles multiple changes on 1 day
-o split off rdup-utils and rdup-core
+o split off rdup-utils and rdup-core?
 o add -x switch to dump.sh
 o make hdup.pl first class citizen
 
@@ -44,6 +40,12 @@ o use full hostname not the short one. $HOST is just used...
 
 
 :DONE:
+o refactor the scripts
+o kill whitespace
+o use read and dd in restore scripts
+o use booleans in stead of integers
+  1 July: done
+
 o remove NAME as req arg from dump.sh, new argument -N ala rdup
   12 May: implemented
 
