@@ -11,6 +11,7 @@ S_ISLNK=40960   # octal: 0120000
 S_MMASK=4095    # octal: 00007777, mask to get permission
 monthday=0
 prevfile=""
+remote=false
 PROGNAME=$0
 
 _echo2() {
@@ -79,13 +80,13 @@ _seq() {
 
 # echo the file's status line to stdout
 print_file_status() {
-        if [[ $remote -eq 0 ]]; then
-                echo -n "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
-                echo "${_path[$1]}"
-        else
+        if $remote; then
                 echo "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
                 echo -n "${_path[$1]}"
                 cat_file $1
+        else
+                echo -n "${_mode[$1]} ${_uid[$1]} ${_gid[$1]} ${_psize[$1]} ${_fsize[$1]} "
+                echo "${_path[$1]}"
         fi
 }
 
@@ -110,13 +111,11 @@ cat_file() {
 
 # remove the files stored sofar
 rm_tmp_files() {
-        if [[ $remote -eq 0 ]]; then
-                return
+        if $remote; then
+                for j in $(_seq $1); do
+                        rm -f "${_tmp_path[$j]}"
+                done
         fi
-
-        for j in $(_seq $1); do
-                rm -f "${_tmp_path[$j]}"
-        done
 }
 
 store() {
@@ -131,7 +130,7 @@ store() {
         _month_e[$i]=$mo; _month_s[$i]=0
         _base[$i]=$basename
 
-        if [[ $remote -eq 0 ]]; then
+        if ! $remote; then
                 return
         fi
 
@@ -158,187 +157,66 @@ store() {
         esac
 }
 
-remote_restore() {
-        i=0
-        declare -a _mode
-        declare -a _uid; declare -a _gid
-        declare -a _psize; declare -a _fsize
-        declare -a _path; declare -a _tmp_path
-        declare -a _month_s; declare -a _month_e # monthday interval
-        declare -a _base
+_restore() {
+        $remote && read -r -n $psize path
+        sanity_check
 
-        # the next 3 lines are the difference with local_restore...
-        while read -r mode uid gid psize fsize
-        do
-                path=$(head -c $psize)
+        if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
+                basename=${BASH_REMATCH[1]}
+                mo=$((10#${BASH_REMATCH[2]})) # force base 10
+        else 
+                basename="$path"
+                mo=32
+        fi
 
-                sanity_check
+        store
 
-                if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
-                        basename=${BASH_REMATCH[1]}
-                        mo=$((10#${BASH_REMATCH[2]})) # force base 10
-                else 
-                        basename="$path"
-                        mo=32
+        if [[ $i -eq 0 ]]; then
+                # first one read
+                i=$(($i + 1))
+                continue;
+        fi
+        prev=$(($i - 1))
+
+        if [[ ${_base[$i]} == ${_base[$prev]} ]]; then
+                _month_s[$i]=${_month_e[$prev]}
+                if [[ ${_month_s[$i]} -eq 32 ]]; then
+                        # end of month marker, make this 0 for
+                        # practical purposes
+                        _month_s[$i]=0
                 fi
+                i=$(($i + 1))
+                continue;
+        else
+                x=$(($i - 1))
+                smallest_interval=100
+                p=""
+                for j in $(_seq $x); do
+                        if [[ $monthday -gt ${_month_s[$j]} &&
+                                $monthday -le ${_month_e[$j]}
+                                ]]; then
 
-                store
-
-                if [[ $i -eq 0 ]]; then
-                        # first one read
-                        i=$(($i + 1))
-                        continue;
-                fi
-                prev=$(($i - 1))
-
-                if [[ ${_base[$i]} == ${_base[$prev]} ]]; then
-                        _month_s[$i]=${_month_e[$prev]}
-                        if [[ ${_month_s[$i]} -eq 32 ]]; then
-                                # end of month marker, make this 0 for
-                                # practical purposes
-                                _month_s[$i]=0
-                        fi
-                        i=$(($i + 1))
-                        continue;
-                else           
-                        x=$(($i - 1))                     
-                        smallest_interval=100
-                        p=""
-                        for j in $(_seq $x); do
-                                if [[ $monthday -gt ${_month_s[$j]} &&
-                                        $monthday -le ${_month_e[$j]}
-                                        ]]; then
-
-                                        interval=$((${_month_e[$j]} - ${_month_s[$j]}))
-                                        if [[ $interval -lt $smallest_interval ]]; then
-                                                smallest_interval=$interval
-                                                p=$j
-                                        fi
+                                interval=$((${_month_e[$j]} - ${_month_s[$j]}))
+                                if [[ $interval -lt $smallest_interval ]]; then
+                                        smallest_interval=$interval
+                                        p=$j
                                 fi
-                        done
-
-                        if [[ ! -z $p ]]; then 
-                                print_file_status $p
-                                rm_tmp_files $x
-                        fi      
-                        # yes, zero, store, set to 1
-                        i=0; store; i=1
-                fi
-        done
-        # last one
-        x=$(($i - 1))                     
-        smallest_interval=100
-        p=""
-        for j in $(_seq $x); do
-                if [[ $monthday -gt ${_month_s[$j]} &&
-                        $monthday -le ${_month_e[$j]}
-                        ]]; then
-
-                        interval=$((${_month_e[$j]} - ${_month_s[$j]}))
-                        if [[ $interval -lt $smallest_interval ]]; then
-                                smallest_interval=$interval
-                                p=$j
                         fi
-                fi
-        done
+                done
 
-        if [[ ! -z $p ]]; then 
-                print_file_status $p
-                rm_tmp_files $x
-        fi      
+                if [[ ! -z $p ]]; then 
+                        print_file_status $p
+                        rm_tmp_files $x
+                fi
+                # yes, zero, store, set to 1
+                i=0; store; i=1
+        fi
+
 }
 
-local_restore() {
-        i=0
-        declare -a _mode
-        declare -a _uid; declare -a _gid
-        declare -a _psize; declare -a _fsize
-        declare -a _path; declare -a _tmp_path
-        declare -a _month_s; declare -a _month_e # monthday interval
-        declare -a _base
-
-        while read -r mode uid gid psize fsize path
-        do
-                sanity_check
-
-                if [[ "$path" =~ "(.+)\\+(..)\\.(..):(..)$" ]]; then
-                        basename=${BASH_REMATCH[1]}
-                        mo=$((10#${BASH_REMATCH[2]})) # force base 10
-                else 
-                        basename="$path"
-                        mo=32
-                fi
-
-                store
-
-                if [[ $i -eq 0 ]]; then
-                        # first one read
-                        i=$(($i + 1))
-                        continue;
-                fi
-                prev=$(($i - 1))
-
-                if [[ ${_base[$i]} == ${_base[$prev]} ]]; then
-                        _month_s[$i]=${_month_e[$prev]}
-                        if [[ ${_month_s[$i]} -eq 32 ]]; then
-                                # end of month marker, make this 0 for
-                                # practical purposes
-                                _month_s[$i]=0
-                        fi
-                        i=$(($i + 1))
-                        continue;
-                else           
-                        x=$(($i - 1))                     
-                        smallest_interval=100
-                        p=""
-                        for j in $(_seq $x); do
-                                if [[ $monthday -gt ${_month_s[$j]} &&
-                                        $monthday -le ${_month_e[$j]}
-                                        ]]; then
-
-                                        interval=$((${_month_e[$j]} - ${_month_s[$j]}))
-                                        if [[ $interval -lt $smallest_interval ]]; then
-                                                smallest_interval=$interval
-                                                p=$j
-                                        fi
-                                fi
-                        done
-
-                        if [[ ! -z $p ]]; then 
-                                print_file_status $p
-                                rm_tmp_files $x
-                        fi      
-                        # yes, zero, store, set to 1
-                        i=0; store; i=1
-                fi
-        done
-        # last one
-        x=$(($i - 1))                     
-        smallest_interval=100
-        p=""
-        for j in $(_seq $x); do
-                if [[ $monthday -gt ${_month_s[$j]} &&
-                        $monthday -le ${_month_e[$j]}
-                        ]]; then
-
-                        interval=$((${_month_e[$j]} - ${_month_s[$j]}))
-                        if [[ $interval -lt $smallest_interval ]]; then
-                                smallest_interval=$interval
-                                p=$j
-                        fi
-                fi
-        done
-
-        if [[ ! -z $p ]]; then 
-                print_file_status $p
-                rm_tmp_files $x
-        fi      
-}
-
-remote=0
 while getopts ":Vch" o; do
         case $o in
-                c) remote=1;;
+                c) remote=true;;
                 h) usage && exit;;
                 V) version && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
@@ -370,9 +248,14 @@ if [[ $monthday -eq 0 ]]; then
         monthday=32
 fi
 
-if [[ $remote -eq 0 ]]; then
-        local_restore
-else
+i=0
+declare -a _mode
+declare -a _uid; declare -a _gid
+declare -a _psize; declare -a _fsize
+declare -a _path; declare -a _tmp_path
+declare -a _month_s; declare -a _month_e # monthday interval
+declare -a _base
+if $remote; then
         TMPDIR=`mktemp -d "/tmp/rdup.restore.XXXXXX"`
         if [[ $? -ne 0 ]]; then
                 _echo2 "Mktemp failed"
@@ -380,5 +263,34 @@ else
         fi
         chmod 700 $TMPDIR
 
-        remote_restore
+        while read -r mode uid gid psize fsize
+        do
+                _restore
+        done
+else
+        while read -r mode uid gid psize fsize path
+        do
+                _restore
+        done
 fi
+# last one
+x=$(($i - 1))
+smallest_interval=100
+p=""
+for j in $(_seq $x); do
+        if [[ $monthday -gt ${_month_s[$j]} &&
+                $monthday -le ${_month_e[$j]} ]]; then
+
+                interval=$((${_month_e[$j]} - ${_month_s[$j]}))
+                if [[ $interval -lt $smallest_interval ]]; then
+                        smallest_interval=$interval
+                        p=$j
+                fi
+        fi
+done
+if [[ ! -z $p ]]; then 
+        print_file_status $p
+        rm_tmp_files $x
+fi
+
+exit 0

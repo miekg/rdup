@@ -1,7 +1,7 @@
 x xxx 2006: 0.2.15 Miek <miek@miek.nl>
    scripts:
-   * refactored mirror.sh
-
+   * refactored mirror.sh, rorrim.sh, monthday.sh 
+   * reformatted the perl scripts
 
 
 1 Jul 2006: 0.2.14 Miek <miek@miek.nl>
