@@ -18,7 +18,7 @@ case $HOSTNAME in
         exit 1
 esac
 
-echo "You need to edit this script, exiting"
+echo "You need to edit this script, exiting" >&2
 exit 1 # remove this 
 
 ##
