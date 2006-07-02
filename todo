@@ -9,10 +9,10 @@ o make hdup.pl first class citizen
 
 :rdup:
 :tests:
-add conformence test; symlinks etc.
+add conformence test; symlinks etc. Must be done before 0.2.15
 
 :doc:
-manpages for the perl versions?
+manpages for the perl versions? They do the same, generic manpage?
 
 :porting:
 o port extended attributes to FreeBSD
@@ -40,6 +40,9 @@ o use full hostname not the short one. $HOST is just used...
 
 
 :DONE:
+o refactored perl scripts
+ 2 July: done
+
 o refactor the scripts
 o kill whitespace
 o use read and dd in restore scripts
