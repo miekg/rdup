@@ -17,7 +17,6 @@ use Fcntl qw(:mode);
 
 my $ts = time;
 my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($ts);
-
 my $S_MMASK = 07777;      # mask to get permission
 my $S_ISDIR = 040000;
 my $S_ISLNK = 0120000;
@@ -46,17 +45,25 @@ my $ireg = 0;        # Number of regular files
 my $idir = 0;        # Number of directories
 my $ilnk = 0;        # Number of symbolic links
 my $irm  = 0;        # Number of files removed
+my ($mode, $uid, $gid, $psize, $fsize, $path);
 
-if ($remote)
-{
-        remote_mirror($backupDir);
-}
-else
-{
-        local_mirror($backupDir);
-}
 
+my $dir = $_[0];
+if ($remote) {
+        while (($_ = <STDIN>)) {
+                chomp;
+                ($mode, $uid, $gid, $psize, $fsize) = split;
+                _mirror($backupDir);
+        }
+} else {
+        while (($_ = <STDIN>)) {
+                chomp;
+                ($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
+                _mirror($backupDir);
+        }
+}
 my $te = time;
+
 printf STDERR "** #REG FILES  : %d\n", $ireg;
 printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
@@ -67,168 +74,86 @@ printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 
 exit 0;
 
-sub local_mirror
+sub _mirror
 {
-        my $dir = $_[0];
+        my $dump = substr($mode, 0, 1);
+        my $modebits = substr($mode, 1);
 
-        while (($_ = <STDIN>))
-        {
-                chomp;
-                my($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
-                my $dump = substr($mode, 0, 1);
-                my $modebits = substr($mode, 1);
+        sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
 
-                sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
-
-                my $bits=$modebits & $S_MMASK; # permission bits
-                        my $typ = 0;
-                $typ = 1 if ($modebits & $S_ISDIR) == $S_ISDIR;
-                $typ = 2 if ($modebits & $S_ISLNK) == $S_ISLNK;
-                print STDERR "$path\n" if $verbose;
-                my $target = "$dir/$path";
-                my $suffix = mirror_suffix($target);
-
-                if ($dump eq '+')
-                {        # add
-                        if ($typ == 0)
-                        {        # REG
-                                if ($suffix)
-                                {      # We only have a suffix if the file exists
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
-                                copy($path, $target) or warn "** Copy failed: $! $path $target";
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
-                                chmod $modebits, $target;
-                                $ftsize += $fsize;
-                                $ireg++;
-                        }
-                        elsif ($typ == 1)
-                        {
-                                if (-f _ || -l _)
-                                {      # Type of entity has changed
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
-                                mkpath($target) unless -d _;
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
-                                if ($> != 0 && $bits == 0)
-                                {
-                                        print STDERR "chmod $target to 700\n";
-                                        $bits = 0700;
-                                }
-                                chmod $bits, $target;
-                                $idir++;
-                        }
-                        elsif ($typ == 2)
-                        {        # LNK; target id the content
-                                if ($suffix)
-                                {      # We only have a suffix if the file exists
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
-                                symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
-                                $ilnk++;
-                        }
-                }
-                else
-                {       # move. It could be the stuff is not there, don't error on that.
-                        if ($suffix)
-                        {
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                $irm++;
-                        }
-                }
-        }
-}
-
-sub remote_mirror
-{
-        my $dir = $_[0];
-
-        while (($_ = <STDIN>))
-        {
-                chomp;
-
-                my($mode, $uid, $gid, $psize, $fsize) = split;
-                my $dump = substr($mode, 0, 1);
-                my $modebits = substr($mode, 1);
-
-                sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
+        if ($remote) {
                 my $path = "";
                 read STDIN, $path, $psize;
+        }
 
-                my $bits = $modebits & $S_MMASK;
-                my $typ = 0;
-                $typ = 1 if ($modebits & $S_ISDIR) == $S_ISDIR;
-                $typ = 2 if ($modebits & $S_ISLNK) == $S_ISLNK;
-                print STDERR "$path\n" if $verbose;
-                my $target = "$dir/$path";
-                my $suffix = mirror_suffix($target);
+        my $bits = $modebits & $S_MMASK;
+        my $typ = 0;
+        $typ = 1 if ($modebits & $S_ISDIR) == $S_ISDIR;
+        $typ = 2 if ($modebits & $S_ISLNK) == $S_ISLNK;
+        print STDERR "$path\n" if $verbose;
+        my $target = "$dir/$path";
+        my $suffix = mirror_suffix($target);
 #
-#       NOTE - mirror_suffix() calls stat() on the target.  We rely on thet below to avoid multiple expensive calls to stat.
+#       NOTE - mirror_suffix() calls stat() on the target.  
+#       We rely on thet below to avoid multiple expensive calls to stat.
 #       If mirror_suffix is changed, or is naot called, it will be necassary to revise this assumtion.
 #
-                if ($dump eq '+')
-                {        # add
-                        if ($typ == 0)
-                        {        # REG
-                                if ($suffix)
-                                {      # We only have a suffix if the file exists
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
+        if ($dump eq '+') {        # add
+                if ($typ == 0) {        # REG
+                        if ($suffix) {      # We only have a suffix if the file exists
+                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                        }
+                        if ($remote) {
                                 open FILE, ">$target" or warn "** Cannot create $target: $!";
-                                if ($fsize != 0)
-                                {
+                                if ($fsize != 0) {
                                         copyout($fsize, *FILE);
                                 }
                                 chown $uid, $gid, *FILE;
                                 chown_attr($uid, $gid, $target);
                                 chmod $bits, *FILE;
                                 close FILE;
-                                $ftsize += $fsize;
-                                $ireg++;
-                        }
-                        elsif ($typ == 1)
-                        {        # DIR
-                                if (-f _ || -l _)
-                                {      # Type of entiry has changed
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
-                                mkpath($target) unless -d _;
+                        } else {
+                                copy($path, $target) or warn "** Copy failed: $! $path $target";
                                 chown $uid, $gid, $target;
                                 chown_attr($uid, $gid, $target);
-                                if ($> != 0 && $bits == 0)
-                                {
-                                        print STDERR "chmod $target to 700\n";
-                                        $bits = 0700;
-                                }
-                                chmod $bits, $target;
-                                $idir++;
+                                chmod $modebits, $target;
                         }
-                        elsif ($typ == 2)
-                        {        # LNK; target id the content
-                                if ($suffix)
-                                {      # We only have a suffix if the file exists
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
+                        $ftsize += $fsize;
+                        $ireg++;
+                } elsif ($typ == 1) {        # DIR
+                        if (-f _ || -l _) {      # Type of entiry has changed
+                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                        }
+                        mkpath($target) unless -d _;
+                        chown $uid, $gid, $target;
+                        chown_attr($uid, $gid, $target);
+                        if ($> != 0 && $bits == 0) {
+                                print STDERR "chmod $target to 700\n";
+                                $bits = 0700;
+                        }
+                        chmod $bits, $target;
+                        $idir++;
+                } elsif ($typ == 2) {        # LNK; target id the content
+                        if ($suffix) {      # We only have a suffix if the file exists
+                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                        }
+                        if ($remote) {
                                 my $linkTarget = "";
                                 read STDIN, $linkTarget, $fsize;
                                 symlink $target, $linkTarget;
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
-                                $ilnk++;
+                        } else {
+                                symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
                         }
+
+                        chown $uid, $gid, $target;
+                        chown_attr($uid, $gid, $target);
+                        $ilnk++;
                 }
-                else
-                {        # Remove
-                        if ($suffix)
-                        {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                        }
-                        $irm++;
+        } else {        # Remove
+                if ($suffix) {      # We only have a suffix if the file exists
+                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                 }
+                $irm++;
         }
 }
 
@@ -241,8 +166,7 @@ sub chown_attr
         my $xgid = $_[1];
         my $file = $_[2];
 
-        if ($^O eq "linux")
-        {
+        if ($^O eq "linux") {
                 system("attr -q -s r_uid -V$xuid \"$file\"");
                 system("attr -q -s r_gid -V$xgid \"$file\"");
         }
@@ -282,12 +206,9 @@ sub sanity_check
 
 sub check_attr
 {
-        if ($^O eq "linux")
-        {
+        if ($^O eq "linux") {
                 map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
-        }
-        else
-        {
+        } else {
                 warn "Cannot set extended attributes";
         }
         return 0;
@@ -304,13 +225,13 @@ sub usage
         print " -v      print the files processed to stderr\n";
         print " -h      this help\n";
         print " -V      print version\n";
-        exit;
+        exit 0;
 }
 
 sub version
 {
         print "** $progName: @PACKAGE_VERSION@ (rdup-utils)\n";
-        exit;
+        exit 0;
 }
 
 sub copyout
@@ -321,14 +242,12 @@ sub copyout
         my $buf;
         my $n;
 
-        while ($count > 4096)
-        {
+        while ($count > 4096) {
                 $n = read STDIN, $buf, 4096;
                 syswrite $pipe, $buf, $n;
                 $count -= 4096;
         }
-        if ($count > 0)
-        {
+        if ($count > 0) {
                 $n = read STDIN, $buf, $count;
                 syswrite $pipe, $buf, $n;
         }
