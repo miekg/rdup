@@ -27,6 +27,7 @@ usage(FILE *f)
                 "   -c\t\tcat the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
         fprintf(f, "   -h\t\tgives this help\n");
         fprintf(f, "   -m\t\tonly print new/modified files (unsets -r)\n");
+        fprintf(f, "   -l\t\tdon't check for file size changes\n");
         fprintf(f, "   -n\t\tignore " NOBACKUP " files\n");
         fprintf(f, "   -r\t\tonly print removed files (unsets -m)\n");
         fprintf(f, "   -s SIZE\tonly output files smaller then SIZE bytes\n");

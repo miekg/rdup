@@ -108,6 +108,9 @@ option unsets \-m.
 Only print modified/new files; entries that start with a `+'. This
 option unsets \-r.
 .TP
+.B \-l
+Local backups, do not check for file size changes.
+.TP
 .B \-v
 Be more verbose. 
 When used once, processed .nobackup files will be

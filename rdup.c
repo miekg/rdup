@@ -12,6 +12,7 @@ gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup 
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
+gboolean opt_check  	   = TRUE; 		      /* check for file size changes */
 char *opt_format 	   = "%p%m %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
@@ -218,6 +219,9 @@ main(int argc, char **argv)
 				if (opt_verbose > 2) {
 					opt_verbose = 2;
 				}
+				break;
+			case 'l':
+				opt_check = FALSE;
 				break;
 			case 'r':
 				opt_removed = TRUE;
