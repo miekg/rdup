@@ -51,12 +51,12 @@ _echo2() {
 while getopts ":ab:k:l:c:N:s:vzehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG
-                if [[ -z $BACKUPDIR ]]; then
+                if [[ -z "$BACKUPDIR" ]]; then
                         _echo2 "-b needs an argument"
                         exit 1
                 fi;;
                 k) KEYFILE=$OPTARG
-                if [[ -z $KEYFILE ]]; then
+                if [[ -z "$KEYFILE" ]]; then
                         _echo2 "-k needs an argument"
                         exit 1
                 fi
@@ -89,7 +89,7 @@ if [[ $# -eq 0 ]]; then
         _echo2 "No directories to backup" 
         exit 1
 fi
-if [[ -z $BACKUPDIR ]]; then
+if [[ -z "$BACKUPDIR" ]]; then
         BACKUPDIR="/vol/backup/$HOSTNAME" 
 fi
 
@@ -135,19 +135,19 @@ fi
 if [[ -z "$remote" ]]; then      # no remote 
         if [[ -z "$KEYFILE" ]]; then
                 if $gzip; then
-                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
+                        @sbindir@/rdup -l -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh | \
                         @sbindir@/mirror.sh $v $a -c -b "$BACKUPDIR"
                 else 
-                        @sbindir@/rdup -N $STAMP $LIST $@ | \
+                        @sbindir@/rdup -l -N $STAMP $LIST $@ | \
                         @sbindir@/mirror.sh $a $v -b "$BACKUPDIR"
                 fi
         else    # with keyfile
                 if $gzip; then
-                        @sbindir@/rdup -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
+                        @sbindir@/rdup -l -c -N $STAMP $LIST $@ | @sbindir@/gzip.sh |\
                         @sbindir@/crypt.sh $KEYFILE | \
                         @sbindir@/mirror.sh $a $v -c -b "$BACKUPDIR"
                 else 
-                        @sbindir@/rdup -c -N $STAMP $LIST $@ |
+                        @sbindir@/rdup -l -c -N $STAMP $LIST $@ |
                         @sbindir@/crypt.sh $KEYFILE | \
                         @sbindir@/mirror.sh $v $a -c -b "$BACKUPDIR"
                 fi

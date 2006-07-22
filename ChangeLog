@@ -1,10 +1,10 @@
 x xxx 2006: 0.2.15 Miek <miek@miek.nl>
    scripts:
    * refactored mirror.sh, rorrim.sh, monthday.sh, mirror.pl
-   * coding style changes to the perl scripts; {-placement
-   * rdup: add -l (local) option. Disable size checking for 
-     files
-
+   * dump.sh: more quotes for dirs with spaces
+   * coding style changes to the perl scripts.
+   * rdup: add -l (local) option. Disable size checking for
+     files when doing a local backup
 
 1 Jul 2006: 0.2.14 Miek <miek@miek.nl>
    -- misc. bugfixes and new features --
