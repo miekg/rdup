@@ -279,6 +279,7 @@ fi
 backupdir=$backupdir/`date +%Y%m`
 
 ts=`date +%s`
+spaces="                    "
 if $remote; then
         while read -r mode uid gid psize fsize
         do
@@ -288,6 +289,10 @@ else
         declare -a path # catch spacing
         while read -r mode uid gid psize fsize path
         do
+                # urggh, re-add missgin spaces at the end
+                ((sp=$psize - ${#path}))
+                sp=${spaces:0:$sp}
+                path="$path$sp"
                 _mirror
         done
 fi
