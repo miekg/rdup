@@ -1,11 +1,12 @@
-x xxx 2006: 0.2.15 Miek <miek@miek.nl>
+6 Aug 2006: 0.2.15 Miek <miek@miek.nl>
    scripts:
    * refactored mirror.sh, rorrim.sh, monthday.sh, mirror.pl
    * dump.sh: more quotes for dirs with spaces. Re-add trailing spaces 
      to path names
    * coding style changes to the perl scripts.
    * rdup: add -l (local) option. Disable size checking for
-     files when doing a local backup
+     files when doing a local backup and don't drop the file.
+
 
 1 Jul 2006: 0.2.14 Miek <miek@miek.nl>
    -- misc. bugfixes and new features --

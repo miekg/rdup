@@ -207,7 +207,7 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 	
-	if (!S_ISDIR(e->f_mode) && plusmin == '+' && opt_local) {
+	if (!S_ISDIR(e->f_mode) && plusmin == '+' && !opt_local) {
 		/* check if the file has changed since we first
 		 * visited it. If so, skip it as it will tear
 		 * up the entire print. Esp. when also printing
