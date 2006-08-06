@@ -107,7 +107,7 @@ mirror_suffix() {
 
 mirror_create_top() {
         # need to reverse the order
-        dir=$1;
+        dir=$1
         while [[ $dir != "/" ]]
         do
                 dirs="$dir $dirs"
@@ -290,6 +290,7 @@ else
         while read -r mode uid gid psize fsize path
         do
                 # urggh, re-add missgin spaces at the end
+                # this is why shell sucks
                 ((sp=$psize - ${#path}))
                 sp=${spaces:0:$sp}
                 path="$path$sp"
