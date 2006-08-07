@@ -1,5 +1,8 @@
 TODO: 
 
+o rethink the backup format 
+o related - rethink the restore
+
 :rdup utils: 
 o limit modifier understand k/m/g suffixes
 o check if monthday.sh handles multiple changes on 1 day
@@ -13,6 +16,7 @@ add conformence test; symlinks etc. Must be done before 0.2.15
 
 :doc:
 manpages for the perl versions? They do the same, generic manpage?
+move to rest for the format
 
 :porting:
 o port extended attributes to FreeBSD
