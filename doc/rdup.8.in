@@ -24,9 +24,6 @@ backups. All paths printed are absolute.
 If the \fItimestamp\fR option is not given, all paths founds are
 printed. Only when a \fItimestamp\fR file is given, times can be
 compared and an incremental output can be generated.
-
-The \fIFILELIST\fR is stored, be default, in `@sysconfdir@/rdup'. See
-the \fB\-e\fR option on how to change this.
 .PP
 \fBrdup\fR prints a filelist to standard output. 
 Subsequent programs in a pipe line can be used to actually

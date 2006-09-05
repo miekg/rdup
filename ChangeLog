@@ -6,6 +6,7 @@
    * coding style changes to the perl scripts.
    * rdup: add -l (local) option. Disable size checking for
      files when doing a local backup and don't skip the file.
+   * Documentation updates
 
 
 1 Jul 2006: 0.2.14 Miek <miek@miek.nl>
