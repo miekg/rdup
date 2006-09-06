@@ -1,3 +1,8 @@
+xxxx 2006: 0.2.16 Miek <miek@miek.nl>
+
+
+
+
 1 Sep 2006: 0.2.15 Miek <miek@miek.nl>
    scripts:
    * refactored mirror.sh, rorrim.sh, monthday.sh, mirror.pl
