@@ -153,10 +153,10 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			fprintf(out, "%ld", (unsigned long)e->f_uid);		
 			break;
 		case 'g': 
-			fprintf(out, "%ld", (unsigned long) e->f_gid);		
+			fprintf(out, "%ld", (unsigned long)e->f_gid);		
 			break;
 		case 'm': 
-			fprintf(out, "%d", e->f_mode);	
+			fprintf(out, "%d", (int)e->f_mode);	
 			break;
 		case 't': 
 			fprintf(out, "%ld", (unsigned long)e->f_mtime);	
@@ -293,9 +293,9 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 	fprintf((FILE*) fp, "%d %s", (int) ((struct entry*)data)->f_mode, 
 			(char*) ((struct entry*)data)->f_name);
 	if (opt_null) {
-		putc('\0', fp);
+		putc('\0', (FILE*)fp);
 	} else {
-		putc('\n', fp);
+		putc('\n', (FILE*)fp);
 	}
 	return FALSE;
 }
