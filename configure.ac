@@ -7,11 +7,13 @@ AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
 sinclude(glib-2.0.m4)
+sinclude(check_gnu_make.m4)
 
 AC_AIX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
+CHECK_GNU_MAKE
 AM_PATH_GLIB_2_0(2.0.0)
 AC_CHECK_LIB(attr, lgetxattr,, [
         AC_MSG_WARN([No xattr support. Not enabling -a])

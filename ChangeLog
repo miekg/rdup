@@ -1,7 +1,8 @@
 xxxx 2006: 0.2.16 Miek <miek@miek.nl>
    rdup:
    * some updates for Solaris 10
-
+   configure:
+   * added check for GNU make (isn't used yet)
 
 
 1 Sep 2006: 0.2.15 Miek <miek@miek.nl>
