@@ -22,6 +22,7 @@ AC_CHECK_LIB(attr, lgetxattr,, [
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])
 
 AC_CHECK_FUNCS(getdelim) 
+AC_CHECK_FUNCS(dirfd) 
 
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,

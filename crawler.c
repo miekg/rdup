@@ -175,7 +175,11 @@ dir_crawl(GTree *t, char *path)
 	}
 
 	/* get device */
+#ifdef HAVE_DIRFD
 	if (fstat(dirfd(dir), &s) != 0) {
+#else
+	if (fstat(rdup_dirfd(dir), &s) != 0) {
+#endif
 		msg("Cannot determine holding device of the directory `%s\': %s", path, 
 				strerror(errno));
 		closedir(dir);

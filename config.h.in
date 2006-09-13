@@ -3,6 +3,9 @@
 /* Define to 1 if you have the <attr/xattr.h> header file. */
 #undef HAVE_ATTR_XATTR_H
 
+/* Define to 1 if you have the `dirfd' function. */
+#undef HAVE_DIRFD
+
 /* Define to 1 if you have the `getdelim' function. */
 #undef HAVE_GETDELIM
 

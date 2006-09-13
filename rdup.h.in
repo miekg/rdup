@@ -9,6 +9,10 @@
 #define _GNU_SOURCE
 #endif
 
+#ifdef HAVE_DIRFD
+#define rdup_dirfd(d) ((d)->dd_fd)
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
