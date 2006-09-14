@@ -47,7 +47,6 @@ my $ilnk = 0;        # Number of symbolic links
 my $irm  = 0;        # Number of files removed
 my ($mode, $uid, $gid, $psize, $fsize, $path);
 
-
 my $dir = $_[0];
 if ($remote) {
         while (($_ = <STDIN>)) {
@@ -74,8 +73,7 @@ printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 
 exit 0;
 
-sub _mirror
-{
+sub _mirror {
         my $dump = substr($mode, 0, 1);
         my $modebits = substr($mode, 1);
 
@@ -95,8 +93,8 @@ sub _mirror
         my $suffix = mirror_suffix($target);
 #
 #       NOTE - mirror_suffix() calls stat() on the target.  
-#       We rely on thet below to avoid multiple expensive calls to stat.
-#       If mirror_suffix is changed, or is naot called, it will be necassary to revise this assumtion.
+#       We rely on that below to avoid multiple expensive calls to stat.
+#       If mirror_suffix is changed, or is not called, it will be necassary to revise this assumtion.
 #
         if ($dump eq '+') {        # add
                 if ($typ == 0) {        # REG
@@ -157,8 +155,7 @@ sub _mirror
         }
 }
 
-sub chown_attr
-{
+sub chown_attr {
         return unless $attr_there;
         return unless $attr;
 
@@ -177,8 +174,7 @@ sub chown_attr
 #         ^^ ^^^^^
 # => "+05.01:50
 #
-sub mirror_suffix
-{
+sub mirror_suffix {
         my $filename = $_[0];
 
         lstat($filename);
@@ -187,8 +183,7 @@ sub mirror_suffix
         return sprintf "+%02d.%02d:%02d", $mday, $hour, $min;
 }
 
-sub sanity_check
-{
+sub sanity_check {
         my $dump = $_[0];
         my $mode = $_[1];
         my $psize = $_[2];
@@ -204,8 +199,7 @@ sub sanity_check
         die "** $progName: gid ($gid) must be numeric"   unless $gid =~ "[0-9]+";
 }
 
-sub check_attr
-{
+sub check_attr {
         if ($^O eq "linux") {
                 map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
         } else {
@@ -214,8 +208,7 @@ sub check_attr
         return 0;
 }
 
-sub usage
-{
+sub usage {
         print "$progName [OPTIONS]\n\n";
         print "Mirror the files from the filelist of rdup\n\n";
         print "OPTIONS\n";
@@ -228,14 +221,12 @@ sub usage
         exit 0;
 }
 
-sub version
-{
+sub version {
         print "** $progName: @PACKAGE_VERSION@ (rdup-utils)\n";
         exit 0;
 }
 
-sub copyout
-{
+sub copyout {
         my $count = $_[0];
         my $pipe = $_[1];
 
