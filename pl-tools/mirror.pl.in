@@ -50,7 +50,7 @@ my ($mode, $uid, $gid, $psize, $fsize, $path);
 if ($remote) {
         while (($_ = <STDIN>)) {
                 chomp;
-                ($mode, $uid, $gid, $psize, $fsize) = split;
+                ($mode, $uid, $gid, $psize, $fsize) = split(" ", $_, 5);
                 _mirror($backupDir);
         }
 } else {
@@ -80,7 +80,7 @@ sub _mirror {
         sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
 
         if ($remote) {
-                my $path = "";
+                $path = "";
                 read STDIN, $path, $psize;
         }
 

@@ -21,6 +21,17 @@ a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
 backups. All paths printed are absolute.
 .PP
+The
+.IR FILELIST
+is a internal list \fBrdup\fR writes to, to keep track of which files
+are in a backup. If you don't want this (i.e. make a full
+backup), use \fI/dev/null\fR here.
+.PP
+The
+.IR DIRS/FILES
+can be specified multiple times. These are the directories and files
+you want to backup.
+.PP
 If the \fItimestamp\fR option is not given, all paths founds are
 printed. Only when a \fItimestamp\fR file is given, times can be
 compared and an incremental output can be generated.

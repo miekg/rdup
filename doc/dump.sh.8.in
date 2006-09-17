@@ -15,21 +15,21 @@ DIR|FILE
 ]
 
 .SH DESCRIPTION
-\fBdump.sh\fR is a frontend for `mirror.sh' and `rdup'. It will backup
+\fBdump.sh\fR is a frontend for `mirror.pl' and `rdup'. It will backup
 all directories and files given on the command line. It tries to be smart with
 respect to a full dump or an incremental dump. If the directories to
 be backed up \fIdo not exist\fR in the backup directory a full dump
 is assumed. Otherwise an incremental dump is performed.
 .PP
 Making local backups is as simple as:
-      dump.sh ~ 
+      dump.pl ~ 
 .PP
 \fBDIR\fR is the directory to be backed up. Multiple directories
 are allowed on the command line.
 .PP
 The default backup location is `/vol/backup/$HOSTNAME'.
 .PP
-See mirror.sh(8) for more information on how the files are placed
+See mirror.pl(8) for more information on how the files are placed
 in the backup.
 
 .SH OPTIONS
@@ -79,6 +79,9 @@ Limit the transfer to 'num' bytes/second. This option is given to
 .B \-a
 Enable extended attributes. Write the uid/gid to the extended user
 attributes r_uid and r_gid.
+.TP
+.B \-x
+Pass \-x to rdup (stay in local filesystem).
 .TP
 .B \-z
 Compress the files while backing up. This option
