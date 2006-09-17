@@ -15,16 +15,16 @@ usage() {
         echo DIR \ - directories to back up
         echo
         echo OPTIONS:
-        echo " -b DIR     backup directory. Default: /vol/backup/HOSTNAME"
+        echo " -b DIR     backup directory, can be given more then once"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
+        echo " -z         compress all files, using gzip.pl"
         echo " -N PREFIX  optional prefix for the timestmp and filelist"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -v         echo the files processed to stderr"
         echo " -x         pass -x to rdup"
-        echo " -z         compress all files, using gzip.pl"
         echo " -h         this help"
         echo " -V         print version"
 }
