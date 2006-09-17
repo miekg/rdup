@@ -9,6 +9,7 @@ xxxx 2006: 0.2.16 Miek <miek@miek.nl>
    * mirror.pl: major fixes: use the correct backup dir
      and correct -c.
    * dump.sh: use the perl tools! Added -x option
+   * dump-here.sh: use perl tools too.
 
 
 1 Sep 2006: 0.2.15 Miek <miek@miek.nl>
