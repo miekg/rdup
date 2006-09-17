@@ -52,7 +52,7 @@ _echo2() {
 while getopts ":ab:k:l:c:N:s:vzxehV" o; do
         case $o in
                 b) BACKUPDIR=$OPTARG
-                if [[ -z "$BACKUPDIR" ]]; then
+                if [[ -z "$OPTARG" ]]; then
                         _echo2 "-b needs an argument"
                         exit 1
                 fi;;
