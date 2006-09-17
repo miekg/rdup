@@ -8,6 +8,8 @@ xxxx 2006: 0.2.16 Miek <miek@miek.nl>
    scripts:
    * mirror.pl: major fixes: use the correct backup dir
      and correct -c.
+     Allow multiple -b options to backup to different directories
+     at the same time
    * dump.sh: use the perl tools! Added -x option
    * dump-here.sh: use perl tools too.
 

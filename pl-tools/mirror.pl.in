@@ -8,7 +8,7 @@
 
 use strict;
 
-use Getopt::Std;
+use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 use File::Path;
 use File::Copy;
@@ -22,20 +22,28 @@ my $S_ISDIR = 040000;
 my $S_ISLNK = 0120000;
 
 my $progName = basename $0;
+my ($help, $version, $verbose, $attr, $remote, @backupDir);
 
-my %opt;
+GetOptions("h" => \$help,
+        "V" => \$version,
+        "a" => \$attr, # extended attr support
+        "c" => \$remote,
+        "v" => \$verbose,
+        "b=s" => \@backupDir);
 
-getopts('acvhb:V', \%opt);
+#getopts('acvhb:V', \%opt);
 
-usage() if $opt{'h'};      # Usage for -h
-version() if $opt{'V'};      # Version for -V
-my $verbose = $opt{'v'};    # Verbose messages for -v
-my $attr = $opt{'a'};      # Extended attributes set for -a
-my $remote = $opt{'c'};      # Find content in pipe for -c
+usage() if $help;
+version() if $version;
 my $hostname = `hostname`;    # This hostname
 chomp $hostname;
 # Location of backup root in local filesystem
-my $backupDir = (defined $opt{'b'} ? $opt{'b'} : "/vol/backup/" . $hostname) . "/" . sprintf "%04d%02d", 1900+$year, 1+$mon;
+if ($#backupDir == 0) {
+        $backupDir[0] = "/vol/backup/" . $hostname;
+}
+foreach my $b (@backupDir) {
+        $b .= "/" . sprintf "%04d%02d", 1900+$year, 1+$mon . "\n";
+}
 
 my $attr_there = check_attr();    # Can we set extended attributes?
 
@@ -51,13 +59,13 @@ if ($remote) {
         while (($_ = <STDIN>)) {
                 chomp;
                 ($mode, $uid, $gid, $psize, $fsize) = split(" ", $_, 5);
-                _mirror($backupDir);
+                _mirror(@backupDir);
         }
 } else {
         while (($_ = <STDIN>)) {
                 chomp;
                 ($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
-                _mirror($backupDir);
+                _mirror(@backupDir);
         }
 }
 my $te = time;
@@ -67,13 +75,13 @@ printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
 printf STDERR "** SIZE        : %d KB\n", $ftsize/1024;
-printf STDERR "** STORED IN   : %s\n", $backupDir;
+printf STDERR "** STORED IN   : %s\n",  join(", ",@backupDir);
 printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 
 exit 0;
 
 sub _mirror {
-        my $dir = $_[0];
+        my @backupDir = @_;
         my $dump = substr($mode, 0, 1);
         my $modebits = substr($mode, 1);
 
@@ -93,67 +101,82 @@ sub _mirror {
         $typ = 1 if ($modebits & $S_ISDIR) == $S_ISDIR;
         $typ = 2 if ($modebits & $S_ISLNK) == $S_ISLNK;
         print STDERR "$path\n" if $verbose;
-        my $target = "$dir/$path";
-        my $suffix = mirror_suffix($target);
-#
+
 #       NOTE - mirror_suffix() calls stat() on the target.  
 #       We rely on that below to avoid multiple expensive calls to stat.
 #       If mirror_suffix is changed, or is not called, it will be necassary to revise this assumtion.
 #
         if ($dump eq '+') {        # add
                 if ($typ == 0) {        # REG
-                        if ($suffix) {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                        }
-                        if ($remote) {
-                                open FILE, ">$target" or warn "** Cannot create $target: $!";
-                                if ($fsize != 0) {
-                                        copyout($fsize, *FILE);
+                        foreach my $dir (@backupDir) {
+                                my $target = "$dir/$path";
+                                my $suffix = mirror_suffix($target);
+
+                                if ($suffix) {      # We only have a suffix if the file exists
+                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                                 }
-                                chown $uid, $gid, *FILE;
-                                chown_attr($uid, $gid, $target);
-                                chmod $bits, *FILE;
-                                close FILE;
-                        } else {
-                                copy($path, $target) or warn "** Copy failed: $! $path $target";
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
-                                chmod $modebits, $target;
+                                if ($remote) {
+                                        open FILE, ">$target" or warn "** Cannot create $target: $!";
+                                        if ($fsize != 0) {
+                                                copyout($fsize, *FILE);
+                                        }
+                                        chown $uid, $gid, *FILE;
+                                        chown_attr($uid, $gid, $target);
+                                        chmod $bits, *FILE;
+                                        close FILE;
+                                } else {
+                                        copy($path, $target) or warn "** Copy failed: $! $path $target";
+                                        chown $uid, $gid, $target;
+                                        chown_attr($uid, $gid, $target);
+                                        chmod $modebits, $target;
+                                }
                         }
                         $ftsize += $fsize;
                         $ireg++;
                 } elsif ($typ == 1) {        # DIR
-                        if (-f _ || -l _) {      # Type of entiry has changed
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                        foreach my $dir (@backupDir) {
+                                my $target = "$dir/$path";
+                                my $suffix = mirror_suffix($target);
+                                if (-f _ || -l _) {      # Type of entiry has changed
+                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                                }
+                                mkpath($target) unless -d _;
+                                chown $uid, $gid, $target;
+                                chown_attr($uid, $gid, $target);
+                                if ($> != 0 && $bits == 0) {
+                                        print STDERR "chmod $target to 700\n";
+                                        $bits = 0700;
+                                }
+                                chmod $bits, $target;
                         }
-                        mkpath($target) unless -d _;
-                        chown $uid, $gid, $target;
-                        chown_attr($uid, $gid, $target);
-                        if ($> != 0 && $bits == 0) {
-                                print STDERR "chmod $target to 700\n";
-                                $bits = 0700;
-                        }
-                        chmod $bits, $target;
                         $idir++;
                 } elsif ($typ == 2) {        # LNK; target id the content
-                        if ($suffix) {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                        }
-                        if ($remote) {
-                                my $linkTarget = "";
-                                read STDIN, $linkTarget, $fsize;
-                                symlink $target, $linkTarget;
-                        } else {
-                                symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
-                        }
+                        foreach my $dir (@backupDir) {
+                                my $target = "$dir/$path";
+                                my $suffix = mirror_suffix($target);
+                                if ($suffix) {      # We only have a suffix if the file exists
+                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                                }
+                                if ($remote) {
+                                        my $linkTarget = "";
+                                        read STDIN, $linkTarget, $fsize;
+                                        symlink $target, $linkTarget;
+                                } else {
+                                        symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
+                                }
 
-                        chown $uid, $gid, $target;
-                        chown_attr($uid, $gid, $target);
+                                chown $uid, $gid, $target;
+                                chown_attr($uid, $gid, $target);
+                        }
                         $ilnk++;
                 }
         } else {        # Remove
-                if ($suffix) {      # We only have a suffix if the file exists
-                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                foreach my $dir (@backupDir) {
+                        my $target = "$dir/$path";
+                        my $suffix = mirror_suffix($target);
+                        if ($suffix) {      # We only have a suffix if the file exists
+                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                        }
                 }
                 $irm++;
         }
