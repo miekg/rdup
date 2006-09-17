@@ -1,9 +1,11 @@
 xxxx 2006: 0.2.16 Miek <miek@miek.nl>
    rdup:
    * some updates for Solaris 10
+   * small documentation updates
    configure:
    * added check for GNU make (isn't used yet)
    * Solaris fixes (dirfd)
+   scripts:
    * mirror.pl: major fixes: use the correct backup dir
      and correct -c.
    * dump.sh: use the perl tools! Added -x option

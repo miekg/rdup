@@ -7,7 +7,6 @@ o related - rethink the restore
 o limit modifier understand k/m/g suffixes
 o check if monthday.sh handles multiple changes on 1 day
 o split off rdup-utils and rdup-core?
-o add -x switch to dump.sh
 o make hdup.pl first class citizen
 o maximum errors....
 
