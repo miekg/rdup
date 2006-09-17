@@ -13,7 +13,8 @@ xxxx 2006: 0.2.16 Miek <miek@miek.nl>
    * dump.sh: use the perl tools! Added -x option.
      The -b argument is mandatory, but can now be given
      multiple times.
-     The 'YYYYMM' directory isn't created by default.
+     The $HOST directory isn't added by default! Now you need
+     to specify: -b /vol/backup/$HOST
    * dump-here.sh: use perl tools too.
    * Added crypt.pl - a perl version crypt.sh
 
