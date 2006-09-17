@@ -22,21 +22,24 @@ be backed up \fIdo not exist\fR in the backup directory a full dump
 is assumed. Otherwise an incremental dump is performed.
 .PP
 Making local backups is as simple as:
-      dump.pl ~ 
+      dump.pl -b /vol/backup/$HOST ~ 
 .PP
-\fBDIR\fR is the directory to be backed up. Multiple directories
-are allowed on the command line.
+\fB~\fR is the directory to be backed up. Multiple directories
+or files are allowed on the command line.
 .PP
-The default backup location is `/vol/backup/$HOSTNAME'.
+There is no default backup location. You must specify a \-b argument.
 .PP
-See mirror.pl(8) for more information on how the files are placed
+See mirror.sh(8) for more information on how the files are placed
 in the backup.
 
 .SH OPTIONS
 .TP 
 .B \-b backupdir
-Alternate backup directory. Defaults to /vol/backup/`hostname`. The
-current date in the format YYYYMM is added automatically.
+The backup directory. You can specify this option multiple times, this
+will make the backup to be written to all these directories in one go.
+
+Note that the \-e option for instance will only be looking at the first
+directory specified.
 .TP
 .B \-N name
 The \fIname\fR speficies an optional prefix for the

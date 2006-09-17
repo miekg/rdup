@@ -40,6 +40,7 @@ PROGNAME=$0
 BACKUPDIR=""
 KEYFILE=""
 PREFIX=""
+FIRST="" # the first backup dir
 remote=""
 bwidth=""
 a=""
@@ -51,7 +52,10 @@ _echo2() {
 
 while getopts ":ab:k:l:c:N:s:vzxehV" o; do
         case $o in
-                b) BACKUPDIR=$OPTARG
+                b) BACKUPDIR="$BACKUPDIR -b $OPTARG"
+                if [[ -z $FIRST ]]; then
+                        FIRST=$OPTARG
+                fi
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-b needs an argument"
                         exit 1
@@ -92,7 +96,8 @@ if [[ $# -eq 0 ]]; then
         exit 1
 fi
 if [[ -z "$BACKUPDIR" ]]; then
-        BACKUPDIR="/vol/backup/$HOSTNAME" 
+        _echo2 "The -b argument is mandaory"
+        exit 1
 fi
 
 if [[ ! -z $bwidth && -z $cstream ]]; then
@@ -105,19 +110,21 @@ if $etc; then
                 _echo2 "The -e option is not compatible with -c"
                 exit 1
         fi
-        ETC="$BACKUPDIR"
+        ETC="$FIRST"
 else
         ETC="/etc/rdup"
 fi
 
-BACKUPDIR_DATE="$BACKUPDIR/$d"
+BACKUPDIR_DATE="$FIRST/$d"
+mkdir -p $BACKUPDIR_DATE
+if [[ ! $? ]]; then
+        _echo2 "Failure to create target backup directory"
+        exit 1
+fi
 STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
 LIST="$ETC/$HOSTNAME.$(basename $1).list"
 # DIRS in $@
 
-# this needs to be done differently, why? MG 11 May
-mkdir -m 755 -p "$BACKUPDIR"           
-mkdir -m 755 -p "$BACKUPDIR_DATE"
 # add pwd if the path was relative
 if [[ ${1:0:1} == "/" ]]; then
         dest="$1"
@@ -138,20 +145,22 @@ if [[ -z "$remote" ]]; then      # no remote
         if [[ -z "$KEYFILE" ]]; then
                 if $gzip; then
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl | \
-                        @sbindir@/mirror.pl $v $a -c -b "$BACKUPDIR"
+                        @sbindir@/mirror.pl $v $a -c $BACKUPDIR
                 else 
+                        echo "@sbindir@/rdup -l $x -N $STAMP $LIST $@"
+                        echo "@sbindir@/mirror.pl $a $v $BACKUPDIR"
                         @sbindir@/rdup -l $x -N $STAMP $LIST $@ | \
-                        @sbindir@/mirror.pl $a $v -b "$BACKUPDIR"
+                        @sbindir@/mirror.pl $a $v $BACKUPDIR
                 fi
         else    # with keyfile
                 if $gzip; then
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
                         @sbindir@/crypt.sh $KEYFILE | \
-                        @sbindir@/mirror.pl $a $v -c -b "$BACKUPDIR"
+                        @sbindir@/mirror.pl $a $v -c $BACKUPDIR
                 else 
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ |
                         @sbindir@/crypt.sh $KEYFILE | \
-                        @sbindir@/mirror.pl $v $a -c -b "$BACKUPDIR"
+                        @sbindir@/mirror.pl $v $a -c $BACKUPDIR
                 fi
         fi
 else     # remote 
@@ -159,21 +168,21 @@ else     # remote
                 if $gzip; then
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl | \
-                                ssh -x "$remote" | mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" | mirror.pl $a $v -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl | \
                                 $cstream -t $bwidth | \
-                                ssh -x "$remote" | mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" | mirror.pl $a $v -c $BACKUPDIR
                         fi
                 else    # without gzip
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 # do compress stream here
-                                ssh -x -C "$remote" mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 $cstream -t $bwidth | \
-                                ssh -x -C "$remote" mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         fi
                 fi
         else # with keyfile
@@ -181,23 +190,23 @@ else     # remote
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
                                 @sbindir@/crypt.sh $KEYFILE | 
-                                ssh -x "$remote" mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" mirror.pl $a $v -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
                                 @sbindir@/crypt.sh $KEYFILE | 
                                 $cstream -t $bwidth | \
-                                ssh -x "$remote" mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x "$remote" mirror.pl $a $v -c $BACKUPDIR
                         fi
                 else
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 @sbindir@/crypt.sh $KEYFILE | \
-                                ssh -x -C "$remote" mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 @sbindir@/crypt.sh $KEYFILE | \
                                 $cstream -t $bwidth | \
-                                ssh -x -C "$remote" mirror.pl $a $v -c -b "$BACKUPDIR"
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         fi
 
                 fi

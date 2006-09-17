@@ -31,18 +31,18 @@ GetOptions("h" => \$help,
         "v" => \$verbose,
         "b=s" => \@backupDir);
 
-#getopts('acvhb:V', \%opt);
-
 usage() if $help;
 version() if $version;
 my $hostname = `hostname`;    # This hostname
 chomp $hostname;
 # Location of backup root in local filesystem
-if ($#backupDir == 0) {
-        $backupDir[0] = "/vol/backup/" . $hostname;
+if ($#backupDir == -1) {
+                die "** Need at least one -b option";
+        
 }
 foreach my $b (@backupDir) {
-        $b .= "/" . sprintf "%04d%02d", 1900+$year, 1+$mon . "\n";
+        $b .= "/" . sprintf "%04d%02d", 1900 + $year, 1 + $mon . "\n";
+        mkdir $b;
 }
 
 my $attr_there = check_attr();    # Can we set extended attributes?

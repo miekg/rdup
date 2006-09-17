@@ -10,7 +10,10 @@ xxxx 2006: 0.2.16 Miek <miek@miek.nl>
      and correct -c.
      Allow multiple -b options to backup to different directories
      at the same time
-   * dump.sh: use the perl tools! Added -x option
+   * dump.sh: use the perl tools! Added -x option.
+     The -b argument is mandatory, but can now be given
+     multiple times.
+     The 'YYYYMM' directory isn't created by default.
    * dump-here.sh: use perl tools too.
 
 
