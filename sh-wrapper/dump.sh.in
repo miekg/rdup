@@ -147,8 +147,6 @@ if [[ -z "$remote" ]]; then      # no remote
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl | \
                         @sbindir@/mirror.pl $v $a -c $BACKUPDIR
                 else 
-                        echo "@sbindir@/rdup -l $x -N $STAMP $LIST $@"
-                        echo "@sbindir@/mirror.pl $a $v $BACKUPDIR"
                         @sbindir@/rdup -l $x -N $STAMP $LIST $@ | \
                         @sbindir@/mirror.pl $a $v $BACKUPDIR
                 fi
