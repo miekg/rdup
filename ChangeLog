@@ -6,6 +6,7 @@
    * added check for GNU make (isn't used yet)
    * Solaris fixes (dirfd)
    scripts:
+   * All sizes are report in MB
    * mirror.pl: major fixes: use the correct backup dir
      and correct -c.
      Allow multiple -b options to backup to different directories

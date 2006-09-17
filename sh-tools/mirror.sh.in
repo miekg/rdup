@@ -303,7 +303,7 @@ echo "** #REG FILES  : $ireg" >&2
 echo "** #DIRECTORIES: $idir" >&2
 echo "** #LINKS      : $ilnk" >&2
 echo "** #(RE)MOVED  : $irm"  >&2
-echo "** SIZE        : $(($ftsize / 1024 )) KB"  >&2
+echo "** SIZE        : $(($ftsize / 1024 / 1024 )) MB"  >&2
 echo "** STORED IN   : $backupdir"  >&2
 echo "** ELAPSED     : $(($te - $ts)) s" >&2
 exit 0
