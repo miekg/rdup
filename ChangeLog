@@ -15,6 +15,7 @@ xxxx 2006: 0.2.16 Miek <miek@miek.nl>
      multiple times.
      The 'YYYYMM' directory isn't created by default.
    * dump-here.sh: use perl tools too.
+   * Added crypt.pl - a perl version crypt.sh
 
 
 1 Sep 2006: 0.2.15 Miek <miek@miek.nl>
