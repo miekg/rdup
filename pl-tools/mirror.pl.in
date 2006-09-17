@@ -84,8 +84,9 @@ sub _mirror {
                 read STDIN, $path, $psize;
         }
 
-        if ($path eq "") 
-                exit 1;
+        if ($path eq "") {
+                die "** Empty path";
+        }
 
         my $bits = $modebits & $S_MMASK;
         my $typ = 0;
