@@ -4,6 +4,7 @@ xxxx 2006: 0.2.16 Miek <miek@miek.nl>
    configure:
    * added check for GNU make (isn't used yet)
    * Solaris fixes (dirfd)
+   * mirror.pl: major fix: use the correct backup dir
 
 
 1 Sep 2006: 0.2.15 Miek <miek@miek.nl>

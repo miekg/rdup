@@ -47,7 +47,6 @@ my $ilnk = 0;        # Number of symbolic links
 my $irm  = 0;        # Number of files removed
 my ($mode, $uid, $gid, $psize, $fsize, $path);
 
-my $dir = $_[0];
 if ($remote) {
         while (($_ = <STDIN>)) {
                 chomp;
@@ -74,6 +73,7 @@ printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 exit 0;
 
 sub _mirror {
+        my $dir = $_[0];
         my $dump = substr($mode, 0, 1);
         my $modebits = substr($mode, 1);
 
@@ -83,6 +83,9 @@ sub _mirror {
                 my $path = "";
                 read STDIN, $path, $psize;
         }
+
+        if ($path eq "") 
+                exit 1;
 
         my $bits = $modebits & $S_MMASK;
         my $typ = 0;

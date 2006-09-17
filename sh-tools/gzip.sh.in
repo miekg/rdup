@@ -32,7 +32,7 @@ usage() {
         echo "Compress or decompress the file's contents"
         echo
         echo OPTIONS:
-        echo " -c    ignored as gzip.sh always works on content"
+        echo " -c    process the file content also (rdup -c)"
         echo " -d    decompress the files"
         echo " -h    this help"
         echo " -V    print version"
@@ -78,6 +78,7 @@ _stat_size() {
 
 while getopts ":cdhV" o; do
         case $o in
+                c) remote=true;;
                 d) OPT="-d";;
                 h) usage && exit;;
                 V) version && exit;;
