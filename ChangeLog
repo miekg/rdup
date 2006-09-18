@@ -1,16 +1,18 @@
 18 Sep 2006: 0.2.16 Miek <miek@miek.nl>
+   -- bugfixes and moved to the perl utils --
    rdup:
-   * some updates for Solaris 10
+   * some compilation updates for Solaris 10 (dirdf)
    * small documentation updates
    configure:
    * added check for GNU make (isn't used yet)
-   * Solaris fixes (dirfd)
    scripts:
    * All sizes are report in MB
    * mirror.pl: major fixes: use the correct backup dir
      and correct -c.
      Allow multiple -b options to backup to different directories
      at the same time
+     The -b argument is mandatory, but can now be given
+     multiple times.
    * dump.sh: use the perl tools! Added -x option.
      The -b argument is mandatory, but can now be given
      multiple times.
