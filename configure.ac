@@ -48,14 +48,14 @@ AC_CONFIG_FILES([Makefile
                  doc/rorrim.sh.8
                  doc/restore.sh.8
                  doc/monthday.sh.8
-                 doc/mirror.sh.8
+                 doc/mirror.pl.8
                  doc/rdup.8
                  doc/dump.sh.8
                  doc/dump-here.sh.8
                  doc/hist.sh.1
                  doc/yesterday.sh.1
-                 doc/crypt.sh.1
-                 doc/gzip.sh.1
+                 doc/crypt.pl.1
+                 doc/gzip.pl.1
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh
