@@ -28,6 +28,8 @@ GetOptions("h" => \$help,
         "V" => \$version,
         "a" => \$attr, # extended attr support
         "c" => \$remote,
+        "p" => \$path,
+        "f" => \$filer,
         "v" => \$verbose,
         "b=s" => \@backupDir);
 
@@ -40,11 +42,6 @@ if ($#backupDir == -1) {
                 die "** Need at least one -b option";
         
 }
-foreach my $b (@backupDir) {
-        $b .= "/" . sprintf "%04d%02d", 1900 + $year, 1 + $mon . "\n";
-        mkdir $b;
-}
-
 my $attr_there = check_attr();    # Can we set extended attributes?
 
 # Statistics
@@ -242,6 +239,8 @@ sub usage {
         print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
         print " -c      process the file content also (rdup -c), for remote backups\n";
         print " -b DIR  use DIR as the backup directory, YYYYMM will be added\n";
+        print " -f      filter file names that end in +DD.HH:MM\n";
+        print " -p NUM  remove NUM leading directory names from each filename\n";
         print " -v      print the files processed to stderr\n";
         print " -h      this help\n";
         print " -V      print version\n";
