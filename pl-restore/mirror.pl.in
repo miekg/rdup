@@ -28,8 +28,6 @@ GetOptions("h" => \$help,
         "V" => \$version,
         "a" => \$attr, # extended attr support
         "c" => \$remote,
-        "p" => \$path,
-        "f" => \$restore,
         "v" => \$verbose,
         "b=s" => \@backupDir);
 
@@ -42,6 +40,11 @@ if ($#backupDir == -1) {
                 die "** Need at least one -b option";
         
 }
+foreach my $b (@backupDir) {
+        $b .= "/" . sprintf "%04d%02d", 1900 + $year, 1 + $mon . "\n";
+        mkdir $b;
+}
+
 my $attr_there = check_attr();    # Can we set extended attributes?
 
 # Statistics
@@ -109,7 +112,7 @@ sub _mirror {
                                 my $target = "$dir/$path";
                                 my $suffix = mirror_suffix($target);
 
-                                if (!$restore and $suffix) {      # We only have a suffix if the file exists
+                                if ($suffix) {      # We only have a suffix if the file exists
                                         rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                                 }
                                 if ($remote) {
@@ -134,7 +137,7 @@ sub _mirror {
                         foreach my $dir (@backupDir) {
                                 my $target = "$dir/$path";
                                 my $suffix = mirror_suffix($target);
-                                if (!$restore and (-f _ || -l _)) {      # Type of entiry has changed
+                                if (-f _ || -l _) {      # Type of entiry has changed
                                         rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                                 }
                                 mkpath($target) unless -d _;
@@ -151,7 +154,7 @@ sub _mirror {
                         foreach my $dir (@backupDir) {
                                 my $target = "$dir/$path";
                                 my $suffix = mirror_suffix($target);
-                                if (!$restore and $suffix) {      # We only have a suffix if the file exists
+                                if ($suffix) {      # We only have a suffix if the file exists
                                         rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                                 }
                                 if ($remote) {
@@ -168,16 +171,14 @@ sub _mirror {
                         $ilnk++;
                 }
         } else {        # Remove
-                if (!$restore) {
-                        foreach my $dir (@backupDir) {
-                                my $target = "$dir/$path";
-                                my $suffix = mirror_suffix($target);
-                                if ($suffix) {      # We only have a suffix if the file exists
-                                        rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
-                                }
+                foreach my $dir (@backupDir) {
+                        my $target = "$dir/$path";
+                        my $suffix = mirror_suffix($target);
+                        if ($suffix) {      # We only have a suffix if the file exists
+                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                         }
-                        $irm++;
                 }
+                $irm++;
         }
 }
 
@@ -241,7 +242,6 @@ sub usage {
         print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
         print " -c      process the file content also (rdup -c), for remote backups\n";
         print " -b DIR  use DIR as the backup directory, YYYYMM will be added\n";
-        print " -r      restore, always write the file to the target. Filter out files with +DD.HH:MM suffixes\n";
         print " -v      print the files processed to stderr\n";
         print " -h      this help\n";
         print " -V      print version\n";

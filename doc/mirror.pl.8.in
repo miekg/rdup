@@ -1,0 +1,60 @@
+'\" t
+.TH MIRROR.PL 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+mirror.pl \- mirror the files from the list on standard input
+
+.SH SYNOPSIS
+.B mirror.plsh
+[
+.IR OPTIONS
+]
+
+.SH DESCRIPTION
+\fBmirror.pl\fR copies the files it gets from standard input to the directory
+specified with the \-b option. This script \fIimplements\fR the backup policy. 
+.PP
+If a file already exists in the backup directory it will be moved and
+will get a suffix. This suffix is of the form: '+DD.HH:MM'. This suffix
+is thus accurate to the minute. Multiple changes to files within one
+minute are never caught by \fBmirror.pl\fR.
+.PP
+`hist.sh' and `yesterday.sh' also work on files with this same suffix.
+
+.SH OPTIONS
+.TP
+.B \-a
+Write the uid and gid information to the file's extended user attributes:
+\'r_uid' and 'r_gid'. This option only works if \fBattr\fR is available
+on the system. And currently only for Linux.
+
+This option is usefull when storing a remote backup. Normally these
+backups are transferred by a non-root user. This user will not be able
+to correctly set all uid/gid information. As a workaround
+\fBmirror.pl\fR will set the extended user attributes to the uid/gid as
+it got them from standard input.
+.TP 
+.B \-b backupdir
+Alternate backup directory. Defaults to `/vol/backup/$HOSTNAME'.
+.TP
+.B \-c 
+Used in conjunction with \fBrdup\fR's \-c. This will allow
+\fBmirror.pl\fR to be used for remote backups.
+.TP
+.B \-r
+Restore mode. Always write the file to the target directory and
+don't rename existing files to a +DD.HH:MM suffix.
+This mode also filters out any file with such a suffix - as you
+probably don't want those in your restore.
+.TP
+.B \-v
+Echo the files processed to standard error.
+.TP
+.B \-h
+Short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH SEE ALSO
+hist.sh(1), yesterday.sh(1), rdup(8)

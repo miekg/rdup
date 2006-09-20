@@ -2,6 +2,7 @@
 # cron file of rdup                    #
 ########################################
  
+DATE=`date +%Y%m`
 # --- dump - each new month a full dump--- #
-10 02 * * * root /usr/sbin/dump.sh -b /vol/backup/elektron/`date +%Y%m` -b /vol/raid/backup/elektron/`date +%Y%m` /etc /home /tftpboot
-00 02 * * * root /usr/sbin/dump.sh -b /vol/backup/elektron/`date %Y%m` -b /vol/raid/backup/elektron/`date +%Y%m` /var/mail /var/svn /var/lib
+10 02 * * * root /usr/sbin/dump.sh -b /vol/backup/elektron/$DATE -b /vol/raid/backup/elektron/$DATE /etc /home /tftpboot
+00 02 * * * root /usr/sbin/dump.sh -b /vol/backup/elektron/$DATE -b /vol/raid/backup/elektron/$DATE /var/mail /var/svn /var/lib

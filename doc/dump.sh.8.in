@@ -38,8 +38,11 @@ in the backup.
 The backup directory. You can specify this option multiple times, this
 will make the backup to be written to all these directories in one go.
 
-Note that the \-e option for instance will only be looking at the first
+Note that the \-e option will only be looking at the first
 directory specified.
+
+Also note that \fBdump.sh\fR will add the string YYYYMM to
+the backup directory.
 .TP
 .B \-N name
 The \fIname\fR speficies an optional prefix for the
@@ -63,7 +66,7 @@ elektron.bin.timestamp
 Restore a backup on a remote host. This will create a pipeline of the
 form: 
 
-rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR mirror.sh \-c \-b \fIbackupdir\fR
+rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR mirror.pl \-c \-b \fIbackupdir\fR
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
@@ -111,24 +114,20 @@ Show the version.
 .SS LOCAL BACKUP 
 Dumping my homedir to the backup:
 
-        dump.sh ~
+        dump.sh -b /vol/backup/$HOST ~
 
 Dumping /var/lib to the backup:
         
-        dump.sh /var/lib
+        dump.sh -b /vol/backup/$HOST /var/lib
       
 .SS REMOTE BACKUP
 Dumping my homedir to the remote backup:
 
-        dump.sh -c miekg@remote ~
+        dump.sh -b /vol/backup/$HOST -c miekg@remote ~
 
 Dumping /home to the remote backup:
         
-        dump.sh -c miekg@remote /home
-
-.SH FILES
-/vol/backup/`hostname`, or the directory specified with \-b, root of
-the backup file system.
+        dump.sh -b /vol/backup/$HOST -c miekg@remote /home
 
 .SH SEE ALSO
 hist.sh(1), yesterday.sh(1) and rdup(8).

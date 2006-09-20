@@ -276,7 +276,6 @@ check_attr
 if [ -z "$backupdir" ]; then
         backupdir="/vol/backup/`hostname`"
 fi
-backupdir=$backupdir/`date +%Y%m`
 
 ts=`date +%s`
 spaces="                    "
