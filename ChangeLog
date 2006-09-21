@@ -3,7 +3,8 @@
    * mirror.pl: remove the YYYYMM suffix for backup directory
    * mirror.sh: remove the YYYYMM suffix for backup directory
    * added rdup.cron example
-   * added grep.pl
+   * added grep.pl, grep.pl.1 manual page
+   * Doc: moved all docs over to the perl versions of the utils.
 
 18 Sep 2006: 0.2.16 Miek <miek@miek.nl>
    -- bugfixes and moved to the perl utils --

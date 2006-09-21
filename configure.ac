@@ -56,6 +56,7 @@ AC_CONFIG_FILES([Makefile
                  doc/yesterday.sh.1
                  doc/crypt.pl.1
                  doc/gzip.pl.1
+                 doc/grep.pl.1
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh

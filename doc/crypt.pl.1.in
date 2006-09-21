@@ -31,6 +31,9 @@ such an option.
 .B \-d
 Decrypt the files.
 .TP
+.B \-h
+Show a short help message.
+.TP
 .B \-V
 Show the version.
 
