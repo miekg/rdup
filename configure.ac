@@ -68,6 +68,7 @@ AC_CONFIG_FILES([Makefile
                  sh-tools/yesterday.sh
                  pl-tools/gzip.pl
                  pl-tools/crypt.pl
+                 pl-tools/grep.pl
                  pl-tools/mirror.pl
                  ])
 AC_CONFIG_HEADER([config.h])

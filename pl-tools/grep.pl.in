@@ -3,7 +3,7 @@
 # Copyright (c) 2005, 2006 Miek Gieben; Mark J Hewitt
 # See LICENSE for the license
 #
-# crypt -c's output
+# grep rdup output
 #
 use strict;
 
@@ -12,74 +12,102 @@ use File::Basename;
 use File::Temp qw{tempdir tempfile};
 use File::Spec;
 
+my $S_MMASK = 07777;      # mask to get permission
 my $S_ISDIR = 040000;
 my $S_ISLNK = 0120000;
 
 my $progName = basename $0;
 
 my %opt;
+my ($remote, $verbose);
 
-if (!defined($ARGV[1]) or ! -f $ARGV[1]) {
-        die "Cannot open keyfile";
-}
-my $crOptions = "-q -F -f $ARGV[1] -a blowfish";
-
-getopts('dhV', \%opt);
+getopts('cdhvV', \%opt);
 usage() if $opt{'h'};
 version() if $opt{'V'};
-$crOptions .= "-d " if $opt{'d'};
+$verbose = $opt{'v'};
+$remote = $opt{'c'};
+my ($mode, $uid, $gid, $psize, $fsize, $path);
+my $REG = $ARGV[0];
 
+if ($REG eq "") {
+        die "** Need a regular expression";
+}
 
-my $tmpDir = tempdir("rdup.crypt.XXXXXX", TMPDIR => 1, CLEANUP => 1);
-die "** $tmpDir could not be created: $!" unless -d $tmpDir;
+if ($remote) {
+        while (($_ = <STDIN>)) {
+                chomp;
+                ($mode, $uid, $gid, $psize, $fsize) = split(" ", $_, 5);
+                _grep();
+        }
+} else {
+        while (($_ = <STDIN>)) {
+                chomp;
+                ($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
+                _grep();
+        }
+}
+exit 0;
 
-while (($_ = <STDIN>)) {
-        chomp;
-        my($mode, $uid, $gid, $psize, $fsize) = split;
+sub _grep {
         my $dump = substr($mode, 0, 1);
         my $modebits = substr($mode, 1);
-        my $typ = 0;
 
         sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
 
-        my $path = "";
-        read STDIN, $path, $psize;
+        if ($remote) {
+                $path = "";
+                read STDIN, $path, $psize;
+        }
+
+        if ($path eq "") {
+                die "** Empty path";
+        }
+
+        my $bits = $modebits & $S_MMASK;
+        my $typ = 0;
         $typ = 1 if ($mode & $S_ISDIR) == $S_ISDIR;
         $typ = 2 if ($mode & $S_ISLNK) == $S_ISLNK;
+        print STDERR "$path\n" if $verbose;
+
+        my $match = 0;
         if ($dump eq '+') {        # add
+                if (grep($path, $REG)) {
+                        $match = 1;
+                }
+
                 if ($typ == 0) {      # REG
-                        if ($fsize != 0) {
-                                my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
-                                $fh->close();
-                                open CRYPT, "|mcrypt $crOptions > $filename" or die "** $filename: $!";
-                                copy($fsize, *CRYPT);
-                                close CRYPT or die "** $filename: $!";
-                                my $size = (stat($filename))[7];
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $size\n$path";
-                                catfile($filename);
-                                unlink $filename;
-                        } else {      # No content
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                        if ($match == 1) {
+                                # match
+                                if ($fsize != 0 and $remote) {
+                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                        copy($fsize, *STDOUT);
+                                } else {      # No content
+                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                }
                         }
                 } elsif ($typ == 1) {      # DIR
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                        if ($match == 1) {
+                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                        }
                 } elsif ($typ == 2) {      # LNK
                         my $target;
                         read STDIN, $target, $fsize;
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path$target";
+                        if ($match == 1) {
+                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path$target";
+                        }
                 }
         } else {
-                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                if ($match == 1) {
+                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                }
         }
 }
 
 sub usage {
-        print "$progName [OPTIONS] KEYFILE\n\n";
-        print "Encrypt or decrypt the file's contents with the\n";
-        print "key stored in KEYFILE\n\n";
+        print "$progName [OPTIONS] REGEXP\n\n";
+        print "Grep rdup's output usin REGEXP\n\n";
         print "OPTIONS:\n";
-        print " -c    ignored as gzip.pl always works on content\n";
-        print " -d    decrypt the files\n";
+        print " -c    also process the files' content (rdup -c)\n";
         print " -h    this help\n";
         print " -V    print version\n";
         exit;

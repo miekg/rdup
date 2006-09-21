@@ -28,7 +28,7 @@ GetOptions("h" => \$help,
         "V" => \$version,
         "a" => \$attr, # extended attr support
         "c" => \$remote,
-        "f" => \$restore,
+        "R" => \$restore,
         "v" => \$verbose,
         "b=s" => \@backupDir);
 
@@ -234,13 +234,13 @@ sub check_attr {
 }
 
 sub usage {
-        print "$progName [OPTIONS]\n\n";
+        print "$progName -b DIR [OPTIONS]\n\n";
         print "Mirror the files from the filelist of rdup\n\n";
         print "OPTIONS\n";
         print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
         print " -c      process the file content also (rdup -c), for remote backups\n";
-        print " -b DIR  use DIR as the backup directory, YYYYMM will be added\n";
-        print " -r      restore, always write the file to the target. Filter out files with +DD.HH:MM suffixes\n";
+        print " -b DIR  use DIR as the backup directory\n";
+        print " -R      restore mode, always write the file to the target\n";
         print " -v      print the files processed to stderr\n";
         print " -h      this help\n";
         print " -V      print version\n";
