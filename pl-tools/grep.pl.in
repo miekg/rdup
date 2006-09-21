@@ -19,18 +19,21 @@ my $S_ISLNK = 0120000;
 my $progName = basename $0;
 
 my %opt;
-my ($remote, $verbose);
+my ($remote, $verbose, $invert);
 
-getopts('cdhvV', \%opt);
+getopts('cihvV', \%opt);
 usage() if $opt{'h'};
 version() if $opt{'V'};
 $verbose = $opt{'v'};
 $remote = $opt{'c'};
+$invert = $opt{'i'};
 my ($mode, $uid, $gid, $psize, $fsize, $path);
 my $REG = $ARGV[0];
 
-if ($REG eq "") {
-        die "** Need a regular expression";
+if (defined($ARGV[0])) {
+        $REG = $ARGV[0];
+} else {
+        die "** Need an regular expression";
 }
 
 if ($remote) {
@@ -71,8 +74,12 @@ sub _grep {
 
         my $match = 0;
         if ($dump eq '+') {        # add
-                if (grep($path, $REG)) {
+                if ($path =~ /$REG/) {
                         $match = 1;
+                }
+
+                if ($invert) {
+                        $match = ! $match;
                 }
 
                 if ($typ == 0) {      # REG
@@ -105,9 +112,11 @@ sub _grep {
 
 sub usage {
         print "$progName [OPTIONS] REGEXP\n\n";
-        print "Grep rdup's output usin REGEXP\n\n";
+        print "Grep rdup's output using REGEXP\n\n";
         print "OPTIONS:\n";
         print " -c    also process the files' content (rdup -c)\n";
+        print " -i    invert, print all what doesn't match\n";
+        print " -v    echo the files process to standard error\n";
         print " -h    this help\n";
         print " -V    print version\n";
         exit;

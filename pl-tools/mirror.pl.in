@@ -241,7 +241,7 @@ sub usage {
         print " -c      process the file content also (rdup -c), for remote backups\n";
         print " -b DIR  use DIR as the backup directory\n";
         print " -R      restore mode, always write the file to the target\n";
-        print " -v      print the files processed to stderr\n";
+        print " -v      print the files processed to standard error\n";
         print " -h      this help\n";
         print " -V      print version\n";
         exit 0;
