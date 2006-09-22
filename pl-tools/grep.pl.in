@@ -74,13 +74,8 @@ sub _grep {
 
         my $match = 0;
         if ($dump eq '+') {        # add
-                if ($path =~ /$REG/) {
-                        $match = 1;
-                }
-
-                if ($invert) {
-                        $match = ! $match;
-                }
+                if ($path =~ /$REG/) { $match = 1; }
+                if ($invert) { $match = ! $match; }
 
                 if ($typ == 0) {      # REG
                         if ($match == 1) {
@@ -97,13 +92,13 @@ sub _grep {
                                 }
                         }
                 } elsif ($typ == 1) {      # DIR
-                        if ($match == 1) {
+                        #if ($match == 1) {
                                 if ($remote) {
                                         syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
                                 }  else {
                                         syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
                                 }
-                        }
+                        #}
                 } elsif ($typ == 2) {      # LNK
                         if ($match == 1) {
                                 if ($remote) {

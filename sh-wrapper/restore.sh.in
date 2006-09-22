@@ -12,7 +12,7 @@ usage() {
         echo 
         echo "This is a wrapper around rdup, grep.pl and mirror.pl"
         echo
-        echo DIR \ - directories to back up
+        echo DIR \ - directories to restore
         echo
         echo OPTIONS:
         echo " -b DIR     restore to this directory, can be given more then once"
