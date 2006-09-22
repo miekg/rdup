@@ -1,29 +1,28 @@
 #!/bin/bash
 
-# restore a backup to a directory
-# try to be as smart of dump.sh
+# create a restore of a backup in -b <dir>
+# figure out of the dump should be a full one or incremental
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 cstream=@cstream@
 
 usage() {
-        echo "$PROGNAME [OPTIONS] [+DAY] -t TO_DIR FROM_DIR [FROM_DIR ...]"
+        echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
         echo 
-        echo "This is a wrapper around rdup, rorrim.sh and monthday.sh"
+        echo "This is a wrapper around rdup, grep.pl and mirror.pl"
         echo
-        echo "+DAY       - restore up to this month day, defaults to 0"
-        echo "-t TO_DIR  - restore to this directory"
-        echo "FROM_DIR   - restore from these directorie(s)"
+        echo DIR \ - directories to back up
         echo
         echo OPTIONS:
-        echo " -k KEYFILE encrypt all files"
-        echo " -c REMOTE  dump the backup on a remote machine with ssh"
-        echo " -p NUM     strip NUM leading components from file names"
+        echo " -b DIR     restore to this directory, can be given more then once"
+        echo " -c REMOTE  restore the backup from a remote machine with ssh"
         echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
-        echo " -a         read extended attributes r_uid/_rgid"
-        echo " -z         compress all files"
+        echo " -k KEYFILE decrypt all files, using crypt.pl"
+        echo " -z         decompress all files, using gzip.pl"
+        echo " -a         use extended attributes with uid/gid"
         echo " -v         echo the files processed to stderr"
+        echo " -x         pass -x to rdup"
         echo " -h         this help"
         echo " -V         print version"
 }
@@ -32,159 +31,170 @@ version() {
         echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
-d=`date +%Y%m`
+gzip=false
 PROGNAME=$0
-gzip=0
+BACKUPDIR=""
 KEYFILE=""
-monthday=0
-to_dir=""
-dirstrip=0
+PREFIX=""
+FIRST="" # the first restore dir
 remote=""
 bwidth=""
-v=""
 a=""
-s=""
+v=""
 
 _echo2() {
         echo "** $PROGNAME: $1" >&2
 }
 
-while getopts ":ac:k:l:p:t:s:zhVv" o; do
+while getopts ":ab:k:l:c:N:vzxhV" o; do
         case $o in
-                k) KEYFILE=$OPTARG;;
-                t) to_dir=$OPTARG;;
-                c) remote=$OPTARG;;
-                l) bwidth=$OPTARG;;
-                z) gzip=1;;
-                p) dirstrip=$OPTARG
-                if [[ ! $dirstrip =~ "[0-9]+" ]]; then
-                        _echo2 "Argument to -p must be numeric"
-                        exit 1
+                b) BACKUPDIR="$BACKUPDIR -b $OPTARG"
+                if [[ -z $FIRST ]]; then
+                        FIRST=$OPTARG
                 fi
-                if [[ $dirstrip -lt 0 || $dirstrip -gt 10 ]]; then
-                        _echo2 "-p argument out of bounds [0..10]"
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-b needs an argument"
                         exit 1
                 fi;;
-                v) v="-v";;
+                k) KEYFILE=$OPTARG
+                if [[ -z "$KEYFILE" ]]; then
+                        _echo2 "-k needs an argument"
+                        exit 1
+                fi
+                if [[ ! -r "$KEYFILE" ]]; then
+                        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
+                        exit 1
+                fi;;
+                c) remote=$OPTARG
+                if [[ -z $remote ]]; then
+                        _echo2 "-c needs an argument"
+                        exit 1
+                fi;;
+                N) PREFIX=$OPTARG
+                if [[ -z $PREFIX ]]; then
+                        _echo2 "-N needs an argument"
+                fi;;
+                l) bwidth=$OPTARG;;
+                z) gzip=true;;
                 a) a="-a";;
-                s) echo todo;;
+                v) v="-v";;
+                x) x="-x";;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
+if [[ $# -eq 0 ]]; then
+        _echo2 "No directories to restore" 
+        exit 1
+fi
+if [[ -z "$BACKUPDIR" ]]; then
+        _echo2 "The -b argument is mandatory"
+        exit 1
+fi
 
 if [[ ! -z $bwidth && -z $cstream ]]; then
         _echo2 "Bandwidth shaping not enabled: cstream not found"
         exit 1
 fi
-# fix the argument string
-dirstrip="-p $dirstrip"
 
-# +DAY argument
-if [[ $1 =~ "\\+(.+)" ]]; then
-        monthday=${BASH_REMATCH[1]}
-        if [[ ! $monthday =~ "[0-9]+" ]]; then
-                _echo2 "+DAY must be numerical"
+for i in $BACKUPDIR; do
+        if [[ !-d "$i/$d" ]]; then 
+                _echo2 "No such directory: \`$i/$d'"
                 exit 1
         fi
-        # rest of the arguments is frm_dir
-        shift
-fi
-if [[ -z "$to_dir" ]]; then
-        _echo2 "Need a directory to restore to"
-        exit 1
-fi
-if [[ $monthday -lt 0 || $monthday -gt 31 ]]; then
-        _echo2 "+DAY out of bounds [0..31]"
-        exit 1
+done
+
+# add pwd if the path was relative
+if [[ ${1:0:1} == "/" ]]; then
+        dest="$1"
+else
+        dest="`pwd`/$1"
 fi
 
-if [[ -z "$remote" ]]; then
-        # no remote
+if [[ -z "$remote" ]]; then      # no remote 
         if [[ -z "$KEYFILE" ]]; then
-                if [[ $gzip -eq 0 ]]; then
-                        @sbindir@/rdup $a -n /dev/null "$@" | \
-                        @sbindir@/monthday.sh +$monthday | \
-                        @sbindir@/rorrim.sh $dirstrip $v "$to_dir"
+                if $gzip; then
+                        @sbindir@/rdup -l $x -c /dev/null $@ |
+                        $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                        @sbindir@/gzip.pl | \
+                        @sbindir@/mirror.pl $v $a -c $BACKUPDIR
                 else 
-                        @sbindir@/rdup $a -n -c /dev/null "$@" | \
-                        @sbindir@/monthday.sh -c +$monthday | \
-                        @sbindir@/gzip.sh -d | \
-                        @sbindir@/rorrim.sh $dirstrip $v -c "$to_dir"
+                        @sbindir@/rdup -l $x /dev/null $LIST $@ | \
+                        @sbindir@/mirror.pl $a $v $BACKUPDIR
                 fi
-        else
-                if [[ $gzip -eq 0 ]]; then
-                        @sbindir@/rdup $a -n -c /dev/null "@$" | \
-                        @sbindir@/monthday.sh -c +$monthday | \
-                        @sbindir@/crypt.sh -d  $KEYFILE | \
-                        @sbindir@/rorrim.sh $dirstrip $v -c "$to_dir"
+        else    # with keyfile
+                if $gzip; then
+                        @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
+                        $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                        @sbindir@/crypt.pl $KEYFILE | \
+                        @sbindir@/mirror.pl $a $v -c $BACKUPDIR
                 else 
-                        @sbindir@/rdup $a -n -c /dev/null "$@" |
-                        @sbindir@/monthday.sh -c +$monthday | \
-                        @sbindir@/crypt.sh -d $KEYFILE | \ 
-                        @sbindir@/gzip.sh -d | @sbindir@/rorrim.sh $dirstrip $v -c "$to_dir"
+                        @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ |
+                        $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                        @sbindir@/crypt.pl $KEYFILE | \
+                        @sbindir@/mirror.pl $v $a -c $BACKUPDIR
                 fi
         fi
-else
-        # remote
+else     # remote 
         if [[ -z "$KEYFILE" ]]; then
-                if [[ $gzip -eq 0 ]]; then
+                if $gzip; then
                         if [[ -z $bwidth ]]; then
-                                ssh -x -C "$remote" rdup $a -n -c /dev/null "$@" | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                @sbindir@/gzip.pl | \
+                                ssh -x "$remote" | mirror.pl $a $v -c $BACKUPDIR
                         else
-                                ssh -x -C "$remote" rdup $a -n -c /dev/null "$@" | \
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \ 
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                @sbindir@/gzip.pl | \
                                 $cstream -t $bwidth | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
-
+                                ssh -x "$remote" | mirror.pl $a $v -c $BACKUPDIR
                         fi
-                else 
+                else    # without gzip
                         if [[ -z $bwidth ]]; then
-                                ssh -x "$remote" rdup $a -n -c /dev/null "$@" | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/gzip.sh -d | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                # do compress stream here
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         else
-                                ssh -x "$remote" rdup $a -n -c /dev/null "$@" | \
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
                                 $cstream -t $bwidth | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/gzip.sh -d | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         fi
                 fi
-        else
-                if [[ $gzip -eq 0 ]]; then
+        else # with keyfile
+                if $gzip; then
                         if [[ -z $bwidth ]]; then
-                                ssh -x -C "$remote" rdup $a -n -c /dev/null "$@" | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/crypt.sh -d  $KEYFILE | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                @sbindir@/gzip.pl |\
+                                @sbindir@/crypt.pl $KEYFILE | 
+                                ssh -x "$remote" mirror.pl $a $v -c $BACKUPDIR
                         else
-                                ssh -x -C "$remote" rdup $a -n -c /dev/null "$@" | \
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                @sbindir@/gzip.pl |\
+                                @sbindir@/crypt.pl $KEYFILE | 
                                 $cstream -t $bwidth | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/crypt.sh -d  $KEYFILE | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                ssh -x "$remote" mirror.pl $a $v -c $BACKUPDIR
                         fi
-                else 
+                else
                         if [[ -z $bwidth ]]; then
-                                ssh -x "$remote" rdup $a -n -c /dev/null "$@" | \
-                                @sbindir@/monthday.sh -c +$monthday | \
-                                @sbindir@/crypt.sh -d $KEYFILE | \ 
-                                @sbindir@/gzip.sh -d | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                @sbindir@/crypt.pl $KEYFILE | \
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         else
-                                ssh -x "$remote" rdup $a -n -c /dev/null "$@" | \
+                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
+                                $sbindir@/grep.pl -v '\+\d\d\.\d\d:\d\d$' | \
+                                @sbindir@/crypt.pl $KEYFILE | \
                                 $cstream -t $bwidth | \
-                                @sbindir@/monthday.sh +$monthday | \
-                                @sbindir@/crypt.sh -d $KEYFILE | \ 
-                                @sbindir@/gzip.sh -d | \
-                                @sbindir@/rorrim.sh -c $dirstrip $v "$to_dir"
+                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
                         fi
+
                 fi
         fi
 fi

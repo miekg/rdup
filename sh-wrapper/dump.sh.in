@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# create a (mirror) backup in /vol/backup/`hostname`
+# create a (mirror) backup in -b dir 
 # figure out of the dump should be a full one or incremental
 
 prefix=@prefix@
@@ -10,7 +10,7 @@ cstream=@cstream@
 usage() {
         echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
         echo 
-        echo "This is a wrapper around rdup and mirror.sh"
+        echo "This is a wrapper around rdup and mirror.pl"
         echo
         echo DIR \ - directories to back up
         echo
@@ -95,7 +95,7 @@ if [[ $# -eq 0 ]]; then
         exit 1
 fi
 if [[ -z "$BACKUPDIR" ]]; then
-        _echo2 "The -b argument is mandaory"
+        _echo2 "The -b argument is mandatory"
         exit 1
 fi
 
@@ -113,24 +113,26 @@ if $etc; then
 else
         ETC="/etc/rdup"
 fi
-
-BACKUPDIR_DATE="$FIRST/$d"
-mkdir -p $BACKUPDIR_DATE
-if [[ ! $? ]]; then
-        _echo2 "Failure to create target backup directory"
-        exit 1
-fi
 STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
 LIST="$ETC/$HOSTNAME.$(basename $1).list"
-# DIRS in $@
 
+for i in $BACKUPDIR; do
+        mkdir -p "$i/$d"
+        if [[ ! $? ]]; then
+                _echo2 "Failure to create target backup directory: \`$i/$d'"
+                exit 1
+        fi
+done
+
+# DIRS in $@
 # add pwd if the path was relative
 if [[ ${1:0:1} == "/" ]]; then
         dest="$1"
 else
         dest="`pwd`/$1"
 fi
-# check what we should do
+# check what we should do, only for the first dir...
+BACKUPDIR_DATE="$FIRST/$d"
 if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
         # kill the timestamp and inc list
         rm -f "$LIST"
