@@ -9,7 +9,7 @@
 #define _GNU_SOURCE
 #endif
 
-#ifdef HAVE_DIRFD
+#ifndef HAVE_DIRFD
 #define rdup_dirfd(d) ((d)->dd_fd)
 #endif
 
