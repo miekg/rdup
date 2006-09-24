@@ -43,8 +43,7 @@ PREFIX=""
 FIRST="" # the first backup dir
 remote=""
 bwidth=""
-a=""
-v=""
+MIR_OPT=""
 
 _echo2() {
         echo "** $PROGNAME: $1" >&2
@@ -81,8 +80,8 @@ while getopts ":ab:k:l:c:N:vzxehV" o; do
                 l) bwidth=$OPTARG;;
                 e) etc=true;;
                 z) gzip=true;;
-                a) a="-a";;
-                v) v="-v";;
+                a) MIR_OPT="$MIR_OPT -a";;
+                v) MIR_OPT="$MIR_OPT -v";;
                 x) x="-x";;
                 V) version && exit;;
                 h) usage && exit;;
@@ -146,20 +145,20 @@ if [[ -z "$remote" ]]; then      # no remote
         if [[ -z "$KEYFILE" ]]; then
                 if $gzip; then
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl | \
-                        @sbindir@/mirror.pl $v $a -c $BACKUPDIR
+                        @sbindir@/mirror.pl $MIR_OPT -c $BACKUPDIR
                 else 
                         @sbindir@/rdup -l $x -N $STAMP $LIST $@ | \
-                        @sbindir@/mirror.pl $a $v $BACKUPDIR
+                        @sbindir@/mirror.pl $MIR_OPT $BACKUPDIR
                 fi
         else    # with keyfile
                 if $gzip; then
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
                         @sbindir@/crypt.pl $KEYFILE | \
-                        @sbindir@/mirror.pl $a $v -c $BACKUPDIR
+                        @sbindir@/mirror.pl $MIR_OPT -c $BACKUPDIR
                 else 
                         @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ |
                         @sbindir@/crypt.pl $KEYFILE | \
-                        @sbindir@/mirror.pl $v $a -c $BACKUPDIR
+                        @sbindir@/mirror.pl $MIR_OPT -c $BACKUPDIR
                 fi
         fi
 else     # remote 
@@ -171,17 +170,17 @@ else     # remote
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl | \
                                 $cstream -t $bwidth | \
-                                ssh -x "$remote" | mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x "$remote" | mirror.pl $MIR_OPT -c $BACKUPDIR
                         fi
                 else    # without gzip
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 # do compress stream here
-                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x -C "$remote" mirror.pl $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 $cstream -t $bwidth | \
-                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x -C "$remote" mirror.pl $MIR_OPT -c $BACKUPDIR
                         fi
                 fi
         else # with keyfile
@@ -189,23 +188,23 @@ else     # remote
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
                                 @sbindir@/crypt.pl $KEYFILE | 
-                                ssh -x "$remote" mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x "$remote" mirror.pl $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | @sbindir@/gzip.pl |\
                                 @sbindir@/crypt.pl $KEYFILE | 
                                 $cstream -t $bwidth | \
-                                ssh -x "$remote" mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x "$remote" mirror.pl $MIR_OPT -c $BACKUPDIR
                         fi
                 else
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 @sbindir@/crypt.pl $KEYFILE | \
-                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x -C "$remote" mirror.pl $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 @sbindir@/crypt.pl $KEYFILE | \
                                 $cstream -t $bwidth | \
-                                ssh -x -C "$remote" mirror.pl $a $v -c $BACKUPDIR
+                                ssh -x -C "$remote" mirror.pl $MIR_OPT -c $BACKUPDIR
                         fi
 
                 fi
