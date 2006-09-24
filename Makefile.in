@@ -5,7 +5,7 @@ SHS_IN=mirror.sh hist.sh yesterday.sh crypt.sh gzip.sh
 WRP_IN=dump.sh dump-here.sh restore.sh
 PRL_IN=gzip.pl mirror.pl crypt.pl grep.pl
 MAN8_IN=rdup.8 mirror.pl.8 dump.sh.8 dump-here.sh.8 restore.sh.8
-MAN1_IN=hist.sh.1 yesterday.sh.1 crypt.pl.1 gzip.pl.1 crypt.pl.1
+MAN1_IN=hist.sh.1 yesterday.sh.1 crypt.pl.1 gzip.pl.1 crypt.pl.1 grep.pl.1
 
 SHS=$(addprefix sh-tools/, $(SHS_IN))
 PRL=$(addprefix pl-tools/, $(PRL_IN))
