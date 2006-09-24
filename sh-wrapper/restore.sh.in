@@ -39,7 +39,7 @@ PREFIX=""
 FIRST="" # the first restore dir
 remote=""
 bwidth=""
-MIR_OPT="-r"
+MIR_OPT="-R"
 LIST="/dev/null"
 REG='\+\d\d\.\d\d:\d[\d/|\d$]'
 
@@ -99,13 +99,6 @@ if [[ ! -z $bwidth && -z $cstream ]]; then
         _echo2 "Bandwidth shaping not enabled: cstream not found"
         exit 1
 fi
-
-for i in $BACKUPDIR; do
-        if [[ !-d "$i/$d" ]]; then 
-                _echo2 "No such directory: \`$i/$d'"
-                exit 1
-        fi
-done
 
 # add pwd if the path was relative
 if [[ ${1:0:1} == "/" ]]; then

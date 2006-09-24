@@ -1,5 +1,6 @@
    Oct 2006: 0.2.17 Miek <miek@miek.nl>
    -- non backwards update --
+   * rdup: fix compilation on Mac OS X (and prob. Solaris)
    * mirror.pl: remove the YYYYMM suffix for backup directory
    * mirror.sh: remove the YYYYMM suffix for backup directory
    * dump.sh will now add this suffix!
@@ -19,7 +20,9 @@
 	mirror.pl will use the -b argument as-is, no magic
 	there.
    * Restoring backups with 0.2.17:
-	
+   	resore.sh -b /tmp/RESTORE dir-to-restore
+
+	and in /tmp/RESTORE you will find your restore
 
 
 18 Sep 2006: 0.2.16 Miek <miek@miek.nl>

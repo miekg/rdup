@@ -52,7 +52,7 @@ _echo2() {
 
 while getopts ":ab:k:l:c:N:vzxehV" o; do
         case $o in
-                b) BACKUPDIR="$BACKUPDIR -b $OPTARG"
+                b) BACKUPDIR="$BACKUPDIR -b $OPTARG/$d"
                 BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
                 if [[ -z $FIRST ]]; then
                         FIRST=$OPTARG
