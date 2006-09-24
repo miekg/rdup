@@ -1,3 +1,8 @@
+   Oct 2006: 0.2.18 Miek <miek@miek.nl>
+   -- don't know yet --
+
+
+
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>
    -- non backwards compatible update + minor feature update --
    * rdup: fix compilation on Mac OS X (and prob. Solaris)
