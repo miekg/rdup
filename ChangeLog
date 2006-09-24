@@ -3,15 +3,12 @@
    * rdup: fix compilation on Mac OS X (and prob. Solaris)
    * mirror.pl: remove the YYYYMM suffix for backup directory
    * mirror.sh: remove the YYYYMM suffix for backup directory
-   * dump.sh will now add this suffix!
-
+   * dump.sh will now add this YYYYMM suffix!
    * added rdup.cron example
    * added grep.pl, grep.pl.1 manual page
-     grep.pl now only works on filenames and links
    * grep.pl/gzip.pl/crypt.pl: small refactoring to make them 
      smaller
-   * sh-restore is REMOVED, there are now special restore utils
-     anymore.
+   * sh-restore is REMOVED, there are now no special restore utils
    * Doc: moved all docs over to the perl versions of the utils.
    * Making backups with 0.2.17:
    	dump.sh -b /vol/backup/$HOSTNAME dir-to-back-up
