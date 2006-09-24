@@ -27,7 +27,7 @@ version() if $opt{'V'};
 $verbose = $opt{'v'};
 $remote = $opt{'c'};
 $invert = $opt{'i'};
-my ($mode, $uid, $gid, $psize, $fsize, $path);
+my ($mode, $uid, $gid, $psize, $fsize, $path, $target);
 my $REG = $ARGV[0];
 
 if (defined($ARGV[0])) {
@@ -76,48 +76,40 @@ sub _grep {
         if ($dump eq '+') {        # add
                 if ($path =~ /$REG/) { $match = 1; }
                 if ($invert) { $match = ! $match; }
+                if ($match == 0) { return; }
 
                 if ($typ == 0) {      # REG
-                        if ($match == 1) {
-                                # match
-                                if ($fsize != 0 and $remote) {
-                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                                        copy($fsize, *STDOUT);
-                                } else {      # No content
-                                        if ($remote) {
-                                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                                        } else {
-                                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
-                                        }
-                                }
+                        if ($fsize != 0 and $remote) {
+                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                copy($fsize, *STDOUT);
+                                return;
                         }
-                } elsif ($typ == 1) {      # DIR
-                        #if ($match == 1) {
-                                if ($remote) {
-                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                                }  else {
-                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
-                                }
-                        #}
-                } elsif ($typ == 2) {      # LNK
-                        if ($match == 1) {
-                                if ($remote) {
-                                        my $target;
-                                        read STDIN, $target, $fsize;
-                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path$target";
-                                } else {
-                                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
-                                }
-                        }
-                }
-        } else {
-                if ($match == 1) {
                         if ($remote) {
                                 syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                        } else {
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                                return;
                         }
+                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                        return;
+                } elsif ($typ == 1) {      # DIR
+                        if ($remote) {
+                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                return;
+                        }
+                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                        return;
+                } elsif ($typ == 2) {      # LNK
+                        if ($remote) {
+                                read STDIN, $target, $fsize;
+                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path$target";
+                                return;
+                        } 
+                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
                 }
+        } else {
+                if ($remote) {
+                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                }
+                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
         }
 }
 
@@ -137,8 +129,6 @@ sub version {
         print "$progName: @PACKAGE_VERSION@ (rdup-utils)\n";
         exit;
 }
-
-
 
 sub sanity_check {
         my $dump = $_[0];

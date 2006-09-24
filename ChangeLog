@@ -5,6 +5,8 @@
    * added rdup.cron example
    * added grep.pl, grep.pl.1 manual page
      grep.pl now only works on filenames and links
+   * grep.pl/gzip.pl/crypt.pl: small refactoring to make them 
+     smaller
    * Doc: moved all docs over to the perl versions of the utils.
 
 18 Sep 2006: 0.2.16 Miek <miek@miek.nl>

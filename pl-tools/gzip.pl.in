@@ -53,9 +53,10 @@ while (($_ = <STDIN>)) {
                                 syswrite STDOUT, "$dump$modebits $uid $gid $psize $size\n$path";
                                 catfile($filename);
                                 unlink $filename;
-                        } else {      # No content
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                        }
+                                return;
+                        } 
+                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                        return;
                 } elsif ($typ == 1) {      # DIR
                         syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
                 } elsif ($typ == 2) {      # LNK

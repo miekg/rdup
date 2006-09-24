@@ -13,7 +13,7 @@ grep.pl, filter \- filter files received from \fBrdup -c\fR
 
 .SH DESCRIPTION
 \fBgrep.pl\fR, filter the output it receives from \fBrdup\fR using
-\fIREGEXP\fR.
+\fIREGEXP\fR. Currently only the pathname is grepped.
 .PP
 Note: be carefull with your regular expression that you don't filter
 away any directories that are needed to put the files in. If these
@@ -30,6 +30,19 @@ Which will let everything pass.
         rdup list ~/Docments | grep.pl -i '50$' 
 
 Will let everything throught that doesn't have "50" as suffix.
+.PP
+If you want to use \fBgrep.pl\fR to restore from a backup you 
+can use the following regular expression:
+\fI'\\+\\d\\d.\\d\\d:\\d[\\d$|\\d/]'\fR 
+
+As in:
+        rdup /dev/null /vol/backup/myhost | \ \\
+        grep.pl -i '\\+\\d\\d.\\d\\d:\\d[\\d$|\\d/]' | \ \\
+        mirror.pl -b /tmp/RESTORE
+
+This will remove all files and directories with a +DD.HH:MM suffix,
+thereby leaving only those files you need to restore to the latest
+state of your backup.
 
 .SH OPTIONS
 .TP

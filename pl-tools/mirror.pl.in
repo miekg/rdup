@@ -37,10 +37,7 @@ version() if $version;
 my $hostname = `hostname`;    # This hostname
 chomp $hostname;
 # Location of backup root in local filesystem
-if ($#backupDir == -1) {
-                die "** Need at least one -b option";
-        
-}
+if ($#backupDir == -1) { die "** Need at least one -b option"; }
 my $attr_there = check_attr();    # Can we set extended attributes?
 
 # Statistics
@@ -88,9 +85,7 @@ sub _mirror {
                 read STDIN, $path, $psize;
         }
 
-        if ($path eq "") {
-                die "** Empty path";
-        }
+        die "** Empty path"  if ($path eq "");
 
         my $bits = $modebits & $S_MMASK;
         my $typ = 0;
