@@ -12,6 +12,14 @@
    * sh-restore is REMOVED, there are now special restore utils
      anymore.
    * Doc: moved all docs over to the perl versions of the utils.
+   * Making backups with 0.2.17:
+   	dump.sh -b /vol/backup/$HOSTNAME dir-to-back-up
+	YYYYMM will be added
+
+	mirror.pl will use the -b argument as-is, no magic
+	there.
+   * Restoring backups with 0.2.17:
+	
 
 
 18 Sep 2006: 0.2.16 Miek <miek@miek.nl>

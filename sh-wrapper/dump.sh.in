@@ -38,6 +38,7 @@ etc=false
 gzip=false
 PROGNAME=$0
 BACKUPDIR=""
+BACKUPDIR_PLAIN=""
 KEYFILE=""
 PREFIX=""
 FIRST="" # the first backup dir
@@ -52,6 +53,7 @@ _echo2() {
 while getopts ":ab:k:l:c:N:vzxehV" o; do
         case $o in
                 b) BACKUPDIR="$BACKUPDIR -b $OPTARG"
+                BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
                 if [[ -z $FIRST ]]; then
                         FIRST=$OPTARG
                 fi
@@ -115,7 +117,7 @@ fi
 STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
 LIST="$ETC/$HOSTNAME.$(basename $1).list"
 
-for i in $BACKUPDIR; do
+for i in $BACKUPDIR_PLAIN; do
         mkdir -p "$i/$d"
         if [[ ! $? ]]; then
                 _echo2 "Failure to create target backup directory: \`$i/$d'"

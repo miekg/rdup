@@ -61,9 +61,9 @@ BACKUPDIR_DATE="$mountpath/$HOSTNAME/$d"
 
 # create top-level backup dir
 sudo mkdir -m 755 -p $BACKUPDIR
+# check if the date exists
 if [[ ! -d "$BACKUPDIR_DATE" ]]; then
         # kill the timestamp and inc list
-        sudo mkdir -m755 -p "$BACKUPDIR_DATE"
         sudo rm -f "$LIST"
         sudo rm -f "$STAMP"
         TEXT="<i>Full</i> dump of <b>$HOSTNAME</b>: $DIRS"
@@ -72,7 +72,7 @@ else
 fi
 
 sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
-sudo @sbindir@/mirror.pl -v -b $BACKUPDIR 2>&1 |\
+sudo @sbindir@/mirror.pl -v -b $BACKUPDIR_DATE 2>&1 |\
 zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"
 
 exit 0

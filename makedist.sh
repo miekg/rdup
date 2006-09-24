@@ -117,7 +117,6 @@ rm -r autom4te* || error_cleanup "Failed to remove autoconf cache directory."
 rm -rf patches  || error_cleanup "Failed to remove patches directory."
 rm -rf poster/icons   || error_cleanup "Failed to remove poster/icons directory."
 rm -rf feedback   || error_cleanup "Failed to remove feedback directory."
-rm -rf rb-tools   || error_cleanup "Failed to remove rb-tools directory."
 
 find . -name .c-mode-rc.el -exec rm {} \;
 find . -name .cvsignore -exec rm {} \;
