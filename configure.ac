@@ -45,9 +45,7 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  rdup.h
-                 doc/rorrim.sh.8
                  doc/restore.sh.8
-                 doc/monthday.sh.8
                  doc/mirror.pl.8
                  doc/rdup.8
                  doc/dump.sh.8
@@ -60,8 +58,6 @@ AC_CONFIG_FILES([Makefile
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh
-                 sh-restore/rorrim.sh
-                 sh-restore/monthday.sh
                  sh-tools/crypt.sh
                  sh-tools/gzip.sh
                  sh-tools/hist.sh

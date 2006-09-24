@@ -2,12 +2,17 @@
    -- non backwards update --
    * mirror.pl: remove the YYYYMM suffix for backup directory
    * mirror.sh: remove the YYYYMM suffix for backup directory
+   * dump.sh will now add this suffix!
+
    * added rdup.cron example
    * added grep.pl, grep.pl.1 manual page
      grep.pl now only works on filenames and links
    * grep.pl/gzip.pl/crypt.pl: small refactoring to make them 
      smaller
+   * sh-restore is REMOVED, there are now special restore utils
+     anymore.
    * Doc: moved all docs over to the perl versions of the utils.
+
 
 18 Sep 2006: 0.2.16 Miek <miek@miek.nl>
    -- bugfixes and moved to the perl utils --
