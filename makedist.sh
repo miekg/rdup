@@ -158,7 +158,7 @@ rm -f rdup-$version/config.status
 rm -f rdup-$version/tags 
 
 (
-cd rdup-$version/tex
+cd rdup-$version/doc/tex
 pdflatex rdup-quickstart.tex && pdflatex rdup-quickstart
 ) || error_cleanup "Failed to create pdf version of the quickstart doc."
 
