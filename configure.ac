@@ -45,13 +45,11 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  rdup.h
-                 doc/restore.sh.8
-                 doc/mirror.pl.8
                  doc/rdup.8
                  doc/dump.sh.8
+                 doc/restore.sh.8
                  doc/dump-here.sh.8
-                 doc/hist.sh.1
-                 doc/yesterday.sh.1
+                 doc/mirror.pl.8
                  doc/crypt.pl.1
                  doc/gzip.pl.1
                  doc/grep.pl.1
@@ -60,9 +58,7 @@ AC_CONFIG_FILES([Makefile
                  sh-wrapper/dump.sh
                  sh-tools/crypt.sh
                  sh-tools/gzip.sh
-                 sh-tools/hist.sh
                  sh-tools/mirror.sh
-                 sh-tools/yesterday.sh
                  pl-tools/gzip.pl
                  pl-tools/crypt.pl
                  pl-tools/grep.pl

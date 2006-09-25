@@ -11,6 +11,7 @@
         1) Crawl all directories, and print all the names found to
            standard output.
         2) Write a filelist with all the names found when crawling.
+           Use this list to calculate the correct incremental dump.
 
     Incremental dump:
         1) Read in the filelist that was written when doing a full dump.
@@ -32,7 +33,7 @@ crawler.c
         When a .nobackup is found the entry's value is changed from
         VALUE to NO_PRINT. The functions that write the list know that
         NO_PRINT values should not be written nor printed.  (The entry
-        could not simple be removed, becaused that messed up the flow of
+        could not simple be removed, becaused that messes up the flow of
         the GTree).
 
         So in rdup each item (a path) can have three values:

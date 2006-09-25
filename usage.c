@@ -25,7 +25,7 @@ usage(FILE *f)
 #endif /* HAVE_ATTR_XATTR_H */
         fprintf(f,
                 "   -c\t\tcat the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
-        fprintf(f, "   -h\t\tgives this help\n");
+        fprintf(f, "   -h\t\tthis help\n");
         fprintf(f, "   -m\t\tonly print new/modified files (unsets -r)\n");
         fprintf(f, "   -l\t\tdon't check for file size changes\n");
         fprintf(f, "   -n\t\tignore " NOBACKUP " files\n");
@@ -43,8 +43,8 @@ usage(FILE *f)
         fprintf(f, "   \'%%s\': file size\n");
         fprintf(f, "   \'%%n\': path\n");
         fprintf(f, "   \'%%t\': time of modification (epoch)\n");
-        fprintf(f, "   \'%%T\': \'type\'\n");
-        fprintf(f, "   \'%%C\': file contents\n");
+        fprintf(f, "   \'%%T\': \'type\' (d, l or -: dir, link or file)\n");
+        fprintf(f, "   \'%%C\': contents\n");
         fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
         fprintf(f, "Licensed under the GPL. See the file LICENSE in the\n");
         fprintf(f, "source distribution of rdup.\n");

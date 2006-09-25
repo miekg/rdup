@@ -1,6 +1,7 @@
    Oct 2006: 0.2.18 Miek <miek@miek.nl>
    -- don't know yet --
-
+   * removed: hist.sh and yesterday.sh
+     never used them myself, probably stopped working in 0.2.17
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

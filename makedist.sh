@@ -156,7 +156,11 @@ rm -f rdup-$version/tar-exclude
 rm -f rdup-$version/config.log 
 rm -f rdup-$version/config.status
 rm -f rdup-$version/tags 
-#rm -rf rdup-$version/tex 
+
+(
+cd rdup-$version/tex
+pdflatex rdup-quickstart.tex && pdflatex rdup-quickstart
+) || error_cleanup "Failed to create pdf version of the quickstart doc."
 
 info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
