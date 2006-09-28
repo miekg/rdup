@@ -2,6 +2,7 @@
    -- don't know yet --
    * removed: hist.sh and yesterday.sh
      never used them myself, probably stopped working in 0.2.17
+   * bug fixed in crypt.pl
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>
