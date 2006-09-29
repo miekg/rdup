@@ -138,7 +138,7 @@ if [[ -z "$remote" ]]; then      # no remote
                         @sbindir@/mirror.pl $MIR_OPT -c $BACKUPDIR
                 else 
                         @sbindir@/rdup -l $x -N $STAMP $LIST $@ | \
-                        @sbindir@/mirror.pl $MIR_OPT $BACKUPDIR
+                        /home/miekg/svn/rdup/trunk/hardlink.pl  $BACKUPDIR
                 fi
         else    # with keyfile
                 if $gzip; then
