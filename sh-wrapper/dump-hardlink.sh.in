@@ -34,31 +34,25 @@ version() {
 }
 
 what() {
-        if [[ ! -e $bACKUPDIR_PLAIN ]]; then
-                mkdir -p $backupdir
-                return true
-        fi
-
         for i in `seq 1 7`; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
 
-                echo $dir
                 if [[ -d $BACKUPDIR_PLAIN/$dir ]]; then
-                        cp -plr $BACKUPDIR_PLAIN/$dir $BACKUPDIR_PLAIN/$d
+
                         return false
                 fi
         done
         return true
 }
 
-d=`date +%Y%m/%d`       # store as YYYYMM/DD
+ym=`date +%Y%m`           # YYYYMM
+ymd=`date +%Y%m/%d`       # YYYYMM/DD
 gzip=false
 PROGNAME=$0
 BACKUPDIR=""
 BACKUPDIR_PLAIN=""
 KEYFILE=""
 PREFIX=""
-FIRST="" # the first backup dir
 remote=""
 bwidth=""
 MIR_OPT=""
@@ -69,11 +63,8 @@ _echo2() {
 
 while getopts ":ab:k:l:c:N:vzxhV" o; do
         case $o in
-                b) BACKUPDIR="$BACKUPDIR -b $OPTARG/$d"
+                b) BACKUPDIR="$BACKUPDIR -b $OPTARG/$ymd"
                 BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
-                if [[ -z $FIRST ]]; then
-                        FIRST=$OPTARG
-                fi
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-b needs an argument"
                         exit 1
@@ -122,17 +113,22 @@ if [[ ! -z $bwidth && -z $cstream ]]; then
         exit 1
 fi
 
-ETC="/etc/rdup"
-STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
-LIST="$ETC/$HOSTNAME.$(basename $1).list"
+
+for i in $BACKUPDIR_PLAIN; do
+        mkdir -p "$i/$ym"
+        if [[ ! $? ]]; then
+                _echo2 "Failure to create target backup directory: \`$i/$ym'"
+                exit 1
+        fi
+done
 
 if [[ what ]]; then
         # full dump
-        _echo2 "Full dump"
+        _echo2 "FULL DUMP"
         rm -f $STAMP
         rm -f $LIST
 else
-        _echo2 "Incremental dump"
+        _echo2 "INCREMENTAL DUMP"
 fi
 
 if [[ -z "$remote" ]]; then      # no remote 

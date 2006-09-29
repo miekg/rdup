@@ -138,9 +138,9 @@ if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
         # kill the timestamp and inc list
         rm -f "$LIST"
         rm -f "$STAMP"
-        _echo2 "Full dump"
+        _echo2 "FULL DUMP"
 else
-        _echo2 "Incremental dump"
+        _echo2 "INCREMENTAL dump"
 fi
 
 if [[ -z "$remote" ]]; then      # no remote 
