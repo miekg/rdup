@@ -56,12 +56,14 @@ AC_CONFIG_FILES([Makefile
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh
+                 sh-wrapper/dump-hardlink.sh
                  sh-tools/crypt.sh
                  sh-tools/gzip.sh
                  sh-tools/mirror.sh
                  pl-tools/gzip.pl
                  pl-tools/crypt.pl
                  pl-tools/grep.pl
+                 pl-tools/hardlink.pl
                  pl-tools/mirror.pl
                  ])
 AC_CONFIG_HEADER([config.h])

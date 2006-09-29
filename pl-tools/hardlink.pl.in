@@ -20,7 +20,7 @@ my $S_ISDIR = 040000;
 my $S_ISLNK = 0120000;
 
 my $progName = basename $0;
-my ($help, $version, $verbose, $attr, $restore, $remote, @backupDir);
+my ($help, $version, $verbose, $attr, $remote, @backupDir);
 
 GetOptions("h" => \$help,
         "V" => \$version,
@@ -120,7 +120,7 @@ sub _mirror {
                         foreach my $dir (@backupDir) {
                                 my $target = "$dir/$path";
                                 exist($target);  # side effects Go!
-                                if (!$restore and (-f _ || -l _)) {      # Type of entiry has changed
+                                if (-f _ || -l _) {      # Type of entiry has changed
                                         unlink $target or warn "** Cannot unlink $target: $!";
                                 }
                                 mkpath($target) unless -d _;
@@ -136,7 +136,7 @@ sub _mirror {
                 } elsif ($typ == 2) {        # LNK; target id the content
                         foreach my $dir (@backupDir) {
                                 my $target = "$dir/$path";
-                                if (exist($target)) {      # We only have a suffix if the file exists
+                                if (exist($target)== 1) {      
                                         unlink $target or warn "** Cannot unlink $target: $!";
                                 }
                                 if ($remote) {
@@ -153,15 +153,13 @@ sub _mirror {
                         $ilnk++;
                 }
         } else {        # Remove
-                if (!$restore) {
-                        foreach my $dir (@backupDir) {
-                                my $target = "$dir/$path";
-                                if (exist($target)) {      
-                                        unlink $target or warn "** Cannot rename $target: $!";
-                                }
+                foreach my $dir (@backupDir) {
+                        my $target = "$dir/$path";
+                        if (exist($target)) {      
+                                unlink $target or warn "** Cannot rename $target: $!";
                         }
-                        $irm++;
                 }
+                $irm++;
         }
 }
 

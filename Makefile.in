@@ -2,8 +2,8 @@ OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o
 HDR=rdup.h 
 CMD=rdup 
 SHS_IN=mirror.sh crypt.sh gzip.sh 
-WRP_IN=dump.sh dump-here.sh restore.sh
-PRL_IN=gzip.pl mirror.pl crypt.pl grep.pl
+WRP_IN=dump.sh dump-here.sh restore.sh dump-hardlink.sh
+PRL_IN=gzip.pl mirror.pl crypt.pl grep.pl hardlink.pl
 MAN8_IN=rdup.8 mirror.pl.8 dump.sh.8 dump-here.sh.8 restore.sh.8
 MAN1_IN=crypt.pl.1 gzip.pl.1 crypt.pl.1 grep.pl.1
 

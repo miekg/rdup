@@ -50,12 +50,12 @@ to="$backupdir/`date +%Y%m/%d`"
 
 case $purpose in
         0)
-        ./rdup -N STAMP LIST ~/Documents | ./hardlink.pl -b $to
+        ./rdup -N STAMP LIST ~/Documents | ./pl-tools/hardlink.pl -b $to
         ;;
         1)
         rm LIST
         rm STAMP
-        ./rdup -N STAMP LIST ~/Documents | ./hardlink.pl -b $to
+        ./rdup -N STAMP LIST ~/Documents | ./pl-tools/hardlink.pl -b $to
         ;;
 esac
 exit 0
