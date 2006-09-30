@@ -5,13 +5,14 @@
    * bug fix in crypt.pl
    * ${prefix/}share/rdup is used for common perl/shell files
      all tools now source these files
-   * all scripts source the share directory, making them smaller
    * all scripts are prefixed with rdup-
+   * all documentation updated with the new names
    * all installed scripts loose the .sh/.pl suffix (Debian Policy)
    * removed -N prefix arg from the utils
-   * rdup-snap added (perl) tool ala mirror but works on hardlinked dir
+   * rdup-snap added (perl) tool ala mirror but works on hard linked
+     files
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
-
+     This uses 'cp -plr' which is a gnu-ism
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

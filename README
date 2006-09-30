@@ -8,15 +8,7 @@ rdup depends on:
 o Gmake for compilation
 o Glib to build. Glib is the lowlevel C library of the
   GTK project. Configure will check for this.
-o Bash3 for the scripts. They use some of the advanced regexp features
-  that are only available in Bash3.
-
-Note: some of the rdup utils script depend on Gnu tools, and might
-not work as expected on *BSD.
-For *BSD you might want to create a link from /bin/bash to
-/usr/local/bin/bash, or edit all the scripts to use the correct bash.
-
-Currently rdup and all its scripts are tested on Linux and FreeBSD.
+o Perl for the scripts. 
 
 2/ DIFFERENCE WITH RSYNC
 
@@ -40,83 +32,5 @@ decends into directories. This way all top level directories can be
 created in sequence. If you process the files in the same order no magic
 is needed to create directories that otherwise might be missing.
 
-3.1/ FULL DUMP
-
-So how do you actually make a backup with rdup then? First run:
-rm -f timestamp && rdup -N timestamp FILELIST dir1
-
-Every directory, file and symlink in dir1 will be printed to standard
-out put, like this:
-+33152 1000 1000 45 0 /home/miekg/svn/rdup/trunk/bin/.svn/.nobackup
-+33216 1000 1000 37 528 /home/miekg/svn/rdup/trunk/bin/svnlog
-+33216 1000 1000 35 441 /home/miekg/svn/rdup/trunk/bin/zlog
-+33216 1000 1000 34 131 /home/miekg/svn/rdup/trunk/bin/zzz
-+33152 1000 1000 37 0 /home/miekg/svn/rdup/trunk/bin/zzzzzz
-
-Which says everything is new, that's the + sign in the first column.
-Next to that is the st_mode field of lstat(2), which holds the type
-of the file (dir, regular or symlink) and the protection bits.
-Then we find the numeric user id and numeric group id. Then the
-filesize in bytes and as last the there is the pathname.
-
-To do a real backup you can use:
-rm -f timestamp && \
-rdup -N timestamp FILELIST dir | rdup-mirror -b /vol/backup/
-
-'rdup-mirror' is a shell script which looks at the filetype and acts
-accordingly. It copies the content of all files to the archive
-directory, directories and symlinks are recreated.
-
-Thus rdup-mirror creates a mirror of the directories in the archive
-directory.
-
-By default it will put the files in "/vol/backup/`hostname`/YYYYMM".
-
-3.2/ INCREMENTAL DUMP
-
-Just run:
-rdup -N timestamp FILELIST dir1 | rdup-mirror -b /vol/backup/ 
-again.
-This will use the contents of FILELIST and the date on `timestamp' and
-will only print those files that are a newer then the m_time of file
-timestamp.
-
-If we were not piping the output to 'rdup-mirror' we would see:
--33152 0 0 9 0 bin/blaat
-+16832 1000 1000 8 0 bin/.svn
-
-Saying that 'bin/blaat' is to be removed. bin/.svn is always printed
-because that is a directory. The rdup-mirror script will update the
-backup directory as follows: any file that is updated and thus exists
-in the backup directory, will be moved to <filename>+MONTHDAY:HH:MM.
-The auxilary scripts hist.sh and yesterday.sh can cope with this format.
-
-4/ AND NOW FOR SOME FUN
-
-Note: the examples given here are simplified, you cannot use a simple
-command, but need to use differentiate between directories, regular
-files and symbolic links. See the example script 'rdup-mirror' for an
-implementation.
-
-You want gzipped backups?
-rdup -c FILELIST /home | gzip.sh | rdup-mirror -c 
-
-        gzip.sh is included in the rdup tarball.
-
-You want encrypted backups?
-rdup -c FILELIST /home | crypt.sh KEYFILE | rdup-mirror -c 
-
-        crypt.sh is included in the rdup tarball.
-
-You want encrypted/gzipped backups?
-rdup -c FILELIST /home | crypt.sh KEYFILE | gzip.sh | rdup-mirror -c 
-
-You want a gzipped tar file of your files?
-rdup FILELIST /home > tar_list && \
-tar --create --T list -z --file myhostbackup.tar.gz
-
-You want to dump your files on a remote machine?
-rdup FILELIST /home > list
-rsync --files-from=list user@remotehost.nl
-
-As in true unix tradition the list can go on and on :-)
+See rdup-backups(8) for an extended explanation on how to create
+backups.
