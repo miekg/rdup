@@ -19,10 +19,6 @@ require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $ts = time;
 my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($ts);
-my $S_MMASK = 07777;      # mask to get permission
-my $S_ISDIR = 040000;
-my $S_ISLNK = 0120000;
-
 my $progName = basename $0;
 my ($help, $version, $verbose, $attr, $remote, $backupDir);
 
@@ -68,7 +64,7 @@ printf STDERR "** #REG FILES  : %d\n", $ireg;
 printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
-printf STDERR "** SIZE        : %d MB\n", $ftsize/1024/1024;
+printf STDERR "** SIZE        : %f MB\n", ($ftsize/1024/1024 * 1.00);
 printf STDERR "** STORED IN   : %s\n", $backupDir;
 printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 

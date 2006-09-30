@@ -2,6 +2,10 @@
 # shared perl function
 # this is included by the other utils
 
+my $S_MMASK = 07777;      # mask to get permission
+my $S_ISDIR = 040000;
+my $S_ISLNK = 0120000;
+
 # show the version, $progname needs to be set!
 sub version {
         print "$_[0]: @PACKAGE_VERSION@ (rdup-utils)\n";
