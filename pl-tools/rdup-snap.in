@@ -13,6 +13,10 @@ use File::Copy;
 use File::Copy::Recursive qw(dircopy rcopy fcopy);
 use Fcntl qw(:mode);
 
+my $S_MMASK = 07777;      # mask to get permission
+my $S_ISDIR = 040000;
+my $S_ISLNK = 0120000;
+
 # common functions
 my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
@@ -64,7 +68,7 @@ printf STDERR "** #REG FILES  : %d\n", $ireg;
 printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
-printf STDERR "** SIZE        : %f MB\n", ($ftsize/1024/1024 * 1.00);
+printf STDERR "** SIZE        : %.2f MB\n", ($ftsize/1024/1024 * 1.00);
 printf STDERR "** STORED IN   : %s\n", $backupDir;
 printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 
