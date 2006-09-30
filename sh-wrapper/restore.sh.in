@@ -35,7 +35,6 @@ gzip=false
 PROGNAME=$0
 BACKUPDIR=""
 KEYFILE=""
-PREFIX=""
 FIRST="" # the first restore dir
 remote=""
 bwidth=""
@@ -43,7 +42,7 @@ MIR_OPT="-R"
 LIST="/dev/null"
 REG='\+\d\d\.\d\d:\d[\d/|\d$]'
 
-while getopts ":ab:k:l:c:N:vzxhV" o; do
+while getopts ":ab:k:l:c:vzxhV" o; do
         case $o in
                 b) BACKUPDIR="$BACKUPDIR -b $OPTARG"
                 if [[ -z $FIRST ]]; then
@@ -66,10 +65,6 @@ while getopts ":ab:k:l:c:N:vzxhV" o; do
                 if [[ -z $remote ]]; then
                         _echo2 "-c needs an argument"
                         exit 1
-                fi;;
-                N) PREFIX=$OPTARG
-                if [[ -z $PREFIX ]]; then
-                        _echo2 "-N needs an argument"
                 fi;;
                 l) bwidth=$OPTARG;;
                 z) gzip=true;;

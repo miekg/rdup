@@ -1,11 +1,12 @@
-   Oct 2006: 0.2.18 Miek <miek@miek.nl>
-   -- don't know yet --
+   Sept 2006: 0.3.0 Miek <miek@miek.nl>
+   -- major features enhancements --
    * removed: hist.sh and yesterday.sh
    * bug fix in crypt.pl
    * $prefix/share/rdup is used for common perl/shell files
    * all scripts source the share directory, making them smaller
    * all scripts are prefixed with rdup-
    * all installed scripts loose the .sh/.pl suffix (Debian Policy)
+   * removed -N prefix arg from the utils
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

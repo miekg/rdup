@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdup, 0.2.18, miek@miek.nl, rdup)
+AC_INIT(rdup, 0.3.30, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
@@ -58,7 +58,7 @@ AC_CONFIG_FILES([Makefile
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh
-                 sh-wrapper/dump-hardlink.sh
+                 sh-wrapper/snapshot.sh
                  sh-tools/crypt.sh
                  sh-tools/gzip.sh
                  sh-tools/mirror.sh

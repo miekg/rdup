@@ -55,7 +55,7 @@ while (($_ = <STDIN>)) {
                                 my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
                                 $fh->close();
                                 open CRYPT, "|mcrypt $crOptions > $filename" or die "** $filename: $!";
-                                copy($fsize, *CRYPT);
+                                copyout($fsize, *CRYPT);
                                 close CRYPT or die "** $filename: $!";
                                 my $size = (stat($filename))[7];
                                 syswrite STDOUT, "$dump$modebits $uid $gid $psize $size\n$path";

@@ -1,0 +1,92 @@
+#!/bin/sh
+
+# create a hardlinked backup
+# this scripts figures out if the
+# dump is incremental or full
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datadir=@datadir@/rdup
+
+# shared stuff
+source $datadir/shared.sh
+
+usage() {
+        echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
+        echo
+        echo "This is a wrapper around rdup and snap.pl"
+        echo
+        echo DIR \ - directories to back up
+        echo
+        echo OPTIONS:
+        echo " -b DIR     backup directory"
+        echo " -c REMOTE  dump the backup on a remote machine with ssh"
+        echo " -k KEYFILE encrypt all files, using crypt.pl"
+        echo " -z         compress all files, using gzip.pl"
+        echo " -a         write extended attributes with uid/gid"
+        echo " -e         filelist and timestamp are put in backup directory"
+        echo " -v         echo the files processed to stderr"
+        echo " -x         pass -x to rdup"
+        echo " -h         this help"
+        echo " -V         print version"
+}
+
+what() {
+        for i in `seq 1 7`; do
+                dir=`date +%Y%m/%d --date "$i days ago"`
+                if [[ -d $BACKUPDIR/$dir ]]; then
+                        # copy 'em over
+                        _echo2 "Linking dir: \`$dir'"
+                        cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
+                        return 0
+                fi
+        done
+        return 1
+}
+
+PROGNAME=$0
+NOW=`date +%Y%m/%d`
+BACKUPDIR=/tmp/backup
+while getopts ":ab:k:l:c:N:vzxehV" o; do
+        case $o in
+                b) BACKUPDIR="$OPTARG"
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-b needs an argument"
+                        exit 1
+                fi
+                ;;
+                h) usage && exit;;
+                V) version && exit;;
+        esac
+done
+shift $((OPTIND - 1))
+if [[ $# -eq 0 ]]; then
+        _echo2 "No directories to backup"
+        exit 1
+fi
+
+ETC="/etc/rdup"
+STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
+LIST="$ETC/$HOSTNAME.$(basename $1).list"
+
+
+mkdir -p $BACKUPDIR
+if [[ ! $? ]]; then
+        _echo2 "Can not create backup directory"
+        exit 1
+fi
+
+what; purpose=$? # save return code from what2do
+case $purpose in
+        0)
+        _echo2 "INCREMENTAL DUMP"
+        @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/snap.pl -b $BACKUPDIR/$NOW
+        ;;
+        1)
+        _echo2 "FULL DUMP"
+        rm $LIST
+        rm $STAMP
+        ./rdup -N $STAMP $LIST $@ | @sbindir@/snap.pl -b $BACKUPDIR/$NOW
+        ;;
+esac
+exit 0

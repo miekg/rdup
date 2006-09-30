@@ -43,23 +43,6 @@ directory specified.
 
 Also note that \fBdump.sh\fR will add the string YYYYMM to
 the backup directory.
-.TP
-.B \-N name
-The \fIname\fR speficies an optional prefix for the
-timestamp and filelist files. These are stored, by default, in
-`@sysconfdir@/rdup'. With the \fB\-e\fR option you can store them
-with your backup. 
-
-Normally the filelist and timestamp files are named like this:
-
-$HOSTNAME.`basename DIR`.list and
-$HOSTNAME.`basename DIR`.timestamp
-
-where DIR is the first directory or file on the command line. Thus:
-\fBdump.sh\fR /home/miekg/bin, will lead to the following names:
-
-elektron.bin.list and
-elektron.bin.timestamp
 
 .TP
 .B \-c user@remotehost

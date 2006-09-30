@@ -24,7 +24,6 @@ usage() {
         echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -z         compress all files, using gzip.pl"
-        echo " -N PREFIX  optional prefix for the timestmp and filelist"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -v         echo the files processed to stderr"
@@ -40,7 +39,6 @@ PROGNAME=$0
 BACKUPDIR=""
 BACKUPDIR_PLAIN=""
 KEYFILE=""
-PREFIX=""
 FIRST="" # the first backup dir
 remote=""
 bwidth=""
@@ -70,10 +68,6 @@ while getopts ":ab:k:l:c:N:vzxehV" o; do
                 if [[ -z $remote ]]; then
                         _echo2 "-c needs an argument"
                         exit 1
-                fi;;
-                N) PREFIX=$OPTARG
-                if [[ -z $PREFIX ]]; then
-                        _echo2 "-N needs an argument"
                 fi;;
                 l) bwidth=$OPTARG;;
                 e) etc=true;;

@@ -113,7 +113,7 @@ sub _mirror {
                                 if ($remote) {
                                         open FILE, ">$target" or warn "** Cannot create $target: $!";
                                         if ($fsize != 0) {
-                                                copy($fsize, *FILE);
+                                                copyout($fsize, *FILE);
                                         }
                                         chown $uid, $gid, *FILE;
                                         chown_attr($uid, $gid, $target);

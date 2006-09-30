@@ -85,7 +85,7 @@ sub _grep {
                 if ($typ == 0) {      # REG
                         if ($fsize != 0 and $remote) {
                                 syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                                copy($fsize, *STDOUT);
+                                copyout($fsize, *STDOUT);
                                 return;
                         }
                         if ($remote) {

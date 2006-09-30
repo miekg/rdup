@@ -26,7 +26,7 @@ sub sanity_check {
 }
 
 # copy a FILE DESC to a PIPE
-sub copy {
+sub copyout {
         my $count = $_[0];
         my $pipe = $_[1];
 

@@ -24,21 +24,21 @@ my $S_ISDIR = 040000;
 my $S_ISLNK = 0120000;
 
 my $progName = basename $0;
-my ($help, $version, $verbose, $attr, $remote, @backupDir);
+my ($help, $version, $verbose, $attr, $remote, $backupDir);
 
 GetOptions("h" => \$help,
         "V" => \$version,
         "a" => \$attr, # extended attr support
         "c" => \$remote,
         "v" => \$verbose,
-        "b=s" => \@backupDir);
+        "b=s" => \$backupDir);
 
 usage() if $help;
 version() if $version;
 my $hostname = `hostname`;    # This hostname
 chomp $hostname;
 # Location of backup root in local filesystem
-if ($#backupDir == -1) { die "** Need at least one -b option"; }
+if ($backupDir eq "") { die "** Need at least one -b option"; }
 my $attr_there = check_attr();    # Can we set extended attributes?
 
 # Statistics
@@ -53,13 +53,13 @@ if ($remote) {
         while (($_ = <STDIN>)) {
                 chomp;
                 ($mode, $uid, $gid, $psize, $fsize) = split(" ", $_, 5);
-                _mirror(@backupDir);
+                _mirror($backupDir);
         }
 } else {
         while (($_ = <STDIN>)) {
                 chomp;
                 ($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
-                _mirror(@backupDir);
+                _mirror($backupDir);
         }
 }
 my $te = time;
@@ -69,13 +69,13 @@ printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
 printf STDERR "** SIZE        : %d MB\n", $ftsize/1024/1024;
-printf STDERR "** STORED IN   : %s\n",  join(", ",@backupDir);
+printf STDERR "** STORED IN   : %s\n", $backupDir;
 printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 
 exit 0;
 
 sub _mirror {
-        my @backupDir = @_;
+        my $dir = $_[0];
         my $dump = substr($mode, 0, 1);
         my $modebits = substr($mode, 1);
 
@@ -96,73 +96,69 @@ sub _mirror {
 
         if ($dump eq '+') {        # add
                 if ($typ == 0) {        # REG
-                        foreach my $dir (@backupDir) {
-                                my $target = "$dir/$path";
+                        my $target = "$dir/$path";
 
-                                if (exist($target) == 1) {      # We only have a suffix if the file exists
-                                        unlink $target or warn "** Cannot unlink $target: $!";
-                                }
-                                if ($remote) {
-                                        open FILE, ">$target" or warn "** Cannot create $target: $!";
-                                        if ($fsize != 0) {
-                                                copy($fsize, *FILE);
-                                        }
-                                        chown $uid, $gid, *FILE;
-                                        chown_attr($uid, $gid, $target);
-                                        chmod $bits, *FILE;
-                                        close FILE;
-                                } else {
-                                        copy($path, $target) or warn "** Copy failed: $! $path $target";
-                                        chown $uid, $gid, $target;
-                                        chown_attr($uid, $gid, $target);
-                                        chmod $modebits, $target;
-                                }
+                        if (exist($target) == 1) {      # We only have a suffix if the file exists
+                                unlink $target or warn "** Cannot unlink $target: $!";
                         }
+                        if ($remote) {
+                                open FILE, ">$target" or warn "** Cannot create $target: $!";
+                                if ($fsize != 0) {
+                                        copyout($fsize, *FILE);
+                                }
+                                chown $uid, $gid, *FILE;
+                                chown_attr($uid, $gid, $target);
+                                chmod $bits, *FILE;
+                                close FILE;
+                        } else {
+                                copy($path, $target) or warn "** Copy failed: $! $path $target";
+                                chown $uid, $gid, $target;
+                                chown_attr($uid, $gid, $target);
+                                chmod $modebits, $target;
+                        }
+                        
                         $ftsize += $fsize;
                         $ireg++;
                 } elsif ($typ == 1) {        # DIR
-                        foreach my $dir (@backupDir) {
-                                my $target = "$dir/$path";
-                                exist($target);  # side effects Go!
-                                if (-f _ || -l _) {      # Type of entiry has changed
-                                        unlink $target or warn "** Cannot unlink $target: $!";
-                                }
-                                mkpath($target) unless -d _;
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
-                                if ($> != 0 && $bits == 0) {
-                                        print STDERR "chmod $target to 700\n";
-                                        $bits = 0700;
-                                }
-                                chmod $bits, $target;
+                        my $target = "$dir/$path";
+                        exist($target);  # side effects Go!
+                        if (-f _ || -l _) {      # Type of entiry has changed
+                                unlink $target or warn "** Cannot unlink $target: $!";
                         }
+                        mkpath($target) unless -d _;
+                        chown $uid, $gid, $target;
+                        chown_attr($uid, $gid, $target);
+                        if ($> != 0 && $bits == 0) {
+                                print STDERR "chmod $target to 700\n";
+                                $bits = 0700;
+                        }
+                        chmod $bits, $target;
+                        
                         $idir++;
                 } elsif ($typ == 2) {        # LNK; target id the content
-                        foreach my $dir (@backupDir) {
-                                my $target = "$dir/$path";
-                                if (exist($target)== 1) {      
-                                        unlink $target or warn "** Cannot unlink $target: $!";
-                                }
-                                if ($remote) {
-                                        my $linkTarget = "";
-                                        read STDIN, $linkTarget, $fsize;
-                                        symlink $target, $linkTarget;
-                                } else {
-                                        symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
-                                }
-
-                                chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
+                        my $target = "$dir/$path";
+                        if (exist($target)== 1) {      
+                                unlink $target or warn "** Cannot unlink $target: $!";
                         }
+                        if ($remote) {
+                                my $linkTarget = "";
+                                read STDIN, $linkTarget, $fsize;
+                                symlink $target, $linkTarget;
+                        } else {
+                                symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
+                        }
+
+                        chown $uid, $gid, $target;
+                        chown_attr($uid, $gid, $target);
+                        
                         $ilnk++;
                 }
         } else {        # Remove
-                foreach my $dir (@backupDir) {
-                        my $target = "$dir/$path";
-                        if (exist($target)) {      
-                                unlink $target or warn "** Cannot rename $target: $!";
-                        }
+                my $target = "$dir/$path";
+                if (exist($target)) {      
+                        unlink $target or warn "** Cannot rename $target: $!";
                 }
+                
                 $irm++;
         }
 }
@@ -187,22 +183,6 @@ sub exist {
         lstat($filename);
         return 0 unless -e _;
         return 1;
-}
-
-sub sanity_check {
-        my $dump = $_[0];
-        my $mode = $_[1];
-        my $psize = $_[2];
-        my $fsize = $_[3];
-        my $uid = $_[4];
-        my $gid = $_[5];
-
-        die "** $progName: dump ($dump) must be + or -"   if $dump ne "+" && $dump ne "-";
-        die "** $progName: mode ($mode) must be numeric"  unless $mode =~ "[0-9]+";
-        die "** $progName: psize ($psize) must be numeric" unless $psize =~ "[0-9]+";
-        die "** $progName: fsize ($fsize) must be numeric" unless $fsize =~ "[0-9]+";
-        die "** $progName: uid ($uid) must be numeric"   unless $uid =~ "[0-9]+";
-        die "** $progName: gid ($gid) must be numeric"   unless $gid =~ "[0-9]+";
 }
 
 sub check_attr {
