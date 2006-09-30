@@ -1,28 +1,28 @@
 '\" t
-.TH GZIP.PL 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-GZIP 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-gzip.pl, compress \-  compress files received from \fBrdup -c\fR
+rdup-gzip, compress \-  compress files received from \fBrdup -c\fR
 
 .SH SYNOPSIS
-.B gzip.pl
+.B rdup-gzip
 [
 .IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBgzip.pl\fR compresses the data it receives from \fBrdup\fR with gzip.
+\fBrdup-gzip\fR compresses the data it receives from \fBrdup\fR with gzip.
 .PP
 For example,
 .PP
-        rdup -c list ~/Documents | gzip.pl | mirror.pl -c -b /tmp/storage
+        rdup -c list ~/Documents | rdup-gzip | rdup-mirror -c -b /tmp/storage
 .PP
-Note the \fI-c\fR option for \fBmirror.pl\fR.
+Note the \fI-c\fR option for \fBrdup-mirror\fR.
 
 .SH OPTIONS
 .TP
 .B \-c
-This option is ignored, \fBgzip.pl\fR always works on the files'
+This option is ignored, \fBrdup-gzip\fR always works on the files'
 content. This "feature" was added because all rdup-util scripts have
 such an option.
 .TP
@@ -33,4 +33,4 @@ Decompress the files.
 Show the version.
 
 .SH SEE ALSO
-crypt.pl(1) and mirror.pl(8).
+rdup-crypt(1) and rdup-mirror(8).

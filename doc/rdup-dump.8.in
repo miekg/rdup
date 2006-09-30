@@ -1,11 +1,11 @@
 '\" t
-.TH DUMP.SH 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-DUMP 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-dump.sh \- dump a filesystem for a specifc host
+rdup-dump \- dump a filesystem for a specifc host
 
 .SH SYNOPSIS
-.B dump.sh
+.B rdup-dump
 [
 .IR OPTIONS
 ]
@@ -15,14 +15,14 @@ DIR|FILE
 ]
 
 .SH DESCRIPTION
-\fBdump.sh\fR is a frontend for `mirror.pl' and `rdup'. It will backup
+\fBrdup-dump\fR is a frontend for `rdup-mirror' and `rdup'. It will backup
 all directories and files given on the command line. It tries to be smart with
 respect to a full dump or an incremental dump. If the directories to
 be backed up \fIdo not exist\fR in the backup directory a full dump
 is assumed. Otherwise an incremental dump is performed.
 .PP
 Making local backups is as simple as:
-      dump.pl -b /vol/backup/$HOST ~ 
+      rdup-dump -b /vol/backup/$HOST ~ 
 .PP
 \fB~\fR is the directory to be backed up. Multiple directories
 or files are allowed on the command line.
@@ -41,7 +41,7 @@ will make the backup to be written to all these directories in one go.
 Note that the \-e option will only be looking at the first
 directory specified.
 
-Also note that \fBdump.sh\fR will add the string YYYYMM to
+Also note that \fBrdup-dump\fR will add the string YYYYMM to
 the backup directory.
 
 .TP
@@ -97,20 +97,20 @@ Show the version.
 .SS LOCAL BACKUP 
 Dumping my homedir to the backup:
 
-        dump.sh -b /vol/backup/$HOST ~
+        rdup-dump -b /vol/backup/$HOST ~
 
 Dumping /var/lib to the backup:
         
-        dump.sh -b /vol/backup/$HOST /var/lib
+        rdup-dump -b /vol/backup/$HOST /var/lib
       
 .SS REMOTE BACKUP
 Dumping my homedir to the remote backup:
 
-        dump.sh -b /vol/backup/$HOST -c miekg@remote ~
+        rdup-dump -b /vol/backup/$HOST -c miekg@remote ~
 
 Dumping /home to the remote backup:
         
-        dump.sh -b /vol/backup/$HOST -c miekg@remote /home
+        rdup-dump -b /vol/backup/$HOST -c miekg@remote /home
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1) and rdup(8).
+rdup(8) and rdup-snapshot(8).

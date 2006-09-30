@@ -1,30 +1,30 @@
 '\" t
-.TH CRYPT.PL 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-CRYPT 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-crypt.pl, encrypt \- encrypt files received from \fBrdup -c\fR
+rdup-crypt, encrypt \- encrypt files received from \fBrdup -c\fR
 
 .SH SYNOPSIS
-.B crypt.sh
+.B rdup-crypt
 .IR KEYFILE
 [
 .IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBcrypt.pl\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
+\fBrdup-crypt\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
 key contained in \fIKEYFILE\fR.
 .PP
 For example,
 .PP
-        rdup -c list ~/Documents | crypt.pl KEY | mirror.pl -c -b /tmp/storage
+        rdup -c list ~/Documents | rdup-crypt KEY | rdup-mirror -c -b /tmp/storage
 .PP
-Note the \fI-c\fR option for \fBmirror.pl\fR.
+Note the \fI-c\fR option for \fBrdup-mirror\fR.
 
 .SH OPTIONS
 .TP
 .B \-c
-This option is ignored, \fBcrypt.pl\fR always works on the files'
+This option is ignored, \fBrdup-crypt\fR always works on the files'
 content. This "feature" was added because all rdup-util scripts have
 such an option.
 .TP
@@ -38,4 +38,4 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-gzip.pl(1), mirror.pl(8) and mcrypt(1).
+rdup-gzip(1), rdup-mirror(8) and mcrypt(1).

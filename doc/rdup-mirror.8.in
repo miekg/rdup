@@ -1,27 +1,27 @@
 '\" t
-.TH MIRROR.PL 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-MIRROR 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-mirror.pl \- mirror the files from the list on standard input
+rdup-mirror \- mirror the files from the list on standard input
 
 .SH SYNOPSIS
-.B mirror.plsh
+.B rdup-mirror
 [
 .IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBmirror.pl\fR copies the files it gets from standard input to the directory
+\fBrdup-mirror\fR copies the files it gets from standard input to the directory
 specified with the \-b option. This script \fIimplements\fR the backup policy. 
 .PP
 If a file already exists in the backup directory it will be moved and
 will get a suffix. This suffix is of the form: '+DD.HH:MM'. This suffix
 is thus accurate to the minute. Multiple changes to files within one
-minute are never caught by \fBmirror.pl\fR.
+minute are never caught by \fBrdup-mirrorl\fR.
 .PP
 `hist.sh' and `yesterday.sh' also work on files with this same suffix.
 
-.SH OPTIONS
+.SH OPTION
 .TP
 .B \-a
 Write the uid and gid information to the file's extended user attributes:
@@ -31,7 +31,7 @@ on the system. And currently only for Linux.
 This option is usefull when storing a remote backup. Normally these
 backups are transferred by a non-root user. This user will not be able
 to correctly set all uid/gid information. As a workaround
-\fBmirror.pl\fR will set the extended user attributes to the uid/gid as
+\fBrdup-mirror\fR will set the extended user attributes to the uid/gid as
 it got them from standard input.
 .TP 
 .B \-b backupdir
@@ -39,7 +39,7 @@ Store the backup in \fIbackupdir\fR. This argument is mandatory.
 .TP
 .B \-c 
 Used in conjunction with \fBrdup\fR's \-c. This will allow
-\fBmirror.pl\fR to be used for remote backups.
+\fBrdup-mirror\fR to be used for remote backups.
 .TP
 .B \-R
 Restore mode. Always write the file to the target directory and
@@ -55,4 +55,4 @@ Short help message.
 Show the version.
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), rdup(8)
+rdup(8) and rdup-snapshot(8).

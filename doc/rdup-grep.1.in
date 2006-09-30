@@ -1,18 +1,18 @@
 '\" t
-.TH GREP.PL 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-GREP 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-grep.pl, filter \- filter files received from \fBrdup -c\fR
+rdup-grep, filter \- filter files received from \fBrdup -c\fR
 
 .SH SYNOPSIS
-.B grep.sh
+.B rdup-grep
 .IR REGEXP
 [
 .IR OPTIONS
 ]
 
 .SH DESCRIPTION
-\fBgrep.pl\fR, filter the output it receives from \fBrdup\fR using
+\fBrdup-grep\fR, filter the output it receives from \fBrdup\fR using
 \fIREGEXP\fR. Currently only the pathname is grepped.
 .PP
 Note: be carefull with your regular expression that you don't filter
@@ -23,22 +23,22 @@ directories do not exist, the resulting backup will fail.
 .PP
 For example,
 .PP
-        rdup list ~/Documents | grep.pl '.*' 
+        rdup list ~/Documents | rdup-grep '.*' 
 
 Which will let everything pass.
 .PP
-        rdup list ~/Docments | grep.pl -i '50$' 
+        rdup list ~/Docments | rdup-grep -i '50$' 
 
 Will let everything throught that doesn't have "50" as suffix.
 .PP
-If you want to use \fBgrep.pl\fR to restore from a backup you 
+If you want to use \fBrdup-grep\fR to restore from a backup you 
 can use the following regular expression:
 \fI'\\+\\d\\d.\\d\\d:\\d[\\d$|\\d/]'\fR 
 
 As in:
         rdup /dev/null /vol/backup/myhost | \ \\
-        grep.pl -i '\\+\\d\\d.\\d\\d:\\d[\\d$|\\d/]' | \ \\
-        mirror.pl -b /tmp/RESTORE
+        rdup-grep -i '\\+\\d\\d.\\d\\d:\\d[\\d$|\\d/]' | \ \\
+        rdup-mirror -b /tmp/RESTORE
 
 This will remove all files and directories with a +DD.HH:MM suffix,
 thereby leaving only those files you need to restore to the latest
@@ -59,4 +59,4 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-gzip.pl(1), mirror.pl(8) and grep(1).
+rdup-gzip(1), rdup-mirror(8) and grep(1).
