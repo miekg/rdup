@@ -58,14 +58,14 @@ AC_CONFIG_FILES([Makefile
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh
-                 sh-wrapper/snapshot.sh
+                 sh-wrapper/rdup-snapshot
                  sh-tools/crypt.sh
                  sh-tools/gzip.sh
                  sh-tools/mirror.sh
                  pl-tools/gzip.pl
                  pl-tools/crypt.pl
                  pl-tools/grep.pl
-                 pl-tools/snap.pl
+                 pl-tools/rdup-snap
                  pl-tools/mirror.pl
                  ])
 AC_CONFIG_HEADER([config.h])
