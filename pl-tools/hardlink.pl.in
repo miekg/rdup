@@ -13,6 +13,10 @@ use File::Copy;
 use File::Copy::Recursive qw(dircopy rcopy fcopy);
 use Fcntl qw(:mode);
 
+# common functions
+my $prefix="@prefix@";
+require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+
 my $ts = time;
 my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($ts);
 my $S_MMASK = 07777;      # mask to get permission
@@ -101,7 +105,7 @@ sub _mirror {
                                 if ($remote) {
                                         open FILE, ">$target" or warn "** Cannot create $target: $!";
                                         if ($fsize != 0) {
-                                                copyout($fsize, *FILE);
+                                                copy($fsize, *FILE);
                                         }
                                         chown $uid, $gid, *FILE;
                                         chown_attr($uid, $gid, $target);
@@ -221,27 +225,4 @@ sub usage {
         print " -h      this help\n";
         print " -V      print version\n";
         exit 0;
-}
-
-sub version {
-        print "** $progName: @PACKAGE_VERSION@ (rdup-utils)\n";
-        exit 0;
-}
-
-sub copyout {
-        my $count = $_[0];
-        my $pipe = $_[1];
-
-        my $buf;
-        my $n;
-
-        while ($count > 4096) {
-                $n = read STDIN, $buf, 4096;
-                syswrite $pipe, $buf, $n;
-                $count -= 4096;
-        }
-        if ($count > 0) {
-                $n = read STDIN, $buf, $count;
-                syswrite $pipe, $buf, $n;
-        }
 }

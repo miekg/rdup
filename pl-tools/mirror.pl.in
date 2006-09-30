@@ -15,6 +15,10 @@ use File::Copy;
 use File::Copy::Recursive qw(dircopy rcopy fcopy);
 use Fcntl qw(:mode);
 
+# common functions
+my $prefix="@prefix@";
+require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+
 my $ts = time;
 my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($ts);
 my $S_MMASK = 07777;      # mask to get permission
@@ -33,7 +37,7 @@ GetOptions("h" => \$help,
         "b=s" => \@backupDir);
 
 usage() if $help;
-version() if $version;
+version($progName) if $version;
 my $hostname = `hostname`;    # This hostname
 chomp $hostname;
 # Location of backup root in local filesystem
@@ -109,7 +113,7 @@ sub _mirror {
                                 if ($remote) {
                                         open FILE, ">$target" or warn "** Cannot create $target: $!";
                                         if ($fsize != 0) {
-                                                copyout($fsize, *FILE);
+                                                copy($fsize, *FILE);
                                         }
                                         chown $uid, $gid, *FILE;
                                         chown_attr($uid, $gid, $target);
@@ -203,22 +207,6 @@ sub mirror_suffix {
         return sprintf "+%02d.%02d:%02d", $mday, $hour, $min;
 }
 
-sub sanity_check {
-        my $dump = $_[0];
-        my $mode = $_[1];
-        my $psize = $_[2];
-        my $fsize = $_[3];
-        my $uid = $_[4];
-        my $gid = $_[5];
-
-        die "** $progName: dump ($dump) must be + or -"   if $dump ne "+" && $dump ne "-";
-        die "** $progName: mode ($mode) must be numeric"  unless $mode =~ "[0-9]+";
-        die "** $progName: psize ($psize) must be numeric" unless $psize =~ "[0-9]+";
-        die "** $progName: fsize ($fsize) must be numeric" unless $fsize =~ "[0-9]+";
-        die "** $progName: uid ($uid) must be numeric"   unless $uid =~ "[0-9]+";
-        die "** $progName: gid ($gid) must be numeric"   unless $gid =~ "[0-9]+";
-}
-
 sub check_attr {
         if ($^O eq "linux") {
                 map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
@@ -240,27 +228,4 @@ sub usage {
         print " -h      this help\n";
         print " -V      print version\n";
         exit 0;
-}
-
-sub version {
-        print "** $progName: @PACKAGE_VERSION@ (rdup-utils)\n";
-        exit 0;
-}
-
-sub copyout {
-        my $count = $_[0];
-        my $pipe = $_[1];
-
-        my $buf;
-        my $n;
-
-        while ($count > 4096) {
-                $n = read STDIN, $buf, 4096;
-                syswrite $pipe, $buf, $n;
-                $count -= 4096;
-        }
-        if ($count > 0) {
-                $n = read STDIN, $buf, $count;
-                syswrite $pipe, $buf, $n;
-        }
 }

@@ -53,6 +53,8 @@ AC_CONFIG_FILES([Makefile
                  doc/crypt.pl.1
                  doc/gzip.pl.1
                  doc/grep.pl.1
+                 shared/shared.sh
+                 shared/shared.pl
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
                  sh-wrapper/dump.sh
