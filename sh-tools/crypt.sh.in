@@ -5,23 +5,13 @@
 #
 # zip rdup -c's output
 
-S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
-S_ISLNK=40960   # octal: 0120000
-S_MMASK=4095    # octal: 00007777, mask to get permission
+datadir=@datadir@/rdup
+# shared stuff
+source $datadir/shared.sh
+
 PROGNAME=$0
 OPT=""
 
-_echo2() {
-        echo "** $PROGNAME: $1" >&2
-}
-
-cleanup() {
-        _echo2 "Signal received while processing \`$path', exiting"
-        if [[ ! -z $TMPDIR ]]; then
-                rm -rf $TMPDIR
-        fi
-        exit 1
-}
 # trap at least these
 trap cleanup SIGINT SIGPIPE
 
@@ -36,33 +26,6 @@ usage() {
         echo " -d    decrypt the files"
         echo " -h    this help"
         echo " -V    print version"
-}
-
-sanity_check() {
-        if [[ $dump != "+" && $dump != "-" ]]; then
-                _echo2 "$PROGNAME: dump must be + or -"
-                exit 1
-        fi
-        if [[ ! "$mode" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: mode must be numeric"
-                exit 1
-        fi
-        if [[ ! "$psize" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: psize must be numeric"
-                exit 1
-        fi
-        if [[ ! "$fsize" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: fsize must be numeric"
-                exit 1
-        fi
-        if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
-                _echo2 "$PROGNAME: uid or gid must be numeric"
-                exit 1
-        fi
-}
-
-version() {
-        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
 _stat_size() {

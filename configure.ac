@@ -65,7 +65,7 @@ AC_CONFIG_FILES([Makefile
                  pl-tools/gzip.pl
                  pl-tools/crypt.pl
                  pl-tools/grep.pl
-                 pl-tools/hardlink.pl
+                 pl-tools/snap.pl
                  pl-tools/mirror.pl
                  ])
 AC_CONFIG_HEADER([config.h])

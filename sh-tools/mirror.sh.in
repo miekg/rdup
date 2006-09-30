@@ -6,9 +6,10 @@
 # This script implement a mirroring backup scheme
 # -c is used for remote mirroring
 
-S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
-S_ISLNK=40960   # octal: 0120000
-S_MMASK=4095    # octal: 00007777, mask to get permission
+datadir=@datadir@/rdup
+cstream=@cstream@
+# shared stuff
+source $datadir/shared.sh
 
 remote=false
 verbose=false
@@ -18,11 +19,10 @@ attr=false          # use attr to save original uid/gid
 attr_there=false
 backupdir=""
 PROGNAME=$0
-cstream=@cstream@
 
-_echo2() {
-        echo "** $PROGNAME: $1" >&2
-}
+# trap at least these
+trap cleanup SIGINT SIGPIPE
+
 
 # check if attr can be found
 check_attr() {
@@ -40,13 +40,6 @@ check_attr() {
                 ;;
         esac
 }
-
-cleanup() {
-        _echo2 "Signal received while processing \`$path', exiting"
-        exit 1
-}
-# trap at least these
-trap cleanup SIGINT SIGPIPE
 
 set_attr_uid() {
         if ! $attr_there; then
@@ -133,33 +126,6 @@ usage() {
         echo " -v      echo the files processed to stderr"
         echo " -h      this help"
         echo " -V      print version"
-}
-
-version() {
-        echo "** $PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
-}
-
-sanity_check() {
-        if [[ $dump != "+" && $dump != "-" ]]; then
-                _echo2 "dump must be + or -"
-                exit 1
-        fi
-        if [[ ! "$mode" =~ "[0-9]+" ]]; then
-                _echo2 "mode must be numeric"
-                exit 1
-        fi
-        if [[ ! "$psize" =~ "[0-9]+" ]]; then
-                _echo2 "psize must be numeric"
-                exit 1
-        fi
-        if [[ ! "$fsize" =~ "[0-9]+" ]]; then
-                _echo2 "fsize must be numeric"
-                exit 1
-        fi
-        if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
-                _echo2 "uid or gid must be numeric"
-                exit 1
-        fi
 }
 
 _mirror() {

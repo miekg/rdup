@@ -5,7 +5,11 @@
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
+datadir=@datadir@/rdup
 cstream=@cstream@
+
+# shared stuff
+source $datadir/shared.sh
 
 usage() {
         echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
@@ -29,10 +33,6 @@ usage() {
         echo " -V         print version"
 }
 
-version() {
-        echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
-}
-
 d=`date +%Y%m`
 etc=false
 gzip=false
@@ -45,10 +45,6 @@ FIRST="" # the first backup dir
 remote=""
 bwidth=""
 MIR_OPT=""
-
-_echo2() {
-        echo "** $PROGNAME: $1" >&2
-}
 
 while getopts ":ab:k:l:c:N:vzxehV" o; do
         case $o in
