@@ -72,7 +72,7 @@ else
 fi
 
 sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
-sudo @sbindir@/mirror.pl -v -b $BACKUPDIR_DATE 2>&1 |\
+sudo @sbindir@/rdup-mirror -v -b $BACKUPDIR_DATE 2>&1 |\
 zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"
 
 exit 0
