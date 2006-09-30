@@ -1,16 +1,13 @@
 '\" t
-.TH RESTORE.SH 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-RESTORE 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-restore.sh \- restore a filesystem from a specific directory
+rdup-restore \- restore a filesystem from a specific directory
 
 .SH SYNOPSIS
-.B restore.sh
+.B rdup-restore
 [
 .IR OPTIONS
-]
-[
-+DAY
 ]
 .IR \-t
 .IR TO_DIR
@@ -20,20 +17,21 @@ FROM_DIR ...
 ]
 
 .SH DESCRIPTION
-\fBrestore.sh\fR is a frontend for `rorrim.sh', `monthday.sh' and `rdup'. It will
+\fBrdup-restore\fR is a frontend for `rdup-mirror' and `rdup'. It will
 restore everything under \fIFROM_DIR\fRs to \fITO_DIR\fR.
 
 .PP
-For the \fI+DAY\fR argument, see the rorrim.sh(8) manual page.
+With this script you can only restore to the latest state of your
+backup. If you need something better (for backing up) see
+rdup-snapshot(8).
 
 .PP
 Restoring from a backup is as simple as:
-      restore.sh \-t /tmp/home /vol/backup/elektron/200604/home
+      rdup-restore \-t /tmp/home /vol/backup/elektron/200604/home
 
 Note: The restored files "inherit" the `/vol/backup/elektron/200604'
 prefix. So the restored files are found in the directory:
-`/tmp/home/vol/backup/elektron/200604/home'. You can chop off those
-first few path components with the \-p switch.
+`/tmp/home/vol/backup/elektron/200604/home'.
 
 .SH OPTIONS
 .TP
@@ -46,7 +44,7 @@ Pull a backup from a remote host. This will create a pipeline of the
 form: 
 
 ssh \fIuser@remotehost\fR rdup \-c /dev/null \fIFROM_DIR\fR |
-montday.sh \-c \fI+DAY\fR | rorrim.sh \-c \fITO_DIR\fR
+rdup-mirror \-c \fITO_DIR\fR
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
@@ -55,15 +53,15 @@ the rdup-util scripts can be found.
 .TP
 .B \-k keyfile
 Decrypt the files while restoring with \fIkeyfile\fR. This option
-inserts \fBcrypt.sh \-d keyfile\fR in the pipeline. If both \fI\-z\fR and
+inserts \fBrdup-crypt \-d keyfile\fR in the pipeline. If both \fI\-z\fR and
 \fI\-k\fR are given a file is first decrypted and then unzipped. This 
-is ofcourse the opposite of what \fBdump.sh\fR does.
+is ofcourse the opposite of what \fBrdup-dump\fR does.
 .TP
 .B \-z
 Decompress the files while restoring. This option
-inserts \fBgzip.sh \-d\fR in the pipeline. If both \fI\-z\fR and
+inserts \fBrdup-gzip \-d\fR in the pipeline. If both \fI\-z\fR and
 \fI\-k\fR are given a file is first decrypted and then unzipped. This 
-is ofcourse the opposite of what \fBdump.sh\fR does.
+is ofcourse the opposite of what \fBrdup-dump\fR does.
 .TP
 .B \-a
 Enable extended attributes. Rad the uid/gid to the extended user
@@ -72,10 +70,6 @@ attributes r_uid and r_gid.
 .B -l num
 Limit the transfer to 'num' bytes/second. This option is given to
 \fBcstream\fR. See the manual page of cstream at the \-t option.
-.TP
-.B \-p NUM
-Strip NUM leading components of the file names. See rorrim.sh(8) for
-more details.
 .TP
 .B \-v
 Echo the files processed to standard error.
@@ -91,14 +85,14 @@ Show the version.
 .SS LOCAL RESTORE
 Restoring from my local backup:
 
-        restore.sh -t /tmp/restore /vol/backup/elektron/200604/home/miekg/bin
+        rdup-restore -t /tmp/restore /vol/backup/elektron/200604/home/miekg/bin
 
 
 .SS REMOTE RESTORE
 Restoring from a remote server:
 
-         restore.sh -c miekg@remote -t /tmp/restore ~/bin
+         rdup-restore -c miekg@remote -t /tmp/restore ~/bin
 
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1) and rdup(8).
+rdup(8), rdup-snapshot(8) and rdup-mirror(8)

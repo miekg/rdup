@@ -8,7 +8,7 @@ dump-here.sh \- dump a filesystem to where this script is located
 .B dump-here.sh
 
 .SH DESCRIPTION
-\fBdump-here.sh\fR is a graphical front-end for `mirror.sh' and `rdup'.
+\fBdump-here.sh\fR is a graphical front-end for `rdup-mirror' and `rdup'.
 Its main purpose is that it is used as `autorun.sh' on removeable media.
 This way you can backup automaticaly when you power on or insert such
 media.

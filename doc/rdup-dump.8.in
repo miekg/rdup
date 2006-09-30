@@ -29,7 +29,7 @@ or files are allowed on the command line.
 .PP
 There is no default backup location. You must specify a \-b argument.
 .PP
-See mirror.sh(8) for more information on how the files are placed
+See rdup-mirror(8) for more information on how the files are placed
 in the backup.
 
 .SH OPTIONS
@@ -49,7 +49,7 @@ the backup directory.
 Restore a backup on a remote host. This will create a pipeline of the
 form: 
 
-rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR mirror.pl \-c \-b \fIbackupdir\fR
+rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-mirror.pl \-c \-b \fIbackupdir\fR
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
@@ -74,7 +74,7 @@ Pass \-x to rdup (stay in local filesystem).
 .TP
 .B \-z
 Compress the files while backing up. This option
-inserts \fBgzip.sh\fR in the pipeline. If both \fI-z\fR and
+inserts \fBrdup-gzip\fR in the pipeline. If both \fI-z\fR and
 \fI-k\fR are given a file is first zipped and then encrypted.
 .TP
 .B \-e

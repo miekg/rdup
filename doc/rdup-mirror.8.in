@@ -18,8 +18,6 @@ If a file already exists in the backup directory it will be moved and
 will get a suffix. This suffix is of the form: '+DD.HH:MM'. This suffix
 is thus accurate to the minute. Multiple changes to files within one
 minute are never caught by \fBrdup-mirrorl\fR.
-.PP
-`hist.sh' and `yesterday.sh' also work on files with this same suffix.
 
 .SH OPTION
 .TP

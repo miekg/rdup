@@ -275,88 +275,59 @@ DD is the monthday of change.
 .PP
 The more important scripts are:
 .TP
-.B mirror.sh
+.B rdup-mirror
 the main backup script that implements a mirroring backup. It also used
 for remote backups (with the -c switch).
 .TP
-.B gzip.sh
+.B rdup-snapshot
+Create a (hard link) snapshot. Hard links safe space so you can keep
+a very long record of previous backups. This is wrapper around
+`rdup-snap` and `rdup`.
+.TP
+.B rdup-gzip
 acts as a compression filter.
 .TP
-.B crypt.sh
+.B rdup-crypt
 acts as a encryption filter.
 .TP
-.B dump.sh
-a wrapper script around `mirror.sh' and `rdup' that creates
+.B rdup-dump
+a wrapper script around `rdup-mirror' and `rdup' that creates
 a backup.
 .TP
-.B hist.sh
-inspect the backup history of a particulair file.
-.TP
-.B yesterday.sh
-restore files from the backups, show diffs, etc.
-.TP
-.B monthday.sh
-select files from a specific day in the month from a backup
-.TP
-.B rorrim.sh
-restore files from a backup.
-.TP
-.B restore.sh
-a wrapper scripts around `rdup', `monthday.sh' and `rorrim.sh' to
-ease restoring.
+.B rdup-restore
+a wrapper scripts around `rdup', `rdup-mirror' to ease restoring.
 
 .SH EXAMPLES
 
 .SS BACKUPS
-\fBdump.sh\fR is a wrapper which implements these (and more) pipelines:
+\fBrdup-dump\fR is a wrapper which implements these (and more) pipelines:
 
 .SS full dump of /home 
-rdup /tmp/HOMELIST ~ | mirror.sh \-b /vol/backup
+rdup /tmp/HOMELIST ~ | rdup-mirror \-b /vol/backup
 
 .SS full gzipped dump of /home
-rdup \-c /tmp/HOMELIST ~ | gzip.sh | mirror.sh \-c \-b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | rdup-gzip | rdup-mirror \-c \-b /vol/backup
 
 .SS full remote dump of /home
-rdup \-c /tmp/HOMELIST ~ | ssh \-C miekg@example.com mirror.sh \-c \-b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | ssh \-C miekg@example.com rdup-mirror \-c \-b /vol/backup
 
 The \fI\-C\fR compresses the stream.
 
 .SS full encrypted remote dump of /home
-rdup \-c /tmp/HOMELIST ~ | crypt.sh KEYFILE | 
-ssh miekg@example.com mirror.sh \-c \-b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | rdup-crypt KEYFILE | 
+ssh miekg@example.com rdup-mirror \-c \-b /vol/backup
 
 .SS full encrypted, gzipped remote dump of /home
-This is my favorite:
 
-rdup \-c /tmp/HOMELIST ~ | crypt.sh KEYFILE | gzip.sh | 
-ssh miekg@example.com mirror.sh \-c \-b /vol/backup
+rdup \-c /tmp/HOMELIST ~ | rdup-crypt KEYFILE | rdup-gzip | 
+ssh miekg@example.com rdup-mirror \-c \-b /vol/backup
 
 .SS RESTORES
-\fBrestore.sh\fR is a wrapper which implements these (and more) pipelines:
+\fBrdup-restore\fR is a wrapper which implements these (and more) pipelines:
 
 .SS restore of /home to /tmp/restore
-rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh |
-rorrim.sh /tmp/restore
-
-.SS restore of /home to state of the 15th of the month
-rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh +15 |
-rorrim.sh /tmp/restore
-
-.SS restore of /home but leading 4 paths components stripped
-rdup /dev/null /vol/backup/HOST/200604/home | monthday.sh |
-rorrim.sh \-p4 /tmp/restore
-
-.SS restore of gzipped backup
-rdup \-c /dev/null /vol/backup/HOST/200604/home | monthday.sh \-c |
-rorrim.sh \-c /tmp/restore
-
-.SS remote restore
-ssh miekg@example.com rdup \-c /dev/null /vol/backup/me/200605/home |
-montday.sh \-c | rorrim.sh \-c /tmp/restore
-
-.SS remote restore of encrypted backup
-ssh miekg@example.com rdup \-c /dev/null /vol/backup/me/200605/home |
-montday.sh \-c | crypt.sh \-d SECRET_KEY | rorrim.sh \-c /tmp/restore
+rdup /dev/null /vol/backup/HOST/200604/home |
+rdup-mirror -r -b /tmp/restore
 
 .SH USEFULL EXTERNAL TOOLS
 As \fBrdup\fR only prints names it depends on external tools and scripts
@@ -379,7 +350,7 @@ Written by Miek Gieben.
 Report bugs to <miek@miek.nl>. 
 
 .SH SEE ALSO
-hist.sh(1), yesterday.sh(1), mirror.sh(8), dump.sh(8) and restore.sh(8).
+rdup-mirror(8), rdup-dump(8), rdup-snap(8) and rdup-restore(8).
 
 .SH COPYRIGHT
 Copyright (C) 2005, 2006 Miek Gieben. This is free software. There is NO
