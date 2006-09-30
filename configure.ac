@@ -57,16 +57,16 @@ AC_CONFIG_FILES([Makefile
                  shared/shared.pl
                  sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
-                 sh-wrapper/rdup-dump.sh
+                 sh-wrapper/rdup-dump
                  sh-wrapper/rdup-snapshot
                  sh-tools/crypt.sh
                  sh-tools/gzip.sh
                  sh-tools/mirror.sh
-                 pl-tools/rdup-gzip.pl
-                 pl-tools/rdup-crypt.pl
-                 pl-tools/rdup-grep.pl
+                 pl-tools/rdup-gzip
+                 pl-tools/rdup-crypt
+                 pl-tools/rdup-grep
                  pl-tools/rdup-snap
-                 pl-tools/rdup-mirror.pl
+                 pl-tools/rdup-mirror
                  ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
