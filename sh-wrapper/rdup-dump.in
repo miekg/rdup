@@ -14,7 +14,7 @@ source $datadir/shared.sh
 usage() {
         echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
         echo 
-        echo "This is a wrapper around rdup and mirror.pl"
+        echo "This is a wrapper around rdup and rdup-mirror"
         echo
         echo DIR \ - directories to back up
         echo
@@ -22,8 +22,8 @@ usage() {
         echo " -b DIR     backup directory, can be given more then once"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
-        echo " -k KEYFILE encrypt all files, using crypt.pl"
-        echo " -z         compress all files, using gzip.pl"
+        echo " -k KEYFILE encrypt all files, using rdup-crypt"
+        echo " -z         compress all files, using rdup-gzip"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory"
         echo " -v         echo the files processed to stderr"
@@ -166,7 +166,7 @@ else     # remote
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \ 
                                 @sbindir@/rdup-gzip | \
                                 $cstream -t $bwidth | \
-                                ssh -x "$remote" | rdup-mirror.pl $MIR_OPT -c $BACKUPDIR
+                                ssh -x "$remote" | rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
                 else    # without gzip
                         if [[ -z $bwidth ]]; then

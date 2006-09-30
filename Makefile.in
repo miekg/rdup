@@ -72,7 +72,6 @@ install: all
 	mkdir -p ${DESTDIR}${datadir}
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/$$i ; done
 	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
-	for i in ${SHS}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${SHA}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN8}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man8/`basename $$i` ; done
