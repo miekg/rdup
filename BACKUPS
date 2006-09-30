@@ -21,7 +21,7 @@ add that suffix.
 As root run:
 rm -f /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST && \
 /usr/bin/rdup -N /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST /home |\
-/usr/sbin/mirror.pl -b /vol/backup/$HOSTNAME/`date +%Y%m`
+/usr/sbin/rdup-mirror -b /vol/backup/$HOSTNAME/`date +%Y%m`
 
 When this completes it will print (or something very simular):
 ** #REG FILES  : 32
@@ -41,7 +41,7 @@ dump is started.
 
 An incremental dump is easy, just run:
 /usr/bin/rdup -N /etc/rdup/HOME_TIMESTAMP /etc/rdup/HOMELIST /home |\
-/usr/sbin/mirror.pl -b /vol/backup/$HOSTNAME/`date +%Y%m`
+/usr/sbin/rdup-mirror -b /vol/backup/$HOSTNAME/`date +%Y%m`
 
 This will dump all files that have changed sine the last dump. The time
 of the last dump is gotten from the file HOME_TIMESTAMP. Old files in
@@ -55,13 +55,15 @@ yesterday.sh and hist.sh can be used to retrieve old files.
 
 In both examples the backup will be placed in /vol/backup.
 
-rdup -c -N timestamp HOMELIST ~ | ssh user@otherhost mirror.pl -c \
+rdup -c -N timestamp HOMELIST ~ | ssh user@otherhost rdup-mirror -c \
 -b backupdir/
 
 or if you want bandwidth limitation:
 
 rdup -c -N timestamp HOMELIST ~ | cstream | ssh user@otherhost \ 
-mirror.pl -c -b backupdir
+rdup-mirror -c -b backupdir
 
 3/ EXTERNAL HARDDISK BACKUPS
-In the sh-wrapper/ directory there is a script 
+In the sh-wrapper/ directory there is a script dump-here.sh which you
+can use for that. It will create the backup in the directory it is
+called from.

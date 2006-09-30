@@ -47,7 +47,7 @@ AC_CONFIG_FILES([Makefile
                  rdup.h
                  doc/rdup.8
                  doc/rdup-dump.8
-                 doc/restore.sh.8
+                 doc/rdup-restore.8
                  doc/dump-here.sh.8
                  doc/rdup-mirror.8
                  doc/rdup-crypt.1
@@ -55,8 +55,8 @@ AC_CONFIG_FILES([Makefile
                  doc/rdup-grep.1
                  shared/shared.sh
                  shared/shared.pl
-                 sh-wrapper/restore.sh
                  sh-wrapper/dump-here.sh
+                 sh-wrapper/rdup-restore
                  sh-wrapper/rdup-dump
                  sh-wrapper/rdup-snapshot
                  sh-tools/crypt.sh

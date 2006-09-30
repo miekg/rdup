@@ -61,13 +61,13 @@ filesize in bytes and as last the there is the pathname.
 
 To do a real backup you can use:
 rm -f timestamp && \
-rdup -N timestamp FILELIST dir | ./mirror.sh -b /vol/backup/
+rdup -N timestamp FILELIST dir | rdup-mirror -b /vol/backup/
 
-'mirror.sh' is a shell script which looks at the filetype and acts
+'rdup-mirror' is a shell script which looks at the filetype and acts
 accordingly. It copies the content of all files to the archive
 directory, directories and symlinks are recreated.
 
-Thus mirror.sh creates a mirror of the directories in the archive
+Thus rdup-mirror creates a mirror of the directories in the archive
 directory.
 
 By default it will put the files in "/vol/backup/`hostname`/YYYYMM".
@@ -75,18 +75,18 @@ By default it will put the files in "/vol/backup/`hostname`/YYYYMM".
 3.2/ INCREMENTAL DUMP
 
 Just run:
-rdup -N timestamp FILELIST dir1 | ./mirror.sh -b /vol/backup/ 
+rdup -N timestamp FILELIST dir1 | rdup-mirror -b /vol/backup/ 
 again.
 This will use the contents of FILELIST and the date on `timestamp' and
 will only print those files that are a newer then the m_time of file
 timestamp.
 
-If we were not piping the output to 'mirror.sh' we would see:
+If we were not piping the output to 'rdup-mirror' we would see:
 -33152 0 0 9 0 bin/blaat
 +16832 1000 1000 8 0 bin/.svn
 
 Saying that 'bin/blaat' is to be removed. bin/.svn is always printed
-because that is a directory. The mirror.sh script will update the
+because that is a directory. The rdup-mirror script will update the
 backup directory as follows: any file that is updated and thus exists
 in the backup directory, will be moved to <filename>+MONTHDAY:HH:MM.
 The auxilary scripts hist.sh and yesterday.sh can cope with this format.
@@ -95,21 +95,21 @@ The auxilary scripts hist.sh and yesterday.sh can cope with this format.
 
 Note: the examples given here are simplified, you cannot use a simple
 command, but need to use differentiate between directories, regular
-files and symbolic links. See the example script 'mirror.sh' for an
+files and symbolic links. See the example script 'rdup-mirror' for an
 implementation.
 
 You want gzipped backups?
-rdup -c FILELIST /home | gzip.sh | mirror.sh -c 
+rdup -c FILELIST /home | gzip.sh | rdup-mirror -c 
 
         gzip.sh is included in the rdup tarball.
 
 You want encrypted backups?
-rdup -c FILELIST /home | crypt.sh KEYFILE | mirror.sh -c 
+rdup -c FILELIST /home | crypt.sh KEYFILE | rdup-mirror -c 
 
         crypt.sh is included in the rdup tarball.
 
 You want encrypted/gzipped backups?
-rdup -c FILELIST /home | crypt.sh KEYFILE | gzip.sh | mirror.sh -c 
+rdup -c FILELIST /home | crypt.sh KEYFILE | gzip.sh | rdup-mirror -c 
 
 You want a gzipped tar file of your files?
 rdup FILELIST /home > tar_list && \
