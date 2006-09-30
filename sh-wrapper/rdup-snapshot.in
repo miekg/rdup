@@ -37,6 +37,8 @@ what() {
                 if [[ -d $BACKUPDIR/$dir ]]; then
                         # copy 'em over
                         _echo2 "Linking dir: \`$dir'"
+                        mkdir -p $BACKUPDIR/$NOW
+                        chmod 755 $BACKUPDIR/$NOW
                         cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
                         return 0
                 fi
@@ -75,6 +77,7 @@ if [[ ! $? ]]; then
         _echo2 "Can not create backup directory"
         exit 1
 fi
+chmod 755 $BACKUPDIR
 
 what; purpose=$? # save return code from what2do
 case $purpose in
