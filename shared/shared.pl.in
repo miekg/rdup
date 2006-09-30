@@ -1,0 +1,68 @@
+
+# shared perl function
+# this is included by the other utils
+
+# show the version, $progname needs to be set!
+sub version {
+        print "$_[0]: @PACKAGE_VERSION@ (rdup-utils)\n";
+        exit;
+}
+
+# sanity_check the input
+sub sanity_check {
+        my $dump = $_[0];
+        my $mode = $_[1];
+        my $psize = $_[2];
+        my $fsize = $_[3];
+        my $uid = $_[4];
+        my $gid = $_[5];
+
+        die "** $progName: dump must be + or -"   if $dump ne "+" && $dump ne "-";
+        die "** $progName: mode must be numeric"  unless $mode =~ "[0-9]+";
+        die "** $progName: psize must be numeric" unless $psize =~ "[0-9]+";
+        die "** $progName: fsize must be numeric" unless $fsize =~ "[0-9]+";
+        die "** $progName: uid must be numeric"   unless $uid =~ "[0-9]+";
+        die "** $progName: gid must be numeric"   unless $gid =~ "[0-9]+";
+}
+
+# copy a FILE DESC to a PIPE
+sub copy {
+        my $count = $_[0];
+        my $pipe = $_[1];
+
+        my $buf;
+        my $n;
+
+        while ($count > 4096) {
+                $n = read STDIN, $buf, 4096;
+                syswrite $pipe, $buf, $n;
+                $count -= 4096;
+        }
+        if ($count > 0) {
+                $n = read STDIN, $buf, $count;
+                syswrite $pipe, $buf, $n;
+        }
+}
+
+# cat from FILE DESC to STDOUT
+sub cat {
+        my $file = $_[0];
+
+        my $buf;
+        my $n;
+
+        while (($n = read $file, $buf, 4096) > 0) {
+                syswrite STDOUT, $buf, $n;
+        }
+}
+
+# cat from FILE to STDOUT
+sub catfile {
+        my $name = $_[0];
+        open FILE, "<$name" or die "** $name: $!";
+        cat(*FILE);
+        close FILE;
+}
+
+# keep
+1;
