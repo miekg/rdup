@@ -19,6 +19,7 @@ bindir=@bindir@
 sbindir=@sbindir@
 mandir=@mandir@
 sysconfdir=@sysconfdir@
+datadir=@datadir@/rdup
 
 GCC=@CC@
 GLIB_CFLAGS=@GLIB_CFLAGS@

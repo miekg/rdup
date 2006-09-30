@@ -1,61 +1,50 @@
 #!/bin/sh
 
-#/tmp/backup/YYYYMM/DD
+# create a hardlinked backup
+# this scripts figures out if the
+# dump is incremental or full
 
-# check if there is something in /tmp/backup
-# no -> do a full dump *** 
-# yes
-# check if there is a previous dump
-# go back a number of days...like 7 (option) -7
-# copy the the old dir to the new dir
-# if found 
-# yes -> cp -rpl old new
-#        do an incremental dump
-# no -> do a full dump
-
-# exit code: 1 full dump, 0 incremental dump
+prefix=@prefix@
+exec_prefix=@exec_prefix@
 
 
-function what2do {
-        dir=`date +%Y%m/%d --date "$i days ago"`
-        backupdir=/tmp/backup
-        if [[ ! -e $backupdir ]]; then
-                mkdir -p $backupdir
 
-                echo FULL DUMP
-                return 1;
-        fi
+NOW=`date +%Y%m/%d`
+BACKUPDIR=/tmp/backup
 
-# backup dir is there
-# find last backup
+mkdir -p $BACKUPDIR
+if [[ ! $? ]]; then
+        echo "Can not create backup directory"
+        exit 1
+fi
+
+what() {
         for i in `seq 1 7`; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
 
                 echo $dir
-                if [[ -d $backupdir/$dir ]]; then
+                if [[ -d $BACKUPDIR/$dir ]]; then
                         # copy 'em over
-                        cp -plr $backupdir/$dir $backupdir/`date +%Y%m/%d`
-                        echo INC DUMP
+                        echo "Linking old dir: \`$dir'"
+                        cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
                         return 0
                 fi
         done
-        echo FULL
         return 1
 }
 
-what2do
-purpose=$? # save return code from what2do
-
-to="$backupdir/`date +%Y%m/%d`"
+what; purpose=$? # save return code from what2do
 
 case $purpose in
         0)
-        ./rdup -N STAMP LIST ~/Documents | ./pl-tools/hardlink.pl -b $to
+        echo "INCREMENTAL DUMP"
+        ./rdup -N STAMP LIST ~/Documents | ./pl-tools/hardlink.pl -b $BACKUPDIR/$NOW
         ;;
         1)
+        echo "FULL DUMP"
         rm LIST
         rm STAMP
-        ./rdup -N STAMP LIST ~/Documents | ./pl-tools/hardlink.pl -b $to
+        ./rdup -N STAMP LIST ~/Documents | ./pl-tools/hardlink.pl -b $BACKUPDIR/$NOW
         ;;
 esac
 exit 0

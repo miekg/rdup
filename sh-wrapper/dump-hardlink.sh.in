@@ -5,6 +5,7 @@
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
+datadir=@datadir@
 cstream=@cstream@
 
 usage() {
