@@ -80,13 +80,13 @@ what; purpose=$? # save return code from what2do
 case $purpose in
         0)
         _echo2 "INCREMENTAL DUMP"
-        @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/snap.pl -b $BACKUPDIR/$NOW
+        @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/rdup-snap -b $BACKUPDIR/$NOW
         ;;
         1)
         _echo2 "FULL DUMP"
         rm $LIST
         rm $STAMP
-        ./rdup -N $STAMP $LIST $@ | @sbindir@/snap.pl -b $BACKUPDIR/$NOW
+        ./rdup -N $STAMP $LIST $@ | @sbindir@/rdup-snap -b $BACKUPDIR/$NOW
         ;;
 esac
 exit 0
