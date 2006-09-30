@@ -5,6 +5,8 @@
 #
 # zip rdup -c's output
 
+prefix=@prefix@
+exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 # shared stuff
 source $datadir/shared.sh

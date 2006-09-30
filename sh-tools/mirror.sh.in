@@ -6,6 +6,8 @@
 # This script implement a mirroring backup scheme
 # -c is used for remote mirroring
 
+prefix=@prefix@
+exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 cstream=@cstream@
 # shared stuff
