@@ -84,9 +84,9 @@ case $purpose in
         ;;
         1)
         _echo2 "FULL DUMP"
-        rm $LIST
-        rm $STAMP
-        ./rdup -N $STAMP $LIST $@ | @sbindir@/rdup-snap -b $BACKUPDIR/$NOW
+        rm -f $LIST
+        rm -f $STAMP
+        @sbindir@/rdup -N $STAMP $LIST $@ | @sbindir@/rdup-snap -b $BACKUPDIR/$NOW
         ;;
 esac
 exit 0
