@@ -34,7 +34,7 @@ GetOptions("h" => \$help,
         "b=s" => \$backupDir);
 
 usage() if $help;
-version() if $version;
+version($progName) if $version;
 my $hostname = `hostname`;    # This hostname
 chomp $hostname;
 # Location of backup root in local filesystem
