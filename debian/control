@@ -7,7 +7,7 @@ Standards-Version: 3.6.2
 
 Package: rdup
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libfile-copy-recursive-perl
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
 

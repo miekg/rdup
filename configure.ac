@@ -36,11 +36,6 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 
 AC_PATH_PROG(cstream, cstream)
 
-# set sysconfdir
-if test $sysconfdir = '${prefix}/etc'; then
-        sysconfdir="/etc"
-fi
-
 AC_CONFIG_FILES([Makefile
                  rdup.h
                  doc/rdup.8
