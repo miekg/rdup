@@ -53,7 +53,7 @@ deb-trunk:
 	( \
 	cp -ra trunk @PACKAGE_NAME@-@PACKAGE_VERSION@ ; \
 	cd @PACKAGE_NAME@-@PACKAGE_VERSION@ ; \
-	dpkg-buildpackage -rfakeroot ; \
+	dpkg-buildpackage -us -uc -rfakeroot ; \
 	cd .. ; \
 	rm -rf  @PACKAGE_NAME@-@PACKAGE_VERSION@ )
 
