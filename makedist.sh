@@ -140,10 +140,14 @@ cd ..
 mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
 
 # make the debian package
-( cd rdup-$version; \
-dpkg-buildpackage -rfakeroot; \
-cd ..)
+cd rdup-$version
+dpkg-buildpackage -rfakeroot
+cd ..
+ls
 
+mv *.deb ../ 
+
+exit
 tarfile="../rdup-$version.tar.gz"
 
 if [ -f $tarfile ]; then
