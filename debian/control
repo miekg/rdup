@@ -1,0 +1,17 @@
+Source: rdup
+Section: utils
+Priority: optional
+Maintainer: Miek Gieben <miekg@atoom.net>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev
+Standards-Version: 3.6.2
+
+Package: rdup
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
+
+Package: rdup-doc
+Architecture: all
+Description: Documentation for rdup
+ <insert long description, indented with spaces>
