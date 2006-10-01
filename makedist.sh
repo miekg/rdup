@@ -135,19 +135,17 @@ if [ "$SNAPSHOT" = "yes" ]; then
     info "Snapshot version number: $version"
 fi
 
-info "Renaming rdup directory to rdup-$version."
+info "Renaming rdup directory to rdup-$version..."
 cd ..
 mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
 
 # make the debian package
-cd rdup-$version
-dpkg-buildpackage -rfakeroot
-cd ..
-ls
+info "Creating Debian package rdup_...$version.deb."
+( cd rdup-$version
+dpkg-buildpackage -us -uc -rfakeroot 2>/dev/null >/dev/null ) || \
+error_cleanup "Failed to create Debian package."
+mv *.deb ../
 
-mv *.deb ../ 
-
-exit
 tarfile="../rdup-$version.tar.gz"
 
 if [ -f $tarfile ]; then
@@ -166,9 +164,10 @@ rm -f rdup-$version/config.log
 rm -f rdup-$version/config.status
 rm -f rdup-$version/tags 
 
+info "Making .pdf of the tex quickstart"
 (
 cd rdup-$version/doc/tex
-pdflatex rdup-quickstart.tex && pdflatex rdup-quickstart
+pdflatex rdup-quickstart.tex 2>/dev/null && pdflatex rdup-quickstart 2>/dev/null
 ) || error_cleanup "Failed to create pdf version of the quickstart doc."
 
 info "Creating tar rdup-$version.tar.bz2"
