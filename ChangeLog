@@ -13,6 +13,7 @@
      files
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
+   * don't install dump-here.sh or dump-here.sh.8
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>
