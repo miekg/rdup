@@ -1,6 +1,6 @@
 02 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- major features enhancements --
-   * No shell scripts are installed anymore!
+   * No shell utils are installed anymore, only the wrappers
    * history.sh and yesterday.sh are removed from the archive
    * bug fix in crypt.pl
    * ${prefix/}share/rdup is used for common perl/shell files
