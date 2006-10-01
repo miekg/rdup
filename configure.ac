@@ -34,6 +34,11 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
+# sysconfdir
+if test $sysconfdir = '${prefix}/etc'; then
+        sysconfdir="/etc"
+fi
+
 AC_PATH_PROG(cstream, cstream)
 
 AC_CONFIG_FILES([Makefile
