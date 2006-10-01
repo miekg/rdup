@@ -1,10 +1,5 @@
 TODO: 
 
-checks
-website updates
-tests
-
-
 :rdup utils: 
 o limit modifier understand k/m/g suffixes
 o split off rdup-utils and rdup-core?
