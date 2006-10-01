@@ -32,11 +32,8 @@ usage() {
         echo " -V         print version"
 }
 
-#
-# only need to link the directories
-# we are backing up
-#
-
+# better check what
+# to copy
 what() {
         for i in `seq 1 7`; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
