@@ -139,6 +139,11 @@ info "Renaming rdup directory to rdup-$version."
 cd ..
 mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
 
+# make the debian package
+( cd rdup-$version; \
+dpkg-buildpackage -rfakeroot; \
+cd ..)
+
 tarfile="../rdup-$version.tar.gz"
 
 if [ -f $tarfile ]; then

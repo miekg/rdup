@@ -49,15 +49,13 @@ clean:
 	rm -f *.o
 	rm -f rdup
 
-# bit flacky
-deb:
-	( cd .. ; \
+deb-trunk:
+	( \
 	cp -ra trunk @PACKAGE_NAME@-@PACKAGE_VERSION@ ; \
 	cd @PACKAGE_NAME@-@PACKAGE_VERSION@ ; \
 	dpkg-buildpackage -rfakeroot ; \
 	cd .. ; \
 	rm -rf  @PACKAGE_NAME@-@PACKAGE_VERSION@ )
-	
 
 realclean: clean
 	rm -rf autom4te.cache
