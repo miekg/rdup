@@ -27,35 +27,35 @@ all in the hands of the user.
 
 \subsection*{\textit{Backup}}
 The most convenient way to use \rdup{} is to use the wrapper
-script \cmd{dump.sh}. Synopsis:\\
-\cmd{dump.sh [ OPTIONS ] DIR|FILE [ DIR|FILE ]}
+script \cmd{rdup-dump}. Synopsis:\\
+\cmd{rdup-dump [ OPTIONS ] DIR|FILE [ DIR|FILE ]}
 \begin{itemize}
 \item
 Dump \path{/home} to your USB disk on \path{/media/usbdisk}:\\
-\cmd{dump.sh -e -b /media/usbdisk/\$HOST /home}
+\cmd{rdup-dump -e -b /media/usbdisk/\$HOST /home}
 \item
 Dump compressed \path{/home} to \path{/vol/backup}:\\
-\cmd{dump.sh -z b /vol/backup/\$HOST /home} 
+\cmd{rdup-dump -z b /vol/backup/\$HOST /home} 
 \item
 Dump encrypted \path{/home} to \path{/vol/backup} at remote
 host:\\
-\cmd{dump.sh -k secret\_file -b /vol/backup/\$HOME \\\
+\cmd{rdup-dump -k secret\_file -b /vol/backup/\$HOME \\\
 -c user@example.nl /home}
 \end{itemize}
 
 \subsection*{\textit{Restore}}
 The most convenient way to restore with \rdup{} is by using
-the script \cmd{restore.sh}. Synopsis:\\
-\cmd{restore.sh [ OPTIONS ] -b TO\_DIR FROM\_DIR [ FROM\_DIR ]}
+the script \cmd{rdup-restore}. Synopsis:\\
+\cmd{rdup-restore [ OPTIONS ] -b TO\_DIR FROM\_DIR [ FROM\_DIR ]}
 \begin{itemize}
 \item
 Restore from the latest backup from May 2006, to \path{/tmp/restore}:\\
-\cmd{restore.sh -b /tmp/restore \\\
+\cmd{rdup-restore -b /tmp/restore \\\
 /vol/backup/elektron/200605/home/miekg}
 \item
 Restore from the latest remote backup from May 2006. This backup
 is encrypted:\\
-\cmd{restore.sh -k secret\_file -c user@example.nl -b /tmp/restore \\\
+\cmd{rdup-restore -k secret\_file -c user@example.nl -b /tmp/restore \\\
 /vol/backup/elektron/200605/home/miekg}
 \end{itemize}
 

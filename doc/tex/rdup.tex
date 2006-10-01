@@ -88,7 +88,7 @@ The are quite a few of them:
 \item[\cmd{crypt.sh}]{-- encrypt/decrypt the files' contents,}
 \item[\cmd{gzip.sh}]{-- compress/decrypt the files' contents,}
 \item[\cmd{mirror.sh}]{-- store the backup to its backup directory,}
-\item[\cmd{dump.sh}]{-- convenience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
+\item[\cmd{rdup-dump}]{-- convenience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
 \end{description}
 
 And for restoring we have:
@@ -97,7 +97,7 @@ And for restoring we have:
 \item[\cmd{yesterday.sh}]{-- restore files from the backup,}
 \item[\cmd{rorrim.sh}]{-- place to-be-restored files in a directory,}
 \item[\cmd{monthday.sh}]{-- select files to restore from the backup,}
-\item[\cmd{restore.sh}]{-- convenience wrapper around \cmd{rdup},
+\item[\cmd{rdup-restore}]{-- convenience wrapper around \cmd{rdup},
 \cmd{monthday.sh} and \cmd{rorrim.sh}.} 
 \end{description}
 
@@ -239,15 +239,15 @@ ssh miekg@example.nl mirror.sh -c -b /vol/backup
 
 \end{enumerate}
 
-\section{Using \cmd{dump.sh}}
-\cmd{dump.sh} is a wrapper script to make things more easy. If we redo
+\section{Using \cmd{rdup-dump}}
+\cmd{rdup-dump} is a wrapper script to make things more easy. If we redo
 the examples from above,we get:
 \begin{enumerate}
-\item{\cmd{dump.sh mybackup /home}}
-\item{\cmd{dump.sh -c miekg@example.nl mybackup-remote /home}}
-\item{\cmd{dump.sh -z -c miekg@example.nl mybackup-remote /home}}
-\item{\cmd{dump.sh -k secret.file -c miekg@example.nl mybackup-remote /home}}
-\item{\cmd{dump.sh -k secret.file -z -l 10240 -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{rdup-dump mybackup /home}}
+\item{\cmd{rdup-dump -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{rdup-dump -z -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{rdup-dump -k secret.file -c miekg@example.nl mybackup-remote /home}}
+\item{\cmd{rdup-dump -k secret.file -z -l 10240 -c miekg@example.nl mybackup-remote /home}}
 \end{enumerate}
 Note that is a backup is to be compressed and encrypted (-k and -z are
 both given), it will be first compressed and the encrypted.
@@ -276,6 +276,6 @@ rorrim.sh /tmp/test
 This also works remotely.
 
 
-\section{Using \cmd{restore.sh}}
+\section{Using \cmd{rdup-restore}}
 
 \end{document}
