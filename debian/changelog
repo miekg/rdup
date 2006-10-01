@@ -1,6 +1,6 @@
 rdup (0.3.0-1) unstable; urgency=low
 
-  * Initial release Closes: #nnnn  (nnnn is the bug number of your ITP)
+  * Initial release.
 
  -- Miek Gieben <miekg@atoom.net>  Sun,  1 Oct 2006 13:57:21 +0200
 

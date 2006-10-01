@@ -11,6 +11,9 @@ o placement of scripts in debian
 :tests:
 add conformence test; symlinks etc.
 
+:debian:
+fix up the debian directory
+
 :porting:
 o port extended attributes to FreeBSD
 

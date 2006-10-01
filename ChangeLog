@@ -1,4 +1,4 @@
-   Sept 2006: 0.3.0 Miek <miek@miek.nl>
+02 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- major features enhancements --
    * No shell scripts are installed anymore!
    * history.sh and yesterday.sh are removed from the archive
@@ -14,6 +14,8 @@
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
    * don't install dump-here.sh or dump-here.sh.8
+   * Added debian/ dir so a .deb package can be build
+     (cd debian ; dpkg-buildpackage -rfakeroot)
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

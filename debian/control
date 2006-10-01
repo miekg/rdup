@@ -1,7 +1,7 @@
 Source: rdup
 Section: utils
 Priority: optional
-Maintainer: Miek Gieben <miekg@atoom.net>
+Maintainer: Miek Gieben <miek@miek.nl>
 Build-Depends: debhelper (>= 4.0.0), autotools-dev
 Standards-Version: 3.6.2
 

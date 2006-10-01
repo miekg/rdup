@@ -167,7 +167,7 @@ rm -f rdup-$version/tags
 info "Making .pdf of the tex quickstart"
 (
 cd rdup-$version/doc/tex
-pdflatex rdup-quickstart.tex 2>/dev/null && pdflatex rdup-quickstart 2>/dev/null
+pdflatex rdup-quickstart.tex >/dev/null && pdflatex rdup-quickstart >/dev/null
 ) || error_cleanup "Failed to create pdf version of the quickstart doc."
 
 info "Creating tar rdup-$version.tar.bz2"
