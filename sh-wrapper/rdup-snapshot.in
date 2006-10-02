@@ -88,15 +88,15 @@ what; purpose=$? # save return code from what
 case $purpose in
         0)
         _echo2 "INCREMENTAL DUMP"
-        @sbindir@/rdup $R_OPT -N $STAMP $LIST $@ | \ 
-        @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW
+        ${exec_prefix}/sbin/rdup $R_OPT -N $STAMP $LIST $@ | \
+        ${exec_prefix}/sbin/rdup-snap $OPT -b $BACKUPDIR/$NOW
         ;;
         1)
         _echo2 "FULL DUMP"
         rm -f $LIST
         rm -f $STAMP
-        @sbindir@/rdup $R_OPT -N $STAMP $LIST $@ | \
-        @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW
+        ${exec_prefix}/sbin/rdup $R_OPT -N $STAMP $LIST $@ | \
+        ${exec_prefix}/sbin/rdup-snap $OPT -b $BACKUPDIR/$NOW
         ;;
 esac
 chmod 755 $BACKUPDIR/$NOW               # hmmm
