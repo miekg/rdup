@@ -21,6 +21,7 @@
      work
    * rdup-snap.8 and rdup-snapshot.8 added
    * refactored the wrapper scripts
+   * Loose the multiple backup directory stuff
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

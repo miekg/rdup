@@ -22,7 +22,6 @@ usage() {
         echo OPTIONS:
         echo " -b DIR     backup directory, can be given more then once"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
-        echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
         echo " -z         compress all files, using rdup-gzip"
         echo " -a         write extended attributes with uid/gid"
@@ -35,17 +34,15 @@ usage() {
 
 d=`date +%Y%m`
 etc=false
-gzip=false
 PROGNAME=$0
 BACKUPDIR=""
 BACKUPDIR_PLAIN=""
-KEYFILE=""
 FIRST="" # the first backup dir
-remote=""
-bwidth=""
-MIR_OPT=""
+OPT=""
+pipe=""
+ssh=""
 
-while getopts ":ab:k:l:c:N:vzxehV" o; do
+while getopts ":ab:k:c:N:vzxehV" o; do
         case $o in
                 b) BACKUPDIR="$BACKUPDIR -b $OPTARG/$d"
                 BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
@@ -56,25 +53,28 @@ while getopts ":ab:k:l:c:N:vzxehV" o; do
                         _echo2 "-b needs an argument"
                         exit 1
                 fi;;
-                k) KEYFILE=$OPTARG
-                if [[ -z "$KEYFILE" ]]; then
+                k) 
+                if [[ -z "$OPTARG" ]]; then
                         _echo2 "-k needs an argument"
                         exit 1
                 fi
-                if [[ ! -r "$KEYFILE" ]]; then
-                        _echo2 "Cannot read keyfile \`$KEYFILE': failed"
+                if [[ ! -r "$OPTARG" ]]; then
+                        _echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
-                fi;;
-                c) remote=$OPTARG
-                if [[ -z $remote ]]; then
+                fi
+                pipe="$pipe | ${exec_prefix}/sbin/rdup-crypt $OPTARG"       
+                ;;
+                c) 
+                if [[ -z $OPTARG ]]; then
                         _echo2 "-c needs an argument"
                         exit 1
-                fi;;
-                l) bwidth=$OPTARG;;
+                fi
+                ssh=" ssh -x $OPTARG"
+                ;;
                 e) etc=true;;
-                z) gzip=true;;
-                a) MIR_OPT="$MIR_OPT -a";;
-                v) MIR_OPT="$MIR_OPT -v";;
+                z) pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip";;
+                a) OPT="$MIR_OPT -a";;
+                v) OPT="$MIR_OPT -v";;
                 x) x="-x";;
                 V) version && exit;;
                 h) usage && exit;;
@@ -108,6 +108,15 @@ fi
 STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
 LIST="$ETC/$HOSTNAME.$(basename $1).list"
 
+# create our command line
+if [[ -z $ssh ]]; then
+        pipe="$pipe | @sbindir@/rdup-mirror $OPT $BACKUPDIR"
+        cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
+else
+        pipe="$pipe | $ssh rdup-mirror $OPT $BACKUPDIR"
+        cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
+fi
+
 for i in $BACKUPDIR_PLAIN; do
         mkdir -p "$i/$d"
         if [[ ! $? ]]; then
@@ -133,81 +142,6 @@ if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
 else
         _echo2 "INCREMENTAL dump"
 fi
-
-if [[ -z "$remote" ]]; then      # no remote 
-        if [[ -z "$KEYFILE" ]]; then
-                if $gzip; then
-                        @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | \
-                        @sbindir@/rdup-gzip | \
-                        @sbindir@/rdup-mirror $MIR_OPT -c $BACKUPDIR
-                else 
-                        @sbindir@/rdup -l $x -N $STAMP $LIST $@ | \
-                        @sbindir@/rdup-mirror $MIR_OPT $BACKUPDIR
-                fi
-        else    # with keyfile
-                if $gzip; then
-                        @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ | \ 
-                        @sbindir@/rdup-gzip |\
-                        @sbindir@/rdup-crypt $KEYFILE | \
-                        @sbindir@/rdup-mirror $MIR_OPT -c $BACKUPDIR
-                else 
-                        @sbindir@/rdup -l $x -c -N $STAMP $LIST $@ |
-                        @sbindir@/rdup-crypt $KEYFILE | \
-                        @sbindir@/rdup-mirror $MIR_OPT -c $BACKUPDIR
-                fi
-        fi
-else     # remote 
-        if [[ -z "$KEYFILE" ]]; then
-                if $gzip; then
-                        if [[ -z $bwidth ]]; then
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                @sbindir@/rdup-gzip | \
-                                ssh -x "$remote" | rdup-mirror $a $v -c $BACKUPDIR
-                        else
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \ 
-                                @sbindir@/rdup-gzip | \
-                                $cstream -t $bwidth | \
-                                ssh -x "$remote" | rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        fi
-                else    # without gzip
-                        if [[ -z $bwidth ]]; then
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                # do compress stream here
-                                ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        else
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                $cstream -t $bwidth | \
-                                ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        fi
-                fi
-        else # with keyfile
-                if $gzip; then
-                        if [[ -z $bwidth ]]; then
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \ 
-                                @sbindir@/rdup-gzip |\
-                                @sbindir@/rdup-crypt $KEYFILE | 
-                                ssh -x "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        else
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                @sbindir@/rdup-gzip |\
-                                @sbindir@/rdup-crypt $KEYFILE | 
-                                $cstream -t $bwidth | \
-                                ssh -x "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        fi
-                else
-                        if [[ -z $bwidth ]]; then
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                @sbindir@/rdup-crypt $KEYFILE | \
-                                ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        else
-                                @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                @sbindir@/rdup-crypt $KEYFILE | \
-                                $cstream -t $bwidth | \
-                                ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
-                        fi
-
-                fi
-        fi
-fi
-
+# execute the backup command
+eval ${cmd}
 exit 0

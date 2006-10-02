@@ -76,7 +76,7 @@ while getopts ":ab:k:c:vzxhV" o; do
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
                 ;;
-                z) pipe="$pipe | @sbindir@/rdup-gzip" ;;
+                z) pipe="$pipe | @sbindir@/rdup-gzip";;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
                 x) R_OPT="$R_OPT -x";;
