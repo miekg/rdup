@@ -48,6 +48,8 @@ AC_CONFIG_FILES([Makefile
                  doc/rdup-restore.8
                  doc/rdup-dump-here.8
                  doc/rdup-mirror.8
+                 doc/rdup-snap.8
+                 doc/rdup-snapshot.8
                  doc/rdup-crypt.1
                  doc/rdup-gzip.1
                  doc/rdup-grep.1

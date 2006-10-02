@@ -1,0 +1,57 @@
+'\" t
+.TH RDUP-SNAP 8 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+rdup-snap \- create backup in a hard link backup
+
+.SH SYNOPSIS
+.B rdup-snap
+[
+.IR OPTIONS
+]
+
+.SH DESCRIPTION
+\fBrdup-snap\fR copies the files it gets from standard input to the directory
+specified with the \-b option. This script \fIimplements\fR the backup policy. 
+It works on a directory that is hard linked or on an empty
+directory. When the directory is empty a full dump is performed.
+.PP
+If a file (i.e. hard link) already exists in the backup directory it
+will be removed. The end result will be that you will be left with
+a complete mirror of your directory structure at the time of the backup.
+Due to the use of hard links the amount of disk space used for the
+backup is minimized.
+.PP
+Note, to create a hard linked backup directory use the script
+\fIrdup-snapshot\fR which will create it for you. See rdup-snapshot(8)
+for more information. This currently only works with GNU's cp.
+.PP
+Also note that there are no restore utilities, this is because you 
+can copy the backup to another location with the standard unix
+commands.
+
+.SH OPTION
+.TP
+.B \-a
+Write the uid and gid information to the file's extended user attributes:
+\'r_uid' and 'r_gid'. This option only works if \fBattr\fR is available
+on the system. And currently only for Linux.
+.TP 
+.B \-b backupdir
+Store the backup in \fIbackupdir\fR. This argument is mandatory.
+.TP
+.B \-c 
+Used in conjunction with \fBrdup\fR's \-c. This will allow
+\fBrdup-mirror\fR to be used for remote backups. 
+.TP
+.B \-v
+Echo the files processed to standard error.
+.TP
+.B \-h
+Short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH SEE ALSO
+rdup(8), cp(1) and rdup-snapshot(8).

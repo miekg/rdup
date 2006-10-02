@@ -19,6 +19,7 @@
    * if you want /etc/rdup to be in a different directory be sure
      to use ./configure --sysconfdir=foo, otherwise it might not
      work
+   * rdup-snap.8 and rdup-snapshot.8 added
    * refactored the wrapper scripts
 
 

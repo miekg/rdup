@@ -1,0 +1,115 @@
+'\" t
+.TH RDUP-SNAPSHOT 8 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+rdup-snapshot \- create a hardlink backup
+
+.SH SYNOPSIS
+.B rdup-snapshot
+[
+.IR OPTIONS
+]
+DIR|FILE
+[
+DIR|FILE
+]
+
+.SH DESCRIPTION
+\fBrdup-snapshot\fR is a frontend for `rdup-snap' and `rdup'. It will backup
+all directories and files given on the command line. It will create a
+hard linked backup directory, where the backup is created. 
+.PP
+Making local backups is as simple as:
+      rdup-snapshot -b /vol/backup/$HOST ~ 
+.PP
+\fB~\fR is the directory to be backed up. Multiple directories
+or files are allowed on the command line.
+.PP
+There is no default backup location. You must specify a \-b argument.
+.PP
+For the backup a YYYYMM directory is created. In this directory
+specific day dumps are placed. So the first dump in October 2006,
+will created in 200610/01 and the second in 200610/02, etc.
+
+.SH OPTIONS
+.TP 
+.B \-b backupdir
+The backup directory. You can specify this option multiple times, this
+will make the backup to be written to all these directories in one go.
+
+Note that the \-e option will only be looking at the first
+directory specified.
+
+Also note that \fBrdup-dump\fR will add the string YYYYMM to
+the backup directory.
+
+.TP
+.B \-c user@remotehost
+Restore a backup on a remote host. This will create a pipeline of the
+form: 
+
+rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-mirror.pl \-c \-b \fIbackupdir\fR
+
+There is no provisioning for \fBssh\fR so unless you have configured
+\fBssh\fR to work without a passphrase you will be asked to supply one.
+Also note that the PATH on the remote host should be set in such a way that all
+the rdup-util scripts can be found.
+.TP
+.B \-k keyfile
+Encrypt the files while backing up with \fIkeyfile\fR. This option
+inserts \fBcrypt.pl keyfile\fR in the pipeline. If both \fI-z\fR and
+\fI-k\fR are given a file is first zipped and then encrypted.
+.TP
+.B -l num
+Limit the transfer to 'num' bytes/second. This option is given to 
+\fBcstream\fR. See the manual page of cstream at the \-t option.
+.TP
+.B \-a
+Enable extended attributes. Write the uid/gid to the extended user
+attributes r_uid and r_gid.
+.TP
+.B \-x
+Pass \-x to rdup (stay in local filesystem).
+.TP
+.B \-z
+Compress the files while backing up. This option
+inserts \fBrdup-gzip\fR in the pipeline. If both \fI-z\fR and
+\fI-k\fR are given a file is first zipped and then encrypted.
+.TP
+.B \-e
+Store the the timestamp and filelist files together with the backup.
+This allows for backups to USB-drives and such. Normally they
+are stored in `/etc/rdup'.
+
+This option cannot be used when doing a remote backup.
+.TP
+.B \-v
+Echo the files processed to standard error.
+.TP
+.B \-h
+Show a short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH EXAMPLES
+.SS LOCAL BACKUP 
+Dumping my homedir to the backup:
+
+        rdup-dump -b /vol/backup/$HOST ~
+
+Dumping /var/lib to the backup:
+        
+        rdup-dump -b /vol/backup/$HOST /var/lib
+      
+.SS REMOTE BACKUP
+Dumping my homedir to the remote backup:
+
+        rdup-dump -b /vol/backup/$HOST -c miekg@remote ~
+
+Dumping /home to the remote backup:
+        
+        rdup-dump -b /vol/backup/$HOST -c miekg@remote /home
+
+.SH SEE ALSO
+rdup(8) and rdup-snapshot(8).
