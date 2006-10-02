@@ -19,6 +19,7 @@
    * if you want /etc/rdup to be in a different directory be sure
      to use ./configure --sysconfdir=foo, otherwise it might not
      work
+   * refactored the wrapper scripts
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

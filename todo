@@ -1,11 +1,10 @@
 TODO: 
 
 :rdup utils: 
-o limit modifier understand k/m/g suffixes
 o split off rdup-utils and rdup-core?
-o make hdup.pl first class citizen
-o maximum errors....
 o placement of scripts in debian
+o slight refactoring for wrapper scripts, ala rdup-snapshot
+o rdup-backups(8)
 
 :rdup:
 :tests:

@@ -21,19 +21,17 @@ usage() {
         echo
         echo OPTIONS:
         echo " -b DIR     backup directory"
-        echo " -c REMOTE  dump the backup on a remote machine with ssh (not impl)"
+#        echo " -c REMOTE  dump the backup on a remote machine with ssh (not yet)"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
-        echo " -e         filelist and timestamp are put in backup directory"
         echo " -v         echo the files processed to stderr"
         echo " -x         pass -x to rdup"
         echo " -h         this help"
         echo " -V         print version"
 }
 
-# better check what
-# to copy
+# better check what to copy
 what() {
         if [[ -d $BACKUPDIR/$NOW ]]; then
                 # already there do not link
@@ -55,10 +53,11 @@ what() {
 PROGNAME=$0
 NOW=`date +%Y%m/%d`
 OPT=""
-R_OPT=""
+R_OPT="-l"
 ETC="@sysconfdir@/rdup"
+pipe=""
 
-while getopts ":ab:k:l:c:N:vzxehV" o; do
+while getopts ":ab:k:c:vzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -66,6 +65,18 @@ while getopts ":ab:k:l:c:N:vzxehV" o; do
                         exit 1
                 fi
                 ;;
+                k) 
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-k needs an argument"
+                        exit 1
+                fi
+                if [[ ! -r "$OPTARG" ]]; then
+                        _echo2 "Cannot read keyfile \`$OPTARG': failed"
+                        exit 1
+                fi
+                pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
+                ;;
+                z) pipe="$pipe | @sbindir@/rdup-gzip" ;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
                 x) R_OPT="$R_OPT -x";;
@@ -82,6 +93,9 @@ fi
 STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
 LIST="$ETC/$HOSTNAME.$(basename $1).list"
 
+# create our command line
+pipe="$pipe | @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW"
+cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
 
 mkdir -p $BACKUPDIR
 if [[ ! $? ]]; then
@@ -93,16 +107,14 @@ what; purpose=$? # save return code from what
 case $purpose in
         0)
         _echo2 "INCREMENTAL DUMP"
-        ${exec_prefix}/sbin/rdup $R_OPT -N $STAMP $LIST $@ | \
-        ${exec_prefix}/sbin/rdup-snap $OPT -b $BACKUPDIR/$NOW
         ;;
         1)
         _echo2 "FULL DUMP"
         rm -f $LIST
         rm -f $STAMP
-        ${exec_prefix}/sbin/rdup $R_OPT -N $STAMP $LIST $@ | \
-        ${exec_prefix}/sbin/rdup-snap $OPT -b $BACKUPDIR/$NOW
         ;;
 esac
+# execute the backup command
+eval ${cmd}
 chmod 755 $BACKUPDIR/$NOW               # hmmm
 exit 0
