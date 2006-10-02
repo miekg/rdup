@@ -1,10 +1,9 @@
-TODO: 
+TODO:
 
-:rdup utils: 
+:rdup utils:
+=======
 o split off rdup-utils and rdup-core?
-o slight refactoring for wrapper scripts, ala rdup-snapshot
 o rdup-backups(8)
-o rdup-dump.sh better
 
 :rdup:
 :tests:
