@@ -35,6 +35,11 @@ usage() {
 # better check what
 # to copy
 what() {
+        if [[ -d $BACKUPDIR/$NOW ]]; then
+                # already there do not link
+                return 0
+        fi
+        
         for i in `seq 1 7`; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
                 if [[ -d $BACKUPDIR/$dir ]]; then
