@@ -160,16 +160,15 @@ info "Deleting the other fluff"
 rm -rf rdup-$version/.svn
 rm -f rdup-$version/core
 rm -f rdup-$version/tar-exclude
-rm -f rdup-$version/config.log 
+rm -f rdup-$version/config.log
 rm -f rdup-$version/config.status
-rm -f rdup-$version/tags 
-
-info "Making .pdf of the tex quickstart"
-(
-cd rdup-$version/doc/tex
-pdflatex rdup-quickstart.tex >/dev/null && pdflatex rdup-quickstart >/dev/null
-) || error_cleanup "Failed to create pdf version of the quickstart doc."
-
+rm -f rdup-$version/tags
+rm -rf rdup-$version/doc/tex
+#info "Making .pdf of the tex quickstart"
+#(
+#cd rdup-$version/doc/tex
+#pdflatex rdup-quickstart.tex >/dev/null && pdflatex rdup-quickstart >/dev/null
+#) || error_cleanup "Failed to create pdf version of the quickstart doc."
 info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
 
