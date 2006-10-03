@@ -64,5 +64,31 @@ sub catfile {
         close FILE;
 }
 
+# set the r_uid/g_uid with the original uid/gid
+# usefull for remote backups
+sub chown_attr {
+        return unless $attr_there;
+        return unless $attr;
+
+        my $xuid = $_[0];
+        my $xgid = $_[1];
+        my $file = $_[2];
+
+        if ($^O eq "linux") {
+                system("attr -q -s r_uid -V$xuid \"$file\"");
+                system("attr -q -s r_gid -V$xgid \"$file\"");
+        }
+}
+
+# check if the system supports extended attributes
+sub check_attr {
+        if ($^O eq "linux") {
+                map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
+        } else {
+                warn "Cannot set extended attributes";
+        }
+        return 0;
+}
+
 # keep
 1;

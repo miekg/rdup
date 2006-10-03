@@ -99,10 +99,10 @@ xattr support.
 
 This option is usefull when restoring a remote backup. Normally these
 backups are transferred by a non-root user. This user will not be able
-to correctly set all uid/gid information. As a workaround rdup's scripts
-will set the extended attributes for the file to store the original
-uid/gid. With this option \fBrdup\fR will re-insert these original
-uid/gid in its output.
+to correctly set all uid/gid information. As a workaround rdup's
+utilities will set the extended attributes for the file to store the
+original uid/gid. With this option \fBrdup\fR will re-insert these
+original uid/gid in its output.
 
 .TP
 .B \-c
@@ -148,7 +148,9 @@ All full-dump filelist is printed to standard output. And with:
 
         rdup -N timestamp LIST DIR
 
-An incremental dump filelist is printed.
+An incremental dump filelist is printed. The file \fItimestamp\fR
+is used to safe the exact time of rdup's run. The file \fILIST\fR is
+used to calculate the correct incremental dump list.
 
 .SH FORMAT
 The default format \fBrdup\fR uses is: "%p%m %u %g %l %s %n\\n"
@@ -258,21 +260,9 @@ of printing the file contents the target name is printed. Thus:
 Where \fBaaa/def\fR is a symbolic link that points to 'b'
 
 .SH SCRIPTS
-Various shells scripts are included with rdup. These script actually
-implement the backup scheme. These scripts form a family as they
-all assume the same backup directory layout. That is: 
-.TP
-.B o 
-each month a new full dump is created in a directory named YYYYMM.
-.TP
-.B o 
-incremental dumps that place in that same directory for the
-duration of the month
-.TP
-.B o 
-changed files are backed up with the suffix: +DD.HH:MM, where
-DD is the monthday of change.
-
+Various perl scripts are included with rdup. These script actually
+implement the backup scheme. With these scripts you define
+an actual backup policy.
 .PP
 The more important scripts are:
 .TP
@@ -281,7 +271,7 @@ the main backup script that implements a mirroring backup. It also used
 for remote backups (with the -c switch).
 .TP
 .B rdup-snapshot
-Create a (hard link) snapshot. Hard links safe space so you can keep
+Create a (hard link) snapshot. Hard links saves space so you can keep
 a very long record of previous backups. This is wrapper around
 `rdup-snap` and `rdup`.
 .TP
@@ -342,7 +332,8 @@ split a directory into DVD sized volumes for easy burning.
 
 .SH FILES
 \fBrdup\fR uses `@sysconfdir@/rdup' as directory where the timestamp
-and filelist files are put.
+and filelist files are put, but this is completely overrideable by the
+user.
 
 .SH AUTHOR
 Written by Miek Gieben. 
@@ -352,7 +343,7 @@ Report bugs to <miek@miek.nl>.
 
 .SH SEE ALSO
 rdup-mirror(8), rdup-dump(8), rdup-snap(8) and rdup-restore(8). See
-rdup-backups(8) for an introduction.
+rdup-backups(8) for an introduction into creating backups
 
 .SH COPYRIGHT
 Copyright (C) 2005, 2006 Miek Gieben. This is free software. There is NO

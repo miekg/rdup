@@ -163,35 +163,12 @@ sub _mirror {
         }
 }
 
-sub chown_attr {
-        return unless $attr_there;
-        return unless $attr;
-
-        my $xuid = $_[0];
-        my $xgid = $_[1];
-        my $file = $_[2];
-
-        if ($^O eq "linux") {
-                system("attr -q -s r_uid -V$xuid \"$file\"");
-                system("attr -q -s r_gid -V$xgid \"$file\"");
-        }
-}
-
 sub exist {
         my $filename = $_[0];
 
         lstat($filename);
         return 0 unless -e _;
         return 1;
-}
-
-sub check_attr {
-        if ($^O eq "linux") {
-                map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
-        } else {
-                warn "Cannot set extended attributes";
-        }
-        return 0;
 }
 
 sub usage {

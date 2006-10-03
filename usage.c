@@ -21,7 +21,7 @@ usage(FILE *f)
         fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
         fprintf(f, "   -V\t\tprint version\n");
 #ifdef HAVE_ATTR_XATTR_H
-        fprintf(f, "   -a\t\tread extended attributes r_uid/_rgid\n");
+        fprintf(f, "   -a\t\tread the extended attributes: r_uid,r_gid\n");
 #endif /* HAVE_ATTR_XATTR_H */
         fprintf(f,
                 "   -c\t\tcat the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");

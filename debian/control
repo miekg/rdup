@@ -8,10 +8,14 @@ Standards-Version: 3.6.2
 Package: rdup
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libfile-copy-recursive-perl
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: tool to create list suitable for making backups
+  rdup is a utility inspired by rsync and the plan9 way of doing
+  backups. rdup itself does not backup anything. It only prints a list
+  of files that are changed, or all files in case of a null dump. It
+  also handles files that are removed, allowing for correct incremental
+  backups. 
 
 Package: rdup-doc
 Architecture: all
 Description: Documentation for rdup
- <insert long description, indented with spaces>
+ rdup auxilary documenation.

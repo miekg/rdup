@@ -171,20 +171,6 @@ sub _mirror {
         }
 }
 
-sub chown_attr {
-        return unless $attr_there;
-        return unless $attr;
-
-        my $xuid = $_[0];
-        my $xgid = $_[1];
-        my $file = $_[2];
-
-        if ($^O eq "linux") {
-                system("attr -q -s r_uid -V$xuid \"$file\"");
-                system("attr -q -s r_gid -V$xgid \"$file\"");
-        }
-}
-
 # Eg:
 # 2006-05-05 01:50:18.000000000 +0100
 #         ^^ ^^^^^
@@ -197,15 +183,6 @@ sub mirror_suffix {
         return "" unless -e _;
         my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime((lstat(_))[9]);
         return sprintf "+%02d.%02d:%02d", $mday, $hour, $min;
-}
-
-sub check_attr {
-        if ($^O eq "linux") {
-                map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
-        } else {
-                warn "Cannot set extended attributes";
-        }
-        return 0;
 }
 
 sub usage {
