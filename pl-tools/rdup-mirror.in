@@ -72,13 +72,13 @@ printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
 printf STDERR "** SIZE        : %.2f MB\n", ($ftsize/1024/1024 * 1.00);
-printf STDERR "** STORED IN   : %s\n",  join(", ",@backupDir);
+printf STDERR "** STORED IN   : %s\n",  $backupDir;
 printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
 
 exit 0;
 
 sub _mirror {
-        my $dir = @_[0];
+        my $dir = $_[0];
         my $dump = substr($mode, 0, 1);
         my $modebits = substr($mode, 1);
 
@@ -97,7 +97,7 @@ sub _mirror {
         $typ = 2 if ($modebits & $S_ISLNK) == $S_ISLNK;
         print STDERR "$path\n" if $verbose;
 
-#       NOTE - mirror_suffix() calls stat() on the target.  
+#       NOTE - mirror_suffix() calls stat() on the target.
 #       We rely on that below to avoid multiple expensive calls to stat.
 #       If mirror_suffix is changed, or is not called, it will be necassary to revise this assumtion.
 #
