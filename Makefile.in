@@ -50,7 +50,7 @@ clean:
 	rm -f rdup
 
 deb-trunk:
-	( \
+	( cd ..;\
 	cp -ra trunk @PACKAGE_NAME@-@PACKAGE_VERSION@ ; \
 	cd @PACKAGE_NAME@-@PACKAGE_VERSION@ ; \
 	dpkg-buildpackage -us -uc -rfakeroot ; \
