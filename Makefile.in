@@ -67,11 +67,7 @@ realclean: clean
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${MAN1} ${MAN8}
 
-distclean: realclean
-	rm -f configure
-	rm -f Makefile
-	rm -f *.tar.bz2
-	rm -f *.tar.gz
+distclean: 
 
 install: all
 	mkdir -p ${DESTDIR}${sysconfdir}/rdup
