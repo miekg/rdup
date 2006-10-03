@@ -6,7 +6,6 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
-cstream=@cstream@
 
 # common stuff
 source $datadir/shared.sh
@@ -21,7 +20,6 @@ usage() {
         echo OPTIONS:
         echo " -b DIR     restore to this directory, can be given more then once"
         echo " -c REMOTE  restore the backup from a remote machine with ssh"
-        echo " -l NUM     limit transfer to NUM bytes/second, see cstream(1)'s -t"
         echo " -k KEYFILE decrypt all files, using rdup-crypt"
         echo " -z         decompress all files, using rdup-gzip"
         echo " -a         use extended attributes with uid/gid"
@@ -41,6 +39,7 @@ bwidth=""
 MIR_OPT="-R"
 LIST="/dev/null"
 REG='\+\d\d\.\d\d:\d[\d/|\d$]'
+grepcmd="@sbindir@/rdup-grep -c -v $REG"
 
 while getopts ":ab:k:l:c:vzxhV" o; do
         case $o in
@@ -86,11 +85,6 @@ if [[ -z "$BACKUPDIR" ]]; then
         exit 1
 fi
 
-if [[ ! -z $bwidth && -z $cstream ]]; then
-        _echo2 "Bandwidth shaping not enabled: cstream not found"
-        exit 1
-fi
-
 # add pwd if the path was relative
 if [[ ${1:0:1} == "/" ]]; then
         dest="$1"
@@ -102,7 +96,7 @@ if [[ -z "$remote" ]]; then      # no remote
         if [[ -z "$KEYFILE" ]]; then
                 if $gzip; then
                         @sbindir@/rdup -l $x -c $LIST $@ |
-                        $sbindir@/rdup-grep -c -v $REG | \
+                        @sbindir@/rdup-grep -c -v $REG | \
                         @sbindir@/rdup-gzip | \
                         @sbindir@/rdup-mirror $MIR_OPT -c $BACKUPDIR
                 else 
@@ -134,7 +128,6 @@ else     # remote
                                 @sbindir@/rdup $x -c $LIST $@ | \ 
                                 $sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-gzip | \
-                                $cstream -t $bwidth | \
                                 ssh -x "$remote" | rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
                 else    # without gzip
@@ -146,7 +139,6 @@ else     # remote
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
                                 $sbindir@/rdup-grep -v $REG | \
-                                $cstream -t $bwidth | \
                                 ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
                 fi
@@ -163,7 +155,6 @@ else     # remote
                                 $sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-gzip |\
                                 @sbindir@/rdup-crypt $KEYFILE | 
-                                $cstream -t $bwidth | \
                                 ssh -x "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
                 else
@@ -176,7 +167,6 @@ else     # remote
                                 @sbindir@/rdup $x -c $LIST $@ | \
                                 $sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-crypt $KEYFILE | \
-                                $cstream -t $bwidth | \
                                 ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
 

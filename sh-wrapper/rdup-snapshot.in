@@ -25,6 +25,7 @@ usage() {
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
+        echo " -e         filelist and timestamp are put in backup directory (not yet)."
         echo " -v         echo the files processed to stderr"
         echo " -x         pass -x to rdup"
         echo " -h         this help"
@@ -93,7 +94,7 @@ fi
 STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
 LIST="$ETC/$HOSTNAME.$(basename $1).list"
 
-# create our command line
+# create our command line 
 pipe="$pipe | @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW"
 cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
 

@@ -24,7 +24,7 @@ backup is minimized.
 .PP
 Note, to create a hard linked backup directory use the script
 \fIrdup-snapshot\fR which will create it for you. See rdup-snapshot(8)
-for more information. This currently only works with GNU's cp.
+for more information. This currently only works with GNU cp.
 .PP
 Also note that there are no restore utilities, this is because you 
 can copy the backup to another location with the standard unix

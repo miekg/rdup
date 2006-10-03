@@ -4,17 +4,13 @@ TODO:
 =======
 o split off rdup-utils and rdup-core?
 o rdup-backups(8)
+o refactor rdup-restore
+o rdup-backups(8)
 
 :rdup:
 :tests:
 add conformence test; symlinks etc.
 
-:debian:
-fix up the debian directory
-
 :porting:
 o port extended attributes to FreeBSD
-
-:hdup2:
-o make complete hdup2 clone based on rdup
-  see hdup2 directory. Not finished, I have limited time for this
+o cp -plr

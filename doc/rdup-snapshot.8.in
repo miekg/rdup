@@ -28,8 +28,11 @@ or files are allowed on the command line.
 There is no default backup location. You must specify a \-b argument.
 .PP
 For the backup a YYYYMM directory is created. In this directory
-specific day dumps are placed. So the first dump in October 2006,
+specific day-dumps are placed. So the first dump in October 2006,
 will created in 200610/01 and the second in 200610/02, etc.
+.PP
+You can use incremental dumps for ever, there is no need to do
+a full dump every once in a while.
 
 .SH OPTIONS
 .TP 
@@ -48,7 +51,7 @@ the backup directory.
 Restore a backup on a remote host. This will create a pipeline of the
 form: 
 
-rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-mirror.pl \-c \-b \fIbackupdir\fR
+rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-shapshot \-c \-b \fIbackupdir\fR
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
@@ -57,7 +60,7 @@ the rdup-util scripts can be found.
 .TP
 .B \-k keyfile
 Encrypt the files while backing up with \fIkeyfile\fR. This option
-inserts \fBcrypt.pl keyfile\fR in the pipeline. If both \fI-z\fR and
+inserts \fBrdup-crypt keyfile\fR in the pipeline. If both \fI-z\fR and
 \fI-k\fR are given a file is first zipped and then encrypted.
 .TP
 .B -l num

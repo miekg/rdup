@@ -39,8 +39,6 @@ if test ${sysconfdir} = '${prefix}/etc'; then
         sysconfdir='/etc'
 fi
 
-AC_PATH_PROG(cstream, cstream)
-
 AC_CONFIG_FILES([Makefile
                  rdup.h
                  doc/rdup.8

@@ -73,8 +73,8 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                 ;;
                 e) etc=true;;
                 z) pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip";;
-                a) OPT="$MIR_OPT -a";;
-                v) OPT="$MIR_OPT -v";;
+                a) OPT="$OPT -a";;
+                v) OPT="$OPT -v";;
                 x) x="-x";;
                 V) version && exit;;
                 h) usage && exit;;
@@ -111,10 +111,10 @@ LIST="$ETC/$HOSTNAME.$(basename $1).list"
 # create our command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-mirror $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup -l $OPT -N $STAMP $LIST $@ $pipe"
 else
         pipe="$pipe | $ssh rdup-mirror $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup $OPT -N $STAMP $LIST $@ $pipe"
 fi
 
 for i in $BACKUPDIR_PLAIN; do

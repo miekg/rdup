@@ -67,10 +67,6 @@ is ofcourse the opposite of what \fBrdup-dump\fR does.
 Enable extended attributes. Rad the uid/gid to the extended user
 attributes r_uid and r_gid.
 .TP
-.B -l num
-Limit the transfer to 'num' bytes/second. This option is given to
-\fBcstream\fR. See the manual page of cstream at the \-t option.
-.TP
 .B \-v
 Echo the files processed to standard error.
 .TP
