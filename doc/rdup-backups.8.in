@@ -1,0 +1,18 @@
+'\" t
+.TH RDUP-BACKUPS 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+rdup-backups \- introduction into making backups with rdup
+
+.SH DESCRIPTION
+\fBrdup-mirror\fR copies the files it gets from standard input to the directory
+specified with the \-b option. This script \fIimplements\fR the backup policy. 
+.PP
+If a file already exists in the backup directory it will be moved and
+will get a suffix. This suffix is of the form: '+DD.HH:MM'. This suffix
+is thus accurate to the minute. Multiple changes to files within one
+minute are never caught by \fBrdup-mirrorl\fR.
+
+.SH SEE ALSO
+rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-grep(1), rdup-gzip(1) and
+rdup-crypt(1).
