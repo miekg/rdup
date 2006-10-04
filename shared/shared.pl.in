@@ -67,7 +67,7 @@ sub catfile {
 # set the r_uid/g_uid with the original uid/gid
 # usefull for remote backups
 sub chown_attr {
-	my $attr = $_[0]
+	my $attr = $_[0];
         return unless $attr;
 
         my $xuid = $_[1];
