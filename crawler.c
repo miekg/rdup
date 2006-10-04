@@ -34,17 +34,19 @@ entry_free(struct entry *f)
 	g_free(f);
 }
 
-static uid_t 
-read_attr_uid(__attribute__((unused)) 
+static uid_t
+read_attr_uid(__attribute__((unused))
 	char *path, __attribute__((unused)) uid_t u)
 {
 #ifdef HAVE_ATTR_XATTR_H
 	/* linux */
 	char buf[ATTR_SIZE + 1];
 	uid_t x;
+	int r;
 
-	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
+	if ((r = lgetxattr(path, R_UID, buf, ATTR_SIZE)) > 0) {
 		x = (uid_t)atoi(buf);
+		buf[r] = '\0';
 		if (x > R_MAX_ID) {
 			msg("Too large uid `%zd\' for `%s\', truncating", (size_t)x, 
 				path);
@@ -64,26 +66,23 @@ read_attr_uid(__attribute__((unused))
 	int attfd;
 	int r;
 	if ((attfd = attropen(path, "r_uid", O_RDONLY) == -1)) {
+		msg("No uid xattr for `%s\'", path);
 		return u;
 	}
 	if ((r = read(attfd, buf, ATTR_SIZE)) == -1) {
 		return u;
 	}
+	close(attfd);
 	buf[r] = '\0';
 	x = (uid_t)atoi(buf);
 	return x;
-
-
-	
-
-
 #else
 	return u;
 #endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
 }
 
-static gid_t 
-read_attr_gid(__attribute__((unused)) 
+static gid_t
+read_attr_gid(__attribute__((unused))
 	char *path, __attribute__((unused)) gid_t g)
 {
 #ifdef HAVE_ATTR_XATTR_H
@@ -110,9 +109,19 @@ read_attr_gid(__attribute__((unused))
 	/* solaris */
 	char buf[ATTR_SIZE + 1];
 	gid_t x;
-	if (attropen(path, "r_gid", O_RDONLY) == -1) {
-		return g;
+	int attfd;
+	int r;
+	if ((attfd = attropen(path, "r_gid", O_RDONLY) == -1)) {
+		msg("No gid xattr for `%s\'", path);
+		return u;
 	}
+	if ((r = read(attfd, buf, ATTR_SIZE)) == -1) {
+		return u;
+	}
+	close(attfd);
+	buf[r] = '\0';
+	x = (uid_t)atoi(buf);
+	return x;
 #else
 	return g;
 #endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
