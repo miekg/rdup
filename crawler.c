@@ -113,10 +113,10 @@ read_attr_gid(__attribute__((unused))
 	int r;
 	if ((attfd = attropen(path, "r_gid", O_RDONLY) == -1)) {
 		msg("No gid xattr for `%s\'", path);
-		return u;
+		return g;
 	}
 	if ((r = read(attfd, buf, ATTR_SIZE)) == -1) {
-		return u;
+		return g;
 	}
 	close(attfd);
 	buf[r] = '\0';
