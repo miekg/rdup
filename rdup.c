@@ -197,6 +197,9 @@ main(int argc, char **argv)
 #ifdef HAVE_ATTR_XATTR_H
 				opt_attr = TRUE;
 #endif /* HAVE_ATTR_XATTR_H */
+#ifdef HAVE_OPENAT
+				opt_attr = TRUE;
+#endif /* HAVE_OPENAT */
 				break;
 			case 'c':
 				opt_format = "%p%m %u %g %l %s\n%n%C";

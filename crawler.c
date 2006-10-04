@@ -63,6 +63,7 @@ read_attr_uid(__attribute__((unused))
 	/* solaris */
 	char buf[ATTR_SIZE + 1];
 	uid_t x;
+	printf("looking at then\n");
 	int attfd;
 	int r;
 	if ((attfd = attropen(path, "r_uid", O_RDONLY) == -1)) {
@@ -76,7 +77,8 @@ read_attr_uid(__attribute__((unused))
 	buf[r] = '\0';
 	x = (uid_t)atoi(buf);
 	return x;
-#else
+#elif
+	fprintf("getting here\n");
 	return u;
 #endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
 }
