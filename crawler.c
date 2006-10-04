@@ -91,7 +91,7 @@ read_attr_gid(__attribute__((unused))
 	int r;
 
 	if ((r = lgetxattr(path, R_GID, buf, ATTR_SIZE)) > 0) {
-		buf[r] = '\0'
+		buf[r] = '\0';
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
 			msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, 
