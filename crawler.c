@@ -44,7 +44,7 @@ read_attr_uid(__attribute__((unused))
 	uid_t x;
 	int r;
 
-	if ((r = lgetxattr(path, R_UID, buf, ATTR_SIZE)) > 0) {
+	if ((r = lgetxattr(path, "user.r_uid", buf, ATTR_SIZE)) > 0) {
 		x = (uid_t)atoi(buf);
 		buf[r] = '\0';
 		if (x > R_MAX_ID) {
@@ -92,7 +92,7 @@ read_attr_gid(__attribute__((unused))
 	gid_t x;
 	int r;
 
-	if ((r = lgetxattr(path, R_GID, buf, ATTR_SIZE)) > 0) {
+	if ((r = lgetxattr(path, "user.r_gid", buf, ATTR_SIZE)) > 0) {
 		buf[r] = '\0';
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {

@@ -43,7 +43,7 @@
 #define PROGNAME    "@PACKAGE_NAME@"
 
 #define BUFSIZE         2048
-#define NOBACKUP        ".nobackup"      
+#define NOBACKUP        ".nobackup"
 #define NULL_DUMP       0
 #define DIR_SEP         '/'
 #define VALUE           (void*)1 /* g_tree_lookup returns this in rdup */
@@ -54,8 +54,6 @@
 #define LIST_SPACEPOS  5
 
 /* extended attributes */
-#define R_UID           "user.r_uid"
-#define R_GID           "user.r_gid"
 #define ATTR_SIZE       10
 #define R_MAX_ID        2147483646  /* 2 ^ 31 - 2 */
 
