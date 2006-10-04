@@ -67,12 +67,12 @@ sub catfile {
 # set the r_uid/g_uid with the original uid/gid
 # usefull for remote backups
 sub chown_attr {
-        return unless $attr_there;
+	my $attr = $_[0]
         return unless $attr;
 
-        my $xuid = $_[0];
-        my $xgid = $_[1];
-        my $file = $_[2];
+        my $xuid = $_[1];
+        my $xgid = $_[2];
+        my $file = $_[3];
 
         if ($^O eq "linux") {
                 system("attr -q -s r_uid -V$xuid \"$file\"");
