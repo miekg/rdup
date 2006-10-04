@@ -116,7 +116,7 @@ sub _mirror {
                                 chown_attr($uid, $gid, $target);
                                 chmod $modebits, $target;
                         }
-                        
+
                         $ftsize += $fsize;
                         $ireg++;
                 } elsif ($typ == 1) {        # DIR
@@ -133,11 +133,11 @@ sub _mirror {
                                 $bits = 0700;
                         }
                         chmod $bits, $target;
-                        
+
                         $idir++;
                 } elsif ($typ == 2) {        # LNK; target id the content
                         my $target = "$dir/$path";
-                        if (exist($target)== 1) {      
+                        if (exist($target)== 1) {
                                 unlink $target or warn "** Cannot unlink $target: $!";
                         }
                         if ($remote) {
@@ -150,15 +150,14 @@ sub _mirror {
 
                         chown $uid, $gid, $target;
                         chown_attr($uid, $gid, $target);
-                        
+
                         $ilnk++;
                 }
         } else {        # Remove
                 my $target = "$dir/$path";
-                if (exist($target)) {      
+                if (exist($target)) {
                         unlink $target or warn "** Cannot rename $target: $!";
                 }
-                
                 $irm++;
         }
 }

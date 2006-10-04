@@ -48,7 +48,7 @@ cat(FILE *fp, char *filename)
 	char buf[BUFSIZE + 1];
 	FILE *file;
 	size_t i;
-		
+
 	if ((file = fopen(filename, "r")) == NULL) {
 		msg("Could not open '%s\': %s", filename, strerror(errno));
 		return FALSE;
@@ -59,7 +59,6 @@ cat(FILE *fp, char *filename)
 			fclose(file);
 			signal_abort(sig);
 		}
-		
 		i = fread(buf, sizeof(char), BUFSIZE, file);
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
 			msg("Write failure `%s\': %s", filename, strerror(errno));

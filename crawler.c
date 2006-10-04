@@ -129,7 +129,6 @@ dir_prepend(GTree *t, char *path)
 		e.f_mtime     = s.st_mtime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
-		
 		g_tree_replace(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
 		p = c++;
@@ -168,7 +167,6 @@ dir_crawl(GTree *t, char *path)
 			g_free(dirstack);
 			return;
 		}
-		
 		msg("Cannot enter directory `%s\': %s", path, strerror(errno));
 		g_free(dirstack);
 		return;
@@ -232,7 +230,6 @@ dir_crawl(GTree *t, char *path)
 				rp.len  = strlen(path);
 				rp.path = path;
 				g_tree_foreach(t, gfunc_remove_path, (gpointer)&rp);
-				
 				/* add .nobackup back */
 				g_tree_replace(t, (gpointer) entry_dup(&pop), VALUE);
 				g_free(dirstack);
