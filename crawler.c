@@ -65,7 +65,7 @@ read_attr_uid(__attribute__((unused))
 	uid_t x;
 	int attfd;
 	int r;
-	if ((attfd = attropen(path, "r_uid", O_RDONLY) == -1)) {
+	if ((attfd = attropen(path, "r_uid", O_RDONLY)) == -1) {
 		if (opt_verbose > 0) {
 			msg("No uid xattr for `%s\'", path);
 		}
@@ -75,7 +75,7 @@ read_attr_uid(__attribute__((unused))
 		return u;
 	}
 	close(attfd);
-	buf[r] = '\0';
+	buf[r - 1] = '\0';
 	x = (uid_t)atoi(buf);
 	return x;
 #elif
@@ -93,7 +93,7 @@ read_attr_gid(__attribute__((unused))
 	int r;
 
 	if ((r = lgetxattr(path, "user.r_gid", buf, ATTR_SIZE)) > 0) {
-		buf[r] = '\0';
+		buf[r - 1] = '\0';
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
 			msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, 
@@ -113,7 +113,7 @@ read_attr_gid(__attribute__((unused))
 	gid_t x;
 	int attfd;
 	int r;
-	if ((attfd = attropen(path, "r_gid", O_RDONLY) == -1)) {
+	if ((attfd = attropen(path, "r_gid", O_RDONLY)) == -1) {
 		if (opt_verbose > 0) {
 			msg("No gid xattr for `%s\'", path);
 		}
@@ -123,7 +123,7 @@ read_attr_gid(__attribute__((unused))
 		return g;
 	}
 	close(attfd);
-	buf[r] = '\0';
+	buf[r - 1] = '\0';
 	x = (uid_t)atoi(buf);
 	return x;
 #else
