@@ -61,6 +61,20 @@ read_attr_uid(__attribute__((unused))
 	/* solaris */
 	char buf[ATTR_SIZE + 1];
 	uid_t x;
+	int attfd;
+	int r;
+	if ((attfd = attropen(path, "r_uid", O_RDONLY) == -1)) {
+		return u;
+	}
+	if ((r = read(attfd, buf, ATTR_SIZE)) == -1) {
+		return u;
+	}
+	buf[r] = '\0';
+	x = (uid_t)atoi(buf);
+	return x;
+
+
+	
 
 
 #else
@@ -75,8 +89,10 @@ read_attr_gid(__attribute__((unused))
 #ifdef HAVE_ATTR_XATTR_H
 	char buf[ATTR_SIZE + 1];
 	gid_t x;
+	int r;
 
-	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
+	if ((r = lgetxattr(path, R_GID, buf, ATTR_SIZE)) > 0) {
+		buf[r] = '\0'
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
 			msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, 
@@ -94,6 +110,9 @@ read_attr_gid(__attribute__((unused))
 	/* solaris */
 	char buf[ATTR_SIZE + 1];
 	gid_t x;
+	if (attropen(path, "r_gid", O_RDONLY) == -1) {
+		return g;
+	}
 #else
 	return g;
 #endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
