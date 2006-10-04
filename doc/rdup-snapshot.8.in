@@ -43,7 +43,7 @@ will make the backup to be written to all these directories in one go.
 Note that the \-e option will only be looking at the first
 directory specified.
 
-Also note that \fBrdup-dump\fR will add the string YYYYMM to
+Also note that \fBrdup-snapshot\fR will add the string YYYYMM to
 the backup directory.
 
 .TP
@@ -60,8 +60,7 @@ the rdup-util scripts can be found.
 .TP
 .B \-k keyfile
 Encrypt the files while backing up with \fIkeyfile\fR. This option
-inserts \fBrdup-crypt keyfile\fR in the pipeline. If both \fI-z\fR and
-\fI-k\fR are given a file is first zipped and then encrypted.
+inserts \fBrdup-crypt keyfile\fR in the pipeline. 
 .TP
 .B -l num
 Limit the transfer to 'num' bytes/second. This option is given to 
@@ -76,8 +75,7 @@ Pass \-x to rdup (stay in local filesystem).
 .TP
 .B \-z
 Compress the files while backing up. This option
-inserts \fBrdup-gzip\fR in the pipeline. If both \fI-z\fR and
-\fI-k\fR are given a file is first zipped and then encrypted.
+inserts \fBrdup-gzip\fR in the pipeline. 
 .TP
 .B \-e
 Store the the timestamp and filelist files together with the backup.
@@ -97,22 +95,20 @@ Show the version.
 
 .SH EXAMPLES
 .SS LOCAL BACKUP 
-Dumping my homedir to the backup:
+Snapshotting my homedir to the backup:
 
-        rdup-dump -b /vol/backup/$HOST ~
+        rdup-snapshot -b /vol/backup/$HOST ~
 
-Dumping /var/lib to the backup:
+Snapshotting /var/lib to the backup:
         
-        rdup-dump -b /vol/backup/$HOST /var/lib
+        rdup-snapshot -b /vol/backup/$HOST /var/lib
       
-.SS REMOTE BACKUP
-Dumping my homedir to the remote backup:
-
-        rdup-dump -b /vol/backup/$HOST -c miekg@remote ~
-
-Dumping /home to the remote backup:
-        
-        rdup-dump -b /vol/backup/$HOST -c miekg@remote /home
+.SH RESTORE
+In principle a restore is as easy as using the standard system tools to 
+copy a directory to another location. However when the
+\-a flag is used extended attributes are set, these are normally not
+read by the unix utilities. In this case you should restore by using
+\fBrdup\fR \-a and \fBrdup-mirror\fR to copy the files to another location.
 
 .SH SEE ALSO
-rdup(8) and rdup-snapshot(8).
+rdup(8), rdup-mirror(8) and rdup-snapshot(8).

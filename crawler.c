@@ -39,7 +39,8 @@ read_attr_uid(__attribute__((unused))
 	char *path, __attribute__((unused)) uid_t u)
 {
 #ifdef HAVE_ATTR_XATTR_H
-	char buf[ATTR_SIZE];
+	/* linux */
+	char buf[ATTR_SIZE + 1];
 	uid_t x;
 
 	if (lgetxattr(path, R_UID, buf, ATTR_SIZE) > 0) {
@@ -56,9 +57,15 @@ read_attr_uid(__attribute__((unused))
 		}
 		return u;
 	}
+#elif HAVE_OPENAT
+	/* solaris */
+	char buf[ATTR_SIZE + 1];
+	uid_t x;
+
+
 #else
 	return u;
-#endif /* HAVE_ATTR_XATTR_H */
+#endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
 }
 
 static gid_t 
@@ -66,7 +73,7 @@ read_attr_gid(__attribute__((unused))
 	char *path, __attribute__((unused)) gid_t g)
 {
 #ifdef HAVE_ATTR_XATTR_H
-	char buf[ATTR_SIZE];
+	char buf[ATTR_SIZE + 1];
 	gid_t x;
 
 	if (lgetxattr(path, R_GID, buf, ATTR_SIZE) > 0) {
@@ -83,9 +90,13 @@ read_attr_gid(__attribute__((unused))
 		}
 		return g;
 	}
+#elif HAVE_OPENAT
+	/* solaris */
+	char buf[ATTR_SIZE + 1];
+	gid_t x;
 #else
 	return g;
-#endif /* HAVE_ATTR_XATTR_H */
+#endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
 }
 
 /**

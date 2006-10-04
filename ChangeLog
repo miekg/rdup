@@ -2,29 +2,31 @@
    -- major features enhancements --
    ** big changes **
    * No shell utils are installed anymore, only the wrappers
-   * history.sh and yesterday.sh are removed from the archive
+   * History.sh and yesterday.sh are removed from the archive
    * ${prefix/}share/rdup is used for common perl/shell files
-     all tools now source these files
-   * removed -N prefix arg from the utils
-   * all scripts are prefixed with rdup-
-   * all installed scripts loose the .sh/.pl suffix (Debian Policy)
+     all utilities now source these files
+   * Removed -N prefix arg from the utils
+   * Removed -l prefix arg from the utils
+   * All scripts are prefixed with rdup-
+   * All installed scripts loose the .sh/.pl suffix (Debian Policy)
    * rdup-snap added (perl) tool ala mirror but works on hard linked
      files
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
+   * Solaris 10 extended attributes was added
    ** smaller changes **
-   * bug fix in crypt.pl
-   * all documentation updated with the new names
-   * don't install dump-here.sh or dump-here.sh.8
+   * Bug fix in crypt.pl
+   * All documentation updated with the new names and some more updates
+   * Don't install dump-here.sh or dump-here.sh.8
    * Added debian/ dir so a .deb package can be build
      (cd debian ; dpkg-buildpackage -rfakeroot)
-   * if you want /etc/rdup to be in a different directory be sure
+   * If you want /etc/rdup to be in a different directory be sure
      to use ./configure --sysconfdir=foo, otherwise it might not work
    * rdup-snap.8 and rdup-snapshot.8 added
-   * refactored the wrapper scripts
+   * Refactored the wrapper scripts
    * Loose the multiple backup directory stuff
-   * Removed cstream stuff
-   * check_attr() and chown_attr() to shared.pl.in
+   * Check_attr() and chown_attr() to shared.pl.in
+   * Spec file for rpm creation added (Robert Haskins)
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

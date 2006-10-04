@@ -35,7 +35,7 @@ commands.
 .B \-a
 Write the uid and gid information to the file's extended user attributes:
 \'r_uid' and 'r_gid'. This option only works if \fBattr\fR is available
-on the system. And currently only for Linux.
+on the system. This currently work for Linux and Solaris 10.
 .TP 
 .B \-b backupdir
 Store the backup in \fIbackupdir\fR. This argument is mandatory.

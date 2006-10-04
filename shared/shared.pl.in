@@ -78,15 +78,21 @@ sub chown_attr {
                 system("attr -q -s r_uid -V$xuid \"$file\"");
                 system("attr -q -s r_gid -V$xgid \"$file\"");
         }
+        if ($^O eq "solaris") {
+                system("runat \"$file\" echo $xuid > r_uid");
+                system("runat \"$file\" echo $xgid > r_gid");
+        }
 }
 
 # check if the system supports extended attributes
 sub check_attr {
         if ($^O eq "linux") {
                 map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
-        } else {
-                warn "Cannot set extended attributes";
         }
+        if ($^O eq "solaris") {
+                map {return 1 if -x $_ . '/' . "runat"}  split(/:/, $ENV{'PATH'});
+        }
+        warn "Cannot set extended attributes";
         return 0;
 }
 

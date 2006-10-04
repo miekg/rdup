@@ -3,7 +3,6 @@
 # Build a rdup distribution tar from the SVN repository.
 
 set -e
-
 cwd=`pwd`
 
 usage () {
@@ -115,7 +114,6 @@ autoconf || error_cleanup "Autoconf failed."
 
 rm -r autom4te* || error_cleanup "Failed to remove autoconf cache directory."
 rm -rf patches  || error_cleanup "Failed to remove patches directory."
-rm -rf poster/icons   || error_cleanup "Failed to remove poster/icons directory."
 rm -rf feedback   || error_cleanup "Failed to remove feedback directory."
 
 find . -name .c-mode-rc.el -exec rm {} \;

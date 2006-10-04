@@ -1,10 +1,10 @@
 This package was debianized by Miek Gieben <miekg@atoom.net> on
 Sun,  1 Oct 2006 13:57:21 +0200.
 
-It was downloaded from <fill in ftp site>
+It was downloaded from http://www.miek.nl/projects/rdup
 
-Copyright Holder: <put author(s) name and email here>
+Copyright Holder: Miek Gieben <miek@miek.nl>
 
 License:
 
-<Put the license of the package here>
+rdup is licensed under the GPL version 2 and only that version.

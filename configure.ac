@@ -15,14 +15,13 @@ AC_PROG_MAKE_SET
 
 CHECK_GNU_MAKE
 AM_PATH_GLIB_2_0(2.0.0)
-AC_CHECK_LIB(attr, lgetxattr,, [
-        AC_MSG_WARN([No xattr support. Not enabling -a])
-        ]
-)
+AC_CHECK_LIB(attr, lgetxattr)
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])
 
-AC_CHECK_FUNCS(getdelim) 
-AC_CHECK_FUNCS(dirfd) 
+#AC_CHECK_HEADERS(attr/openat.h,,,[AC_INCLUDES_DEFAULT])
+#runat stuff - look at the manual
+
+AC_CHECK_FUNCS([getdelim dirfd openat])
 
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
