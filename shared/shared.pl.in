@@ -79,8 +79,8 @@ sub chown_attr {
                 system("attr -q -s r_gid -V$xgid \"$file\"");
         }
         if ($^O eq "solaris") {
-                system("runat \"$file\" echo $xuid > r_uid");
-                system("runat \"$file\" echo $xgid > r_gid");
+                system("runat \"$file\" \"echo $xuid > r_uid\"");
+                system("runat \"$file\" \"echo $xgid > r_gid\"");
         }
 }
 
