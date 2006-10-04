@@ -107,13 +107,13 @@ sub _mirror {
                                         copyout($fsize, *FILE);
                                 }
                                 chown $uid, $gid, *FILE;
-                                chown_attr($uid, $gid, $target);
+                                chown_attr($attr_there, $uid, $gid, $target);
                                 chmod $bits, *FILE;
                                 close FILE;
                         } else {
                                 copy($path, $target) or warn "** Copy failed: $! $path $target";
                                 chown $uid, $gid, $target;
-                                chown_attr($uid, $gid, $target);
+                                chown_attr($attr_there, $uid, $gid, $target);
                                 chmod $modebits, $target;
                         }
 
@@ -127,7 +127,7 @@ sub _mirror {
                         }
                         mkpath($target) unless -d _;
                         chown $uid, $gid, $target;
-                        chown_attr($uid, $gid, $target);
+                        chown_attr($attr_there, $uid, $gid, $target);
                         if ($> != 0 && $bits == 0) {
                                 print STDERR "chmod $target to 700\n";
                                 $bits = 0700;
@@ -149,7 +149,7 @@ sub _mirror {
                         }
 
                         chown $uid, $gid, $target;
-                        chown_attr($uid, $gid, $target);
+                        chown_attr($attr_there, $uid, $gid, $target);
 
                         $ilnk++;
                 }
