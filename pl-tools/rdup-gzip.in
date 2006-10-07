@@ -52,16 +52,18 @@ while (($_ = <STDIN>)) {
                                 syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
                                 catfile($filename);
                                 unlink $filename;
-                                return;
+                                next;
                         }
                         syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
-                        return;
+                        next;
                 } elsif ($type eq 'd') {      # DIR
                         syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+                        next;
                 } elsif ($type eq 'l') {      # LNK
                         my $target;
                         read STDIN, $target, $fsize;
                         syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path$target";
+                        next;
                 }
         } else {
                 syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
