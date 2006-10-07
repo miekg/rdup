@@ -17,6 +17,7 @@
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
    * Solaris 10 extended attributes support was added
+   * Moved Makefile.in to GNUmakefile.in to force gmake usage
   ** smaller changes **
    * Bug fix in crypt.pl
    * All documentation updated with the new names and some more updates

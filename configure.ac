@@ -7,13 +7,10 @@ AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
 sinclude(glib-2.0.m4)
-sinclude(check_gnu_make.m4)
-
 AC_AIX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
-CHECK_GNU_MAKE
 AM_PATH_GLIB_2_0(2.0.0)
 AC_CHECK_FUNCS([getdelim dirfd openat])
 AC_CHECK_LIB(attr, lgetxattr)
@@ -33,7 +30,7 @@ if test ${sysconfdir} = '${prefix}/etc'; then
         sysconfdir='/etc'
 fi
 
-AC_CONFIG_FILES([Makefile
+AC_CONFIG_FILES([GNUmakefile
                  rdup.h
                  doc/rdup.8
                  doc/rdup-dump.8
