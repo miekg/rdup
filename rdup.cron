@@ -1,7 +1,3 @@
-########################################
-# cron file of rdup                    #
-########################################
- 
-# --- dump - each new month a full dump--- #
-10 02 * * * root /usr/sbin/dump.sh -b /vol/backup/$HOSTNAME -b /vol/raid/backup/$HOSTNAME /etc /home /tftpboot
-00 02 * * * root /usr/sbin/dump.sh -b /vol/backup/$HOSTNAME -b /vol/raid/backup/$HOSTNAME /var/mail /var/svn /var/lib
+# cron file of rdup
+10 02 * * * root /usr/sbin/rdup-snapshot -b /vol/backup/$HOSTNAME -b /vol/raid/backup/$HOSTNAME /etc /home /tftpboot
+00 02 * * * root /usr/sbin/rdup-snashot -b /vol/backup/$HOSTNAME -b /vol/raid/backup/$HOSTNAME /var/mail /var/svn /var/lib
