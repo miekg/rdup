@@ -1,7 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o
-HDR=rdup.h 
-CMD=rdup 
-SHS_IN=mirror.sh crypt.sh gzip.sh 
+HDR=rdup.h
+CMD=rdup
 SHA_IN=shared.sh shared.pl
 WRP_IN=rdup-dump rdup-snapshot rdup-restore
 PRL_IN=rdup-gzip rdup-mirror rdup-crypt rdup-grep rdup-snap
@@ -9,7 +8,6 @@ MAN8_IN=rdup.8 rdup-mirror.8 rdup-dump.8 rdup-restore.8 rdup-snap.8 rdup-snapsho
 MAN1_IN=rdup-crypt.1 rdup-gzip.1 rdup-grep.1
 
 SHA=$(addprefix shared/, $(SHA_IN))
-SHS=$(addprefix sh-tools/, $(SHS_IN))
 PRL=$(addprefix pl-tools/, $(PRL_IN))
 WRP=$(addprefix sh-wrapper/, $(WRP_IN))
 MAN8=$(addprefix doc/, $(MAN8_IN))
@@ -38,12 +36,12 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 all:	rdup scripts
 
-rdup:	${OBJ} ${HDR} 
+rdup:	${OBJ} ${HDR}
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
 	strip rdup
 
 scripts:
-	chmod +x $(SHS) $(RES) $(PRL) $(WRP)
+	chmod +x $(RES) $(PRL) $(WRP)
 
 clean:
 	rm -f *.o
@@ -84,7 +82,6 @@ install: all
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${sbindir}/$$i ; done
 	for i in ${WRP}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
-	for i in ${SHS}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${PRL}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
 	for i in ${SHA}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN8}; do rm -f ${DESTDIR}${mandir}/man8/`basename $$i` ; done

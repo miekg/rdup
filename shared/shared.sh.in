@@ -1,10 +1,6 @@
 
-# source this file to get some commonly 
+# source this file to get some commonly
 # used functions in the rdup-utils.
-
-S_ISDIR=16384   # octal: 040000 (This seems to be portable...)
-S_ISLNK=40960   # octal: 0120000
-S_MMASK=4095    # octal: 00007777, mask to get permission
 
 # show the version of the tool
 version() {
@@ -22,27 +18,4 @@ cleanup() {
 # echo to standard error
 _echo2() {
         echo "** $PROGNAME: $1" >&2
-}
-
-sanity_check() {
-        if [[ $dump != "+" && $dump != "-" ]]; then
-                _echo2 "dump must be + or -"
-                exit 1
-        fi
-        if [[ ! "$mode" =~ "[0-9]+" ]]; then
-                _echo2 "mode must be numeric"
-                exit 1
-        fi
-        if [[ ! "$psize" =~ "[0-9]+" ]]; then
-                _echo2 "psize must be numeric"
-                exit 1
-        fi
-        if [[ ! "$fsize" =~ "[0-9]+" ]]; then
-                _echo2 "fsize must be numeric"
-                exit 1
-        fi
-        if [[ ! "$uid" =~ "[0-9]+" || ! "$gid" =~ "[0-9]+" ]]; then
-                _echo2 "uid or gid must be numeric"
-                exit 1
-        fi
 }

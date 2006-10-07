@@ -2,7 +2,7 @@
  * Copyright (c) 2005, 2006 Miek Gieben
  * See LICENSE for the license
  *
- * g_tree_foreach helper functions 
+ * g_tree_foreach helper functions
  */
 
 #include "rdup.h"
@@ -20,7 +20,7 @@ extern size_t opt_size;
 extern sig_atomic_t sig;
 
 /**
- * we received a signal 
+ * we received a signal
  */
 static void
 signal_abort(int signal)
@@ -96,71 +96,74 @@ entry_cat_data(FILE *fp, struct entry *e)
 }
 
 /**
- * print an escape sequence correctly 
+ * print an escape sequence correctly
  */
 static void
-entry_print_escape(char n, FILE *out) 
+entry_print_escape(char n, FILE *out)
 {
 	switch (n) {
-		case 'a': 
-			fputc('\a', out); 
+		case 'a':
+			fputc('\a', out);
 			break;
-		case 'b': 
-			fputc('\b', out); 
+		case 'b':
+			fputc('\b', out);
 			break;
-		case 'e': 
-			fputc('\e', out); 
+		case 'e':
+			fputc('\e', out);
 			break;
-		case 'f': 
-			fputc('\f', out); 
+		case 'f':
+			fputc('\f', out);
 			break;
-		case 'r': 
-			fputc('\r', out); 
+		case 'r':
+			fputc('\r', out);
 			break;
-		case 't': 
-			fputc('\t', out); 
+		case 't':
+			fputc('\t', out);
 			break;
-		case 'v': 
-			fputc('\v', out); 
+		case 'v':
+			fputc('\v', out);
 			break;
-		case '0': 
-			fputc('\0', out); 
+		case '0':
+			fputc('\0', out);
 			break;
-		case 'n': 
-			fputc('\n', out); 
+		case 'n':
+			fputc('\n', out);
 			break;
 		default:
-			fputc(n, out); 
+			fputc(n, out);
 			break;
 	}
 }
 
 /**
- * print arbitrary data field 
+ * print arbitrary data field
  */
 static void
-entry_print_data(FILE *out, char n, struct entry *e) 
+entry_print_data(FILE *out, char n, struct entry *e)
 {
 	switch (n) {
-		case 'n': 
-			fputs(e->f_name, out);		
+		case 'n':
+			fputs(e->f_name, out);
 			break;
-		case 'l': 
-			fprintf(out, "%ld", (unsigned long)e->f_name_size);	
+		case 'l':
+			fprintf(out, "%ld", (unsigned long)e->f_name_size);
 			break;
-		case 'u': 
-			fprintf(out, "%ld", (unsigned long)e->f_uid);		
+		case 'u':
+			fprintf(out, "%ld", (unsigned long)e->f_uid);
 			break;
-		case 'g': 
-			fprintf(out, "%ld", (unsigned long)e->f_gid);		
+		case 'g':
+			fprintf(out, "%ld", (unsigned long)e->f_gid);
 			break;
-		case 'm': 
-			fprintf(out, "%d", (int)e->f_mode);	
+		case 'm':
+			fprintf(out, "%d", (int)e->f_mode);
 			break;
-		case 't': 
-			fprintf(out, "%ld", (unsigned long)e->f_mtime);	
-			break;	
-		case 's': 
+	        case 'b':
+                       fprintf(out, "%0o", (int)e->f_mode & F_PERM);
+                       break;
+		case 't':
+			fprintf(out, "%ld", (unsigned long)e->f_mtime);
+			break;
+		case 's':
 			/* don't report size for directories. */
 			if (S_ISDIR(e->f_mode)) {
 				putchar('0');
@@ -186,7 +189,7 @@ entry_print_data(FILE *out, char n, struct entry *e)
 /**
  * print function
  */
-void 
+void
 entry_print(FILE *out, char plusmin, struct entry *e)
 {
 	char *pos;
@@ -201,11 +204,11 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 	}
 
 	if (opt_verbose > 1) {
-		fputs("** ", stderr); 
+		fputs("** ", stderr);
 		fputc(plusmin, stderr);
 		fprintf(stderr, " %s\n", e->f_name);
 	}
-	
+
 	if (!S_ISDIR(e->f_mode) && plusmin == '+' && !opt_local) {
 		/* check if the file has changed since we first
 		 * visited it. If so, skip it as it will tear
@@ -216,7 +219,7 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		 * This is not a problem for directories
 		 */
 		if (lstat(e->f_name, &s) != 0) {
-			msg("Could not stat path `%s\': %s", e->f_name, 
+			msg("Could not stat path `%s\': %s", e->f_name,
 				strerror(errno));
 			return;
 		}
@@ -238,17 +241,17 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 				++pos;
 				switch (*pos) {
 					case '%':
-						  fputc('%', out); 
+						  fputc('%', out);
 						  break;
-					case 'p': 
-						  fputc(plusmin, out); 
+					case 'p':
+						  fputc(plusmin, out);
 						  break;
 					case 'C':
 						  if (plusmin == '+') {
 						  	entry_cat_data(out, e);
 						  }
 						  break;
-					default: 
+					default:
 						  entry_print_data(out, *pos, e);
 						  break;
 				}
@@ -264,8 +267,8 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 /**
  * free a struct entry
  */
-gboolean 
-gfunc_free(gpointer data, __attribute__((unused)) gpointer value, 
+gboolean
+gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 		__attribute__((unused)) gpointer usr)
 {
 	struct entry *f;
@@ -278,18 +281,18 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 /**
  * Write our internal filelist
  */
-gboolean 
+gboolean
 gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
 	if (sig != 0)
 		signal_abort(sig);
 
-	if (value == NO_PRINT) 
+	if (value == NO_PRINT)
 		return FALSE;
 
 	/* mode_path */
 	/* this is used to create our filelist */
-	fprintf((FILE*) fp, "%d %s", (int) ((struct entry*)data)->f_mode, 
+	fprintf((FILE*) fp, "%d %s", (int) ((struct entry*)data)->f_mode,
 			(char*) ((struct entry*)data)->f_name);
 	if (opt_null) {
 		putc('\0', (FILE*)fp);
@@ -303,21 +306,21 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
  * write out the list of to be backupped items
  */
 gboolean
-gfunc_backup(gpointer data, __attribute__((unused)) gpointer value, 
+gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 		__attribute__((unused)) gpointer usr)
 {
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 
 	/* .nobackup seen, don't print it */
-	if (value == NO_PRINT) 
+	if (value == NO_PRINT)
 		return FALSE;
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
 		entry_print(stdout, '+', (struct entry*)data);
 		return FALSE;
-	} 
-	if (S_ISREG(((struct entry*)data)->f_mode) || 
+	}
+	if (S_ISREG(((struct entry*)data)->f_mode) ||
 			S_ISLNK(((struct entry*)data)->f_mode)) {
 
 		if (opt_size != 0 && ((struct entry*)data)->f_size > (ssize_t)opt_size) {
@@ -341,10 +344,10 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
  * write out the list of removed items
  */
 gboolean
-gfunc_remove(gpointer data, __attribute__((unused)) gpointer value, 
+gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 		__attribute__((unused)) gpointer usr)
 {
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 
 	/* should not have these here!! */
@@ -384,17 +387,17 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 gboolean
 gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointer r)
 {
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 
-	if (!strncmp(((struct entry*)data)->f_name, 
-				((struct remove_path *)r)->path, 
+	if (!strncmp(((struct entry*)data)->f_name,
+				((struct remove_path *)r)->path,
 				((struct remove_path *)r)->len)) {
-	
+
 		/* don't remove the directory itself */
 		if (S_ISDIR( ((struct entry*)data)->f_mode))
 			return FALSE;
-		
+
 		g_tree_replace(
 			((struct remove_path *)r)->tree, (gpointer) data, NO_PRINT);
 	}
@@ -407,7 +410,7 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
  * everything in A, but NOT in b
  * (data := element out of A)
  * (b    := packed in diff, diff->b)
- * This function is essentially the most expensive function 
+ * This function is essentially the most expensive function
  * in rdup...
  */
 gboolean

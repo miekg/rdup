@@ -17,7 +17,7 @@ usage(FILE *f)
         fprintf(f, "   -N FILE\tuse the timestamp of FILE for incremental dumps\n");
         fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
         fprintf(f, "   -F FORMAT\tuse specified format string\n");
-        fprintf(f, "   \t\tdefaults to: \"%%p%%m %%u %%g %%l %%s %%n\\n\"\n");
+        fprintf(f, "   \t\tdefaults to: \"%%p%%T %%b %%u %%g %%l %%s %%n\\n\"\n");
         fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
         fprintf(f, "   -V\t\tprint version\n");
 #ifdef HAVE_ATTR_XATTR_H
@@ -27,7 +27,7 @@ usage(FILE *f)
         fprintf(f, "   -a\t\tread the extended attributes: r_uid, r_gid\n");
 #endif /* HAVE_OPENAT */
         fprintf(f,
-                "   -c\t\tcat the contents (FORMAT=\"%%p%%m %%u %%g %%l %%s\\n%%n%%C\")\n");
+                "   -c\t\tcat the contents (FORMAT=\"%%p%%T %%b %%u %%g %%l %%s\\n%%n%%C\")\n");
         fprintf(f, "   -h\t\tthis help\n");
         fprintf(f, "   -m\t\tonly print new/modified files (unsets -r)\n");
         fprintf(f, "   -l\t\tdon't check for file size changes\n");
@@ -39,7 +39,8 @@ usage(FILE *f)
         fprintf(f, "\nFORMAT:\n");
         fprintf(f, "   The following escape sequences are recognized:\n");
         fprintf(f, "   \'%%p\': '+' if new, '-' if removed\n");
-        fprintf(f, "   \'%%m\': mode\n");
+        fprintf(f, "   \'%%b\': permission bits\n");
+        fprintf(f, "   \'%%m\': file mode bits\n");
         fprintf(f, "   \'%%u\': uid\n");
         fprintf(f, "   \'%%g\': gid\n");
         fprintf(f, "   \'%%l\': path length\n");

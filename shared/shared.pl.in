@@ -11,14 +11,14 @@ sub version {
 # sanity_check the input
 sub sanity_check {
         my $dump = $_[0];
-        my $mode = $_[1];
+        my $bits = $_[1];
         my $psize = $_[2];
         my $fsize = $_[3];
         my $uid = $_[4];
         my $gid = $_[5];
 
         die "** $progName: dump must be + or -"   if $dump ne "+" && $dump ne "-";
-        die "** $progName: mode must be numeric"  unless $mode =~ "[0-9]+";
+        die "** $progName: bits must be otcal"  unless $mode =~ "[0-7]+";
         die "** $progName: psize must be numeric" unless $psize =~ "[0-9]+";
         die "** $progName: fsize must be numeric" unless $fsize =~ "[0-9]+";
         die "** $progName: uid must be numeric"   unless $uid =~ "[0-9]+";
@@ -73,15 +73,15 @@ sub chown_attr {
         my $xuid = $_[1];
         my $xgid = $_[2];
         my $file = $_[3];
+        my $err = 0;
 
         if ($^O eq "linux") {
-                system("attr -q -s r_uid -V$xuid \"$file\"");
-                system("attr -q -s r_gid -V$xgid \"$file\"");
+                $err += system("attr -q -s r_uid -V$xuid \"$file\" 2>/dev/null; attr -q -s r_gid -V$xgid \"$file\" 2>/dev/null");
         }
         if ($^O eq "solaris") {
-                system("runat \"$file\" \"echo $xuid > r_uid\"");
-                system("runat \"$file\" \"echo $xgid > r_gid\"");
+                 $err += system("runat \"$file\" \"echo $xuid > r_uid\" 2>/dev/null; runat \"$file\" \"echo $xgid > r_gid\" 2>/dev/null");
         }
+        warn "** Could not set xattr on $file" if ($err ne 0);
 }
 
 # check if the system supports extended attributes
@@ -92,8 +92,24 @@ sub check_attr {
         if ($^O eq "solaris") {
                 map {return 1 if -x $_ . '/' . "runat"}  split(/:/, $ENV{'PATH'});
         }
-        warn "Cannot set extended attributes";
+        warn "** Cannot set extended attributes";
         return 0;
+}
+
+
+# chmod or warn
+sub rchmod {
+        my $bits = $_[0];
+        my $file = $_[1];
+        chmod oct($bits), $file or warn "** Cannot chmod $file: $!";
+}
+
+# chown or warn
+sub rchown {
+        my $uid = $_[0];
+        my $gid = $_[1];
+        my $file = $_[2];
+        chown $uid, $gid, $file or warn "** Cannot chown $file: $!";
 }
 
 # keep

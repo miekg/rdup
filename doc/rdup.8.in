@@ -51,9 +51,9 @@ if this time is NEWER than the m_time of FILELIST the pathname is printed
 to standard output. When files are removed they are also printed to 
 standard output, but they are prefixed with a '-'. See 
 .B FORMAT
-below.
-All errors are written to standard error.
+below. The default format \fBrdup\fR uses is: "%p%T %b %m %u %g %l %s %n\\n"
 .PP
+All errors are written to standard error.
 If the directory or file does not exist, they are skipped and a
 warning is emitted.
 .PP
@@ -65,7 +65,7 @@ backups.
 .SH BACKUP POLICY
 As \fBrdup\fR doesn't backup anything, the backup policy; what you
 backup, how you backup, how often and how you restore; is all left
-to the scripts. See the Section \fBSCRIPTS\fR for a run down on what
+to the scripts. See the Section \fBUTILITIES\fR for a run down on what
 \fBrdup\fR's backup policy is.
 
 .SH OPTIONS
@@ -108,7 +108,7 @@ original uid/gid in its output.
 .TP
 .B \-c
 Print the files' contents to standard output. This sets
-the FORMAT string to: "%p%m %u %g %l %s\\n%n%C";
+the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C";
 
 Note this creates a race condition: if a file changes in size after
 rdup has crawled it and before it has been sent to the remote server,
@@ -159,22 +159,23 @@ is used to safe the exact time of rdup's run. The file \fILIST\fR is
 used to calculate the correct incremental dump list.
 
 .SH FORMAT
-The default format \fBrdup\fR uses is: "%p%m %u %g %l %s %n\\n"
+The default format \fBrdup\fR uses is: "%p%T %b %u %g %l %s %n\\n"
 .PP
 The following escape sequences are understood by \fBrdup\fR:
 
         'p': '+' if file is new/modified, '-' if removed
-        'm': mode from lstat(2)
-        'u': uid 
-        'g': gid 
+        'T': file type: -, l or d (normail file, symlink or directory)
+        'b': permission bits from lstat(2)
+        'u': uid
+        'g': gid
         'l': path name length
         's': file size (zero if directory)
-        'n': path 
+        'n': path
         't': time of modification (seconds from epoch)
         'T': 'type' - 'd'/'l'/'-' for directory, link or file.
         'C': the content of the file/link (none for directories)
 .PP
-To delimit the outout of \fBrdup\fR with NULLs you can use '\\0' in the 
+To delimit the outout of \fBrdup\fR with NULLs you can use '\\0' in the
 format string.
 
 .SH FILELIST
@@ -350,6 +351,8 @@ Report bugs to <miek@miek.nl>.
 .SH BUGS
 See the \-c flag for explanation about a small race condition when doing
 remote dumps.
+.PP
+Hard links are handled as normal files.
 
 .SH SEE ALSO
 rdup-mirror(8), rdup-dump(8), rdup-snap(8) and rdup-restore(8). See

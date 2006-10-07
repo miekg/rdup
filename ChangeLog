@@ -1,5 +1,8 @@
 10 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- major features enhancements --
+   ** OUTPUT CHANGES **
+   * new format character: %b: permission bits
+   * output changed to:
    ** big changes **
    * No shell utils are installed anymore, only the wrappers
    * History.sh and yesterday.sh are removed from the archive

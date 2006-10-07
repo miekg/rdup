@@ -57,6 +57,8 @@
 #define ATTR_SIZE       10
 #define R_MAX_ID        2147483646  /* 2 ^ 31 - 2 */
 
+#define F_PERM          07777
+
 struct entry {
         char *f_name;
         size_t f_name_size;
