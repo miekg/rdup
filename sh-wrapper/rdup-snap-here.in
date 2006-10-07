@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# create a dump on a external harddisk
+# or better said: create a dump on the disk/dir where
+# this file is placed!
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+NOW=`date +%Y%m/%d`
+
+what() {
+        if [[ -d $BACKUPDIR/$NOW ]]; then
+                # already there do not link
+                return 0
+        fi
+
+        for i in `seq 1 7`; do
+                dir=`date +%Y%m/%d --date "$i days ago"`
+                if [[ -d $BACKUPDIR/$dir ]]; then
+                        # copy 'em over
+                        cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
+                        return 0
+                fi
+        done
+        return 1
+}
+
+##
+# For each HOST you should define the directories to backup 
+##
+case $HOSTNAME in
+        elektron*)
+        DIRS="/home/miekg/Documents"
+        ;;
+        *)
+        # no such host
+        zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for <b>$HOSTNAME</b>"
+        exit 1
+esac
+
+echo "You need to edit this script, exiting" >&2
+exit 1 # remove this
+
+##
+# Don't need to edit anything below this line
+##
+
+if [ ! -x @sbindir@/rdup ]; then
+        zenity --error --title "rdup @ $HOSTNAME" --text "rdup can not be found"
+        exit 1
+fi
+
+# get the path were we live
+if [[ $0 =~ ^/ ]]; then
+        p=$0
+ else
+        p=`pwd`/$0
+fi
+
+mountpath=`dirname $p`
+
+if [[ -z $DIRS ]]; then
+         zenity --error --title "rdup @ $HOSTNAME" --text "No backup directories defined"
+         exit 1
+fi
+
+# only to get root
+gksudo -m "Perform backup of <b>$HOSTNAME</b> to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
+if [[ $? -ne 0 ]]; then
+        exit
+fi
+
+## Set the directories ##
+STAMP="$mountpath/$HOSTNAME/$HOSTNAME.timestamp"
+LIST="$mountpath/$HOSTNAME/$HOSTNAME.list"
+BACKUPDIR="$mountpath/$HOSTNAME"
+
+sudo mkdir -m 755 -p $BACKUPDIR
+what; purpose=$?
+case $purpose in
+        0)
+        TEXT="<i>Incremental</i> dump of <b>$HOSTNAME</b>: $DIRS"
+        ;;
+        1)
+        TEXT="<i>Full</i> dump of <b>$HOSTNAME</b>: $DIRS"
+        rm -f $LIST
+        rm -f $STAMP
+        ;;
+esac
+
+sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
+sudo @sbindir@/rdup-snap -v -b $BACKUPDIR/$NOW 2>&1 |\
+zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"
+
+exit 0
