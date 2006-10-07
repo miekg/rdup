@@ -36,7 +36,7 @@ usage() if $help;
 version($progName) if $version;
 die "** Need a -b option" if !$backupDir;
 my $hostname = `hostname`; chomp $hostname;
-my $attr_there = check_attr();    # Can we set extended attributes?
+my $attr_there = check_attr() if $attr;
 
 # Statistics
 my $ftsize = 0;        # Total file size
