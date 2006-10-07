@@ -1,9 +1,9 @@
 10 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- major features enhancements --
-   ** OUTPUT CHANGES **
+  ** OUTPUT CHANGES **
    * new format character: %b: permission bits
-   * output changed to:
-   ** big changes **
+   * output changed to: %p%T %b %u %g %l %s %n\n"
+  ** BIG changes **
    * No shell utils are installed anymore, only the wrappers
    * History.sh and yesterday.sh are removed from the archive
    * ${prefix/}share/rdup is used for common perl/shell files
@@ -17,7 +17,7 @@
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
    * Solaris 10 extended attributes support was added
-   ** smaller changes **
+  ** smaller changes **
    * Bug fix in crypt.pl
    * All documentation updated with the new names and some more updates
    * Don't install dump-here.sh or dump-here.sh.8
