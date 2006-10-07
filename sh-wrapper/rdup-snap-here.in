@@ -25,6 +25,9 @@ what() {
         return 1
 }
 
+echo "You need to edit this script and remove the next line, exiting" >&2
+exit 1 # REMOVE THIS
+
 ##
 # For each HOST you should define the directories to backup 
 ##
@@ -37,9 +40,6 @@ case $HOSTNAME in
         zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for <b>$HOSTNAME</b>"
         exit 1
 esac
-
-echo "You need to edit this script, exiting" >&2
-exit 1 # remove this
 
 ##
 # Don't need to edit anything below this line

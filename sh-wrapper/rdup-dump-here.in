@@ -20,8 +20,8 @@ case $HOSTNAME in
         exit 1
 esac
 
-echo "You need to edit this script, exiting" >&2
-exit 1 # remove this 
+echo "You need to edit this script and remove the next line, exiting" >&2
+exit 1 # REMOVE THIS
 
 ##
 # Don't need to edit anything below this line
