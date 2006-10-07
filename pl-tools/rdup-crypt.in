@@ -16,11 +16,7 @@ use File::Spec;
 my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
-my $S_ISDIR = 040000;
-my $S_ISLNK = 0120000;
-
 my $progName = basename $0;
-
 my %opt;
 
 getopts('dhV', \%opt);
@@ -38,19 +34,18 @@ die "** $tmpDir could not be created: $!" unless -d $tmpDir;
 
 while (($_ = <STDIN>)) {
         chomp;
-        my($mode, $uid, $gid, $psize, $fsize) = split;
-        my $dump = substr($mode, 0, 1);
-        my $modebits = substr($mode, 1);
-        my $typ = 0;
+        my ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
+        my $dump = substr($t, 0, 1);
+        my $type = substr($t, 1, 1);
 
-        sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
+        sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
 
         my $path = "";
         read STDIN, $path, $psize;
-        $typ = 1 if ($mode & $S_ISDIR) == $S_ISDIR;
-        $typ = 2 if ($mode & $S_ISLNK) == $S_ISLNK;
+        die "** Empty path"  if ($path eq "");
+
         if ($dump eq '+') {        # add
-                if ($typ == 0) {      # REG
+                if ($type eq '-') {      # REG
                         if ($fsize != 0) {
                                 my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
                                 $fh->close();
@@ -58,22 +53,22 @@ while (($_ = <STDIN>)) {
                                 copyout($fsize, *CRYPT);
                                 close CRYPT or die "** $filename: $!";
                                 my $size = (stat($filename))[7];
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $size\n$path";
+                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
                                 catfile($filename);
                                 unlink $filename;
                                 return;
-                        } 
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                        }
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
                         return;
-                } elsif ($typ == 1) {      # DIR
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
-                } elsif ($typ == 2) {      # LNK
+                } elsif ($type eq 'd') {      # DIR
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+                } elsif ($type eq 'l') {      # LNK
                         my $target;
                         read STDIN, $target, $fsize;
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path$target";
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path$target";
                 }
         } else {
-                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
         }
 }
 

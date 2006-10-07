@@ -16,10 +16,6 @@ use File::Spec;
 my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
-my $S_MMASK = 07777;      # mask to get permission
-my $S_ISDIR = 040000;
-my $S_ISLNK = 0120000;
-
 my $progName = basename $0;
 
 my %opt;
@@ -43,38 +39,31 @@ if (defined($ARGV[0])) {
 if ($remote) {
         while (($_ = <STDIN>)) {
                 chomp;
-                ($mode, $uid, $gid, $psize, $fsize) = split(" ", $_, 5);
+                ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
                 _grep();
         }
 } else {
         while (($_ = <STDIN>)) {
                 chomp;
-                ($mode, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 6);
+                ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
                 _grep();
         }
 }
 exit 0;
 
 sub _grep {
-        my $dump = substr($mode, 0, 1);
-        my $modebits = substr($mode, 1);
+        my $dump = substr($t, 0, 1);
+        my $type = substr($t, 1, 1);
 
-        sanity_check($dump, $modebits, $psize, $fsize, $uid, $gid);
+        sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
 
         if ($remote) {
                 $path = "";
                 read STDIN, $path, $psize;
         }
 
-        if ($path eq "") {
-                die "** Empty path";
-        }
-
-        my $bits = $modebits & $S_MMASK;
-        my $typ = 0;
-        $typ = 1 if ($mode & $S_ISDIR) == $S_ISDIR;
-        $typ = 2 if ($mode & $S_ISLNK) == $S_ISLNK;
         print STDERR "$path\n" if $verbose;
+        die "** Empty path"  if ($path eq "");
 
         my $match = 0;
         if ($dump eq '+') {        # add
@@ -82,38 +71,38 @@ sub _grep {
                 if ($invert) { $match = ! $match; }
                 if ($match == 0) { return; }
 
-                if ($typ == 0) {      # REG
+                if ($type eq '-') {      # REG
                         if ($fsize != 0 and $remote) {
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
                                 copyout($fsize, *STDOUT);
                                 return;
                         }
                         if ($remote) {
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
                                 return;
                         }
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize $path\n";
                         return;
-                } elsif ($typ == 1) {      # DIR
+                } elsif ($type eq 'd') {      # DIR
                         if ($remote) {
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
                                 return;
                         }
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize $path\n";
                         return;
-                } elsif ($typ == 2) {      # LNK
+                } elsif ($typ eq 'l') {      # LNK
                         if ($remote) {
                                 read STDIN, $target, $fsize;
-                                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path$target";
+                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path$target";
                                 return;
-                        } 
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                        }
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize $path\n";
                 }
         } else {
                 if ($remote) {
-                        syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize\n$path";
+                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
                 }
-                syswrite STDOUT, "$dump$modebits $uid $gid $psize $fsize $path\n";
+                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize $path\n";
         }
 }
 
