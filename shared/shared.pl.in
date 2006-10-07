@@ -18,7 +18,7 @@ sub sanity_check {
         my $gid = $_[5];
 
         die "** $progName: dump must be + or -"   if $dump ne "+" && $dump ne "-";
-        die "** $progName: bits must be otcal"  unless $mode =~ "[0-7]+";
+        die "** $progName: bits must be otcal"    unless $bits =~ "[0-7]+";
         die "** $progName: psize must be numeric" unless $psize =~ "[0-9]+";
         die "** $progName: fsize must be numeric" unless $fsize =~ "[0-9]+";
         die "** $progName: uid must be numeric"   unless $uid =~ "[0-9]+";
