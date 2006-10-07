@@ -31,6 +31,7 @@
    * Loose the multiple backup directory stuff
    * Check_attr() and chown_attr() to shared.pl.in
    * Spec file for rpm creation added (Robert Haskins)
+   * Added rdup-snap-here and manpage
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>

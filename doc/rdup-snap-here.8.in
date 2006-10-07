@@ -1,21 +1,22 @@
 '\" t
-.TH RDUP-DUMP-HERE.SH 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-SNAP-HERE.SH 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-rdup-dump-here.sh \- dump a filesystem to where this script is located
+rdup-snap-here.sh \- dump a filesystem to where this script is located
 
 .SH SYNOPSIS
-.B rdup-dump-here.sh
+.B rdup-snap-here.sh
 
 .SH DESCRIPTION
-\fBrdup-dump-here.sh\fR is a graphical front-end for `rdup-mirror' and `rdup'.
+\fBrdup-snap-here.sh\fR is a graphical (using zenity)
+front-end for `rdup-snap' and `rdup'.
 Its main purpose is that it is used as `autorun.sh' on removeable media.
 This way you can backup automaticaly when you power on or insert such
 media.
 .PP
-This script will create a mirror on the backup media.
+This script will use are hardlink technique to create the backup
 .PP
-The backup will be stored in the directory where \fBrdup-dump-here.sh\fR is
+The backup will be stored in the directory where \fBrdup-snap-here.sh\fR is
 called from - usually this is in the root of the removeable media.
 .PP
 The script must be edited to be really usefull - as there is no
@@ -24,8 +25,8 @@ to be backed up \fImust\fR be specifed at the top of the script.
 
 .SH FILES
 `pwd`/`hostname` is the default location for the backups. That is:
-where ever \fBrdup-dump-here.sh\fR is located is taken as the backup
+where ever \fBrdup-snap-here.sh\fR is located is taken as the backup
 directory.
 
 .SH SEE ALSO
-rdup(8) and rdup-mirror(8).
+rdup(8) and rdup-snap(8).
