@@ -1,8 +1,7 @@
 README
 
-These tools should work, but they don't receive as much care
-as the perl tools (the pl-tools directory). There may be bugs
-present.
+These tools do not work anymore, they've stopped working as of
+release 0.3.0, because the format of rdup then changed.
 
 Miek Gieben
-24-Sept-2006
+07-Oct-2006
