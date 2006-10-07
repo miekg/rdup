@@ -109,7 +109,7 @@ sub rchown {
         my $uid = $_[0];
         my $gid = $_[1];
         my $file = $_[2];
-        chown $uid, $gid, $file or warn "** Cannot chown $file: $!";
+        chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
 }
 
 # keep
