@@ -23,6 +23,7 @@ usage() {
         echo " -b DIR     backup directory, can be given more then once"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
+        echo " -N PREFIX  optional prefix for the timestmp and filelist"
         echo " -z         compress all files, using rdup-gzip"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory"
@@ -35,6 +36,7 @@ usage() {
 d=`date +%Y%m`
 etc=false
 PROGNAME=$0
+PREFIX=""
 BACKUPDIR=""
 BACKUPDIR_PLAIN=""
 FIRST="" # the first backup dir
@@ -53,7 +55,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         _echo2 "-b needs an argument"
                         exit 1
                 fi;;
-                k) 
+                k)
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-k needs an argument"
                         exit 1
@@ -62,15 +64,19 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         _echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                pipe="$pipe | ${exec_prefix}/sbin/rdup-crypt $OPTARG"       
+                pipe="$pipe | ${exec_prefix}/sbin/rdup-crypt $OPTARG"
                 ;;
-                c) 
+                c)
                 if [[ -z $OPTARG ]]; then
                         _echo2 "-c needs an argument"
                         exit 1
                 fi
                 ssh=" ssh -x $OPTARG"
                 ;;
+                N) PREFIX=$OPTARG
+                if [[ -z $OPTARG ]]; then
+                        _echo2 "-N needs an argument"
+                fi;;
                 e) etc=true;;
                 z) pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip";;
                 a) OPT="$OPT -a";;
@@ -105,8 +111,13 @@ if $etc; then
 else
         ETC="@sysconfdir@/rdup"
 fi
-STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
-LIST="$ETC/$HOSTNAME.$(basename $1).list"
+if [[ ! -z $PREFIX ]]; then
+        STAMP="$ETC/$PREFIX.$HOSTNAME.$(basename $1).timestamp"
+        LIST="$ETC/$PREFIX.$HOSTNAME.$(basename $1).list"
+else
+        STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
+        LIST="$ETC/$HOSTNAME.$(basename $1).list"
+fi
 
 # create our command line
 if [[ -z $ssh ]]; then

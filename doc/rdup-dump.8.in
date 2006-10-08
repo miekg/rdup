@@ -33,7 +33,7 @@ See rdup-mirror(8) for more information on how the files are placed
 in the backup.
 
 .SH OPTIONS
-.TP 
+.TP
 .B \-b backupdir
 The backup directory. You can specify this option multiple times, this
 will make the backup to be written to all these directories in one go.
@@ -43,11 +43,26 @@ directory specified.
 
 Also note that \fBrdup-dump\fR will add the string YYYYMM to
 the backup directory.
+.TP
+.B \-N name
+The \fIname\fR speficies an optional prefix for the
+timestamp and filelist files. These are stored, by default, in
+`@sysconfdir@/rdup'.
 
+Normally the filelist and timestamp files are named like this:
+
+$HOSTNAME.`basename DIR`.list and
+$HOSTNAME.`basename DIR`.timestamp
+
+where DIR is the first directory or file on the command line. Thus:
+\fBrdup-snapshot\fR /home/miekg/bin, will lead to the following names:
+
+elektron.bin.list and
+elektron.bin.timestamp
 .TP
 .B \-c user@remotehost
 Restore a backup on a remote host. This will create a pipeline of the
-form: 
+form:
 
 rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-mirror.pl \-c \-b \fIbackupdir\fR
 
@@ -75,7 +90,7 @@ inserts \fBrdup-gzip\fR in the pipeline. If both \fI-z\fR and
 .B \-e
 Store the the timestamp and filelist files together with the backup.
 This allows for backups to USB-drives and such. Normally they
-are stored in `/etc/rdup'.
+are stored in `@sysconfdir@/rdup'.
 
 This option cannot be used when doing a remote backup.
 .TP

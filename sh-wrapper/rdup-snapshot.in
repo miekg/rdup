@@ -23,6 +23,7 @@ usage() {
         echo " -b DIR     backup directory"
         echo " -c REMOTE  dump the backup on a remote machine with ssh (not yet)"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
+        echo " -N PREFIX  optional prefix for the timestmp and filelist"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory (not yet)."
@@ -52,13 +53,14 @@ what() {
 }
 
 PROGNAME=$0
+PREFIX=""
 NOW=`date +%Y%m/%d`
 OPT=""
 R_OPT="-l"
 ETC="@sysconfdir@/rdup"
 pipe=""
 
-while getopts ":ab:k:c:vzxhV" o; do
+while getopts ":ab:k:c:N:vzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -78,6 +80,10 @@ while getopts ":ab:k:c:vzxhV" o; do
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
                 ;;
                 z) pipe="$pipe | @sbindir@/rdup-gzip";;
+                N) PREFIX=$OPTARG
+                if [[ -z $OPTARG ]]; then
+                        _echo2 "-N needs an argument"
+                fi;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
                 x) R_OPT="$R_OPT -x";;
@@ -91,8 +97,13 @@ if [[ $# -eq 0 ]]; then
         exit 1
 fi
 
-STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
-LIST="$ETC/$HOSTNAME.$(basename $1).list"
+if [[ ! -z $PREFIX ]]; then
+        STAMP="$ETC/$PREFIX.$HOSTNAME.$(basename $1).timestamp"
+        LIST="$ETC/$PREFIX.$HOSTNAME.$(basename $1).list"
+else
+        STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
+        LIST="$ETC/$HOSTNAME.$(basename $1).list"
+fi
 
 # create our command line 
 pipe="$pipe | @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW"

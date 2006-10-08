@@ -8,7 +8,6 @@
    * History.sh and yesterday.sh are removed from the archive
    * ${prefix/}share/rdup is used for common perl/shell files
      all utilities now source these files
-   * Removed -N prefix arg from the utils
    * Removed -l prefix arg from the utils
    * All scripts are prefixed with rdup-
    * All installed scripts loose the .sh/.pl suffix (Debian Policy)
