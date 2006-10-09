@@ -41,6 +41,7 @@ BACKUPDIR=""
 BACKUPDIR_PLAIN=""
 FIRST="" # the first backup dir
 OPT=""
+ROPT=""
 pipe=""
 ssh=""
 
@@ -65,6 +66,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         exit 1
                 fi
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-crypt $OPTARG"
+                ROPT="-c ";
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
@@ -72,16 +74,20 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         exit 1
                 fi
                 ssh=" ssh -x $OPTARG"
+                ROPT="-c ";
                 ;;
                 N) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
                         _echo2 "-N needs an argument"
                 fi;;
                 e) etc=true;;
-                z) pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip";;
+                z)
+                pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip"
+                ROPT="-c ";
+                ;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
-                x) x="-x";;
+                x) ROPT="$ROPT -x";;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
@@ -89,7 +95,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
 done
 shift $((OPTIND - 1))
 if [[ $# -eq 0 ]]; then
-        _echo2 "No directories to backup" 
+        _echo2 "No directories to backup"
         exit 1
 fi
 if [[ -z "$BACKUPDIR" ]]; then
@@ -122,10 +128,10 @@ fi
 # create our command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-mirror $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup -l $OPT -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup -l -N $STAMP $LIST $@ $pipe"
 else
         pipe="$pipe | $ssh rdup-mirror $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup $OPT -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup $ROPT -N $STAMP $LIST $@ $pipe"
 fi
 
 for i in $BACKUPDIR_PLAIN; do
@@ -154,5 +160,6 @@ else
         _echo2 "INCREMENTAL dump"
 fi
 # execute the backup command
+_echo2 "Executing ${cmd}"
 eval ${cmd}
 exit 0

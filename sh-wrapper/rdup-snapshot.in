@@ -56,6 +56,7 @@ PROGNAME=$0
 PREFIX=""
 NOW=`date +%Y%m/%d`
 OPT=""
+ROPT=""
 R_OPT="-l"
 ETC="@sysconfdir@/rdup"
 pipe=""
@@ -78,15 +79,18 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                         exit 1
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
+                ROPT="$ROPT -c ";
                 ;;
-                z) pipe="$pipe | @sbindir@/rdup-gzip";;
+                z) pipe="$pipe | @sbindir@/rdup-gzip"
+                ROPT="$ROPT -c ";
+                ;;
                 N) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
                         _echo2 "-N needs an argument"
                 fi;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
-                x) R_OPT="$R_OPT -x";;
+                x) ROPT="$ROPT -x";;
                 h) usage && exit;;
                 V) version && exit;;
         esac
@@ -107,7 +111,7 @@ fi
 
 # create our command line 
 pipe="$pipe | @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW"
-cmd="@sbindir@/rdup $R_OPT -N $STAMP $LIST $@ $pipe"
+cmd="@sbindir@/rdup $ROPT -N $STAMP $LIST $@ $pipe"
 
 mkdir -p $BACKUPDIR
 if [[ ! $? ]]; then
@@ -127,6 +131,7 @@ case $purpose in
         ;;
 esac
 # execute the backup command
+_echo2 "Executing: ${cmd}"
 eval ${cmd}
 chmod 755 $BACKUPDIR/$NOW               # hmmm
 exit 0

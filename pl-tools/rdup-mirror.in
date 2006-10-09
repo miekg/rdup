@@ -92,7 +92,6 @@ sub _mirror {
                 my $target = "$dir/$path";
                 if ($type eq '-') {        # REG
                         my $suffix = mirror_suffix($target);
-
                         if (!$restore and $suffix) {      # We only have a suffix if the file exists
                                 rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
                         }
@@ -136,11 +135,13 @@ sub _mirror {
                                 my $linkTarget = "";
                                 read STDIN, $linkTarget, $fsize;
                                 symlink $linkTarget, $target or warn "** Cannot create link: $target -> $linkTarget: $!";
+                                rchown($uid, $gid, $Linktarget);
+                                chown_attr($attr_there, $uid, $gid, $Linktarget);
                         } else {
                                 symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
+                                rchown($uid, $gid, $target);
+                                chown_attr($attr_there, $uid, $gid, $target);
                         }
-                        rchown($uid, $gid, $target);
-                        chown_attr($attr_there, $uid, $gid, $target);
                         $ilnk++;
                 }
         } else {        # Remove

@@ -96,7 +96,6 @@ sub check_attr {
         return 0;
 }
 
-
 # chmod or warn
 sub rchmod {
         my $bits = $_[0];
