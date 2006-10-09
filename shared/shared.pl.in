@@ -81,7 +81,7 @@ sub chown_attr {
         if ($^O eq "solaris") {
                  $err += system("runat \"$file\" \"echo $xuid > r_uid\" 2>/dev/null; runat \"$file\" \"echo $xgid > r_gid\" 2>/dev/null");
         }
-        warn "** Could not set xattr on $file" if ($err ne 0);
+        #warn "** Could not set xattr on $file" if ($err ne 0); Happens too often
 }
 
 # check if the system supports extended attributes
