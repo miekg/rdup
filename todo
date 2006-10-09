@@ -9,7 +9,9 @@ o rdup-backups(8)
 
 :rdup:
 :tests:
-add conformence test; symlinks etc.
+o add conformence test; symlinks etc.
+o sha1 support?
+o syslogging
 
 :porting:
 o port extended attributes to FreeBSD
