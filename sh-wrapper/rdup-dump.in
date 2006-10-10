@@ -156,7 +156,6 @@ else
         _echo2 "INCREMENTAL dump"
 fi
 # execute the backup command
-_echo2 "Executing ${cmd}"
-exit 1
+#_echo2 "Executing ${cmd}"
 eval ${cmd}
 exit 0

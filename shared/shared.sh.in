@@ -27,9 +27,9 @@ what() {
                 # already there do not link
                 return 0
         fi
+        # linux thing
         for i in `seq 1 7`; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
-                echo $dir;
                 if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
