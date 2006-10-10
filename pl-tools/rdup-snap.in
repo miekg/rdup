@@ -85,10 +85,10 @@ sub _mirror {
                 my $target = "$dir/$path";
                 if ($type eq '-') {        # REG
                         if (exist($target) == 1) {      # We only have a suffix if the file exists
-                                unlink $target or warn "** Cannot unlink $target: $!";
+                                unlink $target or warn "** Cannot unlink: $target: $!";
                         }
                         if ($remote) {
-                                open FILE, ">$target" or warn "** Cannot create $target: $!";
+                                open FILE, ">$target" or warn "** Cannot create: $target: $!";
                                 if ($fsize != 0) {
                                         copyout($fsize, *FILE);
                                 }
@@ -108,7 +108,7 @@ sub _mirror {
                 } elsif ($type eq 'd') {        # DIR
                         exist($target);  # side effects Go!
                         if (-f _ || -l _) {      # Type of entiry has changed
-                                unlink $target or warn "** Cannot unlink $target: $!";
+                                unlink $target or warn "** Cannot unlink: $target: $!";
                         }
                         mkpath($target) unless -d _;
                         rchown($uid, $gid, $target);
@@ -121,7 +121,7 @@ sub _mirror {
                         $idir++;
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         if (exist($target)== 1) {
-                                unlink $target or warn "** Cannot unlink $target: $!";
+                                unlink $target or warn "** Cannot unlink: $target: $!";
                         }
                         if ($remote) {
                                 my $linkTarget = "";
@@ -137,7 +137,7 @@ sub _mirror {
         } else {        # Remove
                 my $target = "$dir/$path";
                 if (exist($target)) {
-                        unlink $target or warn "** Cannot rename $target: $!";
+                        unlink $target or warn "** Cannot rename: $target: $!";
                 }
                 $irm++;
         }

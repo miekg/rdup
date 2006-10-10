@@ -93,7 +93,7 @@ sub _mirror {
                 if ($type eq '-') {        # REG
                         my $suffix = mirror_suffix($target);
                         if (!$restore and $suffix) {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                                rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         if ($remote) {
                                 open FILE, ">$target" or warn "** Cannot create $target: $!";
@@ -115,7 +115,7 @@ sub _mirror {
                 } elsif ($type eq 'd') {        # DIR
                         my $suffix = mirror_suffix($target);
                         if (!$restore and (-f _ || -l _)) {      # Type of entiry has changed
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                                rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         mkpath($target) unless -d _;
                         rchown($uid, $gid, $target);
@@ -129,7 +129,7 @@ sub _mirror {
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         my $suffix = mirror_suffix($target);
                         if (!$restore and $suffix) {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                                rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         if ($remote) {
                                 my $linkTarget = "";
@@ -149,7 +149,7 @@ sub _mirror {
                 if (!$restore) {
                         my $suffix = mirror_suffix($target);
                         if ($suffix) {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename $target: $!";
+                                rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         $irm++;
                 }
