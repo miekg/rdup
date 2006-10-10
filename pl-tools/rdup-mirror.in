@@ -135,8 +135,8 @@ sub _mirror {
                                 my $linkTarget = "";
                                 read STDIN, $linkTarget, $fsize;
                                 symlink $linkTarget, $target or warn "** Cannot create link: $target -> $linkTarget: $!";
-                                rchown($uid, $gid, $Linktarget);
-                                chown_attr($attr_there, $uid, $gid, $Linktarget);
+                                rchown($uid, $gid, $linkTarget);
+                                chown_attr($attr_there, $uid, $gid, $linkTarget);
                         } else {
                                 symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
                                 rchown($uid, $gid, $target);
