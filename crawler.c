@@ -78,7 +78,7 @@ read_attr_uid(__attribute__((unused))
 	buf[r - 1] = '\0';
 	x = (uid_t)atoi(buf);
 	return x;
-#elif
+#else
 	return u;
 #endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
 }
