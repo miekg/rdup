@@ -21,7 +21,7 @@ usage() {
         echo
         echo OPTIONS:
         echo " -b DIR     backup directory"
-        echo " -c REMOTE  dump the backup on a remote machine with ssh (not yet)"
+        echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -N PREFIX  optional prefix for the timestmp and filelist"
         echo " -z         compress all files, using gzip.pl"
@@ -33,33 +33,14 @@ usage() {
         echo " -V         print version"
 }
 
-# better check what to copy
-what() {
-        if [[ -d $BACKUPDIR/$NOW ]]; then
-                # already there do not link
-                return 0
-        fi
-
-        for i in `seq 1 7`; do
-                dir=`date +%Y%m/%d --date "$i days ago"`
-                if [[ -d $BACKUPDIR/$dir ]]; then
-                        # copy 'em over
-                        _echo2 "Linking dir: \`$BACKUPDIR/$dir'"
-                        cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
-                        return 0
-                fi
-        done
-        return 1
-}
-
 PROGNAME=$0
 PREFIX=""
 NOW=`date +%Y%m/%d`
 OPT=""
 ROPT=""
-R_OPT="-l"
 ETC="@sysconfdir@/rdup"
 pipe=""
+ssh=""
 
 while getopts ":ab:k:c:N:vzxhV" o; do
         case $o in
@@ -68,6 +49,14 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                         _echo2 "-b needs an argument"
                         exit 1
                 fi
+                ;;
+                c)
+                if [[ -z $OPTARG ]]; then
+                        _echo2 "-c needs an argument"
+                        exit 1
+                fi
+                ssh=" ssh -x $OPTARG"
+                ROPT="-c";
                 ;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
@@ -79,10 +68,10 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                         exit 1
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
-                ROPT="$ROPT -c ";
+                ROPT="-c ";
                 ;;
                 z) pipe="$pipe | @sbindir@/rdup-gzip"
-                ROPT="$ROPT -c ";
+                ROPT="-c ";
                 ;;
                 N) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
@@ -90,7 +79,7 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                 fi;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
-                x) ROPT="$ROPT -x";;
+                x) x="-x";;
                 h) usage && exit;;
                 V) version && exit;;
         esac
@@ -108,10 +97,14 @@ else
         STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
         LIST="$ETC/$HOSTNAME.$(basename $1).list"
 fi
-
-# create our command line 
-pipe="$pipe | @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW"
-cmd="@sbindir@/rdup $ROPT -N $STAMP $LIST $@ $pipe"
+# create our command line
+if [[ -z $ssh ]]; then
+        pipe="$pipe | @sbindir@/rdup-snap $ROPT $OPT -b $BACKUPDIR/$NOW"
+        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
+else
+        pipe="$pipe | $ssh rdup-snap $ROPT $OPT -b $BACKUPDIR/$NOW"
+        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
+fi
 
 mkdir -p $BACKUPDIR
 if [[ ! $? ]]; then
@@ -119,7 +112,12 @@ if [[ ! $? ]]; then
         exit 1
 fi
 
-what; purpose=$? # save return code from what
+if [[ -z $ssh ]]; then
+        what $BCKUPDIR $NOW; purpose=$? # save return code from what
+else
+        $ssh "source @datadir@/share/rdup/shared.sh; what $BACKUPDIR $NOW"
+        $purpose=$?
+fi
 case $purpose in
         0)
         _echo2 "INCREMENTAL DUMP"

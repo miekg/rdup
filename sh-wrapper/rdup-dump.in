@@ -20,7 +20,7 @@ usage() {
         echo DIR \ - directories to back up
         echo
         echo OPTIONS:
-        echo " -b DIR     backup directory, can be given more then once"
+        echo " -b DIR     backup directory"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
         echo " -N PREFIX  optional prefix for the timestmp and filelist"
@@ -41,13 +41,13 @@ BACKUPDIR=""
 BACKUPDIR_PLAIN=""
 FIRST="" # the first backup dir
 OPT=""
-ROPT=""
+ROPT="-l"
 pipe=""
 ssh=""
 
 while getopts ":ab:k:c:N:vzxehV" o; do
         case $o in
-                b) BACKUPDIR="$BACKUPDIR -b $OPTARG/$d"
+                b) BACKUPDIR="-b $OPTARG/$d"
                 BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
                 if [[ -z $FIRST ]]; then
                         FIRST=$OPTARG
@@ -66,7 +66,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         exit 1
                 fi
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-crypt $OPTARG"
-                ROPT="-c ";
+                ROPT="-c";
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
@@ -74,7 +74,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         exit 1
                 fi
                 ssh=" ssh -x $OPTARG"
-                ROPT="-c ";
+                ROPT="-c";
                 ;;
                 N) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
@@ -83,11 +83,11 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                 e) etc=true;;
                 z)
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip"
-                ROPT="-c ";
+                ROPT="-c";
                 ;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
-                x) ROPT="$ROPT -x";;
+                x) x=" -x";;
                 V) version && exit;;
                 h) usage && exit;;
                 \?) _echo2 "Invalid option"; usage && exit;;
@@ -103,10 +103,6 @@ if [[ -z "$BACKUPDIR" ]]; then
         exit 1
 fi
 
-if [[ ! -z $bwidth && -z $cstream ]]; then
-        _echo2 "Bandwidth shaping not enabled: cstream not found"
-        exit 1
-fi
 # where to put the admin files.
 if $etc; then
         if [[ ! -z $remote ]]; then
@@ -127,11 +123,11 @@ fi
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup -l -N $STAMP $LIST $@ $pipe"
+        pipe="$pipe | @sbindir@/rdup-mirror $ROPT $OPT $BACKUPDIR"
+        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
 else
-        pipe="$pipe | $ssh rdup-mirror $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup $ROPT -N $STAMP $LIST $@ $pipe"
+        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR"
+        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
 fi
 
 for i in $BACKUPDIR_PLAIN; do
@@ -161,5 +157,6 @@ else
 fi
 # execute the backup command
 _echo2 "Executing ${cmd}"
+exit 1
 eval ${cmd}
 exit 0
