@@ -113,7 +113,7 @@ if [[ ! $? ]]; then
 fi
 
 if [[ -z $ssh ]]; then
-        what $BCKUPDIR $NOW; purpose=$? # save return code from what
+        what $BACKUPDIR $NOW; purpose=$? # save return code from what
 else
         $ssh "source @datadir@/share/rdup/shared.sh; what $BACKUPDIR $NOW"
         $purpose=$?
@@ -131,5 +131,5 @@ esac
 # execute the backup command
 _echo2 "Executing: ${cmd}"
 eval ${cmd}
-chmod 755 $BACKUPDIR/$NOW               # hmmm
+chmod 755 $BACKUPDIR/$NOW
 exit 0

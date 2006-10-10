@@ -21,19 +21,19 @@ _echo2() {
 }
 
 what() {
-        BACKUPDIR=$1
-        NOW=$2
-        if [[ -d $BACKUPDIR/$NOW ]]; then
+        _BACKUPDIR=$1
+        _NOW=$2
+        if [[ -d $_BACKUPDIR/$_NOW ]]; then
                 # already there do not link
                 return 0
         fi
-
         for i in `seq 1 7`; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
-                if [[ -d $BACKUPDIR/$dir ]]; then
+                echo $dir;
+                if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
-                        _echo2 "Linking dir: \`$BACKUPDIR/$dir'"
-                        cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
+                        _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
+                        cp -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
                         return 0
                 fi
         done
