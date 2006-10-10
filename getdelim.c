@@ -15,18 +15,7 @@ getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
         if (!lineptr || !n || (!*lineptr && *n))
                 return -1;
 
-        /* allocate initial buffer */
-#if 0
-        if (!*lineptr || !*n) {
-                char *np;
-                np = realloc(*lineptr, GETDELIM_BUFFER);
-                if (!np)
-                        return -1;
-                *n = GETDELIM_BUFFER;
-                *lineptr = np;
-        }
-#endif
-
+        /* **lineptr is allocated */
         p = *lineptr;
 
         /* read characters from stream */
@@ -59,7 +48,6 @@ getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
                 *n += 1;
         }
         *p = '\0';
-
         return len;
 }
 
