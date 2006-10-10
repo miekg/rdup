@@ -67,7 +67,7 @@ g_tree_substract(GTree *a, GTree *b)
 	return diff;
 }
 
-/** 
+/**
  * read a filelist, which should hold our previous
  * backup list
  */
@@ -122,7 +122,7 @@ g_tree_read_file(FILE *fp)
 		e->f_gid       = 0;
 		e->f_size      = 0;
 		e->f_mtime     = 0;
-		g_tree_replace(tree, (gpointer) e, VALUE);
+		g_tree_replace(tree, (gpointer)e, VALUE);
 		l++;
 	}
 	g_free(buf);
@@ -143,8 +143,8 @@ timestamp(char *f)
 	return s.st_mtime;
 }
 
-int 
-main(int argc, char **argv) 
+int
+main(int argc, char **argv)
 {
 	GTree 	*backup; 	/* on disk stuff */
 	GTree 	*remove;	/* what needs to be rm'd */
@@ -257,7 +257,7 @@ main(int argc, char **argv)
 
 	if (argc < 2) {
 		usage(stdout);
-		exit(EXIT_FAILURE); 
+		exit(EXIT_FAILURE);
 	}
 
 	if (!(fplist = fopen(argv[0], "a+"))) {
@@ -285,19 +285,19 @@ main(int argc, char **argv)
 		dir_crawl(backup, crawl);
 		g_free(crawl);
 	}
-	remove = g_tree_substract(curtree, backup); 
-	
+	remove = g_tree_substract(curtree, backup);
+
 	/* first what to remove, then what to backup */
-	g_tree_foreach(remove, gfunc_remove, NULL); 
+	g_tree_foreach(remove, gfunc_remove, NULL);
 	g_tree_foreach(backup, gfunc_backup, NULL);
 
 	/* write new filelist */
 	if (ftruncate(fileno(fplist), 0) != 0) {
-		msg("Could not truncate filelist file `%s\': %s", argv[0], 
+		msg("Could not truncate filelist file `%s\': %s", argv[0],
 			strerror(errno));
 	}
 	g_tree_foreach(backup, gfunc_write, fplist);
-	fclose(fplist); 
+	fclose(fplist);
 	/* re-touch the timestamp file */
 	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
 		msg("Could not create timestamp file `%s\': %s", time, strerror(errno));

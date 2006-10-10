@@ -6,7 +6,7 @@
 
 /* copied from xine-devel */
 ssize_t
-getdelim( char **lineptr, size_t *n, int delimiter, FILE *stream )
+getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
 {
         char *p;
         int c;
@@ -16,21 +16,23 @@ getdelim( char **lineptr, size_t *n, int delimiter, FILE *stream )
                 return -1;
 
         /* allocate initial buffer */
+#if 0
         if (!*lineptr || !*n) {
                 char *np;
-                np = realloc( *lineptr, GETDELIM_BUFFER );
+                np = realloc(*lineptr, GETDELIM_BUFFER);
                 if (!np)
                         return -1;
                 *n = GETDELIM_BUFFER;
                 *lineptr = np;
         }
+#endif
 
         p = *lineptr;
 
         /* read characters from stream */
-        while ((c = fgetc( stream )) != EOF) {
+        while ((c = fgetc(stream)) != EOF) {
                 if (len >= *n) {
-                        char *np = realloc( *lineptr, *n * 2 );
+                        char *np = g_realloc(*lineptr, *n * 2);
                         if (!np)
                                 return -1;
                         p = np + (p - *lineptr);
@@ -49,7 +51,7 @@ getdelim( char **lineptr, size_t *n, int delimiter, FILE *stream )
 
         /* trailing "\0" */
         if (len >= *n) {
-                char *np = realloc( *lineptr, *n + 1 );
+                char *np = g_realloc(*lineptr, *n + 1);
                 if (!np)
                         return -1;
                 p = np + (p - *lineptr);
