@@ -166,18 +166,18 @@ entry_print_data(FILE *out, char n, struct entry *e)
 		case 's':
 			/* don't report size for directories. */
 			if (S_ISDIR(e->f_mode)) {
-				putchar('0');
+				fputc('0', out);
 				break;
 			}
 			fprintf(out, "%zd", (size_t)e->f_size);
 			break;
 		case 'T': /* file type */
 			if (S_ISDIR(e->f_mode)) {
-				putchar('d');
+				fputc('d', out);
 			} else if (S_ISLNK(e->f_mode)) {
-				putchar('l');
+				fputc('l', out);
 			} else {
-				putchar('-');
+				fputc('-', out);
 			}
 			break;
 		default:
@@ -295,9 +295,9 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 	fprintf((FILE*) fp, "%d %s", (int) ((struct entry*)data)->f_mode,
 			(char*) ((struct entry*)data)->f_name);
 	if (opt_null) {
-		putc('\0', (FILE*)fp);
+		fputc('\0', (FILE*)fp);
 	} else {
-		putc('\n', (FILE*)fp);
+		fputc('\n', (FILE*)fp);
 	}
 	return FALSE;
 }
