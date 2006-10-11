@@ -229,7 +229,7 @@ dir_crawl(GTree *t, char *path)
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
-		if(!g_ascii_strcasecmp(dent->d_name, ".") || 
+		if(!g_ascii_strcasecmp(dent->d_name, ".") ||
 				!g_ascii_strcasecmp(dent->d_name, ".."))
 			continue;
 
