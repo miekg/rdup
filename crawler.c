@@ -196,10 +196,9 @@ dir_crawl(GTree *t, char *path)
 
 	/* dir stack */
 	gint32 d = 0;
-	gint32 dstack_size = D_STACKSIZE; /* realloc when hit */
 	gint32 dstack_cnt  = 1;
-	struct entry **dirstack = 
-		g_malloc(dstack_cnt * dstack_size * sizeof(struct entry *));
+	struct entry **dirstack =
+		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
 		/* files are also allowed, check for this, if it isn't
@@ -306,9 +305,9 @@ dir_crawl(GTree *t, char *path)
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
 
-			if (d++ % dstack_size == 0) {
+			if (d++ % D_STACKSIZE == 0) {
 				dirstack = g_realloc(dirstack, 
-						++dstack_cnt * dstack_size * 
+						++dstack_cnt * D_STACKSIZE * 
 						sizeof(struct entry *));
 			}
 			g_free(curpath);
