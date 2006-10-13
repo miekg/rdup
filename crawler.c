@@ -189,11 +189,12 @@ dir_crawl(GTree *t, char *path)
 	struct entry    *directory;
 	char 		*curpath;
 	struct stat   	s;
-	struct entry	pop;
+	struct entry	*pop;
 	struct remove_path rp;
 	dev_t 		current_dev;
 	size_t 		curpath_len;
 
+	pop = g_malloc(sizeof(struct entry));
 	/* dir stack */
 	gint32 d = 0;
 	gint32 dstack_cnt  = 1;
@@ -229,7 +230,7 @@ dir_crawl(GTree *t, char *path)
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
-		if(!g_ascii_strcasecmp(dent->d_name, ".") ||
+		if(!g_ascii_strcasecmp(dent->d_name, ".") || 
 				!g_ascii_strcasecmp(dent->d_name, ".."))
 			continue;
 
@@ -249,18 +250,18 @@ dir_crawl(GTree *t, char *path)
 		}
 
 		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) {
-			pop.f_name      = curpath;
-			pop.f_name_size = curpath_len;
+			pop->f_name      = curpath;
+			pop->f_name_size = curpath_len;
 			if (opt_attr) {
-				pop.f_uid       = read_attr_uid(pop.f_name, s.st_uid);
-				pop.f_gid       = read_attr_gid(pop.f_name, s.st_gid);
+				pop->f_uid       = read_attr_uid(pop->f_name, s.st_uid);
+				pop->f_gid       = read_attr_gid(pop->f_name, s.st_gid);
 			} else {
-				pop.f_uid       = s.st_uid;
-				pop.f_gid       = s.st_gid;
+				pop->f_uid       = s.st_uid;
+				pop->f_gid       = s.st_gid;
 			}
-			pop.f_mtime     = s.st_mtime;
-			pop.f_mode      = s.st_mode;
-			pop.f_size      = s.st_size;
+			pop->f_mtime     = s.st_mtime;
+			pop->f_mode      = s.st_mode;
+			pop->f_size      = s.st_size;
 
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
@@ -273,12 +274,12 @@ dir_crawl(GTree *t, char *path)
 				rp.path = path;
 				g_tree_foreach(t, gfunc_remove_path, (gpointer)&rp);
 				/* add .nobackup back */
-				g_tree_replace(t, (gpointer) entry_dup(&pop), VALUE);
+				g_tree_insert(t, (gpointer) entry_dup(pop), VALUE);
 				g_free(dirstack);
 				closedir(dir);
 				return;
 			}
-			g_tree_replace(t, (gpointer) entry_dup(&pop), VALUE);
+			g_tree_insert(t, (gpointer) entry_dup(pop), VALUE);
 			g_free(curpath);
 			continue;
 		} else if(S_ISDIR(s.st_mode)) {
@@ -323,7 +324,7 @@ dir_crawl(GTree *t, char *path)
 
 	while (d > 0) {
 		directory = dirstack[--d]; 
-		g_tree_replace(t, (gpointer) entry_dup(directory), VALUE);
+		g_tree_insert(t, (gpointer) entry_dup(directory), VALUE);
 		/* recurse */
 		/* potentially expensive operation. Better would be to when we hit
 		 * .nobackup to go up the tree and delete some nodes.... or not */
