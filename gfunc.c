@@ -19,26 +19,6 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
-#if 0
-static struct entry *
-entry_dup(struct entry *f)
-{
-        struct entry *g;
-        g = g_malloc(sizeof(struct entry));
-
-        g->f_name       = g_strdup(f->f_name);
-        g->f_name_size  = f->f_name_size;
-        g->f_uid        = f->f_uid;
-        g->f_gid        = f->f_gid;
-        g->f_mode       = f->f_mode;
-        g->f_mtime      = f->f_mtime;
-        g->f_size       = f->f_size;
-        return g;
-}
-#endif
-
-
-
 /**
  * we received a signal
  */
