@@ -36,6 +36,7 @@
    * Added rdup-snap-here and manpage
    * Making backups in 0.3.0:
 
+
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>
    -- non backwards compatible update + minor feature update --
    * rdup: fix compilation on Mac OS X (and prob. Solaris)
