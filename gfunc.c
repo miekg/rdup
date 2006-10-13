@@ -397,7 +397,7 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
 		if (S_ISDIR( ((struct entry*)data)->f_mode))
 			return FALSE;
 
-		g_tree_replace(
+		g_tree_insert(
 			((struct remove_path *)r)->tree, (gpointer) data, NO_PRINT);
 	}
 	return FALSE;
