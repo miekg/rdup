@@ -67,7 +67,7 @@ printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
 printf STDERR "** SIZE        : %.2f MB\n", ($ftsize/1024/1024 * 1.00);
 printf STDERR "** STORED IN   : %s\n",  $backupDir;
-printf STDERR "** ELAPSED     : %d s\n", $te - $ts;
+printf STDERR "** ELAPSED     : %.2f m\n", ($te - $ts / 60);
 
 exit 0;
 
