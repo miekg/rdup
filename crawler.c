@@ -172,7 +172,7 @@ dir_prepend(GTree *t, char *path)
 		e.f_mtime     = s.st_mtime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
-		g_tree_replace(t, (gpointer) entry_dup(&e), VALUE);
+		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
 		p = c++;
 	}
