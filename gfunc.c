@@ -19,6 +19,7 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
+#if 0
 static struct entry *
 entry_dup(struct entry *f)
 {
@@ -34,6 +35,7 @@ entry_dup(struct entry *f)
         g->f_size       = f->f_size;
         return g;
 }
+#endif
 
 
 
@@ -440,7 +442,7 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
 
 	if (!v) {
-		g_tree_replace(((struct substract*)diff)->d, entry_dup(data), value);
+		g_tree_insert(((struct substract*)diff)->d, data, value);
 	}
 	return FALSE;
 }
