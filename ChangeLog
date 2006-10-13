@@ -4,7 +4,8 @@
    * new format character: %b: permission bits
    * output changed to: %p%T %b %u %g %l %s %n\n"
    * the LIST syntax was changed to include the
-     filename size
+     filename size. This was due to a weird bug
+     on Solaris where mangled entries are written...
   ** BIG changes **
    * No shell utils are installed anymore, only the wrappers
    * History.sh and yesterday.sh are removed from the archive
