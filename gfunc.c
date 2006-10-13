@@ -284,6 +284,7 @@ gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
 gboolean
 gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 {
+	struct entry *e = (struct entry*)data;
 	if (sig != 0)
 		signal_abort(sig);
 
@@ -292,8 +293,8 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 
 	/* mode_path */
 	/* this is used to create our filelist */
-	fprintf((FILE*) fp, "%d %s", (int) ((struct entry*)data)->f_mode,
-			(char*) ((struct entry*)data)->f_name);
+	fprintf((FILE*) fp, "%d %d %s", (int) e->f_mode, (int)e->f_name_size, 
+			e->f_name);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);
 	} else {

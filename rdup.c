@@ -76,12 +76,14 @@ g_tree_read_file(FILE *fp)
 {
 	char 	      *buf;
 	char          *n;
+	char          *p;
 	char 	      delim;
 	mode_t        modus;
 	GTree         *tree;
 	struct entry *e;
 	size_t        s;
 	size_t 	      l;
+	size_t        f_name_size;
 
 	tree = g_tree_new(gfunc_equal);
 	buf  = g_malloc(BUFSIZE + 1);
@@ -113,16 +115,28 @@ g_tree_read_file(FILE *fp)
 			msg("Corrupt entry in filelist at line: %zd", l);
 			continue;
 		}
+		/* the file's name list */
+		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
+		if (!p) {
+			msg("Corrupt entry in filelist at line: %zd", l);
+			continue;
+		}
+		*p = '\0'; buf[LIST_SPACEPOS] = ' ';
+		f_name_size = (size_t)atoi(buf + LIST_SPACEPOS);
+		if (strlen(p + 1) != f_name_size) {
+			msg("Corrupt entry in filelist at line: %zd", l);
+			continue;
+		}
 
 		e = g_malloc(sizeof(struct entry));
-		e->f_name      = g_strdup(buf + LIST_SPACEPOS + 1);
+		e->f_name      = g_strdup(p + 1);
 		e->f_name_size = strlen(e->f_name);
 		e->f_mode      = modus;
 		e->f_uid       = 0;
 		e->f_gid       = 0;
 		e->f_size      = 0;
 		e->f_mtime     = 0;
-		g_tree_replace(tree, (gpointer)e, VALUE);
+		g_tree_insert(tree, (gpointer)e, VALUE);
 		l++;
 	}
 	g_free(buf);
