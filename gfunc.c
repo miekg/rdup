@@ -19,6 +19,24 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
+static struct entry *
+entry_dup(struct entry *f)
+{
+        struct entry *g;
+        g = g_malloc(sizeof(struct entry));
+
+        g->f_name       = g_strdup(f->f_name);
+        g->f_name_size  = f->f_name_size;
+        g->f_uid        = f->f_uid;
+        g->f_gid        = f->f_gid;
+        g->f_mode       = f->f_mode;
+        g->f_mtime      = f->f_mtime;
+        g->f_size       = f->f_size;
+        return g;
+}
+
+
+
 /**
  * we received a signal
  */
@@ -370,9 +388,7 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 
 	if (sig != 0)
 		signal_abort(sig);
-
 	e = strcmp(((struct entry*)a)->f_name, ((struct entry*)b)->f_name);
-
 	if (e == 0) {
 		if (((struct entry*)a)->f_mode == ((struct entry*)b)->f_mode) {
 			return 0;
@@ -424,7 +440,7 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
 
 	if (!v) {
-		g_tree_replace(((struct substract*)diff)->d, data, value);
+		g_tree_replace(((struct substract*)diff)->d, entry_dup(data), value);
 	}
 	return FALSE;
 }
