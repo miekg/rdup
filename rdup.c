@@ -121,7 +121,8 @@ g_tree_read_file(FILE *fp)
 			msg("Corrupt entry in filelist at line: %zd", l);
 			continue;
 		}
-		*p = '\0'; buf[LIST_SPACEPOS] = ' ';
+		*p = '\0';
+	 	buf[LIST_SPACEPOS] = ' ';
 		f_name_size = (size_t)atoi(buf + LIST_SPACEPOS);
 		if (strlen(p + 1) != f_name_size) {
 			msg("Corrupt entry in filelist at line: %zd", l);
