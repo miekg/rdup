@@ -47,14 +47,14 @@ my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 syslog_open($progName);
 
 if ($remote) {
-        syslog_log("%s", "Commencing remote backup");
+        syslog_log("%s", "Commencing remote backup to $backupDir");
         while (($_ = <STDIN>)) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
                 _mirror($backupDir);
         }
 } else {
-        syslog_log("%s", "Commencing local backup");
+        syslog_log("%s", "Commencing local backup to $backupdDir");
         while (($_ = <STDIN>)) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
