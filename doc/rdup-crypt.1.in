@@ -13,7 +13,7 @@ rdup-crypt, encrypt \- encrypt files received from \fBrdup -c\fR
 
 .SH DESCRIPTION
 \fBrdup-crypt\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
-key contained in \fIKEYFILE\fR.
+key contained in \fIKEYFILE\fR. The default algorithm used is blowfish
 .PP
 For example,
 .PP

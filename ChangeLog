@@ -11,7 +11,7 @@
    * History.sh and yesterday.sh are removed from the archive
    * ${prefix/}share/rdup is used for common perl/shell files
      all utilities now source these files
-   * Removed -l prefix arg from the utils
+   * Removed -l arg from the utils
    * All scripts are prefixed with rdup-
    * All installed scripts loose the .sh/.pl suffix (Debian Policy)
    * rdup-snap added (perl) tool ala mirror but works on hard linked
@@ -35,6 +35,13 @@
    * Adding logging to rdup-snap and rdup-mirror
    * Added rdup-snap-here and manpage
    * Making backups in 0.3.0:
+   	hardlink backup:
+	rdup-snapshot -b /backup/$HOSTNAME dir-to-backup
+	YYYYMM/DD will be added
+
+   	mirror backup:
+	rdup-dupmp -b /backup/$HOSTNAME dir-to-backup
+	YYYYMM will be added
 
 
 24 Sept 2006: 0.2.17 Miek <miek@miek.nl>
