@@ -23,7 +23,7 @@ usage() {
         echo " -b DIR     backup directory"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
-        echo " -N PREFIX  optional prefix for the timestmp and filelist"
+        echo " -n PREFIX  optional prefix for the timestmp and filelist"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory (not yet)."
@@ -42,7 +42,7 @@ ETC="@sysconfdir@/rdup"
 pipe=""
 ssh=""
 
-while getopts ":ab:k:c:N:vzxhV" o; do
+while getopts ":ab:k:c:n:vzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -74,7 +74,7 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                 z) pipe="$pipe | @sbindir@/rdup-gzip"
                 c="-c"
                 ;;
-                N) PREFIX=$OPTARG
+                n) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
                         _echo2 "-N needs an argument"
                 fi;;

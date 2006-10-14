@@ -42,7 +42,7 @@ The backup directory. This is where the backup is stored
 Note that \fBrdup-snapshot\fR will add the string YYYYMM/DD to
 the backup directory.
 .TP
-.B \-N name
+.B \-n name
 The \fIname\fR speficies an optional prefix for the
 timestamp and filelist files. These are stored, by default, in
 `@sysconfdir@/rdup'.
