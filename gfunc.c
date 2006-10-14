@@ -19,6 +19,9 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 
+/* sha1.c */
+int sha1_stream(FILE *stream, void *resblock);
+
 /**
  * we received a signal
  */
@@ -39,6 +42,31 @@ signal_abort(int signal)
 	exit(EXIT_FAILURE);
 }
 
+/*
+ * calculates a files sha1 sum
+ */
+static gboolean
+sha1(FILE *fp, char *filename) 
+{
+	unsigned char digest[SHA1_LEN];
+	gint i;
+	FILE *file;
+
+	if ((file = fopen(filename, "r")) == NULL) {
+		msg("Could not open '%s\': %s", filename, strerror(errno));
+		return FALSE;
+	}
+	if (sha1_stream(file, digest) != 0) {
+		msg("Failed to calculate sha1 digest: `%s\'", filename);
+		fclose(file);
+		return FALSE;
+	}
+	fclose(file);
+	for(i = 0; i < SHA1_LEN; i++) {
+		fprintf(fp, "%02x", digest[i]);
+	}
+	return TRUE;
+}
 /*
  * cat the files' contents
  */
@@ -170,6 +198,12 @@ entry_print_data(FILE *out, char n, struct entry *e)
 				break;
 			}
 			fprintf(out, "%zd", (size_t)e->f_size);
+			break;
+		case 'H': /* sha1 hash */
+			if (S_ISREG(e->f_mode))
+				sha1(out, e->f_name);
+			else
+				fprintf(out, NO_SHA);
 			break;
 		case 'T': /* file type */
 			if (S_ISDIR(e->f_mode)) {

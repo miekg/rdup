@@ -50,6 +50,9 @@
 #define NO_PRINT        (void*)2 /* don't print values with this flag */
 #define D_STACKSIZE    100
 
+#define SHA1_LEN       20 /* bytes of digest */
+#define NO_SHA         "0000000000000000000000000000000000000000"
+
 #define LIST_MINSIZE   6
 #define LIST_SPACEPOS  5
 
