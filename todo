@@ -6,6 +6,7 @@ o split off rdup-utils and rdup-core?
 o rdup-backups(8)
 o refactor rdup-restore
 o rdup-backups(8)
+o -N --> -n for utils, more constent
 
 :rdup:
 :tests:

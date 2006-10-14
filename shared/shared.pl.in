@@ -111,5 +111,16 @@ sub rchown {
         chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
 }
 
+sub syslog_open {
+        my $p = $_[0];
+        openlog($p, 'cons, pid', 'daemon') or die "** Cannot open syslog";
+}
+
+sub syslog_log {
+        $f = $_[0];
+        shift; 
+        syslog('info', $f, @_);
+}
+
 # keep
 1;

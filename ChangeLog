@@ -32,7 +32,7 @@
    * Refactored the wrapper scripts
    * Loose the multiple backup directory stuff
    * Check_attr() and chown_attr() to shared.pl.in
-   * Spec file for rpm creation added (Robert Haskins)
+   * Adding logging to rdup-snap and rdup-mirror
    * Added rdup-snap-here and manpage
    * Making backups in 0.3.0:
 
