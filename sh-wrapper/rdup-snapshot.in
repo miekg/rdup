@@ -36,8 +36,8 @@ usage() {
 PROGNAME=$0
 PREFIX=""
 NOW=`date +%Y%m/%d`
-OPT=""
-ROPT="-l"
+c=""
+l="-l"
 ETC="@sysconfdir@/rdup"
 pipe=""
 ssh=""
@@ -56,7 +56,8 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                         exit 1
                 fi
                 ssh=" ssh -x $OPTARG"
-                ROPT="-c";
+                c="-c"
+                l=""
                 ;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
@@ -68,10 +69,10 @@ while getopts ":ab:k:c:N:vzxhV" o; do
                         exit 1
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
-                ROPT="-c ";
+                c="-c"
                 ;;
                 z) pipe="$pipe | @sbindir@/rdup-gzip"
-                ROPT="-c ";
+                c="-c"
                 ;;
                 N) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
@@ -99,11 +100,11 @@ else
 fi
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-snap $ROPT $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
+        pipe="$pipe | @sbindir@/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 else
-        pipe="$pipe | $ssh rdup-snap $ROPT $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
+        pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 
 mkdir -p $BACKUPDIR
