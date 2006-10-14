@@ -41,7 +41,8 @@ BACKUPDIR=""
 BACKUPDIR_PLAIN=""
 FIRST="" # the first backup dir
 OPT=""
-ROPT="-l"
+c=""
+l="-l"
 pipe=""
 ssh=""
 
@@ -66,7 +67,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         exit 1
                 fi
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-crypt $OPTARG"
-                ROPT="-c";
+                c="-c"
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
@@ -74,7 +75,8 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                         exit 1
                 fi
                 ssh=" ssh -x $OPTARG"
-                ROPT="-c";
+                c="-c"
+                l=""
                 ;;
                 N) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
@@ -83,7 +85,7 @@ while getopts ":ab:k:c:N:vzxehV" o; do
                 e) etc=true;;
                 z)
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip"
-                ROPT="-c";
+                c="-c"
                 ;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
@@ -123,11 +125,11 @@ fi
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $ROPT $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
+        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT $BACKUPDIR"
+        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 else
         pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR"
-        cmd="@sbindir@/rdup $x $ROPT -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 
 for i in $BACKUPDIR_PLAIN; do
