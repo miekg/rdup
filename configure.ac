@@ -24,6 +24,7 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
    #endif
   ]
 ])
+AC_C_BIGENDIAN
 
 # sysconfdir
 if test ${sysconfdir} = '${prefix}/etc'; then
