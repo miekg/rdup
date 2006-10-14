@@ -50,14 +50,14 @@ my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 syslog_open($progName);
 
 if ($remote) {
-        syslog_log("%s", "Commencing remote backup  backup to $backupDir");
+        syslog_log("%s %s", "Commencing remote backup to:" ,$backupDir);
         while (($_ = <STDIN>)) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
                 _mirror($backupDir);
         }
 } else {
-        syslog_log("%s", "Commencing local backup backup to $backupDir");
+        syslog_log("%s %s", "Commencing local backup to:" ,$backupDir);
         while (($_ = <STDIN>)) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
@@ -119,7 +119,7 @@ sub _mirror {
                         }
                         $ftsize += $fsize;
                         $ireg++;
-                        if ($ireg % 100 eq 0) {
+                        if ($ireg % 200 eq 0) {
                                 syslog_log("progress: %d files", $ireg);
                         }
                 } elsif ($type eq 'd') {        # DIR
