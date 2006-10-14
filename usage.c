@@ -47,6 +47,7 @@ usage(FILE *f)
         fprintf(f, "   \'%%s\': file size\n");
         fprintf(f, "   \'%%n\': path\n");
         fprintf(f, "   \'%%t\': time of modification (epoch)\n");
+        fprintf(f, "   \'%%H\': print the sha1 hash of the file's contents\n");
         fprintf(f, "   \'%%T\': \'type\' (d, l or -: dir, link or file)\n");
         fprintf(f, "   \'%%C\': contents\n");
         fprintf(f, "\nReport bugs to <miek@miek.nl>\n");

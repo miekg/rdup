@@ -164,7 +164,6 @@ The default format \fBrdup\fR uses is: "%p%T %b %u %g %l %s %n\\n"
 The following escape sequences are understood by \fBrdup\fR:
 
         'p': '+' if file is new/modified, '-' if removed
-        'T': file type: -, l or d (normail file, symlink or directory)
         'b': permission bits from lstat(2)
         'm;: the file mode bits, st_mode from lstat(2)
         'u': uid
@@ -173,6 +172,9 @@ The following escape sequences are understood by \fBrdup\fR:
         's': file size (zero if directory)
         'n': path
         't': time of modification (seconds from epoch)
+        'H': the SHA1 hash of the file, all "0" for directories and
+             symlinks
+        'T': file type: -, l or d (normail file, symlink or directory)
         'C': the content of the file/link (none for directories)
 .PP
 To delimit the outout of \fBrdup\fR with NULLs you can use '\\0' in the
