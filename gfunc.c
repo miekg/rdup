@@ -197,7 +197,7 @@ entry_print_data(FILE *out, char n, struct entry *e)
 				fputc('0', out);
 				break;
 			}
-			fprintf(out, "%zd", (size_t)e->f_size);
+			fprintf(out, "%zd", e->f_size);
 			break;
 		case 'H': /* sha1 hash */
 			if (S_ISREG(e->f_mode))
@@ -327,7 +327,7 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 
 	/* mode_path */
 	/* this is used to create our filelist */
-	fprintf((FILE*) fp, "%d %d %s", (int) e->f_mode, (int)e->f_name_size, 
+	fprintf((FILE*) fp, "%d %d %s", (int)e->f_mode, (int)e->f_name_size, 
 			e->f_name);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);

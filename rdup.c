@@ -84,6 +84,7 @@ g_tree_read_file(FILE *fp)
 	size_t        s;
 	size_t 	      l;
 	size_t        f_name_size;
+	size_t        str_len;
 
 	tree = g_tree_new(gfunc_equal);
 	buf  = g_malloc(BUFSIZE + 1);
@@ -112,26 +113,29 @@ g_tree_read_file(FILE *fp)
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
-			msg("Corrupt entry in filelist at line: %zd", l);
+			msg("Corrupt entry in filelist at line: %zd, `%s\' should be numerical", l, buf);
 			continue;
 		}
-		/* the file's name list */
+		/* the path size */
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
 		if (!p) {
-			msg("Corrupt entry in filelist at line: %zd", l);
+			msg("Corrupt entry in filelist at line: %zd, no space found", l);
 			continue;
 		}
+		/* the file's name */
 		*p = '\0';
 	 	buf[LIST_SPACEPOS] = ' ';
 		f_name_size = (size_t)atoi(buf + LIST_SPACEPOS);
-		if (strlen(p + 1) != f_name_size) {
-			msg("Corrupt entry in filelist at line: %zd", l);
+		str_len = strlen(p + 1);
+		if (str_len != f_name_size) {
+			msg("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'", l,
+					str_len, f_name_size);
 			continue;
 		}
 
 		e = g_malloc(sizeof(struct entry));
 		e->f_name      = g_strdup(p + 1);
-		e->f_name_size = strlen(e->f_name);
+		e->f_name_size = str_len;
 		e->f_mode      = modus;
 		e->f_uid       = 0;
 		e->f_gid       = 0;
