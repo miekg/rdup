@@ -14,7 +14,6 @@ gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
 gboolean opt_local  	   = FALSE; 		      /* check for file size changes */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
-char *opt_fmt_prefix	   = "%p%T %b %u %g";         /* start of rdup's default format */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
@@ -223,9 +222,6 @@ main(int argc, char **argv)
 			case 'h':
 				usage(stdout);
 				exit(EXIT_SUCCESS);
-			case 'H':
-				opt_fmt_prefix = "%p%T %b %u %g %H";
-				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
 				exit(EXIT_SUCCESS);

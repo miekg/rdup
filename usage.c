@@ -47,9 +47,9 @@ usage(FILE *f)
         fprintf(f, "   \'%%s\': file size\n");
         fprintf(f, "   \'%%n\': path\n");
         fprintf(f, "   \'%%t\': time of modification (epoch)\n");
-        fprintf(f, "   \'%%H\': print the sha1 hash of the file's contents\n");
+        fprintf(f, "   \'%%H\': the sha1 hash of the file's contents\n");
         fprintf(f, "   \'%%T\': \'type\' (d, l or -: dir, link or file)\n");
-        fprintf(f, "   \'%%C\': contents\n");
+        fprintf(f, "   \'%%C\': file contents\n");
         fprintf(f, "\nReport bugs to <miek@miek.nl>\n");
         fprintf(f, "Licensed under the GPL. See the file LICENSE in the\n");
         fprintf(f, "source distribution of rdup.\n");
