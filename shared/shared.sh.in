@@ -21,14 +21,16 @@ _echo2() {
 }
 
 what() {
-        _BACKUPDIR=$1
-        _NOW=$2
+        _DAYS=$1
+        _BACKUPDIR=$2
+        _NOW=$3
+        i=1
         if [[ -d $_BACKUPDIR/$_NOW ]]; then
                 # already there do not link
                 return 0
         fi
         # linux thing
-        for i in `seq 1 7`; do
+        while [[ $i -le $DAYS ]]; do
                 dir=`date +%Y%m/%d --date "$i days ago"`
                 if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
@@ -36,6 +38,7 @@ what() {
                         cp -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
                         return 0
                 fi
+        (( i++ ))
         done
         return 1
 }

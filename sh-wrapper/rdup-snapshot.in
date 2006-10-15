@@ -13,11 +13,12 @@ sysconfdir=@sysconfdir@/rdup
 source $datadir/shared.sh
 
 usage() {
-        echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
+        echo "$PROGNAME -b DIR [+N] [OPTIONS] DIR [DIR ...]"
         echo
         echo "This is a wrapper around rdup and snap.pl"
         echo
         echo DIR \ - directories to back up
+        echo +N \ \ - Look N days back for previous backups, defaults to 8
         echo
         echo OPTIONS:
         echo " -b DIR     backup directory"
@@ -86,6 +87,22 @@ while getopts ":ab:k:c:n:vzxhV" o; do
         esac
 done
 shift $((OPTIND - 1))
+
+if [[ ${1:0:1} == "+" ]]; then
+        DAYS=${1:1}
+        if [[ ! $DAYS =~ "[0-9]{${#DAYS}}" ]]; then
+                _echo2 "+N needs to be a number [1..99]"
+                exit 1
+        fi
+        if [[ $DAYS -lt 1 || $DAYS -gt 99 ]]; then
+                _echo2 "+N needs to be a number [1..99]"
+                exit 1
+        fi
+        shift
+else
+        DAYS=8
+fi
+
 if [[ $# -eq 0 ]]; then
         _echo2 "No directories to backup"
         exit 1
@@ -114,9 +131,9 @@ if [[ ! $? ]]; then
 fi
 
 if [[ -z $ssh ]]; then
-        what $BACKUPDIR $NOW; purpose=$? # save return code from what
+        what $DAYS $BACKUPDIR $NOW; purpose=$? # save return code from what
 else
-        $ssh "source @datadir@/rdup/shared.sh; what $BACKUPDIR $NOW"
+        $ssh "source @datadir@/rdup/shared.sh; what $DAYS $BACKUPDIR $NOW"
         purpose=$?
 fi
 case $purpose in

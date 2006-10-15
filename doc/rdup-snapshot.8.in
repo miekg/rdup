@@ -7,6 +7,9 @@ rdup-snapshot \- create a hardlink backup
 .SH SYNOPSIS
 .B rdup-snapshot
 [
+.B +DAYS
+]
+[
 .IR OPTIONS
 ]
 DIR|FILE
@@ -18,6 +21,10 @@ DIR|FILE
 \fBrdup-snapshot\fR is a frontend for `rdup-snap' and `rdup'. It will backup
 all directories and files given on the command line. It will create a
 hard linked backup directory, where the backup is created. 
+.PP
+With the optional +DAYS argument you can specify how far backup
+\fBrdup-snapshot\fR looks back for previous backups. This should
+be a number in the range 1..99. It defaults to 8 days.
 .PP
 Making local backups is as simple as:
       rdup-snapshot -b /vol/backup/$HOST ~ 

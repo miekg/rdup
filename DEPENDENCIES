@@ -6,6 +6,7 @@ o libglib (core C gtk library)
 o perl, rdup-utils
   -  perl-module: file-copy-recursive
 o bash, version 3, for the (shell) rdup-utils
+  rdup-snapshot depends on GNU date for date calculations
 
 Optional:
 o ssh     (remote backups and restores)
