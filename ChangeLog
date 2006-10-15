@@ -19,9 +19,10 @@
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
    * Solaris 10 extended attributes support was added
-   * Moved Makefile.in to GNUmakefile.in to force gmake usage
   ** smaller changes **
-   * Bug fix in crypt.pl
+   * Moved Makefile.in to GNUmakefile.in to force gmake usage
+   * Bug fix in gzip.pl (now rdup-gzip)
+   * Bug fix in crypt.pl (now rdup-crypt)
    * All documentation updated with the new names and some more updates
    * Don't install dump-here.sh or dump-here.sh.8
    * Added debian/ dir so a .deb package can be build
@@ -34,7 +35,7 @@
    * Check_attr() and chown_attr() to shared.pl.in
    * Adding logging to rdup-snap and rdup-mirror
    * Added rdup-snap-here and manpage
-   * Making backups in 0.3.0:
+   * Making backups with 0.3.0:
    	hardlink backup:
 	rdup-snapshot -b /backup/$HOSTNAME dir-to-backup
 	YYYYMM/DD will be added

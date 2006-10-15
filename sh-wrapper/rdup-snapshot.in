@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create a hardlinked backup
 # this scripts figures out if the
