@@ -197,7 +197,7 @@ entry_print_data(FILE *out, char n, struct entry *e)
 				fputc('0', out);
 				break;
 			}
-			fprintf(out, "%zd", e->f_size);
+			fprintf(out, "%zd", (size_t)e->f_size);
 			break;
 		case 'H': /* sha1 hash */
 			if (S_ISREG(e->f_mode))
