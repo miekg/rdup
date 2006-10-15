@@ -25,7 +25,7 @@ int sha1_stream(FILE *stream, void *resblock);
 /**
  * we received a signal
  */
-static void
+void
 signal_abort(int signal)
 {
 	switch(signal) {

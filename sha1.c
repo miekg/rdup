@@ -27,6 +27,10 @@
 #include <stddef.h>
 #include <string.h>
 
+void signal_abort(int signal);
+
+extern sig_atomic_t sig;
+
 /* SWAP does an endian swap on architectures that are little-endian,
    as SHA1 needs some data in a big-endian form.  */
 
@@ -138,6 +142,10 @@ sha1_stream (FILE *stream, void *resblock)
       /* Read block.  Take care for partial reads.  */
       while (1)
 	{
+		if (sig != 0) {
+			fclose(stream);
+			signal_abort(sig);
+		}
 	  n = fread (buffer + sum, 1, BLOCKSIZE - sum, stream);
 
 	  sum += n;
