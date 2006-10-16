@@ -8,7 +8,7 @@
 void
 usage(FILE *f)
 {
-        fprintf(f, "USAGE: %s [OPTION...] FILELIST DIR|FILE...\n", PROGNAME);
+        fprintf(f, "USAGE: %s (%s) [OPTION...] FILELIST DIR|FILE...\n", PROGNAME, VERSION);
         fprintf(f, "%s generates a full or incremental file list, this\n", PROGNAME);
         fprintf(f, "list can be used to implement a (incremental) backup scheme.\n");
         fprintf(f, "\n   FILELIST\tfile to store filenames\n");
