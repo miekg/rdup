@@ -52,9 +52,6 @@ AC_CONFIG_FILES([GNUmakefile
                  sh-wrapper/rdup-restore
                  sh-wrapper/rdup-dump
                  sh-wrapper/rdup-snapshot
-                 sh-tools/crypt.sh
-                 sh-tools/gzip.sh
-                 sh-tools/mirror.sh
                  pl-tools/rdup-gzip
                  pl-tools/rdup-crypt
                  pl-tools/rdup-grep
