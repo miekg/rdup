@@ -11,7 +11,7 @@ sysconfdir=@sysconfdir@/rdup
 GNU_DEFS=rdup-snapshot.gnu
 
 # shared stuff
-source $datadir/shared.sh
+. $datadir/shared.sh
 if [[ -r $sysconfdir/$GNU_DEFS ]]; then
         source $sysconfdir/$GNU_DEFS
 fi
