@@ -8,11 +8,19 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
+GNU_DEFS=rdup-snapshot.gnu
 
 # shared stuff
 source $datadir/shared.sh
-GNUDATE=date
-GNUCP=cp
+if [[ -r $sysconfdir/$GNU_DEFS ]]; then
+        source $sysconfdir/$GNU_DEFS
+fi
+if [[ -z $GNUDATE ]]; then
+        GNU_DATE=date
+fi
+if [[ -z $GNUCP ]] ;then
+        GNU_CP=cp
+fi
 
 usage() {
         echo "$PROGNAME -b DIR [+N] [OPTIONS] DIR [DIR ...]"
@@ -34,29 +42,6 @@ usage() {
         echo " -x         pass -x to rdup"
         echo " -h         this help"
         echo " -V         print version"
-}
-
-what() {
-        _DAYS=$1
-        _BACKUPDIR=$2
-        _NOW=$3
-        i=1
-        if [[ -d $_BACKUPDIR/$_NOW ]]; then
-                # already there do not link
-                return 0
-        fi
-        # linux thing
-        while [[ $i -le $DAYS ]]; do
-                dir=`$GNUDATE +%Y%m/%d --date "$i days ago"`
-                if [[ -d $_BACKUPDIR/$dir ]]; then
-                        # copy 'em over
-                        _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
-                        $GNUCP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
-                        return 0
-                fi
-        (( i++ ))
-        done
-        return 1
 }
 
 PROGNAME=$0
@@ -130,6 +115,10 @@ fi
 
 if [[ $# -eq 0 ]]; then
         _echo2 "No directories to backup"
+        exit 1
+fi
+if [[ -z $BACKUPDIR ]]; then
+        _echo2 "Missing the -b argument"
         exit 1
 fi
 
