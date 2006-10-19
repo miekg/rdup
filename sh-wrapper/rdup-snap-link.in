@@ -15,10 +15,10 @@ GNU_DEFS=rdup-snapshot.gnu
 if [[ -r $sysconfdir/$GNU_DEFS ]]; then
         source $sysconfdir/$GNU_DEFS
 fi
-if [[ -z $GNUDATE ]]; then
+if [[ -z $GNU_DATE ]]; then
         GNU_DATE=date
 fi
-if [[ -z $GNUCP ]] ;then
+if [[ -z $GNU_CP ]] ;then
         GNU_CP=cp
 fi
 
