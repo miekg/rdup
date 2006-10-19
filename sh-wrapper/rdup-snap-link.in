@@ -47,7 +47,7 @@ what() {
                 return 0
         fi
         # linux thing
-        while [[ $i -le $DAYS ]]; do
+        while [[ $i -le $_DAYS ]]; do
                 dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
                 if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
@@ -61,3 +61,4 @@ what() {
 }
 
 what $1 $2 $3
+exit $?
