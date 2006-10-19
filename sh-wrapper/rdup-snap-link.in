@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# create a hardlinked backup
+# this scripts figures out if the
+# dump is incremental or full
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datadir=@datadir@/rdup
+sysconfdir=@sysconfdir@/rdup
+GNU_DEFS=rdup-snapshot.gnu
+
+# shared stuff
+. $datadir/shared.sh
+if [[ -r $sysconfdir/$GNU_DEFS ]]; then
+        source $sysconfdir/$GNU_DEFS
+fi
+if [[ -z $GNUDATE ]]; then
+        GNU_DATE=date
+fi
+if [[ -z $GNUCP ]] ;then
+        GNU_CP=cp
+fi
+
+
+usage() {
+        echo "$PROGNAME DAYS BACKUPDIR NOW"
+        echo
+        echo "This is a small shell script that hard links directories"
+        echo
+        echo DIR \ - directories to back up
+        echo +N \ \ - Look N days back for previous backups, defaults to 8
+}
+
+PROGNAME=$0
+if [ $# < 3 ]; then
+        usage
+        exit 1
+fi
+
+what() {
+        _DAYS=$1
+        _BACKUPDIR=$2
+        _NOW=$3
+        i=1
+        if [[ -d $_BACKUPDIR/$_NOW ]]; then
+                # already there do not link
+                return 0
+        fi
+        # linux thing
+        while [[ $i -le $DAYS ]]; do
+                dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
+                if [[ -d $_BACKUPDIR/$dir ]]; then
+                        # copy 'em over
+                        _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
+                        $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
+                        return 0
+                fi
+        (( i++ ))
+        done
+        return 1
+}
+
+what $1 $2 $3
