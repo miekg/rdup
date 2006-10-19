@@ -8,6 +8,9 @@ datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
 GNU_DEFS=rdup-snapshot.gnu
 
+# common stuff
+source $datadir/shared.sh
+
 usage() {
         echo "$PROGNAME -b DIR [+N] [OPTIONS] DIR [DIR ...]"
         echo

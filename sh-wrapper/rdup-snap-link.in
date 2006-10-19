@@ -22,7 +22,6 @@ if [[ -z $GNUCP ]] ;then
         GNU_CP=cp
 fi
 
-
 usage() {
         echo "$PROGNAME DAYS BACKUPDIR NOW"
         echo
@@ -33,7 +32,7 @@ usage() {
 }
 
 PROGNAME=$0
-if [ $# < 3 ]; then
+if [[ $# -ne 3 ]]; then
         usage
         exit 1
 fi

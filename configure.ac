@@ -49,6 +49,7 @@ AC_CONFIG_FILES([GNUmakefile
                  shared/shared.pl
                  sh-wrapper/rdup-dump-here
                  sh-wrapper/rdup-snap-here
+                 sh-wrapper/rdup-snap-link
                  sh-wrapper/rdup-restore
                  sh-wrapper/rdup-dump
                  sh-wrapper/rdup-snapshot
