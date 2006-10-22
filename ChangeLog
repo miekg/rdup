@@ -7,6 +7,9 @@
      filename size. This was due to a weird bug
      on Solaris where mangled entries are written...
   ** BIG changes **
+   * When a file changes size:
+     when smaller: NULLs are inserted
+     when larger: the file is broken off
    * No shell utils are installed anymore, only the wrappers
    * History.sh and yesterday.sh are removed from the archive
    * ${prefix/}share/rdup is used for common perl/shell files

@@ -71,23 +71,33 @@ sha1(FILE *fp, char *filename)
  * cat the files' contents
  */
 static gboolean
-cat(FILE *fp, char *filename)
+cat(FILE *fp, char *filename, off_t f_size)
 {
 	char buf[BUFSIZE + 1];
 	FILE *file;
 	size_t i;
+	size_t t;
 
 	if ((file = fopen(filename, "r")) == NULL) {
 		msg("Could not open '%s\': %s", filename, strerror(errno));
 		return FALSE;
 	}
 
+	t = 0;
 	while (!feof(file) && (!ferror(file))) {
 		if (sig != 0) {
 			fclose(file);
 			signal_abort(sig);
 		}
 		i = fread(buf, sizeof(char), BUFSIZE, file);
+		t += i;
+		if (t > (size_t) f_size) {
+			/* the file has grown. Break off the write!! */
+			msg("File grown larger than original file size, cutting off: `%s\'", filename);
+			fclose(file);
+			return TRUE;
+		}
+
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
 			msg("Write failure `%s\': %s", filename, strerror(errno));
 			fclose(file);
@@ -95,6 +105,15 @@ cat(FILE *fp, char *filename)
 		}
 	}
 	fclose(file);
+
+	/* file has shrunken! Fill the rest with NULLs */
+	if (t < (size_t) f_size) {
+		msg("File has shrunk, filling with NULLs: `%s\'", filename);
+		for(i = t; i <= (size_t) f_size; i++) {
+			fputc('\0', fp);
+		}
+		
+	}
 	return TRUE;
 }
 
@@ -105,7 +124,7 @@ static void
 entry_cat_data(FILE *fp, struct entry *e)
 {
 	if (S_ISREG(e->f_mode)) {
-		if (!cat(fp, e->f_name)) {
+		if (!cat(fp, e->f_name, e->f_size)) {
 			exit(EXIT_FAILURE);
 		}
 		return;
