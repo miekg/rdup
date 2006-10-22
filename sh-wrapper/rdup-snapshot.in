@@ -149,6 +149,10 @@ case $purpose in
         rm -f $LIST
         rm -f $STAMP
         ;;
+        2)
+        _echo2 "Illegal return code from rdup-snap-link"
+        exit 1;
+        ;;
 esac
 # execute the backup command
 #_echo2 "Executing: ${cmd}"
