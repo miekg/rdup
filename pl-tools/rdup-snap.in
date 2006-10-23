@@ -45,7 +45,9 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 syslog_open($progName);
-mkpath($backupDir) or die "** Cannot create `$backupDir': $!";
+if (!exist($backupDir)) {
+        mkpath($backupDir) or die "** Cannot create `$backupDir': $!";
+}
 
 if ($remote) {
         syslog_log("%s %s", "Commencing remote backup to:" ,$backupDir);
