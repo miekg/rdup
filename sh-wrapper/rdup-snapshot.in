@@ -127,12 +127,6 @@ else
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 
-mkdir -p $BACKUPDIR
-if [[ ! $? ]]; then
-        _echo2 "Can not create backup directory"
-        exit 1
-fi
-
 if [[ -z $ssh ]]; then
         @sbindir@/rdup-snap-link $DAYS $BACKUPDIR $NOW
         purpose=$?
