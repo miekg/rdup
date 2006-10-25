@@ -24,6 +24,7 @@ usage() {
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -n PREFIX  optional prefix for the timestmp and filelist"
+        echo " -f         force a full dump"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory (not yet)."
@@ -42,7 +43,7 @@ ETC="@sysconfdir@/rdup"
 pipe=""
 ssh=""
 
-while getopts ":ab:k:c:n:vzxhV" o; do
+while getopts ":ab:k:c:n:vfzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -74,6 +75,7 @@ while getopts ":ab:k:c:n:vzxhV" o; do
                 z) pipe="$pipe | @sbindir@/rdup-gzip"
                 c="-c"
                 ;;
+                f) force=true;;
                 n) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
                         _echo2 "-N needs an argument"
@@ -131,12 +133,16 @@ else
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 
-if [[ -z $ssh ]]; then
-        @sbindir@/rdup-snap-link $DAYS $BACKUPDIR $NOW
-        purpose=$?
+if ! $force; then
+        if [[ -z $ssh ]]; then
+                @sbindir@/rdup-snap-link $DAYS $BACKUPDIR $NOW
+                purpose=$?
+        else
+                $ssh "rdup-snap-link $DAYS $BACKUPDIR $NOW"
+                purpose=$?
+        fi
 else
-        $ssh "rdup-snap-link $DAYS $BACKUPDIR $NOW"
-        purpose=$?
+        purpose=1
 fi
 case $purpose in
         0)

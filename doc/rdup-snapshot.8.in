@@ -88,6 +88,9 @@ Limit the transfer to 'num' bytes/second. This option is given to
 Enable extended attributes. Write the uid/gid to the extended user
 attributes r_uid and r_gid.
 .TP
+.B \-f
+Force a full dump.
+.TP
 .B \-x
 Pass \-x to rdup (stay in local filesystem).
 .TP

@@ -14,7 +14,7 @@ source $datadir/shared.sh
 
 usage() {
         echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
-        echo 
+        echo
         echo "This is a wrapper around rdup and rdup-mirror"
         echo
         echo DIR \ - directories to back up
@@ -24,6 +24,7 @@ usage() {
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
         echo " -n PREFIX  optional prefix for the timestmp and filelist"
+        echo " -f         force a full dump"
         echo " -z         compress all files, using rdup-gzip"
         echo " -a         write extended attributes with uid/gid"
         echo " -e         filelist and timestamp are put in backup directory"
@@ -46,7 +47,7 @@ l="-l"
 pipe=""
 ssh=""
 
-while getopts ":ab:k:c:n:vzxehV" o; do
+while getopts ":ab:k:c:n:vzfxehV" o; do
         case $o in
                 b) BACKUPDIR="-b $OPTARG/$d"
                 BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
@@ -83,6 +84,7 @@ while getopts ":ab:k:c:n:vzxehV" o; do
                         _echo2 "-N needs an argument"
                 fi;;
                 e) etc=true;;
+                f) force=true;;
                 z)
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip"
                 c="-c"
@@ -155,13 +157,20 @@ else
 fi
 # check what we should do, only for the first dir...
 BACKUPDIR_DATE="$FIRST/$d"
-if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
-        # kill the timestamp and inc list
+if ! $force; then
+        if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
+                # kill the timestamp and inc list
+                rm -f "$LIST"
+                rm -f "$STAMP"
+                _echo2 "FULL DUMP"
+        else
+                _echo2 "INCREMENTAL dump"
+        fi
+else
         rm -f "$LIST"
         rm -f "$STAMP"
         _echo2 "FULL DUMP"
-else
-        _echo2 "INCREMENTAL dump"
+
 fi
 # execute the backup command
 #_echo2 "Executing ${cmd}"
