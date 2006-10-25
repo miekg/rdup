@@ -1,4 +1,4 @@
-10 Oct 2006: 0.3.0 Miek <miek@miek.nl>
+10 Oct 2006: 0.3.0-rc1 Miek <miek@miek.nl>
    -- major features enhancements --
   ** OUTPUT CHANGES **
    * new format character: %b: permission bits
