@@ -115,12 +115,18 @@ if $etc; then
 else
         ETC="@sysconfdir@/rdup"
 fi
+
+# fix a lonely root argument
+IDENT=$(basename $1)
+if [[ $IDENT = "/" ]]; then
+        IDENT="ROOT"
+fi
 if [[ ! -z $PREFIX ]]; then
-        STAMP="$ETC/$PREFIX.$HOSTNAME.$(basename $1).timestamp"
-        LIST="$ETC/$PREFIX.$HOSTNAME.$(basename $1).list"
+        STAMP="$ETC/$PREFIX.$HOSTNAME.$IDENT.timestamp"
+        LIST="$ETC/$PREFIX.$HOSTNAME.$IDENT.list"
 else
-        STAMP="$ETC/$HOSTNAME.$(basename $1).timestamp"
-        LIST="$ETC/$HOSTNAME.$(basename $1).list"
+        STAMP="$ETC/$HOSTNAME.$IDENT.timestamp"
+        LIST="$ETC/$HOSTNAME.$IDENT.list"
 fi
 
 # create our command line
