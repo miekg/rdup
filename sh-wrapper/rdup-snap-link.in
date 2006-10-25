@@ -27,8 +27,9 @@ usage() {
         echo
         echo "This is a small shell script that hard links directories"
         echo
-        echo DIR \ - directories to back up
-        echo +N \ \ - Look N days back for previous backups, defaults to 8
+        echo DAYS \ - look backup DAYS days for previous dumps
+        echo BACKUPDIR \ - where to backup to
+        echo NOW \ \ - Current date in YYYY/MM format
 }
 
 PROGNAME=$0

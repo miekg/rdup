@@ -1,0 +1,41 @@
+'\" t
+.TH RDUP-SNAP-LINK 1 "24 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+        
+.SH NAME
+rdup-snap-link, create a hard linked copy of a previous backup
+
+.SH SYNOPSIS
+.B rdup-snap-link
+.IR KEYFILE
+[
+.IR OPTIONS
+]
+
+.SH DESCRIPTION
+\fBrdup-crypt\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
+key contained in \fIKEYFILE\fR. The default algorithm used is blowfish
+.PP
+For example,
+.PP
+        rdup -c list ~/Documents | rdup-crypt KEY | rdup-mirror -c -b /tmp/storage
+.PP
+Note the \fI-c\fR option for \fBrdup-mirror\fR.
+
+.SH OPTIONS
+.TP
+.B \-c
+This option is ignored, \fBrdup-crypt\fR always works on the files'
+content. This "feature" was added because all rdup-util scripts have
+such an option.
+.TP
+.B \-d
+Decrypt the files.
+.TP
+.B \-h
+Show a short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH SEE ALSO
+rdup-gzip(1), rdup-mirror(8) and mcrypt(1).
