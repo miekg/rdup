@@ -42,6 +42,7 @@ l="-l"
 ETC="@sysconfdir@/rdup"
 pipe=""
 ssh=""
+force=false
 
 while getopts ":ab:k:c:n:vfzxhV" o; do
         case $o in

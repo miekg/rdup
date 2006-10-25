@@ -43,9 +43,6 @@ Used in conjunction with \fBrdup\fR's \-c. This will allow
 Restore mode. Always write the file to the target directory and
 don't rename existing files to a +DD.HH:MM suffix.
 .TP
-.B \-f
-Force a full dump.
-.TP
 .B \-v
 Echo the files processed to standard error.
 .TP

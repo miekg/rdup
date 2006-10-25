@@ -46,6 +46,7 @@ c=""
 l="-l"
 pipe=""
 ssh=""
+force=false
 
 while getopts ":ab:k:c:n:vzfxehV" o; do
         case $o in

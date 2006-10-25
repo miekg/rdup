@@ -11,6 +11,7 @@
      when smaller: NULLs are inserted
      when larger: the file is broken off
    * No shell utils are installed anymore, only the wrappers
+   * rdup-snapshot, rdup-mirror add -f option: do a full dump
    * History.sh and yesterday.sh are removed from the archive
    * ${prefix/}share/rdup is used for common perl/shell files
      all utilities now source these files
