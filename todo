@@ -6,14 +6,10 @@ o split off rdup-utils and rdup-core?
 o rdup-backups(8)
 o refactor rdup-restore
 o rdup-backups(8)
-o -N --> -n for utils, more constent
-o Force full dump
 
 :rdup:
 :tests:
 o add conformence test; symlinks etc.
-o sha1 support?
-o syslogging
 
 :porting:
 o port extended attributes to FreeBSD

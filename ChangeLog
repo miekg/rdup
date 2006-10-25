@@ -2,6 +2,7 @@
    -- major features enhancements --
   ** OUTPUT CHANGES **
    * new format character: %b: permission bits
+   * new format character: %H: print the sha1 hash of the file
    * output changed to: %p%T %b %u %g %l %s %n\n"
    * the LIST syntax was changed to include the
      filename size. This was due to a weird bug
@@ -16,13 +17,14 @@
    * ${prefix/}share/rdup is used for common perl/shell files
      all utilities now source these files
    * Removed -l arg from the utils
-   * All scripts are prefixed with rdup-
+   * All scripts are prefixed with 'rdup-'
    * All installed scripts loose the .sh/.pl suffix (Debian Policy)
    * rdup-snap added (perl) tool ala mirror but works on hard linked
      files
    * rdup-snapshot added (shell) small wrapper for rdup and rdup-snap
      This uses 'cp -plr' which is a gnu-ism
    * Solaris 10 extended attributes support was added
+   * Loose the multiple backup directory stuff
   ** smaller changes **
    * Moved Makefile.in to GNUmakefile.in to force gmake usage
    * Bug fix in gzip.pl (now rdup-gzip)
@@ -35,9 +37,8 @@
      to use ./configure --sysconfdir=foo, otherwise it might not work
    * rdup-snap.8 and rdup-snapshot.8 added
    * Refactored the wrapper scripts
-   * Loose the multiple backup directory stuff
    * Check_attr() and chown_attr() to shared.pl.in
-   * Adding logging to rdup-snap and rdup-mirror
+   * Adding syslogging to rdup-snap and rdup-mirror
    * Added rdup-snap-here and manpage
    * Making backups with 0.3.0:
    	hardlink backup:
