@@ -14,6 +14,7 @@ use File::Spec;
 
 # common functions
 my $prefix="@prefix@";
+my $datarootdir="@datarootdir@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $progName = basename $0;

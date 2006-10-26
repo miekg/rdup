@@ -4,6 +4,7 @@
 # figure out of the dump should be a full one or incremental
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 

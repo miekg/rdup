@@ -6,36 +6,21 @@ rdup-snap-link, create a hard linked copy of a previous backup
 
 .SH SYNOPSIS
 .B rdup-snap-link
-.IR KEYFILE
-[
-.IR OPTIONS
-]
+.IR DAYS
+.IR BACKUPDIR
+.IR NOW
 
 .SH DESCRIPTION
-\fBrdup-crypt\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
-key contained in \fIKEYFILE\fR. The default algorithm used is blowfish
+\fBrdup-snap-link\fR creates a hard linked copy of a previous
+backup directory. If such a directory is created \fBrdup-snap-link\fR
+exists with 0. If a full dump should be performed a 1 is returned.
+If 2 is returned an error has occured.
 .PP
-For example,
-.PP
-        rdup -c list ~/Documents | rdup-crypt KEY | rdup-mirror -c -b /tmp/storage
-.PP
-Note the \fI-c\fR option for \fBrdup-mirror\fR.
+This utility should is called from \fBrdup-snapshot\fR.
 
-.SH OPTIONS
-.TP
-.B \-c
-This option is ignored, \fBrdup-crypt\fR always works on the files'
-content. This "feature" was added because all rdup-util scripts have
-such an option.
-.TP
-.B \-d
-Decrypt the files.
-.TP
-.B \-h
-Show a short help message.
-.TP
-.B \-V
-Show the version.
+.SH FILES
+@sysconfdir@/rdup/rdup-snapshot.gnu for the location of GNU cp and GNU
+date. This is probably only needed on non GNU/Linux systems.
 
 .SH SEE ALSO
 rdup-gzip(1), rdup-mirror(8) and mcrypt(1).

@@ -17,6 +17,7 @@ HERE=$(addprefix sh-wrapper/, $(HERE_IN))
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
+datarootdir=@datarootdir@
 bindir=@bindir@
 sbindir=@sbindir@
 mandir=@mandir@

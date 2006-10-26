@@ -1,6 +1,7 @@
 25 Oct 2005: 0.3.0 Miek <miek@miek.nl>
    -- minor fixes --
    * add manual page for rdup-snap-link
+   * Some ubuntu Edgy, fixes
 
 10 Oct 2006: 0.3.0-rc1 Miek <miek@miek.nl>
    -- major features enhancements --
