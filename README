@@ -1,6 +1,6 @@
 1/ TO BUILD
 
-Run: 
+Run:
 autoreconf && ./configure && make (Linux)
 autoheader259 && autoconf259 && ./configure && gmake (FreeBSD)
 

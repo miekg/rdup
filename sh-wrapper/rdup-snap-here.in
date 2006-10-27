@@ -9,24 +9,8 @@ datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 NOW=`date +%Y%m/%d`
 
-what() {
-        if [[ -d $BACKUPDIR/$NOW ]]; then
-                # already there do not link
-                return 0
-        fi
-
-        for i in `seq 1 7`; do
-                dir=`date +%Y%m/%d --date "$i days ago"`
-                if [[ -d $BACKUPDIR/$dir ]]; then
-                        # copy 'em over
-                        cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
-                        return 0
-                fi
-        done
-        return 1
-}
-
 echo "You need to edit this script and remove the next line, exiting" >&2
+echo "Add your hostname below and specify the directories to backup" >&2
 exit 1 # REMOVE THIS
 
 ##
@@ -38,9 +22,28 @@ case $HOSTNAME in
         ;;
         *)
         # no such host
-        zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for <b>$HOSTNAME</b>"
+        zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for host <b>$HOSTNAME</b>"
         exit 1
 esac
+
+
+what() {
+        if [[ -d $BACKUPDIR/$NOW ]]; then
+                # already there do not link
+                return 0
+        fi
+
+        for i in `seq 1 32`; do
+                dir=`date +%Y%m/%d --date "$i days ago"`
+                if [[ -d $BACKUPDIR/$dir ]]; then
+                        # copy 'em over
+                        sudo cp -plr $BACKUPDIR/$dir $BACKUPDIR/$NOW
+                        return 0
+                fi
+        done
+        return 1
+}
+
 
 ##
 # Don't need to edit anything below this line
@@ -66,7 +69,7 @@ if [[ -z $DIRS ]]; then
 fi
 
 # only to get root
-gksudo -m "Perform backup of <b>$HOSTNAME</b> to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
+gksudo -m "Perform backup of host <b>$HOSTNAME</b> to $mountpath as root?" -t "rdup @ $HOSTNAME" "cat /dev/null"
 if [[ $? -ne 0 ]]; then
         exit
 fi
@@ -84,8 +87,8 @@ case $purpose in
         ;;
         1)
         TEXT="<i>Full</i> dump of <b>$HOSTNAME</b>: $DIRS"
-        rm -f $LIST
-        rm -f $STAMP
+        sudo rm -f $LIST
+        sudo rm -f $STAMP
         ;;
 esac
 
