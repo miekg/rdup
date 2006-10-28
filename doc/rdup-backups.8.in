@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-BACKUPS 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-BACKUPS 8 "28 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-backups \- introduction into making backups with rdup
@@ -7,12 +7,71 @@ rdup-backups \- introduction into making backups with rdup
 .SH TODO
 This is very much in a to do state.
 
+.SH INTRODUCTION
+
+The are two wrappers for rdup to make backups. These are \fBrdup-dump\fR
+and \fBrdup-snapshot\fR. The first uses one directory per month where backups
+are dumped, the latter uses a hardlinked backup scheme where each day
+has its own directory. It is a matter of taste what you want to use. I
+personally use \fBrdup-snapshot\fR as it gives me more freedom when
+restoring and it is space efficient.
+
+Both wrappers support encryption, compressions and remote backups.
+You can only restore to the latest state when backing up with 
+\fBrdup-dump\fR.
+
+
 .SH BACKING UP WITH RDUP-SNAPSHOT
 
 
+.SS RDUP PIPELINE
+
+.SH EXAMPLES
+
+.SS LOCAL BACKUP
+
+Snapshotting my homedir to the backup:
+
+        rdup-snapshot -b /vol/backup/$HOST ~
+
+Snapshotting /var/lib to the backup:
+
+        rdup-snapshot -b /vol/backup/$HOST /var/lib
+
+.SH RESTORE
+
+In principle a restore is as easy as using the standard system tools to
+copy a directory to another location. However when the
+\-a flag is used extended attributes are set, these are normally not
+read by the unix utilities. In this case you should restore by using
+\fBrdup\fR \-a and \fBrdup-mirror\fR to copy the files to another
+location.
 
 .SH BACKING UP WITH RDUP-DUMP
 
+.SS RDUP PIPELINE
+
+.SH EXAMPLES
+
+.SS LOCAL BACKUP
+Dumping my homedir to the backup:
+
+        rdup-dump -b /vol/backup/$HOST ~
+
+Dumping /var/lib to the backup:
+
+        rdup-dump -b /vol/backup/$HOST /var/lib
+
+.SS REMOTE BACKUP
+Dumping my homedir to the remote backup:
+
+        rdup-dump -b /vol/backup/$HOST -c miekg@remote ~
+
+Dumping /home to the remote backup:
+
+        rdup-dump -b /vol/backup/$HOST -c miekg@remote /home
+
+.SH RESTORE
 
 .SH SEE ALSO
 rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-grep(1), rdup-gzip(1) and

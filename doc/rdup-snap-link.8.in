@@ -21,6 +21,15 @@ This utility should is called from \fBrdup-snapshot\fR.
 .SH FILES
 @sysconfdir@/rdup/rdup-snapshot.gnu for the location of GNU cp and GNU
 date. This is probably only needed on non GNU/Linux systems.
+This file has the following format:
+
+GNU_DATE=/path/to/gnu_date
+GNU_CP=/path/to/gnu_cp
+
+For example:
+
+GNU_DATE=/usr/local/bin/date
+GNU_CP=/usr/local/bin/cp
 
 .SH SEE ALSO
 rdup-gzip(1), rdup-mirror(8) and mcrypt(1).

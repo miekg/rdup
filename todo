@@ -10,6 +10,7 @@ o rdup-backups(8)
 :rdup:
 :tests:
 o add conformence test; symlinks etc.
+o restore a rdup -a backups (with attributes)
 
 :porting:
 o port extended attributes to FreeBSD

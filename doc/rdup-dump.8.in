@@ -102,24 +102,6 @@ Show a short help message.
 .B \-V
 Show the version.
 
-.SH EXAMPLES
-.SS LOCAL BACKUP 
-Dumping my homedir to the backup:
-
-        rdup-dump -b /vol/backup/$HOST ~
-
-Dumping /var/lib to the backup:
-        
-        rdup-dump -b /vol/backup/$HOST /var/lib
-      
-.SS REMOTE BACKUP
-Dumping my homedir to the remote backup:
-
-        rdup-dump -b /vol/backup/$HOST -c miekg@remote ~
-
-Dumping /home to the remote backup:
-        
-        rdup-dump -b /vol/backup/$HOST -c miekg@remote /home
-
 .SH SEE ALSO
-rdup(8) and rdup-snapshot(8).
+rdup(8) and rdup-snapshot(8). And rdup-backups(8) for examples and an
+introduction into making backups with \fBrdup\fR.

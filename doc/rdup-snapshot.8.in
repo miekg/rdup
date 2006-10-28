@@ -114,22 +114,6 @@ Show a short help message.
 .B \-V
 Show the version.
 
-.SH EXAMPLES
-.SS LOCAL BACKUP 
-Snapshotting my homedir to the backup:
-
-        rdup-snapshot -b /vol/backup/$HOST ~
-
-Snapshotting /var/lib to the backup:
-        
-        rdup-snapshot -b /vol/backup/$HOST /var/lib
-      
-.SH RESTORE
-In principle a restore is as easy as using the standard system tools to 
-copy a directory to another location. However when the
-\-a flag is used extended attributes are set, these are normally not
-read by the unix utilities. In this case you should restore by using
-\fBrdup\fR \-a and \fBrdup-mirror\fR to copy the files to another location.
-
 .SH SEE ALSO
-rdup(8), rdup-mirror(8) and rdup-snapshot(8).
+rdup(8), rdup-mirror(8) and rdup-snapshot(8). See rdup-backups(8) for
+examples and an introduction into making backups with \fBrdup\fR.
