@@ -3,15 +3,15 @@ TODO:
 :rdup utils:
 =======
 o split off rdup-utils and rdup-core?
-o rdup-backups(8)
 o refactor rdup-restore
-o rdup-backups(8)
+o rdup-cp to replace rdup-restore, rdup-mirror -r??
 
 :rdup:
 :tests:
 o add conformence test; symlinks etc.
-o restore a rdup -a backups (with attributes)
+o restore a rdup -a backups (with attributes),
+  make a rdup-cp, loose rdup-restore???
 
 :porting:
 o port extended attributes to FreeBSD
-o cp -plr
+o cp -plr is gnuis. Don't have time to port this...?

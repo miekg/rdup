@@ -28,6 +28,11 @@ be a number in the range 1..99. It defaults to 8 days.
 .PP
 Making local backups is as simple as:
       rdup-snapshot -b /vol/backup/$HOST ~ 
+
+Also note that rdup-snapshot calls \fBrdup-snap-link\fR. This small
+utility will actually hardlink copy the previous backup. The return
+value of \fBrdup-snap-link\fR will determine if a full or incremental 
+dump will be performed.
 .PP
 \fB~\fR is the directory to be backed up. Multiple directories
 or files are allowed on the command line.
@@ -115,5 +120,5 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8), rdup-mirror(8) and rdup-snapshot(8). See rdup-backups(8) for
+rdup(8), rdup-mirror(8), rdup-snap-link(8) and rdup-snapshot(8). See rdup-backups(8) for
 examples and an introduction into making backups with \fBrdup\fR.

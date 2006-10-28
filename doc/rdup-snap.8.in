@@ -2,7 +2,7 @@
 .TH RDUP-SNAP 8 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-rdup-snap \- create backup in a hard link backup
+rdup-snap \- create backup in a hard link directory
 
 .SH SYNOPSIS
 .B rdup-snap
@@ -24,7 +24,7 @@ backup is minimized.
 .PP
 Note, to create a hard linked backup directory use the script
 \fIrdup-snapshot\fR which will create it for you. See rdup-snapshot(8)
-for more information. This currently only works with GNU cp.
+for more information. This only works with GNU cp and GNU date.
 .PP
 Also note that there are no restore utilities, this is because you 
 can copy the backup to another location with the standard unix
@@ -35,7 +35,7 @@ commands.
 .B \-a
 Write the uid and gid information to the file's extended user attributes:
 \'r_uid' and 'r_gid'. This option only works if \fBattr\fR is available
-on the system. This currently work for Linux and Solaris 10.
+on the system. This currently works for Linux and Solaris 10.
 .TP 
 .B \-b backupdir
 Store the backup in \fIbackupdir\fR. This argument is mandatory.
@@ -54,4 +54,4 @@ Short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8), cp(1) and rdup-snapshot(8).
+rdup(8), cp(1), date(1) and rdup-snapshot(8).
