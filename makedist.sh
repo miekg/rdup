@@ -168,16 +168,8 @@ info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
 
 cleanup
-
-case $OSTYPE in
-        linux*)
-                sha=`sha1sum rdup-$version.tar.bz2 |  awk '{ print $1 }'`
-                ;;
-        freebsd*)
-                sha=`sha1  rdup-$version.tar.bz2 |  awk '{ print $5 }'`
-                ;;
-esac
+sha=`sha1sum rdup-$version.tar.bz2 |  awk '{ print $1 }'`
 echo $sha > rdup-$version.tar.bz2.sha1
 
 info "rdup distribution created successfully."
-info "SHA1sum: $sha"
+info "SHA1: $sha"
