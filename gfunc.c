@@ -211,11 +211,6 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			fprintf(out, "%ld", (unsigned long)e->f_mtime);
 			break;
 		case 's':
-			/* don't report size for directories. */
-			if (S_ISDIR(e->f_mode)) {
-				fputc('0', out);
-				break;
-			}
 			fprintf(out, "%zd", (size_t)e->f_size);
 			break;
 		case 'H': /* sha1 hash */

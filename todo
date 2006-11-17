@@ -11,6 +11,9 @@ o rdup-cp to replace rdup-restore, rdup-mirror -r??
 o add conformence test; symlinks etc.
 o restore a rdup -a backups (with attributes),
   make a rdup-cp, loose rdup-restore???
+  rdup -a will read attributes, rdup-cp should
+  understand such a list and copy it to somewhere
+  clone rdup-snap
 
 :porting:
 o port extended attributes to FreeBSD
