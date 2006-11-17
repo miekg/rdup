@@ -74,7 +74,7 @@ printf STDERR "** #REG FILES  : %d\n", $ireg;
 printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
-printf STDERR "** SIZE        : %.1f MB\n", ($ftsize/1024/1024 * 1.0);
+printf STDERR "** FILE SIZE   : %.1f MB\n", ($ftsize/1024/1024 * 1.0);
 printf STDERR "** STORED IN   : %s\n", $backupDir;
 printf STDERR "** ELAPSED     : %.2f m\n", (($te - $ts) / 60 * 1.00);
 rchmod(755, $backupDir);
@@ -132,7 +132,6 @@ sub _mirror {
                                 $bits = "0700";
                         }
                         rchmod($bits, $target);
-                        $ftsize += $fsize;
                         $idir++;
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         if (exist($target)== 1) {

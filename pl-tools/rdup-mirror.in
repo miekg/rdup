@@ -73,7 +73,7 @@ printf STDERR "** #REG FILES  : %d\n", $ireg;
 printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
 printf STDERR "** #(RE)MOVED  : %d\n", $irm;
-printf STDERR "** SIZE        : %.1f MB\n", ($ftsize/1024/1024 * 1.0);
+printf STDERR "** FILE SIZE   : %.1f MB\n", ($ftsize/1024/1024 * 1.0);
 printf STDERR "** STORED IN   : %s\n",  $backupDir;
 printf STDERR "** ELAPSED     : %.2f m\n", (($te - $ts) / 60 * 1.00);
 
@@ -118,7 +118,6 @@ sub _mirror {
                                 chown_attr($attr_there, $uid, $gid, $target);
                                 rchmod($bits, $target);
                         }
-                        $ftsize += $fsize;
                         $ireg++;
                         if ($ireg % 200 eq 0) {
                                 syslog_log("progress: %d files", $ireg);

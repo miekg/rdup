@@ -1,8 +1,6 @@
 xx Nov 2006: 0.3.1 Miek <miek@miek.nl>
    -- fixes --
-
    * print the bytes transfered with 1 decimal
-   * print the directory size also, it used to be 0
 
 29 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- minor fixes --
