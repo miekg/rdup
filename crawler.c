@@ -59,7 +59,7 @@ read_attr_uid(__attribute__((unused))
 		}
 		return u;
 	}
-#elif HAVE_OPENAT
+#elif HAVE_ATTROPEN
 	/* solaris */
 	char buf[ATTR_SIZE + 1];
 	uid_t x;
@@ -80,7 +80,7 @@ read_attr_uid(__attribute__((unused))
 	return x;
 #else
 	return u;
-#endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
+#endif /* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
 }
 
 static gid_t
@@ -107,7 +107,7 @@ read_attr_gid(__attribute__((unused))
 		}
 		return g;
 	}
-#elif HAVE_OPENAT
+#elif HAVE_ATTROPEN
 	/* solaris */
 	char buf[ATTR_SIZE + 1];
 	gid_t x;
@@ -128,7 +128,7 @@ read_attr_gid(__attribute__((unused))
 	return x;
 #else
 	return g;
-#endif /* HAVE_ATTR_XATTR_H, HAVE_OPENAT */
+#endif /* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
 }
 
 /**

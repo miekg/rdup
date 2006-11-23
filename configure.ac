@@ -12,7 +12,7 @@ AC_PROG_CC
 AC_PROG_MAKE_SET
 
 AM_PATH_GLIB_2_0(2.0.0)
-AC_CHECK_FUNCS([getdelim dirfd openat])
+AC_CHECK_FUNCS([getdelim dirfd openat attropen])
 AC_CHECK_LIB(attr, lgetxattr)
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h])
