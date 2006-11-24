@@ -56,8 +56,6 @@ if ($remote) {
         }
 }
 
-exit 0;
-
 sub _cp {
         my $dir = $_[0];
         my $dump = substr($t, 0, 1);
