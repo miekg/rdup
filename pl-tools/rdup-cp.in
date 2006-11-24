@@ -29,14 +29,19 @@ GetOptions("h" => \$help,
 
 usage() if $help;
 version($progName) if $version;
-die "** Need a directory to copy to" if ($#ARGV < 1);
+die "** Need a directory to copy to" if ($#ARGV < 0);
 $toDir = $ARGV[0];
 my $hostname = `hostname`; chomp $hostname;
 my $attr_there = check_attr() if $attr;
 
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
-#        mkpath($backupDir) or die "** Cannot create `$backupDir': $!";
+if (exist($toDir) == 0) {
+        mkpath($toDir) or die "** Cannot create `$toDir': $!";
+} else {
+        die "** `$toDir' is not a directory" unless -d _;
+}
+
 if ($remote) {
         while (($_ = <STDIN>)) {
                 chomp;
@@ -51,7 +56,6 @@ if ($remote) {
         }
 }
 
-rchmod(755, $toDir);
 exit 0;
 
 sub _cp {
