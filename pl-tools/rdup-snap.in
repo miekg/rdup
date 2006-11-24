@@ -158,14 +158,6 @@ sub _mirror {
         }
 }
 
-sub exist {
-        my $filename = $_[0];
-
-        lstat($filename);
-        return 0 unless -e _;
-        return 1;
-}
-
 sub usage {
         print "$progName -b DIR [OPTIONS]\n\n";
         print "Update hardlinks according to the filelist of rdup\n\n";

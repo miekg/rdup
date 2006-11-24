@@ -125,14 +125,6 @@ sub _cp {
         }
 }
 
-sub exist {
-        my $filename = $_[0];
-
-        lstat($filename);
-        return 0 unless -e _;
-        return 1;
-}
-
 sub usage {
         print "$progName [OPTIONS] DEST\n\n";
         print "Copy files read from standard in to DEST\n";

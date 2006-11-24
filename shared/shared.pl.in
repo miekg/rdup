@@ -122,5 +122,15 @@ sub syslog_log {
         syslog('info', $f, @_);
 }
 
+# check if a file exists
+sub exist {
+        my $filename = $_[0];
+
+        lstat($filename);
+        return 0 unless -e _;
+        return 1;
+}
+
+
 # keep
 1;
