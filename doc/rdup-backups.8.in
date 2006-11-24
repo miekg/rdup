@@ -20,9 +20,22 @@ Both wrappers support encryption, compressions and remote backups.
 You can only restore to the latest state when backing up with 
 \fBrdup-dump\fR.
 
-
 .SH BACKING UP WITH RDUP-SNAPSHOT
 
+When using \fBrdup-snapshot\fR the backup process consists out of two
+phases. During phase one a copy is made of any previous backups backups.
+This a hardlinked copy, meaning that it will take up very little space.
+In phase two, \fBrdup-snapshot\fR will only update the files that
+are changed since the last backup. For these files the hardlink is
+removed or overwritten with a new version of the file. The net result
+is that each backup represents a complete view of your filesystem.
+
+For \fBrdup-snapshot\fR two utilities are used: \fRrdup-snapshot\fR it
+self and \fBrdup-snap\fR. The first is a wrapper script, that will also
+create the copy of any previous backup and will then call
+\fBrdup-snap\fR to update this copy.
+
+.SH BACKING UP WITH RDUP-DUMP
 
 .SS RDUP PIPELINE
 
@@ -74,5 +87,5 @@ Dumping /home to the remote backup:
 .SH RESTORE
 
 .SH SEE ALSO
-rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-grep(1), rdup-gzip(1) and
+rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-snap(8), rdup-grep(1), rdup-gzip(1) and
 rdup-crypt(1).

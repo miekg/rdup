@@ -2,12 +2,15 @@ xx Nov 2006: 0.3.1 Miek <miek@miek.nl>
    -- fixes --
    * print the bytes transfered with 1 decimal
    * compilation fix when you don't have xattr (on Linux)
+   * documentation updates; rdup-backups(8)
+   * added: rdup-cp to copy from a rdup created backup
 
 29 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- minor fixes --
    * add manual page for rdup-snap-link
    * Some autotool fixes
    * documentation updates
+   * rdup-snap-here fixes
 
 25 Oct 2006: 0.3.0-rc1 Miek <miek@miek.nl>
    -- major features enhancements --

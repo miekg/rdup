@@ -26,7 +26,8 @@ The
 .IR FILELIST
 is a internal list \fBrdup\fR writes to, to keep track of which files
 are in a backup. If you don't want this (i.e. make a full
-backup), use \fI/dev/null\fR here.
+backup), use \fI/dev/null\fR here. This file is needed to calculate
+which files are to removed from a backup.
 .PP
 The
 .IR DIRS/FILES
@@ -52,6 +53,9 @@ to standard output. When files are removed they are also printed to
 standard output, but they are prefixed with a '-'. See 
 .B FORMAT
 below. The default format \fBrdup\fR uses is: "%p%T %b %m %u %g %l %s %n\\n"
+
+Note, that \fBrdup\fR also supports hashing of files, this makes it
+possible to check the local hash with the hash of the backed up file.
 .PP
 All errors are written to standard error.
 If the directory or file does not exist, they are skipped and a
@@ -271,10 +275,9 @@ of printing the file contents the target name is printed. Thus:
 
 Where \fBaaa/def\fR is a symbolic link that points to 'b'
 
-.SH SCRIPTS
-Various perl scripts are included with rdup. These script actually
-implement the backup scheme. With these scripts you define
-an actual backup policy.
+.SH UTILITIES
+Various perl scripts are included with rdup. Linked together these
+script actually implement the backup scheme. 
 .PP
 The more important scripts are:
 .TP
