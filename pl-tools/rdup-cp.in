@@ -29,7 +29,7 @@ GetOptions("h" => \$help,
 
 usage() if $help;
 version($progName) if $version;
-die "** Need a directory to copy to" if ($#ARGV < 0);
+die "** Need a directory to copy to" if $#ARGV < 0;
 $toDir = $ARGV[0];
 my $hostname = `hostname`; chomp $hostname;
 my $attr_there = check_attr() if $attr;
@@ -66,7 +66,7 @@ sub _cp {
                 $path = "";
                 read STDIN, $path, $psize;
         }
-        die "** Empty path"  if ($path eq "");
+        die "** Empty path"  if $path eq "";
         print STDERR "$path\n" if $verbose;
 
         if ($dump eq '+') {        # add
