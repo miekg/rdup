@@ -26,12 +26,12 @@ this list and implement the backup strategy.  This way rdup can be kept
 lean and mean. Current the (stripped) rdup executable measures 12KB and
 I don't expect that to increase much.
 
-The manual page explains rdup's options and usage. See rdup(8).
+The manual page explains rdup's options and usage. See rdup(8), for an
+introduction into making backups see rdup-backup(8).
 
 The filelist as printed starts with the root of the filedump and then
 decends into directories. This way all top level directories can be
 created in sequence. If you process the files in the same order no magic
-is needed to create directories that otherwise might be missing.
-
-See rdup-backups(8) for an extended explanation on how to create
-backups.
+is needed to create directories that otherwise might be missing. If you
+use rdup-grep to exclude some directories - keep this in mind, they are
+not automaticaly created.

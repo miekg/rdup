@@ -1,5 +1,5 @@
 Rdup is a small program, which depends on a number of a other programs
-to make it all work. The dependencies are listed here:
+and tools to make it all work. The dependencies are listed here:
 
 Mandatory:
 o libglib (core C gtk library)

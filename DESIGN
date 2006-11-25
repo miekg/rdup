@@ -46,23 +46,23 @@ crawler.c
                 don't print items with these values.
 
 gfunc.c
-        This file contain all the function that operate on GTree's.
+        This file contain all the function that operate on GTrees.
 
 getdelim.c  
-        A getdelim() implemenation for systems that don't have the GNU
+        A getdelim() implementation for systems that don't have the GNU
         one.
 
 rdup.c 
-        Contains main() and a few functions that do some setting up.
+        Contains main() and a few functions that perform the
+        initialization.
 
 signal.c
         Contains a signal handling function.
 
-4/ SCRIPTS
+4/ UTILITIES
 
-A reference implementation of some backup and restore scripts is
-included. These scripts are written in bash version 3. But they
-can also easily be made in perl, ruby or python.
+A reference implementation of some backup and restore utilities is
+included. 
 
 All scripts share a simular setup: 
    o Parse the output from rdup
