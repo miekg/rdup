@@ -1,0 +1,48 @@
+'\" t
+.TH RDUP-CP 8 "25 Nov 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+rdup-cp \- copy files from rdup
+
+.SH SYNOPSIS
+.B rdup-cp
+.IR TO
+[
+.IR OPTIONS
+]
+
+.SH DESCRIPTION
+\fBrdup-cp\fR copies the files it gets from standard input to the directory
+\fITO\fR. This script can be used to restore files from a backup,
+especially when the \fB-a\fR option of \fBrdup\fR is used.
+.PP
+The command line would look something like this:
+
+rdup /dev/null FROM | rdup-cp TO
+
+Or when you need \fBrdup\fR to fill in the extended attributes:
+
+rdup -a /dev/null FROM | rdup-cp TO
+
+.SH OPTIONS
+.TP
+.B \-a
+Write the uid and gid information to the file's extended user attributes:
+\'r_uid' and 'r_gid'. This option only works if \fBattr\fR is available
+on the system. This currently works for Linux and Solaris 10.
+.TP 
+.B \-c 
+Used in conjunction with \fBrdup\fR's \-c. Process the files' contents
+also.
+.TP
+.B \-v
+Echo the files processed to standard error.
+.TP
+.B \-h
+Short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH SEE ALSO
+rdup(8) and cp(1).

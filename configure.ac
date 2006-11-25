@@ -42,6 +42,7 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-snap.8
                  doc/rdup-snapshot.8
                  doc/rdup-backups.8
+                 doc/rdup-cp.8
                  doc/rdup-crypt.1
                  doc/rdup-gzip.1
                  doc/rdup-grep.1

@@ -30,7 +30,7 @@ Also note that there are no restore utilities, this is because you
 can copy the backup to another location with the standard unix
 commands.
 
-.SH OPTION
+.SH OPTIONS
 .TP
 .B \-a
 Write the uid and gid information to the file's extended user attributes:
@@ -42,7 +42,7 @@ Store the backup in \fIbackupdir\fR. This argument is mandatory.
 .TP
 .B \-c 
 Used in conjunction with \fBrdup\fR's \-c. This will allow
-\fBrdup-mirror\fR to be used for remote backups. 
+\fBrdup-snap\fR to be used for remote backups. 
 .TP
 .B \-v
 Echo the files processed to standard error.
