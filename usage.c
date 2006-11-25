@@ -8,7 +8,7 @@
 void
 usage(FILE *f)
 {
-        fprintf(f, "USAGE: %s (%s) [OPTION...] FILELIST DIR|FILE...\n", PROGNAME, VERSION);
+        fprintf(f, "USAGE: %s [OPTION...] FILELIST DIR|FILE...\n", PROGNAME);
         fprintf(f, "%s generates a full or incremental file list, this\n", PROGNAME);
         fprintf(f, "list can be used to implement a (incremental) backup scheme.\n");
         fprintf(f, "\n   FILELIST\tfile to store filenames\n");
@@ -19,13 +19,13 @@ usage(FILE *f)
         fprintf(f, "   -F FORMAT\tuse specified format string\n");
         fprintf(f, "   \t\tdefaults to: \"%%p%%T %%b %%u %%g %%l %%s %%n\\n\"\n");
         fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
-        fprintf(f, "   -V\t\tprint version\n");
+        fprintf(f, "   -V\t\tprint version (%s)\n", VERSION);
 #ifdef HAVE_ATTR_XATTR_H
         fprintf(f, "   -a\t\tread the extended attributes: r_uid, r_gid\n");
 #endif /* HAVE_ATTR_XATTR_H */
-#ifdef HAVE_OPENAT
+#ifdef HAVE_ATTROPEN
         fprintf(f, "   -a\t\tread the extended attributes: r_uid, r_gid\n");
-#endif /* HAVE_OPENAT */
+#endif /* HAVE_ATTROPEN */
         fprintf(f,
                 "   -c\t\tcat the contents (FORMAT=\"%%p%%T %%b %%u %%g %%l %%s\\n%%n%%C\")\n");
         fprintf(f, "   -h\t\tthis help\n");
