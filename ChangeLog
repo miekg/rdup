@@ -1,3 +1,7 @@
+xx Dec 2006: 0.3.2 Miek <miek@miek.nl>
+   -- blaah --
+
+
 26 Nov 2006: 0.3.1 Miek <miek@miek.nl>
    -- minor fixes --
    * print the bytes transfered with 1 decimal.
@@ -5,12 +9,14 @@
    * documentation updates; rdup-backups(8) [still needs work]
    * added: rdup-cp (and manpage) to copy from a rdup created backup
 
+
 29 Oct 2006: 0.3.0 Miek <miek@miek.nl>
    -- minor fixes --
    * add manual page for rdup-snap-link
    * Some autotool fixes
    * documentation updates
    * rdup-snap-here fixes
+
 
 25 Oct 2006: 0.3.0-rc1 Miek <miek@miek.nl>
    -- major features enhancements --
