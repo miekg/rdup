@@ -120,7 +120,7 @@ sub _cp {
         } else {        # Remove
                 my $target = "$dir/$path";
                 if (exist($target)) {
-                        unlink $target or warn "** Cannot rename: $target: $!";
+                        unlink $target or warn "** Cannot remove: $target: $!";
                 }
         }
 }

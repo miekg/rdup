@@ -152,7 +152,11 @@ sub _mirror {
         } else {        # Remove
                 my $target = "$dir/$path";
                 if (exist($target)) {
-                        unlink $target or warn "** Cannot rename: $target: $!";
+                        if (-d _) {
+                                rmdir $target or warn "** Cannot remove: $target: $!";
+                        } else {
+                                unlink $target or warn "** Cannot remove: $target: $!";
+                        }
                 }
                 $irm++;
         }

@@ -1,5 +1,6 @@
-xx Dec 2006: 0.3.2 Miek <miek@miek.nl>
-   -- blaah --
+29 Nov 2006: 0.3.2 Miek <miek@miek.nl>
+   -- bug fix --
+   * Use rmdir and NOT unlink to remove directories
 
 
 26 Nov 2006: 0.3.1 Miek <miek@miek.nl>
