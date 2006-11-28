@@ -118,10 +118,7 @@ sub _cp {
                         chown_attr($attr_there, $uid, $gid, $target);
                 }
         } else {        # Remove
-                my $target = "$dir/$path";
-                if (exist($target)) {
-                        unlink $target or warn "** Cannot remove: $target: $!";
-                }
+                warn "** Not removing: $target";
         }
 }
 
