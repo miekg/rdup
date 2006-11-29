@@ -153,7 +153,7 @@ sub _mirror {
                 my $target = "$dir/$path";
                 if (exist($target)) {
                         if (-d _) {
-                                rmdir $target or warn "** Cannot remove: $target: $!";
+                                rmtree $target or warn "** Cannot remove: $target: $!";
                         } else {
                                 unlink $target or warn "** Cannot remove: $target: $!";
                         }
