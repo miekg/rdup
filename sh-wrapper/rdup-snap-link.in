@@ -54,6 +54,8 @@ what() {
                 if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
+                        # create dir to be safe
+                        mkdir -p $_BACKUPDIR/$_NOW
                         $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
                         return 0
                 fi

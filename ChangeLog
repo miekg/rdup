@@ -1,7 +1,9 @@
-29 Nov 2006: 0.3.2 Miek <miek@miek.nl>
+02 Dec 2006: 0.3.2 Miek <miek@miek.nl>
    -- bug fix --
    * Use rmdir and NOT unlink to remove directories
    * Never remove in rdup-cp
+   * Fix a bug for dir creation when using rdup-snapshot
+     (this triggered on an incr. dump, during a month change)
 
 
 26 Nov 2006: 0.3.1 Miek <miek@miek.nl>
