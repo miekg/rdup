@@ -1,4 +1,5 @@
 xxxxxxxxxxx: 0.3.3 Miek <miek@miek.nl>
+   * Really fix the backup creation when using rdup-snap-link
 
 
 02 Dec 2006: 0.3.2 Miek <miek@miek.nl>

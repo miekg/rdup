@@ -51,11 +51,12 @@ what() {
         # linux thing
         while [[ $i -le $_DAYS ]]; do
                 dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
+                mon=`$GNU_DATE +%Y%m`
                 if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
                         # create dir to be safe
-                        mkdir -p $_BACKUPDIR/$_NOW
+                        mkdir -p $_BACKUPDIR/$mon
                         $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
                         return 0
                 fi
