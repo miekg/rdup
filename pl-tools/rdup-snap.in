@@ -12,7 +12,6 @@ use File::Basename;
 use File::Path;
 use File::Copy;
 use File::Copy::Recursive qw(dircopy rcopy fcopy);
-use Fcntl qw(:mode);
 
 # common functions
 my $prefix="@prefix@";
@@ -127,9 +126,10 @@ sub _mirror {
                         mkpath($target) unless -d _;
                         rchown($uid, $gid, $target);
                         chown_attr($attr_there, $uid, $gid, $target);
-                        if ($> != 0 && $bits == 0) {
-                                print STDERR "** Chmod $target to 700\n";
-                                $bits = "0700";
+                        if ($> != 0) {
+                                print STDERR "** Chmod $target u+rxw\n";
+                                $bits = "7" . substr($bits, 1, 2) if length($bits) == 3;
+                                $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2) if length($bits) == 4;
                         }
                         rchmod($bits, $target);
                         $idir++;
