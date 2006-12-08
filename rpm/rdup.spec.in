@@ -1,0 +1,49 @@
+Summary: rdup - utility to create a file list suitable for making backups
+Name: rdup
+Version: @PACKAGE_VERSION@"
+Release: 1
+
+Group: Applications/Archiving
+Vendor: Miek Gieben <miek@miek.nl>
+URL: http://miek.nl/projects/rdup/index.html
+License: GPL
+
+Source: http://miek.nl/projects/rdup/%{name}-${version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-root
+Requires: libgtk2 >= 2.0.0
+
+%description
+rdup is a utility inspired by rsync and the plan9 way of doing
+backups. rdup itself does not backup anything. It only prints a list
+of files that are changed, or all files in case of a null dump. It
+also handles files that are removed, allowing for correct
+incremental backups. 
+
+%prep
+%setup -c
+mv hdup2.0.14/* . && rmdir hdup2.0.14 # Move into standard directory
+
+%build
+%configure
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/usr/sbin 
+%makeinstall bindir=$RPM_BUILD_ROOT/usr/sbin
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+/usr/sbin/rdup
+%dir /etc/rdup
+%attr(0644,root,root) %{_mandir}/man1/rdup*
+#%attr(0644,root,root) %{_mandir}/man8/hdup.conf*
+%doc ChangeLog README AUTHORS
+
+%changelog
+* Fri Dec 08 2007 Miek Gieben <miek@miek.nl>
+- 0.3.4
+- inital RPM release
