@@ -1,7 +1,7 @@
-   Jan 2007: 0.3.4 Miek <miek@miek.nl>
+xx Dec 2006: 0.3.4 Miek <miek@miek.nl>
 
    * Output a zero when printing permissions like: ---rwxrwx
-   * When doing a remote backup and not running is root, rdup-snap
+   * When doing a remote backup and not running as root, rdup-snap
      needs to set the permissions of dirs in such a way that it
      can still access the directory (ie: chmod +wx $dir)
 
