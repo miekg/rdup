@@ -5,7 +5,7 @@
 rdup-backups \- introduction into making backups with rdup
 
 .SH TODO
-This is very much in a to do state.
+TODO still applies here.
 
 .SH INTRODUCTION
 
@@ -14,17 +14,18 @@ and \fBrdup-snapshot\fR. The first uses one directory per month where backups
 are dumped, the latter uses a hardlinked backup scheme where each day
 has its own directory. It is a matter of taste what you want to use. I
 personally use \fBrdup-snapshot\fR as it gives me more freedom when
-restoring and it is space efficient.
+restoring and it is space efficient, but no more then \fBrdup-dump\fR.
 
 Both wrappers support encryption, compressions and remote backups.
-You can only restore to the latest state when backing up with 
-\fBrdup-dump\fR.
 
 .SH BACKING UP WITH RDUP-SNAPSHOT
 
 When using \fBrdup-snapshot\fR the backup process consists out of two
 phases. During phase one a copy is made of any previous backups backups.
 This a hardlinked copy, meaning that it will take up very little space.
+It uses GNU cp to make this copy. See the manual page of
+\fBrdup-snapshot\fR for more information.
+
 In phase two, \fBrdup-snapshot\fR will only update the files that
 are changed since the last backup. For these files the hardlink is
 removed or overwritten with a new version of the file. The net result
@@ -35,7 +36,10 @@ self and \fBrdup-snap\fR. The first is a wrapper script, that will also
 create the copy of any previous backup and will then call
 \fBrdup-snap\fR to update this copy.
 
+.SS RDUP PIPELINE
+
 .SH BACKING UP WITH RDUP-DUMP
+See the manual page of \fBrdup-dump\fR for more information.
 
 .SS RDUP PIPELINE
 
@@ -43,7 +47,7 @@ create the copy of any previous backup and will then call
 
 .SS LOCAL BACKUP
 
-Snapshotting my homedir to the backup:
+Snapshotting my homedir to the backup directory:
 
         rdup-snapshot -b /vol/backup/$HOST ~
 
@@ -51,14 +55,24 @@ Snapshotting /var/lib to the backup:
 
         rdup-snapshot -b /vol/backup/$HOST /var/lib
 
+
+.SS REMOTE BACKUP
+Dumping my homedir to the remote server:
+
+        rdup-snapshot -b /vol/backup/$HOST -c miekg@remote ~
+
+Dumping /home to the remote backup:
+
+        rdup-snapshot -b /vol/backup/$HOST -c miekg@remote /home
+
+
 .SH RESTORE
 
 In principle a restore is as easy as using the standard system tools to
 copy a directory to another location. However when the
 \-a flag is used extended attributes are set, these are normally not
 read by the unix utilities. In this case you should restore by using
-\fBrdup\fR \-a and \fBrdup-mirror\fR to copy the files to another
-location.
+\fBrdup-cp\fR to copy the files to another location.
 
 .SH BACKING UP WITH RDUP-DUMP
 
@@ -67,7 +81,7 @@ location.
 .SH EXAMPLES
 
 .SS LOCAL BACKUP
-Dumping my homedir to the backup:
+Dumping my homedir to the backup directory:
 
         rdup-dump -b /vol/backup/$HOST ~
 
@@ -76,7 +90,7 @@ Dumping /var/lib to the backup:
         rdup-dump -b /vol/backup/$HOST /var/lib
 
 .SS REMOTE BACKUP
-Dumping my homedir to the remote backup:
+Dumping my homedir to the remote server:
 
         rdup-dump -b /vol/backup/$HOST -c miekg@remote ~
 
@@ -87,5 +101,5 @@ Dumping /home to the remote backup:
 .SH RESTORE
 
 .SH SEE ALSO
-rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-snap(8), rdup-grep(1), rdup-gzip(1) and
-rdup-crypt(1).
+rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-snap(8), rdup-grep(1),
+rdup-snapshot(8), rdup-gzip(1) and rdup-crypt(1).
