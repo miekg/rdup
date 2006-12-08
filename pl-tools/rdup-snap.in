@@ -127,9 +127,14 @@ sub _mirror {
                         rchown($uid, $gid, $target);
                         chown_attr($attr_there, $uid, $gid, $target);
                         if ($> != 0) {
-                                print STDERR "** Chmod $target u+rxw\n";
-                                $bits = "7" . substr($bits, 1, 2) if length($bits) == 3;
-                                $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2) if length($bits) == 4;
+                                if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
+                                        print STDERR "** Chmod $target u+rxw\n";
+                                        $bits = "7" . substr($bits, 1, 2);
+                                }
+                                if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
+                                        print STDERR "** Chmod $target u+rxw\n";
+                                        $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
+                                }
                         }
                         rchmod($bits, $target);
                         $idir++;
