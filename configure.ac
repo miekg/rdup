@@ -40,6 +40,7 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-snap-here.8
                  doc/rdup-mirror.8
                  doc/rdup-snap.8
+                 doc/rdup-snap-link.8
                  doc/rdup-snapshot.8
                  doc/rdup-backups.8
                  doc/rdup-cp.8
