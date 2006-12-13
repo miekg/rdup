@@ -9,7 +9,7 @@ URL: http://miek.nl/projects/rdup/index.html
 License: GPL
 
 Source: http://miek.nl/projects/rdup/%{name}-@PACKAGE_VERSION@.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-root
+BuildRoot: %{_tmppath}/%{name}
 Requires: libgtk2 >= 2.0.0
 
 %description
@@ -20,7 +20,7 @@ also handles files that are removed, allowing for correct
 incremental backups. 
 
 %prep
-%setup -c
+%setup 
 
 %build
 %configure --sysconfdir=/etc
@@ -28,6 +28,7 @@ make
 
 %install
 rm -rf $RPM_BUILD_ROOT
+mkdir -p %{_tmppath}/%{name}/etc/rdup
 install -d $RPM_BUILD_ROOT/usr/sbin 
 %makeinstall bindir=$RPM_BUILD_ROOT/usr/sbin
 
@@ -37,10 +38,24 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 /usr/sbin/rdup
+/usr/sbin/rdup-cp
+/usr/sbin/rdup-crypt
+/usr/sbin/rdup-dump
+/usr/sbin/rdup-grep
+/usr/sbin/rdup-gzip
+/usr/sbin/rdup-mirror
+/usr/sbin/rdup-restore
+/usr/sbin/rdup-snap
+/usr/sbin/rdup-snap-link
+/usr/sbin/rdup-snapshot
+/usr/share/rdup-dump-here
+/usr/share/rdup-snap-here
+/usr/share/shared.pl
+/usr/share/shared.sh
 %dir /etc/rdup
 %attr(0644,root,root) %{_mandir}/man1/rdup*
 %attr(0644,root,root) %{_mandir}/man8/rdup*
-%doc ChangeLog README AUTHORS
+%doc ChangeLog README AUTHORS LICENSE
 
 %changelog
 * Fri Dec 08 2007 Miek Gieben <miek@miek.nl>
