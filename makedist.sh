@@ -65,7 +65,6 @@ replace_all () {
     info "Updating '$1' with today's date."
     replace_text "$1" "@date@" "`date +'%b %e, %Y'`"
 }
-    
 
 SNAPSHOT="no"
 
@@ -137,13 +136,6 @@ info "Renaming rdup directory to rdup-$version..."
 cd ..
 mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
 
-# make the debian package
-info "Creating Debian package rdup_...$version.deb."
-( cd rdup-$version
-dpkg-buildpackage -us -uc -rfakeroot 2>/dev/null >/dev/null ) || \
-error_cleanup "Failed to create Debian package."
-mv *.deb ../
-
 tarfile="../rdup-$version.tar.gz"
 
 if [ -f $tarfile ]; then
@@ -166,6 +158,13 @@ rm -rf rdup-$version/sh-tools
 
 info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
+
+# make the debian package
+info "Creating Debian package rdup_...$version.deb."
+( cd rdup-$version
+dpkg-buildpackage -us -uc -rfakeroot 2>/dev/null >/dev/null ) || \
+error_cleanup "Failed to create Debian package."
+mv *.deb ../
 
 cleanup
 sha=`sha1sum rdup-$version.tar.bz2 |  awk '{ print $1 }'`
