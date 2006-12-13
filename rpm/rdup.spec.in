@@ -1,6 +1,6 @@
 Summary: rdup - utility to create a file list suitable for making backups
 Name: rdup
-Version: @PACKAGE_VERSION@"
+Version: @PACKAGE_VERSION@
 Release: 1
 
 Group: Applications/Archiving
@@ -8,7 +8,7 @@ Vendor: Miek Gieben <miek@miek.nl>
 URL: http://miek.nl/projects/rdup/index.html
 License: GPL
 
-Source: http://miek.nl/projects/rdup/%{name}-${version}.tar.bz2
+Source: http://miek.nl/projects/rdup/%{name}-@PACKAGE_VERSION@.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
 Requires: libgtk2 >= 2.0.0
 
@@ -21,10 +21,9 @@ incremental backups.
 
 %prep
 %setup -c
-mv hdup2.0.14/* . && rmdir hdup2.0.14 # Move into standard directory
 
 %build
-%configure
+%configure --sysconfdir=/etc
 make
 
 %install
@@ -40,7 +39,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/sbin/rdup
 %dir /etc/rdup
 %attr(0644,root,root) %{_mandir}/man1/rdup*
-#%attr(0644,root,root) %{_mandir}/man8/hdup.conf*
+%attr(0644,root,root) %{_mandir}/man8/rdup*
 %doc ChangeLog README AUTHORS
 
 %changelog
