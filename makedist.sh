@@ -108,8 +108,8 @@ svn export "$SVNROOT" rdup || error_cleanup "SVN command failed"
 
 cd rdup || error_cleanup "rdup not exported correctly from SVN"
 
-info "Building configure script (autoconf)."
-autoconf || error_cleanup "Autoconf failed."
+info "Building configure script (autoreconf)."
+autoreconf || error_cleanup "Autoreconf failed."
 
 rm -r autom4te* || error_cleanup "Failed to remove autoconf cache directory."
 rm -rf patches  || error_cleanup "Failed to remove patches directory."
