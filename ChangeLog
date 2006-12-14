@@ -4,7 +4,10 @@ xx Dec 2006: 0.3.4 Miek <miek@miek.nl>
    * When doing a remote backup and not running as root, rdup-snap
      needs to set the permissions of dirs in such a way that it
      can still access the directory (ie: chmod +wx $dir)
+     Thanks to Robert Haskins
+   * Add a rpm spec file; tested by Robert Haskins
    * Install the manual page of rdup-snap-link
+   * Remove the screenshot.jpg; makes tar.bz2 200K smaller
 
 
 04 Dec 2006: 0.3.3 Miek <miek@miek.nl>
