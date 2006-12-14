@@ -10,7 +10,7 @@ License: GPL
 
 Source: http://miek.nl/projects/rdup/%{name}-@PACKAGE_VERSION@.tar.bz2
 BuildRoot: %{_tmppath}/%{name}
-Requires: libgtk2 >= 2.0.0
+Requires: libgtk2 >= 2.0.0, bash >= 3.0.0
 
 %description
 rdup is a utility inspired by rsync and the plan9 way of doing
