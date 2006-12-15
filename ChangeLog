@@ -1,9 +1,9 @@
-xx Dec 2006: 0.3.4 Miek <miek@miek.nl>
+15 Dec 2006: 0.3.4 Miek <miek@miek.nl>
   -- bug fix release --
-   * Output a zero when printing permissions like: ---rwxrwx
+   * Output a prefix zero when printing permissions like: ---rwxrwx
    * When doing a remote backup and not running as root, rdup-snap
      needs to set the permissions of dirs in such a way that it
-     can still access the directory (ie: chmod +wx $dir)
+     can still access the directory (ie: chmod +wx $dir).
      Thanks to Robert Haskins
    * Add a rpm spec file; feedback welcomed
    * Install the manual page of rdup-snap-link
