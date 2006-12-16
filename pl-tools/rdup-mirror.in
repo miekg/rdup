@@ -119,7 +119,7 @@ sub _mirror {
                                 rchmod($bits, $target);
                         }
                         $ireg++;
-                        if ($ireg % 200 eq 0) {
+                        if ($ireg % 1000 eq 0) {
                                 syslog_log("progress: %d files", $ireg);
                         }
                 } elsif ($type eq 'd') {        # DIR
