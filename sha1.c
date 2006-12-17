@@ -142,6 +142,7 @@ sha1_stream (FILE *stream, void *resblock)
       /* Read block.  Take care for partial reads.  */
       while (1)
 	{
+		/* added MG */
 		if (sig != 0) {
 			fclose(stream);
 			signal_abort(sig);

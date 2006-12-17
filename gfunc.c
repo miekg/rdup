@@ -480,3 +480,25 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
 	}
 	return FALSE;
 }
+
+/**
+ * Walk the linked list and return TRUE when a regexp
+ * matches, otherwise return FALSE
+ */
+gboolean
+gfunc_regexp(GSList *l, char *n)
+{
+        GSList *k;
+        regex_t *R;
+	int e;
+
+        for (k = g_slist_nth(l, 0); k; k = g_slist_next(k)) { 
+		if (sig != 0)
+			signal_abort(sig);
+
+                R = (regex_t*) k->data;
+                if ((e = regexec(R, n, 0, NULL, 0)) == 0)
+                        return TRUE;
+        }
+        return FALSE;
+}

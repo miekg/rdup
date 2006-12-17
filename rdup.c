@@ -25,10 +25,10 @@ void dir_crawl(GTree *t, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
-/* getdelim.c */
-ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 /* usage.c */
 void usage(FILE *f);
+/* regexp.c */
+int regexp_init(char *f);
 
 static void
 msg_va_list(const char *fmt, va_list args)
@@ -207,10 +207,14 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "acrlmhVnN:s:vqx0F:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVnN:s:vqx0F:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
+				break;
+			case 'E':
+				if (!regexp_init(optarg)) 
+					exit(EXIT_FAILURE);
 				break;
 			case 'a':
 #ifdef HAVE_ATTR_XATTR_H

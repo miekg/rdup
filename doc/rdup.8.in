@@ -86,6 +86,20 @@ will create/touch \fBtimestamp\fR after it has printed the file list.
 This means if something goes wrong, you still have the original
 timestamp.
 .TP
+.B \-E file
+The file named 'file' contains a list of extended POSIX regular
+expressions, one per line, that \fBrdup\fR will use to \fIexclude\fR
+names. A '#' at the start of the line can be used to signal a comment
+line. Empty lines are discarded.
+
+Be carefull in what you exclude, if you exclude a directory, but fail
+to exclude \fIall\fR files in that directory, the backup script further
+along the pipeline may not be able to enter this directory and
+create a backup of the files. This may lead to failure of your entire
+backup.
+
+        that \fBrdup\fR will use to match the generated file list against.
+.TP
 .B \-V
 Print rdup's version.
 .TP
@@ -108,7 +122,6 @@ to correctly set all uid/gid information. As a workaround rdup's
 utilities will set the extended attributes for the file to store the
 original uid/gid. With this option \fBrdup\fR will re-insert these
 original uid/gid in its output.
-
 .TP
 .B \-c
 Print the files' contents to standard output. This sets
@@ -368,7 +381,8 @@ Hard links are handled as normal files.
 
 .SH SEE ALSO
 rdup-mirror(8), rdup-dump(8), rdup-snap(8) and rdup-restore(8). See
-rdup-backups(8) for an introduction into creating backups
+rdup-backups(8) for an introduction into creating backups. See regex(7)
+for an intro to regular expressions.
 
 .SH COPYRIGHT
 Copyright (C) 2005, 2006 Miek Gieben. This is free software. There is NO

@@ -10,6 +10,7 @@ extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
 extern gboolean opt_attr;
 extern gint opt_verbose;
+extern GSList *regex_list;
 
 static struct entry *
 entry_dup(struct entry *f)
@@ -160,6 +161,10 @@ dir_prepend(GTree *t, char *path)
 			msg("Could not stat path `%s\': %s", path2, strerror(errno));
 			return FALSE;
 		}
+		/* Exclude list */
+		if (gfunc_regexp(regex_list, path2)) {
+			continue;
+		}
 		e.f_name      = path2;
 		e.f_name_size = strlen(path2);
 		if (opt_attr) {
@@ -201,9 +206,7 @@ dir_crawl(GTree *t, char *path)
 		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
 
 	if(!(dir = opendir(path))) {
-		/* files are also allowed, check for this, if it isn't
-		 * give the error
-		 */
+		/* files are also allowed, check for this, if it isn't give the error */
 		if ((f = fopen(path, "r"))) {
 			fclose(f);
 			g_free(dirstack);
@@ -262,6 +265,11 @@ dir_crawl(GTree *t, char *path)
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 
+			if (gfunc_regexp(regex_list, curpath)) {
+				g_free(curpath);
+				continue;
+			}
+
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
 				if (opt_verbose > 0) {
@@ -272,7 +280,7 @@ dir_crawl(GTree *t, char *path)
 				rp.len  = strlen(path);
 				rp.path = path;
 				g_tree_foreach(t, gfunc_remove_path, (gpointer)&rp);
-				/* add .nobackup back */
+				/* add .nobackup back in */
 				g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 				g_free(dirstack);
 				closedir(dir);
@@ -288,6 +296,12 @@ dir_crawl(GTree *t, char *path)
 				g_free(curpath);
 				continue;
 			}
+			/* Exclude list */
+			if (gfunc_regexp(regex_list, curpath)) {
+				g_free(curpath);
+				continue;
+			}
+
 
 			dirstack[d] = g_malloc(sizeof(struct entry));
 			dirstack[d]->f_name       = g_strdup(curpath); 
