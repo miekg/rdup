@@ -18,6 +18,7 @@ usage(FILE *f)
         fprintf(f, "   \t\tif FILE does not exist, a full dump is performed\n");
         fprintf(f, "   -F FORMAT\tuse specified format string\n");
         fprintf(f, "   \t\tdefaults to: \"%%p%%T %%b %%u %%g %%l %%s %%n\\n\"\n");
+	fprintf(f, "   -E FILE\tuse FILE as an exclude list\n");
         fprintf(f, "   -0\t\tdelimit internal filelist with NULLs\n");
         fprintf(f, "   -V\t\tprint version (%s)\n", VERSION);
 #ifdef HAVE_ATTR_XATTR_H

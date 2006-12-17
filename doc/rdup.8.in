@@ -89,16 +89,15 @@ timestamp.
 .B \-E file
 The file named 'file' contains a list of extended POSIX regular
 expressions, one per line, that \fBrdup\fR will use to \fIexclude\fR
-names. A '#' at the start of the line can be used to signal a comment
-line. Empty lines are discarded.
+names. A '#' at the start of the line can be used to signal a comment.
+Empty lines are discarded. The \fI\-0\fR option also affects the
+format of this file.
 
 Be carefull in what you exclude, if you exclude a directory, but fail
 to exclude \fIall\fR files in that directory, the backup script further
 along the pipeline may not be able to enter this directory and
-create a backup of the files. This may lead to failure of your entire
-backup.
-
-        that \fBrdup\fR will use to match the generated file list against.
+create a backup of the files. This may lead to a failure of your entire
+backup!
 .TP
 .B \-V
 Print rdup's version.
