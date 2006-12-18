@@ -1,63 +1,50 @@
-Summary: rdup - utility to create a file list suitable for making backups
 Name: rdup
 Version: @PACKAGE_VERSION@
 Release: 1
-
-Group: Applications/Archiving
 Vendor: Miek Gieben <miek@miek.nl>
-URL: http://miek.nl/projects/rdup/index.html
+Url: http://www.miek.nl/projects/rdup/index.html
 License: GPL
+Summary: prints filenames for backup
+Group: File tools
+Packager: Vitaly Lipatov <lav at altlinux.ru>
 
-Source: http://miek.nl/projects/rdup/%{name}-@PACKAGE_VERSION@.tar.bz2
-BuildRoot: %{_tmppath}/%{name}
-Requires: libgtk2 >= 2.0, bash >= 3.0
+Source: http://www.miek.nl/projects/%name/%name-%version.tar.bz2
+#Patch: %name-0.3.0.patch
+#AutoReq: yes, noperl
+
+# Automatically added by buildreq on Wed Nov 08 2006 (-bi)
+BuildRequires: glib2-devel libattr-devel linux-libc-headers openssh-clients perl-File-Copy-Recursive
 
 %description
-rdup is a utility inspired by rsync and the plan9 way of doing
-backups. rdup itself does not backup anything. It only prints a list
-of files that are changed, or all files in case of a null dump. It
-also handles files that are removed, allowing for correct
-incremental backups. 
+rdup is a utility inspired by rsync and the plan9 way of doing backups.
+rdup it self does not backup anything, it only print a list of absolute
+filenames to standard output. Auxilary scripts are needed that act on
+this list and implement the backup strategy.
 
 %prep
-%setup 
+%setup -q
+#%patch
 
 %build
 %configure --sysconfdir=/etc
-make
+%make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p %{_tmppath}/%{name}/etc/rdup
-install -d $RPM_BUILD_ROOT/usr/sbin 
-%makeinstall bindir=$RPM_BUILD_ROOT/usr/sbin
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+mkdir -p %buildroot%_sbindir
+%make_install install DESTDIR=%buildroot
 
 %files
-%defattr(-,root,root)
-/usr/sbin/rdup
-/usr/sbin/rdup-cp
-/usr/sbin/rdup-crypt
-/usr/sbin/rdup-dump
-/usr/sbin/rdup-grep
-/usr/sbin/rdup-gzip
-/usr/sbin/rdup-mirror
-/usr/sbin/rdup-restore
-/usr/sbin/rdup-snap
-/usr/sbin/rdup-snap-link
-/usr/sbin/rdup-snapshot
-/usr/share/rdup-dump-here
-/usr/share/rdup-snap-here
-/usr/share/shared.pl
-/usr/share/shared.sh
-%dir /etc/rdup
-%attr(0644,root,root) %{_mandir}/man1/rdup*
-%attr(0644,root,root) %{_mandir}/man8/rdup*
-%doc ChangeLog README AUTHORS LICENSE
+%doc AUTHORS BACKUPS DEPENDENCIES ChangeLog README DESIGN todo
+%doc hdup/
+#%_bindir/*
+%_sbindir/*
+%exclude %_sbindir/rdup-grep
+%_man1dir/*
+%_man8dir/*
+%_datadir/%name/
 
 %changelog
 * Fri Dec 08 2007 Miek Gieben <miek@miek.nl>
-- 0.3.4
+- @PACKAGE_VERSION@ 
+- Copied from: http://www.sisyphus.ru/srpm/rdup/spec
 - inital RPM release
