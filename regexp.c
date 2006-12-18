@@ -34,16 +34,14 @@ regexp_init(char *file) {
 		exit(EXIT_FAILURE);
 	}	
 	/* read the regexp */
-
 	buf  = g_malloc(BUFSIZE + 1);
 	errbuf = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 
-	if (opt_null) {
+	if (opt_null)
                 delim = '\0';
-        } else {
+        else 
                 delim = '\n';
-        }
 
 	l = 1;
 	while ((j = getdelim(&buf, &s, delim, fp)) != -1) {
@@ -56,6 +54,8 @@ regexp_init(char *file) {
 			fclose(fp);
 			(void)regerror(i, &R, errbuf, BUFSIZE);
 			msg("Corrupt regular expression line: %zd: %s", l, errbuf); 
+			g_free(errbuf); 
+			g_free(buf);
 			return FALSE;
 		} else {
 			d = g_malloc(sizeof R);
@@ -65,5 +65,7 @@ regexp_init(char *file) {
 		l++;
 	}
 	fclose(fp);
+	g_free(errbuf); 
+	g_free(buf);
 	return TRUE;
 }

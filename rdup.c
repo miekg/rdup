@@ -91,11 +91,10 @@ g_tree_read_file(FILE *fp)
 	s    = BUFSIZE;
 	l    = 1;
 
-	if (opt_null) {
+	if (opt_null)
 		delim = '\0';
-	} else {
+	else
 		delim = '\n';
-	}
 
 	while ((getdelim(&buf, &s, delim, fp)) != -1) {
 		if (s < LIST_MINSIZE) {
