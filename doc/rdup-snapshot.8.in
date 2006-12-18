@@ -97,7 +97,7 @@ attributes r_uid and r_gid.
 Force a full dump.
 .TP
 .B \-x
-Pass \-x to rdup (stay in local filesystem).
+See \-x in rdup(8).
 .TP
 .B \-z
 Compress the files while backing up. This option

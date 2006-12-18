@@ -93,11 +93,15 @@ names. A '#' at the start of the line can be used to signal a comment.
 Empty lines are discarded. The \fI\-0\fR option also affects the
 format of this file.
 
-Be carefull in what you exclude, if you exclude a directory, but fail
-to exclude \fIall\fR files in that directory, the backup script further
-along the pipeline may not be able to enter this directory and
-create a backup of the files. This may lead to a failure of your entire
-backup!
+If a directory is excluded, \fBrdup\fR won't descend in that directory,
+so all files in that directory are also excluded.
+
+The directories leading up to the directory to be backed up cannot
+be excluded. If you use a command line like: 
+
+        rdup /dev/null /home/miekg/bin
+
+The directories '/home', '/miekg', '/bin' are always printed.
 .TP
 .B \-V
 Print rdup's version.
