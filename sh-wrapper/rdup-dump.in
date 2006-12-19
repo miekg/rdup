@@ -25,6 +25,7 @@ usage() {
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
         echo " -n PREFIX  optional prefix for the timestmp and filelist"
+        echo " -E FILE    use FILE as an exclude list"
         echo " -f         force a full dump"
         echo " -z         compress all files, using rdup-gzip"
         echo " -a         write extended attributes with uid/gid"
@@ -60,6 +61,13 @@ while getopts ":ab:k:c:n:vzfxehV" o; do
                         _echo2 "-b needs an argument"
                         exit 1
                 fi;;
+                E)
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-E needs an argument"
+                        exit 1
+                fi
+                OPT="$OPT -E $OPTARG"
+                ;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-k needs an argument"

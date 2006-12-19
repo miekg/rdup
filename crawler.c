@@ -161,10 +161,6 @@ dir_prepend(GTree *t, char *path)
 			msg("Could not stat path `%s\': %s", path2, strerror(errno));
 			return FALSE;
 		}
-		/* Exclude list */
-		if (gfunc_regexp(regex_list, path2)) {
-			continue;
-		}
 		e.f_name      = path2;
 		e.f_name_size = strlen(path2);
 		if (opt_attr) {

@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # updates a hardlinked backup
+# Licensed under the GPL version 2
+# Copyright Miek Gieben, 2006
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -25,6 +27,7 @@ usage() {
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -n PREFIX  optional prefix for the timestmp and filelist"
+        echo " -E FILE    use FILE as an exclude list"
         echo " -f         force a full dump"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
@@ -45,13 +48,20 @@ pipe=""
 ssh=""
 force=false
 
-while getopts ":ab:k:c:n:vfzxhV" o; do
+while getopts ":ab:E:k:c:n:vfzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-b needs an argument"
                         exit 1
                 fi
+                ;;
+                E)
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-E needs an argument"
+                        exit 1
+                fi
+                OPT="$OPT -E $OPTARG"
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then

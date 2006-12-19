@@ -1,7 +1,9 @@
 xx yyy jjjj: 0.3.5 Miek <miek@miek.nl>
   -- ?? --
-   * Added -E file option, with which you can give rdup an exlude
-     list. This list contain extended POSIX regular expressions
+   * Added '-E file' option, with which you can give rdup an exlude
+     list. This list contain extended POSIX regular expressions. See
+     rdup(8) for more info.
+   * Add -E to rdup-dump and rdup-snapshot
 
 15 Dec 2006: 0.3.4 Miek <miek@miek.nl>
   -- bug fix release --
