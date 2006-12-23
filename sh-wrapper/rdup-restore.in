@@ -107,12 +107,12 @@ if [[ -z "$remote" ]]; then      # no remote
         else    # with keyfile
                 if $gzip; then
                         @sbindir@/rdup -l $x -c $LIST $@ | @sbindir@/rdup-gzip |\
-                        $sbindir@/rdup-grep -c -v $REG | \
+                        @sbindir@/rdup-grep -c -v $REG | \
                         @sbindir@/rdup-crypt $KEYFILE | \
                         @sbindir@/rdup-mirror $MIR_OPT -c $BACKUPDIR
                 else 
                         @sbindir@/rdup -l $x -c $LIST $@ |
-                        $sbindir@/rdup-grep -c -v $REG | \
+                        @sbindir@/rdup-grep -c -v $REG | \
                         @sbindir@/rdup-crypt $KEYFILE | \
                         @sbindir@/rdup-mirror $MIR_OPT -c $BACKUPDIR
                 fi
@@ -122,24 +122,24 @@ else     # remote
                 if $gzip; then
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c $LIST $@ | \
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-gzip | \
                                 ssh -x "$remote" | rdup-mirror $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c $LIST $@ | \ 
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-gzip | \
                                 ssh -x "$remote" | rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
                 else    # without gzip
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c $LIST $@ | \
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 # do compress stream here
                                 ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c -N $STAMP $LIST $@ | \
-                                $sbindir@/rdup-grep -v $REG | \
+                                @sbindir@/rdup-grep -v $REG | \
                                 ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
                 fi
@@ -147,13 +147,13 @@ else     # remote
                 if $gzip; then
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c $LIST $@ | \
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-gzip |\
                                 @sbindir@/rdup-crypt $KEYFILE | 
                                 ssh -x "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c $LIST $@ | \
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-gzip |\
                                 @sbindir@/rdup-crypt $KEYFILE | 
                                 ssh -x "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
@@ -161,12 +161,12 @@ else     # remote
                 else
                         if [[ -z $bwidth ]]; then
                                 @sbindir@/rdup $x -c $LIST $@ | \
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-crypt $KEYFILE | \
                                 ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         else
                                 @sbindir@/rdup $x -c $LIST $@ | \
-                                $sbindir@/rdup-grep -c -v $REG | \
+                                @sbindir@/rdup-grep -c -v $REG | \
                                 @sbindir@/rdup-crypt $KEYFILE | \
                                 ssh -x -C "$remote" rdup-mirror $MIR_OPT -c $BACKUPDIR
                         fi
