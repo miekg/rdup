@@ -3,9 +3,9 @@ HDR=rdup.h
 CMD=rdup
 SHA_IN=shared.sh shared.pl
 WRP_IN=rdup-dump rdup-snapshot rdup-restore rdup-snap-link
-PRL_IN=rdup-gzip rdup-mirror rdup-crypt rdup-grep rdup-snap rdup-cp
+PRL_IN=rdup-gzip rdup-mirror rdup-crypt rdup-snap rdup-cp
 MAN8_IN=rdup.8 rdup-mirror.8 rdup-dump.8 rdup-restore.8 rdup-snap.8 rdup-snapshot.8 rdup-backups.8 rdup-cp.8 rdup-snap-link.8
-MAN1_IN=rdup-crypt.1 rdup-gzip.1 rdup-grep.1
+MAN1_IN=rdup-crypt.1 rdup-gzip.1
 HERE_IN=rdup-dump-here rdup-snap-here
 
 SHA=$(addprefix shared/, $(SHA_IN))

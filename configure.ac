@@ -46,7 +46,6 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-cp.8
                  doc/rdup-crypt.1
                  doc/rdup-gzip.1
-                 doc/rdup-grep.1
                  shared/shared.sh
                  shared/shared.pl
                  sh-wrapper/rdup-dump-here
@@ -57,7 +56,6 @@ AC_CONFIG_FILES([GNUmakefile
                  sh-wrapper/rdup-snapshot
                  pl-tools/rdup-gzip
                  pl-tools/rdup-crypt
-                 pl-tools/rdup-grep
                  pl-tools/rdup-snap
                  pl-tools/rdup-cp
                  pl-tools/rdup-mirror
