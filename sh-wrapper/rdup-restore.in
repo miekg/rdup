@@ -99,9 +99,9 @@ fi
 
 # regular expresion to restore only the latest #
 REG='\+\d\d\.\d\d:\d[\d/|\d$]'
-if dump; then
+if $dump; then
         # nice :-)
-        r="-E <(echo $REG)"
+        r="-E <(echo '$REG')"
 else
         r=""
 fi
