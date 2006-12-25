@@ -35,6 +35,15 @@ prefix. So the restored files are found in the directory:
 
 .SH OPTIONS
 .TP
+.B \-S
+Restore a rdup-snapshot backup. This is a hardlinked backup, so one
+can also restore these with 'cp'. Consider this a convient function.
+.TP
+.B \-D
+Restore a rdup-dump backup. Due to the way this backup is made, you
+can only restore to the latest version of your backup. \-D is the
+default for rdup-restore.
+.TP
 .B \-b TO_DIR
 This option is mandatory. It specifies the directory where the backup
 should be restored in.

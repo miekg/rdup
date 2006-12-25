@@ -21,6 +21,8 @@ usage() {
         echo " -b DIR     restore to this directory, can be given more then once"
         echo " -c REMOTE  restore the backup from a remote machine with ssh"
         echo " -k KEYFILE decrypt all files, using rdup-crypt"
+        echo " -S         rdup-snapshot restore (does not use rdup -E)"
+        echo " -D         rdup-dump restore (does use rdup -E), default"
         echo " -z         decompress all files, using rdup-gzip"
         echo " -a         use extended attributes with uid/gid"
         echo " -v         echo the files processed to stderr"
@@ -33,6 +35,7 @@ PROGNAME=$0
 BACKUPDIR=""
 pipe=""
 ssh=""
+dump=true
 while getopts ":ab:k:c:vzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
@@ -53,6 +56,10 @@ while getopts ":ab:k:c:vzxhV" o; do
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
                 c="-c"
                 ;;
+                D)
+                dump=true;;
+                S)
+                dump=false;;
                 c)
                 if [[ -z $OPTARG ]]; then
                         _echo2 "-c needs an argument"
@@ -92,13 +99,19 @@ fi
 
 # regular expresion to restore only the latest #
 REG='\+\d\d\.\d\d:\d[\d/|\d$]'
+if dump; then
+        # nice :-)
+        r="-E <(echo $REG)"
+else
+        r=""
+fi
 # create the command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-cp $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup -E <(echo $REG) $x $l $c /dev/null $@ $pipe"
+        cmd="@sbindir@/rdup $r $x $l $c /dev/null $@ $pipe"
 else
         pipe="$pipe | $ssh rdup-cp $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup -E <(echo $REG) $x $l $c /dev/null $@ $pipe"
+        cmd="@sbindir@/rdup $r $x $l $c /dev/null $@ $pipe"
 fi
 
 # execute the backup command

@@ -8,7 +8,8 @@ xx yyy jjjj: 0.3.5 Miek <miek@miek.nl>
    * Added rpm from: http://www.sisyphus.ru/srpm/rdup/spec
    * Add patch from Fabio Rossi to rdup-mirror, this add -u swith
      which makes rdup-mirror not create any date-directories.
-   * Completely rewrite rdup-restore
+   * Completely rewrite rdup-restore, it now uses rdup-cp and rdup
+     to restore. Restores for rdup-snapshot added.
 	
 
 15 Dec 2006: 0.3.4 Miek <miek@miek.nl>
