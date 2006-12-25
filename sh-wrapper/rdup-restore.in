@@ -40,6 +40,7 @@ while getopts ":ab:k:c:vzxhV" o; do
                         _echo2 "-b needs an argument"
                         exit 1
                 fi
+                ;;
                 k) KEYFILE=$OPTARG
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-k needs an argument"
@@ -96,7 +97,7 @@ grepcmd="@sbindir@/rdup-grep -c -v $REG"
 # create the command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-cp $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $l $c /dev/null $LIST $@ $pipe"
+        cmd="@sbindir@/rdup $x $l $c /dev/null $@ $pipe"
 else
         pipe="$pipe | $ssh rdup-cp $c $OPT -b $BACKUPDIR/$NOW"
         cmd="@sbindir@/rdup $x $l $c /dev/null $@ $pipe"

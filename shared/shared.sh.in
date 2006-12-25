@@ -7,6 +7,7 @@ version() {
         echo "$PROGNAME: @PACKAGE_VERSION@ (rdup-utils)"
 }
 
+# cleanup any stuff and exit
 cleanup() {
         _echo2 "Signal received while processing \`$path', exiting"
         if [[ ! -z $TMPDIR ]]; then
@@ -20,6 +21,7 @@ _echo2() {
         echo "** $PROGNAME: $1" >&2
 }
 
+# find out what kind of snapshot to make
 what() {
         _DAYS=$1
         _BACKUPDIR=$2
@@ -41,4 +43,15 @@ what() {
         (( i++ ))
         done
         return 1
+}
+
+# fix the name argument when backing up /
+ident_root() {
+        if [[ $1 = "/" ]]; then
+                IDENT="ROOT"
+        else
+                IDENT=$1
+        fi
+        echo "$IDENT"
+        return 0
 }

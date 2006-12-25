@@ -52,11 +52,7 @@ force=false
 
 while getopts ":ab:k:c:n:vzfxehV" o; do
         case $o in
-                b) BACKUPDIR="-b $OPTARG/$d"
-                BACKUPDIR_PLAIN="$BACKUPDIR_PLAIN $OPTARG"
-                if [[ -z $FIRST ]]; then
-                        FIRST=$OPTARG
-                fi
+                b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-b needs an argument"
                         exit 1
@@ -117,22 +113,20 @@ if [[ -z "$BACKUPDIR" ]]; then
         exit 1
 fi
 
-# where to put the admin files.
+# where to put the list and timestamp files.
 if $etc; then
-        if [[ ! -z $remote ]]; then
+        if [[ ! -z $c ]]; then
                 _echo2 "The -e option is not compatible with -c"
                 exit 1
         fi
-        ETC="$FIRST"
+        ETC="$BACKUPDIR"
 else
         ETC="@sysconfdir@/rdup"
 fi
 
 # fix a lonely root argument
-IDENT=$(basename $1)
-if [[ $IDENT = "/" ]]; then
-        IDENT="ROOT"
-fi
+IDENT=`ident_root $(basename $1)`
+
 if [[ ! -z $PREFIX ]]; then
         STAMP="$ETC/$PREFIX.$HOSTNAME.$IDENT.timestamp"
         LIST="$ETC/$PREFIX.$HOSTNAME.$IDENT.list"
@@ -143,20 +137,18 @@ fi
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT $BACKUPDIR"
+        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT $BACKUPDIR/$d"
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 else
-        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR"
+        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR/$d"
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 
-for i in $BACKUPDIR_PLAIN; do
-        mkdir -p "$i/$d"
-        if [[ ! $? ]]; then
-                _echo2 "Failure to create target backup directory: \`$i/$d'"
-                exit 1
-        fi
-done
+mkdir -p "$BACKUPDIR/$d"
+if [[ ! $? ]]; then
+        _echo2 "Failure to create target backup directory: \`$BACKUPDIR/$d'"
+        exit 1
+fi
 
 # DIRS in $@
 # add pwd if the path was relative

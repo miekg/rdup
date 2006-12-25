@@ -125,11 +125,10 @@ if [[ -z $BACKUPDIR ]]; then
         _echo2 "Missing the -b argument"
         exit 1
 fi
-# fix a lonely root argument
-IDENT=$(basename $1)
-if [[ $IDENT = "/" ]]; then
-        IDENT="ROOT"
-fi
+
+# fix lonely root arg
+IDENT=`ident_root $(basename $1)`
+
 if [[ ! -z $PREFIX ]]; then
         STAMP="$ETC/$PREFIX.$HOSTNAME.$IDENT.timestamp"
         LIST="$ETC/$PREFIX.$HOSTNAME.$IDENT.list"
@@ -158,18 +157,14 @@ else
         purpose=1
 fi
 case $purpose in
-        0)
-        _echo2 "INCREMENTAL DUMP"
-        ;;
+        0) _echo2 "INCREMENTAL DUMP" ;;
         1)
         _echo2 "FULL DUMP"
         rm -f $LIST
-        rm -f $STAMP
-        ;;
+        rm -f $STAMP ;;
         2)
         _echo2 "Illegal return code from rdup-snap-link"
-        exit 1;
-        ;;
+        exit 1 ;;
 esac
 # execute the backup command
 #_echo2 "Executing: ${cmd}"
