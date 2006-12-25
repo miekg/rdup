@@ -40,6 +40,9 @@ The backup directory. This is where the backup will be stored.
 Note that \fBrdup-dump\fR will add the string YYYYMM to
 the backup directory.
 .TP
+.B \-u
+Unique backupdir, do not create a YYYYMM subdirectory structure.
+.TP
 .B \-n name
 The \fIname\fR speficies an optional prefix for the
 timestamp and filelist files. These are stored, by default, in

@@ -21,7 +21,8 @@ usage() {
         echo DIR \ - directories to back up
         echo
         echo OPTIONS:
-        echo " -b DIR     backup directory"
+        echo " -b DIR     backup directory (adds YYYYMM)"
+        echo " -u         backup directory is unique, don't add YYYYMM dirs"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
         echo " -n PREFIX  optional prefix for the timestmp and filelist"
@@ -48,6 +49,7 @@ c=""
 l="-l"
 pipe=""
 ssh=""
+u=false
 force=false
 
 while getopts ":ab:k:c:n:vzfxehV" o; do
@@ -90,6 +92,7 @@ while getopts ":ab:k:c:n:vzfxehV" o; do
                         _echo2 "-N needs an argument"
                 fi;;
                 e) etc=true;;
+                u) u=true;;
                 f) force=true;;
                 z)
                 pipe="$pipe | ${exec_prefix}/sbin/rdup-gzip"
@@ -135,18 +138,22 @@ else
         LIST="$ETC/$HOSTNAME.$IDENT.list"
 fi
 
+# if not unique add date dir
+if ! $u then
+        BACKUPDIR=$BACKUPDIR/$d
+fi
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT $BACKUPDIR/$d"
+        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT $BACKUPDIR"
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 else
-        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR/$d"
+        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR"
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 
-mkdir -p "$BACKUPDIR/$d"
+mkdir -p "$BACKUPDIR"
 if [[ ! $? ]]; then
-        _echo2 "Failure to create target backup directory: \`$BACKUPDIR/$d'"
+        _echo2 "Failure to create target backup directory: \`$BACKUPDIR'"
         exit 1
 fi
 
@@ -158,9 +165,8 @@ else
         dest="`pwd`/$1"
 fi
 # check what we should do, only for the first dir...
-BACKUPDIR_DATE="$FIRST/$d"
 if ! $force; then
-        if [[ ! -e "$BACKUPDIR_DATE/$dest" ]]; then
+        if [[ ! -e "$BACKUPDIR/$dest" ]]; then
                 # kill the timestamp and inc list
                 rm -f "$LIST"
                 rm -f "$STAMP"
