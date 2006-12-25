@@ -90,17 +90,15 @@ else
         dest="`pwd`/$1"
 fi
 
-# reg stuff #
+# regular expresion to restore only the latest #
 REG='\+\d\d\.\d\d:\d[\d/|\d$]'
-grepcmd="@sbindir@/rdup-grep -c -v $REG"
-
 # create the command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-cp $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $l $c /dev/null $@ $pipe"
+        cmd="@sbindir@/rdup -E <(echo $REG) $x $l $c /dev/null $@ $pipe"
 else
         pipe="$pipe | $ssh rdup-cp $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $l $c /dev/null $@ $pipe"
+        cmd="@sbindir@/rdup -E <(echo $REG) $x $l $c /dev/null $@ $pipe"
 fi
 
 # execute the backup command

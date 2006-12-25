@@ -23,8 +23,8 @@ rdup is a utility inspired by rsync and the plan9 way of doing backups.
 rdup it self does not backup anything, it only print a list of absolute
 filenames to standard output. Auxilary scripts are needed that act on
 this list and implement the backup strategy.  This way rdup can be kept
-lean and mean. Current the (stripped) rdup executable measures 12KB and
-I don't expect that to increase much.
+lean and mean. Current the (stripped) rdup executable measures 28 KB (on
+AMD64) and I don't expect that to increase much.
 
 The manual page explains rdup's options and usage. See rdup(8), for an
 introduction into making backups see rdup-backup(8).
