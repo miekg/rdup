@@ -101,5 +101,5 @@ Dumping /home to the remote backup:
 .SH RESTORE
 
 .SH SEE ALSO
-rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-snap(8), rdup-grep(1),
+rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-snap(8),
 rdup-snapshot(8), rdup-gzip(1) and rdup-crypt(1).

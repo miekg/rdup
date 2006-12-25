@@ -6,10 +6,10 @@ xx yyy jjjj: 0.3.5 Miek <miek@miek.nl>
    * Add -E to rdup-dump and rdup-snapshot 
    * Remove rdup-grep, as most functionality can be achieved with -E
    * Added rpm from: http://www.sisyphus.ru/srpm/rdup/spec
-   * Fix occurences of $sbindir@ to @sbindir@ in rdup-restore.in
-     (patch from Fabio Rossi)
+   * Add patch from Fabio Rossi to rdup-mirror, this add -u swith
+     which makes rdup-mirror not create any date-directories.
+   * Completely rewrite rdup-restore
 	
-
 
 15 Dec 2006: 0.3.4 Miek <miek@miek.nl>
   -- bug fix release --

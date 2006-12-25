@@ -97,6 +97,7 @@ while getopts ":ab:E:k:c:n:vfzxhV" o; do
                 x) x="-x";;
                 h) usage && exit;;
                 V) version && exit;;
+                \?) _echo2 "Invalid option"; exit 1;;
         esac
 done
 shift $((OPTIND - 1))
