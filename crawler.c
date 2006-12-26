@@ -205,7 +205,6 @@ dir_crawl(GTree *t, char *path)
 				continue;
 			}
 
-
 			dirstack[d] = g_malloc(sizeof(struct entry));
 			dirstack[d]->f_name       = g_strdup(curpath); 
 			dirstack[d]->f_name_size  = curpath_len;
