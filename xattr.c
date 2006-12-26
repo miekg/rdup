@@ -114,6 +114,11 @@ read_attr_gid(__attribute__((unused))
 #endif /* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
 }
 
+
+#if 0
+/* Note; we read the st_mode here, but the rdup-utils write the permissions
+ * so the callers must fix that
+ */
 mode_t
 read_attr_mode(__attribute__((unused))
 	char *path, mode_t m)
@@ -158,3 +163,4 @@ read_attr_mode(__attribute__((unused))
 	return m;
 #endif /* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
 }
+#endif
