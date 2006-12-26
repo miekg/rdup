@@ -1,6 +1,9 @@
 TODO:
 
 :rdup utils:
+o when doing a remote backup (ssh) save permissions when a dir
+  is created with for instance 000 perms... which is set to 700
+  for rdup to enter that dir
 :rdup:
 :tests:
 o add conformence test; symlinks etc.
