@@ -6,7 +6,7 @@ xx yyy jjjj: 0.3.5 Miek <miek@miek.nl>
    * Add -E to rdup-dump and rdup-snapshot 
    * Remove rdup-grep, as most functionality can be achieved with -E
    * Added rpm from: http://www.sisyphus.ru/srpm/rdup/spec
-   * Add patch from Fabio Rossi to rdup-mirror, this add -u swith
+   * Add patch from Fabio Rossi to rdup-mirror, this add -u switch
      which makes rdup-mirror not create any date-directories.
    * Completely rewrite rdup-restore, it now uses rdup-cp and rdup
      to restore. Restores for rdup-snapshot added.
@@ -101,7 +101,7 @@ xx yyy jjjj: 0.3.5 Miek <miek@miek.nl>
 	YYYYMM/DD will be added
 
    	mirror backup:
-	rdup-dupmp -b /backup/$HOSTNAME dir-to-backup
+	rdup-dump -b /backup/$HOSTNAME dir-to-backup
 	YYYYMM will be added
 
 

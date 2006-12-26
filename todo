@@ -1,12 +1,6 @@
 TODO:
 
 :rdup utils:
-=======
-o split off rdup-utils and rdup-core?
-o refactor rdup-restore
-o rdup-cp is created, can it be used for the 
-  other utils?
-
 :rdup:
 :tests:
 o add conformence test; symlinks etc.
