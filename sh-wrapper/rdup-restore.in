@@ -116,6 +116,5 @@ fi
 
 # execute the backup command
 #_echo2 "Executing: ${cmd}"
-echo ${cmd}
 eval ${cmd}
 exit 0
