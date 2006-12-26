@@ -4,7 +4,9 @@
 
 #define GETDELIM_BUFFER 128
 
-/* copied from xine-devel */
+/* copied from xine-devel, same license applies 
+ * slightly modified to fit my needs
+ */
 ssize_t
 getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
 {
@@ -50,5 +52,4 @@ getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
         *p = '\0';
         return len;
 }
-
 #endif /* !HAVE_GETDELIM */

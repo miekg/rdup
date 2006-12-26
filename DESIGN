@@ -59,6 +59,15 @@ rdup.c
 signal.c
         Contains a signal handling function.
 
+regex.c
+        Regular expression functions
+
+xattr.c
+        Extended attributes functions.
+
+sha1.c
+        SHA-1 implementation, for file hashing
+
 4/ UTILITIES
 
 A reference implementation of some backup and restore utilities is

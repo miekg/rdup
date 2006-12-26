@@ -15,7 +15,7 @@ zenity --error --title "rdup @ $HOSTNAME" --text "Edit this file before running 
 exit 1 # REMOVE THIS
 
 ##
-# For each HOST you should define the directories to backup 
+# For each HOST you should define the directories to backup
 ##
 case $HOSTNAME in
         elektron*)
@@ -26,7 +26,6 @@ case $HOSTNAME in
         zenity --error --title "rdup @ $HOSTNAME" --text "No backups defined for host <b>$HOSTNAME</b>"
         exit 1
 esac
-
 
 what() {
         if [[ -d $BACKUPDIR/$NOW ]]; then
