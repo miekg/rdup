@@ -118,6 +118,7 @@ sub _cp {
                         chown_attr($attr_there, $uid, $gid, $target);
                 }
         } else {        # Remove
+                my $target = "$dir/$path";
                 warn "** Not removing: $target";
         }
 }
