@@ -1,4 +1,4 @@
-xx yyy jjjj: 0.3.5 Miek <miek@miek.nl>
+26 Dec 2006: 0.3.5 Miek <miek@miek.nl>
   -- minor features added --
    * Added '-E file' option, with which you can give rdup an exlude
      list. This list contains extended POSIX regular expressions. See
