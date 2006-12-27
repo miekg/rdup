@@ -52,7 +52,7 @@ ssh=""
 u=false
 force=false
 
-while getopts ":ab:k:c:n:vzfxehV" o; do
+while getopts ":ab:k:c:n:vzfxuehV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -139,15 +139,15 @@ else
 fi
 
 # if not unique add date dir
-if ! $u then
+if ! $u; then
         BACKUPDIR=$BACKUPDIR/$d
 fi
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT $BACKUPDIR"
+        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT -b $BACKUPDIR"
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 else
-        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT $BACKUPDIR"
+        pipe="$pipe | $ssh rdup-mirror $ROPT $OPT -b $BACKUPDIR"
         cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 fi
 

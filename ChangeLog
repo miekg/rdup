@@ -1,4 +1,4 @@
-26 Dec 2006: 0.3.5 Miek <miek@miek.nl>
+27 Dec 2006: 0.3.5 Miek <miek@miek.nl>
   -- minor features added --
    * Added '-E file' option, with which you can give rdup an exlude
      list. This list contains extended POSIX regular expressions. See
@@ -10,6 +10,7 @@
      which makes rdup-mirror not create any date-directories.
    * Completely rewrite rdup-restore, it now uses rdup-cp and rdup
      to restore. Restores for rdup-snapshot added.
+   * Documentation fixes
 	
 
 15 Dec 2006: 0.3.4 Miek <miek@miek.nl>

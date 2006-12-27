@@ -12,13 +12,12 @@ source $datadir/shared.sh
 
 usage() {
         echo "$PROGNAME -b DIR [OPTIONS] DIR [DIR ...]"
-        echo 
-        echo "This is a wrapper around rdup, rdup-grep and rdup-mirror"
         echo
+        echo "This is a wrapper around rdup and rdup-cp"
         echo DIR \ - directories to restore
         echo
         echo OPTIONS:
-        echo " -b DIR     restore to this directory, can be given more then once"
+        echo " -b DIR     restore to this directory"
         echo " -c REMOTE  restore the backup from a remote machine with ssh"
         echo " -k KEYFILE decrypt all files, using rdup-crypt"
         echo " -S         rdup-snapshot restore (does not use rdup -E)"
@@ -98,7 +97,8 @@ else
 fi
 
 # regular expresion to restore only the latest #
-REG='\+\d\d\.\d\d:\d[\d/|\d$]'
+#REG='\+\d\d\.\d\d:\d[\d/|\d$]'
+REG='\+..\...:..$'
 if $dump; then
         # nice :-)
         r="-E <(echo '$REG')"
@@ -115,6 +115,6 @@ else
 fi
 
 # execute the backup command
-#_echo2 "Executing: ${cmd}"
+_echo2 "Executing: ${cmd}"
 eval ${cmd}
 exit 0

@@ -17,7 +17,7 @@ FROM_DIR ...
 ]
 
 .SH DESCRIPTION
-\fBrdup-restore\fR is a frontend for `rdup-mirror' and `rdup'. It will
+\fBrdup-restore\fR is a frontend to `rdup-cp' and `rdup'. It will
 restore everything under \fIFROM_DIR\fRs to \fITO_DIR\fR.
 
 .PP
@@ -27,7 +27,7 @@ rdup-snapshot(8).
 
 .PP
 Restoring from a backup is as simple as:
-      rdup-restore \-t /tmp/home /vol/backup/elektron/200604/home
+      rdup-restore \-b /tmp/home /vol/backup/elektron/200604/home
 
 Note: The restored files "inherit" the `/vol/backup/elektron/200604'
 prefix. So the restored files are found in the directory:
