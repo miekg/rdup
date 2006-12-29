@@ -75,7 +75,7 @@ while getopts ":ab:k:c:n:vzfxuehV" o; do
                         _echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                pipe="$pipe | @sbindir@/sbin/rdup-crypt $OPTARG"
+                pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
                 c="-c"
                 ;;
                 c)
@@ -95,7 +95,7 @@ while getopts ":ab:k:c:n:vzfxuehV" o; do
                 u) u=true;;
                 f) force=true;;
                 z)
-                pipe="$pipe | @sbindir@/sbin/rdup-gzip"
+                pipe="$pipe | @sbindir@/rdup-gzip"
                 c="-c"
                 ;;
                 a) OPT="$OPT -a";;
