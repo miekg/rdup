@@ -1,3 +1,8 @@
+xx Jan 2007: 0.3.6 Miek <miek@miek.nl>
+  -- minor bugfixes --
+   * Small fixes for rdup-dump (Fabio Rossi)
+
+
 27 Dec 2006: 0.3.5 Miek <miek@miek.nl>
   -- minor features added --
    * Added '-E file' option, with which you can give rdup an exlude
