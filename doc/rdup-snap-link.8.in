@@ -25,13 +25,17 @@ This utility is called from \fBrdup-snapshot\fR.
 date. This is probably only needed on non GNU/Linux systems.
 This file has the following format:
 
-GNU_DATE=/path/to/gnu_date
-GNU_CP=/path/to/gnu_cp
+.RS
+        GNU_DATE=/path/to/gnu_date
+        GNU_CP=/path/to/gnu_cp
+.RE
 
 For example:
 
-GNU_DATE=/usr/local/bin/date
-GNU_CP=/usr/local/bin/cp
+.RS
+        GNU_DATE=/usr/local/bin/date
+        GNU_CP=/usr/local/bin/cp
+.RE
 
 .SH SEE ALSO
 rdup-backups(1) and rdup-snapshot(8).

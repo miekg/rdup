@@ -396,7 +396,7 @@ rdup-backups(8) for an introduction into creating backups. See regex(7)
 for an intro to regular expressions.
 
 .SH COPYRIGHT
-Copyright (C) 2005, 2006 Miek Gieben. This is free software. There is NO
+Copyright (C) 2005-2007 Miek Gieben. This is free software. There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.
 .PP
