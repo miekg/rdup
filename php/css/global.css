@@ -1,0 +1,201 @@
+/************************************************************** GLOBAL STYLES */
+html {
+	min-width: 750px;
+	}
+	
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background: #fff url(/gfx/bkgrnd_greydots.png) repeat;
+	font-family: "Trebuchet MS", helvetica, verdana, arial, sans-serif;
+        font-size: 14px;
+	color: #333;
+	}
+	
+#wrap {
+	width: 750px;
+	margin: 0 auto 10px auto;
+	padding: 0;
+	text-align: left;
+	background: #fff;
+	}
+	
+#innerwrap {
+	width: 720px;
+	margin: 0 15px;
+	padding: 8px 0;
+	}
+	
+#content {
+        margin-left: 4em;
+        margin-right: 6em;
+}
+
+form button {
+cursor: pointer;
+}
+
+#info {
+        font-size: small;
+        background-color: #dedede;
+        padding-left: 0.5em;
+        margin-bottom: 0.5em;
+        width: 20em;
+}
+	
+/************************************************************** BASIC HTML STYLES */
+	
+p {
+	line-height: 1.25em;
+/*	margin-top: 0; */
+	}
+
+h1+p,
+h2+p,
+h3+p,
+h4+p {
+	margin-top: .25em;
+	}
+	
+p.footnote {
+	margin-top: 4em;
+	font-size: xx-small;
+	color: black;
+	}
+	
+p.question {
+	color: #999;
+	font-weight: bold;
+	margin-bottom: 0px;
+	}
+	
+p.answer {
+	margin: 0 auto 15px auto;
+	}
+	
+blockquote.introquote {
+	color: #666; 
+	font-size: small; 
+	margin: 15px;
+	}
+	
+blockquote.introquote p {
+	font-family: Georgia, serif; 
+	padding-bottom: 0; 
+	margin-bottom: 0;
+	}
+	
+blockquote.introquote cite {
+	margin-left: 350px; 
+	margin-right: 1em; 
+	font-size: smaller;
+	}
+
+img {
+	border: 0;
+	}
+	
+img.promoInline {
+	margin-bottom: 15px;
+	}
+	
+img.imgInline {
+	margin: 15px 0;
+	}
+
+img.iconLeft {
+	margin-right: 5px;
+	}
+
+img.floatRight	{
+	float: right;
+	display: block;
+	margin-left: 15px;
+	margin-bottom: 10px;
+	}
+
+img.floatLeft	{
+	float: left;
+	display: block;
+	margin-right: 15px;
+	margin-bottom: 10px;
+	}
+	
+dt {
+	font-weight:bold;
+	padding-bottom:.5em;
+	}
+
+dd {
+	margin-bottom:1.5em;
+	}
+	
+dd div {
+	margin: 1em 0 2em 0;
+	}
+	
+ul li,
+ol li {
+	margin: 5px 0;
+	}
+	
+ul.linkage {
+	list-style: none;
+	padding-left: 8px;
+	margin-left: 9px;
+	}
+	
+ul.linkage li{
+	padding-left: 10px;
+	margin: .8em 0;
+	}
+	
+ul.listLeft {
+	padding-left: 1em;
+	}
+
+table {	
+        font-size: small;
+        }
+	
+/************************************************************** LINK STYLES */	
+a:link {
+	color: #0066cc;
+	}
+	
+a:visited {
+	/* color: #6699cc; */
+	color: #0066cc;
+	}
+
+#navigate a:visited {
+	color: #0066cc;
+	}
+
+	
+h2 a,
+h3 a,
+h4 a {
+	text-decoration: none;
+	}
+	
+/************************************************************** FORM ROWS */
+
+input {
+	border: 1px solid #999;
+	background: #f7f2d0;
+	}
+	
+input.submitSpace {
+	margin-top: 20px
+	}
+
+div.formblock {		/* for formblocks that follow h2's */
+	margin-bottom: 1em;
+	}
+
+div.formrow {
+  	padding: 5px 0;
+  	font-size: x-small;
+  	}

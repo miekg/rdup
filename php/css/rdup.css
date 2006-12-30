@@ -1,0 +1,71 @@
+/* 	This stylesheet is copied from the redhat.com site.
+ *      All credits go to their webdev team
+ *      I've modified the style heavily
+ *
+ *      MG 2006
+ */
+
+@import url("global.css");
+@import url("navigation.css"); 
+@import url("bugzilla.css"); 
+
+#header {
+        width: 100%;
+        height: 42px;
+        clear: left;
+        }
+
+#header form {
+        width: 201px;
+        margin-top: 5px;
+        float: right;
+        text-align: right;
+        }
+
+#header input {
+        background: #eee;
+        }
+
+#headerLeft {
+        position: absolute;
+        float: left;
+        }
+#headerRight {
+        position: absolute;
+        float: right;
+        }
+
+p#footer {
+        padding-top: 40px;
+        margin-left: 15px;
+        line-height: 1.5em;
+        color: #999;
+        font-size: xx-small;
+        clear: both;
+        }
+
+p#footer a {
+        text-decoration: none;
+        }
+
+table {
+	border: 1px;
+	}
+	
+td,
+th {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-align: left;
+	vertical-align: top;
+	}
+
+blockquote {
+  margin: 10px 0px 0px 17px;
+  padding: 0px 35px 0 9px;
+  border-left: 5px solid #ddd;
+  font-style: italic;
+  _overflow: visible;
+  _height: 1px;
+}
+
