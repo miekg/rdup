@@ -41,7 +41,7 @@ final class i18n
     /* The translate funcion, give the
      * english text and retrieve the language string
      */
-    public function _T($e) {
+    public function T($e) {
         if (isset($this->trans{$this->lang}{sha1($e)}))
             return $this->trans{$this->lang}{sha1($e)};
         return $e;

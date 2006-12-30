@@ -2,14 +2,23 @@
 <?php
 error_reporting(E_ALL);
 
-require_once("i18n.php");
+require_once("web.php");
 
 $L = "NL";
 
 $x = new i18n($L, "lang.txt");
 $x->show("Configuration", "Configuratie");
+$x->show("infopage", "infopagina");
+#
+echo $x->T("Hello") . "\n";
+echo $x->T("Configuration") . "\n";
+#
 
-echo $x->_T("Hello") . "\n";
-echo $x->_T("Configuration") . "\n";
+$w = new web($L, "lang.txt");
+$w->header("infopage");
+
+
+
+$w->footer();
 
 ?>
