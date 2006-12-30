@@ -145,6 +145,8 @@ fi
 
 info "Deleting the tpkg and test directory"
 rm -rf rdup-$version/test/
+info "Deleting the php directory"
+rm -rf rdup-$version/php/
 
 info "Deleting the other fluff"
 rm -rf rdup-$version/.svn
