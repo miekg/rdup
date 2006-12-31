@@ -36,7 +36,7 @@ final class i18n
 
     public function show($english, $translation)
     {
-        echo "#" . $english . "\n";
+        echo "# " . $english . "\n";
         echo $this->lang . " ";
         echo sha1($english) . " ";
         echo $translation . "\n";

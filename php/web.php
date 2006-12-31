@@ -33,7 +33,7 @@ final class web
         $hl_config = "m0";
         $hl_system = "m0";
         switch($curpage) {
-            case "info":
+            case "infopage":
                 $hl_info = "mainLast";
                 break;
             case "backup":
