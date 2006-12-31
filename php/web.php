@@ -115,6 +115,8 @@ HEADER;
     {
         $home   = $this->x->T("Homepage rdup");
         $author = $this->x->T("Contact author");
+        $date   = date("D M d H:i:s T Y");
+
         echo <<<FOOTER
 </div> <!-- content -->
 
@@ -123,11 +125,80 @@ HEADER;
 </div><!-- contentWrap -->
 <p id="footer"> Copyright &copy; 2005 - 2007 Miek Gieben<br/>
   <a href="http://www.miek.nl/projects/rdup">$home</a> :
-  <a href="http://www.miek.nl/about/about.html">$author</a>
+  <a href="http://www.miek.nl/about/about.html">$author</a> :
+  $date
 </p>
 </div> <!-- end innerWrap -->
 
 FOOTER;
+        return true;
     }
+
+    public function system_shutdown()
+    {
+        $server   = $this->x->T("Server");
+        $shutdown = $this->x->T("Shutdown");
+        $value = $this->x->T("Shutdown the server");
+        echo <<<EOF
+<h2>$server</h2>
+<form name="system.shutdown" action="http://www.miek.nl/php/action.php" method="post">
+<fieldset>
+<legend>$value</legend>
+<input type="hidden" name="action" value="shutdown"/>
+<input class="form-submit" value="$value" type="submit"/>
+</fieldset>
+</form>
+EOF;
+        return true;
+    }
+
+    public function system_network()
+    {
+        $network = $this->x->T("Network");
+        $leg_type = $this->x->T("Network type");
+        $dyna = $this->x->T("Dynamic");
+        $stat = $this->x->T("Static");
+        $leg_stat = $this->x->T("Static network settings");
+        $addr = $this->x->T("Address");
+        $mask = $this->x->T("Network mask");
+        $gate = $this->x->T("Gateway");
+        $submit = $this->x->T("Submit");
+        echo <<<EOF
+<h2>$network</h2>
+<form name="system.network" action="http://www.miek.nl/php/action.php" method="post">
+<fieldset>
+<legend>$leg_type</legend>
+<input type="hidden" name="action" value="network"/>
+<select name="network_type">
+   <option value="DHCP">$dyna</option>
+   <option value="STATIC">$stat</option>
+</select>
+<p>
+<input class="form-submit" value="$submit" type="submit"/>
+</fieldset>
+<fieldset>
+<legend>$leg_stat</legend>
+<table>
+<tr>
+<td>$addr</td>
+<td><input type="text" name="ip_addr" value=""/></td>
+</tr>
+<tr>
+<td>$mask</td> 
+<td><input type="text" name="ip_mask" value=""/></td>
+</tr>
+<tr>
+<td>$gate</td>
+<td><input type="text" name="ip_gate" value=""/></td>
+</tr>
+</table>
+<input class="form-submit" value="$submit" type="submit"/>
+</fieldset>
+</form>
+EOF;
+        return true;
+    }
+
+
 }
 ?>
