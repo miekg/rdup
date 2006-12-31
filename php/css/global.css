@@ -187,6 +187,13 @@ input {
 	background: #f7f2d0;
 	}
 
+option.dir {
+        color: #800000;
+        font-size: large;
+        right-margin: 2em;
+        left-margin: 2em;
+}
+
 legend {
        color: #777;
        font-weight: bold;

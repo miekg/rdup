@@ -4,6 +4,7 @@
  */
 
 require_once("i18n.php");
+require_once("lib.php");
 
 final class web
 {
