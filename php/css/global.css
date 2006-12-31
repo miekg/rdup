@@ -186,6 +186,11 @@ input {
 	border: 1px solid #999;
 	background: #f7f2d0;
 	}
+
+legend {
+       color: #777;
+       font-weight: bold;
+}
 	
 input.submitSpace {
 	margin-top: 20px
