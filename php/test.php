@@ -20,5 +20,6 @@ $w->header("infopage");
 
 
 $w->footer();
+echo date("D M d H:i:s T Y");
 
 ?>
