@@ -15,15 +15,19 @@ final class i18n
     public function __construct($lang, $langfile)
     {
         $this->lang  = strtoupper($lang);
-        $this->trans = $this->read($langfile);
+        if (false === ($this->trans = $this->read($langfile)))
+            return false;
         return true;
     }
 
     public function read($file)
     {
-        $f = file($file);
+        if (false === ($f = file($file))) 
+            return false;
         $tr = array();
         foreach($f as $line) {
+            if (substr($line, 0, 1) == "#") 
+                continue;
             list($l, $h, $t) = split(" ", rtrim($line, "\n"), 3);
             $tr{$l}{$h} = $t;
         }
@@ -32,6 +36,7 @@ final class i18n
 
     public function show($english, $translation)
     {
+        echo "#" . $english . "\n";
         echo $this->lang . " ";
         echo sha1($english) . " ";
         echo $translation . "\n";

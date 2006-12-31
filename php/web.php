@@ -11,7 +11,8 @@ final class web
 
     public function __construct($lang, $langfile)
     {
-        $this->x = new i18n($lang, $langfile);
+        if (false === ($this->x = new i18n($lang, $langfile)))
+            return false;
         return true;
     }
 
@@ -25,6 +26,26 @@ final class web
         $config   = $this->x->T("configuration");
         $system   = $this->x->T("system");
         $home     = $this->x->T("homepage rdup");
+
+        /* mainLast is highlighted in the stylesheet */
+        $hl_info = "m0";
+        $hl_backup = "m0";
+        $hl_config = "m0";
+        $hl_system = "m0";
+        switch($curpage) {
+            case "info":
+                $hl_info = "mainLast";
+                break;
+            case "backup":
+                $hl_backup = "mainLast";
+                break;
+            case "config":
+                $hl_config = "mainLast";
+                break;
+            case "system":
+                $hl_system = "mainLast";
+                break;
+        }
     
         echo <<<HEADER
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -51,10 +72,10 @@ final class web
 <div id="mainNavInner">
 <ul>
 <!-- mainLast is highlighted -->
-    <li id="m0"><a href="http://www.miek.nl/">$info</a></li>
-    <li id="m1"><a href="http://www.miek.nl/projects/">$backup</a></li>
-    <li id="m2"><a href="http://www.miek.nl/projects/">$config</a></li>
-    <li id="m3"><a href="http://www.miek.nl/linux/">$system</a></li>
+    <li id="$hl_info"><a href="http://www.miek.nl/php/index.php">$info</a></li>
+    <li id="$hl_backup"><a href="http://www.miek.nl/php/backup.php">$backup</a></li>
+    <li id="$hl_config"><a href="http://www.miek.nl/php/config.php">$config</a></li>
+    <li id="$hl_system"><a href="http://www.miek.nl/php/system.php">$system</a></li>
     <li id="m4"><a href="http://www.miek.nl/projects/rdup/">$home</a></li>
 </ul>
 </div><!-- end mainNavInner -->
