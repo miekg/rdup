@@ -4,3 +4,7 @@ NL 754164850f38c1ecdaf6b8ed894cb192bc36c5f4 Configuratie
 NL c6e1dada543be2689b044803dedb06dc27e889c0 infopagina
 # system
 NL 317f1e761f2faa8da781a4762b9dcc2c5cad209a systeem
+# Shutdown
+NL 7fddb7d8d1d60b1eeefa9af01082e0811d4b484d Uitzetten
+# Shutdown the server
+NL 441fbead49538d2658718b70cc9a3ba41c078d36 Zet de server uit
