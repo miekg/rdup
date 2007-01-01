@@ -245,7 +245,7 @@ EOF;
         $delete_all = $this->T("Delete all");
         $delete = $this->T("Delete");
         $list = dirlist($dir, true, 2);
-        $perline = 6;
+        $perline = 10;
 
         print "<h2>Backups</h2>\n";
         foreach(array_keys($list) as $topdir) {
