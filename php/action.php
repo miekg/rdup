@@ -9,9 +9,14 @@ switch ($_REQUEST['action']) {
         $a = $_REQUEST['dirs'];
         print_r($a);
         break;
+    case "backup.now":
+        echo "rdup";
+        break;
+
     case "system.network":
     default:
          echo $_REQUEST['action'];
         /* go to home page */
+         break;
 }
 ?>

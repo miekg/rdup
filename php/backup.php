@@ -29,8 +29,10 @@ foreach ($ar as $d) {
 
 
 
-
+<form name="backup.dir" action="http://www.miek.nl/php/action.php" method="post">
+<input type=hidden name="action" value="backup.now"/>
 <h2>Start backup now!</h2>
+</form>
 
 <h2>Daily backup</h2>
 Schedule: 02:00 ('s nachts) 
