@@ -8,6 +8,7 @@ final class rc
     var $directories;
     var $free;
     var $fifo;
+    var $rdup;
 
     public function __construct($file) 
     {
@@ -17,6 +18,7 @@ final class rc
         $directories = "";
         $free = "";
         $fifo = "";
+        $rdup = "";
         $this->parse_rdup_rc($file);   
         return true;
     }
@@ -51,6 +53,9 @@ final class rc
                     break;
                 case "FIFO":
                     $this->fifo = $value;
+                    break;
+                case "RDUPSH":
+                    $this->rdupsh = $value;
                     break;
             }
         }

@@ -38,10 +38,10 @@ while (!stream_select($read, $w = NULL, $e = NULL, 0)) {
 
     switch($cmd) {
         case "BACKUP":
-            echo "backup cmd!\n";
+            echo $conf->rdupsh . "\n";
             break;
         case "SHUTDOWN":
-            echo "shutdown cmd!\n";
+            echo "/sbin/poweroff\n";
             break;
         case "REMOVE":
             if (!check_backupdir($arg)) {

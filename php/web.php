@@ -115,8 +115,8 @@ HEADER;
 
     public function footer() 
     {
-        $home   = $this->x->T("Homepage rdup");
-        $author = $this->x->T("Contact author");
+        $home   = $this->T("Homepage rdup");
+        $author = $this->T("Contact author");
         $date   = date("D M d H:i:s T Y");
 
         echo <<<FOOTER
@@ -139,9 +139,9 @@ FOOTER;
 
     public function system_shutdown()
     {
-        $server   = $this->x->T("Server");
-        $shutdown = $this->x->T("Shutdown");
-        $value = $this->x->T("Shutdown the server");
+        $server   = $this->T("Server");
+        $shutdown = $this->T("Shutdown");
+        $value = $this->T("Shutdown the server");
         echo <<<EOF
 <h2>$server</h2>
 <form name="system.shutdown" action="http://www.miek.nl/php/action.php" method="post">
@@ -157,15 +157,15 @@ EOF;
 
     public function system_network()
     {
-        $network = $this->x->T("Network");
-        $leg_type = $this->x->T("Network type");
-        $dyna = $this->x->T("Dynamic");
-        $stat = $this->x->T("Static");
+        $network = $this->T("Network");
+        $leg_type = $this->T("Network type");
+        $dyna = $this->T("Dynamic");
+        $stat = $this->T("Static");
         $leg_stat = $this->x->T("Static network settings");
-        $addr = $this->x->T("Address");
-        $mask = $this->x->T("Network mask");
-        $gate = $this->x->T("Gateway");
-        $submit = $this->x->T("Submit");
+        $addr = $this->T("Address");
+        $mask = $this->T("Network mask");
+        $gate = $this->T("Gateway");
+        $submit = $this->T("Submit");
         echo <<<EOF
 <h2>$network</h2>
 <form name="system.network" action="http://www.miek.nl/php/action.php" method="post">
@@ -201,5 +201,95 @@ EOF;
 EOF;
         return true;
     }
+
+    public function infopage_backup()
+    {
+        $mk_backup = $this->T("Make a backup now");
+        echo <<<EOF
+<h2>Process</h2>
+<form name="backup" action="http://www.miek.nl/php/action.php" method="post">
+<input type="hidden" value="backup" name="action">
+<input class="form-submit" type="submit" value="$mk_backup">
+</form>
+EOF;
+        return true;
+    }
+        
+    public function infopage_info($dir) {
+        $last = $this->T("Last backup");
+        $free = $this->T("Free");
+        $used = $this->T("Used");
+        $info = $this->T("Info");
+#        $last_backup = last_backup();
+        $free_v = sprintf("%.2f", free($dir));
+        $used_v = sprintf("%.2f", used($dir));
+        $perc_v = sprintf("%.2f", percentage($dir));
+        echo <<<EOF
+<h2>$info</h2>
+<table>
+<tr>
+<td>$last:</td>
+<td>
+<input class="form-submit" readonly value="blaat"></td>
+</tr>
+<tr><td>$free/$used:</td>
+<td><input class="form-submit" readonly value="$free_v/$used_v"> ($perc_v %)</td>
+</tr>
+</table>
+EOF;
+        return true;
+    }
+
+    public function infopage_dirs($dir) 
+    {
+        $delete_all = $this->T("Delete all");
+        $delete = $this->T("Delete");
+        $list = dirlist($dir, true, 2);
+        $perline = 6;
+
+        print "<h2>Backups</h2>\n";
+        foreach(array_keys($list) as $topdir) {
+            # rdup syntax
+            $month = $this->T(month_name(substr($topdir, -2, 2)));
+
+            print "<div class=\"mC\">\n";
+            print "<div class=\"mH\" onclick=\"toggleMenu('$topdir')\">$topdir/\n";
+            print "<span class=\"right\">$month</span>";
+            print "</div>\n";
+            print "<div id=\"$topdir\" class=\"mL\">\n";
+            print "<form name=\"remove\" action=\"http://www.miek.nl/php/action.php\" method=\"post\">";
+            print "<input type=\"hidden\" value=\"remove\" name=\"action\">";
+            print "<input type=\"hidden\" value=$topdir name=\"arg\">";
+            print "<input type=\"submit\" value=\"$delete_all\">";
+            print "</form>\n";
+
+            $i = 0;
+            print "<table>\n";
+            foreach(array_keys($list{$topdir}) as $dir) {
+                $dir = basename($dir);
+            if ($i % $perline == 0) {
+                if ($i == 0)
+                    print "<tr>\n";
+                else
+                    print "</tr><tr>\n";
+            }
+
+            print "<td>";
+            print "<span class=\"mO\">\n";
+            print "<form name=\"remove\" action=\"http://www.miek.nl/php/action.php\" method=\"post\">\n";
+            print "<input type=\"hidden\" value=\"remove\" name=\"action\">\n";
+            print "<input type=\"hidden\" value=\"$topdir/$dir\" name=\"arg\">\n";
+            print "<input type=\"submit\" value=\"$delete\">\n";
+            print "&nbsp; $dir/</span></form>";
+            print "</td>";
+
+            $i++;
+            }
+            print "</table>\n";
+            print "</div></div>\n";
+        }
+        return true;
+    }
+
 }
 ?>

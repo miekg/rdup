@@ -182,6 +182,12 @@ h4 a {
 	
 /************************************************************** FORM ROWS */
 
+.right {
+        position: absolute;
+        right: 45%;
+        text-align: right;
+}
+
 input {
 	border: 1px solid #999;
 	background: #f7f2d0;

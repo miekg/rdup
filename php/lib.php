@@ -56,4 +56,25 @@ function month_name($num)
             return "Dec";
     }
 }
+
+function free($dir) 
+{
+    return (disk_free_space($dir) / 1024 / 1024 / 1024);
+}
+
+function used($dir) 
+{
+    return (disk_total_space($dir) / 1024 / 1024 / 1024);
+}
+
+function percentage($dir) 
+{
+    $dt = used($dir);
+    $df = free($dir);
+    if ($dt == 0)
+        return 0;
+    return (($dt - $df) / $dt) * 100;
+}
+
+
 ?>
