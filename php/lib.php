@@ -5,6 +5,9 @@
 
 function dirlist($dir, $dironly = false, $depth = 1) 
 {
+    if (!is_dir($dir))
+        return array();
+
     foreach(scandir($dir) as $entry)
         if($entry != '.' && $entry != '..') {
             $entry  = $dir . '/' .$entry;
@@ -21,7 +24,10 @@ function dirlist($dir, $dironly = false, $depth = 1)
                 $listarray[] = $path['basename'];
             }
         }
-    return($listarray);
+    if (isset($listarray))
+        return($listarray);
+    return array();
+
 }
 
 function month_name($num)
