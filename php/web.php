@@ -54,10 +54,10 @@ final class web
   <style type="text/css" media="screen">
     <!--
         @import url("css/rdup.css");
+        @import url("css/menu.css");
     -->
 </style>
 <script src="menu.js" type="text/javascript"></script>
-<link href="menu.css" type="text/css" rel="stylesheet"/> 
 <title>rdup - $pagename</title>
 </head>
 <body id="mainend">
