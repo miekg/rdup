@@ -205,8 +205,9 @@ EOF;
     public function infopage_backup()
     {
         $mk_backup = $this->T("Make a backup now");
+        $process = $this->T("Process");
         echo <<<EOF
-<h2>Process</h2>
+<h2>$process</h2>
 <form name="backup" action="http://www.miek.nl/php/action.php" method="post">
 <input type="hidden" value="backup" name="action">
 <input class="form-submit" type="submit" value="$mk_backup">
