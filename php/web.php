@@ -282,7 +282,7 @@ EOF;
             print "<input type=\"hidden\" value=\"remove\" name=\"action\">\n";
             print "<input type=\"hidden\" value=\"$topdir/$dir\" name=\"arg\">\n";
             print "<input type=\"submit\" value=\"$delete\">\n";
-            print "&nbsp; $dir/</span></form>";
+            print "<br/>$dir/</span></form>";
             print "</td>";
 
             $i++;

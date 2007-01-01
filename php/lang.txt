@@ -51,4 +51,4 @@ NL 03ecf6cb7c2fc120581290f5c68e1b9d388f1a9c Netwerk type
 # Total
 NL b25928c69902557b0ef0a628490a3a1768d7b82f Totaal
 # Used
-NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 In gebruikt
+NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 In gebruik
