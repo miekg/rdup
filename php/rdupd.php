@@ -7,6 +7,7 @@
  * DELETE <dir> - delete a backup
  * SHUTDOWN - shutdown the machine
  */
+error_reporting("E_NONE");
 require_once("rc.php");
 $conf = new rc("rdup.rc");
 
