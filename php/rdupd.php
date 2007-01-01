@@ -57,6 +57,9 @@ while (!stream_select($read, $w = NULL, $e = NULL, 0)) {
             print $u .":";
             print md5($p) . "\n";
             break;
+        case "SMBSHARE":
+            echo $conf->smbshare . "\n";
+            break;
         default:
             echo "Unknown cmd: $cmd\n";
             break;

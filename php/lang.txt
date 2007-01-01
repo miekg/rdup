@@ -22,8 +22,6 @@ NL d6cd2d0bc45bd71f8555280344ef8cb632103d3f Maak nu een backup
 NL 0cf85ba64aa1fc5cefd4c82017ae43e6fe069223 Laatste backup
 # Free
 NL 75f527181b574f84568f33f67adc3b267a6fef9c Vrij
-# Used
-NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 Gebruikt
 # Info
 NL 4b631f69842530d659306c8f06dbad594a6b1807 Informatie
 # Delete
@@ -50,3 +48,7 @@ NL 51327aef9866e85ef5b5b2294a28494d2715ae59 Okt
 NL a81a4ccbae0f7bbeb95b36ac2ae3e4802c18c35e Statische netwerk configuratie
 # Network type
 NL 03ecf6cb7c2fc120581290f5c68e1b9d388f1a9c Netwerk type
+# Total
+NL b25928c69902557b0ef0a628490a3a1768d7b82f Totaal
+# Used
+NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 In gebruikt

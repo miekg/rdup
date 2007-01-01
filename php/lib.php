@@ -68,19 +68,17 @@ function free($dir)
     return (disk_free_space($dir) / 1024 / 1024 / 1024);
 }
 
-function used($dir) 
+function total($dir) 
 {
     return (disk_total_space($dir) / 1024 / 1024 / 1024);
 }
 
 function percentage($dir) 
 {
-    $dt = used($dir);
+    $dt = total($dir);
     $df = free($dir);
     if ($dt == 0)
         return 0;
-    return (($dt - $df) / $dt) * 100;
+    return 100 - ($df / $dt * 100);
 }
-
-
 ?>

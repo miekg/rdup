@@ -219,11 +219,12 @@ EOF;
     public function infopage_info($dir) {
         $last = $this->T("Last backup");
         $free = $this->T("Free");
+        $total = $this->T("Total");
         $used = $this->T("Used");
         $info = $this->T("Info");
 #        $last_backup = last_backup();
         $free_v = sprintf("%.2f", free($dir));
-        $used_v = sprintf("%.2f", used($dir));
+        $total_v = sprintf("%.2f", total($dir));
         $perc_v = sprintf("%.2f", percentage($dir));
         echo <<<EOF
 <h2>$info</h2>
@@ -233,8 +234,8 @@ EOF;
 <td>
 <input class="form-submit" readonly value="blaat"></td>
 </tr>
-<tr><td>$free/$used:</td>
-<td><input class="form-submit" readonly value="$free_v/$used_v"> ($perc_v %)</td>
+<tr><td>$free/$total:</td>
+<td><input class="form-submit" readonly value="$free_v G/$total_v G"> ($perc_v % $used)</td>
 </tr>
 </table>
 EOF;

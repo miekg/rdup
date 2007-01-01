@@ -7,4 +7,5 @@ BACKUP=/home/miekg/miek.nl/php/A
 HTPASSWD=/home/miekg/php/.htpasswd
 FIFO=rdupd.fifo
 RDUPSH=rdup.sh
+SMBSHARE=smb:///bllaat
 FREE=10
