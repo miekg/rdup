@@ -11,12 +11,16 @@ if (false === ($fd = fopen("/home/miekg/miek.nl/php/rdupd.fifo", "w"))) {
 }
 switch ($req) {
     case "REMOVE":
-        $a = $_REQUEST['arg'];
-        print_r($a);
-        $req = "$req $a";
+        $dirs = $_REQUEST['arg'];
+        $req = "$req $dirs";
     case "BACKUP":
     case "SHUTDOWN":
         fwrite($fd, $req);
+        break;
+    case "HTACCESS":
+        $user = $_REQUEST['user'];
+        $pass = $_REQUEST['pass'];
+        fwrite($fd, $req . $user . $pass);
         break;
     default:
         /* go to home page */

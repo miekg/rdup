@@ -51,6 +51,12 @@ while (!stream_select($read, $w = NULL, $e = NULL, 0)) {
             }
             echo "rm -rf " . $conf->backup . "/" . $arg . "\n";
             break;
+        case "HTPASSWD":
+            list($u, $p) = preg_split("/ /", $arg, 2);
+            echo $conf->htaccess;
+            print $u .":";
+            print md5($p) . "\n";
+            break;
         default:
             echo "Unknown cmd: $cmd\n";
             break;

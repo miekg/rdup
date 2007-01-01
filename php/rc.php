@@ -9,16 +9,18 @@ final class rc
     var $free;
     var $fifo;
     var $rdup;
+    var $htpasswd;
 
     public function __construct($file) 
     {
-        $compression = "";
-        $encryption = "";
-        $backuyp = "";
-        $directories = "";
-        $free = "";
-        $fifo = "";
-        $rdup = "";
+        $this->compression = "";
+        $this->encryption = "";
+        $this->backuyp = "";
+        $this->directories = "";
+        $this->free = "";
+        $this->fifo = "";
+        $this->rdup = "";
+        $this->htpasswd = "";
         $this->parse_rdup_rc($file);   
         return true;
     }
@@ -56,6 +58,9 @@ final class rc
                     break;
                 case "RDUPSH":
                     $this->rdupsh = $value;
+                    break;
+                case "HTPASSWD":
+                    $this->htpasswd = $value;
                     break;
             }
         }
