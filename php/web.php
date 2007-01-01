@@ -9,12 +9,16 @@ require_once("lib.php");
 final class web
 {
     private $x;
-
     public function __construct($lang, $langfile)
     {
         if (false === ($this->x = new i18n($lang, $langfile)))
             return false;
         return true;
+    }
+
+    public function T($e) 
+    {
+        return $this->x->T($e);
     }
 
     /* print the website's header */
@@ -23,22 +27,17 @@ final class web
         $pagename = $this->x->T($curpage);
         /* pages */
         $info     = $this->x->T("infopage");
-        $backup   = $this->x->T("backups");
         $config   = $this->x->T("configuration");
         $system   = $this->x->T("system");
         $home     = $this->x->T("homepage rdup");
 
         /* mainLast is highlighted in the stylesheet */
         $hl_info = "m0";
-        $hl_backup = "m0";
         $hl_config = "m0";
         $hl_system = "m0";
         switch($curpage) {
             case "infopage":
                 $hl_info = "mainLast";
-                break;
-            case "backup":
-                $hl_backup = "mainLast";
                 break;
             case "config":
                 $hl_config = "mainLast";
@@ -50,12 +49,17 @@ final class web
     
         echo <<<HEADER
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
   <style type="text/css" media="screen">
     <!--
         @import url("css/rdup.css");
     -->
 </style>
+<script src="menu.js" type="text/javascript"></script>
+<link href="menu.css" type="text/css" rel="stylesheet"/> 
 <title>rdup - $pagename</title>
+</head>
 <body id="mainend">
 <div id="wrap">
 <div id="innerWrap">
@@ -74,7 +78,6 @@ final class web
 <ul>
 <!-- mainLast is highlighted -->
     <li id="$hl_info"><a href="http://www.miek.nl/php/index.php">$info</a></li>
-    <li id="$hl_backup"><a href="http://www.miek.nl/php/backup.php">$backup</a></li>
     <li id="$hl_config"><a href="http://www.miek.nl/php/config.php">$config</a></li>
     <li id="$hl_system"><a href="http://www.miek.nl/php/system.php">$system</a></li>
     <li id="m4"><a href="http://www.miek.nl/projects/rdup/">$home</a></li>
@@ -91,8 +94,7 @@ final class web
 </div><!-- end secNav -->
 </div><!-- end secNavOuter -->
 <span id="login-info">
-2005 - 2007
- &copy; Miek Gieben
+2005 - 2007 &copy; Miek Gieben
 </span>
 <div style="clear: both;"></div>
 
@@ -108,7 +110,6 @@ final class web
 <div id="content">
 
 HEADER;
-
     return true;
     }
 
@@ -130,6 +131,7 @@ HEADER;
   $date
 </p>
 </div> <!-- end innerWrap -->
+</div> <!-- end wrap --></body></html>
 
 FOOTER;
         return true;
@@ -181,15 +183,15 @@ EOF;
 <legend>$leg_stat</legend>
 <table>
 <tr>
-<td>$addr</td>
+<td>$addr:</td>
 <td><input type="text" name="ip_addr" value=""/></td>
 </tr>
 <tr>
-<td>$mask</td> 
+<td>$mask:</td> 
 <td><input type="text" name="ip_mask" value=""/></td>
 </tr>
 <tr>
-<td>$gate</td>
+<td>$gate:</td>
 <td><input type="text" name="ip_gate" value=""/></td>
 </tr>
 </table>
@@ -199,7 +201,5 @@ EOF;
 EOF;
         return true;
     }
-
-
 }
 ?>

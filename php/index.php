@@ -4,61 +4,88 @@ require_once("web.php");
 $L = "NL";
 $w = new web($L, "lang.txt");
 $w->header("infopage");
+
+/* gig */
+$df = (disk_free_space("/tmp") / 1024 / 1024 / 1024);
+$dt = (disk_total_space("/tmp") / 1024 / 1024 / 1024);
+$per = (($dt - $df) / $dt) * 100;
+
 ?>
 
-<script src="/php/progressbar.js" type="text/javascript" language="javascript1.2"></script>
-
-<h2>rdup 0.3.5</h2>
-<div id="info">Fri Dec 27 19:53:59 CET 2006</div>
-An exclude (-E) option was added, rdup-restore is
-refactored.  See the 
-<a href="projects/rdup/index.html">project page</a> for details. 
-<p/>
-<a href="projects/rdup/rdup.tar.bz2">download</a>
-
-    <script type="text/javascript" language="javascript1.2">
-        var myProgBar = new progressBar(
-            2,         //border thickness
-            '#000000', //border colour
-            '#ffffff', //background colour
-            '#80000', //bar colour
-            600,       //width of bar (excluding border)
-            20,        //height of bar (excluding border)
-            1          //direction of progress: 1 = right, 2 = down, 3 = left, 4 = up
-        );
-    <script>
-
-
-<script type="text/javascript" language="javascript1.2">
-function animate() {
-    myProgBar.setBar(0.1,true);  
-    setTimeout("animate()", 100);
-}
-</script>
-
-</center>
-<form>
-<input type=file name=file >
-<INPUT TYPE="submit" VALUE="Send!" onClick="animate();"> 
+<h2>Process</h2>
+<form name="backup" action="http://www.miek.nl/php/action.php" method="post">
+<input type="hidden" value="backup" name="action">
+<input class="form-submit" type="submit" value="Maak nu een backup">
 </form>
 
-</center>
-
-
-
-<h2>RAID on Linux, booting from USB</h2>
-<div id="info">Tue Sep  5 09:09:10 CEST 2006</div>
-I'm building a RAID server which boots from a USB stick.
-This server will be low maintenance and high capacity.
 <p/>
-Read <a href="/linux/usb_raid.html">how I did it</a>.
+Laatste backup: 
+<input class="form-submit" readonly value="1912u">
+<p>
+Totaal/vrij: 
+<?php
+print "<input class=\"form-submit\" readonly value=\"";
+printf("%.2f", $dt); print "/";
+printf("%.2f", $df); print "/";
+printf("%.2f", $per); 
+print "% \">\n";
+?>
 
-<h2>New LaTeX class</h2>
-<div id="info">Fri jun 23 08:38:41 CEST 2006</div>
-I've created a new LaTeX layout, this time based on
-the excellent <tt>memoir</tt> class. Check it
-<a href="linux/blocks.html">out</a>.
+<p/>
 
 <?php
+
+print "<h2>Backups</h2>\n\n";
+$a = (dirlist("/home/miekg/miek.nl/php/A", true, 2));
+foreach(array_keys($a) as $topdir) {
+    # rdup syntax
+    $month = $w->T(month_name(substr($topdir, -2, 2)));
+
+    print "<div class=\"mC\">\n";
+#    print "<form name=\"remove\" action=\"http://www.miek.nl/php/action.php\" method=\"post\">";
+#    print "<input type=\"hidden\" value=\"remove\" name=\"action\">";
+#    print "<input type=\"hidden\" value=$topdir\" name=\"arg\">";
+#    print "<input type=\"submit\" value=\"X\">";
+#    print "</form>";
+    print "<div class=\"mH\" onclick=\"toggleMenu('$topdir')\">$month:&nbsp $topdir/\n";
+    print "</div>\n";
+    print "<div id=\"$topdir\" class=\"mL\">\n";
+
+    print "<p>";
+    print "<form name=\"remove\" action=\"http://www.miek.nl/php/action.php\" method=\"post\">";
+    print "<input type=\"hidden\" value=\"remove\" name=\"action\">";
+    print "<input type=\"hidden\" value=$topdir name=\"arg\">";
+    print "<input type=\"submit\" value=\"Verwijder alles\">";
+    print "</form>\n";
+    $i = 0;
+    print "<table>\n";
+    foreach(array_keys($a{$topdir}) as $dir) {
+        $dir = basename($dir);
+    if ($i % 5 == 0) {
+        if ($i == 0) 
+            print "<tr>\n";
+        else
+            print "</tr><tr>\n";
+    }
+
+    print "<td>";
+    print "<span class=\"mO\">\n";
+    print "<form name=\"remove\" action=\"http://www.miek.nl/php/action.php\" method=\"post\">\n";
+    print "<input type=\"hidden\" value=\"remove\" name=\"action\">\n";
+    print "<input type=\"hidden\" value=\"$topdir/$dir\" name=\"arg\">\n";
+    print "<input type=\"submit\" value=\"Verwijder\">\n";
+    print "&nbsp; $dir/</span></form>";
+    print "</td>";
+
+
+    $i++;
+    }
+    print "</table>\n";
+
+
+    print "</div>\n</div>";
+}
+
+
 $w->footer();
 ?>

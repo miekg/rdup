@@ -185,7 +185,13 @@ h4 a {
 input {
 	border: 1px solid #999;
 	background: #f7f2d0;
-	}
+}
+
+input.large {
+	border: 1px solid #999;
+	background: #f7f2d0;
+        font-size: x-large;
+}
 
 option.dir {
         color: #800000;

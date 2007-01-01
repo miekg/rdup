@@ -3,9 +3,12 @@
 error_reporting(E_ALL);
 
 require_once("web.php");
+require_once("rc.php");
 
-$a =  dir_list("/tmp", false);
 
-print_r($a);
+$conf = new rc("rdup.rc");
+
+print $conf->fifo;
+
 
 ?>

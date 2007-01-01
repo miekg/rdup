@@ -4,4 +4,5 @@ ENCRYPTION_KEY=
 LOCKFILE=/var/lock/rdup
 DIRECTORIES=/nfs/windows
 BACKUP=/backup
+FIFO=rdupd.fifo
 FREE=10

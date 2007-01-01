@@ -15,15 +15,15 @@ final class i18n
     public function __construct($lang, $langfile)
     {
         $this->lang  = strtoupper($lang);
-        if (false === ($this->trans = $this->read($langfile)))
-            return false;
+        $this->trans = $this->read($langfile);
         return true;
     }
 
     public function read($file)
     {
-        if (false === ($f = file($file))) 
-            return false;
+        if (false === ($f = file($file)))
+            return array();
+       
         $tr = array();
         foreach($f as $line) {
             if (substr($line, 0, 1) == "#") 
