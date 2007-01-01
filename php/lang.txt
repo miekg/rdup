@@ -26,8 +26,6 @@ NL 75f527181b574f84568f33f67adc3b267a6fef9c Vrij
 NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 Gebruikt
 # Info
 NL 4b631f69842530d659306c8f06dbad594a6b1807 Informatie
-# Delete all
-NL 08170580cbf4275bbc82f95ca2564a30804a3e28 Allemaal verwijderen
 # Delete
 NL f6fdbe48dc54dd86f63097a03bd24094dedd713a Verwijderen
 # Process
@@ -38,3 +36,17 @@ NL ceb739dfaa883916a2f3db6aaa122bce70006b53 Dynamisch
 NL af92969a73d6478fcb802c1a76b95af4d1cc533c Statisch
 # Contact author
 NL 05f1320ff940e103a8a5ebea905e51c3a9290d0d Neem contact op met auteur
+# Delete all month
+NL 25e23b0cc1d63d05af07c94efabc62c5341802b4 Verwijder hele maand
+# Delete whole month
+NL 7eb110c14d6dac61d81ac9a538342fad5788f081 Verwijder hele maand
+# Mar
+NL c4ba0822462e0c373aadd5360a69f205c2a7d036 Mrt
+# May
+NL c94f479833c5d401cffdfa7afe6c9c2d56448019 Mei
+# Oct
+NL 51327aef9866e85ef5b5b2294a28494d2715ae59 Okt
+# Static network settings
+NL a81a4ccbae0f7bbeb95b36ac2ae3e4802c18c35e Statische netwerk configuratie
+# Network type
+NL 03ecf6cb7c2fc120581290f5c68e1b9d388f1a9c Netwerk type

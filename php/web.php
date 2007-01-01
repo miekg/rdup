@@ -243,7 +243,7 @@ EOF;
 
     public function infopage_dirs($dir) 
     {
-        $delete_all = $this->T("Delete all");
+        $delete_all = $this->T("Delete whole month");
         $delete = $this->T("Delete");
         $list = dirlist($dir, true, 2);
         $perline = 10;
