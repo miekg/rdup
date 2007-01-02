@@ -90,7 +90,6 @@ function last_backup($dir) {
         if ($l > $max) 
             $max = $l;
     }
-    return date("D M d H:i:s Y", $max);
+    return date("d-m-Y  H:i:s", $max);
 }
-
 ?>

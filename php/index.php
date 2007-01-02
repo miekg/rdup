@@ -3,8 +3,8 @@ error_reporting(E_ALL);
 require_once("web.php");
 require_once("rc.php");
 
-global $conf;
 $conf = new rc("rdup.rc");
+$web =  new web("NL", "lang.txt");
 
 $web->header("infopage");
 $web->infopage_info($conf->backup);

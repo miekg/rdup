@@ -5,8 +5,6 @@
 require_once("i18n.php");
 require_once("lib.php");
 
-$web = new web("NL", "lang.txt");
-
 final class web
 {
     private $x;
@@ -47,7 +45,6 @@ final class web
                 $hl_system = "mainLast";
                 break;
         }
-    
         echo <<<HEADER
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -233,10 +230,10 @@ EOF;
 <tr>
 <td>$last:</td>
 <td>
-<input class="form-submit" size=23 readonly value="$last_backup"></td>
+<input class="form-submit" readonly value="$last_backup"></td>
 </tr>
 <tr><td>$free/$total:</td>
-<td><input class="form-submit" size=23 readonly value="$free_v G/$total_v G"> ($perc_v % $used)</td>
+<td><input class="form-submit" readonly value="$free_v G/$total_v G"> ($perc_v % $used)</td>
 </tr>
 </table>
 EOF;
@@ -248,7 +245,7 @@ EOF;
         $delete_all = $this->T("Delete whole month");
         $delete = $this->T("Delete");
         $list = dirlist($dir, true, 2);
-        $perline = 10;
+        $perline = 8;
 
         print "<h2>Backups</h2>\n";
         foreach(array_keys($list) as $topdir) {

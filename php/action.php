@@ -6,6 +6,7 @@ require_once("web.php");
 require_once("rc.php");
 
 $conf = new rc("rdup.rc");
+$web  = new web("NL", "lang.txt");
 $req = strtoupper($_REQUEST['action']);
 
 if (false === ($fd = fopen("/home/miekg/miek.nl/php/rdupd.fifo", "w"))) {
