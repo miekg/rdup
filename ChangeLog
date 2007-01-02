@@ -1,6 +1,7 @@
 xx Jan 2007: 0.3.6 Miek <miek@miek.nl>
   -- minor bugfixes --
    * Small fixes for rdup-dump (Fabio Rossi)
+   * rdup-dump, rdup-snap-shot; $@ quoting fix (Farrukh Ahmad)
 
 
 27 Dec 2006: 0.3.5 Miek <miek@miek.nl>

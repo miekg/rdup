@@ -139,10 +139,10 @@ fi
 # create our command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST '$@' $pipe"
 else
         pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
-        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
+        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST '$@' $pipe"
 fi
 
 if ! $force; then
