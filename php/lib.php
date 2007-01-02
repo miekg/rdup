@@ -82,4 +82,15 @@ function percentage($dir)
     return 100 - ($df / $dt * 100);
 }
 
+function last_backup($dir) {
+    $max = 0;
+    $dirs = dirlist($dir, true, 2);
+    foreach(array_keys($dirs) as $topdir) {
+        $l = filemtime($dir . "/" . $topdir);
+        if ($l > $max) 
+            $max = $l;
+    }
+    return date("D M d H:i:s Y", $max);
+}
+
 ?>

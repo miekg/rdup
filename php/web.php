@@ -223,7 +223,7 @@ EOF;
         $total = $this->T("Total");
         $used = $this->T("Used");
         $info = $this->T("Info");
-#        $last_backup = last_backup();
+        $last_backup = last_backup($dir);
         $free_v = sprintf("%.2f", free($dir));
         $total_v = sprintf("%.2f", total($dir));
         $perc_v = sprintf("%.2f", percentage($dir));
@@ -233,10 +233,10 @@ EOF;
 <tr>
 <td>$last:</td>
 <td>
-<input class="form-submit" readonly value="blaat"></td>
+<input class="form-submit" size=23 readonly value="$last_backup"></td>
 </tr>
 <tr><td>$free/$total:</td>
-<td><input class="form-submit" readonly value="$free_v G/$total_v G"> ($perc_v % $used)</td>
+<td><input class="form-submit" size=23 readonly value="$free_v G/$total_v G"> ($perc_v % $used)</td>
 </tr>
 </table>
 EOF;
