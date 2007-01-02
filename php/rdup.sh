@@ -3,6 +3,7 @@
 # start rdup and perform some locking
 
 . /home/miekg/miek.nl/php/rdup.rc
+#mount $SMBSHARE
 echo $LOCKFILE
 
 if ! (umask 222; echo $$ >$LOCKFILE) 2>/dev/null; then
