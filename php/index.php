@@ -2,15 +2,14 @@
 error_reporting(E_ALL);
 require_once("web.php");
 require_once("rc.php");
-/* setup language */
-$L = "NL";
-$w = new web($L, "lang.txt");
+
+global $conf;
 $conf = new rc("rdup.rc");
 
-$w->header("infopage");
-$w->infopage_info($conf->backup);
-$w->infopage_backup();
+$web->header("infopage");
+$web->infopage_info($conf->backup);
+$web->infopage_backup();
 print "<hr/>";
-$w->infopage_dirs($conf->backup);
-$w->footer();
+$web->infopage_dirs($conf->backup);
+$web->footer();
 ?>

@@ -2,9 +2,10 @@
 /**
  * @Class: web for generating the website
  */
-
 require_once("i18n.php");
 require_once("lib.php");
+
+$web = new web("NL", "lang.txt");
 
 final class web
 {

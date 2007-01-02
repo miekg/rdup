@@ -81,4 +81,5 @@ function percentage($dir)
         return 0;
     return 100 - ($df / $dt * 100);
 }
+
 ?>

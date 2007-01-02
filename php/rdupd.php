@@ -7,10 +7,9 @@
  * DELETE <dir> - delete a backup
  * SHUTDOWN - shutdown the machine
  */
-error_reporting("E_NONE");
+error_reporting(E_NONE);
 require_once("rc.php");
 $conf = new rc("rdup.rc");
-
 declare(ticks = 1);
 pcntl_signal(SIGTERM, "sig_handler");
 pcntl_signal(SIGHUP,  "sig_handler");
@@ -42,7 +41,10 @@ while (!stream_select($read, $w = NULL, $e = NULL, 0)) {
             echo $conf->rdupsh . "\n";
             break;
         case "SHUTDOWN":
-            echo "/sbin/poweroff\n";
+            if (!is_readable($conf->lockfile))
+                echo "/sbin/poweroff\n";
+            else
+                echo "backup in progress\n";
             break;
         case "REMOVE":
             if (!check_backupdir($arg)) {
@@ -89,5 +91,4 @@ function check_backupdir($dir)
 
     return false;
 }
-
 ?>

@@ -21,6 +21,7 @@ final class rc
         $this->fifo = "";
         $this->rdup = "";
         $this->htpasswd = "";
+        $this->lockfile = "";
         $this->parse_rdup_rc($file);   
         return true;
     }
@@ -62,6 +63,8 @@ final class rc
                 case "HTPASSWD":
                     $this->htpasswd = $value;
                     break;
+                case "LOCKFILE":
+                    $this->lockfile = $value;
             }
         }
         return true;
