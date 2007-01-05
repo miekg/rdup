@@ -106,7 +106,8 @@ cat(FILE *fp, char *filename, off_t f_size)
 	}
 	fclose(file);
 
-	/* file has shrunken! Fill the rest with NULLs */
+	/* file has shrunken! Fill the rest with NULLs, this works
+	 * but is slow! */
 	if (t < (size_t) f_size) {
 		msg("File has shrunk, filling with NULLs: `%s\'", filename);
 		for(i = t; i < (size_t) f_size; i++) {
