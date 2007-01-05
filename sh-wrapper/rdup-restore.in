@@ -76,7 +76,7 @@ while getopts ":ab:k:c:vzxhV" o; do
                 x) x="-x";;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) _echo2 "Invalid option"; exit 1;;
+                \?) _echo2 "Invalid option: $OPTARG"; exit 1;;
         esac
 done
 shift $((OPTIND - 1))

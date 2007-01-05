@@ -109,7 +109,7 @@ cat(FILE *fp, char *filename, off_t f_size)
 	/* file has shrunken! Fill the rest with NULLs */
 	if (t < (size_t) f_size) {
 		msg("File has shrunk, filling with NULLs: `%s\'", filename);
-		for(i = t; i <= (size_t) f_size; i++) {
+		for(i = t; i < (size_t) f_size; i++) {
 			fputc('\0', fp);
 		}
 		
