@@ -94,6 +94,14 @@ cat(FILE *fp, char *filename, off_t f_size)
 		if (t > (size_t) f_size) {
 			/* the file has grown. Break off the write!! */
 			msg("File grown larger than original file size, cutting off: `%s\'", filename);
+			if (i - (t - (size_t) f_size) > 0) {
+				/* write the missing bytes till f_size */
+				if (fwrite(buf, sizeof(char), (i - (t - (size_t) f_size)), fp) != i) {
+					msg("Write failure `%s\': %s", filename, strerror(errno));
+					fclose(file);
+					return FALSE;
+				}
+			}
 			fclose(file);
 			return TRUE;
 		}
