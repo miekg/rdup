@@ -1,7 +1,6 @@
 xx Jan 2007: 0.3.6 Miek <miek@miek.nl>
   -- minor bugfixes --
    * Small fixes for rdup-dump (Fabio Rossi)
-   * rdup-dump, rdup-snap-shot; $@ quoting fix (Farrukh Ahmad)
    * sh-wrappers: print the unknown option when encountering one
    * gfunc.c: write remaining bytes when cutting of growing 
      files when doing a remote backup

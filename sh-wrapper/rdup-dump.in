@@ -145,11 +145,10 @@ fi
 # create our command line
 if [[ -z $ssh ]]; then
         pipe="$pipe | @sbindir@/rdup-mirror $c $OPT -b $BACKUPDIR"
-        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST '$@' $pipe"
 else
         pipe="$pipe | $ssh rdup-mirror $ROPT $OPT -b $BACKUPDIR"
-        cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST '$@' $pipe"
 fi
+cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
 
 mkdir -p "$BACKUPDIR"
 if [[ ! $? ]]; then
