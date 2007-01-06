@@ -234,7 +234,7 @@ while getopts ":acvhb:V" options; do
                 v) verbose=true;;
                 V) version && exit;;
                 h) usage && exit;;
-                \?) _echo2 "Invalid option"; usage && exit;;
+                \?) _echo2 "Invalid option: $OPTARG"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))

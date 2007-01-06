@@ -46,7 +46,7 @@ while getopts ":cdVh" o; do
                 d) OPT="-d";;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) _echo2 "Invalid option"; usage && exit;;
+                \?) _echo2 "Invalid option: $OPTARG"; usage && exit;;
         esac
 done
 shift $((OPTIND - 1))
