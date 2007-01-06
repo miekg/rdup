@@ -5,24 +5,26 @@ final class rc
     var $compression;
     var $encryption;
     var $backup;
-    var $directories;
+    var $directory;
     var $free;
     var $fifo;
     var $rdup;
     var $htpasswd;
+    var $mail;
 
     public function __construct($file) 
     {
         $this->compression = "";
         $this->encryption = "";
         $this->backuyp = "";
-        $this->directories = "";
+        $this->directory = "";
         $this->free = "";
         $this->fifo = "";
         $this->rdup = "";
         $this->htpasswd = "";
         $this->lockfile = "";
         $this->parse_rdup_rc($file);   
+        $this->mail = "";
         return true;
     }
 
@@ -39,8 +41,8 @@ final class rc
 
             list($var, $value) = preg_split("/=/", $l);
             switch(strtoupper($var)) {
-                case "DIRECTORIES":
-                    $this->directories = $value;
+                case "DIRECTORY":
+                    $this->directory = $value;
                     break;
                 case "BACKUP":
                     $this->backup = $value;
@@ -65,6 +67,10 @@ final class rc
                     break;
                 case "LOCKFILE":
                     $this->lockfile = $value;
+                    break;
+                case "MAIL":
+                    $this->mail = $value;
+                    break;
             }
         }
         return true;

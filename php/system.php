@@ -4,6 +4,5 @@ require_once("web.php");
 $web = new web("NL", "lang.txt");
 $web->header("system");
 $web->system_shutdown();
-$web->system_network();
 $web->footer();
 ?>

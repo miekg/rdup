@@ -143,11 +143,8 @@ FOOTER;
         echo <<<EOF
 <h2>$server</h2>
 <form name="system.shutdown" action="http://www.miek.nl/php/action.php" method="post">
-<fieldset>
-<legend>$value</legend>
 <input type="hidden" name="action" value="shutdown"/>
 <input class="form-submit" value="$value" type="submit"/>
-</fieldset>
 </form>
 EOF;
         return true;
@@ -197,6 +194,16 @@ EOF;
 </fieldset>
 </form>
 EOF;
+        return true;
+    }
+
+    public function infopage_group1($dir) 
+    {
+        print "<table><tr><td>\n";
+        $this->infopage_info($dir);
+        print "<td> &nbsp; &nbsp;</td></td><td>\n";
+        $this->infopage_backup();
+        print "</td></tr></table>\n";
         return true;
     }
 
