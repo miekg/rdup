@@ -52,3 +52,5 @@ NL 03ecf6cb7c2fc120581290f5c68e1b9d388f1a9c Netwerk type
 NL b25928c69902557b0ef0a628490a3a1768d7b82f Totaal
 # Used
 NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 In gebruik
+# configuration
+NL 0652e436f42d75f5672a8bd9ae2f398a55115d51 configuratie
