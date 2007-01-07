@@ -11,6 +11,8 @@ NOW=`date +%Y%m/%d`
 
 echo "You need to edit this script and remove the next line, exiting" >&2
 echo "Add your hostname below and specify the directories to backup" >&2
+echo "Put this script on your external disk and name it autorun.sh" >&2
+echo "Gnome and KDE should run this automaticaly" >&2
 zenity --error --title "rdup @ $HOSTNAME" --text "Edit this file before running it" >&2
 exit 1 # REMOVE THIS
 
