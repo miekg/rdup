@@ -4,7 +4,7 @@ require_once("web.php");
 require_once("rc.php");
 
 $conf = new rc("rdup.rc");
-$web =  new web("NL", "lang.txt");
+$web =  new web($conf->lang, "lang.txt");
 
 $web->header("infopage");
 $web->infopage_group1($conf->backup);

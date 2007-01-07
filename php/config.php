@@ -1,10 +1,14 @@
 <?php
 error_reporting(E_ALL);
 require_once("web.php");
-$web = new web("NL", "lang.txt");
-$web->header("config");
+require_once("rc.php");
 
+$conf = new rc("rdup.rc");
+$web =  new web($conf->lang, "lang.txt");
+
+$web->header("configuration");
 #$web->htpasswd();
+#web->language();
 $web->system_network();
 $web->footer();
 ?>

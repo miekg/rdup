@@ -11,6 +11,7 @@ final class rc
     var $rdup;
     var $htpasswd;
     var $mail;
+    var $lang;
 
     public function __construct($file) 
     {
@@ -23,8 +24,9 @@ final class rc
         $this->rdup = "";
         $this->htpasswd = "";
         $this->lockfile = "";
-        $this->parse_rdup_rc($file);   
         $this->mail = "";
+        $this->lang = "";
+        $this->parse_rdup_rc($file);   
         return true;
     }
 
@@ -70,6 +72,9 @@ final class rc
                     break;
                 case "MAIL":
                     $this->mail = $value;
+                    break;
+                case "LANG":
+                    $this->lang = $value;
                     break;
             }
         }
