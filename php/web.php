@@ -197,6 +197,30 @@ EOF;
         return true;
     }
 
+    public function config_language()
+    {
+        $lang = $this->T("Language");
+        $submit = $this->T("Submit");
+        $NL = $this->T("Dutch");
+        $EN = $this->T("English");
+        echo <<<EOF
+<h2>$lang</h2>
+<form name="system.network" action="http://www.miek.nl/php/action.php" method="post">
+<fieldset>
+<legend>$lang</legend>
+<input type="hidden" name="action" value="language"/>
+<select name="config_language">
+   <option value="NL">$NL</option>
+   <option value="EN">$EN</option>
+</select>
+<p>
+<input class="form-submit" value="$submit" type="submit"/>
+</fieldset>
+</form>
+EOF;
+        return true;
+    }
+
     public function infopage_group1($dir) 
     {
         print "<table><tr><td>\n";

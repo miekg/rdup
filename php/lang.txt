@@ -54,3 +54,9 @@ NL b25928c69902557b0ef0a628490a3a1768d7b82f Totaal
 NL 02c0e4a1da64085d6e5e5cc69335b54b181e8a32 In gebruik
 # configuration
 NL 0652e436f42d75f5672a8bd9ae2f398a55115d51 configuratie
+# Language
+NL 89b86ab0e66f527166d98df92ddbcf5416ed58f6 Taal
+# Dutch
+NL 334a85f1b16e32b6ba9a69313c6f584edef482cc Nederlands
+# English
+NL 649df08a448ee3fa90f3746baaf6b0907df42c91 Engels

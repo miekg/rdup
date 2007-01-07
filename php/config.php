@@ -8,7 +8,7 @@ $web =  new web($conf->lang, "lang.txt");
 
 $web->header("configuration");
 #$web->htpasswd();
-#web->language();
+$web->config_language();
 $web->system_network();
 $web->footer();
 ?>

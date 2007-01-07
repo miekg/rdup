@@ -30,6 +30,11 @@ final class rc
         return true;
     }
 
+    function write_rdup_rc($file) 
+    {
+
+    }
+
     function parse_rdup_rc($file)
     {
         global $backupdir;
