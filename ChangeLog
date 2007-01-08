@@ -4,6 +4,7 @@ xx Jan 2007: 0.3.6 Miek <miek@miek.nl>
    * sh-wrappers: print the unknown option when encountering one
    * gfunc.c: write remaining bytes when cutting of growing 
      files in a remote backup
+   * Use DEcrypt and gUNzip when restoring
 
 
 27 Dec 2006: 0.3.5 Miek <miek@miek.nl>
