@@ -55,3 +55,13 @@ ident_root() {
         echo "$IDENT"
         return 0
 }
+
+lock() {
+        (umask 222; echo "Backup locked by PID: $$" >"$1" ) ||
+                (cat "$1" ; echo "aborting..." ; exit 1)
+        [ $? = 0 ] || exit 1
+}
+
+unlock() {
+        rm -f "$1"
+}

@@ -9,6 +9,7 @@ exec_prefix=@exec_prefix@
 datarootdir=@datarootdir@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
+lockdir=/var/lock
 GNU_DEFS=rdup-snapshot.gnu
 
 # common stuff
@@ -167,5 +168,7 @@ case $purpose in
 esac
 # execute the backup command
 #_echo2 "Executing: ${cmd}"
+lock $lockdir/rdup
 eval ${cmd}
+unlock $lockdir/rdup
 exit 0

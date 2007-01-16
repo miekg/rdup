@@ -9,6 +9,7 @@ exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 cstream=@cstream@
 sysconfdir=@sysconfdir@
+lockdir=/var/lock
 
 # shared stuff
 source $datadir/shared.sh
@@ -181,5 +182,7 @@ else
 fi
 # execute the backup command
 #_echo2 "Executing ${cmd}"
+lock $lockdir/rdup
 eval ${cmd}
+unlock $lockdir/rdup
 exit 0
