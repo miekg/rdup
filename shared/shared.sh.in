@@ -13,6 +13,7 @@ cleanup() {
         if [[ ! -z $TMPDIR ]]; then
                 rm -rf $TMPDIR
         fi
+        unlock /var/lock/rdup
         exit 1
 }
 
