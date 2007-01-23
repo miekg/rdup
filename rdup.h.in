@@ -5,15 +5,9 @@
 
 #include "config.h"
 
-#ifdef HAVE_GETDELIM
-#define _GNU_SOURCE
-#endif
-
 #ifndef HAVE_DIRFD
 #define rdup_dirfd(d) ((d)->dd_fd)
 #endif
-
-#undef HAVE_GETDELIM
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,7 +91,7 @@ gboolean gfunc_regexp(GSList *l, char *n);
 /* rdup.c */
 void msg(const char *fmt, ...);
 /* getdelim.c */
-ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 /* signal.c */
 void signal_abort(int signal);
 #endif  /* _RDUP_H */

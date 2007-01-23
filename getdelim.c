@@ -8,7 +8,7 @@ extern sig_atomic_t sig;
  * slightly modified to fit my needs
  */
 ssize_t
-getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream)
+rdup_getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream)
 {
         char *p;
         int c;

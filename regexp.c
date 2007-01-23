@@ -44,7 +44,7 @@ regexp_init(char *file) {
                 delim = '\n';
 
 	l = 1;
-	while ((j = getdelim(&buf, &s, delim, fp)) != -1) {
+	while ((j = rdup_getdelim(&buf, &s, delim, fp)) != -1) {
 		if (buf[0] == '#' || buf[0] == '\n') 
 			continue;
 

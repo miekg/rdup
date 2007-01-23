@@ -96,7 +96,7 @@ g_tree_read_file(FILE *fp)
 	else
 		delim = '\n';
 
-	while ((getdelim(&buf, &s, delim, fp)) != -1) {
+	while ((rdup_getdelim(&buf, &s, delim, fp)) != -1) {
 		if (sig != 0) {
 			fclose(fp);
 			signal_abort(sig);
