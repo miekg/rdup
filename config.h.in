@@ -9,9 +9,6 @@
 /* Define to 1 if you have the `dirfd' function. */
 #undef HAVE_DIRFD
 
-/* Define to 1 if you have the `getdelim' function. */
-#undef HAVE_GETDELIM
-
 /* Define to 1 if you have the <getopt.h> header file. */
 #undef HAVE_GETOPT_H
 
