@@ -97,6 +97,11 @@ g_tree_read_file(FILE *fp)
 		delim = '\n';
 
 	while ((getdelim(&buf, &s, delim, fp)) != -1) {
+		if (sig != 0) {
+			fclose(fp);
+			signal_abort(sig);
+		}
+
 		if (s < LIST_MINSIZE) {
 			msg("Corrupt entry in filelist at line: %zd", l);
 			continue;

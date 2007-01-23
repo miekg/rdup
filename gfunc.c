@@ -22,26 +22,6 @@ extern sig_atomic_t sig;
 /* sha1.c */
 int sha1_stream(FILE *stream, void *resblock);
 
-/**
- * we received a signal
- */
-void
-signal_abort(int signal)
-{
-	switch(signal) {
-		case SIGPIPE:
-			msg("SIGPIPE received, exiting");
-			break;
-		case SIGINT:
-			msg("SIGINT received, exiting");
-			break;
-		default:
-			msg("Unhandled signal reveived, exiting");
-			break;
-	}
-	exit(EXIT_FAILURE);
-}
-
 /*
  * calculates a files sha1 sum
  */

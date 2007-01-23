@@ -1,14 +1,14 @@
-#ifndef HAVE_GETDELIM
-
 #include "rdup.h"
 
 #define GETDELIM_BUFFER 128
+
+extern sig_atomic_t sig;
 
 /* copied from xine-devel, same license applies 
  * slightly modified to fit my needs
  */
 ssize_t
-getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
+getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream)
 {
         char *p;
         int c;
@@ -22,6 +22,10 @@ getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
 
         /* read characters from stream */
         while ((c = fgetc(stream)) != EOF) {
+		if (sig != 0) {
+			fclose(stream);
+			signal_abort(sig);
+		}
                 if (len >= *n) {
                         char *np = g_realloc(*lineptr, *n * 2);
                         if (!np)
@@ -52,4 +56,3 @@ getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream )
         *p = '\0';
         return len;
 }
-#endif /* !HAVE_GETDELIM */

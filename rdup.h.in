@@ -13,6 +13,8 @@
 #define rdup_dirfd(d) ((d)->dd_fd)
 #endif
 
+#undef HAVE_GETDELIM
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -96,4 +98,6 @@ gboolean gfunc_regexp(GSList *l, char *n);
 void msg(const char *fmt, ...);
 /* getdelim.c */
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+/* signal.c */
+void signal_abort(int signal);
 #endif  /* _RDUP_H */

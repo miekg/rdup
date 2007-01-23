@@ -108,7 +108,7 @@ sub _mirror {
                                 if ($fsize != 0) {
                                         copyout($fsize, *FILE);
                                 }
-                                close FILE;
+                                close FILE or warn "** Failed to close: $!";
                                 rchown($uid, $gid, $target);
                                 chown_attr($attr_there, $uid, $gid, $target);
                                 rchmod($bits, $target);

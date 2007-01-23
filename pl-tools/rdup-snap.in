@@ -106,7 +106,7 @@ sub _mirror {
                                 rchown($uid, $gid, $target);
                                 chown_attr($attr_there, $uid, $gid, $target);
                                 rchmod($bits, $target);
-                                close FILE;
+                                close FILE or warn "** Failed to close: $!";
                         } else {
                                 copy($path, $target) or warn "** Copy failed: $! $path $target";
                                 rchown($uid, $gid, $target);

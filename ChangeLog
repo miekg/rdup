@@ -6,6 +6,7 @@
      files in a remote backup
    * Use DEcrypt and gUNzip when restoring
    * Added (local) locking in the shell wrapper tools
+   * Allow control-C when reading the filelist file
 
 
 27 Dec 2006: 0.3.5 Miek <miek@miek.nl>
