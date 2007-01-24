@@ -102,15 +102,21 @@ be excluded. If you use a command line like:
 .RS
         rdup /dev/null /home/miekg/bin
 .RE
+.RS
 
 The directories '/home', '/miekg', '/bin' are always printed.
 
 If you want to exclude the file '/home/miekg/blaat' you need to add
-the following regular expression: '/home/miekg/blaat'. If you want
+the following regular expression: '/home/miekg/blaat'. 
+
+If you want
 to exclude all .mozilla/cache directories of all users you can 
 use '/home/.*/.mozilla/cache/.*'. This doesn't exclude the directory
-itself. Note that \fBrdup\fR does not print directories with a
+itself. 
+
+Note that \fBrdup\fR does not print directories with a
 trailing slash.
+.RE
 
 .TP
 .B \-V

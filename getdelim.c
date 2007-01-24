@@ -27,12 +27,16 @@ rdup_getdelim(char **lineptr, size_t *n, int delimiter, FILE *stream)
 			signal_abort(sig);
 		}
                 if (len >= *n) {
+			msg("Line longer then %d characters", *n);
+			return 0;
+#if 0
                         char *np = g_realloc(*lineptr, *n * 2);
                         if (!np)
                                 return -1;
                         p = np + (p - *lineptr);
                         *lineptr = np;
                         *n *= 2;
+#endif
                 }
                 *p++ = (char) c;
                 len++;

@@ -104,6 +104,7 @@ g_tree_read_file(FILE *fp)
 
 		if (s < LIST_MINSIZE) {
 			msg("Corrupt entry in filelist at line: %zd", l);
+			l++;
 			continue;
 		}
 		if (!opt_null) {
@@ -118,12 +119,14 @@ g_tree_read_file(FILE *fp)
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
 			msg("Corrupt entry in filelist at line: %zd, `%s\' should be numerical", l, buf);
+			l++;
 			continue;
 		}
 		/* the path size */
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
 		if (!p) {
 			msg("Corrupt entry in filelist at line: %zd, no space found", l);
+			l++;
 			continue;
 		}
 		/* the file's name */
@@ -134,6 +137,7 @@ g_tree_read_file(FILE *fp)
 		if (str_len != f_name_size) {
 			msg("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'", l,
 					str_len, f_name_size);
+			l++;
 			continue;
 		}
 
@@ -178,6 +182,7 @@ main(int argc, char **argv)
 	char 	*crawl;
 	char    pwd[BUFSIZE + 1];
 	char    *time;
+	gboolean devnull = FALSE;	/* hack: remember if we open /dev/null */
 
 	struct sigaction sa;
 
@@ -287,6 +292,9 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+	if (strcmp(argv[0], "/dev/null") == 0)
+		devnull = TRUE;
+
 	if (!(fplist = fopen(argv[0], "a+"))) {
 		msg("Could not open filelist `%s\': %s", argv[0], strerror(errno));
 		exit(EXIT_FAILURE);
@@ -319,7 +327,7 @@ main(int argc, char **argv)
 	g_tree_foreach(backup, gfunc_backup, NULL);
 
 	/* write new filelist */
-	if (ftruncate(fileno(fplist), 0) != 0) {
+	if (!devnull && ftruncate(fileno(fplist), 0) != 0) {
 		msg("Could not truncate filelist file `%s\': %s", argv[0],
 			strerror(errno));
 	}
