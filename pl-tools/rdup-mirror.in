@@ -24,13 +24,12 @@ require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 my $ts = time;
 my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($ts);
 my $progName = basename $0;
-my ($help, $version, $verbose, $attr, $restore, $remote, $backupDir);
+my ($help, $version, $verbose, $attr, $remote, $backupDir);
 
 GetOptions("h" => \$help,
         "V" => \$version,
         "a" => \$attr, # extended attr support
         "c" => \$remote,
-        "R" => \$restore,
         "v" => \$verbose,
         "b=s" => \$backupDir);
 
@@ -100,7 +99,7 @@ sub _mirror {
                 my $target = "$dir/$path";
                 if ($type eq '-') {        # REG
                         my $suffix = mirror_suffix($target);
-                        if (!$restore and $suffix) {      # We only have a suffix if the file exists
+                        if ($suffix) {      # We only have a suffix if the file exists
                                 rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         if ($remote) {
@@ -124,7 +123,7 @@ sub _mirror {
                         }
                 } elsif ($type eq 'd') {        # DIR
                         my $suffix = mirror_suffix($target);
-                        if (!$restore and (-f _ || -l _)) {      # Type of entiry has changed
+                        if (-f _ || -l _) {      # Type of entiry has changed
                                 rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         mkpath($target) unless -d _;
@@ -139,7 +138,7 @@ sub _mirror {
                         $ftsize += $fsize;
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         my $suffix = mirror_suffix($target);
-                        if (!$restore and $suffix) {      # We only have a suffix if the file exists
+                        if ($suffix) {      # We only have a suffix if the file exists
                                 rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                         }
                         if ($remote) {
@@ -158,13 +157,11 @@ sub _mirror {
                 }
         } else {        # Remove
                 my $target = "$dir/$path";
-                if (!$restore) {
-                        my $suffix = mirror_suffix($target);
-                        if ($suffix) {      # We only have a suffix if the file exists
-                                rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
-                        }
-                        $irm++;
+                my $suffix = mirror_suffix($target);
+                if ($suffix) {      # We only have a suffix if the file exists
+                        rename $target, ($target . $suffix) or warn "** Cannot rename: $target: $!";
                 }
+                $irm++;
         }
 }
 
@@ -189,7 +186,6 @@ sub usage {
         print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
         print " -c      process the file content also (rdup -c), for remote backups\n";
         print " -b DIR  use DIR as the backup directory\n";
-        print " -R      restore mode, always write the file to the target\n";
         print " -v      print the files processed to standard error\n";
         print " -h      this help\n";
         print " -V      print version\n";
