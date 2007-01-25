@@ -139,7 +139,7 @@ sub _mirror {
                         rchmod($bits, $target);
                         $idir++;
                 } elsif ($type eq 'l') {        # LNK; target id the content
-                        if (exist($target)== 1) {
+                        if (exist($target) == 1) {
                                 unlink $target or warn "** Cannot unlink: $target: $!";
                         }
                         if ($remote) {

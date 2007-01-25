@@ -48,6 +48,10 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 syslog_open($progName);
+if (!exist($backupDir)) {
+        mkpath($backupDir) or die "** Cannot create `$backupDir': $!";
+}
+
 
 if ($remote) {
         syslog_log("%s %s", "Commencing remote backup to:" ,$backupDir);
@@ -75,7 +79,7 @@ printf STDERR "** #(RE)MOVED  : %d\n", $irm;
 printf STDERR "** FILE SIZE   : %.1f MB\n", ($ftsize/1024/1024 * 1.0);
 printf STDERR "** STORED IN   : %s\n",  $backupDir;
 printf STDERR "** ELAPSED     : %.2f m\n", (($te - $ts) / 60 * 1.00);
-
+rchmod(755, $backupDir);
 exit 0;
 
 sub _mirror {
@@ -117,6 +121,7 @@ sub _mirror {
                                 chown_attr($attr_there, $uid, $gid, $target);
                                 rchmod($bits, $target);
                         }
+                        $ftsize += $fsize;
                         $ireg++;
                         if ($ireg % 1000 eq 0) {
                                 syslog_log("progress: %d files", $ireg);
@@ -129,13 +134,18 @@ sub _mirror {
                         mkpath($target) unless -d _;
                         rchown($uid, $gid, $target);
                         chown_attr($attr_there, $uid, $gid, $target);
-                        if ($> != 0 && $bits == 0) {
-                                print STDERR "** Chmod $target to 700\n";
-                                $bits = "0700";
+                        if ($> != 0) {
+                                if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
+                                        print STDERR "** Chmod $target u+rxw\n";
+                                        $bits = "7" . substr($bits, 1, 2);
+                                }
+                                if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
+                                        print STDERR "** Chmod $target u+rxw\n";
+                                        $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
+                                }
                         }
                         rchmod($bits, $target);
                         $idir++;
-                        $ftsize += $fsize;
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         my $suffix = mirror_suffix($target);
                         if ($suffix) {      # We only have a suffix if the file exists
@@ -145,13 +155,11 @@ sub _mirror {
                                 my $linkTarget = "";
                                 read STDIN, $linkTarget, $fsize;
                                 symlink $linkTarget, $target or warn "** Cannot create link: $target -> $linkTarget: $!";
-                                rchown($uid, $gid, $linkTarget);
-                                chown_attr($attr_there, $uid, $gid, $linkTarget);
                         } else {
                                 symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
-                                rchown($uid, $gid, $target);
-                                chown_attr($attr_there, $uid, $gid, $target);
                         }
+                        rchown($uid, $gid, $target);
+                        chown_attr($attr_there, $uid, $gid, $target);
                         $ftsize += $fsize;
                         $ilnk++;
                 }
@@ -183,9 +191,9 @@ sub usage {
         print "$progName -b DIR [OPTIONS]\n\n";
         print "Mirror the files from the filelist of rdup\n\n";
         print "OPTIONS\n";
+        print " -b DIR  use DIR as the backup directory\n";
         print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
         print " -c      process the file content also (rdup -c), for remote backups\n";
-        print " -b DIR  use DIR as the backup directory\n";
         print " -v      print the files processed to standard error\n";
         print " -h      this help\n";
         print " -V      print version\n";
