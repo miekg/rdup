@@ -11,6 +11,7 @@
      about not being able to ftruncate it
    * Always use our own getdelim() implementation
    * pl-tools: add warning when not being able to close a file
+   * Fixes from rdup-snap ported to rdup-mirror
 
 
 27 Dec 2006: 0.3.5 Miek <miek@miek.nl>
