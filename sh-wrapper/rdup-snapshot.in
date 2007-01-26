@@ -139,7 +139,7 @@ else
 fi
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+        pipe="$pipe | @sbindir@/rdup-snap $OPT -b $BACKUPDIR/$NOW"
 else
         pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
 fi
