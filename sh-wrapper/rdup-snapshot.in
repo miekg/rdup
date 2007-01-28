@@ -6,7 +6,6 @@
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
-datarootdir=@datarootdir@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
 lockdir=/var/lock

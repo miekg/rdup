@@ -5,7 +5,6 @@
 # this file is placed!
 
 prefix=@prefix@
-datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 
 ##

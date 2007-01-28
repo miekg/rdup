@@ -15,7 +15,6 @@ use File::Copy::Recursive qw(dircopy rcopy fcopy);
 
 # common functions
 my $prefix="@prefix@";
-my $datarootdir="@datarootdir@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $ts = time;

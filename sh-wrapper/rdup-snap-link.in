@@ -5,7 +5,6 @@
 # dump is incremental or full
 
 prefix=@prefix@
-datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
