@@ -104,7 +104,7 @@ be excluded. If you use a command line like:
 .RE
 .RS
 
-The directories '/home', '/miekg', '/bin' are always printed.
+The directories '/home', '/home/miekg', '/home/miekg/bin' are always printed.
 
 If you want to exclude the file '/home/miekg/blaat' you need to add
 the following regular expression: '/home/miekg/blaat'. 
@@ -194,8 +194,9 @@ All full-dump filelist is printed to standard output. And with:
 .RE
 
 An incremental dump filelist is printed. The file \fItimestamp\fR
-is used to safe the exact time of rdup's run. The file \fILIST\fR is
-used to calculate the correct incremental dump list.
+is used to save the exact time of rdup's run. The file \fILIST\fR is
+used to calculate the correct incremental dump list, this is needed
+for files that are removed, or have a different type.
 
 .SH FORMAT
 The default format \fBrdup\fR uses is: "%p%T %b %u %g %l %s %n\\n"
