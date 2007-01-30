@@ -95,10 +95,11 @@ sub _mirror {
                 my $target = "$dir/$path";
                 if ($type eq '-') {        # REG
                         if (exist($target) == 1) {
-                                if (-d _)
+                                if (-d _) {
                                         rmtree $target or warn "** Cannot remove: $target: $!";
-                                else 
+                                } else {
                                         unlink $target or warn "** Cannot unlink: $target: $!";
+                                }
                         }
                         if ($remote) {
                                 open FILE, ">$target" or warn "** Cannot create: $target: $!";
@@ -142,10 +143,11 @@ sub _mirror {
                         $idir++;
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         if (exist($target) == 1) {
-                                if (-d _)
+                                if (-d _) {
                                         rmtree $target or warn "** Cannot remove: $target: $!";
-                                else
+                                } else {
                                         unlink $target or warn "** Cannot unlink: $target: $!";
+                                }
                         }
                         if ($remote) {
                                 my $linkTarget = "";
@@ -162,10 +164,11 @@ sub _mirror {
         } else {        # Remove
                 my $target = "$dir/$path";
                 if (exist($target)) {
-                        if (-d _)
+                        if (-d _) {
                                 rmtree $target or warn "** Cannot remove: $target: $!";
-                        else
+                        } else {
                                 unlink $target or warn "** Cannot unlink: $target: $!";
+                        }
                 }
                 $irm++;
         }
