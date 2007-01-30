@@ -4,6 +4,8 @@ xx yyy 2007: 0.3.7 Miek <miek@miek.nl>
      autoconf versions
    * rdup-snap: when removing, look at the type, and if its
      a dir use rmtree, otherwise unlink
+   * removed spec file from distribution - there are multiple
+     spec files on the internet
 
 26 Jan 2007: 0.3.6 Miek <miek@miek.nl>
   -- minor bugfixes --
