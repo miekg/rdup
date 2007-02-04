@@ -2,7 +2,7 @@ xx yyy 2007: 0.3.7 Miek <miek@miek.nl>
   -- bugfixes --
    * removed @datarootdir@ as this gives errors with older
      autoconf versions
-   * rdup-snap: when removing, look at the type, and if its
+   * rdup-snap: when removing, look at the type, and if it's
      a dir use rmtree, otherwise unlink
    * removed spec file from distribution - there are multiple
      spec files on the internet
