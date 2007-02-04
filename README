@@ -9,6 +9,7 @@ o Gmake for compilation
 o Glib to build. Glib is the lowlevel C library of the
   GTK project. Configure will check for this.
 o Perl for the scripts. 
+o copy-recursive module for Perl
 o rdup-snaphost depends on GNU cp to create the hardlinked directories
 
 2/ DIFFERENCE WITH RSYNC
