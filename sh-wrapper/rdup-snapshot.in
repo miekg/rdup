@@ -47,6 +47,7 @@ ETC="@sysconfdir@/rdup"
 pipe=""
 ssh=""
 force=false
+E=""
 
 while getopts ":ab:E:k:c:n:vfzxhV" o; do
         case $o in
@@ -61,7 +62,7 @@ while getopts ":ab:E:k:c:n:vfzxhV" o; do
                         _echo2 "-E needs an argument"
                         exit 1
                 fi
-                OPT="$OPT -E $OPTARG"
+                E="-E $OPTARG"
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
@@ -142,7 +143,7 @@ if [[ -z $ssh ]]; then
 else
         pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
 fi
-cmd="@sbindir@/rdup $x $l $c -N $STAMP $LIST $@ $pipe"
+cmd="@sbindir@/rdup $E $x $l $c -N $STAMP $LIST $@ $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then
