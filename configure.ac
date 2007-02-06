@@ -59,7 +59,6 @@ AC_CONFIG_FILES([GNUmakefile
                  pl-tools/rdup-snap
                  pl-tools/rdup-cp
                  pl-tools/rdup-mirror
-                 rpm/rdup.spec
                  ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
