@@ -1,4 +1,4 @@
-xx yyy 2007: 0.3.7 Miek <miek@miek.nl>
+11 Feb 2007: 0.3.7 Miek <miek@miek.nl>
   -- bugfixes --
    * removed @datarootdir@ as this gives errors with older
      autoconf versions (Jelte Jansen)
