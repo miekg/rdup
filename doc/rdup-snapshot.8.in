@@ -109,7 +109,7 @@ inserts \fBrdup-gzip\fR in the pipeline.
 .B \-e
 Store the the timestamp and filelist files together with the backup.
 This allows for backups to USB-drives and such. Normally they
-are stored in `/etc/rdup'.
+are stored in `/etc/rdup'. 
 
 This option cannot be used when doing a remote backup.
 .TP

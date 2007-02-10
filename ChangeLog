@@ -7,6 +7,7 @@ xx yyy 2007: 0.3.7 Miek <miek@miek.nl>
    * removed spec file from distribution - there are multiple
      spec files on the internet
    * Add -E option to all utilities (reported by Jörg Rüppel)
+   * Fix -e in rdup-snapshot and rdup-dump
 
 26 Jan 2007: 0.3.6 Miek <miek@miek.nl>
   -- minor bugfixes --

@@ -120,8 +120,7 @@ fi
 # where to put the list and timestamp files.
 if $etc; then
         if [[ ! -z $c ]]; then
-                _echo2 "The -e option is not compatible with -c"
-                exit 1
+                _echo2 "The -e option will not work with remote backups"
         fi
         ETC="$BACKUPDIR"
 else

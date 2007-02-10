@@ -31,7 +31,7 @@ usage() {
         echo " -f         force a full dump"
         echo " -z         compress all files, using gzip.pl"
         echo " -a         write extended attributes with uid/gid"
-        echo " -e         filelist and timestamp are put in backup directory (not yet)."
+        echo " -e         filelist and timestamp are put in backup directory"
         echo " -v         echo the files processed to stderr"
         echo " -x         pass -x to rdup"
         echo " -h         this help"
@@ -43,13 +43,13 @@ PREFIX=""
 NOW=`date +%Y%m/%d`
 c=""
 l="-l"
-ETC="@sysconfdir@/rdup"
+etc=false
 pipe=""
 ssh=""
 force=false
 E=""
 
-while getopts ":ab:E:k:c:n:vfzxhV" o; do
+while getopts ":ab:E:k:c:n:vefzxhV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -57,6 +57,7 @@ while getopts ":ab:E:k:c:n:vfzxhV" o; do
                         exit 1
                 fi
                 ;;
+                e) etc=true ;;
                 E)
                 if [[ -z "$OPTARG" ]]; then
                         _echo2 "-E needs an argument"
@@ -126,6 +127,17 @@ if [[ -z $BACKUPDIR ]]; then
         _echo2 "Missing the -b argument"
         exit 1
 fi
+# where to put the list and timestamp files.
+if $etc; then
+        if [[ ! -z $c ]]; then
+                _echo2 "The -e option will not work with remote backups"
+        fi
+        ETC="$BACKUPDIR"
+else
+        ETC="@sysconfdir@/rdup"
+fi
+
+
 
 # fix lonely root arg
 IDENT=`ident_root $(basename $1)`
