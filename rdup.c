@@ -331,6 +331,7 @@ main(int argc, char **argv)
 		msg("Could not truncate filelist file `%s\': %s", argv[0],
 			strerror(errno));
 	}
+	/* write temporary file and the move it */
 	g_tree_foreach(backup, gfunc_write, fplist);
 	fclose(fplist);
 	/* re-touch the timestamp file */

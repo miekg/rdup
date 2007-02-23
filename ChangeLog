@@ -1,6 +1,7 @@
 xx yyy 2007: 0.3.8 Miek <miek@miek.nl>
   -- xxx --
-
+   * Add 'E:' to the known options in rdup-dump.in
+   * Fix the +NUMBER argument in rdup-snapshot (reported by Joerg Rueppel)
 
 11 Feb 2007: 0.3.7 Miek <miek@miek.nl>
   -- bugfixes --
@@ -8,7 +9,7 @@ xx yyy 2007: 0.3.8 Miek <miek@miek.nl>
      autoconf versions (reported by Jelte Jansen)
    * rdup-snap: when removing, look at the type, and if it's
      a dir use rmtree, otherwise unlink
-   * Add -E option to all utilities (reported by Jörg Rüppel)
+   * Add -E option to all utilities (reported by Joerg Rueppel)
    * Fix -e in rdup-snapshot and rdup-dump
    * removed spec file from distribution - there are multiple
      spec files to be found on the internet
