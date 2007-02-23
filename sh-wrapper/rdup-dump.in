@@ -53,7 +53,7 @@ u=false
 force=false
 E=""
 
-while getopts ":ab:k:c:n:vzfxuehV" o; do
+while getopts ":ab:k:c:n:vzfxuehVE:" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
