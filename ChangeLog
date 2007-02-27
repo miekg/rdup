@@ -1,7 +1,8 @@
-xx yyy 2007: 0.3.8 Miek <miek@miek.nl>
-  -- xxx --
+xx Mar 2007: 0.3.8 Miek <miek@miek.nl>
+  -- minor bugfixes --
    * Add 'E:' to the known options in rdup-dump.in
    * Fix the +NUMBER argument in rdup-snapshot (reported by Joerg Rueppel)
+
 
 11 Feb 2007: 0.3.7 Miek <miek@miek.nl>
   -- bugfixes --
@@ -13,6 +14,7 @@ xx yyy 2007: 0.3.8 Miek <miek@miek.nl>
    * Fix -e in rdup-snapshot and rdup-dump
    * removed spec file from distribution - there are multiple
      spec files to be found on the internet
+
 
 26 Jan 2007: 0.3.6 Miek <miek@miek.nl>
   -- minor bugfixes --

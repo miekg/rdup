@@ -51,10 +51,11 @@ timestamp and filelist files. These are stored, by default, in
 Normally the filelist and timestamp files are named like this:
 
 $HOSTNAME.`basename DIR`.list and
+
 $HOSTNAME.`basename DIR`.timestamp
 
 where DIR is the first directory or file on the command line. Thus:
-\fBrdup-snapshot\fR /home/miekg/bin, will lead to the following names:
+\fBrdup-dump\fR /home/miekg/bin, will lead to the following names:
 
 elektron.bin.list and
 elektron.bin.timestamp
