@@ -144,7 +144,7 @@ if ! $u; then
 fi
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $OPT -b $BACKUPDIR"
+        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT -b $BACKUPDIR"
 else
         pipe="$pipe | $ssh rdup-mirror $c $ROPT $OPT -b $BACKUPDIR"
 fi
