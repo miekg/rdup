@@ -18,7 +18,7 @@ require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $progName = basename $0;
 my %opt;
-my $zipOptions = "";
+my $zipOptions = "-f ";
 
 getopts('dhV', \%opt);
 usage() if $opt{'h'};
