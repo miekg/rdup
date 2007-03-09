@@ -5,6 +5,7 @@ xx Mar 2007: 0.3.8 Miek <miek@miek.nl>
    * Fix usage of -z (and any other option that toggles rdup's -c option)
      (thanks to J.W. Janssen for reporting)
    * Use -f in rdup-gzip (bug reported by David Martin)
+   * FIx a bug in rdup-crypt (reported by David Martin)
 
 
 11 Feb 2007: 0.3.7 Miek <miek@miek.nl>
