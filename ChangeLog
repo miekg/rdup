@@ -7,6 +7,7 @@ xx Mar 2007: 0.3.8 Miek <miek@miek.nl>
    * Use -f in rdup-gzip (bug reported by David Martin)
    * Fix a bug in rdup-crypt (reported by David Martin)
    * Use 'warn' in rdup-gzip/crypt, echo a warning and continue
+     when files fail to zip or crypt.
 
 
 11 Feb 2007: 0.3.7 Miek <miek@miek.nl>
