@@ -47,7 +47,7 @@ while (($_ = <STDIN>)) {
                                 $fh->close();
                                 open ZIP, "|gzip $zipOptions -c > $filename" or die "** $filename: $!";
                                 copyout($fsize, *ZIP);
-                                close ZIP or die "** $filename: $!";
+                                close ZIP or warn "** Zip failure: \'$path': $!";
                                 my $size = (stat($filename))[7];
                                 syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
                                 catfile($filename);

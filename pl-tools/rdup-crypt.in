@@ -49,9 +49,9 @@ while (($_ = <STDIN>)) {
                         if ($fsize != 0) {
                                 my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
                                 $fh->close();
-                                open CRYPT, "|mcrypt $crOptions > $filename" or die "** $filename: $!";
+                                open CRYPT, "|mcrypt $crOptions 2>/dev/null > $filename" or die "** $filename: $!";
                                 copyout($fsize, *CRYPT);
-                                close CRYPT or die "** $filename: $!";
+                                close CRYPT or warn "** Crypt failure: result will be empty \`$path': $!";
                                 my $size = (stat($filename))[7];
                                 syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
                                 catfile($filename);
