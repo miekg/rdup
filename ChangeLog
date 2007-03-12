@@ -1,4 +1,4 @@
-xx Mar 2007: 0.3.8 Miek <miek@miek.nl>
+12 Mar 2007: 0.3.8 Miek <miek@miek.nl>
   -- minor bugfixes --
    * Add 'E:' to the known options in rdup-dump.in
    * Fix the +NUMBER argument in rdup-snapshot (reported by Joerg Rueppel)
