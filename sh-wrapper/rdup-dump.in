@@ -25,7 +25,7 @@ usage() {
         echo " -u         backup directory is unique, don't add YYYYMM dirs"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using rdup-crypt"
-        echo " -n PREFIX  optional prefix for the timestmp and filelist"
+        echo " -n PREFIX  optional directory prefix for the timestmp and filelist"
         echo " -E FILE    use FILE as an exclude list"
         echo " -f         force a full dump"
         echo " -z         compress all files, using rdup-gzip"
@@ -90,7 +90,7 @@ while getopts ":ab:k:c:n:vzfxuehVE:" o; do
                 ;;
                 n) PREFIX=$OPTARG
                 if [[ -z $OPTARG ]]; then
-                        _echo2 "-N needs an argument"
+                        _echo2 "-n needs an argument"
                 fi;;
                 e) etc=true;;
                 u) u=true;;
@@ -131,8 +131,8 @@ fi
 IDENT=`ident_root $(basename $1)`
 
 if [[ ! -z $PREFIX ]]; then
-        STAMP="$ETC/$PREFIX.$HOSTNAME.$IDENT.timestamp"
-        LIST="$ETC/$PREFIX.$HOSTNAME.$IDENT.list"
+        STAMP="$PREFIX/$HOSTNAME.$IDENT.timestamp"
+        LIST="$PREFIX/$HOSTNAME.$IDENT.list"
 else
         STAMP="$ETC/$HOSTNAME.$IDENT.timestamp"
         LIST="$ETC/$HOSTNAME.$IDENT.list"

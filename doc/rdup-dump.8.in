@@ -43,22 +43,11 @@ the backup directory.
 .B \-u
 Unique backupdir, do not create a YYYYMM subdirectory structure.
 .TP
-.B \-n name
-The \fIname\fR speficies an optional prefix for the
-timestamp and filelist files. These are stored, by default, in
-`@sysconfdir@/rdup'.
+.B \-n path
+The \fIpath\fR speficies an optional prefix path for the
+timestamp and filelist files. These are stored, by default, 
+in `@sysconfdir@/rdup'. Now they will be put in \fBpath\fR
 
-Normally the filelist and timestamp files are named like this:
-
-$HOSTNAME.`basename DIR`.list and
-
-$HOSTNAME.`basename DIR`.timestamp
-
-where DIR is the first directory or file on the command line. Thus:
-\fBrdup-dump\fR /home/miekg/bin, will lead to the following names:
-
-elektron.bin.list and
-elektron.bin.timestamp
 .TP
 .B \-c user@remotehost
 Restore a backup on a remote host. This will create a pipeline of the
@@ -78,6 +67,7 @@ See \-E in rdup(8).
 Encrypt the files while backing up with \fIkeyfile\fR. This option
 inserts \fBcrypt.pl keyfile\fR in the pipeline. If both \fI-z\fR and
 \fI-k\fR are given a file is first zipped and then encrypted.
+.TP
 .B \-a
 Enable extended attributes. Write the uid/gid to the extended user
 attributes r_uid and r_gid.
