@@ -65,13 +65,13 @@ while getopts ":ab:E:k:c:n:vefzxhVl:" o; do
                         exit 1
                 fi
                 E="-E $OPTARG"
+		;;
 		l)
 		if [[ -z "$OPTARG" ]]; then
 			_echo2 "-l needs an argument"
 			exit 1
 		fi
 		lockdir=$OPTARG
-		;;
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
