@@ -12,6 +12,7 @@
      now a path prefix in stead of a file prefix
    * documentation updates in the manpages of rdup-dump and
      rdup-snapshot
+   * add -l to rdup-dump, rdup-snapshot for an optional lockfile dir
 
 
 11 Feb 2007: 0.3.7 Miek <miek@miek.nl>

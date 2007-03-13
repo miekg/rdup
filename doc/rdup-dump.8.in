@@ -33,6 +33,7 @@ See rdup-mirror(8) for more information on how the files are placed
 in the backup.
 
 .SH OPTIONS
+
 .TP
 .B \-b backupdir
 The backup directory. This is where the backup will be stored.
@@ -59,6 +60,9 @@ There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
 Also note that the PATH on the remote host should be set in such a way that all
 the rdup-util scripts can be found.
+.TP
+.B \-l directory
+Use \fBdirectory\fR for the lock file.
 .TP
 .B \-E file
 See \-E in rdup(8).
