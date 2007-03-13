@@ -27,6 +27,7 @@ usage() {
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -n PREFIX  optional directory prefix for the timestmp and filelist"
+	echo " -l LOCKDIR optional directory for lock file (/var/lock)"
         echo " -E FILE    use FILE as an exclude list"
         echo " -f         force a full dump"
         echo " -z         compress all files, using gzip.pl"
@@ -49,7 +50,7 @@ ssh=""
 force=false
 E=""
 
-while getopts ":ab:E:k:c:n:vefzxhV" o; do
+while getopts ":ab:E:k:c:n:vefzxhVl:" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
@@ -64,6 +65,13 @@ while getopts ":ab:E:k:c:n:vefzxhV" o; do
                         exit 1
                 fi
                 E="-E $OPTARG"
+		l)
+		if [[ -z "$OPTARG" ]]; then
+			_echo2 "-l needs an argument"
+			exit 1
+		fi
+		lockdir=$OPTARG
+		;;
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
