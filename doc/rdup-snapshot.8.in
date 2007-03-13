@@ -54,21 +54,10 @@ The backup directory. This is where the backup is stored
 Note that \fBrdup-snapshot\fR will add the string YYYYMM/DD to
 the backup directory.
 .TP
-.B \-n name
-The \fIname\fR speficies an optional prefix for the
-timestamp and filelist files. These are stored, by default, in
-`@sysconfdir@/rdup'.
-
-Normally the filelist and timestamp files are named like this:
-
-$HOSTNAME.`basename DIR`.list and
-$HOSTNAME.`basename DIR`.timestamp
-
-where DIR is the first directory or file on the command line. Thus:
-\fBrdup-snapshot\fR /home/miekg/bin, will lead to the following names:
-
-elektron.bin.list and
-elektron.bin.timestamp
+.B \-n path
+The \fIpath\fR speficies an optional prefix path for the
+timestamp and filelist files. These are stored, by default,
+in `@sysconfdir@/rdup'. Now they will be put in \fBpath\fR
 .TP
 .B \-c user@remotehost
 Restore a backup on a remote host. This will create a pipeline of the
@@ -87,10 +76,6 @@ See \-E in rdup(8).
 .B \-k keyfile
 Encrypt the files while backing up with \fIkeyfile\fR. This option
 inserts \fBrdup-crypt keyfile\fR in the pipeline. 
-.TP
-.B -l num
-Limit the transfer to 'num' bytes/second. This option is given to 
-\fBcstream\fR. See the manual page of cstream at the \-t option.
 .TP
 .B \-a
 Enable extended attributes. Write the uid/gid to the extended user
