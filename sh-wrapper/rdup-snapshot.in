@@ -26,7 +26,7 @@ usage() {
         echo " -b DIR     backup directory"
         echo " -c REMOTE  dump the backup on a remote machine with ssh"
         echo " -k KEYFILE encrypt all files, using crypt.pl"
-        echo " -n PREFIX  optional directory prefix for the timestmp and filelist"
+        echo " -n PREFIX  optional directory prefix for the timestamp and filelist"
 	echo " -l LOCKDIR optional directory for lock file (/var/lock)"
         echo " -E FILE    use FILE as an exclude list"
         echo " -f         force a full dump"

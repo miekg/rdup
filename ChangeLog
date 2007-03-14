@@ -1,5 +1,6 @@
-13 Mar 2007: 0.3.8 Miek <miek@miek.nl>
-  -- minor bugfixes --
+14 Mar 2007: 0.3.8 Miek <miek@miek.nl>
+  -- bugfixes --
+   * NOTE: -n changed semantics!
    * Add 'E:' to the known options in rdup-dump.in
    * Fix the +NUMBER argument in rdup-snapshot (reported by Joerg Rueppel)
    * Fix usage of -z (and any other option that toggles rdup's -c option)
