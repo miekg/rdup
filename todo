@@ -1,5 +1,7 @@
 TODO:
 
+:install:
+o install the rdup utils in /usr/bin or /bin instead of /sbin
 :rdup utils:
 :rdup:
 o -e option
