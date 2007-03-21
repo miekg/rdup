@@ -397,6 +397,9 @@ a tool the implement bandwidth shaping (for remote backups).
 .B o dirsplit 
 split a directory into DVD sized volumes for easy burning.
 
+.SH EXIT CODES
+\fBrdup\fR return a zero exit code on success, otherwise 1 is returned.
+
 .SH FILES
 \fBrdup\fR uses `@sysconfdir@/rdup' as directory where the timestamp
 and filelist files are put, but this is completely overrideable by the
