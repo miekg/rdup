@@ -34,7 +34,7 @@ BACKUPDIR=""
 pipe=""
 ssh=""
 dump=true
-while getopts ":ab:k:c:vzxhV" o; do
+while getopts ":ab:k:c:vzxhSDV" o; do
         case $o in
                 b) BACKUPDIR="$OPTARG"
                 if [[ -z "$OPTARG" ]]; then
