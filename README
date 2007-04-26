@@ -36,3 +36,9 @@ created in sequence. If you process the files in the same order no magic
 is needed to create directories that otherwise might be missing. If you
 use rdup-grep to exclude some directories - keep this in mind, they are
 not automaticaly created.
+
+4/ ROADMAP
+
+Shorttime: make rdup not depend on anything that a root user should
+setup. This way users can easily make backups of their own data
+This will also mean a lot of stuff is moved from /sbin to /usr/bin

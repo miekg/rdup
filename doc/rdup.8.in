@@ -150,6 +150,9 @@ Note this creates a race condition: if a file changes in size after
 rdup has crawled it and before it has been sent to the remote server,
 the backup will fail. \fBrdup\fR will check for file size changes, but
 this doesn't remove the race condition.
+
+This option is used when streaming your backup to a remote machine. Note
+that the remote machine must have \fBrdup\fR installed.
 .TP
 .B \-r
 Only print removed files; entries that start with a `\-'. This 

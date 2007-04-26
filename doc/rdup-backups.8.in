@@ -57,6 +57,11 @@ Snapshotting /var/lib to the backup:
 
 
 .SS REMOTE BACKUP
+For a remote backup to work, both the sending machine and the receiving
+machine must have \fBrdup\fR installed. The currently implemented
+protocol is \fIssh\fR.
+
+
 Dumping my homedir to the remote server:
 
         rdup-snapshot -b /vol/backup/$HOST -c miekg@remote ~

@@ -25,8 +25,12 @@ version($progName) if $opt{'V'};
 my $crOptions .= "-d " if $opt{'d'};
 
 if (!defined($ARGV[0]) or ! -f $ARGV[0]) {
-        die "Cannot open keyfile";
+        die "** Cannot open keyfile";
 }
+if (system('mcrypt 2>&1 >/dev/null')) {
+	die "** Cannot find \`mcrypt'";
+}
+
 $crOptions .= "-q -F -f $ARGV[0] -a blowfish";
 
 my $tmpDir = tempdir("rdup.crypt.XXXXXX", TMPDIR => 1, CLEANUP => 1);

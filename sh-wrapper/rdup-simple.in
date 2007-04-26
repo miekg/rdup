@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# updates a hardlinked backup
+# licensed under the GPL version 2
+# Copyright Miek Gieben, 2007
+
+OLD_IFS=$IFS
+c=""
+ssh=""
+pipe=""
+l="-l"
+etc=~/.rdup
+force=false
+
+# rdup [options] source destination
+
+dest="ssh://elektron.atoom.net/directory"
+dest="ssh://elektron.atoom.net/directory/var/"
+dest="file:///var/backup"
+dest="/var/backup"
+dest="ssh://miekg@elektron.atoom.net/directory"
+
+if [[ ${dest:0:6} == "ssh://" ]]; then
+	rest=${dest/ssh:\/\//}
+	u=`echo $rest | cut -s -f1 -d@`
+	rest=${rest/$u@/}
+	h=`echo $rest | cut -s -f1 -d/`
+	dir=${rest/$h/}
+
+	c="-c"
+	l=""
+	if [[ -z $u ]]; then
+		ssh=" ssh -x $h"
+	else
+		ssh=" ssh -x $u@$h"
+	fi
+fi
+if [[ ${dest:0:7} == "file://" ]]; then
+	rest=${dest/file:\/\//}
+	dir=$rest
+fi
+if [[ ${dest:0:1} == "/" ]]; then
+	dir=$dest
+fi
+
+
+
+echo
+echo S $ssh
+echo P $dir
+echo
+
+
+

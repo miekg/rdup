@@ -1,123 +1,123 @@
-Hi,
-
-While I was investigating `rdup`, I made some notes of things that
-occurred to me. I've written them up here. Sadly I can't take on any
-more projects ATM, so take these patch-less suggestions with a large
-pinch of salt. ;-)
-
-* `rdup-simple`
-I think ultimately you want a general wrapper script with simple calling
-conventions. The existing ones are fine, but I fear that they portray
-rdup as complex, when in reality it's quite elegant.
-
-The style used by rsync, unison, duplicity, rdiff-backup, etc., is
-`<command> <source> <destination>`. By all means add extra, optional
-configuration choices, but provide sensible defaults. This syntax
-should, like the others, support both local and remote paths for each
-argument. IOW, to backup my home directory to a remote server,
-`rdup-simple ~ ssh://server/backup/home` should be sufficient.
-
-* Config file
-In the spirit of making the default cases easier, a global / per-user
-config file system would probably help. These would specify default
-filter chains, compression types, encryption options, etc. They could be
-overridden by command-line options.
-
-The goal here is to move the backup logic out of a crontab file and into
-a self-descriptive, commented config file. `rsync` suffers from this
-problem: you implement a backup policy with it, put the resulting
-command line in a crontab, then need to pour over the man page months
-later when you want to tweak it.
-
-This could even support named profiles such that each backup job can be
-referred to with a human-readable name. For example:
-
-    [music]
-    source: /audio
-    dest: ssh://server:/backup/audio
-    compression: none
-    encryption: none
-
-    [documents]
-    source: ~/docs
-    dest: /media/backup/docs
-    compression: bzip2
-    encryption: GPG, 11F2F4E0
-
-* GPG encryption
-Instead of using `mcyrpt` for encryption, why not use GPG? It will
-remove the need for the user to hardcode a password into their backup
-process, reduce complexity from the command line, integrate with
-gpg-agent for passphrase prompting, support targeting multiple public
-keys, and be one less password to remember ;-).
-
-* `rdup-crypt` dependency
-`rdup-crypt` requires mcrypt to work, but doesn't explicitly check that
-said binary is present. As a result, if it's not (and as you can
-probably gather, in my case it wasn't ;-)), it dies with vague error
-messages. Perhaps a check could be put in before you enter the while
-loop that the binary exists; if it doesn't bail out immediately with a
-clear error message.
-
-* Root requirement
-Why does the `rdup` suite expect to be run as root? :-) IME, backup jobs
-are normally ran as a dedicated `backup` user, or by an individual user
-of the system. It seems an unnecessary requirement.
-
-One of the more obvious repercussions is that if, as in the examples on
-the man pages, a user wants to backup their home directory, they're
-thwarted by the permissions on /etc/rdup (`root:root` on my system), so
-have to explicitly define alternative metadata directories. Why not give
-everybody a `~/.rdup/`, in which their filelist, config files, and
-everything else is stored. This would support both use cases detailed
-above.
-
-* Easier restoration.
-Restoration of backups seems to require the user to remember the exact
-command invocation he used to make the original backup. For instance,
-did he compress then encrypt, or encrypt then compress? This is clearly
-the domain of a generic wrapper script, but I do think solving it would
-be useful.
-
-One approach would be to store details of the backup in the backup
-directory itself, so restoration is as simple as pointing `rdup-restore`
-at the directory, and letting it assemble the correct command line from
-what the metadata contained within.
-
-Another would be to implement the config file mechanism described above,
-then let the user simply direct `rdup-restore` to a specific named
-policy -- the restoration details could be derived from that.
-
-Yet another, which would be mainly useful for restoring from removable
-media a long time after the original backup, would be a self-restoring
-backup. The original backup script would generate a corresponding
-restoration script in the backup directory.
-
-* Encrypted filenames.
-At some point, users will start requesting that the filenames of their
-documents be encrypted, as well as the contents. I'm not sure of the
-best solution for this.
-
-* Debs.
-It could aid adoption if you distributed .debs of significant releases.
-When `rdup` is a bit easier for the average user, it would be beneficial
- to post a tutorial on UbuntuForums.org. There's a lot of interest in an
-encrypted backup tool, and as duplicity falls further into obsolescence,
-`rdup` is the best solution. If it can be installed with `gdebi`, and is
-easy enough to use, it could really take off in that environment.
-
-* Metadata viewing
-For `rdup-snapshot` particularly, a tool to view stats of backup
-archives would be useful. The timespan backed up, the size of a given
-backup set, the differences between a backup set and the source
-directory, etc.
-
-* Remote backups
-It may be worth making explicit that `rdup` must be installed on both
-client and server for snapshot backups. It was obvious once I thought
-about it, but the initial error messages were a bit odd. ;-)
-
-FTR, because it's so difficult to install software on my backup server,
-I just settled on mounting it with SSHFs, then backing up to it as if it
-were local. That seems to be working.
-
+> Hi,
+> 
+> While I was investigating `rdup`, I made some notes of things that
+> occurred to me. I've written them up here. Sadly I can't take on any
+> more projects ATM, so take these patch-less suggestions with a large
+> pinch of salt. ;-)
+> 
+> * `rdup-simple`
+> I think ultimately you want a general wrapper script with simple calling
+> conventions. The existing ones are fine, but I fear that they portray
+> rdup as complex, when in reality it's quite elegant.
+> 
+> The style used by rsync, unison, duplicity, rdiff-backup, etc., is
+> `<command> <source> <destination>`. By all means add extra, optional
+> configuration choices, but provide sensible defaults. This syntax
+> should, like the others, support both local and remote paths for each
+> argument. IOW, to backup my home directory to a remote server,
+> `rdup-simple ~ ssh://server/backup/home` should be sufficient.
+> 
+> * Config file
+> In the spirit of making the default cases easier, a global / per-user
+> config file system would probably help. These would specify default
+> filter chains, compression types, encryption options, etc. They could be
+> overridden by command-line options.
+> 
+> The goal here is to move the backup logic out of a crontab file and into
+> a self-descriptive, commented config file. `rsync` suffers from this
+> problem: you implement a backup policy with it, put the resulting
+> command line in a crontab, then need to pour over the man page months
+> later when you want to tweak it.
+> 
+> This could even support named profiles such that each backup job can be
+> referred to with a human-readable name. For example:
+> 
+>     [music]
+>     source: /audio
+>     dest: ssh://server:/backup/audio
+>     compression: none
+>     encryption: none
+> 
+>     [documents]
+>     source: ~/docs
+>     dest: /media/backup/docs
+>     compression: bzip2
+>     encryption: GPG, 11F2F4E0
+> 
+> * GPG encryption
+> Instead of using `mcyrpt` for encryption, why not use GPG? It will
+> remove the need for the user to hardcode a password into their backup
+> process, reduce complexity from the command line, integrate with
+> gpg-agent for passphrase prompting, support targeting multiple public
+> keys, and be one less password to remember ;-).
+> 
+> * `rdup-crypt` dependency
+> `rdup-crypt` requires mcrypt to work, but doesn't explicitly check that
+> said binary is present. As a result, if it's not (and as you can
+> probably gather, in my case it wasn't ;-)), it dies with vague error
+> messages. Perhaps a check could be put in before you enter the while
+> loop that the binary exists; if it doesn't bail out immediately with a
+> clear error message.
+> 
+> * Root requirement
+> Why does the `rdup` suite expect to be run as root? :-) IME, backup jobs
+> are normally ran as a dedicated `backup` user, or by an individual user
+> of the system. It seems an unnecessary requirement.
+> 
+> One of the more obvious repercussions is that if, as in the examples on
+> the man pages, a user wants to backup their home directory, they're
+> thwarted by the permissions on /etc/rdup (`root:root` on my system), so
+> have to explicitly define alternative metadata directories. Why not give
+> everybody a `~/.rdup/`, in which their filelist, config files, and
+> everything else is stored. This would support both use cases detailed
+> above.
+> 
+> * Easier restoration.
+> Restoration of backups seems to require the user to remember the exact
+> command invocation he used to make the original backup. For instance,
+> did he compress then encrypt, or encrypt then compress? This is clearly
+> the domain of a generic wrapper script, but I do think solving it would
+> be useful.
+> 
+> One approach would be to store details of the backup in the backup
+> directory itself, so restoration is as simple as pointing `rdup-restore`
+> at the directory, and letting it assemble the correct command line from
+> what the metadata contained within.
+> 
+> Another would be to implement the config file mechanism described above,
+> then let the user simply direct `rdup-restore` to a specific named
+> policy -- the restoration details could be derived from that.
+> 
+> Yet another, which would be mainly useful for restoring from removable
+> media a long time after the original backup, would be a self-restoring
+> backup. The original backup script would generate a corresponding
+> restoration script in the backup directory.
+> 
+> * Encrypted filenames.
+> At some point, users will start requesting that the filenames of their
+> documents be encrypted, as well as the contents. I'm not sure of the
+> best solution for this.
+> 
+> * Debs.
+> It could aid adoption if you distributed .debs of significant releases.
+> When `rdup` is a bit easier for the average user, it would be beneficial
+>  to post a tutorial on UbuntuForums.org. There's a lot of interest in an
+> encrypted backup tool, and as duplicity falls further into obsolescence,
+> `rdup` is the best solution. If it can be installed with `gdebi`, and is
+> easy enough to use, it could really take off in that environment.
+> 
+> * Metadata viewing
+> For `rdup-snapshot` particularly, a tool to view stats of backup
+> archives would be useful. The timespan backed up, the size of a given
+> backup set, the differences between a backup set and the source
+> directory, etc.
+> 
+> * Remote backups
+> It may be worth making explicit that `rdup` must be installed on both
+> client and server for snapshot backups. It was obvious once I thought
+> about it, but the initial error messages were a bit odd. ;-)
+> 
+> FTR, because it's so difficult to install software on my backup server,
+> I just settled on mounting it with SSHFs, then backing up to it as if it
+> were local. That seems to be working.
+> 
