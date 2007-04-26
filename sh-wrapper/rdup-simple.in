@@ -4,27 +4,122 @@
 # licensed under the GPL version 2
 # Copyright Miek Gieben, 2007
 
-OLD_IFS=$IFS
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datadir=@datadir@/rdup
+sysconfdir=@sysconfdir@/rdup
+lockdir=/var/lock
+GNU_DEFS=rdup-snapshot.gnu
+
+# common stuff
+source $datadir/shared.sh
+
+usage() {
+        echo "$PROGNAME [+N] DIR [DIR ...] DESTINATION"
+        echo
+        echo "This is a wrapper around rdup and snap.pl"
+        echo
+        echo DIR \ - directories to back up
+        echo +N \ \ - Look N days back for previous backups, defaults to 8
+	echo DEST \ - where to store the backup. This can be:
+	echo "		ssh://user@remote/directory"
+	echo "		file:///directory (note 3 slashes)"
+	echo "		/directory"
+	echo "		directory"
+        echo
+        echo OPTIONS:
+        echo " -k KEYFILE encrypt all files, using crypt.pl"
+        echo " -z         compress all files, using gzip.pl"
+	echo "            If both -z and -k are selected, compression is done first"
+        echo " -E FILE    use FILE as an exclude list"
+        echo " -f         force a full dump"
+        echo " -a         write extended attributes with uid/gid"
+        echo " -v         echo the files processed to stderr"
+        echo " -x         pass -x to rdup"
+        echo " -h         this help"
+        echo " -V         print version"
+}
+
+PROGNAME=$0
 c=""
 ssh=""
 pipe=""
 l="-l"
+zip=false
+enc=false
 etc=~/.rdup
 force=false
+DAYS=8
 
+while getopts "E:k:vfzxhV" o; do
+        case $o in
+		E)
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-E needs an argument"
+                        exit 1
+                fi
+                E="-E $OPTARG"
+                ;;
+                k)
+                if [[ -z "$OPTARG" ]]; then
+                        _echo2 "-k needs an argument"
+                        exit 1
+                fi
+                if [[ ! -r "$OPTARG" ]]; then
+                        _echo2 "Cannot read keyfile \`$OPTARG': failed"
+                        exit 1
+                fi
+                pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
+                c="-c"
+                ;;
+                z) pipe="$pipe | @sbindir@/rdup-gzip"
+                c="-c"
+                ;;
+                f) force=true;;
+                a) OPT="$OPT -a";;
+                v) OPT="$OPT -v";;
+                x) x="-x";;
+                h) usage && exit;;
+                V) version && exit;;
+                \?) _echo2 "Invalid option: $OPTARG"; exit 1;;
+        esac
+done
+shift $((OPTIND - 1))
+
+if [[ ${1:0:1} == "+" ]]; then
+        DAYS=${1:1}
+        if [[ $DAYS -lt 1 || $DAYS -gt 99 ]]; then
+                _echo2 "+N needs to be a number [1..99]"
+                exit 1
+        fi
+        shift
+else
+        DAYS=8
+fi
+
+i=1; last=$#; DIRS=
+while [[ $i -lt $last ]]; do
+	DIRS="$DIRS $1"
+	shift;
+	((i=$i+1))
+done
 # rdup [options] source destination
+#dest="ssh://elektron.atoom.net/directory"
+#dest="ssh://elektron.atoom.net/directory/var/"
+#dest="file:///var/backup"
+#dest="/var/backup"
+#dest="ssh://miekg@elektron.atoom.net/directory"
 
-dest="ssh://elektron.atoom.net/directory"
-dest="ssh://elektron.atoom.net/directory/var/"
-dest="file:///var/backup"
-dest="/var/backup"
-dest="ssh://miekg@elektron.atoom.net/directory"
-
+dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
-	rest=${dest/ssh:\/\//}
+	rest=${1/ssh:\/\//}
 	u=`echo $rest | cut -s -f1 -d@`
 	rest=${rest/$u@/}
 	h=`echo $rest | cut -s -f1 -d/`
+#	if [[ -z $h ]]; then
+#		_echo2 "Need a directory for the host"; exit 1;;
+#	fi
+
 	dir=${rest/$h/}
 
 	c="-c"
@@ -43,12 +138,15 @@ if [[ ${dest:0:1} == "/" ]]; then
 	dir=$dest
 fi
 
+# no hits above, asume relative filename
+if [[ -z $dir ]]; then
+	dir=$dest
+fi
 
 
-echo
+echo $pipe
+echo $OPT
+echo DIRS $DIRS
 echo S $ssh
 echo P $dir
 echo
-
-
-
