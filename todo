@@ -8,6 +8,11 @@ o -e option
 :tests:
 o add conformence test; symlinks etc.
 
+o gpg encryption
+o check if mcrypt, gpg is there in rdup-crypt (Ben Coffey)
+o make it more clear how you do remote backups
+
+
 :porting:
 o port extended attributes to FreeBSD
 o cp -plr is gnuis. Don't have time to port this...?
