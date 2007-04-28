@@ -28,8 +28,10 @@ $crOptions = "-d " if $opt{'d'};
 if (!defined($ARGV[0]) or ! -f $ARGV[0]) {
         die "** Cannot open keyfile";
 }
-if (system('gpg --version 2>&1 >/dev/null')) {
-	die "** Cannot find \`gpg'";
+
+`which gpg >/dev/null`;
+if ($? != 0) {
+        die "** Cannot find \'gpg'";
 }
 
 $crOptions .= "-q --default-recipient-self";

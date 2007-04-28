@@ -28,8 +28,9 @@ $zipOptions .= "-d " if $opt{'d'};
 my $tmpDir = tempdir("rdup.backup.XXXXXX", TMPDIR => 1, CLEANUP => 1);
 die "** $tmpDir could not be created: $!" unless -d $tmpDir;
 
-if (system('gzip -v 2>&1 >/dev/null')) {
-	die "** Cannot find \`gzip'";
+`which gzip >/dev/null`;
+if ($? != 0) {
+	die "** Cannot find \'gzip'";
 }
 
 while (($_ = <STDIN>)) {
