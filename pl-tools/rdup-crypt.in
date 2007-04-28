@@ -27,7 +27,7 @@ my $crOptions .= "-d " if $opt{'d'};
 if (!defined($ARGV[0]) or ! -f $ARGV[0]) {
         die "** Cannot open keyfile";
 }
-if (system('mcrypt 2>&1 >/dev/null')) {
+if (system('mcrypt -v 2>&1 >/dev/null')) {
 	die "** Cannot find \`mcrypt'";
 }
 
