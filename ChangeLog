@@ -5,9 +5,10 @@ xx May 2007: 0.3.9 Miek <miek@miek.nl>
    * Add runtime check to find mcrypt to rdup-crypt  (reported by Ben
      Coffey)
    * Documentation updates and tweaks
-   * Add rdup-simple; 
+   * Added rdup-simple; 
    	- other calling semantics
 	- uses ~/.rdup for storing tmp files
+   * Added rdup-gpg - encrypt with gpg
 
 
 14 Mar 2007: 0.3.8 Miek <miek@miek.nl>
