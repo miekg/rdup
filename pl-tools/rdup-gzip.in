@@ -78,7 +78,7 @@ sub usage {
         print "$progName [OPTIONS]\n\n";
         print "Compress or decompress the file's contents\n\n";
         print "OPTIONS:\n";
-        print " -c    ignored as gzip.pl always works on content\n";
+        print " -c    ignored as rdup-gzip always works on content\n";
         print " -d    decompress the files\n";
         print " -h    this help\n";
         print " -V    print version\n";

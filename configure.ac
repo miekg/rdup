@@ -59,6 +59,7 @@ AC_CONFIG_FILES([GNUmakefile
                  pl-tools/rdup-crypt
                  pl-tools/rdup-snap
                  pl-tools/rdup-cp
+                 pl-tools/rdup-gpg
                  pl-tools/rdup-mirror
                  ])
 AC_CONFIG_HEADER([config.h])
