@@ -25,10 +25,6 @@ version($progName) if $opt{'V'};
 my $crOptions = "-e ";
 $crOptions = "-d " if $opt{'d'};
 
-if (!defined($ARGV[0]) or ! -f $ARGV[0]) {
-        die "** Cannot open keyfile";
-}
-
 `which gpg >/dev/null`;
 if ($? != 0) {
         die "** Cannot find \'gpg'";
@@ -54,7 +50,7 @@ while (($_ = <STDIN>)) {
         if ($dump eq '+') {        # add
                 if ($type eq '-') {      # REG
                         if ($fsize != 0) {
-                                my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
+                                my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".gpg" );
                                 $fh->close();
                                 open CRYPT, "|gpg $crOptions 2>/dev/null > $filename" or die "** $filename: $!";
                                 copyout($fsize, *CRYPT);
