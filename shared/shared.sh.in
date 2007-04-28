@@ -57,6 +57,14 @@ ident_root() {
         return 0
 }
 
+# create ~/.rdup
+create_rdup() {
+	if [[ ! -d $1 ]]; then
+		mkdir $1
+	fi
+	return 0
+}
+
 lock() {
         (umask 222; echo "Backup locked by PID: $$" >"$1" ) ||
                 (cat "$1" ; echo "aborting..." ; exit 1)

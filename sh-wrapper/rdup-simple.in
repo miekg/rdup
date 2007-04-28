@@ -21,11 +21,11 @@ usage() {
         echo
         echo DIR \ - directories to back up
         echo +N \ \ - Look N days back for previous backups, defaults to 8
-	echo DEST \ - where to store the backup. This can be:
-	echo "		ssh://user@remote/directory"
-	echo "		file:///directory (note 3 slashes)"
-	echo "		/directory"
-	echo "		directory"
+	echo DEST - where to store the backup. This can be:
+	echo "	ssh://user@host/directory (note: no colon after the hostname"
+	echo "	file:///directory (note: 3 slashes)"
+	echo "	/directory"
+	echo "	directory"
         echo
         echo OPTIONS:
         echo " -k KEYFILE encrypt all files, using crypt.pl"
@@ -41,13 +41,14 @@ usage() {
 }
 
 PROGNAME=$0
+NOW=`date +%Y%m/%d`
 c=""
 ssh=""
 pipe=""
 l="-l"
 zip=false
 enc=false
-etc=~/.rdup
+etc=~/.rdup  # check existence
 force=false
 DAYS=8
 
@@ -120,7 +121,7 @@ if [[ ${dest:0:6} == "ssh://" ]]; then
 #		_echo2 "Need a directory for the host"; exit 1;;
 #	fi
 
-	dir=${rest/$h/}
+	BACKUPDIR=${rest/$h/}
 
 	c="-c"
 	l=""
@@ -129,24 +130,61 @@ if [[ ${dest:0:6} == "ssh://" ]]; then
 	else
 		ssh=" ssh -x $u@$h"
 	fi
+	l=	# enable race checking
 fi
 if [[ ${dest:0:7} == "file://" ]]; then
 	rest=${dest/file:\/\//}
-	dir=$rest
+	BACKUPDIR=$rest
 fi
 if [[ ${dest:0:1} == "/" ]]; then
-	dir=$dest
+	BACKUPDIR=$dest
 fi
 
 # no hits above, asume relative filename
-if [[ -z $dir ]]; then
-	dir=$dest
+if [[ -z $BACKUPDIR ]]; then
+	BACKUPDIR=$dest
 fi
 
+if [[ -z $BACKUPDIR ]]; then
+        _echo2 "Missing the backup destination directory"
+	exit 1
+fi
 
-echo $pipe
-echo $OPT
-echo DIRS $DIRS
-echo S $ssh
-echo P $dir
-echo
+create_rdup $etc
+
+STAMP=$etc/$HOSTNAME.XXX.timestamp
+LIST=$etc/$HOSTNAME.XXX.list
+
+# create our command line
+if [[ -z $ssh ]]; then
+        pipe="$pipe | ${exec_prefix}/sbin/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+else
+        pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+fi
+cmd="${exec_prefix}/sbin/rdup $E $x $l $c -N $STAMP $LIST $DIRS $pipe"
+
+if ! $force; then
+        if [[ -z $ssh ]]; then
+                ${exec_prefix}/sbin/rdup-snap-link $DAYS $BACKUPDIR $NOW
+                purpose=$?
+        else
+                $ssh "rdup-snap-link $DAYS $BACKUPDIR $NOW"
+                purpose=$?
+        fi
+else
+        purpose=1
+fi
+case $purpose in
+        0) _echo2 "INCREMENTAL DUMP" ;;
+        1)
+        _echo2 "FULL DUMP"
+        rm -f $LIST
+        rm -f $STAMP ;;
+        *)
+        _echo2 "Illegal return code from rdup-snap-link"
+        exit 1 ;;
+esac
+# execute the backup command
+_echo2 "Executing: ${cmd}"
+eval ${cmd}
+exit 0
