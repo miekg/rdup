@@ -57,6 +57,7 @@ while getopts ":ab:k:c:vzxhSDV" o; do
 		if $zip; then
 			_echo2 "Select decryption first, then decompression"
 			exit 1
+		if
                 ;;
                 D)
                 dump=true;;
