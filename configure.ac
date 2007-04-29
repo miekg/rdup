@@ -42,10 +42,12 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-snap.8
                  doc/rdup-snap-link.8
                  doc/rdup-snapshot.8
+                 doc/rdup-simple.8
                  doc/rdup-backups.8
                  doc/rdup-cp.8
                  doc/rdup-crypt.1
                  doc/rdup-gzip.1
+                 doc/rdup-gpg.1
                  shared/shared.sh
                  shared/shared.pl
                  sh-wrapper/rdup-dump-here

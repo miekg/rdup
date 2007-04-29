@@ -1,0 +1,42 @@
+'\" t
+.TH RDUP-GPG 1 "29 Apr 2007" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+        
+.SH NAME
+rdup-gpg, encrypt \- encrypt files with gpg received from \fBrdup -c\fR
+
+.SH SYNOPSIS
+.B rdup-gpg
+[
+.IR OPTIONS
+]
+
+.SH DESCRIPTION
+\fBrdup-gpg\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
+default public key in your key ring.
+.PP
+For example,
+.PP
+        rdup -c list ~/Documents | rdup-gpg | rdup-snap -c -b /tmp/storage
+.PP
+Note the \fI-c\fR option for \fBrdup-snap\fR.
+
+.SH OPTIONS
+.TP
+.B \-c
+This option is ignored, \fBrdup-gpg\fR always works on the files'
+content. This "feature" was added because all rdup-util scripts have
+such an option.
+.TP
+.B \-d
+Decrypt the files. You need `gpg-agent' running for this to work ok, 
+otherwise you need to type your passphrase for \fIevery\fR file that
+is decrypted.
+.TP
+.B \-h
+Show a short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH SEE ALSO
+rdup-gzip(1), rdup-snap(8) and gpg(1).

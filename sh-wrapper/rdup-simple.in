@@ -152,7 +152,7 @@ fi
 
 # no hits above, asume relative filename
 if [[ -z $BACKUPDIR ]]; then
-	BACKUPDIR=$dest
+	BACKUPDIR=`pwd`/$dest
 fi
 
 if [[ -z $BACKUPDIR ]]; then
@@ -192,6 +192,6 @@ case $purpose in
         exit 1 ;;
 esac
 # execute the backup command
-_echo2 "Executing: ${cmd}"
+#_echo2 "Executing: ${cmd}"
 eval ${cmd}
 exit 0

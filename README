@@ -37,8 +37,12 @@ is needed to create directories that otherwise might be missing. If you
 use rdup-grep to exclude some directories - keep this in mind, they are
 not automaticaly created.
 
-4/ ROADMAP
+4/ COPYRIGHT
 
-Shorttime: make rdup not depend on anything that a root user should
-setup. This way users can easily make backups of their own data
-This will also mean a lot of stuff is moved from /sbin to /usr/bin
+All files in this archive are copyrighted by Miek Gieben, unless stated
+otherwise in the file itself.
+
+(c) Miek Gieben, 2005-2007
+
+5/ LICENSE
+GPL, version 2, See the file LICENSE.
