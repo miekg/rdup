@@ -102,6 +102,12 @@ else
         DAYS=8
 fi
 
+
+# fix lonely root arg
+IDENT=`ident_root $(basename $1)`
+STAMP=$etc/$HOSTNAME.$IDENT.timestamp
+LIST=$etc/$HOSTNAME.$IDENT.list
+
 i=1; last=$#; DIRS=
 while [[ $i -lt $last ]]; do
 	DIRS="$DIRS $1"
@@ -155,9 +161,6 @@ if [[ -z $BACKUPDIR ]]; then
 fi
 
 create_rdup $etc
-
-STAMP=$etc/$HOSTNAME.XXX.timestamp
-LIST=$etc/$HOSTNAME.XXX.list
 
 # create our command line
 if [[ -z $ssh ]]; then
