@@ -46,7 +46,6 @@ c=""
 ssh=""
 pipe=""
 l="-l"
-zip=false
 enc=false
 etc=~/.rdup  # check existence
 force=false
@@ -71,9 +70,14 @@ while getopts "E:k:vfzxhV" o; do
                         exit 1
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
+		enc=true
                 c="-c"
                 ;;
                 z) pipe="$pipe | @sbindir@/rdup-gzip"
+		if $enc; then
+			_echo2 "Select compression first, then encryption"
+			exit 1
+		fi
                 c="-c"
                 ;;
                 f) force=true;;
@@ -146,7 +150,7 @@ if [[ -z $BACKUPDIR ]]; then
 fi
 
 if [[ -z $BACKUPDIR ]]; then
-        _echo2 "Missing the backup destination directory"
+        usage
 	exit 1
 fi
 

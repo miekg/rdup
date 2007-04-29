@@ -49,6 +49,7 @@ c=""
 l="-l"
 pipe=""
 ssh=""
+enc=false
 u=false
 force=false
 E=""
@@ -85,6 +86,7 @@ while getopts ":ab:k:c:n:vzfxuehVE:l:" o; do
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
                 c="-c"
+		enc=true
                 ;;
                 c)
                 if [[ -z $OPTARG ]]; then
@@ -103,6 +105,10 @@ while getopts ":ab:k:c:n:vzfxuehVE:l:" o; do
                 u) u=true;;
                 f) force=true;;
                 z)
+		if $enc; then
+			_echo2 "Select compression first, then encryption"
+			exit 1
+		fi
                 pipe="$pipe | @sbindir@/rdup-gzip"
                 c="-c"
                 ;;

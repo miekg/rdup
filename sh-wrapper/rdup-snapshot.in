@@ -45,6 +45,7 @@ NOW=`date +%Y%m/%d`
 c=""
 l="-l"
 etc=false
+enc=false
 pipe=""
 ssh=""
 force=false
@@ -93,9 +94,14 @@ while getopts ":ab:E:k:c:n:vefzxhVl:" o; do
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
                 c="-c"
+		enc=true
                 ;;
                 z) pipe="$pipe | @sbindir@/rdup-gzip"
                 c="-c"
+		if $enc; then
+			_echo2 "Select compression first, then encryption"
+			exit 1
+		fi
                 ;;
                 f) force=true;;
                 n) PREFIX=$OPTARG

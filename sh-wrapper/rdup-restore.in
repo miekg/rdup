@@ -32,6 +32,7 @@ usage() {
 PROGNAME=$0
 BACKUPDIR=""
 pipe=""
+zip=false
 ssh=""
 dump=true
 while getopts ":ab:k:c:vzxhSDV" o; do
@@ -53,6 +54,9 @@ while getopts ":ab:k:c:vzxhSDV" o; do
                 fi
                 pipe="$pipe | @sbindir@/rdup-crypt -d $OPTARG"
                 c="-c"
+		if $zip; then
+			_echo2 "Select decryption first, then decompression"
+			exit 1
                 ;;
                 D)
                 dump=true;;
@@ -69,6 +73,7 @@ while getopts ":ab:k:c:vzxhSDV" o; do
                 ;;
                 z) pipe="$pipe | @sbindir@/rdup-gzip -d"
                 c="-c"
+		zip=true
                 ;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
