@@ -18,11 +18,13 @@ my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $progName = basename $0;
-my ($help, $version, $verbose, $attr, $remote, $from, $toDir);
+my ($help, $version, $verbose, $attr, $remote, $from, $toDir, $strip);
 
+$strip = 0;
 GetOptions("h" => \$help,
         "V" => \$version,
         "a" => \$attr, # extended attr support
+	"p=i" => \$strip, # strip i slashes
         "c" => \$remote,
         "v" => \$verbose);
 
@@ -59,17 +61,22 @@ sub _cp {
         my $dir = $_[0];
         my $dump = substr($t, 0, 1);
         my $type = substr($t, 1, 1);
+	my $tpath;
 
         sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
         if ($remote) {
                 $path = "";
                 read STDIN, $path, $psize;
         }
-        die "** Empty path"  if $path eq "";
+	$tpath = strip_path($strip, $path);
+	if ($tpath eq "") {
+		warn "** Empty destination path, from $path";
+		return;
+	}
         print STDERR "$path\n" if $verbose;
 
         if ($dump eq '+') {        # add
-                my $target = "$dir/$path";
+                my $target = "$dir/$tpath";
                 if ($type eq '-') {        # REG
                         if (exist($target) == 1) {      # We only have a suffix if the file exists
                                 unlink $target or warn "** Cannot unlink: $target: $!";
@@ -122,6 +129,19 @@ sub _cp {
         }
 }
 
+sub strip_path {
+	my $s = $_[0];
+        my $p = $_[1];
+
+	if ($s < 0) {
+		$s = 0;
+	}
+
+        my @path = split /\/+/, $p;
+        my $r = join '/', @path[$s..$#path];
+        return $r;
+}
+
 sub usage {
         print "$progName [OPTIONS] DEST\n\n";
         print "Copy files read from standard in to DEST\n";
@@ -129,6 +149,7 @@ sub usage {
         print "OPTIONS\n";
         print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
         print " -c      process the file content also (rdup -c)\n";
+        print " -P NUM  strip NUM slashes from the filenames\n";
         print " -v      print the files processed to standard error\n";
         print " -h      this help\n";
         print " -V      print version\n";
