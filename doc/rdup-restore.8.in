@@ -21,9 +21,9 @@ FROM_DIR ...
 restore everything under \fIFROM_DIR\fRs to \fITO_DIR\fR.
 
 .PP
-With this script you can only restore to the latest state of your
-backup. If you need something better (for backing up) see
-rdup-snapshot(8).
+Note; if you still backup with `rdup-dump' you can only restore
+to the latest state of your backup. With `rdup-snapshot' you can
+also restore to any previous state, see rdup-snapshot(8).
 
 .PP
 Restoring from a backup is as simple as:

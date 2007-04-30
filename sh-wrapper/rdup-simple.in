@@ -15,7 +15,7 @@ GNU_DEFS=rdup-snapshot.gnu
 source $datadir/shared.sh
 
 usage() {
-        echo "$PROGNAME [+N] DIR [DIR ...] DESTINATION"
+        echo "$PROGNAME [+N] DIR [DIR ...] DEST"
         echo
         echo "This is a wrapper around rdup and snap.pl"
         echo
@@ -102,6 +102,11 @@ else
         DAYS=8
 fi
 
+
+if [[ $# -eq 0 ]]; then
+	usage
+	exit
+fi
 
 # fix lonely root arg
 IDENT=`ident_root $(basename $1)`
