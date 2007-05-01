@@ -24,15 +24,16 @@ getopts('dhV', \%opt);
 usage() if $opt{'h'};
 version($progName) if $opt{'V'};
 my $crOptions = "-e ";
-$crOptions = "-d --use-agent" if $opt{'d'};
+$crOptions = "-d " if $opt{'d'};
+$crOptions .= "--use-agent " if $opt{'a'};
 
 `which gpg >/dev/null`;
 if ($? != 0) {
         die "** Cannot find \'gpg'";
 }
 
-$default="--default-recipient-self"
-if (!defined($ARGV[0])) {
+my $default="--default-recipient-self";
+if (defined($ARGV[0])) {
 	$default="--default-recipient $ARGV[0]";
 }
 
@@ -87,10 +88,11 @@ sub usage {
         print "$progName [OPTIONS] [RECIPIENT]\n\n";
         print "Encrypt or decrypt the file's contents with the\n";
         print "default public key in your key ring\n";
-	print "RECIPIENT - recipient name to use for GPG\n\n";
+	print "RECIPIENT - recipient name to use for GPG\n";
 	print "            defaults to self\n";
-        print "OPTIONS:\n";
+        print "\nOPTIONS:\n";
         print " -c    ignored as rdup-gpg always works on content\n";
+        print " -a    use gpg-agent (needed when decrypting a lot files)\n";
         print " -d    decrypt the files\n";
         print " -h    this help\n";
         print " -V    print version\n";
