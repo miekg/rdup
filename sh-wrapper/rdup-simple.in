@@ -47,7 +47,7 @@ ssh=""
 pipe=""
 l="-l"
 enc=false
-etc=~/.rdup  # check existence
+etc=~/.rdup 
 force=false
 DAYS=8
 

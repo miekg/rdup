@@ -127,9 +127,8 @@ todo
 > `rdup` is the best solution. If it can be installed with `gdebi`, and is
 > easy enough to use, it could really take off in that environment.
 
-don
+done - need to write the howto
 
-> 
 > * Metadata viewing
 > For `rdup-snapshot` particularly, a tool to view stats of backup
 > archives would be useful. The timespan backed up, the size of a given
@@ -138,7 +137,6 @@ don
 
 todo - not really the domain of rdup
 
-> 
 > * Remote backups
 > It may be worth making explicit that `rdup` must be installed on both
 > client and server for snapshot backups. It was obvious once I thought
@@ -150,4 +148,3 @@ done - documentation...
 > FTR, because it's so difficult to install software on my backup server,
 > I just settled on mounting it with SSHFs, then backing up to it as if it
 > were local. That seems to be working.
-> 

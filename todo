@@ -3,8 +3,12 @@ TODO:
 :install:
 o install the rdup utils in /usr/bin or /bin instead of /sbin
 :rdup utils:
+o rdup-simple-restore
 :rdup:
+o encrypted file names
 o -e option
+o get a handle about the race condition when files are growing or
+  shrinking
 :tests:
 o add conformence test; symlinks etc.
 
@@ -12,7 +16,11 @@ o gpg encryption
 o check if mcrypt, gpg is there in rdup-crypt (Ben Coffey)
 o make it more clear how you do remote backups
 
+:gui:
+o a high level gui?
 
 :porting:
 o port extended attributes to FreeBSD
 o cp -plr is gnuis. Don't have time to port this...?
+o on Solaris I sometimes get weird output from rdup, this
+  is either a bug in my code or something weird in libgtk

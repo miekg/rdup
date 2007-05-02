@@ -9,10 +9,15 @@ rdup-gpg, encrypt \- encrypt files with gpg received from \fBrdup -c\fR
 [
 .IR OPTIONS
 ]
+[
+.IR RECIPIENT
+]
 
 .SH DESCRIPTION
 \fBrdup-gpg\fR, by default,  encrypts the data it receives from \fBrdup\fR with the
-default public key in your key ring.
+default public key in your key ring. When \fIRECIPIENT\fR is empty, the
+default recipient (you) is used, otherwise it is used in the
+\fB--default-recipient\fR option of `gpg'.
 .PP
 For example,
 .PP
@@ -32,6 +37,9 @@ Decrypt the files. You need `gpg-agent' running for this to work ok,
 otherwise you need to type your passphrase for \fIevery\fR file that
 is decrypted.
 .TP
+.B \-a
+Use `gpg-agent`, usefull when decrypting a backup. 
+.TP
 .B \-h
 Show a short help message.
 .TP
@@ -39,4 +47,4 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup-gzip(1), rdup-snap(8) and gpg(1).
+rdup-gzip(1), rdup-snap(8), gpg(1) and gpg-agent(1)

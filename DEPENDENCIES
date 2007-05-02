@@ -14,4 +14,7 @@ o libattr (extended attributes library)
 o attr    (extended attributes utility)
 o cstream (bandwidth shaping)
 o mcrypt  (encryption)
+o gpg 	  (gpg encryption)
+o gpg-agent 	  (gpg decryption)
 o gzip    (compression)
+

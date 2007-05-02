@@ -21,11 +21,15 @@ DESTINATION
 .SH DESCRIPTION
 \fBrdup-simple\fR is a frontend for `rdup-snap' and `rdup'. It will backup
 all directories and files given on the command line. It will create a
-hard linked backup directory, where the backup is created. 
+hard linked backup directory, where the backup is created.
 .PP
 With the optional +DAYS argument you can specify how far backup
 \fBrdup-simple\fR looks back for previous backups. This should
 be a number in the range 1..99. It defaults to 8 days.
+.PP
+\fBrdup-simple\fR will create the directory `~/.rdup' and will
+store its administrative files there. This program does not need
+to be run with root permissions.
 .PP
 The last argument of \fBrdup-simple\fR is used as the destination;
 the following destinations are supported:
@@ -49,20 +53,19 @@ are 3 slashes here.
 Use `/directory` to store the backup. 
 .TP
 .B directory
-Use `directory` in the current directory for backup.
+Use `directory` in the current directory for the backup.
 
 .SS Making a backup
 Making a backup is as simple as:
 
-      rdup-simple ~ /adm /vol/backup/$HOST
+      rdup-simple ~ /adm /vol/backup/$HOSTNAME
 
 .PP
 \fB~\fR and \fB/adm\fR are the directories to be backed up. Multiple directories
 or files are allowed on the command line.
 .PP
-The backup will be stored in `/vol/backup/$HOST`.
+The backup will be stored in `/vol/backup/$HOSTNAME`.
 
-There is no default backup location. You must specify a \-b argument.
 .PP
 For the backup a YYYYMM directory is created. In this directory
 specific day-dumps are placed. So the first dump in October 2006,
