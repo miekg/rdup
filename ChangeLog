@@ -1,3 +1,7 @@
+xx yyy zzzz: 0.3.10 Miek <miek@miek.nl>
+  -- xxxx --
+
+
 09 May 2007: 0.3.9 Miek <miek@miek.nl>
   -- new features and fixes --
    * Add -S and -D to the known options of rdup-restore (reported by 
