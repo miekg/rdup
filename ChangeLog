@@ -1,5 +1,5 @@
-xx May 2007: 0.3.9 Miek <miek@miek.nl>
-  -- small fixes --
+09 May 2007: 0.3.9 Miek <miek@miek.nl>
+  -- new features and fixes --
    * Add -S and -D to the known options of rdup-restore (reported by 
      Ben Coffey)
    * Add runtime check to find mcrypt to rdup-crypt (reported by Ben
