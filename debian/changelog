@@ -1,3 +1,9 @@
+rdup (0.3.9-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Miek Gieben <miekg@atoom.net>  Wed,  9 May 2007 23:03:13 +0200
+
 rdup (0.3.7-1) unstable; urgency=low
 
   * New upstream release
