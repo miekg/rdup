@@ -1,0 +1,73 @@
+[Disclaimer: I'm the main author of rdup]
+
+So you want to make backups, but all the programs you find are to
+complicated and even then want allow you to make compressed, encrypted
+and remote backup? Then you might want to try rdup.
+
+In this short guide I will tell what you need to do to get a backup
+running:
+* Installing rdup
+* Configuration 
+* Compressed backup
+* Remote backup
+* Extra features
+* More information
+
+I will not detail how rdup works or how the backup is done in 
+technical sense, see rdup's documentation for that. This guide
+is just to get people going with making backups.
+
+
+* Installation:
+
+libglib2.0-0
+libfile-copy-recursive-perl
+
+Download rdup from
+<my url>
+
+dpkg -i <deb> or use gdebi
+
+
+* Configuration:
+
+This is easy part. What do you want to backup and where do you
+want to store the backup? Its best to keep backups on a different
+partition or better yet on a different harddisk.
+
+rdup-simple ~ /backup/$HOSTNAME
+
+Will store you homedirectory in /backup/$HOSTNAME/YYYYMM/DD. So
+for today and my host this will be: /backup/elektron/200705/09
+Each day will be stored in a new directory.
+
+rdup-simple ~ /etc /backup/$HOSTNAME
+
+will backup /etc and your homedirectory to /backup/$HOSTNAME
+
+
+* Compressed backup
+Simple add the '-z' flag to rdup-simple:
+
+rdup-simple -z ~ /backup/$HOSTNAME
+
+Will gzip you backup.
+
+* Remote backup
+Install 'rdup' on the remote host, rdup needs some of the utilities to
+be available on the remote host. After you have done that:
+
+rdup-simple ~ ssh://user@remotehost/backup/$HOSTNAME
+
+Will store your homedirectory on 'remotehost' in the directory
+/backup/$HOSTNAME/YYYYMMDD 
+
+* Extra features
+You simple want to exclude some directories? Simple create
+a file '.nobackup' in such directories and rdup will skip
+them.
+
+* More information
+You can mail questions to rdup@miek.nl or directly to me miek@miek.nl.
+More documentation can be found the manual pages of rdup and on the
+website of rdup: miek.nl/projects/rdup
