@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdup, 0.3.10, miek@miek.nl, rdup)
+AC_INIT(rdup, 0.4.0, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr)
 
@@ -33,18 +33,18 @@ fi
 
 AC_CONFIG_FILES([GNUmakefile
                  rdup.h
-                 doc/rdup.8
-                 doc/rdup-dump.8
-                 doc/rdup-restore.8
-                 doc/rdup-dump-here.8
-                 doc/rdup-snap-here.8
-                 doc/rdup-mirror.8
-                 doc/rdup-snap.8
-                 doc/rdup-snap-link.8
-                 doc/rdup-snapshot.8
-                 doc/rdup-simple.8
-                 doc/rdup-backups.8
-                 doc/rdup-cp.8
+                 doc/rdup.1
+                 doc/rdup-dump.1
+                 doc/rdup-restore.1
+                 doc/rdup-dump-here.1
+                 doc/rdup-snap-here.1
+                 doc/rdup-mirror.1
+                 doc/rdup-snap.1
+                 doc/rdup-snap-link.1
+                 doc/rdup-snapshot.1
+                 doc/rdup-simple.1
+                 doc/rdup-backups.1
+                 doc/rdup-cp.1
                  doc/rdup-crypt.1
                  doc/rdup-gzip.1
                  doc/rdup-gpg.1

@@ -47,4 +47,4 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup-gzip(1), rdup-snap(8), gpg(1) and gpg-agent(1)
+rdup-gzip(1), rdup-snap(1), gpg(1) and gpg-agent(1)

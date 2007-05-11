@@ -4,14 +4,12 @@ CMD=rdup
 SHA_IN=shared.sh shared.pl
 WRP_IN=rdup-dump rdup-snapshot rdup-restore rdup-snap-link rdup-simple
 PRL_IN=rdup-gzip rdup-mirror rdup-crypt rdup-snap rdup-cp rdup-gpg
-MAN8_IN=rdup.8 rdup-mirror.8 rdup-dump.8 rdup-restore.8 rdup-snap.8 rdup-snapshot.8 rdup-backups.8 rdup-cp.8 rdup-snap-link.8 rdup-simple.8
-MAN1_IN=rdup-crypt.1 rdup-gzip.1 rdup-gpg.1
+MAN1_IN=rdup.1 rdup-mirror.1 rdup-dump.1 rdup-restore.1 rdup-snap.1 rdup-snapshot.1 rdup-backups.1 rdup-cp.1 rdup-snap-link.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1
 HERE_IN=rdup-dump-here rdup-snap-here
 
 SHA=$(addprefix shared/, $(SHA_IN))
 PRL=$(addprefix pl-tools/, $(PRL_IN))
 WRP=$(addprefix sh-wrapper/, $(WRP_IN))
-MAN8=$(addprefix doc/, $(MAN8_IN))
 MAN1=$(addprefix doc/, $(MAN1_IN))
 HERE=$(addprefix sh-wrapper/, $(HERE_IN))
 
@@ -66,7 +64,7 @@ realclean: clean
 	rm -f rdup.h
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
-	rm -f ${MAN1} ${MAN8}
+	rm -f ${MAN1}
 
 distclean: 
 
@@ -75,19 +73,17 @@ install: all
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${mandir}/man8
 	mkdir -p ${DESTDIR}${datadir}
-	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/$$i ; done
-	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
-	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${sbindir}/`basename $$i` ; done
+	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
+	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
+	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${SHA}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${HERE}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
-	for i in ${MAN8}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man8/`basename $$i` ; done
 	for i in ${MAN1}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 
 uninstall:
-	for i in ${CMD}; do rm -f ${DESTDIR}${sbindir}/$$i ; done
-	for i in ${WRP}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
-	for i in ${PRL}; do rm -f ${DESTDIR}${sbindir}/`basename $$i` ; done
+	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
+	for i in ${WRP}; do rm -f ${DESTDIR}${bindir}/`basename $$i` ; done
+	for i in ${PRL}; do rm -f ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${SHA}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${HERE}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
-	for i in ${MAN8}; do rm -f ${DESTDIR}${mandir}/man8/`basename $$i` ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done

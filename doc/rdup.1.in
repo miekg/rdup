@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP 8 "24 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP 1 "24 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 .SH NAME
 @PACKAGE_NAME@ \- generate a file list suitable for making backups
 .SH SYNOPSIS
@@ -19,7 +19,7 @@ timestamp
 backups. \fBrdup\fR itself does not backup anything. It only prints
 a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
-backups. All paths printed are absolute. See rdup-backups(8) for a
+backups. All paths printed are absolute. See rdup-backups(1) for a
 nice introduction.
 .PP
 The
@@ -421,8 +421,8 @@ remote dumps.
 Hard links are handled as normal files.
 
 .SH SEE ALSO
-rdup-mirror(8), rdup-dump(8), rdup-snap(8) and rdup-restore(8). See
-rdup-backups(8) for an introduction into creating backups. See regex(7)
+rdup-mirror(1), rdup-dump(1), rdup-snap(1) and rdup-restore(1). See
+rdup-backups(1) for an introduction into creating backups. See regex(7)
 for an intro to regular expressions.
 
 .SH COPYRIGHT

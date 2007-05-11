@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-RESTORE 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-RESTORE 1 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-restore \- restore a filesystem from a specific directory
@@ -23,7 +23,7 @@ restore everything under \fIFROM_DIR\fRs to \fITO_DIR\fR.
 .PP
 Note; if you still backup with `rdup-dump' you can only restore
 to the latest state of your backup. With `rdup-snapshot' you can
-also restore to any previous state, see rdup-snapshot(8).
+also restore to any previous state, see rdup-snapshot(1).
 
 .PP
 Restoring from a backup is as simple as:
@@ -98,4 +98,4 @@ Restoring from a remote server:
 
 
 .SH SEE ALSO
-rdup(8), rdup-snapshot(8) and rdup-mirror(8)
+rdup(1), rdup-snapshot(1) and rdup-mirror(1)

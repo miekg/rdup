@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-DUMP 8 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-DUMP 1 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-dump \- dump a filesystem for a specifc host
@@ -29,7 +29,7 @@ or files are allowed on the command line.
 .PP
 There is no default backup location. You must specify a \-b argument.
 .PP
-See rdup-mirror(8) for more information on how the files are placed
+See rdup-mirror(1) for more information on how the files are placed
 in the backup.
 
 .SH OPTIONS
@@ -65,7 +65,7 @@ the rdup-util scripts can be found.
 Use \fBdirectory\fR for the lock file.
 .TP
 .B \-E file
-See \-E in rdup(8).
+See \-E in rdup(1).
 .TP
 .B \-k keyfile
 Encrypt the files while backing up with \fIkeyfile\fR. This option
@@ -104,5 +104,5 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8) and rdup-snapshot(8). And rdup-backups(8) for examples and an
+rdup(1) and rdup-snapshot(1). And rdup-backups(1) for examples and an
 introduction into making backups with \fBrdup\fR.

@@ -1,5 +1,10 @@
-xx yyy zzzz: 0.3.10 Miek <miek@miek.nl>
-  -- xxxx --
+xx yyy zzzz: 0.4.0 Miek <miek@miek.nl>
+  -- major new release, scripts are dropped --
+  * todo: rdup-restore in the same line as rdup-simple
+  * todo: rdup-mirror in the same line as rdup-simple
+  * todo: rdup-snapshot
+  * All paths have changed /usr/bin is now used, no more sbin
+  * All manual pages now fall in the section 1, not 8
 
 
 09 May 2007: 0.3.9 Miek <miek@miek.nl>

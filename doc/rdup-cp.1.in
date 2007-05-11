@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-CP 8 "25 Nov 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-CP 1 "25 Nov 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-cp \- copy files from rdup
@@ -49,4 +49,4 @@ Short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8) and cp(1).
+rdup(1) and cp(1).

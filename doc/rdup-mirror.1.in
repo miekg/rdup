@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-MIRROR 8 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-MIRROR 1 "25 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-mirror \- mirror the files from the list on standard input
@@ -53,4 +53,4 @@ Short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8) and rdup-snapshot(8).
+rdup(1) and rdup-snapshot(1).

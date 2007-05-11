@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-SIMPLE 8 "29 Apr 2007" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-SIMPLE 1 "29 Apr 2007" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-simple \- create a hardlink backup
@@ -104,7 +104,7 @@ attributes r_uid and r_gid.
 Force a full dump.
 .TP
 .B \-x
-See \-x in rdup(8).
+See \-x in rdup(1).
 .TP
 .B \-z
 Compress the files while backing up. This option
@@ -120,5 +120,5 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8), rdup-snap-link(8) and rdup-snapshot(8). See rdup-backups(8) for
+rdup(1), rdup-snap-link(1) and rdup-snapshot(1). See rdup-backups(1) for
 examples and an introduction into making backups with \fBrdup\fR.

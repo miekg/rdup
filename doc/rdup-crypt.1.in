@@ -38,4 +38,4 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup-gzip(1), rdup-mirror(8) and mcrypt(1).
+rdup-gzip(1), rdup-mirror(1) and mcrypt(1).

@@ -69,11 +69,11 @@ while getopts "E:k:vfzxhV" o; do
                         _echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
+                pipe="$pipe | @bindir@/rdup-crypt $OPTARG"
 		enc=true
                 c="-c"
                 ;;
-                z) pipe="$pipe | @sbindir@/rdup-gzip"
+                z) pipe="$pipe | @bindir@/rdup-gzip"
 		if $enc; then
 			_echo2 "Select compression first, then encryption"
 			exit 1
@@ -169,15 +169,15 @@ create_rdup $etc
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | ${exec_prefix}/sbin/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+        pipe="$pipe | ${exec_prefix}/bin/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
 else
         pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
 fi
-cmd="${exec_prefix}/sbin/rdup $E $x $l $c -N $STAMP $LIST $DIRS $pipe"
+cmd="${exec_prefix}/bin/rdup $E $x $l $c -N $STAMP $LIST $DIRS $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then
-                ${exec_prefix}/sbin/rdup-snap-link $DAYS $BACKUPDIR $NOW
+                ${exec_prefix}/bin/rdup-snap-link $DAYS $BACKUPDIR $NOW
                 purpose=$?
         else
                 $ssh "rdup-snap-link $DAYS $BACKUPDIR $NOW"

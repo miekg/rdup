@@ -1,8 +1,12 @@
 [Disclaimer: I'm the main author of rdup]
 
 So you want to make backups, but all the programs you find are to
-complicated and even then want allow you to make compressed, encrypted
+complicated and even then don't allow you to make compressed, encrypted
 and remote backup? Then you might want to try rdup.
+
+The goal of rdup is to provide some simple utilities to make a backup. 
+It's designed to be run from CRON. Also it is not an imaging backup
+program; its main concern is backing up personal data.
 
 In this short guide I will tell what you need to do to get a backup
 running:
@@ -13,10 +17,9 @@ running:
 * Extra features
 * More information
 
-I will not detail how rdup works or how the backup is done in 
+I will not detail how rdup works or how the backup is done in a
 technical sense, see rdup's documentation for that. This guide
 is just to get people going with making backups.
-
 
 * Installation:
 
@@ -26,35 +29,44 @@ libfile-copy-recursive-perl
 Download rdup from
 <my url>
 
-dpkg -i <deb> or use gdebi
-
+$ dpkg -i <deb>
+or use gdebi
 
 * Configuration:
 
 This is easy part. What do you want to backup and where do you
 want to store the backup? Its best to keep backups on a different
-partition or better yet on a different harddisk.
+partition or better yet on a different harddisk altogether.
+
+** Making a backup
 
 rdup-simple ~ /backup/$HOSTNAME
 
 Will store you homedirectory in /backup/$HOSTNAME/YYYYMM/DD. So
 for today and my host this will be: /backup/elektron/200705/09
-Each day will be stored in a new directory.
+Each day will be stored in a new directory. This is done a space
+efficient matter (hardlinks).
 
-rdup-simple ~ /etc /backup/$HOSTNAME
+Because the files are not wrapped up in something like a tar file
+you can easily restore file from your backup.
 
-will backup /etc and your homedirectory to /backup/$HOSTNAME
+** Compressed backup
+Simply add the '-z' flag to rdup-simple:
 
-
-* Compressed backup
-Simple add the '-z' flag to rdup-simple:
-
-rdup-simple -z ~ /backup/$HOSTNAME
+$ rdup-simple -z ~ /backup/$HOSTNAME
 
 Will gzip you backup.
 
+** Encrypted backup
+Simply add the '-k key' flag to rdup-simple:
+
+$ echo "my key" > key
+$ rdup-simple -k key ~ /backup/$HOSTNAME
+
+Will encrypt the backup with the key stored in the file key.
+
 * Remote backup
-Install 'rdup' on the remote host, rdup needs some of the utilities to
+Install 'rdup' on the remote host, rdup needs some of its utilities to
 be available on the remote host. After you have done that:
 
 rdup-simple ~ ssh://user@remotehost/backup/$HOSTNAME
@@ -62,10 +74,12 @@ rdup-simple ~ ssh://user@remotehost/backup/$HOSTNAME
 Will store your homedirectory on 'remotehost' in the directory
 /backup/$HOSTNAME/YYYYMMDD 
 
+The compression and encryption works the same as above.
+
 * Extra features
 You simple want to exclude some directories? Simple create
 a file '.nobackup' in such directories and rdup will skip
-them.
+them. See the manual pages for details.
 
 * More information
 You can mail questions to rdup@miek.nl or directly to me miek@miek.nl.

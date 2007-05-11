@@ -84,7 +84,7 @@ while getopts ":ab:k:c:n:vzfxuehVE:l:" o; do
                         _echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                pipe="$pipe | @sbindir@/rdup-crypt $OPTARG"
+                pipe="$pipe | @bindir@/rdup-crypt $OPTARG"
                 c="-c"
 		enc=true
                 ;;
@@ -109,7 +109,7 @@ while getopts ":ab:k:c:n:vzfxuehVE:l:" o; do
 			_echo2 "Select compression first, then encryption"
 			exit 1
 		fi
-                pipe="$pipe | @sbindir@/rdup-gzip"
+                pipe="$pipe | @bindir@/rdup-gzip"
                 c="-c"
                 ;;
                 a) OPT="$OPT -a";;
@@ -157,11 +157,11 @@ if ! $u; then
 fi
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | @sbindir@/rdup-mirror $c $OPT -b $BACKUPDIR"
+        pipe="$pipe | @bindir@/rdup-mirror $c $OPT -b $BACKUPDIR"
 else
         pipe="$pipe | $ssh rdup-mirror $c $ROPT $OPT -b $BACKUPDIR"
 fi
-cmd="@sbindir@/rdup $E $x $l $c -N $STAMP $LIST $@ $pipe"
+cmd="@bindir@/rdup $E $x $l $c -N $STAMP $LIST $@ $pipe"
 
 mkdir -p "$BACKUPDIR"
 if [[ ! $? ]]; then

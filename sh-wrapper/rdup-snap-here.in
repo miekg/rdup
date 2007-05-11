@@ -50,7 +50,7 @@ what() {
 # Don't need to edit anything below this line
 ##
 
-if [ ! -x @sbindir@/rdup ]; then
+if [ ! -x @bindir@/rdup ]; then
         zenity --error --title "rdup @ $HOSTNAME" --text "rdup can not be found"
         exit 1
 fi
@@ -93,8 +93,8 @@ case $purpose in
         ;;
 esac
 
-sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
-sudo @sbindir@/rdup-snap -v -b $BACKUPDIR/$NOW 2>&1 |\
+sudo @bindir@/rdup -N $STAMP $LIST $DIRS |\
+sudo @bindir@/rdup-snap -v -b $BACKUPDIR/$NOW 2>&1 |\
 zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"
 
 exit 0

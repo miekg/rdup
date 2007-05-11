@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-SNAPSHOT 8 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-SNAPSHOT 1 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-snapshot \- create a hardlink backup
@@ -74,7 +74,7 @@ the rdup-util scripts can be found.
 Use \fBdirectory\fR for the lock file.
 .TP
 .B \-E file
-See \-E in rdup(8).
+See \-E in rdup(1).
 .TP
 .B \-k keyfile
 Encrypt the files while backing up with \fIkeyfile\fR. This option
@@ -88,7 +88,7 @@ attributes r_uid and r_gid.
 Force a full dump.
 .TP
 .B \-x
-See \-x in rdup(8).
+See \-x in rdup(1).
 .TP
 .B \-z
 Compress the files while backing up. This option
@@ -111,5 +111,5 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8), rdup-mirror(8), rdup-snap-link(8) and rdup-snapshot(8). See rdup-backups(8) for
+rdup(1), rdup-mirror(1), rdup-snap-link(1) and rdup-snapshot(1). See rdup-backups(1) for
 examples and an introduction into making backups with \fBrdup\fR.

@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-BACKUPS 8 "28 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-BACKUPS 1 "28 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-backups \- introduction into making backups with rdup
@@ -106,5 +106,5 @@ Dumping /home to the remote backup:
 .SH RESTORE
 
 .SH SEE ALSO
-rdup(8), rdup-mirror(8),rdup-snapshot(8), rdup-snap(8),
-rdup-snapshot(8), rdup-gzip(1) and rdup-crypt(1).
+rdup(1), rdup-mirror(1),rdup-snapshot(1), rdup-snap(1),
+rdup-snapshot(1), rdup-gzip(1) and rdup-crypt(1).

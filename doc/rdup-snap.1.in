@@ -1,5 +1,5 @@
 '\" t
-.TH RDUP-SNAP 8 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+.TH RDUP-SNAP 1 "02 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
 rdup-snap \- create backup in a hard link directory
@@ -23,7 +23,7 @@ Due to the use of hard links the amount of disk space used for the
 backup is minimized.
 .PP
 Note, to create a hard linked backup directory use the script
-\fIrdup-snapshot\fR which will create it for you. See rdup-snapshot(8)
+\fIrdup-snapshot\fR which will create it for you. See rdup-snapshot(1)
 for more information. This only works with GNU cp and GNU date.
 .PP
 Also note that there are no restore utilities, this is because you 
@@ -54,4 +54,4 @@ Short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup(8), cp(1), date(1) and rdup-snapshot(8).
+rdup(1), cp(1), date(1) and rdup-snapshot(1).

@@ -27,7 +27,7 @@ exit 1 # REMOVE THIS
 # Don't need to edit anything below this line
 ##
 
-if [ ! -x @sbindir@/rdup ]; then 
+if [ ! -x @bindir@/rdup ]; then 
         zenity --error --title "rdup @ $HOSTNAME" --text "rdup can not be found"
         exit 1
 fi
@@ -71,8 +71,8 @@ else
         TEXT="<i>Incremental</i> dump of <b>$HOSTNAME</b>: $DIRS"
 fi
 
-sudo @sbindir@/rdup -N $STAMP $LIST $DIRS |\
-sudo @sbindir@/rdup-mirror -v -b $BACKUPDIR_DATE 2>&1 |\
+sudo @bindir@/rdup -N $STAMP $LIST $DIRS |\
+sudo @bindir@/rdup-mirror -v -b $BACKUPDIR_DATE 2>&1 |\
 zenity --progress --pulsate --title "rdup @ $HOSTNAME" --text "$TEXT"
 
 exit 0
