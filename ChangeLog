@@ -5,6 +5,7 @@ xx yyy zzzz: 0.4.0 Miek <miek@miek.nl>
   * todo: rdup-snapshot
   * All paths have changed /usr/bin is now used, no more sbin
   * All manual pages now fall in the section 1, not 8
+  * Major rewrite of rdup-restore
 
 
 09 May 2007: 0.3.9 Miek <miek@miek.nl>

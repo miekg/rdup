@@ -47,7 +47,7 @@ ssh=""
 pipe=""
 l="-l"
 enc=false
-etc=~/.rdup 
+etc=~/.rdup
 force=false
 DAYS=8
 
@@ -116,7 +116,7 @@ LIST=$etc/$HOSTNAME.$IDENT.list
 i=1; last=$#; DIRS=
 while [[ $i -lt $last ]]; do
 	DIRS="$DIRS $1"
-	shift;
+	shift
 	((i=$i+1))
 done
 # rdup [options] source destination
@@ -128,24 +128,20 @@ done
 
 dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
-	rest=${1/ssh:\/\//}
+	rest=${dest/ssh:\/\//}
 	u=`echo $rest | cut -s -f1 -d@`
 	rest=${rest/$u@/}
 	h=`echo $rest | cut -s -f1 -d/`
-#	if [[ -z $h ]]; then
-#		_echo2 "Need a directory for the host"; exit 1;;
-#	fi
 
 	BACKUPDIR=${rest/$h/}
 
 	c="-c"
-	l=""
+	l=""	# enable race checking
 	if [[ -z $u ]]; then
 		ssh=" ssh -x $h"
 	else
 		ssh=" ssh -x $u@$h"
 	fi
-	l=	# enable race checking
 fi
 if [[ ${dest:0:7} == "file://" ]]; then
 	rest=${dest/file:\/\//}
@@ -199,4 +195,3 @@ esac
 # execute the backup command
 #_echo2 "Executing: ${cmd}"
 eval ${cmd}
-exit 0
