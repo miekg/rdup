@@ -21,7 +21,7 @@ time_t opt_timestamp       = 0;                       /* timestamp file */
 sig_atomic_t sig           = 0;
 
 /* crawler.c */
-void dir_crawl(GTree *t, char *path);
+void dir_crawl(GTree *t, char *path, gboolean new_dir);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
@@ -148,7 +148,7 @@ g_tree_read_file(FILE *fp)
 		e->f_uid       = 0;
 		e->f_gid       = 0;
 		e->f_size      = 0;
-		e->f_mtime     = 0;
+		e->f_ctime     = 0;
 		g_tree_insert(tree, (gpointer)e, VALUE);
 		l++;
 	}
@@ -167,7 +167,7 @@ timestamp(char *f)
 	if (lstat(f, &s) != 0) {
 		return 0;
 	}
-	return s.st_mtime;
+	return s.st_ctime;
 }
 
 int
@@ -317,7 +317,7 @@ main(int argc, char **argv)
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, crawl);
+		dir_crawl(backup, crawl, FALSE);
 		g_free(crawl);
 	}
 	remove = g_tree_substract(curtree, backup);

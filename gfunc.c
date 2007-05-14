@@ -197,7 +197,7 @@ entry_print_data(FILE *out, char n, struct entry *e)
                        fprintf(out, "%.3o", (int)e->f_mode & F_PERM);
                        break;
 		case 't':
-			fprintf(out, "%ld", (unsigned long)e->f_mtime);
+			fprintf(out, "%ld", (unsigned long)e->f_ctime);
 			break;
 		case 's':
 			/* don't report size for directories. */
@@ -376,8 +376,11 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 				entry_print(stdout, '+', (struct entry*)data);
 				return FALSE;
 			default: /* INC_DUMP */
-				if (((struct entry*)data)->f_mtime > opt_timestamp) {
+				if (((struct entry*)data)->f_ctime == NULL_DUMP)
 					entry_print(stdout, '+', (struct entry*)data);
+				else {
+					if (((struct entry*)data)->f_ctime > opt_timestamp)
+						entry_print(stdout, '+', (struct entry*)data);
 				}
 				return FALSE;
 		}

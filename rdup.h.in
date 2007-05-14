@@ -64,7 +64,7 @@ struct entry {
         uid_t f_uid;
         gid_t f_gid;
         mode_t f_mode;
-        time_t f_mtime;
+        time_t f_ctime;
         off_t f_size;
 };
 

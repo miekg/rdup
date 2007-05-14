@@ -9,6 +9,7 @@
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
 extern gboolean opt_attr;
+extern time_t opt_timestamp;
 extern gint opt_verbose;
 extern GSList *regex_list;
 
@@ -27,7 +28,7 @@ entry_dup(struct entry *f)
         g->f_uid        = f->f_uid;
         g->f_gid        = f->f_gid;
         g->f_mode       = f->f_mode;
-	g->f_mtime      = f->f_mtime;
+	g->f_ctime      = f->f_ctime;
 	g->f_size       = f->f_size;
         return g;
 }
@@ -77,7 +78,7 @@ dir_prepend(GTree *t, char *path)
 			e.f_uid       = s.st_uid;
 			e.f_gid       = s.st_gid;
 		}
-		e.f_mtime     = s.st_mtime;
+		e.f_ctime     = s.st_ctime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
@@ -88,8 +89,13 @@ dir_prepend(GTree *t, char *path)
 	return TRUE;
 }
 
+/**
+ * If new_dir is true then the directory is new - 
+ * so all files under it should be included
+ * We do this by giving them the value 0 (NULL_DUMP)
+ */
 void
-dir_crawl(GTree *t, char *path)
+dir_crawl(GTree *t, char *path, gboolean new_dir)
 {
 	DIR 		*dir;
 	FILE 		*f;
@@ -164,7 +170,10 @@ dir_crawl(GTree *t, char *path)
 				pop.f_uid       = s.st_uid;
 				pop.f_gid       = s.st_gid;
 			}
-			pop.f_mtime     = s.st_mtime;
+			if (new_dir)
+				pop.f_ctime     = NULL_DUMP;
+			else
+				pop.f_ctime     = s.st_ctime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 
@@ -217,9 +226,14 @@ dir_crawl(GTree *t, char *path)
 				dirstack[d]->f_uid = s.st_uid;
 				dirstack[d]->f_gid = s.st_gid;
 			}
-			dirstack[d]->f_mtime      = s.st_mtime;
+			dirstack[d]->f_ctime      = s.st_ctime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
+
+			if (s.st_ctime > opt_timestamp)
+				new_dir = TRUE;
+			else
+				new_dir = FALSE;
 
 			if (d++ % D_STACKSIZE == 0) {
 				dirstack = g_realloc(dirstack, 
@@ -243,7 +257,7 @@ dir_crawl(GTree *t, char *path)
 		/* recurse */
 		/* potentially expensive operation. Better would be to when we hit
 		 * .nobackup to go up the tree and delete some nodes.... or not */
-		dir_crawl(t, directory->f_name);
+		dir_crawl(t, directory->f_name, new_dir);
 		entry_free(directory);
 	}
 	g_free(dirstack);
