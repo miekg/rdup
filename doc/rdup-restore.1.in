@@ -9,25 +9,35 @@ rdup-restore \- restore a filesystem from a specific directory
 [
 .IR OPTIONS
 ]
-.IR \-b
-.IR TO_DIR
-FROM_DIR
+SOURCE
 [
-FROM_DIR ...
+SOURCE ...
 ]
+DIRECTORY 
 
 .SH DESCRIPTION
 \fBrdup-restore\fR is a frontend to `rdup-cp' and `rdup'. It will
-restore everything under \fIFROM_DIR\fRs to \fITO_DIR\fR.
-
+restore everything from \fISOURCE\fRs to \fIDIRECTORY\fR.
 .PP
-Note; if you still backup with `rdup-dump' you can only restore
-to the latest state of your backup. With `rdup-snapshot' you can
-also restore to any previous state, see rdup-snapshot(1).
+SOURCE can be a remote location (use the ssh:// syntax), if you
+use that syntax only one SOURCE can be used. When using this
+syntax the files are pulled from the remote server using 'ssh'.
+
+There is no provisioning for \fBssh\fR so unless you have configured
+\fBssh\fR to work without a passphrase you will be asked to supply one.
+Also note that the PATH on the remote host should be set in such a way that all
+the rdup-utils can be found.
+.PP
+Multiple local sources are allowed, so that:
+
+	rdup-restore /backup/home /backup/etc /tmp
+
+Will restore both `/backup/home' and '/backup/etc' to `/tmp'.
 
 .PP
 Restoring from a backup is as simple as:
-      rdup-restore \-b /tmp/home /vol/backup/elektron/200604/home
+
+      rdup-restore /vol/backup/elektron/200604/home /tmp/restore
 
 Note: The restored files "inherit" the `/vol/backup/elektron/200604'
 prefix. So the restored files are found in the directory:
@@ -35,45 +45,20 @@ prefix. So the restored files are found in the directory:
 
 .SH OPTIONS
 .TP
-.B \-S
-Restore a rdup-snapshot backup. This is a hardlinked backup, so one
-can also restore these with 'cp'. Consider this a convient function.
-.TP
-.B \-D
-Restore a rdup-dump backup. Due to the way this backup is made, you
-can only restore to the latest version of your backup. \-D is the
-default for rdup-restore.
-.TP
-.B \-b TO_DIR
-This option is mandatory. It specifies the directory where the backup
-should be restored in.
-.TP
-.B \-c user@remotehost
-Pull a backup from a remote host. This will create a pipeline of the
-form: 
-
-ssh \fIuser@remotehost\fR rdup \-c /dev/null \fIFROM_DIR\fR |
-rdup-mirror \-c \fITO_DIR\fR
-
-There is no provisioning for \fBssh\fR so unless you have configured
-\fBssh\fR to work without a passphrase you will be asked to supply one.
-Also note that the PATH on the remote host should be set in such a way that all
-the rdup-utils can be found.
-.TP
 .B \-k keyfile
 Decrypt the files while restoring with \fIkeyfile\fR. This option
 inserts \fBrdup-crypt \-d keyfile\fR in the pipeline. If both \fI\-z\fR and
-\fI\-k\fR are given they are performed in the order they are given. 
+\fI\-k\fR are given files are first decrypted and then uncompressed.
 .TP
 .B \-z
 Decompress the files while restoring. This option
 inserts \fBrdup-gzip \-d\fR in the pipeline. If both \fI\-z\fR and
 \fI\-k\fR are given a file is first decrypted and then unzipped. This 
-is ofcourse the opposite of what \fBrdup-dump\fR does.
+the opposite of what \fBrdup-simple\fR does.
 .TP
 .B \-a
-Enable extended attributes. Rad the uid/gid to the extended user
-attributes r_uid and r_gid.
+Enable extended attributes. Read the uid/gid to the extended user
+attributes r_uid and r_gid. See rdup(1) for a more detailed explanation.
 .TP
 .B \-v
 Echo the files processed to standard error.
@@ -83,19 +68,28 @@ Show a short help message.
 .TP
 .B \-V
 Show the version.
+.TP
+.B \-S
+Restore a rdup-snapshot backup. This is a hardlinked backup, so one
+can also restore these with 'cp'. Consider this a convient function.
+.TP
+.B \-D
+Restore a rdup-dump backup. Due to the way this backup is made, you
+can only restore to the latest version of your backup. \-D is the
+default for rdup-restore.
 
 .SH EXAMPLES
 
 .SS LOCAL RESTORE
-Restoring from my local backup:
+Restoring from a local backup:
 
-        rdup-restore -b /tmp/restore /vol/backup/elektron/200604/home/miekg/bin
+        rdup-restore /vol/backup/elektron/200604/home/miekg/bin /tmp/restore
 
 .SS REMOTE RESTORE
 Restoring from a remote server:
 
-         rdup-restore -c miekg@remote -b /tmp/restore ~/bin
+         rdup-restore ssh://miekg@remove/home/miekg/bin /tmp/restore
 
 
 .SH SEE ALSO
-rdup(1), rdup-snapshot(1) and rdup-mirror(1)
+rdup(1) and rdup-simple(1).

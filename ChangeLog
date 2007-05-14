@@ -1,11 +1,21 @@
 xx yyy zzzz: 0.4.0 Miek <miek@miek.nl>
   -- major new release, scripts are dropped --
+  * backup with: rdup-simple
+  * restore with: rdup-restore
+
+
+
   * todo: rdup-restore in the same line as rdup-simple
   * todo: rdup-mirror in the same line as rdup-simple
   * todo: rdup-snapshot
   * All paths have changed /usr/bin is now used, no more sbin
   * All manual pages now fall in the section 1, not 8
   * Major rewrite of rdup-restore
+  * These files are still in the source distribution, but
+    not any more installed. I don't have enough time to
+    properly maintain them:
+  * Removed: rdup-dump, rdup-snapshot, rdup-mirror
+  * Removed: rdup-mirror, rdup-dump
 
 
 09 May 2007: 0.3.9 Miek <miek@miek.nl>

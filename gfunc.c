@@ -265,10 +265,12 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 				strerror(errno));
 			return;
 		}
+#ifndef _DEBUG_RACE
 		if (e->f_size != s.st_size) {
 			msg("File size has changed, skipping `%s\'", e->f_name);
 			return;
 		}
+#endif /* _DEBUG_RACE */
 	}
 
 	for (pos = opt_format; *pos != '\0';  ++pos) {

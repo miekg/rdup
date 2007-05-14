@@ -2,9 +2,9 @@ OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o xattr.o
 HDR=rdup.h
 CMD=rdup
 SHA_IN=shared.sh shared.pl
-WRP_IN=rdup-dump rdup-snapshot rdup-restore rdup-snap-link rdup-simple
-PRL_IN=rdup-gzip rdup-mirror rdup-crypt rdup-snap rdup-cp rdup-gpg
-MAN1_IN=rdup.1 rdup-mirror.1 rdup-dump.1 rdup-restore.1 rdup-snap.1 rdup-snapshot.1 rdup-backups.1 rdup-cp.1 rdup-snap-link.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1
+WRP_IN=rdup-restore rdup-snap-link rdup-simple
+PRL_IN=rdup-gzip rdup-crypt rdup-snap rdup-cp rdup-gpg
+MAN1_IN=rdup.1 rdup-restore.1 rdup-snap.1 rdup-backups.1 rdup-cp.1 rdup-snap-link.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1
 HERE_IN=rdup-dump-here rdup-snap-here
 
 SHA=$(addprefix shared/, $(SHA_IN))
@@ -26,7 +26,8 @@ GCC=@CC@
 GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
 LIBS=@LIBS@
-CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
+DRACE=-D_DEBUG_RACE
+CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644
 

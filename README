@@ -27,8 +27,8 @@ this list and implement the backup strategy.  This way rdup can be kept
 lean and mean. Current the (stripped) rdup executable measures 28 KB (on
 AMD64) and I don't expect that to increase much.
 
-The manual page explains rdup's options and usage. See rdup(8), for an
-introduction into making backups see rdup-backup(8).
+The manual page explains rdup's options and usage. See rdup(1), for an
+introduction into making backups see rdup-backup(1).
 
 The filelist as printed starts with the root of the filedump and then
 decends into directories. This way all top level directories can be
