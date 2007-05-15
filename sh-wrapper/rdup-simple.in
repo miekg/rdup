@@ -17,7 +17,7 @@ source $datadir/shared.sh
 usage() {
         echo "$PROGNAME [+N] DIR [DIR ...] DEST"
         echo
-        echo "This is a wrapper around rdup and snap.pl"
+        echo "This is a wrapper around rdup and rdup-snap"
         echo
         echo DIR \ - directories to back up
         echo +N \ \ - Look N days back for previous backups, defaults to 8
