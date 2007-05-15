@@ -1,4 +1,4 @@
-rdup (0.4.0-1) unstable; urgency=low
+rdup (0.5.0-1) unstable; urgency=low
 
   * New upstream release
   * All paths have changed from sbin to usr/bin
