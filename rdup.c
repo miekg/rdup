@@ -176,6 +176,8 @@ main(int argc, char **argv)
 	GTree 	*backup; 	/* on disk stuff */
 	GTree 	*remove;	/* what needs to be rm'd */
 	GTree 	*curtree; 	/* previous backup tree */
+	GTree	*new;		/* all that is new */
+	GTree	*changed;	/* all that is possibly changed */
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
@@ -320,11 +322,24 @@ main(int argc, char **argv)
 		dir_crawl(backup, crawl, FALSE);
 		g_free(crawl);
 	}
-	remove = g_tree_substract(curtree, backup);
+
+	/* everything that is gone from the filesystem */
+	remove  = g_tree_substract(curtree, backup);
+
+	/* everything that is really new on the filesystem */
+	new     = g_tree_substract(backup, curtree);
+
+	/* all stuff that should be ctime checked, to see if it has 
+	 * changed */
+	changed = g_tree_substract(backup, new);
+	/* some dirs might still linger in changed, while they are in fact
+	 * removed, kill those here */
+	changed = g_tree_substract(changed, remove);
 
 	/* first what to remove, then what to backup */
 	g_tree_foreach(remove, gfunc_remove, NULL);
-	g_tree_foreach(backup, gfunc_backup, NULL);
+	g_tree_foreach(changed, gfunc_backup, NULL);
+	g_tree_foreach(new, gfunc_new, NULL);
 
 	/* write new filelist */
 	if (!devnull && ftruncate(fileno(fplist), 0) != 0) {

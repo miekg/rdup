@@ -1,8 +1,9 @@
 xx yyy zzzz: 0.4.0 Miek <miek@miek.nl>
   -- major new release, scripts are dropped --
   * rdup: use ctime not the mtime
-  * rdup: if a directory's ctime is newer then the timestamp
-    include all files under it
+  * rdup: major rewrite of the core algorithm, it now uses
+    a remove-list, new-list and posibly changed list - 
+    only item that changed list are ctime checked.
   * backup with: rdup-simple
   * restore with: rdup-restore
 

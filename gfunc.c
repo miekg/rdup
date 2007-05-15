@@ -376,12 +376,8 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
 				entry_print(stdout, '+', (struct entry*)data);
 				return FALSE;
 			default: /* INC_DUMP */
-				if (((struct entry*)data)->f_ctime == NULL_DUMP)
+				if (((struct entry*)data)->f_ctime > opt_timestamp)
 					entry_print(stdout, '+', (struct entry*)data);
-				else {
-					if (((struct entry*)data)->f_ctime > opt_timestamp)
-						entry_print(stdout, '+', (struct entry*)data);
-				}
 				return FALSE;
 		}
 	}
@@ -405,6 +401,26 @@ gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
 	}
 
 	entry_print(stdout, '-', (struct entry*)data);
+	return FALSE;
+}
+
+/**
+ * Print out the list of new item
+ */
+gboolean
+gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
+		__attribute__((unused)) gpointer usr)
+{
+	if (sig != 0)
+		signal_abort(sig);
+
+	/* should not have these here!! */
+	if (value == NO_PRINT) {
+		msg("Internal error: NO_PRINT in remove tree!");
+		return FALSE;
+	}
+
+	entry_print(stdout, '+', (struct entry*)data);
 	return FALSE;
 }
 
@@ -463,15 +479,14 @@ gboolean
 gfunc_substract(gpointer data, gpointer value, gpointer diff)
 {
 	gpointer v;
-
 	if (sig != 0)
 		signal_abort(sig);
 
 	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
 
-	if (!v) {
+	if (!v) 
 		g_tree_insert(((struct substract*)diff)->d, data, value);
-	}
+
 	return FALSE;
 }
 
