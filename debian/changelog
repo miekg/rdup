@@ -3,6 +3,7 @@ rdup (0.4.0-1) unstable; urgency=low
   * New upstream release
   * All paths have changed from sbin to usr/bin
   * A lot of utilities are removed
+  * Completely new algorithm for detecting what to dump
 
  -- Miek Gieben <miekg@atoom.net>  Wed,  9 May 2007 23:03:13 +0200
 

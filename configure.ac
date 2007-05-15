@@ -34,14 +34,10 @@ fi
 AC_CONFIG_FILES([GNUmakefile
                  rdup.h
                  doc/rdup.1
-                 doc/rdup-dump.1
                  doc/rdup-restore.1
-                 doc/rdup-dump-here.1
                  doc/rdup-snap-here.1
-                 doc/rdup-mirror.1
                  doc/rdup-snap.1
                  doc/rdup-snap-link.1
-                 doc/rdup-snapshot.1
                  doc/rdup-simple.1
                  doc/rdup-backups.1
                  doc/rdup-cp.1
@@ -50,19 +46,15 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-gpg.1
                  shared/shared.sh
                  shared/shared.pl
-                 sh-wrapper/rdup-dump-here
                  sh-wrapper/rdup-snap-here
                  sh-wrapper/rdup-snap-link
                  sh-wrapper/rdup-restore
-                 sh-wrapper/rdup-dump
-                 sh-wrapper/rdup-snapshot
                  sh-wrapper/rdup-simple
                  pl-tools/rdup-gzip
                  pl-tools/rdup-crypt
                  pl-tools/rdup-snap
                  pl-tools/rdup-cp
                  pl-tools/rdup-gpg
-                 pl-tools/rdup-mirror
                  ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
