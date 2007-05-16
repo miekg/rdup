@@ -226,11 +226,15 @@ format string.
 .SH FILELIST
 \fBrdup\fR write the FILELIST in the following format:
 .RS
-        MODE PATH_SIZE PATH
+        MODE DEV INODE PATH_SIZE PATH
 .RE
 .PP
 Where MODE is the st_mode from stat(2), PATH_SIZE is the length of 
-PATH. Where PATH is the path of the file. A typical example is: 
+PATH. Where PATH is the path of the file. DEV is the dev id as returned
+by the stat call and INODE is the inode number - \fBrdup\fR needs this
+info to decide if a directory is renamed.
+
+A typical example is: 
 .RS
         33216 8 bin/rdup
 .RE

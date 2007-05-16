@@ -30,6 +30,8 @@ entry_dup(struct entry *f)
         g->f_mode       = f->f_mode;
 	g->f_ctime      = f->f_ctime;
 	g->f_size       = f->f_size;
+	g->f_dev        = f->f_dev;
+	g->f_ino        = f->f_ino;
         return g;
 }
 
@@ -81,6 +83,8 @@ dir_prepend(GTree *t, char *path)
 		e.f_ctime     = s.st_ctime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
+		e.f_dev       = s.st_dev;
+		e.f_ino       = s.st_ino;
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
 		p = c++;
@@ -176,6 +180,8 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 				pop.f_ctime     = s.st_ctime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
+			pop.f_dev       = s.st_dev;
+			pop.f_ino       = s.st_ino;
 
 			if (gfunc_regexp(regex_list, curpath)) {
 				g_free(curpath);
@@ -229,6 +235,8 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 			dirstack[d]->f_ctime      = s.st_ctime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
+			dirstack[d]->f_dev        = s.st_dev;
+			dirstack[d]->f_ino        = s.st_ino;
 
 			if (s.st_ctime > opt_timestamp)
 				new_dir = TRUE;

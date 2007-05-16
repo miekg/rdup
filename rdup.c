@@ -77,6 +77,7 @@ g_tree_read_file(FILE *fp)
 	char 	      *buf;
 	char          *n;
 	char          *p;
+	char 	      *q;
 	char 	      delim;
 	mode_t        modus;
 	GTree         *tree;
@@ -85,6 +86,8 @@ g_tree_read_file(FILE *fp)
 	size_t 	      l;
 	size_t        f_name_size;
 	size_t        str_len;
+	dev_t	      f_dev;
+	ino_t	      f_ino;
 
 	tree = g_tree_new(gfunc_equal);
 	buf  = g_malloc(BUFSIZE + 1);
@@ -109,9 +112,8 @@ g_tree_read_file(FILE *fp)
 		}
 		if (!opt_null) {
 			n = strrchr(buf, '\n');
-			if (n) {
+			if (n)
 				*n = '\0';
-			}
 		}
 
 		/* get modus */
@@ -122,8 +124,41 @@ g_tree_read_file(FILE *fp)
 			l++;
 			continue;
 		}
-		/* the path size */
+
+		/* the dev */
+		q = buf + LIST_SPACEPOS + 1;
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
+		if (!p) {
+			msg("Corrupt entry in filelist at line: %zd, no space found", l);
+			l++;
+			continue;
+		}
+		*p = '\0';
+		f_dev = (dev_t)atoi(q);
+		if (f_dev == 0) {
+			msg("Corrupt entry in filelist at line: %zd, zero device", l);
+			l++;
+			continue;
+		}
+
+		/* the inode */
+		q = p + 1;
+		p = strchr(p + 1, ' ');
+		if (!p) {
+			msg("Corrupt entry in filelist at line: %zd, no space found", l);
+			l++;
+			continue;
+		}
+		*p = '\0';
+		f_ino = (ino_t)atoi(q);
+		if (f_ino == 0) {
+			msg("Corrupt entry in filelist at line: %zd, zero inode", l);
+			l++;
+			continue;
+		}
+		/* the path size */
+		q = p + 1;
+		p = strchr(p + 1, ' ');
 		if (!p) {
 			msg("Corrupt entry in filelist at line: %zd, no space found", l);
 			l++;
@@ -131,8 +166,7 @@ g_tree_read_file(FILE *fp)
 		}
 		/* the file's name */
 		*p = '\0';
-	 	buf[LIST_SPACEPOS] = ' ';
-		f_name_size = (size_t)atoi(buf + LIST_SPACEPOS);
+		f_name_size = (size_t)atoi(q);
 		str_len = strlen(p + 1);
 		if (str_len != f_name_size) {
 			msg("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'", l,
@@ -149,6 +183,8 @@ g_tree_read_file(FILE *fp)
 		e->f_gid       = 0;
 		e->f_size      = 0;
 		e->f_ctime     = 0;
+		e->f_dev       = f_dev;
+		e->f_ino       = f_ino;
 		g_tree_insert(tree, (gpointer)e, VALUE);
 		l++;
 	}
@@ -305,7 +341,7 @@ main(int argc, char **argv)
 	}
 
 	curtree = g_tree_read_file(fplist);
-
+	
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] != DIR_SEP) {
 			crawl = g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]);

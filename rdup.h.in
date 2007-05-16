@@ -66,6 +66,8 @@ struct entry {
         mode_t f_mode;
         time_t f_ctime;
         off_t f_size;
+	dev_t f_dev;
+	ino_t f_ino;
 };
 
 struct substract {

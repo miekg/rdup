@@ -337,8 +337,8 @@ gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
 
 	/* mode_path */
 	/* this is used to create our filelist */
-	fprintf((FILE*) fp, "%d %d %s", (int)e->f_mode, (int)e->f_name_size, 
-			e->f_name);
+	fprintf((FILE*) fp, "%d %d %d %d %s", (int)e->f_mode, (int)e->f_dev, 
+			(int)e->f_ino, (int)e->f_name_size, e->f_name);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);
 	} else {
@@ -434,11 +434,15 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 
 	if (sig != 0)
 		signal_abort(sig);
+
 	e = strcmp(((struct entry*)a)->f_name, ((struct entry*)b)->f_name);
 	if (e == 0) {
-		if (((struct entry*)a)->f_mode == ((struct entry*)b)->f_mode) {
+		if (((struct entry*)a)->f_dev != ((struct entry*)b)->f_dev)
+			return -1;
+		if (((struct entry*)a)->f_ino != ((struct entry*)b)->f_ino)
+			return -1;
+		if (((struct entry*)a)->f_mode == ((struct entry*)b)->f_mode)
 			return 0;
-		}
 	}
 	return e;
 }
