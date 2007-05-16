@@ -416,7 +416,7 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 
 	/* should not have these here!! */
 	if (value == NO_PRINT) {
-		msg("Internal error: NO_PRINT in remove tree!");
+		msg("Internal error: NO_PRINT in new tree!");
 		return FALSE;
 	}
 
