@@ -57,9 +57,9 @@ Use `directory` in the current directory for the backup.
 
 .SS Making a backup
 Making a backup is as simple as:
-
-      rdup-simple ~ /adm /vol/backup/$HOSTNAME
-
+.RS
+rdup-simple ~ /adm /vol/backup/$HOSTNAME
+.RE
 .PP
 \fB~\fR and \fB/adm\fR are the directories to be backed up. Multiple directories
 or files are allowed on the command line.
@@ -80,11 +80,14 @@ value of \fBrdup-snap-link\fR will determine if a full or incremental
 dump will be performed.
 
 .SS Remote backups
+.RS
+rdup-simple ~ /adm ssh://miekg@remote/vol/backup/$HOSTNAME
+.RE
 Note: for remote backups to work, the receiving machine must have \fBrdup\fR installed.
 Also note: there is no colon between the hostname and the directory.
 Remote backup will create a pipeline of the form:
 
-rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-shapshot \-c \-b \fIbackupdir\fR
+rdup \-c \fIDIR|FILE\fR | ssh \fIuser@remotehost\fR rdup-snap \-c \-b \fIbackupdir\fR
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
