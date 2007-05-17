@@ -1,3 +1,6 @@
+xx yy xxxx: 0.5.1 Miek <miek@miek.nl>
+  -- ?? --
+
 17 May 2007: 0.5.0 Miek <miek@miek.nl>
   -- major new release - not backwards compatible -
   * All paths have changed /usr/bin is now used, no more sbin
@@ -20,7 +23,6 @@
   * todo: rdup-snapshot
   * Major rewrite of rdup-restore
   * Removed: rdup-dump, rdup-snapshot, rdup-mirror
-  * Removed: rdup-mirror, rdup-dump
 
 
 09 May 2007: 0.3.9 Miek <miek@miek.nl>
