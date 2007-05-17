@@ -236,7 +236,7 @@ info to decide if a directory is renamed.
 
 A typical example is: 
 .RS
-        33216 8 bin/rdup
+        33216 2310 444739411 8 bin/rdup
 .RE
 
 .SH OUTPUT FORMAT 

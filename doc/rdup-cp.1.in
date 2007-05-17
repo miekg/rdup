@@ -18,11 +18,17 @@ especially when the \fB-a\fR option of \fBrdup\fR is used.
 .PP
 The command line would look something like this:
 
+.RS
 rdup /dev/null FROM | rdup-cp DEST
+.RE
 
 Or when you need \fBrdup\fR to fill in the extended attributes:
 
+.RS
 rdup -a /dev/null FROM | rdup-cp DEST
+.RE
+
+\fIDEST\fR can only be a local directory.
 
 .SH OPTIONS
 .TP
