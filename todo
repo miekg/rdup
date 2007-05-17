@@ -1,11 +1,9 @@
 TODO:
 
 :install:
-o install the rdup utils in /usr/bin or /bin instead of /sbin
 :rdup utils:
-o rdup-simple-restore
 :rdup:
-o encrypted file names
+o encrypted file names?
 o -e option
 o get a handle about the race condition when files are growing or
   shrinking
@@ -13,7 +11,6 @@ o get a handle about the race condition when files are growing or
 o add conformence test; symlinks etc.
 
 o gpg decryption
-o make it more clear how you do remote backups
 
 :gui:
 o a high level gui?

@@ -26,6 +26,7 @@ usage() {
         echo "$PROGNAME DAYS BACKUPDIR NOW"
         echo
         echo "This is a small shell script that hard links directories"
+        echo "It is the basis for rdup-simple"
         echo
         echo DAYS \ - look backup DAYS days for previous dumps
         echo BACKUPDIR \ - where to backup to
