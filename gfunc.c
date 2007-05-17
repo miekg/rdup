@@ -414,11 +414,13 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 	if (sig != 0)
 		signal_abort(sig);
 
-	/* should not have these here!! */
+	/* it is perfectly possibly to have these here */
+	/*
 	if (value == NO_PRINT) {
 		msg("Internal error: NO_PRINT in new tree!");
 		return FALSE;
 	}
+	*/
 
 	entry_print(stdout, '+', (struct entry*)data);
 	return FALSE;

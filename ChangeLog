@@ -1,25 +1,24 @@
-xx yyy zzzz: 0.4.0 Miek <miek@miek.nl>
-  -- major new release, scripts are dropped --
+xx yyy zzzz: 0.5.0 Miek <miek@miek.nl>
+  -- major new release - not backwards compatible -
+  * All paths have changed /usr/bin is now used, no more sbin
+  * All manual pages now fall in the section 1, not 8
+  * No more use of /etc/rdup, only ~/.rdup
+  * rdup-snap-link is the only script that optionally will
+    check /etc/rdup
   * rdup: use ctime not the mtime
   * rdup: major rewrite of the core algorithm, it now uses
     a remove-list, new-list and posibly changed list - 
-    only item that changed list are ctime checked.
+    only items that are on the changed list are ctime checked.
   * rdup: must better algorithm for detecting incremental filesystem
-    changes
+    changes; directory renames are now detected
+  * rdup: the internal filelist is extended with a device number
+    and a inode number; these are needed to detect directory moves.
+    switch
   * backup with: rdup-simple
   * restore with: rdup-restore
-
-
-
   * todo: rdup-restore in the same line as rdup-simple
-  * todo: rdup-mirror in the same line as rdup-simple
   * todo: rdup-snapshot
-  * All paths have changed /usr/bin is now used, no more sbin
-  * All manual pages now fall in the section 1, not 8
   * Major rewrite of rdup-restore
-  * These files are still in the source distribution, but
-    not any more installed. I don't have enough time to
-    properly maintain them:
   * Removed: rdup-dump, rdup-snapshot, rdup-mirror
   * Removed: rdup-mirror, rdup-dump
 
