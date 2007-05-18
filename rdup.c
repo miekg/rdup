@@ -86,7 +86,6 @@ g_tree_read_file(FILE *fp)
 	size_t 	      l;
 	size_t        f_name_size;
 	size_t        str_len;
-	size_t 	      err;
 	dev_t	      f_dev;
 	ino_t	      f_ino;
 
@@ -94,7 +93,6 @@ g_tree_read_file(FILE *fp)
 	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 	l    = 1;
-	err  = 0;
 
 	if (opt_null)
 		delim = '\0';
@@ -105,11 +103,6 @@ g_tree_read_file(FILE *fp)
 		if (sig != 0) {
 			fclose(fp);
 			signal_abort(sig);
-		}
-
-		if (err >= 50) {
-			msg("More than 50 errors, bailing out");
-			exit(EXIT_FAILURE);
 		}
 
 		if (s < LIST_MINSIZE) {
@@ -128,7 +121,7 @@ g_tree_read_file(FILE *fp)
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
 			msg("Corrupt entry in filelist at line: %zd, `%s\' should be numerical", l, buf);
-			l++; err++;
+			l++; 
 			continue;
 		}
 
@@ -137,14 +130,14 @@ g_tree_read_file(FILE *fp)
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
 		if (!p) {
 			msg("Corrupt entry in filelist at line: %zd, no space found", l);
-			l++; err++;
+			l++; 
 			continue;
 		}
 		*p = '\0';
 		f_dev = (dev_t)atoi(q);
 		if (f_dev == 0) {
 			msg("Corrupt entry in filelist at line: %zd, zero device", l);
-			l++; err++;
+			l++; 
 			continue;
 		}
 
@@ -153,14 +146,14 @@ g_tree_read_file(FILE *fp)
 		p = strchr(p + 1, ' ');
 		if (!p) {
 			msg("Corrupt entry in filelist at line: %zd, no space found", l);
-			l++; err++;
+			l++; 
 			continue;
 		}
 		*p = '\0';
 		f_ino = (ino_t)atoi(q);
 		if (f_ino == 0) {
 			msg("Corrupt entry in filelist at line: %zd, zero inode", l);
-			l++; err++;
+			l++; 
 			continue;
 		}
 		/* the path size */
@@ -168,7 +161,7 @@ g_tree_read_file(FILE *fp)
 		p = strchr(p + 1, ' ');
 		if (!p) {
 			msg("Corrupt entry in filelist at line: %zd, no space found", l);
-			l++; err++;
+			l++; 
 			continue;
 		}
 		/* the file's name */
@@ -178,7 +171,7 @@ g_tree_read_file(FILE *fp)
 		if (str_len != f_name_size) {
 			msg("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'", l,
 					str_len, f_name_size);
-			l++; err++;
+			l++; 
 			continue;
 		}
 
