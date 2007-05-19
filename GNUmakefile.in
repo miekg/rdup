@@ -71,9 +71,7 @@ realclean: clean
 distclean: 
 
 install: all
-	mkdir -p ${DESTDIR}${sysconfdir}/rdup
 	mkdir -p ${DESTDIR}${mandir}/man1
-	mkdir -p ${DESTDIR}${mandir}/man8
 	mkdir -p ${DESTDIR}${datadir}
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
 	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
