@@ -13,7 +13,7 @@ xx yy xxxx: 0.5.1 Miek <miek@miek.nl>
   * rdup: major rewrite of the core algorithm, it now uses
     a remove-list, new-list and posibly changed list - 
     only items that are on the changed list are ctime checked.
-  * rdup: must better algorithm for detecting incremental filesystem
+  * rdup: much better algorithm for detecting incremental filesystem
     changes; directory renames are now detected
   * rdup: the internal filelist is extended with a device number
     and a inode number; these are needed to detect directory moves.
