@@ -4,9 +4,6 @@
 .SH NAME
 rdup-backups \- introduction into making backups with rdup
 
-.SH TODO
-A big TODO still applies here. Need to add: rdup-simple
-
 .SH INTRODUCTION
 \fBrdup\fR is a simple program that prints out a list of files and
 directories that are changed changed on a filesystem. It is much
