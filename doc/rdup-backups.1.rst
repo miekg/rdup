@@ -125,7 +125,7 @@ to restore a compressed backup you need only to add the 'z' flag::
 
 REMOTE RESTORE
 --------------
-When doing a remote restore the files are \fIpulled\fR from the
+When doing a remote restore the files are *pulled* from the
 remote server and then copied to your local server.
 
 ::
