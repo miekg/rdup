@@ -35,6 +35,9 @@ decends into directories. This way all top level directories can be
 created in sequence. If you process the files in the same order no magic
 is needed to create directories that otherwise might be missing. 
 
+All documentation is written in Restructered Text for maximum
+flexibility.
+
 4/ COPYRIGHT
 
 All files in this archive are copyrighted by Miek Gieben, unless stated
