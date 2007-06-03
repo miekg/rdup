@@ -37,7 +37,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
-all:	rdup scripts
+all:	rdup scripts doc
 
 rdup:	${OBJ} ${HDR}
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
