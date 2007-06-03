@@ -13,7 +13,7 @@ rdup-snap-link, create a hard linked copy of a previous backup
 .SH DESCRIPTION
 \fBrdup-snap-link\fR creates a hard linked copy of a previous
 backup directory. If such a directory is created \fBrdup-snap-link\fR
-exists with 0. If a full dump should be performed a 1 is returned.
+exits with 0. If a full dump should be performed a 1 is returned.
 If 2 is returned an error has occured. GNU cp is used for the actual 
 creation of the copy. On non GNU operating systems you may need to
 install GNU cp.
