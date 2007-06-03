@@ -32,7 +32,7 @@ CFLAGS=-Wall -W @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FIL
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644
 
-.PHONY:	all clean install all uninstall
+.PHONY:	all clean install all uninstall doc
 
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
@@ -45,6 +45,9 @@ rdup:	${OBJ} ${HDR}
 
 scripts:
 	chmod +x $(RES) $(PRL) $(WRP)
+
+doc:
+	for i in ${MAN1}; do /home/miekg/bin/rst2man $$i.rst $$i ; done
 
 clean:
 	rm -f *.o

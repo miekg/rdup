@@ -33,6 +33,7 @@ fi
 
 AC_CONFIG_FILES([GNUmakefile
                  rdup.h
+		 doc/header.rst
                  doc/rdup.1
                  doc/rdup-restore.1
                  doc/rdup-snap-here.1

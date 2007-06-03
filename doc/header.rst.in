@@ -1,0 +1,6 @@
+:Author: Miek Gieben <miek@miek.nl>
+:Date:   2007-06-03
+:Copyright: GPL
+:Version: @PACKAGE_VERSION@
+:Manual section: 1
+:Manual group: @PACKAGE_NAME@ utils
