@@ -133,6 +133,11 @@ if [ "$SNAPSHOT" = "yes" ]; then
     info "Snapshot version number: $version"
 fi
 
+info "Creating manual pages"
+( cd doc
+for i in rdup-*.rst ; do echo $i; rst2man $i > `basename $i .rst` ; done
+)
+
 info "Renaming rdup directory to rdup-$version..."
 cd ..
 mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
@@ -159,11 +164,6 @@ rm -f rdup-$version/tags
 rm -rf rdup-$version/doc/tex
 rm -rf rdup-$version/sh-tools
 rm -rf rdup-$version/*.o
-
-info "Creating manual pages"
-( cd doc
-for i in rdup-*.rst ; do echo $i; rst2man $i > `basename $i .rst` ; done
-)
 
 info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
