@@ -29,8 +29,8 @@ capabilities to securely copy the backup to another system all together.
 
 There is one wrapper script for rdup to make backups. This is
 *rdup-simple*.  It uses a hardlinked backup scheme where each day
-has its own directory.  This wrapper calls; Brdup, rdup-snap
-and rdup-snap-link. It further more supports encryption,
+has its own directory.  This wrapper calls; **rdup**, **rdup-snap**
+and **rdup-snap-link**. It further more supports encryption,
 compressions and remote backups. This works by inserting the
 apropiate rdup helper utility in the pipeline.
 
@@ -55,7 +55,7 @@ looked like at any specific date. I personaly keep about three months of
 backups and I can go back to any specific date in that time frame.
 
 EXAMPLES
----------
+========
 LOCAL BACKUPS
 -------------
 Backing up my homedir to the backup directory::
@@ -70,7 +70,7 @@ each day will have its own directory. Multiple sources are allowed, so::
 
 	rdup-simple ~ /etc/ /var/lib /vol/backup/$HOSTNAME
 
-|	..this is a hack to force a newline
+|	
 
 Will backup your homedirectory, /etc and /var/lib to the backup
 location. Also if you need to compress your backup, simple add
@@ -136,5 +136,6 @@ remote server and then copied to your local server.
 
 Compression and encryption will work as expected.
 
-.SH SEE ALSO
+SEE ALSO
+========
 rdup(1), rdup-snap(1), rdup-gzip(1), rdup-gpg(1) and rdup-crypt(1).
