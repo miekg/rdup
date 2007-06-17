@@ -14,9 +14,22 @@ o gpg decryption
 
 :gui:
 o a high level gui?
+o get the gui from sbackup - python based, but works
+o has some sort of cron interface...?
 
 :porting:
 o port extended attributes to FreeBSD
 o cp -plr is gnuis. Don't have time to port this...?
 o on Solaris I sometimes get weird output from rdup, this
   is either a bug in my code or something weird in libgtk
+
+:retention:
+We make 1 backup per day, by default. This can be extended but for now
+it is sufficient
+from sbackup; keep logorithmic:
+	- all from yesterday
+	- 1   from each day last week
+	- 1   per week from last month
+	- 1   per month from last year
+	- 1   per year further in the past
+	- erase all others

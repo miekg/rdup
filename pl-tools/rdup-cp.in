@@ -1,8 +1,7 @@
 #!/usr/bin/perl -w
 #
-# Copyright (c) 2005, 2006 Miek Gieben; Mark J Hewitt
+# Copyright (c) 2005 - 2007 Miek Gieben; Mark J Hewitt
 # See LICENSE for the license
-# Hardlink script
 
 use strict;
 
