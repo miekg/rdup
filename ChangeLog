@@ -1,7 +1,8 @@
 xx yy xxxx: 0.5.1 Miek <miek@miek.nl>
   -- ?? --
   * Gnumakefile.in: Dont create unneed directories (Sven Hartrump) 
-  * Documentation: moved to restructed text as the source for all docs
+  * Documentation: moved to restructed text as the source for docs
+    (work in progress)
   * Added: rdup-purge: logorithmic purge script (From simple-backup)
 
 17 May 2007: 0.5.0 Miek <miek@miek.nl>

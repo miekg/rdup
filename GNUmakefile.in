@@ -27,8 +27,8 @@ GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
 LIBS=@LIBS@
 DRACE=-D_DEBUG_RACE
-#CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
-CFLAGS=-Wall -W @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
+CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
+#CFLAGS=-Wall -W @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644
 
@@ -47,7 +47,7 @@ scripts:
 	chmod +x $(RES) $(PRL) $(WRP)
 
 doc:
-	for i in ${MAN1}; do /home/miekg/bin/rst2man $$i.rst $$i ; done
+	for i in ${MAN1}; do [ -f $$i.rst ] && /home/miekg/bin/rst2man $$i.rst $$i ; done; exit 0
 
 clean:
 	rm -f *.o
