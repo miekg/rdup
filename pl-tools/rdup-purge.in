@@ -19,19 +19,14 @@ my ($help, $dry, $version, $verbose, $log, $simple, $purgeDir);
 
 GetOptions("h" => \$help,
         "V" => \$version,
-        "l" => \$log, 	   # log purge
-	"s=i" => \$simple, # simple purge
-        "v" => \$verbose);
+        "n" => \$dry, 	   # log purge
+        "l" => \$log); 	   # log purge
 
 usage() if $help;
 version($progName) if $version;
 
 die "** Need a directory to purge in" if $#ARGV < 0;
 $purgeDir = $ARGV[0];
-
-if ($log and $simple) {
-	die "** You can not select both logorithmic and simple purge";
-}
 
 my $hostname = `hostname`; chomp $hostname;
 
@@ -68,11 +63,14 @@ foreach(@myear) {
 	}
 
 	foreach(@days) {
+		my $directory = "$purgeDir/$m/$_";
 		if (retain(int($year), int($mon), int($_)) == 1) {
-			warn "** Deleting $purgeDir/$m/$_";
-			#rmtree
+			warn "** Deleting $directory" if $dry;
+			if (! $dry) {
+				rmtree $directory or warn "** Cannot remove $directory";
+			}
 		} else {
-			warn "** Keeping $purgeDir/$m/$_";
+			warn "** Keeping $directory" if $dry;
 		}
 	}
 }
@@ -113,7 +111,6 @@ sub usage {
         print " -l      logorithmic purge; see manual page (default)\n";
         print " -s DAYS simple purge; delete everything older than DAYS\n";
         print " -n      dry-run, print what is done, but don't commit it\n";
-        print " -v      print the files processed to standard error\n";
         print " -h      this help\n";
         print " -V      print version\n";
         exit 0;
