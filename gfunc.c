@@ -74,10 +74,10 @@ cat(FILE *fp, char *filename, off_t f_size)
 		t += i;
 		if (t > (size_t) f_size) {
 			/* the file has grown. Break off the write!! */
-			msg("File grown larger than original file size, cutting off: `%s\'", filename);
+			msg("File grown larger (%zd) than original file size (%zd) , cutting off: `%s\'", t, (size_t) f_size, filename);
 			/* what's missing and what is read in the previous read */
-			missing = t - (size_t) f_size + i;
-			fprintf(stderr, "orig %zd missing %zd\n", missing, (size_t)f_size);
+			missing = t - i;
+			missing = (size_t) f_size - missing;
 			if (missing > 0) {
 				/* write the missing bytes till f_size */
 				if (fwrite(buf, sizeof(char), missing, fp) != missing) {
