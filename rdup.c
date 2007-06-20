@@ -359,6 +359,7 @@ main(int argc, char **argv)
 		g_free(crawl);
 	}
 #ifdef _DEBUG_RACE
+	fprintf(stderr, "** Sleeping\n");
 	sleep(3);
 #endif /* _DEBUG_RACE */
 
