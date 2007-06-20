@@ -106,10 +106,8 @@ sub retain {
 
 sub usage {
         print "$progName [OPTIONS] DIRECTORY\n\n";
-        print "Purge old backups from DIRECTORY\n\n";
+        print "Logorithmic purge old backups from DIRECTORY\n\n";
         print "OPTIONS\n";
-        print " -l      logorithmic purge; see manual page (default)\n";
-        print " -s DAYS simple purge; delete everything older than DAYS\n";
         print " -n      dry-run, print what is done, but don't commit it\n";
         print " -h      this help\n";
         print " -V      print version\n";
