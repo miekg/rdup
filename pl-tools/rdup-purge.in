@@ -45,12 +45,16 @@ closedir DIR;
 my(@days);
 foreach(@myear) {
 	my $m = $_;
-	opendir(DIR, "$purgeDir/$m") || die "** Can't opendir $purgeDir/$m: $!";
+	opendir(DIR, "$purgeDir/$m") || next;
 	@days = grep { !/^\./} readdir(DIR);
 	closedir DIR;
 		
 	my $year = substr $m, 0, 4;
 	my $mon  = substr $m, 4, 2;
+
+	if ($year !~ /^-?\d/ || $mon !~ /^-?\d/) {
+		next;
+	}
 
 	if (int($year) <= 1900 || int($year) > 3000) {
 		warn "** Not a valid year: $year";

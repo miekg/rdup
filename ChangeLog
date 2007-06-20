@@ -1,6 +1,6 @@
-xx yy xxxx: 0.5.1 Miek <miek@miek.nl>
-  -- ?? --
-  * Fix race condition with growing files
+2x Jun 2007: 0.5.1 Miek <miek@miek.nl>
+  -- bug fix and feature enhancements --
+  * rdup: Fix race condition with growing files
   * Gnumakefile.in: Dont create unneed directories (Sven Hartrump) 
   * Documentation: moved to restructed text as the source for docs
     (work in progress)
