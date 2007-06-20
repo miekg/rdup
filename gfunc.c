@@ -57,6 +57,7 @@ cat(FILE *fp, char *filename, off_t f_size)
 	FILE *file;
 	size_t i;
 	size_t t;
+	size_t missing;
 
 	if ((file = fopen(filename, "r")) == NULL) {
 		msg("Could not open '%s\': %s", filename, strerror(errno));
@@ -74,9 +75,12 @@ cat(FILE *fp, char *filename, off_t f_size)
 		if (t > (size_t) f_size) {
 			/* the file has grown. Break off the write!! */
 			msg("File grown larger than original file size, cutting off: `%s\'", filename);
-			if (i - (t - (size_t) f_size) > 0) {
+			/* what's missing and what is read in the previous read */
+			missing = t - (size_t) f_size + i;
+			fprintf(stderr, "orig %zd missing %zd\n", missing, (size_t)f_size);
+			if (missing > 0) {
 				/* write the missing bytes till f_size */
-				if (fwrite(buf, sizeof(char), (i - (t - (size_t) f_size)), fp) != i) {
+				if (fwrite(buf, sizeof(char), missing, fp) != missing) {
 					msg("Write failure `%s\': %s", filename, strerror(errno));
 					fclose(file);
 					return FALSE;
@@ -101,7 +105,6 @@ cat(FILE *fp, char *filename, off_t f_size)
 		for(i = t; i < (size_t) f_size; i++) {
 			fputc('\0', fp);
 		}
-		
 	}
 	return TRUE;
 }

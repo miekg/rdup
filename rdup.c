@@ -358,6 +358,9 @@ main(int argc, char **argv)
 		dir_crawl(backup, crawl, FALSE);
 		g_free(crawl);
 	}
+#ifdef _DEBUG_RACE
+	sleep(3);
+#endif /* _DEBUG_RACE */
 
 	/* everything that is gone from the filesystem */
 	remove  = g_tree_substract(curtree, backup);

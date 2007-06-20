@@ -1,5 +1,7 @@
 TODO:
 
+- make rdup-test utils that check the output of rdup
+
 :install:
 :rdup utils:
 :rdup:
