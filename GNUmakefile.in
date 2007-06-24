@@ -81,7 +81,7 @@ install: all
 	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${SHA}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${HERE}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
-	for i in ${MAN1}; do ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done
+	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
