@@ -1,3 +1,8 @@
+xx YYY 2007: 0.5.2 Miek <miek@miek.nl>-
+  -- ---
+  * Fix the debian pkg - don't create /etc/rdup by default
+
+
 23 Jun 2007: 0.5.1 Miek <miek@miek.nl>
   -- bug fix and feature enhancements --
   * rdup: Fix race condition with growing files and remote backups
