@@ -4,7 +4,7 @@ CMD=rdup
 SHA_IN=shared.sh shared.pl
 WRP_IN=rdup-restore rdup-snap-link rdup-simple
 PRL_IN=rdup-gzip rdup-crypt rdup-snap rdup-cp rdup-gpg rdup-purge
-MAN1_IN=rdup.1 rdup-restore.1 rdup-snap.1 rdup-backups.1 rdup-cp.1 rdup-snap-link.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1
+MAN1_IN=rdup.1 rdup-restore.1 rdup-snap.1 rdup-backups.1 rdup-cp.1 rdup-snap-link.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1 rdup-purge.1
 HERE_IN=rdup-snap-here
 
 SHA=$(addprefix shared/, $(SHA_IN))

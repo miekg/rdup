@@ -1,18 +1,19 @@
 TODO:
 
-- make rdup-test utils that check the output of rdup
-
 :install:
+
 :rdup utils:
+
 :rdup:
 o encrypted file names?
 o -e option
-o get a handle about the race condition when files are growing or
-  shrinking
+
 :tests:
 o add conformence test; symlinks etc.
 
 o gpg decryption
+
+o se linux support?
 
 :gui:
 o a high level gui?
@@ -24,14 +25,3 @@ o port extended attributes to FreeBSD
 o cp -plr is gnuis. Don't have time to port this...?
 o on Solaris I sometimes get weird output from rdup, this
   is either a bug in my code or something weird in libgtk
-
-:retention:
-We make 1 backup per day, by default. This can be extended but for now
-it is sufficient
-from sbackup; keep logorithmic:
-	- all from yesterday
-	- 1   from each day last week
-	- 1   per week from last month
-	- 1   per month from last year
-	- 1   per year further in the past
-	- erase all others

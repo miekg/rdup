@@ -19,8 +19,7 @@ my ($help, $dry, $version, $verbose, $log, $simple, $purgeDir);
 
 GetOptions("h" => \$help,
         "V" => \$version,
-        "n" => \$dry, 	   # log purge
-        "l" => \$log); 	   # log purge
+        "n" => \$dry); 	  
 
 usage() if $help;
 version($progName) if $version;

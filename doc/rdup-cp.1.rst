@@ -10,7 +10,7 @@ rdup-cp - copy files from rdup
 
 SYNOPSIS
 ========
-	rdup-cp DEST [OPTIONS]
+	rdup-cp [OPTIONS] DEST
 
 DESCRIPTION
 ===========
