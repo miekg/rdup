@@ -65,7 +65,7 @@ if ($remote) {
 }
 my $te = time;
 
-syslog_log("Successfully finished backup in %.2f m, %.2f MB", 
+syslog_log("Successfully finished backup to %s in %.2f m, %.2f MB", $backupDir
         (($te - $ts) / 60), ($ftsize/1024/1024));
 closelog;
 printf STDERR "** #REG FILES  : %d\n", $ireg;
