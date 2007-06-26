@@ -14,7 +14,7 @@ SYNOPSIS
 
 DESCRIPTION
 ===========
-rdup-purge deletes old backup directories. It does this in a logorithmic
+rdup-purge deletes old backup directories. It does this in a logarithmic
 way (idea taken from simple-backup). It will delete in the following way:
 
 * the last 30 days - keep everything
