@@ -30,36 +30,39 @@ Or when you need rdup to fill in the extended attributes:
 rdup -a /dev/null FROM | rdup-cp DEST
 .RE
 
-\fIDEST\fR can only be a local directory.
+.B DEST
+can only be a local directory.
 
 OPTIONS
 =======
 
--a
-
+.TP
+.B -a
 Write the uid and gid information to the file's extended user attributes:
-r_uid and r_gid. This option only works if **attr** is available
+r_uid and r_gid. This option only works if 
+.B attr
+is available
 on the system. This currently works for Linux and Solaris 10.
 
--p NUM	
-
+.TP
+.B -p NUM	
 Strip NUM slashes of the path names, thereby stripping a common prefix
 of all names.
 
--c 
-
+.TP
+.B -c 
 Used in conjunction with rdup -c. Process the files' contents also.
 
--v
-
+.TP
+.B -v
 Echo the files processed to standard error.
 
--h
-
+.TP
+.B -h
 Short help message.
 
--V
-
+.TP
+.B -V
 Show the version.
 
 SEE ALSO

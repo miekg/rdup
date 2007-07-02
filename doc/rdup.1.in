@@ -260,7 +260,8 @@ Where:
 .TP
 .B o +|-
 plus or minus, indicating whether PATH should added or removed.
-.TP TYPE
+.TP 
+.B o TYPE
 the type of the see %T in \fBFORMAT\fR.
 .TP
 .B o BITS
