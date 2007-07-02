@@ -65,7 +65,7 @@ if ($remote) {
 }
 my $te = time;
 
-syslog_log("Successfully finished backup to %s in %.2f m, %.2f MB", $backupDir
+syslog_log("Successfully finished backup to %s in %.2f m, %.2f MB", $backupDir,
         (($te - $ts) / 60), ($ftsize/1024/1024));
 closelog;
 printf STDERR "** #REG FILES  : %d\n", $ireg;
@@ -82,6 +82,7 @@ sub _mirror {
         my $dir = $_[0];
         my $dump = substr($t, 0, 1);
         my $type = substr($t, 1, 1);
+	my $target;
 
         sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
         if ($remote) {
@@ -92,7 +93,7 @@ sub _mirror {
         print STDERR "$path\n" if $verbose;
 
         if ($dump eq '+') {        # add
-                my $target = "$dir/$path";
+                $target = "$dir/$path";
                 if ($type eq '-') {        # REG
                         if (exist($target) == 1) {
                                 if (-d _) {
@@ -159,7 +160,7 @@ sub _mirror {
                         $ilnk++;
                 }
         } else {        # Remove
-                my $target = "$dir/$path";
+                $target = "$dir/$path";
                 if (exist($target)) {
                         if (-d _) {
                                 rmtree $target or warn "** Cannot remove: $target: $!";
