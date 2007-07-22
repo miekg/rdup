@@ -83,6 +83,7 @@ sub _mirror {
         my $dump = substr($t, 0, 1);
         my $type = substr($t, 1, 1);
 	my $target;
+	my $ret;
 
         sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
         if ($remote) {
@@ -112,10 +113,12 @@ sub _mirror {
                                 rchmod($bits, $target);
                                 close FILE or warn "** Failed to close: $!";
                         } else {
-                                copy($path, $target) or warn "** Copy failed: $! $path $target";
-                                rchown($uid, $gid, $target);
-                                chown_attr($attr_there, $uid, $gid, $target);
-                                rchmod($bits, $target);
+                                $ret = copy($path, $target) or warn "** Copy failed: $! $path $target";
+				if ($ret == 1) {
+					rchown($uid, $gid, $target);
+					chown_attr($attr_there, $uid, $gid, $target);
+					rchmod($bits, $target);
+				}
                         }
                         $ftsize += $fsize;
                         $ireg++;
