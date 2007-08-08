@@ -32,12 +32,12 @@ CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FILE
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644
 
-.PHONY:	all clean install all uninstall doc
+.PHONY:	all clean install all uninstall
 
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
-all:	rdup scripts doc
+all:	rdup scripts
 
 rdup:	${OBJ} ${HDR}
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
@@ -45,9 +45,6 @@ rdup:	${OBJ} ${HDR}
 
 scripts:
 	chmod +x $(RES) $(PRL) $(WRP)
-
-doc:
-	for i in ${MAN1}; do [ -f $$i.rst ] && /home/miekg/bin/rst2man $$i.rst $$i ; done; exit 0
 
 clean:
 	rm -f *.o
