@@ -177,7 +177,7 @@ g_tree_read_file(FILE *fp)
 
 		e = g_malloc(sizeof(struct entry));
 		e->f_name      = g_strdup(p + 1);
-		e->f_name_size = str_len;
+		e->f_name_size = f_name_size;
 		e->f_mode      = modus;
 		e->f_uid       = 0;
 		e->f_gid       = 0;
@@ -199,7 +199,6 @@ static time_t
 timestamp(char *f)
 {
 	struct stat s;
-
 	if (lstat(f, &s) != 0) {
 		return 0;
 	}
