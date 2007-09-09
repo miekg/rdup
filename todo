@@ -3,10 +3,13 @@ TODO:
 :install:
 
 :rdup utils:
+rdup server pkgs with only rdup-snap and rdup-snap-link??
 
 :rdup:
 o encrypted file names?
 o -e option
+o check extended attributes to? 
+    Would be fairly strait forward
 
 :tests:
 o add conformence test; symlinks etc.

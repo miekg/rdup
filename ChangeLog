@@ -1,7 +1,7 @@
 xx YYY 2007: 0.5.2 Miek <miek@miek.nl>-
   -- ---
   * Fix the debian pkg - don't create /etc/rdup by default
-  * rdup-purge add File::Path
+  * rdup-purge add File::Path perl module
 
 
 23 Jun 2007: 0.5.1 Miek <miek@miek.nl>
