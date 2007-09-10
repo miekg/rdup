@@ -1,5 +1,6 @@
 #!/bin/bash
 
-for i in *.tpkg; do 
+for i in *.tpkg; do
+	echo tpkg -q -a ../../ $i
         tpkg -q -a ../../ $i
 done
