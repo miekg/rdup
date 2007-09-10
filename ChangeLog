@@ -1,8 +1,8 @@
-xx YYY 2007: 0.5.2 Miek <miek@miek.nl>-
-  -- ---
+11 Sep 2007: 0.5.2 Miek <miek@miek.nl>
+  -- cleanups --
   * Fix the debian pkg - don't create /etc/rdup by default
   * rdup-purge add File::Path perl module
-
+  * Go back to plain manpages - rst isn't worth the trouble
 
 23 Jun 2007: 0.5.1 Miek <miek@miek.nl>
   -- bug fix and feature enhancements --
