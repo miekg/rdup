@@ -1,3 +1,8 @@
+XX yyy 2007: 0.5.3 Miek <miek@miek.nl>
+  -- ?? --
+  * ...
+
+
 20 Sep 2007: 0.5.2 Miek <miek@miek.nl>
   -- cleanups --
   * Fix the debian pkg - don't create /etc/rdup by default
