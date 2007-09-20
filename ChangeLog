@@ -1,9 +1,10 @@
-12 Sep 2007: 0.5.2 Miek <miek@miek.nl>
+20 Sep 2007: 0.5.2 Miek <miek@miek.nl>
   -- cleanups --
   * Fix the debian pkg - don't create /etc/rdup by default
   * rdup-purge add File::Path perl module
   * rdup-simple: enable -a (thanks to: Mathieu Chappuis)
   * Go back to plain manpages - rst isn't worth the trouble
+
 
 23 Jun 2007: 0.5.1 Miek <miek@miek.nl>
   -- bug fix and feature enhancements --
@@ -12,6 +13,7 @@
   * Documentation: moved to restructed text as the source for docs
     (work in progress)
   * Added: rdup-purge: logarithmic purge script (idea from simple-backup)
+
 
 17 May 2007: 0.5.0 Miek <miek@miek.nl>
   -- major new release - not backwards compatible -
