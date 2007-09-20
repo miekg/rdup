@@ -133,11 +133,6 @@ if [ "$SNAPSHOT" = "yes" ]; then
     info "Snapshot version number: $version"
 fi
 
-info "Creating manual pages"
-( cd doc
-for i in rdup-*.rst ; do echo "from $i"; rst2man $i > `basename $i .rst` ; done
-)
-
 info "Renaming rdup directory to rdup-$version..."
 cd ..
 mv rdup rdup-$version || error_cleanup "Failed to rename rdup directory."
