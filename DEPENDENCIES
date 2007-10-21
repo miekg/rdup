@@ -4,7 +4,7 @@ and tools to make it all work. The dependencies are listed here:
 Mandatory:
 o libglib (core C gtk library)
 o perl, rdup-utils
-  -  perl-module: file-copy-recursive
+  -  perl-module: file-copy
 o bash, version 3, for the (shell) rdup-utils
   rdup-snapshot depends on GNU date for date calculations
 

@@ -11,7 +11,6 @@ use Sys::Syslog;
 use File::Basename;
 use File::Path;
 use File::Copy;
-use File::Copy::Recursive qw(dircopy rcopy fcopy);
 
 # common functions
 my $prefix="@prefix@";
