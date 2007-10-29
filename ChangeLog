@@ -1,6 +1,7 @@
 XX yyy 2007: 0.5.3 Miek <miek@miek.nl>
   -- cleanups --
   * Don't use File::Copy::Recursive - so drop it
+  * Small build updates, makedist.sh
 
 
 20 Sep 2007: 0.5.2 Miek <miek@miek.nl>
