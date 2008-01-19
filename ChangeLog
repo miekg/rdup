@@ -1,3 +1,8 @@
+Xx YY 2008: 0.6.0 Miek <miek@miek.nl>
+  -- complete overhaul of the remote backup paradigma --
+  * USE FUSE for remote backups
+
+
 XX yyy 2007: 0.5.3 Miek <miek@miek.nl>
   -- cleanups --
   * Don't use File::Copy::Recursive - so drop it

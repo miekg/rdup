@@ -1,5 +1,12 @@
 TODO:
 
+Kill the -c switch - error prone - use FUSE if you need this. Make me
+use cp too.  Add howto.
+
+Allows me to use cp in the perl program too, save copy recusive which
+does not handle all the extended attributes. Fixes the -a options
+
+
 :install:
 
 :rdup utils:
