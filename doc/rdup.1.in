@@ -9,7 +9,7 @@
 timestamp
 ]
 [
-.IR OPTIONS
+.IR OPTION
 ]
 .IR FILELIST 
 .IR DIRS/FILES ...
@@ -426,6 +426,8 @@ See the \-c flag for explanation about a small race condition when doing
 remote dumps.
 .PP
 Hard links are handled as normal files.
+.PP
+Files with holes in them are not detected when doing a remote backup.
 
 .SH SEE ALSO
 rdup-simple(1), rdup-snap(1) and rdup-restore(1). See

@@ -7,7 +7,7 @@ rdup-restore \- restore a filesystem from a specific directory
 .SH SYNOPSIS
 .B rdup-restore
 [
-.IR OPTIONS
+.IR OPTION
 ]
 SOURCE
 [

@@ -8,7 +8,7 @@ rdup-cp \- copy files from rdup
 .B rdup-cp
 .IR DEST
 [
-.IR OPTIONS
+.IR OPTION
 ]
 
 .SH DESCRIPTION

@@ -10,7 +10,7 @@ rdup-simple \- create a hardlink backup
 .B +DAYS
 ]
 [
-.IR OPTIONS
+.IR OPTION
 ]
 DIR|FILE
 [

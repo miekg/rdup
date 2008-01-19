@@ -7,7 +7,7 @@ rdup-gpg, encrypt \- encrypt files with gpg received from \fBrdup -c\fR
 .SH SYNOPSIS
 .B rdup-gpg
 [
-.IR OPTIONS
+.IR OPTION
 ]
 [
 .IR RECIPIENT

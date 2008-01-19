@@ -7,7 +7,7 @@ rdup-snap \- create backup in a hard link directory
 .SH SYNOPSIS
 .B rdup-snap
 [
-.IR OPTIONS
+.IR OPTION
 ]
 
 .SH DESCRIPTION

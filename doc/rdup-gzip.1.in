@@ -7,7 +7,7 @@ rdup-gzip, compress \-  compress files received from \fBrdup -c\fR
 .SH SYNOPSIS
 .B rdup-gzip
 [
-.IR OPTIONS
+.IR OPTION
 ]
 
 .SH DESCRIPTION
