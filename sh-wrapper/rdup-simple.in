@@ -30,7 +30,7 @@ usage() {
         echo OPTIONS:
         echo " -k KEYFILE encrypt all files, using crypt.pl"
         echo " -z         compress all files, using gzip.pl"
-	echo "            If both -z and -k are selected, compression is done first"
+	echo "            If both -z and -k are given, compression is done first"
         echo " -E FILE    use FILE as an exclude list"
         echo " -f         force a full dump"
         echo " -a         write extended attributes with uid/gid"

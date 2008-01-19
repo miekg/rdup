@@ -27,7 +27,7 @@
 crawler.c
         The crawler recursively decends into directories.
 
-        Each found item (file, link or directory) is placed into a GTree
+        Each found item (file, symlink or directory) is placed into a GTree
         with a value of VALUE (only the keys are used by rdup).
 
         When a .nobackup is found the entry's value is changed from
@@ -46,15 +46,15 @@ crawler.c
                 don't print items with these values.
 
 gfunc.c
-        This file contain all the function that operate on GTrees.
+        This file contains all functions that operate on GTrees.
 
 getdelim.c  
         A getdelim() implementation for systems that don't have the GNU
         one.
 
 rdup.c 
-        Contains main() and a few functions that perform the
-        initialization.
+	Contains main() and a few functions that perform the
+	initialization.
 
 signal.c
         Contains a signal handling function.
