@@ -312,20 +312,6 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 }
 
 /**
- * free a struct entry
- */
-gboolean
-gfunc_free(gpointer data, __attribute__((unused)) gpointer value,
-		__attribute__((unused)) gpointer usr)
-{
-	struct entry *f;
-	f = (struct entry*) data;
-	g_free(f->f_name);
-	g_free(f);
-	return FALSE;
-}
-
-/**
  * Write our internal filelist
  */
 gboolean
