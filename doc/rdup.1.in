@@ -421,7 +421,7 @@ Written by Miek Gieben.
 .SH REPORTING BUGS
 Report bugs to <miek@miek.nl>. 
 
-.SH BUGS
+.SH BUGS/LIMITATIONS
 See the \-c flag for explanation about a small race condition when doing
 remote dumps. 
 .PP

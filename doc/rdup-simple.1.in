@@ -75,7 +75,7 @@ For the backup a YYYYMM directory is created. In this directory
 specific day-dumps are placed. So the first dump in October 2006,
 will created in 200610/01 and the second in 200610/02, etc.
 .PP
-You can use incremental dumps for ever, there is no need to do
+You can use incremental dumps forever, there is no need to do
 a full dump every once in a while.
 .PP
 Note that \fBrdup-simple\fR calls \fBrdup-snap-link\fR. This small

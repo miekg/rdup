@@ -23,6 +23,7 @@ usage() {
         echo +N \ \ - Look N days back for previous backups, defaults to 8
 	echo DEST - where to store the backup. This can be:
 	echo "	ssh://user@host/directory (note: no colon after the hostname"
+	echo "	ssh://host/directory"
 	echo "	file:///directory (note: 3 slashes)"
 	echo "	/directory"
 	echo "	directory"

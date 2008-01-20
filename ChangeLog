@@ -1,7 +1,9 @@
-XX yyy 2007: 0.5.3 Miek <miek@miek.nl>
+21 Jan 2008: 0.5.3 Miek <miek@miek.nl>
   -- cleanups --
   * Didn't use File::Copy::Recursive - so drop it
-  * Small build updates, makedist.sh
+  * Small documentation updates 
+  * Small fixes in the c source
+  * Small build updates, makedist.sh, remove 'strip'
 
 
 20 Sep 2007: 0.5.2 Miek <miek@miek.nl>

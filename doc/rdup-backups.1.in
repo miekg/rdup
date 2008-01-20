@@ -7,7 +7,6 @@ rdup-backups \- introduction into making backups with rdup
 .SH WORK IN PROGRESS
 This is entire document is a work in progress.
 
-
 .SH INTRODUCTION
 \fBrdup\fR is a simple program that prints out a list of files and
 directories that are changed changed on a filesystem. It is much
@@ -31,11 +30,10 @@ compressions and remote backups. This works by inserting the
 apropiate rdup helper utility in the pipeline.
 
 .SH BACKING UP WITH RDUP-SIMPLE
-
 When using \fBrdup-simple\fR the backup process consists out of two
 phases. During phase one a copy is made of any previous backups backups.
 This a hardlinked copy, meaning that it will take up very little space.
-It uses GNU cp to make this copy. See the manual page of
+It uses GNU 'cp -l' to make this copy. See the manual page of
 \fBrdup-snap-link\fR for more information. \fBrdup-simple\fR uses
 ~/.rdup as the directory to write its internal filelist and timestamp
 file.
