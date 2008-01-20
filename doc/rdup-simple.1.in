@@ -39,6 +39,10 @@ the following destinations are supported:
 Use `ssh' as a protocol and `user` as the remote user name. Store
 the backup in `directory` on the remote server `host'.
 
+Note: when doing a remove backup as a normal ssh user the owership
+of the backup is not preserved on the remove host. All files and
+directories will belong to 'user'. See the -a flag for a work around.
+
 .TP 
 .B ssh://host/directory
 Use `ssh' as a protocol and the current username as the remote user name. Store

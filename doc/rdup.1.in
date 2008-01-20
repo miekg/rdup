@@ -135,7 +135,7 @@ Read the uid and gid information from the file's extended user attributes:
 xattr support. Currently this is supported and tested on Linux and
 Solaris 10.
 
-This option is usefull when restoring a remote backup. Normally these
+This option is usefull when performing a remote backup. Normally these
 backups are transferred by a non-root user. This user will not be able
 to correctly set all uid/gid information. As a workaround rdup's
 utilities will set the extended attributes for the file to store the
