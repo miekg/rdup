@@ -315,7 +315,7 @@ entry_print(FILE *out, char plusmin, struct entry *e)
  * Write our internal filelist
  */
 gboolean
-gfunc_write(gpointer data, __attribute__((unused)) gpointer value, gpointer fp)
+gfunc_write(gpointer data, gpointer value, gpointer fp)
 {
 	struct entry *e = (struct entry*)data;
 	if (sig != 0)
