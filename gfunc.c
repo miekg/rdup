@@ -325,6 +325,10 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 		return FALSE;
 
 	/* this is used to create our filelist */
+	/* writing this output to stderr on Solaris DOES NOT make it corrupt
+	 * with fp every 1 in 1000 lines is corrupted, I don't where to look
+	 * anymore
+	 */
 	fprintf((FILE*) fp, "%ld %ld %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
 			(long int)e->f_ino, (long int)e->f_name_size, e->f_name);
 	if (opt_null) {
