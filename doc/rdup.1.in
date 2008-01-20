@@ -423,11 +423,9 @@ Report bugs to <miek@miek.nl>.
 
 .SH BUGS
 See the \-c flag for explanation about a small race condition when doing
-remote dumps.
+remote dumps. 
 .PP
-Hard links are handled as normal files.
-.PP
-Files with holes in them are not detected when doing a remote backup.
+Hard links are handled as normal files as are files with holes in them.
 
 .SH SEE ALSO
 rdup-simple(1), rdup-snap(1) and rdup-restore(1). See
