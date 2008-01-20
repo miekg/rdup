@@ -1,12 +1,5 @@
 TODO:
 
-Kill the -c switch - error prone - use FUSE if you need this. Make me
-use cp too.  Add howto.
-
-Allows me to use cp in the perl program too, save copy recusive which
-does not handle all the extended attributes. Fixes the -a options
-
-
 :install:
 
 :rdup utils:
@@ -16,7 +9,7 @@ rdup server pkgs with only rdup-snap and rdup-snap-link??
 o encrypted file names?
 o -e option
 o check extended attributes too? 
-    Would be fairly strait forward?
+    Would be fairly easy?
 
 :tests:
 o add conformence test; symlinks etc.
@@ -24,6 +17,7 @@ o add conformence test; symlinks etc.
 o gpg decryption
 
 o se linux support?
+- extended attributes
 
 :gui:
 o a high level gui?

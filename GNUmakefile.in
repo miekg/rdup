@@ -41,7 +41,6 @@ all:	rdup scripts
 
 rdup:	${OBJ} ${HDR}
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
-	strip rdup
 
 scripts:
 	chmod +x $(RES) $(PRL) $(WRP)
