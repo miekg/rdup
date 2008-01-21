@@ -324,11 +324,6 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (value == NO_PRINT)
 		return FALSE;
 
-	/* this is used to create our filelist */
-	/* writing this output to stderr on Solaris DOES NOT make it corrupt
-	 * with fp every 1 in 1000 lines is corrupted, I don't where to look
-	 * anymore
-	 */
 	fprintf((FILE*) fp, "%ld %ld %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
 			(long int)e->f_ino, (long int)e->f_name_size, e->f_name);
 	if (opt_null) {
@@ -343,14 +338,14 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
  * write out the list of to be backupped items
  */
 gboolean
-gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
+gfunc_backup(gpointer data, gpointer value,
 		__attribute__((unused)) gpointer usr)
 {
 	if (sig != 0)
 		signal_abort(sig);
 
 	/* .nobackup seen, don't print it */
-	if (value == NO_PRINT)
+	if (value == NO_PRINT) 
 		return FALSE;
 
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
@@ -380,7 +375,7 @@ gfunc_backup(gpointer data, __attribute__((unused)) gpointer value,
  * write out the list of removed items
  */
 gboolean
-gfunc_remove(gpointer data, __attribute__((unused)) gpointer value,
+gfunc_remove(gpointer data, gpointer value,
 		__attribute__((unused)) gpointer usr)
 {
 	if (sig != 0)
@@ -407,12 +402,8 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 		signal_abort(sig);
 
 	/* it is perfectly possibly to have these here */
-	/*
-	if (value == NO_PRINT) {
-		msg("Internal error: NO_PRINT in new tree!");
+	if (value == NO_PRINT) 
 		return FALSE;
-	}
-	*/
 
 	entry_print(stdout, '+', (struct entry*)data);
 	return FALSE;
@@ -459,7 +450,7 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
 			return FALSE;
 
 		g_tree_insert(
-			((struct remove_path *)r)->tree, (gpointer) data, NO_PRINT);
+			((struct remove_path *)r)->tree, data, NO_PRINT);
 	}
 	return FALSE;
 }

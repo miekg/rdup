@@ -94,6 +94,9 @@ g_tree_read_file(FILE *fp)
 	s    = BUFSIZE;
 	l    = 1;
 
+	if (!fp)
+	    return tree;
+
 	if (opt_null)
 		delim = '\0';
 	else
@@ -332,14 +335,12 @@ main(int argc, char **argv)
 	if (strcmp(argv[0], "/dev/null") == 0)
 		devnull = TRUE;
 
-	if (!(fplist = fopen(argv[0], "a+"))) {
-		msg("Could not open filelist `%s\': %s", argv[0], strerror(errno));
-		exit(EXIT_FAILURE);
+	if (!(fplist = fopen(argv[0], "r"))) {
+		curtree = g_tree_read_file(NULL);
 	} else {
-		rewind(fplist);
+		curtree = g_tree_read_file(fplist);
+		fclose(fplist);
 	}
-
-	curtree = g_tree_read_file(fplist);
 	
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] != DIR_SEP) {
@@ -381,20 +382,24 @@ main(int argc, char **argv)
 	g_tree_foreach(new, gfunc_new, NULL);
 
 	/* write new filelist */
-	if (!devnull && ftruncate(fileno(fplist), 0) != 0) {
-		msg("Could not truncate filelist file `%s\': %s", argv[0],
-			strerror(errno));
+	if (!devnull) {
+	    if (!(fplist = fopen(argv[0], "w"))) {
+		    msg("Could not open filelist `%s\': %s", argv[0], strerror(errno));
+	    } else {
+		/* write temporary file and the move it */
+		g_tree_foreach(backup, gfunc_write, fplist);
+		fclose(fplist);
+	    }
 	}
-	/* write temporary file and the move it */
-	g_tree_foreach(backup, gfunc_write, fplist);
-	fclose(fplist);
+
 	/* re-touch the timestamp file */
 	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
 		msg("Could not create timestamp file `%s\': %s", time, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
-/*	g_tree_foreach(curtree, gfunc_free, NULL);
+/*	
+	g_tree_foreach(curtree, gfunc_free, NULL);
 	g_tree_foreach(backup, gfunc_free, NULL);
 */
 	g_tree_destroy(curtree);
