@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# Copyright (c) 2005 - 2007 Miek Gieben; Mark J Hewitt
+# Copyright (c) 2005 - 2008 Miek Gieben; Mark J Hewitt
 # See LICENSE for the license
 
 use strict;
@@ -29,8 +29,8 @@ GetOptions("h" => \$help,
 usage() if $help;
 version($progName) if $version;
 die "** Need a directory to copy to" if $#ARGV < 0;
-$toDir = $ARGV[0];
-my $hostname = `hostname`; chomp $hostname;
+$toDir = shift;
+chomp (my $hostname = `hostname`); 
 my $attr_there = check_attr() if $attr;
 
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
@@ -42,13 +42,13 @@ if (exist($toDir) == 0) {
 }
 
 if ($remote) {
-        while (($_ = <STDIN>)) {
+        while (<STDIN>) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
                 _cp($toDir);
         }
 } else {
-        while (($_ = <STDIN>)) {
+        while (<STDIN>) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
                 _cp($toDir);
@@ -56,7 +56,7 @@ if ($remote) {
 }
 
 sub _cp {
-        my $dir = $_[0];
+        my $dir = shift;
         my $dump = substr($t, 0, 1);
         my $type = substr($t, 1, 1);
 	my $tpath;
@@ -96,7 +96,7 @@ sub _cp {
                         }
                 } elsif ($type eq 'd') {        # DIR
                         exist($target);  # side effects Go!
-                        if (-f _ || -l _) {      # Type of entiry has changed
+                        if (-f _ || -l _) {      # Type of entry has changed
                                 unlink $target or warn "** Cannot unlink: $target: $!";
                         }
                         mkpath($target) unless -d _;
@@ -128,8 +128,8 @@ sub _cp {
 }
 
 sub strip_path {
-	my $s = $_[0];
-        my $p = $_[1];
+	my $s = shift;
+        my $p = shift;
 
 	if ($s < 0) {
 		$s = 0;
@@ -137,7 +137,7 @@ sub strip_path {
 
         my @path = split /\/+/, $p;
         my $r = join '/', @path[$s..$#path];
-        return $r;
+        $r;
 }
 
 sub usage {
