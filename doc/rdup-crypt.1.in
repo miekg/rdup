@@ -19,7 +19,7 @@ For example,
 .PP
         rdup -c list ~/Documents | rdup-crypt KEY | rdup-snap -c -b /tmp/storage
 .PP
-Note the \fI-c\fR option for \fBrdup-mirror\fR. Also note that you
+Note the \fI-c\fR option for \fBrdup-snap\fR. Also note that you
 cannot change the output FORMAT of \fBrdup-crypt\fR. The FORMAT used is
 rdup's default.
 
@@ -40,4 +40,4 @@ Show a short help message.
 Show the version.
 
 .SH SEE ALSO
-rdup-gzip(1), rdup-mirror(1) and mcrypt(1).
+rdup-gzip(1), rdup-snap(1) and mcrypt(1).

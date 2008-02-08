@@ -209,9 +209,9 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         'p': '+' if file is new/modified, '-' if removed
 .BR
-        'b': permission bits from lstat(2)
+        'b': permission bits from lstat(2), octal in four digits
 .BR
-        'm': the file mode bits, st_mode from lstat(2)
+        'm': the file mode bits, st_mode from lstat(2), decimal digits
 .BR
         'u': uid
 .BR
@@ -266,7 +266,7 @@ the type of the see %T in \fBFORMAT\fR.
 .TP
 .B o BITS
 the permission of the file, this is a subset of the st_mode from
-lstat(2).
+lstat(2). These are four octal digits.
 .TP
 .B o UID
 the numerical user id of PATH. Note that if the first character of the
@@ -363,7 +363,7 @@ acts as a encryption (mcrypt) filter.
 acts as a encryption (gpg) filter.
 .TP
 .B rdup-restore
-a wrapper scripts around `rdup', `rdup-mirror' to ease restoring.
+a wrapper scripts around `rdup', `rdup-cp' to ease restoring.
 
 .SH EXAMPLES
 
@@ -433,7 +433,7 @@ rdup-backups(1) for an introduction into creating backups. See regex(7)
 for an intro to regular expressions.
 
 .SH COPYRIGHT
-Copyright (C) 2005-2007 Miek Gieben. This is free software. There is NO
+Copyright (C) 2005-2008 Miek Gieben. This is free software. There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.
 .PP

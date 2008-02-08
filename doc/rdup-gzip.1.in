@@ -35,4 +35,4 @@ Decompress the files.
 Show the version.
 
 .SH SEE ALSO
-rdup-crypt(1) and rdup-mirror(1).
+rdup-crypt(1) and rdup-snap(1).
