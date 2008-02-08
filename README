@@ -9,7 +9,7 @@ o Gmake for compilation
 o Glib to build. Glib is the lowlevel C library of the
   GTK project. Configure will check for this.
 o Perl for the scripts. 
-o copy-recursive module for Perl
+o File::copy module for Perl
 o rdup-snaphost depends on GNU cp to create the hardlinked directories
 
 2/ DIFFERENCE WITH RSYNC
@@ -35,15 +35,12 @@ decends into directories. This way all top level directories can be
 created in sequence. If you process the files in the same order no magic
 is needed to create directories that otherwise might be missing. 
 
-All documentation is written in Restructered Text for maximum
-flexibility.
-
 4/ COPYRIGHT
 
 All files in this archive are copyrighted by Miek Gieben, unless stated
 otherwise in the file itself.
 
-(c) Miek Gieben, 2005-2007
+(c) Miek Gieben, 2005-2008.
 
 5/ LICENSE
 GPL, version 2, See the file LICENSE.

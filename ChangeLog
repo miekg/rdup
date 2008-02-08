@@ -1,8 +1,9 @@
- 2008: 0.5.5 Miek <miek@miek.nl>
+10 Feb 2008: 0.5.5 Miek <miek@miek.nl>
  -- code cleanups --
  * Print the octal mode (%b) with 4 digits to also allow
     for the correct transfer of sgid/suid/sticky bits.
- * cleanup the perl code
+ * Cleanup the perl code
+ * Fixup the documentation
 
 
 22 Jan 2008: 0.5.4 Miek <miek@miek.nl>
