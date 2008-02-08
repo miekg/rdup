@@ -11,9 +11,8 @@ sub version {
 # sanity_check the input
 sub sanity_check {
         my ($dump, $bits, $psize, $fsize, $uid, $gid) = @_;
-
         die "** $progName: dump must be + or -"   if $dump ne "+" && $dump ne "-";
-        die "** $progName: bits must be otcal"    unless $bits =~ "[0-7]+";
+        die "** $progName: bits must be octal"    unless $bits =~ "[0-7]+";
         die "** $progName: psize must be numeric" unless $psize =~ "[0-9]+";
         die "** $progName: fsize must be numeric" unless $fsize =~ "[0-9]+";
         die "** $progName: uid must be numeric"   unless $uid =~ "[0-9]+";
@@ -38,7 +37,7 @@ sub copyout {
 
 # cat from FILE DESC to STDOUT
 sub cat {
-        my $file = $_[0];
+        my $file = shift;
         my ($buf, $n);
 
         while (($n = read $file, $buf, 4096) > 0) {
@@ -48,14 +47,14 @@ sub cat {
 
 # cat from FILE to STDOUT
 sub catfile {
-        my $name = $_[0];
+        my $name = shift;
         open FILE, "<$name" or die "** $name: $!";
         cat(*FILE);
         close FILE;
 }
 
 # set the r_uid/g_uid with the original uid/gid
-# usefull for remote backups
+# usefull for remote backups. SLOW
 sub chown_attr {
 	my ($attr, $xuid, $xgid, $file) = @_;
         return unless $attr;
@@ -82,33 +81,31 @@ sub check_attr {
 
 # chmod or warn
 sub rchmod {
-        my $bits = $_[0];
-        my $file = $_[1];
+        my $bits = shift;
+        my $file = shift;
         chmod oct($bits), $file or warn "** Cannot chmod $file: $!";
 }
 
 # chown or warn
 sub rchown {
-        my $uid = $_[0];
-        my $gid = $_[1];
-        my $file = $_[2];
+        my $uid = shift;
+        my $gid = shift;
+        my $file = shift;;
         chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
 }
 
 sub syslog_open {
-        my $p = $_[0];
-        openlog($p, 'cons, pid', 'daemon') or die "** Cannot open syslog";
+        openlog(shift, 'cons, pid', 'daemon') or die "** Cannot open syslog";
 }
 
 sub syslog_log {
-        $f = $_[0];
-        shift; 
+        $f = shift; 
         syslog('info', $f, @_);
 }
 
 # check if a file exists
 sub exist {
-        lstat($_[0]);
+        lstat(shift);
         return 0 unless -e _;
         return 1;
 }
