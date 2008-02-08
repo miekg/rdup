@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# Copyright (c) 2005 - 2007 Miek Gieben; Mark J Hewitt
+# Copyright (c) 2005 - 2008 Miek Gieben; Mark J Hewitt
 # See LICENSE for the license
 # Hardlink script
 
@@ -17,7 +17,6 @@ my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $ts = time;
-my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($ts);
 my $progName = basename $0;
 my ($help, $version, $verbose, $attr, $remote, $backupDir);
 
@@ -31,7 +30,7 @@ GetOptions("h" => \$help,
 usage() if $help;
 version($progName) if $version;
 die "** Need a -b option" if !$backupDir;
-my $hostname = `hostname`; chomp $hostname;
+chomp (my $hostname = `hostname`);
 my $attr_there = check_attr() if $attr;
 
 # Statistics
@@ -49,14 +48,14 @@ if (!exist($backupDir)) {
 
 if ($remote) {
         syslog_log("%s %s", "Commencing remote backup to:" ,$backupDir);
-        while (($_ = <STDIN>)) {
+        while (<STDIN>) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
                 _mirror($backupDir);
         }
 } else {
         syslog_log("%s %s", "Commencing local backup to:", $backupDir);
-        while (($_ = <STDIN>)) {
+        while (<STDIN>) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
                 _mirror($backupDir);
@@ -78,7 +77,7 @@ rchmod(755, $backupDir);
 exit 0;
 
 sub _mirror {
-        my $dir = $_[0];
+        my $dir = shift;
         my $dump = substr($t, 0, 1);
         my $type = substr($t, 1, 1);
 	my $target;

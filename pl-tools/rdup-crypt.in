@@ -37,7 +37,7 @@ $crOptions .= "-q -F -f $ARGV[0] -a blowfish";
 my $tmpDir = tempdir("rdup.crypt.XXXXXX", TMPDIR => 1, CLEANUP => 1);
 die "** $tmpDir could not be created: $!" unless -d $tmpDir;
 
-while (($_ = <STDIN>)) {
+while (<STDIN>) {
         chomp;
         my ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
         my $dump = substr($t, 0, 1);

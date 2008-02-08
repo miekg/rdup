@@ -33,7 +33,7 @@ if ($? != 0) {
 	die "** Cannot find \'gzip'";
 }
 
-while (($_ = <STDIN>)) {
+while (<STDIN>) {
         chomp;
         my ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
         my $dump = substr($t, 0, 1);

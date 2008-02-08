@@ -15,9 +15,11 @@ rdup-gzip, compress \-  compress files received from \fBrdup -c\fR
 .PP
 For example,
 .PP
-        rdup -c list ~/Documents | rdup-gzip | rdup-mirror -c -b /tmp/storage
+        rdup -c list ~/Documents | rdup-gzip | rdup-snap -c -b /tmp/storage
 .PP
-Note the \fI-c\fR option for \fBrdup-mirror\fR.
+Note the \fI-c\fR option for \fBrdup-snap\fR. Also note that the you
+cannot change the FORMAT of the output of \fBrdup-gzip\fR. The FORMAT
+used is the default format of rdup.
 
 .SH OPTIONS
 .TP

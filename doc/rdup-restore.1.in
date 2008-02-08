@@ -2,7 +2,7 @@
 .TH RDUP-RESTORE 1 "14 Mar 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-rdup-restore \- restore a filesystem from a specific directory
+rdup-restore \- restore a filesystem from a specific backup directory
 
 .SH SYNOPSIS
 .B rdup-restore
@@ -28,13 +28,6 @@ There is no provisioning for \fBssh\fR so unless you have configured
 Also note that the PATH on the remote host should be set in such a way that all
 the rdup-utils can be found.
 .PP
-Multiple local sources are allowed, so that:
-
-	rdup-restore /backup/home /backup/etc /tmp
-
-Will restore both `/backup/home' and '/backup/etc' to `/tmp'.
-
-.PP
 Restoring from a backup is as simple as:
 
       rdup-restore /vol/backup/elektron/200604/home /tmp/restore
@@ -42,6 +35,13 @@ Restoring from a backup is as simple as:
 Note: The restored files "inherit" the `/vol/backup/elektron/200604'
 prefix. So the restored files are found in the directory:
 `/tmp/home/vol/backup/elektron/200604/home'.
+.PP
+Multiple local sources are allowed, so that:
+
+	rdup-restore /backup/home /backup/etc /tmp
+
+Will restore both `/backup/home' and '/backup/etc' to `/tmp'.
+
 
 .SH OPTIONS
 .TP
@@ -89,7 +89,6 @@ Restoring from a local backup:
 Restoring from a remote server:
 
          rdup-restore ssh://miekg@remove/home/miekg/bin /tmp/restore
-
 
 .SH SEE ALSO
 rdup(1) and rdup-simple(1).
