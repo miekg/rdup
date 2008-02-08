@@ -1,5 +1,6 @@
 10 Feb 2008: 0.5.5 Miek <miek@miek.nl>
- -- code cleanups --
+ -- code cleanups and license change: GPL 3 --
+ * Changed license to GPL 3
  * Print the octal mode (%b) with 4 digits to also allow
     for the correct transfer of sgid/suid/sticky bits.
  * Cleanup the perl code
