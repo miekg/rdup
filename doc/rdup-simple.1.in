@@ -120,6 +120,10 @@ inserts \fBrdup-gzip\fR in the pipeline.
 .B \-v
 Echo the files processed to standard error.
 .TP
+.B \-H
+Make hourly backups. The backup directory will be extended with a hour
+string: YYYY/MM/HH.
+.TP
 .B \-h
 Show a short help message.
 .TP

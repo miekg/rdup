@@ -21,7 +21,7 @@ usage() {
         echo
         echo DIR \ - directories to back up
         echo +N \ \ - Look N days back for previous backups, defaults to 8
-	echo "         hours when using -H"
+	echo "       hours when using -H"
 	echo DEST - where to store the backup. This can be:
 	echo "	ssh://user@host/directory (note: no colon after the hostname"
 	echo "	ssh://host/directory"
