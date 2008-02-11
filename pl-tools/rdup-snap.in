@@ -18,7 +18,7 @@ require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $ts = time;
 my $progName = basename $0;
-my ($help, $version, $verbose, $attr, $remote, $backupDir);
+my ($help, $version, $verbose, $attr, $remote, $hourly, $backupDir);
 
 GetOptions("h" => \$help,
         "V" => \$version,

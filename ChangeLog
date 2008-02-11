@@ -3,6 +3,7 @@
  * Changed license to GPL 3
  * Print the octal mode (%b) with 4 digits to also allow
     for the correct transfer of sgid/suid/sticky bits.
+ * Add support in rdup-snap for hourly backups
  * Cleanup the perl code
  * Fixup the documentation
 

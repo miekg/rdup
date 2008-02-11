@@ -21,6 +21,7 @@ usage() {
         echo
         echo DIR \ - directories to back up
         echo +N \ \ - Look N days back for previous backups, defaults to 8
+	echo "         hours when using -H"
 	echo DEST - where to store the backup. This can be:
 	echo "	ssh://user@host/directory (note: no colon after the hostname"
 	echo "	ssh://host/directory"
@@ -33,6 +34,7 @@ usage() {
         echo " -z         compress all files, using gzip.pl"
 	echo "            If both -z and -k are given, compression is done first"
         echo " -E FILE    use FILE as an exclude list"
+        echo " -H         perform hourly backups"
         echo " -f         force a full dump"
         echo " -a         write extended attributes with uid/gid"
         echo " -v         echo the files processed to stderr"
@@ -50,9 +52,10 @@ l="-l"
 enc=false
 etc=~/.rdup
 force=false
+hour=""
 DAYS=8
 
-while getopts "E:k:vfzxahV" o; do
+while getopts "E:k:vfzxahHV" o; do
         case $o in
 		E)
                 if [[ -z "$OPTARG" ]]; then
@@ -85,6 +88,7 @@ while getopts "E:k:vfzxahV" o; do
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
                 x) x="-x";;
+                H) NOW=`date +%Y%m/%d/%H`;hour="-H";;
                 h) usage && exit;;
                 V) version && exit;;
                 \?) _echo2 "Invalid option: $OPTARG"; exit 1;;
@@ -174,10 +178,10 @@ cmd="${exec_prefix}/bin/rdup $E $x $l $c -N $STAMP $LIST $DIRS $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then
-                ${exec_prefix}/bin/rdup-snap-link $DAYS $BACKUPDIR $NOW
+                ${exec_prefix}/bin/rdup-snap-link $hour $DAYS $BACKUPDIR $NOW
                 purpose=$?
         else
-                $ssh "rdup-snap-link $DAYS $BACKUPDIR $NOW"
+                $ssh "rdup-snap-link $hour $DAYS $BACKUPDIR $NOW"
                 purpose=$?
         fi
 else

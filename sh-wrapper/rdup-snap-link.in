@@ -23,17 +23,30 @@ if [[ -z $GNU_CP ]] ;then
 fi
 
 usage() {
-        echo "$PROGNAME DAYS BACKUPDIR NOW"
+        echo "$PROGNAME [-H] DAYS BACKUPDIR NOW"
         echo
         echo "This is a small shell script that hard links directories"
         echo "It is the basis for rdup-simple"
+	echo
+	echo "-H	include the hour in the backup directory"
         echo
         echo DAYS \ - look backup DAYS days for previous dumps
+	echo "		with -H this calculates in hours"
         echo BACKUPDIR \ - where to backup to
         echo NOW \ \ - Current date in YYYY/MM format
+	echo "          With -H, current date in YYYY/MM/HH format"
 }
 
 PROGNAME=$0
+# parse our only option
+getopts "H" hour;
+if [[ $hour == "H" ]]; then
+    hour=true;
+    shift;
+else
+    hour=false
+fi
+
 if [[ $# -ne 3 ]]; then
         usage
         exit 2
@@ -50,8 +63,13 @@ what() {
         fi
         # linux thing
         while [[ $i -le $_DAYS ]]; do
-                dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
-                mon=`$GNU_DATE +%Y%m`
+		if $hour; then
+		    dir=`$GNU_DATE +%Y%m/%d/%H --date "$i hours ago"`
+		    mon=`$GNU_DATE +%Y%m/%d`
+		else
+		    dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
+		    mon=`$GNU_DATE +%Y%m`
+		fi
                 if [[ -d $_BACKUPDIR/$dir ]]; then
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
