@@ -26,8 +26,10 @@ The
 .IR FILELIST
 is a internal list \fBrdup\fR writes to, to keep track of which files
 are in a backup. If you don't want this (i.e. make a full
-backup), use \fI/dev/null\fR here. This file is needed to calculate
-which files are to removed from a backup.
+backup), use \fI/dev/null\fR here. The file \fI/dev/null\fR is handled
+specially by \fBrdup\fR: if detected this file isn't even opened.
+
+FILELIST is needed to calculate which files are to removed from a backup.
 .PP
 The
 .IR DIRS/FILES

@@ -1,5 +1,6 @@
        2008: 0.5.6 Miek <miek@miek.nl>
  -- ?? --
+ * Document the use of /dev/null better in rdup.1
 
 
 12 Feb 2008: 0.5.5 Miek <miek@miek.nl>
