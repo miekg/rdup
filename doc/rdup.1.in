@@ -291,7 +291,7 @@ always be zero.
 the pathname
 .PP
 A typical example look like this:
-        +- 755 1000 1000 8 11288 bin/rdup
+        +- 0755 1000 1000 8 11288 bin/rdup
 .PP
 This example tells us, that it should be backed up, it has a user id
 and group id of 1000, the length of the path is 8 bytes, the size
@@ -322,7 +322,7 @@ The output when using the \-c is changed as follows, for:
 .B o directories:
 the FILE_SIZE is zero and no content is printed. Thus:
 .RS
-        +d 755 1000 1000 11 0\\n
+        +d 0755 1000 1000 11 0\\n
         \fB/home/miekg\fR
 .RE
 .TP
@@ -330,7 +330,7 @@ the FILE_SIZE is zero and no content is printed. Thus:
 the FILE_SIZE is used as-is and the entire file contents
 is printed to standard output. Thus:
 .RS
-        +- 644 1000 1000 32 6\\n
+        +- 0644 1000 1000 32 6\\n
         \fB/home/miekg/svn/rdup/trunk/aaa/a\fR\fIhello\fR
 .RE
 Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
@@ -339,7 +339,7 @@ Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
 the FILE_SIZE is set to the size of the target name and instead
 of printing the file contents the target name is printed. Thus:
 .RS
-        +l 777 1000 1000 34 1\\n
+        +l 0777 1000 1000 34 1\\n
         \fB/home/miekg/svn/rdup/trunk/aaa/def\fR\fIb\fR
 .RE
 Where \fBaaa/def\fR is a symbolic link that points to 'b'
