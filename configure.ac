@@ -43,6 +43,7 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-crypt.1
                  doc/rdup-gzip.1
                  doc/rdup-gpg.1
+                 doc/rdup-backups.1
                  shared/shared.sh
                  shared/shared.pl
                  sh-wrapper/rdup-snap-here

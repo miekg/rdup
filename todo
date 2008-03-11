@@ -10,6 +10,7 @@ o encrypted file names?
 o -e option
 o check extended attributes too? 
     Would be fairly easy?
+o -0 also affects the exclude, handig?
 
 :tests:
 o add conformence test; symlinks etc.

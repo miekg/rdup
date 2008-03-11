@@ -219,8 +219,7 @@ main(int argc, char **argv)
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
-	char 	*crawl;
-	char    pwd[BUFSIZE + 1];
+	char    pwd[BUFSIZE + 1];	/* BUFSIZE is way larger then PATH_MAX */
 	char    *time;
 	gboolean devnull = FALSE;	/* hack: remember if we open /dev/null */
 
@@ -343,20 +342,17 @@ main(int argc, char **argv)
 	}
 	
 	for (i = 1; i < argc; i++) {
-		if (argv[i][0] != DIR_SEP) {
-			crawl = g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]);
-		} else {
-			crawl = g_strdup(argv[i]);
-		}
-
+		if (! realpath(argv[i], (char*)&pwd)) {
+			msg("Could not resolve %s with \'realpath', skipping", argv[i]);
+			continue;
+		}	
 		/* add dirs leading up the dir/file */
-		if (!dir_prepend(backup, crawl)) {
-			msg("Skipping `%s\'", crawl);
+		if (!dir_prepend(backup, pwd)) {
+			msg("Skipping `%s\'", pwd);
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, crawl, FALSE);
-		g_free(crawl);
+		dir_crawl(backup, pwd, FALSE);
 	}
 #ifdef _DEBUG_RACE
 	fprintf(stderr, "** Sleeping\n");

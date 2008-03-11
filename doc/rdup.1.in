@@ -114,9 +114,10 @@ the following regular expression: '/home/miekg/blaat'.
 If you want
 to exclude all .mozilla/cache directories of all users you can 
 use '/home/.*/.mozilla/cache/.*'. This doesn't exclude the directory
-itself. 
+itself and I'm assuming that the users' home directories are found
+under '/home'.
 
-Note that \fBrdup\fR does not print directories with a
+Also note that \fBrdup\fR does not print directories with a
 trailing slash.
 .RE
 
