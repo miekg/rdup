@@ -1,4 +1,4 @@
-       2008: 0.5.6 Miek <miek@miek.nl>
+13 Mar 2008: 0.5.6 Miek <miek@miek.nl>
  -- Bugfixes and documentation improvements --
  * Document the use of /dev/null better in rdup.1
  * Knut Franke: generate rdup-backups.1 from configure.ac
