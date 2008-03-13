@@ -2,8 +2,8 @@
  -- Bugfixes and documentation improvements --
  * Document the use of /dev/null better in rdup.1
  * Knut Franke: generate rdup-backups.1 from configure.ac
- * Dave Foster: fixup relative pathname argument in conjunction 
-   with the -E (exclude) option
+ * fixup relative pathname argument in conjunction 
+   with the -E (exclude) option (reported by Dave Foster)
 
 
 12 Feb 2008: 0.5.5 Miek <miek@miek.nl>

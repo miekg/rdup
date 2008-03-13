@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2005 - 2007 Miek Gieben
+ * Copyright (c) 2005 - 2008 Miek Gieben
  * See LICENSE for the license
  */
 

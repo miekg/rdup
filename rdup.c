@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2005 - 2007 Miek Gieben
+ * Copyright (c) 2005 - 2008 Miek Gieben
  * See LICENSE for the license
  */
 
@@ -219,7 +219,8 @@ main(int argc, char **argv)
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
-	char    pwd[BUFSIZE + 1];	/* BUFSIZE is way larger then PATH_MAX */
+	char    pwd[BUFSIZE + 1];
+	char	*path;
 	char    *time;
 	gboolean devnull = FALSE;	/* hack: remember if we open /dev/null */
 
@@ -342,10 +343,22 @@ main(int argc, char **argv)
 	}
 	
 	for (i = 1; i < argc; i++) {
-		if (! realpath(argv[i], (char*)&pwd)) {
+		if (argv[i][0] != DIR_SEP) {
+		    path = abspath(g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]));
+		} else
+		    path = abspath(argv[i]);
+
+		printf("-- %s --\n", path);
+
+	    /*
+		if (! abspath(argv[i], (char*)&pwd)) {
 			msg("Could not resolve %s with \'realpath', skipping", argv[i]);
 			continue;
 		}	
+		*/
+
+		continue;
+
 		/* add dirs leading up the dir/file */
 		if (!dir_prepend(backup, pwd)) {
 			msg("Skipping `%s\'", pwd);
