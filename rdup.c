@@ -353,10 +353,6 @@ main(int argc, char **argv)
 			continue;
 		}
 
-		msg("path %s", path);
-
-		continue;
-
 		/* add dirs leading up the dir/file */
 		if (!dir_prepend(backup, path)) {
 			msg("Skipping `%s\'", path);

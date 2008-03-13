@@ -17,8 +17,6 @@ char * abspath(char *path) {
 	char *abspath = NULL;
 	int i;
 
-	printf("in %s\n", path);
-
 	if (!g_path_is_absolute(path))
 		return NULL;
 
@@ -35,13 +33,11 @@ char * abspath(char *path) {
 	/* jump from slash to slash */
 	for (p = abspath2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
-		printf("piece %s\n", p);
 		/* handle ///, . and .. */
 		if (*p == '\0' || (strcmp(p, ".") == 0)) {
 			/* do nothing */
 		} else if (strcmp(p, "..") == 0) {
 			/* go back a slash */
-			printf("back %s\n", p);
 			slash = strrchr(abspath, DIR_SEP);
 			*slash = '\0';
 			*c = DIR_SEP;
