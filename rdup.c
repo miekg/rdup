@@ -348,8 +348,10 @@ main(int argc, char **argv)
 		else
 		    path = abspath(argv[i]);
 
+#ifdef _DEBUG_RACE
 		msg("path %s\n", path);
-
+#endif /* _DEBUG_RACE */
+		
 		if (!path) {
 			msg("Skipping `%s\'", argv[i]);
 			continue;

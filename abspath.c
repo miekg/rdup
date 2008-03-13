@@ -20,10 +20,11 @@ char * abspath(char *path) {
 	if (!g_path_is_absolute(path))
 		return NULL;
 
-	printf("%s\n", path);
-
+	/* abspath can be NULL or abspath[0] == '\0'. The NULL 
+	 * is initial. the [0] == '\0' is when we got back to 
+	 * the root
+	 */
 	abspath = NULL;
-
 	abspath2 = g_strdup(path);
 	i = strlen(abspath2);
 	if (i > BUFSIZ)
@@ -39,30 +40,22 @@ char * abspath(char *path) {
 	/* jump from slash to slash */
 	for (p = abspath2; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
-		printf("part %s\n", p);
-		/* handle ///, . and .. */
 		if (*p == '\0' || (strcmp(p, ".") == 0)) {
-			printf("nothing\n");
 			/* do nothing */
 			p = c;
 		} else if (strcmp(p, "..") == 0) {
 			/* go back a slash */
-				
 			if (abspath == NULL || abspath[0] == '\0') {
-				printf("NULL\n");
 				abspath = g_strdup("/");
 			} else {
-				printf("abs -%s-\n", abspath);
 				slash = strrchr(abspath, DIR_SEP);
 				*slash = '\0';
 				*c = DIR_SEP;
 			}
 		} else {
-			printf("copy\n");
-			if (abspath == NULL || abspath[0] == '\0')  {
+			if (abspath == NULL || abspath[0] == '\0' ||
+				(strcmp(abspath, "/") == 0) )  {
 				/* lone / */
-				abspath =  g_strconcat(DIR_SEP_STR, p, NULL);
-			} else if (strcmp(abspath, "/") == 0) {
 				abspath =  g_strconcat(DIR_SEP_STR, p, NULL);
 			} else {
 				abspath = g_strjoin(DIR_SEP_STR, abspath, p, NULL);
