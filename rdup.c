@@ -348,6 +348,8 @@ main(int argc, char **argv)
 		else
 		    path = abspath(argv[i]);
 
+		msg("path %s\n", path);
+
 		if (!path) {
 			msg("Skipping `%s\'", argv[i]);
 			continue;
