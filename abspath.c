@@ -22,6 +22,8 @@ char * abspath(char *path) {
 
 	abspath2 = g_strdup(path);
 	i = strlen(abspath2);
+	if (i > BUFSIZ)
+		return NULL;
 
 	/* add closing / (guard) */
 	if (abspath2[i - 1] != DIR_SEP) {
