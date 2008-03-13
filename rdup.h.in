@@ -42,6 +42,7 @@
 #define NOBACKUP        ".nobackup"
 #define NULL_DUMP       0
 #define DIR_SEP         '/'
+#define DIR_SEP_STR    "/"
 #define VALUE          (void*)1 /* g_tree_lookup returns this in rdup */
 #define NO_PRINT       (void*)2 /* don't print values with this flag */
 #define D_STACKSIZE    100
@@ -95,6 +96,8 @@ gboolean gfunc_regexp(GSList *l, char *n);
 void msg(const char *fmt, ...);
 /* getdelim.c */
 ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+/* abspath.c */
+char * abspath(char *path);
 /* signal.c */
 void signal_abort(int signal);
 #endif  /* _RDUP_H */

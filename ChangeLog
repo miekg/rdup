@@ -4,6 +4,7 @@
  * Knut Franke: generate rdup-backups.1 from configure.ac
  * fixup relative pathname argument in conjunction 
    with the -E (exclude) option (reported by Dave Foster)
+   Added: abspath.c
 
 
 12 Feb 2008: 0.5.5 Miek <miek@miek.nl>

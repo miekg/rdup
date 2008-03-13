@@ -343,29 +343,27 @@ main(int argc, char **argv)
 	}
 	
 	for (i = 1; i < argc; i++) {
-		if (argv[i][0] != DIR_SEP) {
+		if (!g_path_is_absolute(argv[i])) 
 		    path = abspath(g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]));
-		} else
+		else
 		    path = abspath(argv[i]);
 
-		printf("-- %s --\n", path);
-
-	    /*
-		if (! abspath(argv[i], (char*)&pwd)) {
-			msg("Could not resolve %s with \'realpath', skipping", argv[i]);
+		if (!path) {
+			msg("Skipping `%s\'", argv[i]);
 			continue;
-		}	
-		*/
+		}
+
+		msg("path %s", path);
 
 		continue;
 
 		/* add dirs leading up the dir/file */
-		if (!dir_prepend(backup, pwd)) {
-			msg("Skipping `%s\'", pwd);
+		if (!dir_prepend(backup, path)) {
+			msg("Skipping `%s\'", path);
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, pwd, FALSE);
+		dir_crawl(backup, path, FALSE);
 	}
 #ifdef _DEBUG_RACE
 	fprintf(stderr, "** Sleeping\n");
