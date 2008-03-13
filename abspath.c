@@ -3,7 +3,8 @@
 /*
  * Remove /./ and /../ and // from a pathname
  * ... will trigger an error
- * An absolute pathname argument is required.
+ * An absolute pathname argument is required. I don't think
+ * this is true
  *
  * Returns NULL on error, otherwise NULL terminated
  * sanitized pathname.
