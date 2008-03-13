@@ -8,7 +8,6 @@
  *
  * Also see realpath(3)
  */
-
 char * abspath(char *path) {
 	char *p, *c;
 	char *slash, *abspath2;
@@ -44,7 +43,7 @@ char * abspath(char *path) {
 		} else if (strcmp(p, "..") == 0) {
 			/* go back a slash */
 			if (abspath == NULL || abspath[0] == '\0') {
-				abspath = g_strdup("/");
+				abspath = g_strdup(DIR_SEP_STR);
 			} else {
 				slash = strrchr(abspath, DIR_SEP);
 				*slash = '\0';
@@ -52,7 +51,7 @@ char * abspath(char *path) {
 			}
 		} else {
 			if (abspath == NULL || abspath[0] == '\0' ||
-				(strcmp(abspath, "/") == 0) )  {
+				(strcmp(abspath, DIR_SEP_STR) == 0) )  {
 				/* lone / */
 				abspath =  g_strconcat(DIR_SEP_STR, p, NULL);
 			} else {
@@ -63,7 +62,7 @@ char * abspath(char *path) {
 		p = c;
 	}
 	if (abspath == NULL || abspath[0] == '\0')
-		abspath = g_strdup("/");
+		abspath = g_strdup(DIR_SEP_STR);
 
 	return abspath;
 }
