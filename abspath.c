@@ -2,14 +2,11 @@
 
 /*
  * Remove /./ and /../ and // from a pathname
- * ... will trigger an error
- * An absolute pathname argument is required. I don't think
- * this is true
- *
+ * An absolute pathname argument is required. 
  * Returns NULL on error, otherwise NULL terminated
  * sanitized pathname.
  *
- * Also see man realpath(3)
+ * Also see realpath(3)
  */
 
 char * abspath(char *path) {
