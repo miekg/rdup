@@ -65,8 +65,6 @@ dir_prepend(GTree *t, char *path)
 		path2[len + 1] = '\0';
 	}
 
-	printf("%s\n", path2);
-
 	for (p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if (lstat(path2, &s) != 0) {
@@ -120,6 +118,8 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 	struct entry **dirstack =
 		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
 
+	printf("%s\n", path);
+
 	if(!(dir = opendir(path))) {
 		/* files are also allowed, check for this, if it isn't give the error */
 		if ((f = fopen(path, "r"))) {
@@ -151,8 +151,13 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 				!g_ascii_strcasecmp(dent->d_name, ".."))
 			continue;
 
-		curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
-		curpath_len = strlen(curpath);
+		if (strcmp(path, DIR_SEP_STR) == 0)  {
+			curpath = g_strdup_printf("%c%s", DIR_SEP, dent->d_name);
+			curpath_len = strlen(curpath);
+		} else {
+			curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
+			curpath_len = strlen(curpath);
+		}
 
 		if (lstat(curpath, &s) != 0) {
 			msg("Could not stat path `%s\': %s", curpath, strerror(errno));
