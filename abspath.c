@@ -14,6 +14,9 @@ char * abspath(char *path) {
 	char *abspath;
 	int i;
 
+	if (!path)
+		return NULL;
+
 	if (!g_path_is_absolute(path))
 		return NULL;
 
@@ -52,8 +55,7 @@ char * abspath(char *path) {
 		} else {
 			if (abspath == NULL || abspath[0] == '\0' ||
 				(strcmp(abspath, DIR_SEP_STR) == 0) )  {
-				/* lone / */
-				abspath =  g_strconcat(DIR_SEP_STR, p, NULL);
+				abspath = g_strconcat(DIR_SEP_STR, p, NULL);
 			} else {
 				abspath = g_strjoin(DIR_SEP_STR, abspath, p, NULL);
 			}

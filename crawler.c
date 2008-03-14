@@ -65,6 +65,8 @@ dir_prepend(GTree *t, char *path)
 		path2[len + 1] = '\0';
 	}
 
+	printf("%s\n", path2);
+
 	for (p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if (lstat(path2, &s) != 0) {
@@ -145,14 +147,14 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
-		if(!g_ascii_strcasecmp(dent->d_name, ".") || 
+		if (!g_ascii_strcasecmp(dent->d_name, ".") || 
 				!g_ascii_strcasecmp(dent->d_name, ".."))
 			continue;
 
 		curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
 		curpath_len = strlen(curpath);
 
-		if(lstat(curpath, &s) != 0) {
+		if (lstat(curpath, &s) != 0) {
 			msg("Could not stat path `%s\': %s", curpath, strerror(errno));
 			g_free(curpath);
 			continue;
