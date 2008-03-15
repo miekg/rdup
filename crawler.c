@@ -118,8 +118,6 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 	struct entry **dirstack =
 		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
 
-	printf("%s\n", path);
-
 	if(!(dir = opendir(path))) {
 		/* files are also allowed, check for this, if it isn't give the error */
 		if ((f = fopen(path, "r"))) {

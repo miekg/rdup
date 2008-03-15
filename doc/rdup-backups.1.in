@@ -29,6 +29,10 @@ and \fBrdup-snap-link\fR. It further more supports encryption,
 compressions and remote backups. This works by inserting the
 apropiate rdup helper utility in the pipeline.
 
+\bRrdup\fR can be used to create a backup and to restore from a backup.
+In either case it is a matter a generating a list of files and copying
+them somewhere else.
+
 .SH BACKING UP WITH RDUP-SIMPLE
 When using \fBrdup-simple\fR the backup process consists out of two
 phases. During phase one a copy is made of any previous backups backups.
