@@ -44,6 +44,7 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-gzip.1
                  doc/rdup-gpg.1
                  doc/rdup-backups.1
+                 doc/rdup-hist.1
                  shared/shared.sh
                  shared/shared.pl
                  sh-wrapper/rdup-snap-here
@@ -55,6 +56,7 @@ AC_CONFIG_FILES([GNUmakefile
                  pl-tools/rdup-snap
                  pl-tools/rdup-cp
                  pl-tools/rdup-gpg
+                 pl-tools/rdup-hist
                  ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

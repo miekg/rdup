@@ -1,0 +1,64 @@
+'\" t
+.TH RDUP-HIST 1 "16 Mar 2008" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
+
+.SH NAME
+rdup-hist \- show files from the backup
+
+.SH SYNOPSIS
+.B rdup-hist
+.IR -b PATH
+[
+.IR -NUMBER[d|w|m|y]
+]
+[
+.IR OPTION
+]
+.IR
+PATH
+
+.SH DESCRIPTION
+\fBrdup-hist\fR show the last five (5) back upped versions of
+\fIPATH\fR. The listing contains the backup directory, an uid, a gid
+and the file size:
+
+    EXAMPLE
+
+.SH OPTIONS
+.TP
+.B -NUMBER[d|w|m|y]
+Start looking for the backup \fINUMBER\fR days ago. The optional
+modifiers d, w, m and y stand for day, week (7 days), month (30 days)
+and year (365 days). If you want to look for \fIPATH\fR in last year
+backup you can use:
+
+    rdup-hist -1y PATH
+
+.TP
+.B \-b PATH
+The root of the backup. This is a mandatory argument.
+
+.B \-H HOSTNAME
+Set an optional hostname, if this option if not given it default to
+the current host (value of hostname).
+
+.TP
+.B \-d 
+Show a diff -u of \fIPATH\fR and the current file.
+
+.TP 
+.B \-c 
+Show the contents of \fIPATH\fR in the backup, this is printed to STDOUT.
+
+.TP
+.B \-C
+Copy the file from the backup to the current directory, `.rdup' is
+appended to the name. This uses `cp -i'.
+
+.B \-h
+Short help message.
+.TP
+.B \-V
+Show the version.
+
+.SH SEE ALSO
+rdup(1).

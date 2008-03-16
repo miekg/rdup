@@ -1,7 +1,9 @@
 xx YYY 2008: 0.5.7 Miek <miek@miek.nl>
- -- ?? --
+ -- spring cleaning --
  * removed rdup-purge, this can be done in a shell oneliner
-
+ * added rdup-hist to show files from the backup and copy, cat
+   or diff them.
+   
 
 15 Mar 2008: 0.5.6 Miek <miek@miek.nl>
  -- Bugfixes and documentation improvements --
