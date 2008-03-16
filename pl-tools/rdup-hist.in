@@ -86,7 +86,7 @@ sub usage {
     print "Look for PATH in the backup and print the last 5 backups\n";
     print "With the -NUMBER option the searching starts NUMBER days ago\n";
     print "The -NUMBER accepts an modifier:\n";
-    print "d (day, default), w (week), m (month) and y (year) modifier\n\n";
+    print "d (day, default), w (week), m (month) and y (year)\n\n";
     print "OPTIONS\n";
     print " -b  PATH  root of the backup directory\n";
     print " -H  HOST  optional hostname, defaults to current host\n";
