@@ -18,8 +18,8 @@ PATH
 
 .SH DESCRIPTION
 \fBrdup-hist\fR show the last five (5) back upped versions of
-\fIPATH\fR. The listing contains the backup directory, an uid, a gid
-and the file size:
+\fIPATH\fR. The listing contains the backup directory,
+an uid, a gid and the file size:
 
  $ rdup-hist -10w -b /raid/backup ~/miek.nl/index.html  
 
@@ -29,6 +29,7 @@ and the file size:
     200801/03 1000 1000 28745 /home/miekg/miek.nl/index.html
     200801/02 1000 1000 28745 /home/miekg/miek.nl/index.html
 
+No output means that nothing was found.
 
 .SH OPTIONS
 .TP
