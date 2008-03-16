@@ -24,16 +24,18 @@ my $back = 0;
 my %mod = ( d => 1, w => 7, m => 30, y => 365 );
 
 # check if we have a -NUMBER[modifier] option
+my $i = 0;
 foreach my $opt (@ARGV) {
     if ($opt =~ /-([0-9]+)(d|w|m|y)?/) {
-	shift;
 	$back = $1;
 	if ($2) {
 	    # multiple with the modifier
 	    $back *= $mod{$2} 
 	}
+	splice(@ARGV, $i, 1); # kill the optin
 	last;
     }
+    $i++;
 } 
 
 # normal options

@@ -16,7 +16,7 @@ my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $progName = basename $0;
-my ($help, $verbose, $attr, $remote, $from, $toDir, $strip);
+my ($help, $version, $verbose, $attr, $remote, $from, $toDir, $strip);
 
 $strip = 0;
 GetOptions(h => \$help,
