@@ -84,9 +84,9 @@ sub backinfo($) {
 sub usage {
     print "$progName [-NUMBER[d|w|m|y]] [OPTIONS] PATH\n\n";
     print "Look for PATH in the backup and print the last 5 backups\n";
-    print "With the -NUMBER option the looking starts NUMBER days ago\n";
-    print "The -NUMBER accepts an options d (day, default), w (week), m (month) and\n";
-    print " y (year) modifier\n\n";
+    print "With the -NUMBER option the searching starts NUMBER days ago\n";
+    print "The -NUMBER accepts an modifier:\n";
+    print "d (day, default), w (week), m (month) and y (year) modifier\n\n";
     print "OPTIONS\n";
     print " -b  PATH  root of the backup directory\n";
     print " -H  HOST  optional hostname, defaults to current host\n";
@@ -111,9 +111,7 @@ for (my $i = 0; $i < 5; $i++) {
     # cat
     if ($cat) {
 	open F, $p or die "** Can not open \'$p'";
-	while(<F>) {
-	    print;
-	}
+	while(<F>) { print; }
 	close F;
 	last;
     }
