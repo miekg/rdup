@@ -16,15 +16,18 @@ my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
 
 my $progName = basename $0;
-my ($verbose, $attr, $remote, $from, $toDir, $strip);
+my ($help, $verbose, $attr, $remote, $from, $toDir, $strip);
 
 $strip = 0;
-GetOptions(h => \&usage,
-        V => \&version($progName),
+GetOptions(h => \$help,
+        V => \$version,
         a => \$attr, # extended attr support
 	"p=i" => \$strip, # strip i slashes
         c => \$remote,
         v => \$verbose);
+
+version($progName) if $version;
+usage() if $help;
 
 die "** Need a directory to copy to" if $#ARGV < 0;
 $toDir = shift;

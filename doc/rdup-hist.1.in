@@ -6,13 +6,13 @@ rdup-hist \- show files from the backup
 
 .SH SYNOPSIS
 .B rdup-hist
-.IR -b PATH
 [
 .IR -NUMBER[d|w|m|y]
 ]
 [
 .IR OPTION
 ]
+.IR -b PATH
 .IR
 PATH
 
@@ -21,7 +21,14 @@ PATH
 \fIPATH\fR. The listing contains the backup directory, an uid, a gid
 and the file size:
 
-    EXAMPLE
+ $ rdup-hist -10w -b /raid/backup ~/miek.nl/index.html  
+
+    200801/06 1000 1000 28745 /home/miekg/miek.nl/index.html
+    200801/05 1000 1000 28745 /home/miekg/miek.nl/index.html
+    200801/04 1000 1000 28745 /home/miekg/miek.nl/index.html
+    200801/03 1000 1000 28745 /home/miekg/miek.nl/index.html
+    200801/02 1000 1000 28745 /home/miekg/miek.nl/index.html
+
 
 .SH OPTIONS
 .TP

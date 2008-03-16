@@ -17,7 +17,7 @@ my $BACKUPROOT;
 my $HOST = hostname;
 my $DAYSECONDS = 86400;
 my $progName = basename $0;
-my ($diff, $cat, $copy);
+my ($diff, $cat, $copy, $version, $help);
 
 my $abs_path;
 my $back = 0;
@@ -37,13 +37,16 @@ foreach my $opt (@ARGV) {
 } 
 
 # normal options
-GetOptions(h => \&usage,
-	H => \$HOST,
-	V => \&version($progName),
-	b => \$BACKUPROOT,
+GetOptions(h => \$help,
+	"H=s" => \$HOST,
+	V => \$version,
+	"b=s" => \$BACKUPROOT,
 	d => \$diff,
 	c => \$cat,
 	C => \$copy);
+
+usage() if $help;
+version($progName) if $version;
 
 if (! defined $BACKUPROOT) {
     die "** Need the -b option";	
@@ -77,7 +80,7 @@ sub backinfo($) {
 }
 
 sub usage {
-    print "$progName [OPTIONS] [-NUMBER[d|w|m|y]] PATH\n\n";
+    print "$progName [-NUMBER[d|w|m|y]] [OPTIONS] PATH\n\n";
     print "Look for PATH in the backup and print the last 5 backups\n";
     print "With the -NUMBER option the looking starts NUMBER days ago\n";
     print "The -NUMBER accepts an options d (day, default), w (week), m (month) and\n";

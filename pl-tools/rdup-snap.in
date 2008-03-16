@@ -20,12 +20,15 @@ my $ts = time;
 my $progName = basename $0;
 my ($help, $version, $verbose, $attr, $remote, $hourly, $backupDir);
 
-GetOptions("h" => \&help,
-        "V" => \&version($progName),
+GetOptions("h" => \$help,
+        "V" => \$version,
         "a" => \$attr, # extended attr support
         "c" => \$remote,
         "v" => \$verbose,
         "b=s" => \$backupDir);
+
+usage() if $help;
+version($progName) if $version;
 
 die "** Need a -b option" if !$backupDir;
 chomp (my $hostname = `hostname`);
