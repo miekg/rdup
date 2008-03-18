@@ -13,6 +13,9 @@
 %%\date{}
 %%\maketitle
 \section*{Abstract}
+
+OLD DOCUMENT WHICH IS NOT YET UP TO DATE WITH RESPECT TO RDUP 0.5.7
+
 \rdup{} is small, GPL licensed utility which, together with some scripts, can
 be easily used to setup and maintain backups. These can either be local
 of networked backups. Encryption and compression is also supported.
@@ -61,13 +64,6 @@ way of doing backups. As said, \rdup{} does not create backups. It only
 prints a list of files that are changed or removed. Or all files in case
 of a null dump, to standard output. 
 
-\section{Scheme Implemented in Current Scripts}
-\label{sec:scheme implemented in current scripts}
-One full backup each month, incremental updates after that.
-
-TODO
-
-
 \chapter{Components of \rdup}
 
 \rdup{} consist out of two parts, small core written in C and
@@ -81,40 +77,17 @@ need to be removed and what files are new or modified. That list is then
 printed to standard output.
 
 \section{Scripts}
-The current shell scripts implement the backup and restore policy, see
-Section \ref{sec:scheme implemented in current scripts}.
-The are quite a few of them:
-\begin{description}
-\item[\cmd{crypt.sh}]{-- encrypt/decrypt the files' contents,}
-\item[\cmd{gzip.sh}]{-- compress/decrypt the files' contents,}
-\item[\cmd{mirror.sh}]{-- store the backup to its backup directory,}
-\item[\cmd{rdup-dump}]{-- convenience wrapper around \cmd{rdup} and \cmd{mirror.sh}.}
-\end{description}
-
-And for restoring we have:
-\begin{description}
-\item[\cmd{hist.sh}]{-- inspect the backup history of a file,}
-\item[\cmd{yesterday.sh}]{-- restore files from the backup,}
-\item[\cmd{rorrim.sh}]{-- place to-be-restored files in a directory,}
-\item[\cmd{monthday.sh}]{-- select files to restore from the backup,}
-\item[\cmd{rdup-restore}]{-- convenience wrapper around \cmd{rdup},
-\cmd{monthday.sh} and \cmd{rorrim.sh}.} 
-\end{description}
-
-Note that \cmd{gzip.sh} and \cmd{crypt.sh} can be used for 
-both backing up and restoring. See section \ref{sec:restore examples}
-for some examples.
 
 \section{How Does \rdup{} Work?}
 The data \rdup{} puts out is depicted in Figure \ref{fig:rdup output}.
 \begin{figure}[hbt]
 \begin{verbatim}
-+16877 1000 1000 11 0 /home/miekg
-+16877 1000 1000 15 0 /home/miekg/svn
-+16832 1000 1000 20 0 /home/miekg/svn/rdup
-+16832 1000 1000 26 0 /home/miekg/svn/rdup/trunk
-+33216 1000 1000 30 31 /home/miekg/svn/rdup/trunk/apt
--33216 1000 1000 29 0 /home/miekg/svn/rdup/trunk/nc
++d 0755 1000 1000 11 0 /home/miekg
++d 0755 1000 1000 15 0 /home/miekg/svn
++d 0755 1000 1000 20 0 /home/miekg/svn/rdup
++d 0755 1000 1000 26 0 /home/miekg/svn/rdup/trunk
++- 0644 1000 1000 30 31 /home/miekg/svn/rdup/trunk/apt
+-- 0644 1000 1000 29 0 /home/miekg/svn/rdup/trunk/nc
 \end{verbatim}
 \caption{A short listing of typical output from \rdup.}
 \label{fig:rdup output}
@@ -126,7 +99,8 @@ columns:
 \begin{enumerate}
 \item{\textbf{+/-} -- whether this path should be added (+) or removed
 (-),}
-\item{\textbf{mode} -- the file's protection and mode bits,}
+\item{\textbf{type} -- 'd' for directory, '-' for file,}
+\item{\textbf{perm} -- the file's protection,}
 \item{\textbf{uid} -- numeric user id,}
 \item{\textbf{gid} -- numeric group id,}
 \item{\textbf{path size} -- the length of the path,}
@@ -141,17 +115,17 @@ printed to standard output.
 
 \begin{figure}[hbt]
 \begin{verbatim}
-+16877 1000 1000 11 0 
++d 0755 1000 1000 11 0 
 /home/miekg
-+16877 1000 1000 15 0 
++d 0755 1000 1000 15 0 
 /home/miekg/svn
-+16832 1000 1000 20 0 
++d 0755 1000 1000 20 0 
 /home/miekg/svn/rdup
-+16832 1000 1000 26 0 
++d 0755 1000 1000 26 0 
 /home/miekg/svn/rdup/trunk
-+33216 1000 1000 30 31 
++- 644 1000 1000 30 31 
 /home/miekg/svn/rdup/trunk/apt#!/bin/bash script of 31 bytes ...
--33216 1000 1000 29 0 
+-- 0644 1000 1000 29 0 
 /home/miekg/svn/rdup/trunk/nc
 \end{verbatim}
 \caption{A short listing of output from \rdup{} -c.}
@@ -181,7 +155,7 @@ substitute the attributes in the uid and gid fields of its
 normal output.
 
 \chapter{Making Backups}
-The most simple use of \rdup{} is to mirror files to
+The most simple use of \rdup{} is to copy files to
 another partition/directory. The following example first
 creates a file list using \rdup{} which is then piped to 
 \cmd{mirror.sh} which processes each entry and stores the

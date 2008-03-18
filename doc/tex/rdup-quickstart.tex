@@ -27,36 +27,35 @@ all in the hands of the user.
 
 \subsection*{\textit{Backup}}
 The most convenient way to use \rdup{} is to use the wrapper
-script \cmd{rdup-dump}. Synopsis:\\
-\cmd{rdup-dump [ OPTIONS ] DIR|FILE [ DIR|FILE ]}
+script \cmd{rdup-simple}. Synopsis:\\
+\cmd{rdup-simple [ OPTIONS ] DIR|FILE [ DIR|FILE ] DEST} 
 \begin{itemize}
 \item
 Dump \path{/home} to your USB disk on \path{/media/usbdisk}:\\
-\cmd{rdup-dump -e -b /media/usbdisk/\$HOST /home}
+\cmd{rdup-simple /home /media/usbdisk/\$HOST}
 \item
 Dump compressed \path{/home} to \path{/vol/backup}:\\
-\cmd{rdup-dump -z b /vol/backup/\$HOST /home} 
+\cmd{rdup-simple /home /vol/backup} 
 \item
 Dump encrypted \path{/home} to \path{/vol/backup} at remote
 host:\\
-\cmd{rdup-dump -k secret\_file -b /vol/backup/\$HOME \\\
--c user@example.nl /home}
+\cmd{rdup-simple -k secret\_file /home \\\
+ssh://user@example.nl:/vol/backup/\$HOST}
 \end{itemize}
 
 \subsection*{\textit{Restore}}
 The most convenient way to restore with \rdup{} is by using
 the script \cmd{rdup-restore}. Synopsis:\\
-\cmd{rdup-restore [ OPTIONS ] -b TO\_DIR FROM\_DIR [ FROM\_DIR ]}
+\cmd{rdup-restore [ OPTIONS ] SOURCE [ SOURCE ... ] DIR}
 \begin{itemize}
 \item
 Restore from the latest backup from May 2006, to \path{/tmp/restore}:\\
-\cmd{rdup-restore -b /tmp/restore \\\
-/vol/backup/elektron/200605/home/miekg}
+\cmd{rdup-restore /vol/backup/elektron/200605/home/miekg /tmp/restore}
 \item
 Restore from the latest remote backup from May 2006. This backup
 is encrypted:\\
-\cmd{rdup-restore -k secret\_file -c user@example.nl -b /tmp/restore \\\
-/vol/backup/elektron/200605/home/miekg}
+\cmd{rdup-restore -k secret\_file /tmp/restore \\\
+/vol/backup/elektron/200605/home/miekg /tmp/restore}
 \end{itemize}
 
 \end{document}
