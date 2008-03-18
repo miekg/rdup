@@ -4,6 +4,8 @@ xx YYY 2008: 0.5.7 Miek <miek@miek.nl>
  * removed sh-tools/ as it was already deprecated
  * added rdup-hist to show files from the backup and copy, cat
    or diff them. Also see rdup-hist.1
+ * None of the tools log, for the sake of simplicity remove the
+   stuff
  * make the rdup-backups.1 page look nice
    
 

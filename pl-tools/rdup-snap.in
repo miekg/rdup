@@ -7,7 +7,6 @@
 use strict;
 
 use Getopt::Long qw(:config no_ignore_case bundling);
-use Sys::Syslog;
 use File::Basename;
 use File::Path;
 use File::Copy;
@@ -42,20 +41,17 @@ my $ilnk = 0;        # Number of symbolic links
 my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
-syslog_open($progName);
 if (!exist($backupDir)) {
         mkpath($backupDir) or die "** Cannot create `$backupDir': $!";
 }
 
 if ($remote) {
-        syslog_log("%s %s", "Commencing remote backup to:" ,$backupDir);
         while (<STDIN>) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
                 _mirror($backupDir);
         }
 } else {
-        syslog_log("%s %s", "Commencing local backup to:", $backupDir);
         while (<STDIN>) {
                 chomp;
                 ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
@@ -64,9 +60,6 @@ if ($remote) {
 }
 my $te = time;
 
-syslog_log("Successfully finished backup to %s in %.2f m, %.2f MB", $backupDir,
-        (($te - $ts) / 60), ($ftsize/1024/1024));
-closelog;
 printf STDERR "** #REG FILES  : %d\n", $ireg;
 printf STDERR "** #DIRECTORIES: %d\n", $idir;
 printf STDERR "** #LINKS      : %d\n", $ilnk;
