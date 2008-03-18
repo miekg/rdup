@@ -5,7 +5,7 @@ xx YYY 2008: 0.5.7 Miek <miek@miek.nl>
  * added rdup-hist to show files from the backup and copy, cat
    or diff them. Also see rdup-hist.1
  * None of the tools log, for the sake of simplicity remove the
-   stuff
+   stuff. Also gave troubles on Mac OS X.
  * make the rdup-backups.1 page look nice
    
 
