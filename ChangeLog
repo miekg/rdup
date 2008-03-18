@@ -1,11 +1,11 @@
-xx YYY 2008: 0.5.7 Miek <miek@miek.nl>
+xx Mar 2008: 0.5.7 Miek <miek@miek.nl>
  -- spring cleaning --
  * removed rdup-purge, this can be done in a shell oneliner
  * removed sh-tools/ as it was already deprecated
  * added rdup-hist to show files from the backup and copy, cat
    or diff them. Also see rdup-hist.1
- * None of the tools log, for the sake of simplicity remove the
-   stuff. Also gave troubles on Mac OS X.
+ * Remove syslogging from rdup-snap for the sake of simplicity.
+   It also gave troubles on Mac OS X.
  * make the rdup-backups.1 page look nice
    
 
