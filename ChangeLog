@@ -1,4 +1,4 @@
-xx Mar 2008: 0.5.7 Miek <miek@miek.nl>
+19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
  -- spring cleaning --
  * removed rdup-purge, this can be done in a shell oneliner
  * removed sh-tools/ as it was already deprecated
@@ -6,7 +6,7 @@ xx Mar 2008: 0.5.7 Miek <miek@miek.nl>
    or diff them. Also see rdup-hist.1
  * Remove syslogging from rdup-snap for the sake of simplicity.
    It also gave troubles on Mac OS X.
- * make the rdup-backups.1 page look nice
+ * make the rdup-backups.1 page look nicer
    
 
 15 Mar 2008: 0.5.6 Miek <miek@miek.nl>
