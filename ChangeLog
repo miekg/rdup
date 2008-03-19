@@ -1,3 +1,7 @@
+xx Apr 2008: 0.5.8 Miek <miek@miek.nl>
+  -- ?? --
+
+
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
  -- spring cleaning --
  * removed rdup-purge, this can be done in a shell oneliner
