@@ -32,7 +32,7 @@ foreach my $opt (@ARGV) {
 	    # multiple with the modifier
 	    $back *= $mod{$2} 
 	}
-	splice(@ARGV, $i, 1); # kill the optin
+	splice(@ARGV, $i, 1); # kill the option
 	last;
     }
     $i++;
