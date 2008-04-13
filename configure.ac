@@ -11,7 +11,8 @@ AC_AIX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
-AM_PATH_GLIB_2_0(2.0.0)
+#  [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND 
+AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([libglib2-dev not found !]))
 AC_CHECK_FUNCS([dirfd openat attropen])
 AC_CHECK_LIB(attr, lgetxattr)
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])

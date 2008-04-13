@@ -1,6 +1,6 @@
 xx Apr 2008: 0.5.8 Miek <miek@miek.nl>
   -- ?? --
-
+ * stop ./configure when glib2-dev is not found
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
  -- spring cleaning --
