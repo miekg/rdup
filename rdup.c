@@ -109,7 +109,7 @@ g_tree_read_file(FILE *fp)
 		}
 
 		if (s < LIST_MINSIZE) {
-			msg(gettext("Corrupt entry in filelist at line: %zd"), l);
+			msg(_("Corrupt entry in filelist at line: %zd"), l);
 			l++;
 			continue;
 		}
@@ -123,7 +123,7 @@ g_tree_read_file(FILE *fp)
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
-			msg(gettext("Corrupt entry in filelist at line: %zd, `%s\' should be numerical"), l, buf);
+			msg(_("Corrupt entry in filelist at line: %zd, `%s\' should be numerical"), l, buf);
 			l++; 
 			continue;
 		}
@@ -132,14 +132,14 @@ g_tree_read_file(FILE *fp)
 		q = buf + LIST_SPACEPOS + 1;
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
 		if (!p) {
-			msg( gettext("Corrupt entry in filelist at line: %zd, no space found"), l);
+			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
 			l++; 
 			continue;
 		}
 		*p = '\0';
 		f_dev = (dev_t)atoi(q);
 		if (f_dev == 0) {
-			msg(gettext("Corrupt entry in filelist at line: %zd, zero device"), l);
+			msg(_("Corrupt entry in filelist at line: %zd, zero device"), l);
 			l++; 
 			continue;
 		}
@@ -148,14 +148,14 @@ g_tree_read_file(FILE *fp)
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) {
-			msg(gettext("Corrupt entry in filelist at line: %zd, no space found"), l);
+			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
 			l++; 
 			continue;
 		}
 		*p = '\0';
 		f_ino = (ino_t)atoi(q);
 		if (f_ino == 0) {
-			msg(gettext("Corrupt entry in filelist at line: %zd, zero inode"), l);
+			msg(_("Corrupt entry in filelist at line: %zd, zero inode"), l);
 			l++; 
 			continue;
 		}
@@ -163,7 +163,7 @@ g_tree_read_file(FILE *fp)
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) {
-			msg(gettext("Corrupt entry in filelist at line: %zd, no space found"), l);
+			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
 			l++; 
 			continue;
 		}
@@ -172,7 +172,7 @@ g_tree_read_file(FILE *fp)
 		f_name_size = (size_t)atoi(q);
 		str_len = strlen(p + 1);
 		if (str_len != f_name_size) {
-			msg(gettext("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'"), l,
+			msg(_("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'"), l,
 					str_len, f_name_size);
 			l++; 
 			continue;
@@ -226,6 +226,10 @@ main(int argc, char **argv)
 
 	struct sigaction sa;
 	
+	/*printf("%s\n", DATAROOTDIR);*/
+	/* i18n, set domain to rdup */
+	(void)textdomain(PROGNAME);
+	
 	/* setup our signal handling */
 	sa.sa_flags   = 0;
 	sigfillset(&sa.sa_mask);
@@ -246,12 +250,12 @@ main(int argc, char **argv)
         }
 
 	if (!getcwd(pwd, BUFSIZE)) {
-		msg(gettext("Could not get current working directory"));
+		msg(_("Could not get current working directory"));
 		exit(EXIT_FAILURE);
 	}
 	for(c = 0; c < argc; c++) {
 		if (strlen(argv[c]) > BUFSIZE) {
-			msg(gettext("Argument length overrun"));
+			msg(_("Argument length overrun"));
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -315,12 +319,12 @@ main(int argc, char **argv)
 			case 's':
 				opt_size = atoi(optarg);
 				if (opt_size == 0) {
-					msg(gettext("-s requires a numerical value"));
+					msg(_("-s requires a numerical value"));
 					exit(EXIT_FAILURE);
 				}
 				break;
 			default:
-				msg(gettext("Unknown option seen"));
+				msg(_("Unknown option seen"));
 				exit(EXIT_FAILURE);
 		}
 	}
@@ -349,17 +353,17 @@ main(int argc, char **argv)
 		    path = abspath(argv[i]);
 
 #ifdef _DEBUG_RACE
-		msg(gettext("path %s\n"), path);
+		msg(_("path %s\n"), path);
 #endif /* _DEBUG_RACE */
 		
 		if (!path) {
-			msg(gettext("Skipping `%s\'"), argv[i]);
+			msg(_("Skipping `%s\'"), argv[i]);
 			continue;
 		}
 
 		/* add dirs leading up the dir/file */
 		if (!dir_prepend(backup, path)) {
-			msg(gettext("Skipping `%s\'"), path);
+			msg(_("Skipping `%s\'"), path);
 			continue;
 		}
 		/* descend into the dark, misty directory */
@@ -391,7 +395,7 @@ main(int argc, char **argv)
 	/* write new filelist */
 	if (!devnull) {
 	    if (!(fplist = fopen(argv[0], "w"))) {
-		    msg(gettext("Could not open filelist `%s\': %s"), argv[0], strerror(errno));
+		    msg(_("Could not open filelist `%s\': %s"), argv[0], strerror(errno));
 	    } else {
 		/* write temporary file and the move it */
 		g_tree_foreach(backup, gfunc_write, fplist);
@@ -401,7 +405,7 @@ main(int argc, char **argv)
 
 	/* re-touch the timestamp file */
 	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
-		msg(gettext("Could not create timestamp file `%s\': %s"), time, strerror(errno));
+		msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
