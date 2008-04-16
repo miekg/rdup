@@ -163,6 +163,7 @@ sub _mirror {
                                 unlink $target or warn "** Cannot unlink: $target: $!";
                         }
                 }
+                $ftsize -= $fsize;
                 $irm++;
         }
 }
