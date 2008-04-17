@@ -9,3 +9,5 @@ msginit --locale=nl_NL --input=rdup.pot
 #msgfmt -c -v -o hello.mo oriya.po
 msgfmt -c -v -o rdup.mo po/nl.po
 
+#msgunfmt rdup.mo            
+handig

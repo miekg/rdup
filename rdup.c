@@ -229,7 +229,7 @@ main(int argc, char **argv)
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
 	setlocale(LC_ALL, "");
-	bindtextdomain(PROGNAME, DATAROOTDIR);
+	bindtextdomain(PROGNAME, LOCALEROOTDIR);
 	(void)textdomain(PROGNAME);
 	
 	/* setup our signal handling */
@@ -342,7 +342,6 @@ main(int argc, char **argv)
 		devnull = TRUE;
 
 	if (!(fplist = fopen(argv[0], "r"))) {
-		msg(_("Could not open filelist `%s\': %s"), argv[0], strerror(errno));
 		curtree = g_tree_read_file(NULL);
 	} else {
 		curtree = g_tree_read_file(fplist);
@@ -398,7 +397,7 @@ main(int argc, char **argv)
 	/* write new filelist */
 	if (!devnull) {
 	    if (!(fplist = fopen(argv[0], "w"))) {
-		    msg(_("Could not open filelist `%s\': %s"), argv[0], strerror(errno));
+		    msg(_("Could not write filelist `%s\': %s"), argv[0], strerror(errno));
 	    } else {
 		/* write temporary file and the move it */
 		g_tree_foreach(backup, gfunc_write, fplist);
