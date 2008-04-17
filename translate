@@ -1,0 +1,11 @@
+# _() is not autom. found, hence k_
+# pot files
+xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c
+
+#msginit -l or_IN -o oriya.po -i hello.pot
+# po files
+msginit --locale=nl_NL --input=rdup.pot
+
+#msgfmt -c -v -o hello.mo oriya.po
+msgfmt -c -v -o rdup.mo po/nl.po
+

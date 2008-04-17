@@ -226,8 +226,10 @@ main(int argc, char **argv)
 
 	struct sigaction sa;
 	
-	/*printf("%s\n", DATAROOTDIR);*/
 	/* i18n, set domain to rdup */
+	/* really need LC_ALL? */
+	setlocale(LC_ALL, "");
+	bindtextdomain(PROGNAME, DATAROOTDIR);
 	(void)textdomain(PROGNAME);
 	
 	/* setup our signal handling */
@@ -245,7 +247,7 @@ main(int argc, char **argv)
 	time = NULL;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
-		msg(gettext("Will not run suid/sgid for safety reasons"), PROGNAME);
+		msg(_("Will not run suid/sgid for safety reasons"), PROGNAME);
 		exit(EXIT_FAILURE);
         }
 
@@ -340,6 +342,7 @@ main(int argc, char **argv)
 		devnull = TRUE;
 
 	if (!(fplist = fopen(argv[0], "r"))) {
+		msg(_("Could not open filelist `%s\': %s"), argv[0], strerror(errno));
 		curtree = g_tree_read_file(NULL);
 	} else {
 		curtree = g_tree_read_file(fplist);

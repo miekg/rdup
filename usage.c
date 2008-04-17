@@ -10,10 +10,10 @@ usage(FILE *f)
 {
         fprintf(f, _("USAGE: %s [OPTION...] FILELIST DIR|FILE...\n"), PROGNAME);
         fprintf(f, _("%s generates a full or incremental file list, this\n"), PROGNAME);
-        fprintf(f, _("list can be used to implement a (incremental) backup scheme.\n"));
-        fprintf(f, _("\n   FILELIST\tfile to store filenames\n"));
-        fprintf(f, _("   DIR\t\tdirectory or directories to dump\n"));
-        fprintf(f, _("\nOPTIONS:\n"));
+        fprintf(f, _("list can be used to implement a (incremental) backup scheme.\n\n"));
+        fprintf(f, _("   FILELIST\tfile to store filenames\n"));
+        fprintf(f, _("   DIR\t\tdirectory or directories to dump\n\n"));
+        fprintf(f, _("OPTIONS:\n"));
         fprintf(f, _("   -N FILE\tuse the timestamp of FILE for incremental dumps\n"));
         fprintf(f, _("   \t\tif FILE does not exist, a full dump is performed\n"));
         fprintf(f, _("   -F FORMAT\tuse specified format string\n"));
@@ -36,8 +36,8 @@ usage(FILE *f)
         fprintf(f, _("   -r\t\tonly print removed files (unsets -m)\n"));
         fprintf(f, _("   -s SIZE\tonly output files smaller then SIZE bytes\n"));
         fprintf(f, _("   -v\t\tbe more verbose\n"));
-        fprintf(f, _("   -x\t\tstay in local file system\n"));
-        fprintf(f, _("\nFORMAT:\n"));
+        fprintf(f, _("   -x\t\tstay in local file system\n\n"));
+        fprintf(f, _("FORMAT:\n"));
         fprintf(f, _("   The following escape sequences are recognized:\n"));
         fprintf(f, _("   \'%%p\': '+' if new, '-' if removed\n"));
         fprintf(f, _("   \'%%b\': permission bits\n"));
