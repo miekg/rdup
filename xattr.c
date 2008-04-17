@@ -23,14 +23,14 @@ read_attr_uid(__attribute__((unused))
 		x = (uid_t)atoi(buf);
 		buf[r - 1] = '\0';
 		if (x > R_MAX_ID) {
-			msg("Too large uid `%zd\' for `%s\', truncating", (size_t)x, 
+			msg(_("Too large uid `%zd\' for `%s\', truncating"), (size_t)x, 
 				path);
 			return R_MAX_ID;
 		}
 		return x;
 	} else {
 		if (opt_verbose > 0) {
-			msg("No uid xattr for `%s\'", path);
+			msg(_("No uid xattr for `%s\'"), path);
 		}
 		return u;
 	}
@@ -42,7 +42,7 @@ read_attr_uid(__attribute__((unused))
 	int r;
 	if ((attfd = attropen(path, "r_uid", O_RDONLY)) == -1) {
 		if (opt_verbose > 0) {
-			msg("No uid xattr for `%s\'", path);
+			msg(_("No uid xattr for `%s\'"), path);
 		}
 		return u;
 	}
@@ -53,7 +53,7 @@ read_attr_uid(__attribute__((unused))
 	buf[r - 1] = '\0';
 	x = (uid_t)atoi(buf);
 	if (x > R_MAX_ID) {
-		msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, path);
+		msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x, path);
 		return R_MAX_ID;
 	}
 	return x;
@@ -75,14 +75,14 @@ read_attr_gid(__attribute__((unused))
 		buf[r - 1] = '\0';
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
-			msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, 
+			msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x, 
 					path);
 			return R_MAX_ID;
 		}
 		return x;
 	} else {
 		if (opt_verbose > 0) {
-			msg("No gid xattr for `%s\'\n", path);
+			msg(_("No gid xattr for `%s\'\n"), path);
 		}
 		return g;
 	}
@@ -94,7 +94,7 @@ read_attr_gid(__attribute__((unused))
 	int r;
 	if ((attfd = attropen(path, "r_gid", O_RDONLY)) == -1) {
 		if (opt_verbose > 0) {
-			msg("No gid xattr for `%s\'", path);
+			msg(_("No gid xattr for `%s\'"), path);
 		}
 		return g;
 	}
@@ -105,7 +105,7 @@ read_attr_gid(__attribute__((unused))
 	buf[r - 1] = '\0';
 	x = (uid_t)atoi(buf);
 	if (x > R_MAX_ID) {
-		msg("Too large gid `%zd\' for `%s\', truncating", (size_t)x, path);
+		msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x, path);
 		return R_MAX_ID;
 	}
 	return x;

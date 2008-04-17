@@ -33,11 +33,11 @@ sha1(FILE *fp, char *filename)
 	FILE *file;
 
 	if ((file = fopen(filename, "r")) == NULL) {
-		msg("Could not open '%s\': %s", filename, strerror(errno));
+		msg(_("Could not open '%s\': %s"), filename, strerror(errno));
 		return FALSE;
 	}
 	if (sha1_stream(file, digest) != 0) {
-		msg("Failed to calculate sha1 digest: `%s\'", filename);
+		msg(_("Failed to calculate sha1 digest: `%s\'"), filename);
 		fclose(file);
 		return FALSE;
 	}
@@ -60,7 +60,7 @@ cat(FILE *fp, char *filename, off_t f_size)
 	size_t missing;
 
 	if ((file = fopen(filename, "r")) == NULL) {
-		msg("Could not open '%s\': %s", filename, strerror(errno));
+		msg(_("Could not open '%s\': %s"), filename, strerror(errno));
 		return FALSE;
 	}
 
@@ -74,14 +74,14 @@ cat(FILE *fp, char *filename, off_t f_size)
 		t += i;
 		if (t > (size_t) f_size) {
 			/* the file has grown. Break off the write!! */
-			msg("File grown larger (%zd) than original file size (%zd) , cutting off: `%s\'", t, (size_t) f_size, filename);
+			msg(_("File grown larger (%zd) than original file size (%zd) , cutting off: `%s\'"), t, (size_t) f_size, filename);
 			/* what's missing and what is read in the previous read */
 			missing = t - i;
 			missing = (size_t) f_size - missing;
 			if (missing > 0) {
 				/* write the missing bytes till f_size */
 				if (fwrite(buf, sizeof(char), missing, fp) != missing) {
-					msg("Write failure `%s\': %s", filename, strerror(errno));
+					msg(_("Write failure `%s\': %s"), filename, strerror(errno));
 					fclose(file);
 					return FALSE;
 				}
@@ -91,7 +91,7 @@ cat(FILE *fp, char *filename, off_t f_size)
 		}
 
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
-			msg("Write failure `%s\': %s", filename, strerror(errno));
+			msg(_("Write failure `%s\': %s"), filename, strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
@@ -101,7 +101,7 @@ cat(FILE *fp, char *filename, off_t f_size)
 	/* file has shrunken! Fill the rest with NULLs, this works
 	 * but is slow! */
 	if (t < (size_t) f_size) {
-		msg("File has shrunk, filling with NULLs: `%s\'", filename);
+		msg(_("File has shrunk, filling with NULLs: `%s\'"), filename);
 		for(i = t; i < (size_t) f_size; i++) {
 			fputc('\0', fp);
 		}
@@ -125,7 +125,7 @@ entry_cat_data(FILE *fp, struct entry *e)
 		char buf[BUFSIZE + 1];
 		ssize_t i;
 		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-			msg("Error reading link %s: '%s\'", e->f_name, strerror(errno));
+			msg(_("Error reading link %s: '%s\'"), e->f_name, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		buf[i] = '\0';
@@ -264,13 +264,13 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		 * This is not a problem for directories
 		 */
 		if (lstat(e->f_name, &s) != 0) {
-			msg("Could not stat path `%s\': %s", e->f_name,
+			msg(_("Could not stat path `%s\': %s"), e->f_name,
 				strerror(errno));
 			return;
 		}
 #ifndef _DEBUG_RACE
 		if (e->f_size != s.st_size) {
-			msg("File size has changed, skipping `%s\'", e->f_name);
+			msg(_("File size has changed, skipping `%s\'"), e->f_name);
 			return;
 		}
 #endif /* _DEBUG_RACE */
@@ -383,7 +383,7 @@ gfunc_remove(gpointer data, gpointer value,
 
 	/* should not have these here!! */
 	if (value == NO_PRINT) {
-		msg("Internal error: NO_PRINT in remove tree!");
+		msg(_("Internal error: NO_PRINT in remove tree!"));
 		return FALSE;
 	}
 

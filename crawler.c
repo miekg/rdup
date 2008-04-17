@@ -68,7 +68,7 @@ dir_prepend(GTree *t, char *path)
 	for (p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
 		*c = '\0';
 		if (lstat(path2, &s) != 0) {
-			msg("Could not stat path `%s\': %s", path2, strerror(errno));
+			msg(_("Could not stat path `%s\': %s"), path2, strerror(errno));
 			return FALSE;
 		}
 		e.f_name      = path2;
@@ -125,7 +125,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 			g_free(dirstack);
 			return;
 		}
-		msg("Cannot enter directory `%s\': %s", path, strerror(errno));
+		msg(_("Cannot enter directory `%s\': %s"), path, strerror(errno));
 		g_free(dirstack);
 		return;
 	}
@@ -136,7 +136,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 #else
 	if (fstat(rdup_dirfd(dir), &s) != 0) {
 #endif
-		msg("Cannot determine holding device of the directory `%s\': %s", path, 
+		msg(_("Cannot determine holding device of the directory `%s\': %s"), path, 
 				strerror(errno));
 		closedir(dir);
 		g_free(dirstack);
@@ -158,13 +158,13 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 		}
 
 		if (lstat(curpath, &s) != 0) {
-			msg("Could not stat path `%s\': %s", curpath, strerror(errno));
+			msg(_("Could not stat path `%s\': %s"), curpath, strerror(errno));
 			g_free(curpath);
 			continue;
 		}
 
 		if (strchr(curpath, '\n')) {
-			msg("Newline (\\n) found in path `%s\', skipping", curpath);
+			msg(_("Newline (\\n) found in path `%s\', skipping"), curpath);
 			g_free(curpath);
 			continue;
 		}
@@ -196,7 +196,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
 				/* return after seeing .nobackup */
 				if (opt_verbose > 0) {
-					msg("" NOBACKUP " in '%s\'", path);
+					msg(_("%s found in '%s\'"), NOBACKUP, path);
 				}
 				/* remove all files found in this path */
 				rp.tree = t;
@@ -215,7 +215,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
-				msg("Walking into different filesystem");
+				msg(_("Walking into different filesystem"));
 				g_free(curpath);
 				continue;
 			}
@@ -257,7 +257,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 			continue;
 		} else {
 			if (opt_verbose > 0) {
-				msg("Neither file nor directory `%s\'", curpath);
+				msg(_("Neither file nor directory `%s\'"), curpath);
 			}
 			g_free(curpath);
 		}

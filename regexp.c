@@ -30,7 +30,7 @@ regexp_init(char *file) {
 	int 		i;
 
 	if ((fp = fopen(file, "r")) == NULL) {
-		msg("Could not open '%s\': %s", file, strerror(errno));
+		msg(_("Could not open '%s\': %s"), file, strerror(errno));
 		exit(EXIT_FAILURE);
 	}	
 	/* read the regexp */
@@ -53,7 +53,7 @@ regexp_init(char *file) {
 		if ((i = regcomp(&R, buf, REG_EXTENDED | REG_NOSUB)) != 0) {
 			fclose(fp);
 			(void)regerror(i, &R, errbuf, BUFSIZE);
-			msg("Corrupt regular expression line: %zd: %s", l, errbuf); 
+			msg(_("Corrupt regular expression line: %zd: %s"), l, errbuf); 
 			g_free(errbuf); 
 			g_free(buf);
 			return FALSE;
