@@ -2,6 +2,8 @@
 # pot files
 xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c
 
+xgettext -kget *.pl # for the perl stuff
+
 #msginit -l or_IN -o oriya.po -i hello.pot
 # po files
 msginit --locale=nl_NL --input=rdup.pot

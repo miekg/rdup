@@ -1,4 +1,3 @@
-
 # shared perl function
 # this is included by the other utils
 
@@ -112,7 +111,8 @@ sub i18n {
 	$d;
     } else {
 	setlocale(LC_ALL, "");
-	my $d = Locale::gettext->domain(@PACKAGE_NAME@);
+	my $d = Locale::gettext->domain("@PACKAGE_NAME@");
+	my $prefix="@prefix@"; # fuck autoconf
 	$d->dir("@datarootdir@/locale");
 	$d;
     }
