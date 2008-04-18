@@ -1,6 +1,7 @@
 TODO:
 
-make rdup i18n aware
+install mo files somewhere 
+make pot from make file
 
 :install:
 
@@ -12,7 +13,7 @@ o encrypted file names?
 o -e option
 o check extended attributes too? 
     Would be fairly easy?
-o -0 also affects the exclude, handig?
+o -0 also affects the exclude
 
 :tests:
 o add conformence test; symlinks etc.
@@ -30,5 +31,3 @@ o has some sort of cron interface...?
 :porting:
 o port extended attributes to FreeBSD
 o cp -plr is gnuis. Don't have time to port this...?
-o on Solaris I sometimes get weird output from rdup, this
-  is either a bug in my code or something weird in libgtk
