@@ -4,6 +4,7 @@ xx Apr 2008: 0.6.0 Miek <miek@miek.nl>
    a language for rdup
  * exit ./configure when glib2-dev is not found
  * substract the filesize when files are removed
+ * remove last remnants of syslog from shared.pl.in
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
  -- spring cleaning --

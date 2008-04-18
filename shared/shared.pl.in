@@ -76,7 +76,7 @@ sub check_attr {
                 map {return 1 if -x $_ . '/' . "runat"}  split(/:/, $ENV{'PATH'});
         }
         warn "** Cannot set extended attributes";
-        return 0;
+        0;
 }
 
 # chmod or warn
@@ -94,20 +94,20 @@ sub rchown {
         chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
 }
 
-sub syslog_open {
-        openlog(shift, 'cons, pid', 'daemon') or die "** Cannot open syslog";
-}
-
-sub syslog_log {
-        $f = shift; 
-        syslog('info', $f, @_);
-}
-
 # check if a file exists
 sub exist {
         lstat(shift);
         return 0 unless -e _;
-        return 1;
+        1;
+}
+
+sub i18n {
+    eval('use Locale::gettext;');
+    if ($@) {
+	    return 0;
+    } else {
+	    return 1;
+    }
 }
 
 # keep
