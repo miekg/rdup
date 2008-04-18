@@ -10,6 +10,7 @@ use File::Basename;
 use File::Path;
 use File::Copy;
 use Fcntl qw(:mode);
+use POSIX;
 
 # common functions
 my $prefix="@prefix@";

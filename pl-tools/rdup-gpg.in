@@ -11,6 +11,7 @@ use Getopt::Std;
 use File::Basename;
 use File::Temp qw{tempdir tempfile};
 use File::Spec;
+use POSIX;
 
 # common functions
 my $prefix="@prefix@";
