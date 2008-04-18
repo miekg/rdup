@@ -10,10 +10,12 @@ use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 use File::Path;
 use File::Copy;
+use POSIX;
 
 # common functions
 my $prefix="@prefix@";
 require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+my $d= i18n;
 
 my $ts = time;
 my $progName = basename $0;

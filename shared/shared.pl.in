@@ -101,13 +101,26 @@ sub exist {
         1;
 }
 
+# check if gettext is there, if so return object of that class
+# otherwise return fake object and we will use our own get (see below)
+# on that
 sub i18n {
     eval('use Locale::gettext;');
     if ($@) {
-	    return 0;
+	my $d;
+	$d = bless \$d, "main";
+	$d;
     } else {
-	    return 1;
+	setlocale(LC_ALL, "");
+	my $d = Locale::gettext->domain(@PACKAGE_NAME@);
+	$d->dir("@datarootdir@/locale");
+	$d;
     }
+}
+
+# fake get for systems without gettext
+sub get {
+    @_;
 }
 
 # keep
