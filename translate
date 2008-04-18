@@ -11,3 +11,8 @@ msgfmt -c -v -o rdup.mo po/nl.po
 
 #msgunfmt rdup.mo            
 handig
+
+
+#mergen
+msgmerge -s -U oriya.po hello-new.pot
+

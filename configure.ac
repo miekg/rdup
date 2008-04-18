@@ -13,6 +13,8 @@ AC_PROG_MAKE_SET
 
 #  [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND 
 AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([libglib2-dev not found !]))
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION
 AC_CHECK_FUNCS([dirfd openat attropen])
 AC_CHECK_LIB(attr, lgetxattr)
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])
@@ -59,5 +61,6 @@ AC_CONFIG_FILES([GNUmakefile
                  pl-tools/rdup-gpg
                  pl-tools/rdup-hist
                  ])
+		 # po/GnuMakefile.in
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

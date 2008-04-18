@@ -7,7 +7,7 @@
 
 #ifndef HAVE_DIRFD
 #define rdup_dirfd(d) ((d)->dd_fd)
-#endif
+#endif /* HAVE_DIRFD */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,10 +31,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#ifdef HAVE_GETTEXT
 #include <libintl.h>
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
+#else
+#define _(String) String
+#endif /* HAVE_GETTEXT */
 
 #ifdef HAVE_ATTR_XATTR_H
 #include <attr/xattr.h>

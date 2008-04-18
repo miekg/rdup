@@ -228,9 +228,11 @@ main(int argc, char **argv)
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
+#ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
 	bindtextdomain(PROGNAME, LOCALEROOTDIR);
 	(void)textdomain(PROGNAME);
+#endif /* ENABLE_NLS */
 	
 	/* setup our signal handling */
 	sa.sa_flags   = 0;
