@@ -50,7 +50,7 @@ rdup.pot:
 	xgettext -j -Lperl -kget -d rdup -s -o rdup.pot pl-tools/*.in
 
 rdup.mo: 
-	msgfmt -c -v -o rdup.mo po/*.po
+	[ po/* = "po/*" ] || msgfmt -c -v -o rdup.mo po/*.po
 
 clean:
 	rm -f *.o
