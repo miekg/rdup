@@ -150,7 +150,6 @@ info "Deleting the php directory"
 rm -rf rdup-$version/php/
 
 info "Deleting the other fluff"
-rm -rf rdup-$version/.svn
 rm -f rdup-$version/core
 rm -f rdup-$version/tar-exclude
 rm -f rdup-$version/config.log
