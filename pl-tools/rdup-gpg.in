@@ -3,8 +3,6 @@
 # Copyright (c) 2005 - 2007 Miek Gieben; Mark J Hewitt
 # See LICENSE for the license
 #
-# crypt -c's output
-#
 use strict;
 
 use Getopt::Std;

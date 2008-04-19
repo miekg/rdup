@@ -39,15 +39,22 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 all:	rdup scripts
 
-rdup:	${OBJ} ${HDR}
+rdup:	${OBJ} ${HDR} rdup.mo rdup.pot
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
 
 scripts:
 	chmod +x $(RES) $(PRL) $(WRP)
 
+rdup.pot:
+	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 
+	xgettext -j -Lperl -kget -d rdup -s -o rdup.pot pl-tools/*.in
+
+rdup.mo: 
+	msgfmt -c -v -o rdup.mo po/*.po
+
 clean:
 	rm -f *.o
-	rm -f rdup
+	rm -f rdup rdup.mo
 
 deb-trunk:
 	( cd ..;\
@@ -66,6 +73,8 @@ realclean: clean
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${MAN1}
+	rm -f ${PRL}
+	rm -f ${WRP}
 
 distclean: 
 
