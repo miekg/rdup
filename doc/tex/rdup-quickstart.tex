@@ -1,61 +1,80 @@
-\documentclass[a4paper, openany]{blocksbook}
+\documentclass[a4paper, openany]{atroff}
 \newcommand{\rdup}{\textbf{rdup}}
 \newcommand{\cmd}[1]{\texttt{#1}}
 \newcommand{\url}[1]{\texttt{#1}}
 \newcommand{\path}[1]{\texttt{#1}}
 \newcommand{\flag}[1]{\textit{#1}}
+\title{\rdup: Quick Start}
 \begin{document}
 
 \chapter*{\rdup: Quick Start}
 This is a small guide about setting up and running \rdup{} to make
 backups. \rdup{}
-supports incremental, compressed, encrypted, local, remote  backups and
-restores. All these feature can (and or) implemented in scripts to
+supports incremental, compressed, encrypted, local and remote backups and
+restores. All these feature are implemented in scripts to
 implement an actual backup scheme. The core \rdup{} utility does
-nothing but to print out the files names that are to be backed up.
+nothing but to print out the files names that are to be backed up. A
+small set of Perl scripts implements a hardlinked backup strategy.
 
+\begin{atleftbar}
 See \url{www.miek.nl/projects/rdup} for more information.
+\end{atleftbar}
 
-\subsection*{\textit{Setup}}
+\section*{Setup}
 Get \rdup{} from its website. Configure and install it:
-\begin{verbatim}
+\begin{atalltt}
 ./configure && make && sudo make install
-\end{verbatim}
-\rdup{} by default creates a full dump once a month and 
-daily incrementals after that (if desired). But this is
-all in the hands of the user.
+\end{atalltt}
+\rdup{} by default creates a full dump at the first run, after
+that it will make incrementals. This can ofcourse be fully tweaked.
 
-\subsection*{\textit{Backup}}
+\section*{Backup}
 The most convenient way to use \rdup{} is to use the wrapper
 script \cmd{rdup-simple}. Synopsis:\\
-\cmd{rdup-simple [ OPTIONS ] DIR|FILE [ DIR|FILE ] DEST} 
+\cmd{rdup-simple [ OPTIONS ] DIR|FILE [ DIR|FILE ... ] DEST} 
 \begin{itemize}
 \item
-Dump \path{/home} to your USB disk on \path{/media/usbdisk}:\\
-\cmd{rdup-simple /home /media/usbdisk/\$HOST}
+Dump \path{/home} to your USB disk on \path{/media/usbdisk}:
+\begin{display}
+rdup-simple /home /media/usbdisk/\$HOST
+\end{display}
 \item
-Dump compressed \path{/home} to \path{/vol/backup}:\\
-\cmd{rdup-simple /home /vol/backup} 
-\item
-Dump encrypted \path{/home} to \path{/vol/backup} at remote
-host:\\
-\cmd{rdup-simple -k secret\_file /home \\\
-ssh://user@example.nl:/vol/backup/\$HOST}
+Dump compressed \path{/home} to \path{/vol/backup}:
+\begin{display}
+rdup-simple -z /home /vol/backup/\$HOST
+\end{display}
+Dump encrypted \path{/home} to \path{/vol/backup} at remote host:
+\begin{display}
+rdup-simple -k secret_file /home \
+    ssh://user@example.nl:/vol/backup/\$HOST
+\end{display}
 \end{itemize}
 
-\subsection*{\textit{Restore}}
+\begin{atblock}
+For more examples look at rdup-simple(1).
+\end{atblock}
+
+\section*{Restore}
 The most convenient way to restore with \rdup{} is by using
 the script \cmd{rdup-restore}. Synopsis:\\
 \cmd{rdup-restore [ OPTIONS ] SOURCE [ SOURCE ... ] DIR}
 \begin{itemize}
 \item
-Restore from the latest backup from May 2006, to \path{/tmp/restore}:\\
-\cmd{rdup-restore /vol/backup/elektron/200605/home/miekg /tmp/restore}
+Restore from the latest backup from May 2006, to \path{/tmp/restore}:
+\begin{display}
+rdup-restore /vol/backup/elektron/200605/home/miekg /tmp/restore
+\end{display}
 \item
 Restore from the latest remote backup from May 2006. This backup
 is encrypted:\\
-\cmd{rdup-restore -k secret\_file /tmp/restore \\\
-/vol/backup/elektron/200605/home/miekg /tmp/restore}
+\begin{display}
+rdup-restore -k secret\_file /tmp/restore \
+    /vol/backup/elektron/200605/home/miekg /tmp/restore
+\end{display}
 \end{itemize}
+
+\begin{atblock}
+See rdup-restore(1) for more information.
+\end{atblock}
 
 \end{document}
