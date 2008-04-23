@@ -11,7 +11,6 @@ AC_AIX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
-#  [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND 
 AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([libglib2-dev not found !]))
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION
@@ -34,7 +33,8 @@ if test ${sysconfdir} = '${prefix}/etc'; then
         sysconfdir='/etc'
 fi
 
-AC_CONFIG_FILES([GNUmakefile
+AC_CONFIG_FILES([GNUmakefile 
+		 po/GNUmakefile
                  rdup.h
                  doc/rdup.1
                  doc/rdup-cp.1
@@ -61,6 +61,5 @@ AC_CONFIG_FILES([GNUmakefile
                  pl-tools/rdup-gpg
                  pl-tools/rdup-hist
                  ])
-		 # po/GnuMakefile.in
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT

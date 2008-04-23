@@ -49,9 +49,6 @@ rdup.pot:
 	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 
 	xgettext -j -Lperl -kget -d rdup -s -o rdup.pot pl-tools/*.in
 
-rdup.mo: 
-	[ po/* = "po/*" ] || msgfmt -c -v -o rdup.mo po/*.po
-
 clean:
 	rm -f *.o
 	rm -f rdup rdup.mo

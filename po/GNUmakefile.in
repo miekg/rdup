@@ -1,0 +1,28 @@
+.SUFFIXES:
+.SUFFIXES: .po .gmo .mo
+
+all:	
+	@for i in $$(cat LINGUAS); do make $$i.mo; done
+
+%.mo:		%.po
+	msgfmt -c -o $@ $<
+
+
+clean:
+	rm -f *.mo
+
+realclean: clean
+	rm -rf autom4te.cache
+	rm -f config.log
+	rm -f config.status
+	rm -f config.h
+
+distclean: 
+
+install: all
+	for i in $$(cat LINGUAS); do rm -rf $$i && mkdir $$i; \
+	    cp $$i.mo $$i/rdup.mo; done
+
+# mkdir nl, mv nl.mo to/nl/rdup.mo then install
+uninstall:
+	for i in $$(cat LINGUAS); do echo $$i; done
