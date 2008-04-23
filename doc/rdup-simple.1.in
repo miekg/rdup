@@ -135,6 +135,14 @@ Show a short help message.
 .B \-V
 Show the version.
 
+.SH BUGS
+Be aware if you change the order of the directories to backup between
+dump, you are also messing with \fBrdup\fR's internal filelist. This can
+result in a very large backup, while you were expecting a small
+incremental dump. So don't do this. In ~/.rdup you can check what
+directory name was used for the internal filelist: \fIelektron.etc.list\fR
+uses \fI/etc\fR.
+
 .SH SEE ALSO
 rdup(1), rdup-snap-link(1) and rdup-snapshot(1). See rdup-backups(1) for
 examples and an introduction into making backups with \fBrdup\fR.
