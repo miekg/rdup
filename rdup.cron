@@ -1,3 +1,2 @@
-# cron file of rdup
-10 02 * * * root /usr/sbin/rdup-snapshot -b /vol/raid/backup/$HOSTNAME /etc /home /tftpboot
-00 02 * * * root /usr/sbin/rdup-snapshot -b /vol/raid/backup/$HOSTNAME /var/mail /var/svn /var/lib
+# sample cron file of rdup
+11 02 * * * root rdup-simple /etc /home /var file:///raid/backup/$HOSTNAME 

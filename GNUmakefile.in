@@ -16,6 +16,7 @@ HERE=$(addprefix sh-wrapper/, $(HERE_IN))
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 datarootdir=@datarootdir@
+localedir=@localedir@
 bindir=@bindir@
 sbindir=@sbindir@
 mandir=@mandir@
@@ -27,7 +28,7 @@ GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
 LIBS=@LIBS@
 DRACE=-D_DEBUG_RACE
-CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@datarootdir@/locale\" -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
+CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@localedir@\" -Os -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 #CFLAGS=-Wall -W @CFLAGS@ @DEFS@ -Os $(DRACE) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Wpointer-arith -Wstrict-prototypes
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644

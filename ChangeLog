@@ -1,3 +1,7 @@
+2008-04-19  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in.
+
 xx Apr 2008: 0.6.0 Miek <miek@miek.nl>
   -- i18n added --
  * Implemented gettext for i18n and added Dutch as
@@ -5,6 +9,7 @@ xx Apr 2008: 0.6.0 Miek <miek@miek.nl>
  * exit ./configure when glib2-dev is not found
  * substract the filesize when files are removed in rdup-snap.
  * remove last remnants of syslog from shared.pl.in
+ * changed example cron.rdup
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
