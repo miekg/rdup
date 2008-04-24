@@ -39,6 +39,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 all:	rdup scripts
+	make -C po all
 
 rdup:	${OBJ} ${HDR} rdup.mo rdup.pot
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
@@ -53,6 +54,7 @@ rdup.pot:
 clean:
 	rm -f *.o
 	rm -f rdup rdup.mo
+	make -C po clean
 
 deb-trunk:
 	( cd ..;\
@@ -73,6 +75,7 @@ realclean: clean
 	rm -f ${MAN1}
 	rm -f ${PRL}
 	rm -f ${WRP}
+	make -C po realclean
 
 distclean: 
 
@@ -85,6 +88,7 @@ install: all
 	for i in ${SHA}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${HERE}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
+	make -C po install
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
@@ -93,3 +97,4 @@ uninstall:
 	for i in ${SHA}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${HERE}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
+	make -C po uninstall

@@ -31,7 +31,7 @@ GetOptions("h" => \$help,
 usage() if $help;
 version($progName) if $version;
 
-die "** Need a -b option" if !$backupDir;
+die $d->("** Need a -b option") if !$backupDir;
 chomp (my $hostname = `hostname`);
 my $attr_there = check_attr() if $attr;
 
@@ -44,7 +44,7 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 if (!exist($backupDir)) {
-        mkpath($backupDir) or die "** Cannot create `$backupDir': $!";
+        mkpath($backupDir) or die $d->get("** Cannot create `$backupDir': $!");
 }
 
 if ($remote) {

@@ -1,7 +1,8 @@
 TODO:
 
-install mo files somewhere 
-make pot from make file
+use gettext.sh for the shell stuff
+in perl we use localize if available
+need to check this on non gettext platforms - atcmpg
 
 :install:
 

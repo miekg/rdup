@@ -53,7 +53,7 @@ sub catfile {
 }
 
 # set the r_uid/g_uid with the original uid/gid
-# usefull for remote backups. SLOW
+# usefull for remote backups. SLOOOOWWW
 sub chown_attr {
 	my ($attr, $xuid, $xgid, $file) = @_;
         return unless $attr;
@@ -108,17 +108,16 @@ sub i18n {
     if ($@) {
 	my $d;
 	$d = bless \$d, "main";
-	$d;
     } else {
 	setlocale(LC_ALL, "");
 	my $d = Locale::gettext->domain("@PACKAGE_NAME@");
 	my $prefix="@prefix@"; # fuck autoconf
-	$d->dir("@datarootdir@/locale");
-	$d;
+	$d->dir("@localedir@");
     }
+    $d;
 }
 
-# fake get for systems without gettext
+# fake get for systems without gettext, the identity function
 sub get {
     @_;
 }

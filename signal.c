@@ -21,13 +21,13 @@ signal_abort(int signal)
 {
         switch(signal) {
                 case SIGPIPE:
-                        msg("SIGPIPE received, exiting");
+                        msg(_("SIGPIPE received, exiting"));
                         break;
                 case SIGINT:
-                        msg("SIGINT received, exiting");
+                        msg(_("SIGINT received, exiting"));
                         break;
                 default:
-                        msg("Unhandled signal reveived, exiting");
+                        msg(_("Unhandled signal reveived, exiting"));
                         break;
         }
         exit(EXIT_FAILURE);

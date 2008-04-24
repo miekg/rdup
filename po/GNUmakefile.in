@@ -1,15 +1,26 @@
-.SUFFIXES:
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datarootdir=@datarootdir@
+localedir=@localedir@
+bindir=@bindir@
+sbindir=@sbindir@
+mandir=@mandir@
+sysconfdir=@sysconfdir@
+datadir=@datadir@/rdup
+
 .SUFFIXES: .po .gmo .mo
 
-all:	
-	@for i in $$(cat LINGUAS); do make $$i.mo; done
 
-%.mo:		%.po
+all:	
+	@for i in $$(cat LINGUAS); do make $$i.gmo; done
+
+%.gmo:		%.po
 	msgfmt -c -o $@ $<
 
 
 clean:
-	rm -f *.mo
+	rm -f *.gmo
+	for i in $$(cat LINGUAS); do rm -rf $$i; done
 
 realclean: clean
 	rm -rf autom4te.cache
@@ -19,9 +30,16 @@ realclean: clean
 
 distclean: 
 
+# create a small mirror of the actual dir layout in the filesystem
 install: all
 	for i in $$(cat LINGUAS); do rm -rf $$i && mkdir $$i; \
-	    cp $$i.mo $$i/rdup.mo; done
+	    cp $$i.gmo $$i/rdup.mo; done
+	for i in $$(cat LINGUAS); do \
+		mkdir -p $(DESTDIR)/${localedir}/$$i/LC_MESSAGES; \
+		cp $$i/rdup.mo ${localedir}/$$i/LC_MESSAGES/rdup.mo; \
+	done
+
+
 
 # mkdir nl, mv nl.mo to/nl/rdup.mo then install
 uninstall:
