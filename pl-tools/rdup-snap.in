@@ -44,7 +44,7 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 if (!exist($backupDir)) {
-        mkpath($backupDir) or die $d->get("** Cannot create `$backupDir': $!");
+        mkpath($backupDir) or die $d->get("** Cannot create") . " `$backupDir': $!");
 }
 
 if ($remote) {
@@ -84,7 +84,7 @@ sub _mirror {
                 $path = "";
                 read STDIN, $path, $psize;
         }
-        die "** Empty path"  if ($path eq "");
+        die $d->("** Empty path")  if ($path eq "");
         print STDERR "$path\n" if $verbose;
 
         if ($dump eq '+') {        # add
@@ -92,13 +92,13 @@ sub _mirror {
                 if ($type eq '-') {        # REG
                         if (exist($target) == 1) {
                                 if (-d _) {
-                                        rmtree $target or warn "** Cannot remove: $target: $!";
+                                        rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
                                 } else {
-                                        unlink $target or warn "** Cannot unlink: $target: $!";
+                                        unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
                                 }
                         }
                         if ($remote) {
-                                open FILE, ">$target" or warn "** Cannot create: $target: $!";
+                                open FILE, ">$target" or warn $d->get("** Cannot create:") . " $target: $!";
                                 if ($fsize != 0) {
                                         copyout($fsize, *FILE);
                                 }
@@ -107,7 +107,7 @@ sub _mirror {
                                 rchmod($bits, $target);
                                 close FILE or warn "** Failed to close: $!";
                         } else {
-                                $ret = copy($path, $target) or warn "** Copy failed: $! $path $target";
+                                $ret = copy($path, $target) or warn $d->get("** Copy failed:") . " $! $path $target";
 				if ($ret == 1) {
 					rchown($uid, $gid, $target);
 					chown_attr($attr_there, $uid, $gid, $target);
@@ -119,18 +119,18 @@ sub _mirror {
                 } elsif ($type eq 'd') {        # DIR
                         exist($target);  # side effects Go!
                         if (-f _ || -l _) {      # Type of entiry has changed
-                                unlink $target or warn "** Cannot unlink: $target: $!";
+                                unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
                         }
                         mkpath($target) unless -d _;
                         rchown($uid, $gid, $target);
                         chown_attr($attr_there, $uid, $gid, $target);
                         if ($> != 0) {
                                 if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
-                                        print STDERR "** Chmod $target u+rxw\n";
+                                        print STDERR $d->get("** Chmod u+rwx") . " $target\n";
                                         $bits = "7" . substr($bits, 1, 2);
                                 }
                                 if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
-                                        print STDERR "** Chmod $target u+rxw\n";
+                                        print STDERR $d-get("** Chmod u+rwx") . " $target\n";
                                         $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
                                 }
                         }
@@ -139,17 +139,17 @@ sub _mirror {
                 } elsif ($type eq 'l') {        # LNK; target id the content
                         if (exist($target) == 1) {
                                 if (-d _) {
-                                        rmtree $target or warn "** Cannot remove: $target: $!";
+                                        rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
                                 } else {
-                                        unlink $target or warn "** Cannot unlink: $target: $!";
+                                        unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
                                 }
                         }
                         if ($remote) {
                                 my $linkTarget = "";
                                 read STDIN, $linkTarget, $fsize;
-                                symlink $linkTarget, $target or warn "** Cannot create link: $target -> $linkTarget: $!";
+                                symlink $linkTarget, $target or warn $d->get("** Cannot create link:") . " $target -> $linkTarget: $!";
                         } else {
-                                symlink(readlink($path), $target) or warn "** Cannot create link: $target -> $path: $!";
+                                symlink(readlink($path), $target) or warn $d->get("** Cannot create link:") . " $target -> $path: $!";
                         }
                         rchown($uid, $gid, $target);
                         chown_attr($attr_there, $uid, $gid, $target);
@@ -160,9 +160,9 @@ sub _mirror {
                 $target = "$dir/$path";
                 if (exist($target)) {
                         if (-d _) {
-                                rmtree $target or warn "** Cannot remove: $target: $!";
+                                rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
                         } else {
-                                unlink $target or warn "** Cannot unlink: $target: $!";
+                                unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
                         }
                 }
                 $ftsize -= $fsize;
