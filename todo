@@ -3,6 +3,7 @@ TODO:
 use gettext.sh for the shell stuff
 in perl we use localize if available
 need to check this on non gettext platforms - atcmpg
+fix usage to use here docs??
 
 :install:
 

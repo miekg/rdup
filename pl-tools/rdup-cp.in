@@ -14,10 +14,11 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
-require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+require "@datadir@/rdup/shared.pl";
 
 my $progName = basename $0;
 my ($help, $version, $verbose, $attr, $remote, $from, $toDir, $strip);
+my $d = i18n();
 
 $strip = 0;
 GetOptions(h => \$help,
@@ -30,7 +31,7 @@ GetOptions(h => \$help,
 version($progName) if $version;
 usage() if $help;
 
-die "** Need a directory to copy to" if $#ARGV < 0;
+die $d->get("** Need a directory to copy to") if $#ARGV < 0;
 $toDir = shift;
 chomp (my $hostname = `hostname`); 
 my $attr_there = check_attr() if $attr;

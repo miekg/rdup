@@ -13,7 +13,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
-require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+require "@datadir@/rdup/shared.pl";
 
 my $progName = basename $0;
 my %opt;

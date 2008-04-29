@@ -374,7 +374,7 @@ main(int argc, char **argv)
 		dir_crawl(backup, path, FALSE);
 	}
 #ifdef _DEBUG_RACE
-	fprintf(stderr, "** Sleeping\n");
+	fprintf(stderr, _("** Sleeping\n"));
 	sleep(3);
 #endif /* _DEBUG_RACE */
 

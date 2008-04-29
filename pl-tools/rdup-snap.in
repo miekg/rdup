@@ -14,7 +14,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
-require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+require "@datadir@/rdup/shared.pl";
 my $d= i18n();
 
 my $ts = time;
@@ -31,7 +31,7 @@ GetOptions("h" => \$help,
 usage() if $help;
 version($progName) if $version;
 
-die $d->("** Need a -b option") if !$backupDir;
+die $d->get("** Need a -b option") if !$backupDir;
 chomp (my $hostname = `hostname`);
 my $attr_there = check_attr() if $attr;
 
@@ -62,13 +62,13 @@ if ($remote) {
 }
 my $te = time;
 
-printf STDERR "** #REG FILES  : %d\n", $ireg;
-printf STDERR "** #DIRECTORIES: %d\n", $idir;
-printf STDERR "** #LINKS      : %d\n", $ilnk;
-printf STDERR "** #(RE)MOVED  : %d\n", $irm;
-printf STDERR "** DELTA FSIZE : %.1f MB\n", $ftsize/1024.0/1024.0;
-printf STDERR "** STORED IN   : %s\n", $backupDir;
-printf STDERR "** ELAPSED     : %.2f m\n", ($te - $ts) / 60.00;
+printf STDERR $d->get("** #REG FILES  : %d\n"), $ireg;
+printf STDERR $d->get("** #DIRECTORIES: %d\n"), $idir;
+printf STDERR $d->get("** #LINKS      : %d\n"), $ilnk;
+printf STDERR $d->get("** #(RE)MOVED  : %d\n"), $irm;
+printf STDERR $d->get("** DELTA FSIZE : %.1f MB\n"), $ftsize/1024.0/1024.0;
+printf STDERR $d->get("** STORED IN   : %s\n"), $backupDir;
+printf STDERR $d->get("** ELAPSED     : %.2f m\n"), ($te - $ts) / 60.00;
 rchmod(755, $backupDir);
 exit 0;
 

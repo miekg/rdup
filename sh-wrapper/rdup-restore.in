@@ -10,27 +10,27 @@ datadir=@datadir@/rdup
 source $datadir/shared.sh
 
 usage() {
-        echo "$PROGNAME SOURCE [SOURCE ...] DIR"
-        echo
-        echo "This is a wrapper around rdup and rdup-cp"
-        echo DIR \ - directory to restore to
-        echo SOURCE \ - source to restore from:
-	echo "  ssh://user@host/directory (note: no colon after the hostname"
-        echo "  file:///directory (note: 3 slashes)"
-        echo "  /directory"
-        echo "  directory"
-        echo
-        echo OPTIONS:
-        echo " -k KEYFILE decrypt all files, using rdup-crypt"
-        echo " -z         decompress all files, using rdup-gzip"
-        echo "            If both -z and -k are selected, decryption is done first"
-        echo " -S         rdup-snapshot restore (does not use rdup -E)"
-        echo " -D         rdup-dump restore (does use rdup -E), default"
-        echo " -a         use extended attributes with uid/gid"
-        echo " -v         echo the files processed to stderr"
-        echo " -x         pass -x to rdup"
-        echo " -h         this help"
-        echo " -V         print version"
+	cat << HELP
+"$PROGNAME SOURCE [SOURCE ...] DIR
+
+This is a wrapper around rdup and rdup-cp
+DIR    - directory to restore to
+SOURCE - source to restore from:
+      ssh://user@host/directory (note: no colon after the hostname
+      file:///directory (note: 3 slashes)
+      /directory
+      directory
+
+OPTIONS:
+    -k KEYFILE decrypt all files, using rdup-crypt
+    -z         decompress all files, using rdup-gzip
+               If both -z and -k are selected, decryption is done first
+    -a         use extended attributes with uid/gid
+    -v         echo the files processed to stderr
+    -x         pass -x to rdup
+    -h         this help
+    -V         print version
+HELP
 }
 
 PROGNAME=$0
@@ -40,7 +40,7 @@ pipe=""
 ssh=""
 zip=false
 dump=true
-while getopts ":ak:vzxhSDV" o; do
+while getopts ":ak:vzxhV" o; do
         case $o in
                 k) KEYFILE=$OPTARG
                 if [[ -z "$OPTARG" ]]; then
@@ -147,30 +147,16 @@ else
         dest="`pwd`/$1"
 fi
 
-# regular expresion to restore only the latest #
-#REG='\+\d\d\.\d\d:\d[\d/|\d$]'
-REG='\+..\...\:..$'
-if $dump; then
-        # nice :-)
-	if [[ -z $ssh ]]; then
-	        r="-E <(echo '$REG')"
-	else
-	        r="-E \"<(echo '$REG')\""
-	fi
-else
-        r=""
-fi
-
 # create the command line
 if [[ -z $ssh ]]; then
 	pipe="$pipe | @bindir@/rdup-cp $c $OPT $dest"
-	cmd="@bindir@/rdup $r $x $l $c /dev/null $SOURCE $pipe"
+	cmd="@bindir@/rdup $x $l $c /dev/null $SOURCE $pipe"
 else
 	# needs to be found with PATH
 	pipe="$pipe | rdup-cp $c $OPT $dest"
-	cmd="$ssh @bindir@/rdup $r $x $l $c /dev/null $SOURCE $pipe"
+	cmd="$ssh @bindir@/rdup $x $l $c /dev/null $SOURCE $pipe"
 fi
-#cmd="@bindir@/rdup $r $x $l $c /dev/null $SOURCE $pipe"
+#cmd="@bindir@/rdup $x $l $c /dev/null $SOURCE $pipe"
 
 # execute the backup command
 # _echo2 "Executing: ${cmd}"

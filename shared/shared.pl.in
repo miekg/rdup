@@ -104,13 +104,13 @@ sub exist {
 # otherwise return fake object and we will use our own get (see below)
 # on that
 sub i18n {
+    my $d;
     eval('use Locale::gettext;');
     if ($@) {
-	my $d;
 	$d = bless \$d, "main";
     } else {
 	setlocale(LC_ALL, "");
-	my $d = Locale::gettext->domain("@PACKAGE_NAME@");
+	$d = Locale::gettext->domain("@PACKAGE_NAME@");
 	my $prefix="@prefix@"; # fuck autoconf
 	$d->dir("@localedir@");
     }

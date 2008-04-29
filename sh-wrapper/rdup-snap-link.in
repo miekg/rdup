@@ -2,7 +2,8 @@
 
 # create a hardlinked backup
 # this scripts figures out if the
-# dump is incremental or full
+# dump is incremental or full. And makes a copy
+# of the previous backup woth cp
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -23,18 +24,20 @@ if [[ -z $GNU_CP ]] ;then
 fi
 
 usage() {
-        echo "$PROGNAME [-H] DAYS BACKUPDIR NOW"
-        echo
-        echo "This is a small shell script that hard links directories"
-        echo "It is the basis for rdup-simple"
-	echo
-	echo "-H	include the hour in the backup directory"
-        echo
-        echo DAYS \ - look backup DAYS days for previous dumps
-	echo "		with -H this calculates in hours"
-        echo BACKUPDIR \ - where to backup to
-        echo NOW \ \ - Current date in YYYY/MM format
-	echo "          With -H, current date in YYYY/MM/HH format"
+	cat << HELP
+$PROGNAME [-H] DAYS BACKUPDIR NOW
+
+This is a small shell script that hard links directories
+It is the basis for rdup-simple
+
+-H	     include the hour in the backup directory
+
+DAYS       - look backup DAYS days for previous dumps
+	     with -H this calculates in hours
+BACKUPDIR  - where to backup to
+NOW        - Current date in YYYY/MM format
+             With -H, current date in YYYY/MM/HH format
+HELP
 }
 
 PROGNAME=$0

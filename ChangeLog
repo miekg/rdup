@@ -7,6 +7,9 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
  * substract the filesize when files are removed in rdup-snap
  * remove last remnants of syslog from shared.pl.in
  * changed example cron.rdup
+ * use here docs in the shell script usage
+ * update rdup-restore and removed rdup-snap-here
+ * documentation updates and assorted tweaks
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>

@@ -39,7 +39,6 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup.1
                  doc/rdup-cp.1
                  doc/rdup-restore.1
-                 doc/rdup-snap-here.1
                  doc/rdup-snap-link.1
                  doc/rdup-snap.1
                  doc/rdup-simple.1
@@ -50,7 +49,6 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-hist.1
                  shared/shared.sh
                  shared/shared.pl
-                 sh-wrapper/rdup-snap-here
                  sh-wrapper/rdup-snap-link
                  sh-wrapper/rdup-restore
                  sh-wrapper/rdup-simple

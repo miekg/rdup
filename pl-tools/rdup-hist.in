@@ -12,7 +12,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
-require "@datadir@/rdup/shared.pl" or die "** Require \`shared.pl' failed";
+require "@datadir@/rdup/shared.pl"; 
 
 my $BACKUPROOT;
 my $HOST = hostname;
@@ -23,6 +23,7 @@ my ($diff, $cat, $copy, $version, $help);
 my $abs_path;
 my $back = 0;
 my %mod = ( d => 1, w => 7, m => 30, y => 365 );
+my $d = i18n();
 
 # check if we have a -NUMBER[modifier] option
 my $i = 0;
@@ -52,11 +53,11 @@ usage() if $help;
 version($progName) if $version;
 
 if (! defined $BACKUPROOT) {
-    die "** Need the -b option";	
+    die $d->get("** Need the -b option");
 }
 	
 if (! defined $ARGV[0]) {
-    die "** Need a pathname";
+    die $d->get("** Need a pathname");
 }
 
 $abs_path = File::Spec->rel2abs($ARGV[0]);

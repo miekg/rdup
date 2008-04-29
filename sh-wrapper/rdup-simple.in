@@ -12,35 +12,42 @@ lockdir=/var/lock
 GNU_DEFS=rdup-snapshot.gnu
 
 # common stuff
-source $datadir/shared.sh
+if ! source $datadir/shared.sh; then
+	# no _echo2
+	echo Failed to source $datadir/shared.sh >&2
+	exit 1
+fi
+
 
 usage() {
-        echo "$PROGNAME [+N] DIR [DIR ...] DEST"
-        echo
-        echo "This is a wrapper around rdup and rdup-snap"
-        echo
-        echo DIR \ - directories to back up
-        echo +N \ \ - Look N days back for previous backups, defaults to 8
-	echo "       hours when using -H"
-	echo DEST - where to store the backup. This can be:
-	echo "	ssh://user@host/directory (note: no colon after the hostname"
-	echo "	ssh://host/directory"
-	echo "	file:///directory (note: 3 slashes)"
-	echo "	/directory"
-	echo "	directory"
-        echo
-        echo OPTIONS:
-        echo " -k KEYFILE encrypt all files, using crypt.pl"
-        echo " -z         compress all files, using gzip.pl"
-	echo "            If both -z and -k are given, compression is done first"
-        echo " -E FILE    use FILE as an exclude list"
-        echo " -H         perform hourly backups"
-        echo " -f         force a full dump"
-        echo " -a         write extended attributes with uid/gid"
-        echo " -v         echo the files processed to stderr"
-        echo " -x         pass -x to rdup"
-        echo " -h         this help"
-        echo " -V         print version"
+        cat << HELP
+$PROGNAME [+N] DIR [DIR ...] DEST
+
+This is a wrapper around rdup and rdup-snap
+
+DIR  - directories to back up
++N   - Look N days back for previous backups, defaults to 8
+       hours when using -H
+DEST - where to store the backup. This can be:
+	ssh://user@host/directory (note: no colon after the hostname
+	ssh://host/directory
+	file:///directory (note: 3 slashes)
+	/directory
+	directory
+
+OPTIONS:
+ -k KEYFILE encrypt all files, using crypt.pl
+ -z         compress all files, using gzip.pl
+            If both -z and -k are given, compression is done first
+ -E FILE    use FILE as an exclude list
+ -H         perform hourly backups
+ -f         force a full dump
+ -a         write extended attributes with uid/gid
+ -v         echo the files processed to stderr
+ -x         pass -x to rdup
+ -h         this help
+ -V         print version
+HELP
 }
 
 PROGNAME=$0

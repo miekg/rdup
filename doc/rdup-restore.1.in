@@ -21,7 +21,7 @@ restore everything from \fISOURCE\fRs to \fIDIRECTORY\fR.
 .PP
 SOURCE can be a remote location (use the ssh:// syntax), if you
 use that syntax only one SOURCE can be used. When using this
-syntax the files are pulled from the remote server using 'ssh'.
+syntax the files are \fIpulled\fR from the remote server using 'ssh'.
 
 There is no provisioning for \fBssh\fR so unless you have configured
 \fBssh\fR to work without a passphrase you will be asked to supply one.
@@ -68,15 +68,6 @@ Show a short help message.
 .TP
 .B \-V
 Show the version.
-.TP
-.B \-S
-Restore a rdup-snapshot backup. This is a hardlinked backup, so one
-can also restore these with 'cp'. Consider this a convient function.
-.TP
-.B \-D
-Restore a rdup-dump backup. Due to the way this backup is made, you
-can only restore to the latest version of your backup. \-D is the
-default for rdup-restore.
 
 .SH EXAMPLES
 
