@@ -41,7 +41,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 all:	rdup scripts
 	make -C po all
 
-rdup:	${OBJ} ${HDR} rdup.mo rdup.pot
+rdup:	${OBJ} ${HDR} rdup.pot
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
 
 scripts:
