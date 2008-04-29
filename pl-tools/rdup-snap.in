@@ -44,7 +44,8 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 if (!exist($backupDir)) {
-        mkpath($backupDir) or die $d->get("** Cannot create") . " `$backupDir': $!");
+        mkpath($backupDir) or die $d->get("** Cannot create") . 
+	    "`$backupDir': $!";
 }
 
 if ($remote) {
