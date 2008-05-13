@@ -144,5 +144,5 @@ directory name was used for the internal filelist: \fIelektron.etc.list\fR
 uses \fI/etc\fR.
 
 .SH SEE ALSO
-rdup(1), rdup-snap-link(1) and rdup-snapshot(1). See rdup-backups(1) for
+rdup(1) and rdup-snap-link(1). See rdup-backups(1) for
 examples and an introduction into making backups with \fBrdup\fR.

@@ -21,14 +21,6 @@ will be removed. The end result will be that you will be left with
 a complete mirror of your directory structure at the time of the backup.
 Due to the use of hard links the amount of disk space used for the
 backup is minimized.
-.PP
-Note, to create a hard linked backup directory use the script
-\fIrdup-snapshot\fR which will create it for you. See rdup-snapshot(1)
-for more information. This only works with GNU cp and GNU date.
-.PP
-Also note that there are no restore utilities, this is because you 
-can copy the backup to another location with the standard unix
-commands.
 
 .SH OPTIONS
 .TP
