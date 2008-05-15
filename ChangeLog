@@ -1,5 +1,13 @@
 xx May 2008: 0.6.0 Miek <miek@miek.nl>
   -- i18n added --
+ * i18n support added, but nothing is translated yet
+   - this is for the perl scripts and the rdup core
+   - shell scripts do not use i18n
+ * hardlink support
+   - symlink has also changed to support this
+   - each link is printed as 'link -> target'
+   - hardlinks have the file type 'h'
+   - now we have: -, d, l and h
  * implemented gettext for i18n and added Dutch as
    a language for rdup, the perl utils, but not the shell
    scripts. Those can be easily rewritten in another language
@@ -10,8 +18,6 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
  * use here docs in the shell script usage
  * update rdup-restore and removed rdup-snap-here
  * documentation updates and assorted tweaks
- * hardlink support
- * symlink has also changed to support this
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>

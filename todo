@@ -3,11 +3,15 @@ TODO:
 aanmaken van hardlink als target nog niet bestaat.
     - dit is gegarandeerd omdat in de backup een hard link
     - gevonden is.
+maak fake target, met juiste naam en 'rdup-fake' in het,
+komt wel een keer de juiste file voorbij.
 
 rules voor scripts opstellen
 
+    en die op miek.nl zetten
+
+
 need to check this on non gettext platforms - atcmpg
-fix usage to use here docs??
 
 :install:
 
