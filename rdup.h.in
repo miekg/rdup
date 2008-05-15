@@ -70,15 +70,16 @@
 #define F_PERM          07777
 
 struct entry {
-        char *f_name;
-        size_t f_name_size;
-        uid_t f_uid;
-        gid_t f_gid;
-        mode_t f_mode;
-        time_t f_ctime;
-        off_t f_size;
-	dev_t f_dev;
-	ino_t f_ino;
+        char *f_name;		/* filename, or hardlink target */
+        size_t f_name_size;	/* size of filename */
+	guint f_lnk;		/* 0, 1 if hardlink */
+        uid_t f_uid;		/* uid */
+        gid_t f_gid;		/* gid */
+        mode_t f_mode;		/* mode bits */
+        time_t f_ctime;		/* change time of the inode */
+        off_t f_size;		/* file size */
+	dev_t f_dev;		/* device id */
+	ino_t f_ino;		/* inode number */
 };
 
 struct substract {
@@ -110,4 +111,6 @@ ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 char * abspath(char *path);
 /* signal.c */
 void signal_abort(int signal);
+/* link.c */
+gchar * hardlink(GHashTable *t, struct entry *e);
 #endif  /* _RDUP_H */

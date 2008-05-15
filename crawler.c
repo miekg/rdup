@@ -25,6 +25,7 @@ entry_dup(struct entry *f)
 
         g->f_name       = g_strdup(f->f_name);
         g->f_name_size  = f->f_name_size;
+        g->f_lnk	= f->f_lnk;
         g->f_uid        = f->f_uid;
         g->f_gid        = f->f_gid;
         g->f_mode       = f->f_mode;
@@ -99,13 +100,14 @@ dir_prepend(GTree *t, char *path)
  * We do this by giving them the value 0 (NULL_DUMP)
  */
 void
-dir_crawl(GTree *t, char *path, gboolean new_dir)
+dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 {
 	DIR 		*dir;
 	FILE 		*f;
 	struct dirent 	*dent;
 	struct entry    *directory;
 	char 		*curpath;
+	gchar		*lnk;
 	struct stat   	s;
 	struct entry	pop;
 	struct remove_path rp;
@@ -187,6 +189,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 			pop.f_size      = s.st_size;
 			pop.f_dev       = s.st_dev;
 			pop.f_ino       = s.st_ino;
+			pop.f_lnk	= 0;
 
 			if (gfunc_regexp(regex_list, curpath)) {
 				g_free(curpath);
@@ -209,6 +212,30 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 				closedir(dir);
 				return;
 			}
+
+			/* hardlinks */
+			if (s.st_nlink > 1) {
+				if (( lnk = hardlink(linkhash, &pop))) {
+					/* we got a match back */
+					lnk = g_strdup_printf("%s -> %s", pop.f_name, lnk);
+					pop.f_lnk = 1;
+					pop.f_name = lnk;
+					pop.f_size = strlen(pop.f_name);
+				}
+			}
+			/* symlinks; also put the -> name in f_name */
+			if (S_ISLNK(s.st_mode)) {
+				char buf[BUFSIZE + 1]; 
+				ssize_t i;
+				if ((i = readlink(pop.f_name, buf, BUFSIZE)) == -1) {
+					msg(_("Error reading link `%s\': %s"), pop.f_name, strerror(errno));
+				} else {
+					buf[i] = '\0';
+					pop.f_name = g_strdup_printf("%s -> %s", pop.f_name, buf);
+					pop.f_size = strlen(pop.f_name);
+				}
+			}
+
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);
 			continue;
@@ -242,6 +269,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 			dirstack[d]->f_size       = s.st_size;
 			dirstack[d]->f_dev        = s.st_dev;
 			dirstack[d]->f_ino        = s.st_ino;
+			dirstack[d]->f_lnk        = 0;
 
 			if (s.st_ctime > opt_timestamp)
 				new_dir = TRUE;
@@ -270,7 +298,7 @@ dir_crawl(GTree *t, char *path, gboolean new_dir)
 		/* recurse */
 		/* potentially expensive operation. Better would be to when we hit
 		 * .nobackup to go up the tree and delete some nodes.... or not */
-		dir_crawl(t, directory->f_name, new_dir);
+		dir_crawl(t, linkhash, directory->f_name, new_dir);
 		entry_free(directory);
 	}
 	g_free(dirstack);

@@ -21,7 +21,7 @@ time_t opt_timestamp       = 0;                       /* timestamp file */
 sig_atomic_t sig           = 0;
 
 /* crawler.c */
-void dir_crawl(GTree *t, char *path, gboolean new_dir);
+void dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
@@ -216,6 +216,7 @@ main(int argc, char **argv)
 	GTree 	*curtree; 	/* previous backup tree */
 	GTree	*new;		/* all that is new */
 	GTree	*changed;	/* all that is possibly changed */
+	GHashTable *linkhash;	/* hold dev, inode, name stuff */
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
@@ -244,6 +245,7 @@ main(int argc, char **argv)
 
 	curtree = g_tree_new(gfunc_equal);
 	backup  = g_tree_new(gfunc_equal);
+	linkhash = g_hash_table_new(g_str_hash, g_str_equal);
 	remove  = NULL;
 	opterr = 0;
 	time = NULL;
@@ -371,7 +373,7 @@ main(int argc, char **argv)
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, path, FALSE);
+		dir_crawl(backup, linkhash, path, FALSE);
 	}
 #ifdef _DEBUG_RACE
 	fprintf(stderr, _("** Sleeping\n"));

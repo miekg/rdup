@@ -115,12 +115,14 @@ cat(FILE *fp, char *filename, off_t f_size)
 static void
 entry_cat_data(FILE *fp, struct entry *e)
 {
-	if (S_ISREG(e->f_mode)) {
+	if (S_ISREG(e->f_mode) && e->f_lnk == 0) {
 		if (!cat(fp, e->f_name, e->f_size)) {
 			exit(EXIT_FAILURE);
 		}
 		return;
 	}
+	/* special case for links isn't needed anymore */
+#if 0
 	if (S_ISLNK(e->f_mode)) {
 		char buf[BUFSIZE + 1];
 		ssize_t i;
@@ -132,6 +134,7 @@ entry_cat_data(FILE *fp, struct entry *e)
 		fprintf(fp, "%s", buf);
 		return;
 	}
+#endif
 }
 
 /**
@@ -222,7 +225,10 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			} else if (S_ISLNK(e->f_mode)) {
 				fputc('l', out);
 			} else {
-				fputc('-', out);
+				if (e->f_lnk == 1) {
+					fputc('h', out);
+				} else
+					fputc('-', out);
 			}
 			break;
 		default:
@@ -254,14 +260,16 @@ entry_print(FILE *out, char plusmin, struct entry *e)
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 
-	if (!S_ISDIR(e->f_mode) && plusmin == '+' && !opt_local) {
+	if (S_ISREG(e->f_mode) && plusmin == '+' && !opt_local
+		&& e->f_lnk == 0) {
 		/* check if the file has changed since we first
 		 * visited it. If so, skip it as it will tear
 		 * up the entire print. Esp. when also printing
 		 * the contents. The recheck here, minimizes the
 		 * race, it's NOT GONE!!
 		 *
-		 * This is not a problem for directories
+		 * This is not a problem for directories, nor sym- and
+		 * hard links
 		 */
 		if (lstat(e->f_name, &s) != 0) {
 			msg(_("Could not stat path `%s\': %s"), e->f_name,
