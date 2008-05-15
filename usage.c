@@ -44,18 +44,18 @@ implement a (incremental) backup scheme.\n\
 \n\
         FORMAT:\n\
         The following escape sequences are recognized:\n\
-        \'%%p\': '+' if new, '-' if removed\n\
-        \'%%b\': permission bits\n\
-        \'%%m\': file mode bits\n\
-        \'%%u\': uid\n\
-        \'%%g\': gid\n\
-        \'%%l\': path length\n\
-        \'%%s\': file size\n\
-        \'%%n\': path\n\
-        \'%%t\': time of modification (epoch)\n\
-        \'%%H\': the sha1 hash of the file's contents\n\
-        \'%%T\': \'type\' (d, l or -: dir, link or file)\n\
-        \'%%C\': file contents\n\
+        \'%p\': '+' if new, '-' if removed\n\
+        \'%b\': permission bits\n\
+        \'%m\': file mode bits\n\
+        \'%u\': uid\n\
+        \'%g\': gid\n\
+        \'%l\': path length (for links: size of \'path -> target\')\n\
+        \'%s\': file size\n\
+        \'%n\': path (for links: \'path -> target\')\n\
+        \'%t\': time of modification (epoch)\n\
+        \'%H\': the sha1 hash of the file's contents\n\
+        \'%T\': \'type\' (d, l, h or -: dir, symlink, hardlink or file)\n\
+        \'%C\': file contents\n\
 \n\
 Report bugs to <miek@miek.nl>\n\
 Licensed under the GPL version 3.\n\
