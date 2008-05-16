@@ -217,11 +217,11 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 			if (s.st_nlink > 1) {
 				if (( lnk = hardlink(linkhash, &pop))) {
 					/* we got a match back */
+					pop.f_size = strlen(pop.f_name);  /* old name length */
 					lnk = g_strdup_printf("%s -> %s", pop.f_name, lnk);
 					pop.f_lnk = 1;
 					pop.f_name = lnk;
 					pop.f_name_size = strlen(pop.f_name);
-					pop.f_size = 0;  /* doen? */
 				}
 			}
 			/* symlinks; also put the -> name in f_name */
@@ -232,9 +232,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 					msg(_("Error reading link `%s\': %s"), pop.f_name, strerror(errno));
 				} else {
 					buf[i] = '\0';
+					pop.f_size = strlen(pop.f_name); /* old name length */
 					pop.f_name = g_strdup_printf("%s -> %s", pop.f_name, buf);
 					pop.f_name_size = strlen(pop.f_name);
-					pop.f_name = 0; /* no contents */
 				}
 			}
 
