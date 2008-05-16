@@ -220,7 +220,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 					lnk = g_strdup_printf("%s -> %s", pop.f_name, lnk);
 					pop.f_lnk = 1;
 					pop.f_name = lnk;
-					pop.f_size = strlen(pop.f_name);
+					pop.f_name_size = strlen(pop.f_name);
+					pop.f_size = 0;  /* doen? */
 				}
 			}
 			/* symlinks; also put the -> name in f_name */
@@ -232,7 +233,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 				} else {
 					buf[i] = '\0';
 					pop.f_name = g_strdup_printf("%s -> %s", pop.f_name, buf);
-					pop.f_size = strlen(pop.f_name);
+					pop.f_name_size = strlen(pop.f_name);
+					pop.f_name = 0; /* no contents */
 				}
 			}
 
