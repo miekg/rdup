@@ -1,5 +1,10 @@
 TODO:
 
+-depth option ala find?
+
+use gettext.sh for the shell stuff
+in perl we use localize if available
+
 aanmaken van hardlink als target nog niet bestaat.
     - dit is gegarandeerd omdat in de backup een hard link
     - gevonden is.
@@ -9,9 +14,6 @@ komt wel een keer de juiste file voorbij.
 rules voor scripts opstellen
 
     en die op miek.nl zetten
-
-
-need to check this on non gettext platforms - atcmpg
 
 :install:
 
