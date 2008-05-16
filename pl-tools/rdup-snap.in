@@ -131,7 +131,7 @@ sub _mirror {
                                         $bits = "7" . substr($bits, 1, 2);
                                 }
                                 if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
-                                        print STDERR $d-get("** Chmod u+rwx") . " $target\n";
+                                        print STDERR $d->get("** Chmod u+rwx") . " $target\n";
                                         $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
                                 }
                         }
