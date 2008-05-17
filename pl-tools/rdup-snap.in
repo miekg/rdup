@@ -64,18 +64,18 @@ if ($remote) {
 }
 # postprocess the hardlinks
 foreach (keys %hardlink) {
-    print "$backupDir/$hardlink{$_}", "-> ", "$backupDir/$_", "\n";
     # create hardlinks
-    link("$backupDir/$hardlink{$_}", "$backupDir/$_");
+    link("$backupDir/$hardlink{$_}", "$backupDir/$_") or 
+	warn $d->get("** Cannot create hardlink:") .  
+	" $backupDir/$hardlink{$_} -> $backupDir/$_: $!";
 }
-
-
 
 my $te = time;
 
 printf STDERR $d->get("** #REG FILES  : %d\n"), $ireg;
 printf STDERR $d->get("** #DIRECTORIES: %d\n"), $idir;
-printf STDERR $d->get("** #LINKS      : %d\n"), $ilnk;
+printf STDERR $d->get("** #SYMLINKS   : %d\n"), $ilnk;
+printf STDERR $d->get("** #HARDLINKS  : %d\n"), 0 + keys %hardlink;
 printf STDERR $d->get("** #(RE)MOVED  : %d\n"), $irm;
 printf STDERR $d->get("** DELTA FSIZE : %.1f MB\n"), $ftsize/1024.0/1024.0;
 printf STDERR $d->get("** STORED IN   : %s\n"), $backupDir;
@@ -87,54 +87,59 @@ sub _mirror {
     my $dir = shift;
     my $dump = substr($t, 0, 1);
     my $type = substr($t, 1, 1);
-    my $target;
-    my $ret;
+    my ($target, $ret, $old, $new);
 
     sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
     if ($remote) {
 	$path = "";
 	read STDIN, $path, $psize;
     }
-    die $d->("** Empty path")  if ($path eq "");
+    die $d->get("** Empty path")  if ($path eq "");
     print STDERR "$path\n" if $verbose;
 
+    $target = "$dir/$path";
+
     if ($dump eq '+') {        # add
-	$target = "$dir/$path";
-	if ($type eq '-') {        # REG
-	    if (exist($target) == 1) {
+
+	if ($type eq 'l' or $type eq 'h') {
+	    # the filesize is the leftname of the link
+	    # the path_name size is the size of left -> right
+	    $new = substr($path, 0, $fsize);
+	    $old = substr($path, $fsize + 4); # skip ' -> '
+	    $target = "$dir/$new";
+	}
+
+	# if there is already something there - remove it
+	if (exist($target) == 1) {
+	    if ($type eq '-' or $type eq 'l' or $type eq 'h') {
 		if (-d _) {
 		    rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
 		} else {
 		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
 		}
+	    } elsif ($type eq 'd') {
+		if (-f _ || -l _) {      # Type of entry has changed
+		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
+		}
 	    }
+	}
+
+	if ($type eq '-') {		# REG
 	    if ($remote) {
 		open FILE, ">$target" or warn $d->get("** Cannot create:") . " $target: $!";
 		if ($fsize != 0) {
 		    copyout($fsize, *FILE);
 		}
-		rchown($uid, $gid, $target);
-		chown_attr($attr_there, $uid, $gid, $target);
-		rchmod($bits, $target);
 		close FILE or warn "** Failed to close: $!";
 	    } else {
 		$ret = copy($path, $target) or warn $d->get("** Copy failed:") . " $! $path $target";
-		if ($ret == 1) {
-		    rchown($uid, $gid, $target);
-		    chown_attr($attr_there, $uid, $gid, $target);
-		    rchmod($bits, $target);
-		}
 	    }
 	    $ftsize += $fsize;
 	    $ireg++;
+
 	} elsif ($type eq 'd') {        # DIR
-	    exist($target);  # side effects Go!
-		if (-f _ || -l _) {      # Type of entiry has changed
-		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
-		}
 	    mkpath($target) unless -d _;
-	    rchown($uid, $gid, $target);
-	    chown_attr($attr_there, $uid, $gid, $target);
+	    # fix unaccessible paths for mortal users
 	    if ($> != 0) {
 		if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
 		    print STDERR $d->get("** Chmod u+rwx") . " $target\n";
@@ -145,35 +150,23 @@ sub _mirror {
 		    $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
 		}
 	    }
-	    rchmod($bits, $target);
 	    $idir++;
-	} elsif ($type eq 'l') {        # LNK; target id the content
-	    # the filesize is the leftname of the link
-	    # the path_name size is the size of left -> right
-	    my $new = substr($path, 0, $fsize);
-	    my $old = substr($path, $fsize + 4); # skip ' -> '
-	    $target = "$dir/$new";
-	    if (exist($target) == 1) {
-		if (-d _) {
-		    rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
-		} else {
-		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
-		}
-	    }
-	    symlink($old, $target) or warn $d->get("** Cannot create link:") . 
+
+	} elsif ($type eq 'l') {        # SLNK
+	    symlink($old, $target) or warn $d->get("** Cannot create symlink:") . 
 		" $old -> $target: $!";
-	    rchown($uid, $gid, $target);
-	    chown_attr($attr_there, $uid, $gid, $target);
-	    $ftsize += $fsize;
 	    $ilnk++;
-	} elsif ($type eq 'h') {	# hardlink, save these for postprocessing
-	    my $new = substr($path, 0, $fsize);
-	    my $old = substr($path, $fsize + 4); # skip ' -> '
+	} elsif ($type eq 'h') {	# HLNK
 	    $hardlink{$new} = $old;
 	}
 
+	if ($type ne 'l' and $type ne 'h') {
+	    rchown($uid, $gid, $target);
+	    chown_attr($attr_there, $uid, $gid, $target);
+	    rchmod($bits, $target);
+	}
+
     } else {        # Remove
-	$target = "$dir/$path";
 	if (exist($target)) {
 	    if (-d _) {
 		rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";

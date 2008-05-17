@@ -3,101 +3,98 @@
 
 # show the version, $progname needs to be set!
 sub version {
-        print "$_[0]: @PACKAGE_VERSION@ (rdup-utils)\n";
-        exit;
+    print "$_[0]: @PACKAGE_VERSION@ (rdup-utils)\n";
+    exit;
 }
 
 # sanity_check the input
 sub sanity_check {
-        my ($dump, $bits, $psize, $fsize, $uid, $gid) = @_;
-        die "** $progName: dump must be + or -"   if $dump ne "+" && $dump ne "-";
-        die "** $progName: bits must be octal"    unless $bits =~ "[0-7]+";
-        die "** $progName: psize must be numeric" unless $psize =~ "[0-9]+";
-        die "** $progName: fsize must be numeric" unless $fsize =~ "[0-9]+";
-        die "** $progName: uid must be numeric"   unless $uid =~ "[0-9]+";
-        die "** $progName: gid must be numeric"   unless $gid =~ "[0-9]+";
+    my ($dump, $bits, $psize, $fsize, $uid, $gid) = @_;
+    die "** $progName: dump must be + or -"   if $dump ne "+" && $dump ne "-";
+    die "** $progName: bits must be octal"    unless $bits =~ "[0-7]+";
+    die "** $progName: psize must be numeric" unless $psize =~ "[0-9]+";
+    die "** $progName: fsize must be numeric" unless $fsize =~ "[0-9]+";
+    die "** $progName: uid must be numeric"   unless $uid =~ "[0-9]+";
+    die "** $progName: gid must be numeric"   unless $gid =~ "[0-9]+";
 }
 
 # copy a FILE DESC to a PIPE
 sub copyout {
-	my ($count, $pipe) = @_;
-        my ($buf, $n);
+    my ($count, $pipe) = @_;
+    my ($buf, $n);
 
-        while ($count > 4096) {
-                $n = read STDIN, $buf, 4096;
-                syswrite $pipe, $buf, $n;
-                $count -= 4096;
-        }
-        if ($count > 0) {
-                $n = read STDIN, $buf, $count;
-                syswrite $pipe, $buf, $n;
-        }
+    while ($count > 4096) {
+	$n = read STDIN, $buf, 4096;
+	syswrite $pipe, $buf, $n;
+	$count -= 4096;
+    }
+    if ($count > 0) {
+	$n = read STDIN, $buf, $count;
+	syswrite $pipe, $buf, $n;
+    }
 }
 
 # cat from FILE DESC to STDOUT
 sub cat {
-        my $file = shift;
-        my ($buf, $n);
+    my $file = shift;
+    my ($buf, $n);
 
-        while (($n = read $file, $buf, 4096) > 0) {
-                syswrite STDOUT, $buf, $n;
-        }
+    while (($n = read $file, $buf, 4096) > 0) {
+	syswrite STDOUT, $buf, $n;
+    }
 }
 
 # cat from FILE to STDOUT
 sub catfile {
-        my $name = shift;
-        open FILE, "<$name" or die "** $name: $!";
-        cat(*FILE);
-        close FILE;
+    my $name = shift;
+    open FILE, "<$name" or die "** $name: $!";
+    cat(*FILE);
+    close FILE;
 }
 
 # set the r_uid/g_uid with the original uid/gid
 # usefull for remote backups. SLOOOOWWW
 sub chown_attr {
-	my ($attr, $xuid, $xgid, $file) = @_;
-        return unless $attr;
-        if ($^O eq "linux") {
-                $err += system("attr -q -s r_uid -V$xuid \"$file\" 2>/dev/null; attr -q -s r_gid -V$xgid \"$file\" 2>/dev/null");
-        }
-        if ($^O eq "solaris") {
-                 $err += system("runat \"$file\" \"echo $xuid > r_uid\" 2>/dev/null; runat \"$file\" \"echo $xgid > r_gid\" 2>/dev/null");
-        }
-        #warn "** Could not set xattr on $file" if ($err ne 0); Happens too often
+    my ($attr, $xuid, $xgid, $file) = @_;
+    return unless $attr;
+    if ($^O eq "linux") {
+	$err += system("attr -q -s r_uid -V$xuid \"$file\" 2>/dev/null; attr -q -s r_gid -V$xgid \"$file\" 2>/dev/null");
+    }
+    if ($^O eq "solaris") {
+	$err += system("runat \"$file\" \"echo $xuid > r_uid\" 2>/dev/null; runat \"$file\" \"echo $xgid > r_gid\" 2>/dev/null");
+    }
+    #warn "** Could not set xattr on $file" if ($err ne 0); Happens too often
 }
 
 # check if the system supports extended attributes
 sub check_attr {
-        if ($^O eq "linux") {
-                map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
-        }
-        if ($^O eq "solaris") {
-                map {return 1 if -x $_ . '/' . "runat"}  split(/:/, $ENV{'PATH'});
-        }
-        warn "** Cannot set extended attributes";
-        0;
+    if ($^O eq "linux") {
+	map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
+    }
+    if ($^O eq "solaris") {
+	map {return 1 if -x $_ . '/' . "runat"}  split(/:/, $ENV{'PATH'});
+    }
+    warn "** Cannot set extended attributes";
+    0;
 }
 
 # chmod or warn
 sub rchmod {
-        my $bits = shift;
-        my $file = shift;
-        chmod oct($bits), $file or warn "** Cannot chmod $file: $!";
+    my ($bits, $file) = (shift, shift);
+    chmod oct($bits), $file or warn "** Cannot chmod $file: $!";
 }
 
 # chown or warn
 sub rchown {
-        my $uid = shift;
-        my $gid = shift;
-        my $file = shift;;
-        chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
+    my ($uid, $gid, $file) = (shift, shift, shift);
+    chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
 }
 
 # check if a file exists
 sub exist {
-        lstat(shift);
-        return 0 unless -e _;
-        1;
+    lstat(shift);
+    return 0 unless -e _;
+    1;
 }
 
 # check if gettext is there, if so return object of that class
@@ -112,7 +109,7 @@ sub i18n {
 	setlocale(LC_ALL, "");
 	$d = Locale::gettext->domain("@PACKAGE_NAME@");
 	my $prefix="@prefix@"; # fuck autoconf
-	$d->dir("@localedir@");
+	    $d->dir("@localedir@");
     }
     $d;
 }
