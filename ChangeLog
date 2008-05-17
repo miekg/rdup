@@ -7,7 +7,7 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
    - symlink has also changed to support this
    - each link is printed as 'link -> target'
    - hardlinks have the file type 'h'
-   - now we have: -, d, l and h
+   - now we have: -, d, l and h types
  * implemented gettext for i18n and added Dutch as
    a language for rdup, the perl utils, but not the shell
    scripts. Those can be easily rewritten in another language
