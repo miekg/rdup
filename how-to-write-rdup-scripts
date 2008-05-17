@@ -1,0 +1,12 @@
+  New: sample output:
+
+    +d 0751 1000 1000 11 0 /home/miekg/bin
+    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin2/cx
+    +h 0700 1000 1000 51 28 /home/miekg/bin/cx-hardlink -> /home/miekg/bin2/cx
+    +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
+    +- 0775 1000 1000 21 174 /home/miekg/bin/wifi
+
+a backup script that can be used in conjunction with rdup needs to be able to grok the above
+output (obviously). Writing such a script isn't really that difficult. You can look at the
+examples already used by rdup. See `rdup-snap` for instance. In case you want to write your
+own scripts you will have keep in mind the following things.
