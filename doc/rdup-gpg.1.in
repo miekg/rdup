@@ -38,7 +38,7 @@ otherwise you need to type your passphrase for \fIevery\fR file that
 is decrypted.
 .TP
 .B \-a
-Use `gpg-agent`, usefull when decrypting a backup. 
+Use `gpg-agent`, useful when decrypting a backup. 
 .TP
 .B \-h
 Show a short help message.

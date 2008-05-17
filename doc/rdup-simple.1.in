@@ -115,6 +115,13 @@ attributes r_uid and r_gid.
 .B \-f
 Force a full dump.
 .TP
+.B \-g
+GPG encrypt the files. This option inserts \fBrdup-gpg\fR in the
+pipeline. Note that when you need to restore you will be prompted
+for your GPG passphrase for \fIevery\fR encrypted file! Unless you
+have configured `gpg-agent`. See the \fI\-A\fR flag of
+\fBrdup-restore\fR.
+.TP
 .B \-x
 See \-x in rdup(1).
 .TP
@@ -145,4 +152,5 @@ uses \fI/etc\fR.
 
 .SH SEE ALSO
 rdup(1) and rdup-snap-link(1). See rdup-backups(1) for
-examples and an introduction into making backups with \fBrdup\fR.
+examples and an introduction into making backups with \fBrdup\fR. Look
+at rdup-restore(1) for help on restoring.
