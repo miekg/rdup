@@ -9,6 +9,14 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
    - filesize is overload to take the length of 'link' in this case
    - hardlinks have the file type 'h'
    - now we have: -, d, l and h types
+   New: sample output:
+
+    +d 0751 1000 1000 11 0 /home/miekg/bin
+    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin2/cx
+    +h 0700 1000 1000 51 28 /home/miekg/bin/cx-hardlink -> /home/miekg/bin2/cx
+    +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
+    +- 0775 1000 1000 21 174 /home/miekg/bin/wifi
+
  * Added gpg encryption/decryption to rdup-simple and rdup-restore
    (requested by: Jan Spakula)
  * implemented gettext for i18n and added Dutch as

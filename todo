@@ -1,17 +1,7 @@
 TODO:
 
--depth option ala find?
-
-use gettext.sh for the shell stuff
-in perl we use localize if available
-
-aanmaken van hardlink als target nog niet bestaat.
-    - dit is gegarandeerd omdat in de backup een hard link
-    - gevonden is.
-maak fake target, met juiste naam en 'rdup-fake' in het,
-komt wel een keer de juiste file voorbij.
-
-rules voor scripts opstellen
+rules voor eigen scripts opstellen, waar moet je aan denken bij het
+maken van rdup scripts
 
     check if added or removed
     + or -
@@ -26,6 +16,9 @@ rules voor scripts opstellen
 
 
     en die op miek.nl zetten
+
+rdup-cp fixen, rdup-restore gpg fixen
+
 
 :install:
 
@@ -45,6 +38,7 @@ o add conformence test; symlinks etc.
 o gpg decryption
 
 o se linux support?
+o generic extended attributes. Locally we can use copy
 - extended attributes
 
 :gui:

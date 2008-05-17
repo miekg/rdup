@@ -22,9 +22,9 @@ SOURCE - source to restore from:
       directory
 
 OPTIONS:
-    -k KEYFILE decrypt all files, using rdup-crypt
-    -z         decompress all files, using rdup-gzip
-               If both -z and -k are selected, decryption is done first
+    -k KEYFILE decrypt all files, using mcrypt (rdup-crypt -d)
+    -g	       decrypt all files, using gpg (rdup-gpg -d)
+    -z         decompress all files, using gzip (rdup-gzip -d)
     -a         use extended attributes with uid/gid
     -v         echo the files processed to stderr
     -x         pass -x to rdup
