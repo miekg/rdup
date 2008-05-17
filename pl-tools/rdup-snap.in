@@ -20,13 +20,14 @@ my $d= i18n();
 my $ts = time;
 my $progName = basename $0;
 my ($help, $version, $verbose, $attr, $remote, $hourly, $backupDir);
+my %hardlink;
 
 GetOptions("h" => \$help,
-        "V" => \$version,
-        "a" => \$attr, # extended attr support
-        "c" => \$remote,
-        "v" => \$verbose,
-        "b=s" => \$backupDir);
+	"V" => \$version,
+	"a" => \$attr, # extended attr support
+	"c" => \$remote,
+	"v" => \$verbose,
+	"b=s" => \$backupDir);
 
 usage() if $help;
 version($progName) if $version;
@@ -44,23 +45,32 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 if (!exist($backupDir)) {
-        mkpath($backupDir) or die $d->get("** Cannot create") . 
-	    "`$backupDir': $!";
+    mkpath($backupDir) or die $d->get("** Cannot create") . 
+	"`$backupDir': $!";
 }
 
 if ($remote) {
-        while (<STDIN>) {
-                chomp;
-                ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
-                _mirror($backupDir);
-        }
+    while (<STDIN>) {
+	chomp;
+	($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
+	_mirror($backupDir);
+    }
 } else {
-        while (<STDIN>) {
-                chomp;
-                ($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
-                _mirror($backupDir);
-        }
+    while (<STDIN>) {
+	chomp;
+	($t, $bits, $uid, $gid, $psize, $fsize, $path) = split(" ", $_, 7);
+	_mirror($backupDir);
+    }
 }
+# postprocess the hardlinks
+foreach (keys %hardlink) {
+    print "$backupDir/$hardlink{$_}", "-> ", "$backupDir/$_", "\n";
+    # create hardlinks
+    link("$backupDir/$hardlink{$_}", "$backupDir/$_");
+}
+
+
+
 my $te = time;
 
 printf STDERR $d->get("** #REG FILES  : %d\n"), $ireg;
@@ -74,112 +84,117 @@ rchmod(755, $backupDir);
 exit 0;
 
 sub _mirror {
-        my $dir = shift;
-        my $dump = substr($t, 0, 1);
-        my $type = substr($t, 1, 1);
-	my $target;
-	my $ret;
+    my $dir = shift;
+    my $dump = substr($t, 0, 1);
+    my $type = substr($t, 1, 1);
+    my $target;
+    my $ret;
 
-        sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
-        if ($remote) {
-                $path = "";
-                read STDIN, $path, $psize;
-        }
-        die $d->("** Empty path")  if ($path eq "");
-        print STDERR "$path\n" if $verbose;
+    sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
+    if ($remote) {
+	$path = "";
+	read STDIN, $path, $psize;
+    }
+    die $d->("** Empty path")  if ($path eq "");
+    print STDERR "$path\n" if $verbose;
 
-        if ($dump eq '+') {        # add
-                $target = "$dir/$path";
-                if ($type eq '-') {        # REG
-                        if (exist($target) == 1) {
-                                if (-d _) {
-                                        rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
-                                } else {
-                                        unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
-                                }
-                        }
-                        if ($remote) {
-                                open FILE, ">$target" or warn $d->get("** Cannot create:") . " $target: $!";
-                                if ($fsize != 0) {
-                                        copyout($fsize, *FILE);
-                                }
-                                rchown($uid, $gid, $target);
-                                chown_attr($attr_there, $uid, $gid, $target);
-                                rchmod($bits, $target);
-                                close FILE or warn "** Failed to close: $!";
-                        } else {
-                                $ret = copy($path, $target) or warn $d->get("** Copy failed:") . " $! $path $target";
-				if ($ret == 1) {
-					rchown($uid, $gid, $target);
-					chown_attr($attr_there, $uid, $gid, $target);
-					rchmod($bits, $target);
-				}
-                        }
-                        $ftsize += $fsize;
-                        $ireg++;
-                } elsif ($type eq 'd') {        # DIR
-                        exist($target);  # side effects Go!
-                        if (-f _ || -l _) {      # Type of entiry has changed
-                                unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
-                        }
-                        mkpath($target) unless -d _;
-                        rchown($uid, $gid, $target);
-                        chown_attr($attr_there, $uid, $gid, $target);
-                        if ($> != 0) {
-                                if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
-                                        print STDERR $d->get("** Chmod u+rwx") . " $target\n";
-                                        $bits = "7" . substr($bits, 1, 2);
-                                }
-                                if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
-                                        print STDERR $d->get("** Chmod u+rwx") . " $target\n";
-                                        $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
-                                }
-                        }
-                        rchmod($bits, $target);
-                        $idir++;
-                } elsif ($type eq 'l') {        # LNK; target id the content
-                        if (exist($target) == 1) {
-                                if (-d _) {
-                                        rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
-                                } else {
-                                        unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
-                                }
-                        }
-                        if ($remote) {
-                                my $linkTarget = "";
-                                read STDIN, $linkTarget, $fsize;
-                                symlink $linkTarget, $target or warn $d->get("** Cannot create link:") . " $target -> $linkTarget: $!";
-                        } else {
-                                symlink(readlink($path), $target) or warn $d->get("** Cannot create link:") . " $target -> $path: $!";
-                        }
-                        rchown($uid, $gid, $target);
-                        chown_attr($attr_there, $uid, $gid, $target);
-                        $ftsize += $fsize;
-                        $ilnk++;
-                }
-        } else {        # Remove
-                $target = "$dir/$path";
-                if (exist($target)) {
-                        if (-d _) {
-                                rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
-                        } else {
-                                unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
-                        }
-                }
-                $ftsize -= $fsize;
-                $irm++;
-        }
+    if ($dump eq '+') {        # add
+	$target = "$dir/$path";
+	if ($type eq '-') {        # REG
+	    if (exist($target) == 1) {
+		if (-d _) {
+		    rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
+		} else {
+		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
+		}
+	    }
+	    if ($remote) {
+		open FILE, ">$target" or warn $d->get("** Cannot create:") . " $target: $!";
+		if ($fsize != 0) {
+		    copyout($fsize, *FILE);
+		}
+		rchown($uid, $gid, $target);
+		chown_attr($attr_there, $uid, $gid, $target);
+		rchmod($bits, $target);
+		close FILE or warn "** Failed to close: $!";
+	    } else {
+		$ret = copy($path, $target) or warn $d->get("** Copy failed:") . " $! $path $target";
+		if ($ret == 1) {
+		    rchown($uid, $gid, $target);
+		    chown_attr($attr_there, $uid, $gid, $target);
+		    rchmod($bits, $target);
+		}
+	    }
+	    $ftsize += $fsize;
+	    $ireg++;
+	} elsif ($type eq 'd') {        # DIR
+	    exist($target);  # side effects Go!
+		if (-f _ || -l _) {      # Type of entiry has changed
+		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
+		}
+	    mkpath($target) unless -d _;
+	    rchown($uid, $gid, $target);
+	    chown_attr($attr_there, $uid, $gid, $target);
+	    if ($> != 0) {
+		if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
+		    print STDERR $d->get("** Chmod u+rwx") . " $target\n";
+		    $bits = "7" . substr($bits, 1, 2);
+		}
+		if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
+		    print STDERR $d->get("** Chmod u+rwx") . " $target\n";
+		    $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
+		}
+	    }
+	    rchmod($bits, $target);
+	    $idir++;
+	} elsif ($type eq 'l') {        # LNK; target id the content
+	    # the filesize is the leftname of the link
+	    # the path_name size is the size of left -> right
+	    my $new = substr($path, 0, $fsize);
+	    my $old = substr($path, $fsize + 4); # skip ' -> '
+	    $target = "$dir/$new";
+	    if (exist($target) == 1) {
+		if (-d _) {
+		    rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
+		} else {
+		    unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
+		}
+	    }
+	    symlink($old, $target) or warn $d->get("** Cannot create link:") . 
+		" $old -> $target: $!";
+	    rchown($uid, $gid, $target);
+	    chown_attr($attr_there, $uid, $gid, $target);
+	    $ftsize += $fsize;
+	    $ilnk++;
+	} elsif ($type eq 'h') {	# hardlink, save these for postprocessing
+	    my $new = substr($path, 0, $fsize);
+	    my $old = substr($path, $fsize + 4); # skip ' -> '
+	    $hardlink{$new} = $old;
+	}
+
+    } else {        # Remove
+	$target = "$dir/$path";
+	if (exist($target)) {
+	    if (-d _) {
+		rmtree $target or warn $d->get("** Cannot remove:") . " $target: $!";
+	    } else {
+		unlink $target or warn $d->get("** Cannot unlink:") . " $target: $!";
+	    }
+	}
+	$ftsize -= $fsize;
+	$irm++;
+    }
 }
 
 sub usage {
-        print "$progName -b DIR [OPTIONS]\n\n";
-        print "Update hardlinks according to the filelist of rdup\n\n";
-        print "OPTIONS\n";
-        print " -b DIR  use DIR as the backup directory\n";
-        print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
-        print " -c      process the file content also (rdup -c), for remote backups\n";
-        print " -v      print the files processed to standard error\n";
-        print " -h      this help\n";
-        print " -V      print version\n";
-        exit 0;
+    print "$progName -b DIR [OPTIONS]\n\n";
+    print "Update hardlinks according to the filelist of rdup\n\n";
+    print "OPTIONS\n";
+    print " -b DIR  use DIR as the backup directory\n";
+    print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
+    print " -c      process the file content also (rdup -c), for remote backups\n";
+    print " -v      print the files processed to standard error\n";
+    print " -h      this help\n";
+    print " -V      print version\n";
+    exit 0;
 }
