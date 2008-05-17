@@ -1,5 +1,5 @@
 xx May 2008: 0.6.0 Miek <miek@miek.nl>
-  -- i18n added --
+  -- i18n added, hardlink support added --
  * i18n support added, but nothing is translated yet
    - this is for the perl scripts and the rdup core
    - shell scripts do not use i18n
@@ -9,6 +9,8 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
    - filesize is overload to take the length of 'link' in this case
    - hardlinks have the file type 'h'
    - now we have: -, d, l and h types
+ * Added gpg encryption/decryption to rdup-simple and rdup-restore
+   (requested by: Jan Spakula)
  * implemented gettext for i18n and added Dutch as
    a language for rdup, the perl utils, but not the shell
    scripts. Those can be easily rewritten in another language

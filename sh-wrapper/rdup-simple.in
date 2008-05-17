@@ -102,6 +102,7 @@ while getopts "E:k:vfgzxahHV" o; do
 		fi
 		enc=true
 		c="-c"
+		;;
                 f) force=true;;
                 a) OPT="$OPT -a";;
                 v) OPT="$OPT -v";;
