@@ -65,7 +65,8 @@ while (<STDIN>) {
                         next;
                 } elsif ($type eq 'l') {      # LNK
                         my $target;
-                        read STDIN, $target, $fsize;
+                        read STDIN, $target, $fsize;# hoeven niks te lezen want
+			# fsize nul, ookal zegt rdup van niet
                         syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path$target";
                         next;
                 }

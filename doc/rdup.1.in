@@ -42,7 +42,7 @@ compared and an incremental output can be generated.
 .PP
 \fBrdup\fR prints a filelist to standard output. 
 Subsequent programs in a pipe line can be used to actually
-implement to backup scheme. If FILELIST is empty or non existant all
+implement to backup scheme. If FILELIST is empty or non existent all
 files in DIR are dumped. This is the same as a null dump. After a run
 a new FILELIST is written. No warning is given when FILELIST is an
 existing file, it just gets overwritten by \fBrdup\fR. New runs will
@@ -138,7 +138,7 @@ Read the uid and gid information from the file's extended user attributes:
 xattr support. Currently this is supported and tested on Linux and
 Solaris 10.
 
-This option is usefull when performing a remote backup. Normally these
+This option is useful when performing a remote backup. Normally these
 backups are transferred by a non-root user. This user will not be able
 to correctly set all uid/gid information. As a workaround rdup's
 utilities will set the extended attributes for the file to store the
@@ -286,7 +286,8 @@ spaces this can come in handy.
 .B o FILE_SIZE
 the size of file pointed to by PATH. Note that if the first character of the line is '-'
 (.ie. remove) the SIZE will be zero. For directories this size will
-always be zero.
+always be zero. Symbolic and hard links are handled differently, see
+CAVAETS.
 .TP
 .B o PATH
 the pathname
@@ -318,6 +319,22 @@ there is one extra field and the following cavaets.
 The entire file is concatenated to standard output.
 
 .SS CAVAETS
+.TP
+.B o symbolic and hard links
+the PATH is generated from the link's name and its target. A symlink like
+
+.RS
+    /home/bin/blaat -> /home/bin/bliep
+.RE
+
+is put the PATH as '/home/bin/blaat -> /home/bin/bliep'. The PATH_SIZE
+is modified accordingly.
+The FILE_SIZE is not really needed, so it is set the size of the link's
+name, in this case the length of '/home/bin/blaat'.
+
+If rdup encounters a hardlink it is handled in the same way, but the
+output type is set to 'h' instead of 'l'.
+
 The output when using the \-c is changed as follows, for:
 .TP
 .B o directories:
@@ -335,15 +352,6 @@ is printed to standard output. Thus:
         \fB/home/miekg/svn/rdup/trunk/aaa/a\fR\fIhello\fR
 .RE
 Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
-.TP
-.B o symbolic links:
-the FILE_SIZE is set to the size of the target name and instead
-of printing the file contents the target name is printed. Thus:
-.RS
-        +l 0777 1000 1000 34 1\\n
-        \fB/home/miekg/svn/rdup/trunk/aaa/def\fR\fIb\fR
-.RE
-Where \fBaaa/def\fR is a symbolic link that points to 'b'
 
 .SH UTILITIES
 Various perl scripts are included with rdup. Linked together these
@@ -428,7 +436,7 @@ Report bugs to <miek@miek.nl>.
 See the \-c flag for explanation about a small race condition when doing
 remote dumps. 
 .PP
-Hard links are handled as normal files as are files with holes in them.
+Sparse files are not detected by the default rdup utilities.
 
 .SH SEE ALSO
 rdup-simple(1), rdup-snap(1) and rdup-restore(1). See

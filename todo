@@ -13,6 +13,18 @@ komt wel een keer de juiste file voorbij.
 
 rules voor scripts opstellen
 
+    check if added or removed
+    + or -
+
+    check if the file already exist in the backup directory (maybe
+	    another script has hardlinked the prev. backup in here).
+    remove it
+
+    put new file in place
+    make new directory
+    make new sym- or hardlink - if dir exist change permission bits
+
+
     en die op miek.nl zetten
 
 :install:

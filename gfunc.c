@@ -121,7 +121,9 @@ entry_cat_data(FILE *fp, struct entry *e)
 		}
 		return;
 	}
-	/* special case for links isn't needed anymore */
+	/* special case for links isn't needed anymore
+	 * link name is now embedded in the path: link -> target
+	 */
 #if 0
 	if (S_ISLNK(e->f_mode)) {
 		char buf[BUFSIZE + 1];
