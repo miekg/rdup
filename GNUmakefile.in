@@ -39,7 +39,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 all:	rdup scripts
-	make -C po all
+	( cd po ; make -f GNUmakefile all )
 
 rdup:	${OBJ} ${HDR} rdup.pot
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
@@ -54,7 +54,7 @@ rdup.pot:
 clean:
 	rm -f *.o
 	rm -f rdup rdup.mo
-	make -C po clean
+	( cd po ; make -f GNUmakefile clean )
 
 deb-trunk:
 	( cd ..;\
