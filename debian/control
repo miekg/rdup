@@ -2,7 +2,7 @@ Source: rdup
 Section: utils
 Priority: optional
 Maintainer: Miek Gieben <miek@miek.nl>
-Build-Depends: debhelper (>= 4.0.0), autotools-dev, libglib2.0-dev
+Build-Depends: debhelper (>= 4.0.0), autotools-dev, libglib2.0-dev, autoconf, automake
 Standards-Version: 3.6.2
 
 Package: rdup
