@@ -1,12 +1,100 @@
-  New: sample output:
+# Writing your own rdup scripts
+A backup script that can be used in conjunction with rdup needs to be able to grok the 
+output listed below (obviously). Writing such a script isn't really that difficult. You can look at the
+examples already used by *rdup*. See `rdup-snap` for instance. In case you want to write your
+own scripts you will have keep in mind the following things.
+
+The line numbers given all refer to `rdup-snap` version 0.6.0 in rdup
+distribution. You can see the file 
+(online)[http://miek.nl/projects/rdup/svn/tags/0.6.0/pl-tools/rdup-snap.in]
+
+Sample rdup output:
 
     +d 0751 1000 1000 11 0 /home/miekg/bin
-    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin2/cx
-    +h 0700 1000 1000 51 28 /home/miekg/bin/cx-hardlink -> /home/miekg/bin2/cx
+    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin/cx
+    +h 0700 1000 1000 51 28 /home/miekg/bin/cx-hardlink -> /home/miekg/bin/cx
     +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
     +- 0775 1000 1000 21 174 /home/miekg/bin/wifi
 
-a backup script that can be used in conjunction with rdup needs to be able to grok the above
-output (obviously). Writing such a script isn't really that difficult. You can look at the
-examples already used by rdup. See `rdup-snap` for instance. In case you want to write your
-own scripts you will have keep in mind the following things.
+# Add or remove
+In rdup's default output a '+' as the first character signals the object
+(file, directory or link) named in this line should be added to the
+backup. This case is the most complicated one, so it will be handled in
+its own section.
+
+When a line starts with a '-' the object should be removed, in the case
+of a directory the whole directory (and everything below it) is removed.
+All other cases are handled with a simple unlink (`rm`).
+
+See lines 179 - 187 in `rdup-snap`.
+
+# Adding objects
+When objects are added you need to look at the type of the object, which
+is either a directory, a normal file, a symlink or a hardlink.
+
+## Removing existing files
+When we've reached this point we have to look at our files in the backup
+directory (depending on the setup we may have copied the backup from
+yesterday to today and the script is working on those files).
+
+If the object we want to add already exists in the backup, we need to 
+remove it and replace it with the current one. Usually we can just
+unlink the object, unless it is a directory and that case we need
+to `rm -rf` it. See lines 122 - 135 in `rdup-snap`.
+
+Next we need to split on the actual type: files, directory, symlink and
+hardlink.
+
+## Files
+Basically just copy the from the file system over to the backup file system.
+In `rdup-snap` File::copy is used for this.
+
+## Directory
+The directory size as printed by `rdup` is always zero as there no
+content for a directory. Just `mkdir $directory`, see line 151 in
+`rdup-snap`.
+
+Example of a directory output:
+
+    +d 0751 1000 1000 11 0 /home/miekg/bin
+
+Note: when a backup is made by mortal users (i.e. non root) the
+directory permissions need to be set in such a way that rdup
+can still access this directory in case it needs to place more files
+in this directory. If this is detected a `chmod u+rwx` is issued.
+
+## Symbolic
+A symbolic link can be created as-is. The target need not yet to
+exist in the backup file system. The target of the link might even
+fall outside the directories that are backed up.
+
+In any case the parsing of the output of rdup is slight different.
+The file size (%s) of a symlink is not relevant, so rdup overloads it
+to mean the *path* length of the symlink name. The path length (%n) is
+extended to include the link target also. So in this sample output:
+
+    +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
+
+The 24 is the combined length of '/miekg/miekg/bin/t -> tt' and 18 is the 
+length of '/home/miekg/bin/t'. The symlink is thus a substring
+from the pathname up to the 18th character. From the 18+4th till
+the last position is the target name of the symlink. See the lines 114 -
+120 for this parsing in rdup-snap.
+
+With the link name and the target name we can re-create the symlink in our
+backup file system.
+
+See line 166 for the symlink creation.
+
+## Hardlink
+A hardlink look almost like a symlink in rdup's output, except for the
+'h' as type. The link name and target name parsing is exactly the same
+as for symlinks, as you might spot from this sample output:
+
+    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin/cx
+
+The only problem with hardlinks is that you can not create them when the
+target is not available. To fix this all lines with type 'hardlink' are
+saved up (line 170) and the link creation is done after all files and
+directories are put in the backup file system. This post processing can
+be found at lines 71 - 76.

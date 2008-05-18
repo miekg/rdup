@@ -1,5 +1,5 @@
 xx May 2008: 0.6.0 Miek <miek@miek.nl>
-  -- i18n added, hardlink support added --
+  -- i18n added, hardlink support added, default output changed --
  * i18n support added, but nothing is translated yet
    - this is for the perl scripts and the rdup core
    - shell scripts do not use i18n
@@ -12,8 +12,8 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
    New: sample output:
 
     +d 0751 1000 1000 11 0 /home/miekg/bin
-    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin2/cx
-    +h 0700 1000 1000 51 28 /home/miekg/bin/cx-hardlink -> /home/miekg/bin2/cx
+    +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin/cx
+    +h 0700 1000 1000 51 28 /home/miekg/bin/cx-hardlink -> /home/miekg/bin/cx
     +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
     +- 0775 1000 1000 21 174 /home/miekg/bin/wifi
 
