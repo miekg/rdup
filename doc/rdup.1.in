@@ -228,7 +228,7 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         't': time of modification (seconds from epoch)
 .BR
-        'H': the SHA1 hash of the file, all "0" for directories and symlinks
+        'H': the SHA1 hash of the file, all zeros "0" for directories, symlinks and hardlinks
 .BR
         'T': file type: -, l, h or d (normail file, symlink, hardlink or directory)
 .BR

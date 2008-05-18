@@ -217,7 +217,9 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			break;
 		case 'H': /* sha1 hash */
 			if (S_ISREG(e->f_mode))
-				sha1(out, e->f_name);
+				/* normal file and no hardlink */
+				if (e->f_lnk == 0) 
+					sha1(out, e->f_name);
 			else
 				fprintf(out, NO_SHA);
 			break;
