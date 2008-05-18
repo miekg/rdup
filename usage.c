@@ -10,7 +10,7 @@ usage(FILE *f)
 {
         fprintf(f, _("USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"), PROGNAME);
 	fputs( _("\
-Generate a full or incremental file list. This list can be\n\
+Generate a full or incremental file list. This list can be used to\n\
 implement a (incremental) backup scheme.\n\
 \n\
 	FILELIST\tfile to store filenames\n\
