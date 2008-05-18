@@ -60,6 +60,10 @@ the opposite of what \fBrdup-simple\fR does.
 Enable extended attributes. Read the uid/gid to the extended user
 attributes r_uid and r_gid. See rdup(1) for a more detailed explanation.
 .TP
+.B \-g
+Decrypt all files with GPG (using rdup-gpg). Note: without gpg-agent
+this isn't fun.
+.TP
 .B \-v
 Echo the files processed to standard error.
 .TP
