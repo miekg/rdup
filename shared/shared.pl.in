@@ -1,6 +1,8 @@
 # shared perl function
 # this is included by the other utils
 
+#datarootdir=@datarootdir@
+
 # show the version, $progname needs to be set!
 sub version {
     print "$_[0]: @PACKAGE_VERSION@ (rdup-utils)\n";

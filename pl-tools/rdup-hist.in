@@ -12,6 +12,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
+# datarootdir = @datarootdir@
 require "@datadir@/rdup/shared.pl"; 
 
 my $BACKUPROOT;

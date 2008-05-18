@@ -10,6 +10,7 @@ datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
 lockdir=/var/lock
 GNU_DEFS=rdup-snapshot.gnu
+# datarootdir=@dataroodir@
 
 # common stuff
 if ! source $datadir/shared.sh; then
