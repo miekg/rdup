@@ -171,14 +171,14 @@ info "Creating tar rdup-$version.tar.bz2"
 tar cjf ../rdup-$version.tar.bz2 rdup-$version || error_cleanup "Failed to create tar file."
 
 # make the debian package
-info "Creating Debian package rdup_...$version.deb."
-if ! `which fakeroot > /dev/null`; then
+#info "Creating Debian package rdup_...$version.deb."
+##if ! `which fakeroot > /dev/null`; then
     info "Failed to find fakeroot"
-fi
-( cd rdup-$version
-dpkg-buildpackage -us -uc -rfakeroot 2>/dev/null >/dev/null ) || \
-error_cleanup "Failed to create Debian package."
-mv *.deb ../
+#fi
+#( cd rdup-$version
+#dpkg-buildpackage -us -uc -rfakeroot 2>/dev/null >/dev/null ) || \
+#error_cleanup "Failed to create Debian package."
+#mv *.deb ../
 
 cleanup
 sha=`sha1sum rdup-$version.tar.bz2 |  awk '{ print $1 }'`
