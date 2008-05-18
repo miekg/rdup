@@ -13,7 +13,7 @@ usage() {
 	cat << HELP
 "$PROGNAME SOURCE [SOURCE ...] DIR
 
-This is a wrapper around rdup and rdup-cp
+This is a wrapper around rdup and rdup-snap -R
 DIR    - directory to restore to
 SOURCE - source to restore from:
       ssh://user@host/directory (note: no colon after the hostname
@@ -149,11 +149,11 @@ fi
 
 # create the command line
 if [[ -z $ssh ]]; then
-	pipe="$pipe | @bindir@/rdup-cp $c $OPT $dest"
+	pipe="$pipe | @bindir@/rdup-snap -b $dest -R $c $OPT"
 	cmd="@bindir@/rdup $x $l $c /dev/null $SOURCE $pipe"
 else
 	# needs to be found with PATH
-	pipe="$pipe | rdup-cp $c $OPT $dest"
+	pipe="$pipe | rdup-snap -b $dest -R $c $OPT"
 	cmd="$ssh @bindir@/rdup $x $l $c /dev/null $SOURCE $pipe"
 fi
 #cmd="@bindir@/rdup $x $l $c /dev/null $SOURCE $pipe"
