@@ -2,6 +2,8 @@ rdup (0.6.0-1) unstable; urgency=low
 
   * New upstream release
   * i18n support added
+  * hardlink support added
+  * lots of updates and tweaks
 
  -- Miek Gieben <miekg@atoom.net>  Mon,  21 Apr 2008 23:03:13 +0200
 
