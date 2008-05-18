@@ -39,13 +39,15 @@ INSTALL_DATA=$(INSTALL) -m 644
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 all:	rdup scripts
-	( cd po ; make -f GNUmakefile all )
 
-rdup:	${OBJ} ${HDR} rdup.pot
+rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
 
 scripts:
 	chmod +x $(RES) $(PRL) $(WRP)
+
+po:	rdup.pot 
+	( cd po ; make -f GNUmakefile all )
 
 rdup.pot:
 	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 

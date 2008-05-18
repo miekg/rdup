@@ -19,8 +19,8 @@ timestamp
 backups. \fBrdup\fR itself does not backup anything. It only prints
 a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
-backups. All paths printed are absolute. See rdup-backups(1) for a
-nice introduction.
+backups. All paths printed are absolute. See rdup-backups(1) for an
+introduction.
 .PP
 The
 .IR FILELIST
@@ -98,7 +98,7 @@ format of this file.
 If a directory is excluded, \fBrdup\fR won't descend in that directory,
 so all files in that directory are also excluded.
 
-The directories leading up to the directory to be backed up cannot
+The directories leading up to the directory to be backed up can not
 be excluded. If you use a command line like: 
 
 .RS
