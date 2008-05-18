@@ -216,12 +216,14 @@ entry_print_data(FILE *out, char n, struct entry *e)
 			fprintf(out, "%zd", (size_t)e->f_size);
 			break;
 		case 'H': /* sha1 hash */
-			if (S_ISREG(e->f_mode))
+			if (S_ISREG(e->f_mode)) {
 				/* normal file and no hardlink */
-				if (e->f_lnk == 0) 
+				if (e->f_lnk == 0) {
 					sha1(out, e->f_name);
-			else
+				}
+			} else {
 				fprintf(out, NO_SHA);
+			}
 			break;
 		case 'T': /* file type */
 			if (S_ISDIR(e->f_mode)) {
