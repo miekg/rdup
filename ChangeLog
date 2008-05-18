@@ -30,6 +30,7 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
  * use here docs in the shell script usage
  * update rdup-restore and removed rdup-snap-here
  * documentation updates and assorted tweaks
+ * removed last remants of rdup-snap-here
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
