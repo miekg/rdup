@@ -1,7 +1,7 @@
 xx May 2008: 0.6.0 Miek <miek@miek.nl>
-  -- i18n added, hardlink support added, default output changed --
+  -- i18n added, hardlink support added: default output changed --
  * i18n support added, but nothing is translated yet
-   - this is for the perl scripts and the rdup core
+   - this is for the perl scripts and the rdup C core
    - shell scripts do not use i18n
  * hardlink support
    - symlink output has also changed to support this
@@ -9,7 +9,7 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
    - filesize is overload to take the length of 'link' in this case
    - hardlinks have the file type 'h'
    - now we have: -, d, l and h types
-   New: sample output:
+   New sample output:
 
     +d 0751 1000 1000 11 0 /home/miekg/bin
     +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin/cx
@@ -17,7 +17,7 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
     +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
     +- 0775 1000 1000 21 174 /home/miekg/bin/wifi
 
- * Added gpg encryption/decryption to rdup-simple and rdup-restore
+ * added gpg encryption/decryption to rdup-simple and rdup-restore
    (requested by: Jan Spakula)
  * killed off rdup-cp and put that functionality in rdup-snap
  * implemented gettext for i18n and added Dutch as
@@ -31,6 +31,7 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
  * update rdup-restore and removed rdup-snap-here
  * documentation updates and assorted tweaks
  * removed last remants of rdup-snap-here
+ * used lintian on the debian packages
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
