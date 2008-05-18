@@ -14,7 +14,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
-# datarootdir = @datarootdir@
+my $datarootdir = "@datarootdir@";
 require "@datadir@/rdup/shared.pl";
 my $d= i18n();
 

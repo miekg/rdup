@@ -5,7 +5,7 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
-# datarootdir = @datarootdir@
+datarootdir=@datarootdir@
 
 # common stuff
 source $datadir/shared.sh
