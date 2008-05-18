@@ -19,7 +19,7 @@ maken van rdup scripts
 
     en die op miek.nl zetten
 
-rdup-cp fixen, rdup-restore gpg fixen
+Ik denk dat rdup-restore ook omgeschreven kan worden in rdup-simple
 
 
 :install:

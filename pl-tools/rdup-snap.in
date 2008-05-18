@@ -23,6 +23,7 @@ my ($help, $version, $verbose, $attr, $remote, $hourly, $backupDir);
 my %hardlink;
 my ($restore, $strip);
 
+$strip = 0;
 GetOptions("h" => \$help,
 	"V" => \$version,
 	"a" => \$attr, # extended attr support

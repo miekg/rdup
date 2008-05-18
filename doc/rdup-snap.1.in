@@ -34,7 +34,9 @@ Store the backup in \fIbackupdir\fR. This argument is mandatory.
 .TP
 .B \-R 
 Restore mode. Copy the files from standard input to the directory
-given with the \-b option. 
+given with the \-b option. In restore mode all entries which should
+be removed are ignored and no overview message at the end of the restore
+is given.
 .TP
 .B \-c 
 Used in conjunction with \fBrdup\fR's \-c. This will allow
