@@ -14,6 +14,9 @@ Generate a distribution tar file for rdup.
     -s           Build a snapshot distribution file.  The current date is
                  automatically appended to the current rdup version number.
     -d SVN_root  Retrieve the rdup source from the specified repository.
+		 default: file:///var/svn/rdup/trunk
+    -v VER	 make version VER, svnroot will be
+		 file:///var/svn/rdup/tags/VER
 EOF
     exit 1
 }
@@ -69,6 +72,7 @@ replace_all () {
 SNAPSHOT="no"
 
 # Parse the command line arguments.
+SVNROOT="file:///var/svn/rdup/trunk"
 while [ "$1" ]; do
     case "$1" in
         "-h")
@@ -78,6 +82,10 @@ while [ "$1" ]; do
             SVNROOT="$2"
             shift
             ;;
+	"-v")
+	    SVNROOT="file:///var/svn/rdup/tags/$2"
+	    shift
+	    ;;
         "-s")
             SNAPSHOT="yes"
             ;;
