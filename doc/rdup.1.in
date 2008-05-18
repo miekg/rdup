@@ -147,7 +147,7 @@ original uid/gid in its output.
 .TP
 .B \-c
 Print the files' contents to standard output. This sets
-the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C";
+the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C"
 
 Note this creates a race condition: if a file changes in size after
 rdup has crawled it and before it has been sent to the remote server,
