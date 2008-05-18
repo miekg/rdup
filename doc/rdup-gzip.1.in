@@ -2,7 +2,7 @@
 .TH RDUP-GZIP 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-rdup-gzip, compress \-  compress files received from \fBrdup -c\fR
+rdup-gzip \- compress files received from \fBrdup -c\fR
 
 .SH SYNOPSIS
 .B rdup-gzip

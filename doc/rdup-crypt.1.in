@@ -2,7 +2,7 @@
 .TH RDUP-CRYPT 1 "27 Feb 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-rdup-crypt, encrypt \- encrypt files received from \fBrdup -c\fR
+rdup-crypt \- encrypt files received from \fBrdup -c\fR
 
 .SH SYNOPSIS
 .B rdup-crypt

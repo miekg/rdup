@@ -2,7 +2,7 @@
 .TH RDUP-SNAP-LINK 1 "24 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-rdup-snap-link, create a hard linked copy of a previous backup
+rdup-snap-link \- create a hard linked copy of a previous backup
 
 .SH SYNOPSIS
 .B rdup-snap-link
