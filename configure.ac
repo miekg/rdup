@@ -37,7 +37,6 @@ AC_CONFIG_FILES([GNUmakefile
 		 po/GNUmakefile
                  rdup.h
                  doc/rdup.1
-                 doc/rdup-cp.1
                  doc/rdup-restore.1
                  doc/rdup-snap-link.1
                  doc/rdup-snap.1
@@ -55,7 +54,6 @@ AC_CONFIG_FILES([GNUmakefile
                  pl-tools/rdup-gzip
                  pl-tools/rdup-crypt
                  pl-tools/rdup-snap
-                 pl-tools/rdup-cp
                  pl-tools/rdup-gpg
                  pl-tools/rdup-hist
                  ])

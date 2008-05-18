@@ -16,7 +16,7 @@ SOURCE ...
 DIRECTORY 
 
 .SH DESCRIPTION
-\fBrdup-restore\fR is a frontend to `rdup-cp' and `rdup'. It will
+\fBrdup-restore\fR is a frontend to `rdup-snap -R' and `rdup'. It will
 restore everything from \fISOURCE\fRs to \fIDIRECTORY\fR.
 .PP
 SOURCE can be a remote location (use the ssh:// syntax), if you

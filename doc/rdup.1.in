@@ -374,7 +374,7 @@ acts as a encryption (mcrypt) filter.
 acts as a encryption (gpg) filter.
 .TP
 .B rdup-restore
-a wrapper scripts around `rdup', `rdup-cp' to ease restoring.
+a wrapper scripts around `rdup' and `rdup-snap' to ease restoring.
 
 .SH EXAMPLES
 
@@ -406,7 +406,7 @@ ssh miekg@example.com rdup-snap \-c \-b /vol/backup
 
 .SS restore of /home to /tmp/restore
 rdup /dev/null /vol/backup/HOST/200604/home |
-rdup-cp /tmp/restore
+rdup-snap -b /tmp/restore -R
 
 .SH USEFULL EXTERNAL TOOLS
 As \fBrdup\fR only prints names it depends on external tools and scripts

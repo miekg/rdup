@@ -107,7 +107,7 @@ In principle a restore is as easy as using the standard system tools to
 copy a directory to another location. However when the
 \-a flag is used extended attributes are set, these are normally not
 read by the unix utilities. In this case you should restore by using
-\fBrdup-cp\fR to copy the files to another location. But there is also
+\fBrdup-snap -R\fR to copy the files to another location. But there is also
 a script that can be used: \fBrdup-restore\fR.
 
 .SS LOCAL RESTORE
