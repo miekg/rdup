@@ -39,8 +39,9 @@ c=""
 pipe=""
 ssh=""
 zip=false
+enc=false
 dump=true
-while getopts ":ak:vzxhV" o; do
+while getopts ":ak:vgzxhV" o; do
         case $o in
                 k) KEYFILE=$OPTARG
                 if [[ -z "$OPTARG" ]]; then
@@ -57,7 +58,17 @@ while getopts ":ak:vzxhV" o; do
 			_echo2 "Select decryption first, then decompression"
 			exit 1
 		fi
+		enc=true
                 ;;
+		g)
+		if $enc; then
+			_echo2 "Encryption already set"
+			exit 1
+		fi
+                pipe="$pipe | @bindir@/rdup-gpg -d"
+		c="-c"
+		enc=true
+		;;
                 D)
                 dump=true;;
                 S)
