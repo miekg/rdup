@@ -111,7 +111,8 @@ sub i18n {
 	setlocale(LC_ALL, "");
 	$d = Locale::gettext->domain("@PACKAGE_NAME@");
 	my $prefix="@prefix@"; # fuck autoconf
-	    $d->dir("@localedir@");
+	my $datarootdir="@datarootdir@"; # fuck autconf, part 2
+	$d->dir("@localedir@");
     }
     $d;
 }
