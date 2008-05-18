@@ -13,7 +13,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
-my $datarootdir="@datarootdir@";
+my $datarootdir = "@datarootdir@";
 require "@datadir@/rdup/shared.pl";
 
 my $progName = basename $0;

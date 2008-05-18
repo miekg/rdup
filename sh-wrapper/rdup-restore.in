@@ -3,9 +3,9 @@
 # create a restore of a backup in -b <dir>
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
-datarootdir=@datarootdir@
 
 # common stuff
 source $datadir/shared.sh

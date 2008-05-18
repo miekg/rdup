@@ -6,11 +6,11 @@
 # of the previous backup woth cp
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
 GNU_DEFS=rdup-snapshot.gnu
-datarootdir=@datarootdir@
 
 # shared stuff
 . $datadir/shared.sh

@@ -5,12 +5,12 @@
 # Copyright Miek Gieben, 2007
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
 lockdir=/var/lock
 GNU_DEFS=rdup-snapshot.gnu
-datarootdir=@datarootdir@
 
 # common stuff
 if ! source $datadir/shared.sh; then
