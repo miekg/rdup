@@ -7,6 +7,9 @@ sha1-sum the directory arguments for the internal filelist admin
 store the config options to, to read them backup in, or complain
 about not being given the right options.
 
+only look at the backup directory - and save under that name? Makes
+more sense. Save options too.
+
 :rdup:
 o encrypted file names, is it worth the effort, needs to be done
   rdup-snap, when reading a name mangle it with a key.

@@ -34,7 +34,7 @@ to be run with root permissions.
 For the naming of the files in `~/.rdup' the first directory
 argument is taken. If you switch the order of these directories you
 will get another filename and hence a full dump, instead of the
-expected incremental one.
+expected incremental one. FIX THIS - NOW CHANGED
 .PP
 The last argument of \fBrdup-simple\fR is used as the destination;
 the following destinations are supported:

@@ -19,6 +19,8 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
 
  * added gpg encryption/decryption to rdup-simple and rdup-restore
    (requested by: Jan Spakula)
+ * rdup-simple: be more consistent for the naming of the interal
+   filelist and timestamp files (Jan Spakula)
  * killed off rdup-cp and put that functionality in rdup-snap
  * implemented gettext for i18n and added Dutch as
    a language for rdup, the perl utils, but not the shell
