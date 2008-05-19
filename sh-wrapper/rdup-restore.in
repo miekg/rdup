@@ -26,7 +26,7 @@ OPTIONS:
     -k KEYFILE decrypt all files, using mcrypt (rdup-crypt -d)
     -g	       decrypt all files, using gpg (rdup-gpg -d)
     -z         decompress all files, using gzip (rdup-gzip -d)
-    -a         use extended attributes with uid/gid
+    -a         use extended attributes for reading uid/gid
     -v         echo the files processed to stderr
     -x         pass -x to rdup
     -h         this help

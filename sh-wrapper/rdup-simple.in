@@ -43,7 +43,7 @@ OPTIONS:
  -E FILE    use FILE as an exclude list
  -H         perform hourly backups
  -f         force a full dump
- -a         write extended attributes with uid/gid
+ -a         write extended attributes for storing uid/gid
  -v         echo the files processed to stderr
  -x         pass -x to rdup
  -h         this help

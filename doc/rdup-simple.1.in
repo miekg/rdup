@@ -119,7 +119,7 @@ Force a full dump.
 GPG encrypt the files. This option inserts \fBrdup-gpg\fR in the
 pipeline. Note that when you need to restore you will be prompted
 for your GPG passphrase for \fIevery\fR encrypted file! Unless you
-have configured `gpg-agent`. See the \fI\-A\fR flag of
+have configured `gpg-agent`. See the \fI\-a\fR flag of
 \fBrdup-restore\fR.
 .TP
 .B \-x
