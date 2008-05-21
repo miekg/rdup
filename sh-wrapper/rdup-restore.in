@@ -148,7 +148,7 @@ while [[ $i -lt $last ]]; do
 done
 dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
-	_echo2 "Destionation cannot be a remote host"
+	_echo2 "Destination cannot be a remote host"
 	exit 1
 fi
 

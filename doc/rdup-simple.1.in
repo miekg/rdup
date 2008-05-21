@@ -2,7 +2,7 @@
 .TH RDUP-SIMPLE 1 "29 Apr 2007" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
 
 .SH NAME
-rdup-simple \- create a hardlink backup
+rdup-simple \- create a hard linked backup
 
 .SH SYNOPSIS
 .B rdup-simple
@@ -19,7 +19,7 @@ DIR|FILE
 DESTINATION
 
 .SH DESCRIPTION
-\fBrdup-simple\fR is a frontend for `rdup-snap' and `rdup'. It will backup
+\fBrdup-simple\fR is a front end for `rdup-snap' and `rdup'. It will backup
 all directories and files given on the command line. It will create a
 hard linked backup directory structure and the specified directory.
 .PP
@@ -28,23 +28,29 @@ With the optional +DAYS argument you can specify how far backup
 be a number in the range 1..99. It defaults to 8 days.
 .PP
 \fBrdup-simple\fR will create the directory `~/.rdup' and will
-store its administrative files there. This program does not need
-to be run with root permissions.
+store its administrative files there. See the FILES section for
+more information.
 .PP
-For the naming of the files in `~/.rdup' the first directory
-argument is taken. If you switch the order of these directories you
-will get another filename and hence a full dump, instead of the
-expected incremental one. FIX THIS - NOW CHANGED
+This program does not need to be run with root permissions.
 .PP
-The last argument of \fBrdup-simple\fR is used as the destination;
-the following destinations are supported:
+The last argument of \fBrdup-simple\fR is used as the destination.
+.PP
+For the naming of the files in `~/.rdup' the destination 
+argument is taken and hashed somewhat. If a destination equals
+a previous destination the internal book keeping files for 
+that destination are used by \fBrdup-simple\fR. Note that
+\fBrdup-simple\fR does not check what encryption and/or compression
+options you may have used for a previous backup. If you naively forget
+to provide a '-k KEY' option to a new backup run, those files will be
+put in your backup file system with encryption.
 
+The following destinations are supported:
 .TP
 .B ssh:///user@host/directory
 Use `ssh' as a protocol and `user` as the remote user name. Store
 the backup in `directory` on the remote server `host'.
 
-Note: when doing a remove backup as a normal ssh user the owership
+Note: when doing a remove backup as a normal ssh user the ownership
 of the backup is not preserved on the remove host. All files and
 directories will belong to 'user'. See the -a flag for a work around.
 
@@ -141,14 +147,6 @@ Show a short help message.
 .TP
 .B \-V
 Show the version.
-
-.SH BUGS
-Be aware if you change the order of the directories to backup between
-dump, you are also messing with \fBrdup\fR's internal filelist. This can
-result in a very large backup, while you were expecting a small
-incremental dump. So don't do this. In ~/.rdup you can check what
-directory name was used for the internal filelist: \fIelektron.etc.list\fR
-uses \fI/etc\fR.
 
 .SH SEE ALSO
 rdup(1) and rdup-snap-link(1). See rdup-backups(1) for
