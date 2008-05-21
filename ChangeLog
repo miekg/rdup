@@ -1,4 +1,4 @@
-xx May 2008: 0.6.0 Miek <miek@miek.nl>
+23 May 2008: 0.6.0-rc1 Miek <miek@miek.nl>
   -- i18n added, hardlink support added: default output changed --
  * i18n support added, but nothing is translated yet
    - this is for the perl scripts and the rdup C core
@@ -6,7 +6,7 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
  * hardlink support
    - symlink output has also changed to support this
    - each link is printed as 'link -> target'
-   - filesize is overload to take the length of 'link' in this case
+   - filesize is overloaded to take the length of 'link' in this case
    - hardlinks have the file type 'h'
    - now we have: -, d, l and h types
    New sample output:
@@ -19,21 +19,19 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
 
  * added gpg encryption/decryption to rdup-simple and rdup-restore
    (requested by: Jan Spakula)
- * rdup-simple: be more consistent for the naming of the interal
+ * rdup-simple: be more consistent for the naming of the internal
    filelist and timestamp files (Jan Spakula)
  * killed off rdup-cp and put that functionality in rdup-snap
- * implemented gettext for i18n and added Dutch as
-   a language for rdup, the perl utils, but not the shell
-   scripts. Those can be easily rewritten in another language
+ * implemented gettext for i18n use.
  * exit ./configure when glib2-dev is not found
- * substract the filesize when files are removed in rdup-snap
+ * subtract the filesize when files are removed in rdup-snap
  * remove last remnants of syslog from shared.pl.in
  * fixed example cron.rdup
  * use here docs in the shell script usage
  * update rdup-restore and removed rdup-snap-here
  * documentation updates and assorted tweaks
- * removed last remants of rdup-snap-here
- * used lintian on the debian packages
+ * removed last remnants of rdup-snap-here
+ * used lintian on the debian package
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>
