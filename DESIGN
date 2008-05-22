@@ -54,19 +54,19 @@ getdelim.c
 
 rdup.c 
 	Contains main() and a few functions that perform the
-	initialization.
+	initialization. Also reads and writes the internal filelist.
 
 signal.c
         Contains a signal handling function.
 
 regex.c
-        Regular expression functions
+        Regular expression functions.
 
 xattr.c
         Extended attributes functions.
 
 sha1.c
-        SHA-1 implementation, for file hashing
+        SHA-1 implementation, for file hashing.
 
 4/ UTILITIES
 

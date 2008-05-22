@@ -4,15 +4,10 @@
 @PACKAGE_NAME@ \- generate a file list suitable for making backups
 .SH SYNOPSIS
 .B @PACKAGE_NAME@
-[
-.IR \-N 
-timestamp
-]
-[
-.IR OPTION
-]
-.IR FILELIST 
-.IR DIRS/FILES ...
+[\fI\-N timestamp\fR]
+[\fIOPTION...\fR]
+[\fIFILELIST\fR]
+[\fIDIR/FILE...\fR]
 
 .SH DESCRIPTION
 \fBrdup\fR is a utility inspired by rsync and the plan9 way of doing
@@ -27,7 +22,8 @@ The
 is a internal list \fBrdup\fR writes to, to keep track of which files
 are in a backup. If you don't want this (i.e. make a full
 backup), use \fI/dev/null\fR here. The file \fI/dev/null\fR is handled
-specially by \fBrdup\fR: if detected this file isn't even opened.
+specially by \fBrdup\fR: if detected no new file list is written. This
+is useful when doing full backups and you want all files to be printed.
 
 FILELIST is needed to calculate which files are to removed from a backup.
 .PP
@@ -36,7 +32,7 @@ The
 can be specified multiple times. These are the directories and files
 you want to backup.
 .PP
-If the \fI\-N timestamp\fR option is not given, all paths founds are
+If the \fI\-N timestamp\fR option is not given, all paths found are
 printed. Only when a \fI\-N timestamp\fR file is given, times can be
 compared and an incremental output can be generated.
 .PP
@@ -63,7 +59,7 @@ All errors are written to standard error.
 If the directory or file does not exist, they are skipped and a
 warning is emitted.
 .PP
-The general idea is to be very unix like and create a bunch of simple programs
+The general idea is to be very UNIX like and create a bunch of simple programs
 which each do a their specific thing very well. With \fBrdup\fR and a
 small shell script (50 lines) one can implement encrypted and compressed
 backups.
@@ -72,7 +68,7 @@ backups.
 As \fBrdup\fR doesn't backup anything, the backup policy; what you
 backup, how you backup, how often and how you restore; is all left
 to the scripts. See the Section \fBUTILITIES\fR for a run down on what
-\fBrdup\fR's backup policy is.
+\fBrdup\fR's default backup policy is.
 
 .SH OPTIONS
 .TP

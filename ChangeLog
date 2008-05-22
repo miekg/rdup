@@ -1,5 +1,5 @@
 23 May 2008: 0.6.0-rc1 Miek <miek@miek.nl>
-  -- i18n added, hardlink support added: default output changed --
+  -- i18n and hardlink support added: default output changed --
  * i18n support added, but nothing is translated yet
    - this is for the perl scripts and the rdup C core
    - shell scripts do not use i18n

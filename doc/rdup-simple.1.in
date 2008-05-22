@@ -21,32 +21,31 @@ DESTINATION
 .SH DESCRIPTION
 \fBrdup-simple\fR is a front end for `rdup-snap' and `rdup'. It will backup
 all directories and files given on the command line. It will create a
-hard linked backup directory structure and the specified directory.
+hard linked backup directory structure under the specified directory.
 .PP
 With the optional +DAYS argument you can specify how far backup
 \fBrdup-simple\fR looks back for previous backups. This should
 be a number in the range 1..99. It defaults to 8 days.
 .PP
 \fBrdup-simple\fR will create the directory `~/.rdup' and will
-store its administrative files there. See the FILES section for
-more information.
+store its administrative files there. 
 .PP
 This program does not need to be run with root permissions.
 .PP
 The last argument of \fBrdup-simple\fR is used as the destination.
 .PP
 For the naming of the files in `~/.rdup' the destination 
-argument is taken and hashed somewhat. If a destination equals
+argument is taken and hashed some what. If a destination equals
 a previous destination the internal book keeping files for 
 that destination are used by \fBrdup-simple\fR. Note that
 \fBrdup-simple\fR does not check what encryption and/or compression
 options you may have used for a previous backup. If you naively forget
 to provide a '-k KEY' option to a new backup run, those files will be
-put in your backup file system with encryption.
+put in your backup file system without encryption.
 
 The following destinations are supported:
 .TP
-.B ssh:///user@host/directory
+.B ssh://user@host/directory
 Use `ssh' as a protocol and `user` as the remote user name. Store
 the backup in `directory` on the remote server `host'.
 

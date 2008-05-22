@@ -9,13 +9,17 @@ o bash, version 3, for the (shell) rdup-utils
   rdup-snapshot depends on GNU date for date calculations
 o GNU cp for making a hardlink copy of a previous dump
 
+To build:
+o automake
+o autoconf
+
 Optional:
 o ssh     (remote backups and restores)
 o libattr (extended attributes library)
 o attr    (extended attributes utility)
-o cstream (bandwidth shaping)
 o mcrypt  (encryption)
 o gpg 	  (gpg encryption)
 o gpg-agent 	  (gpg decryption)
 o gzip    (compression)
 o gettext (i18n)
+o cstream (bandwidth shaping)

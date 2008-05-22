@@ -1,0 +1,22 @@
+Hello,
+
+If worked hard to complete a new rdup release: 0.6.0-rc1. A new minor
+number to indicate a lot of changes:
+
+    o hardlinks are now supported
+    o output of symlinks had to change to accommodate 
+      for this.
+    o i18n support added
+    o GPG encryption added to rdup-simple
+    o ...lots of other tweaks
+
+I'm currently making my own backup with this new version (of course), but 
+I'm looking for the following feedback:
+
+    o does it compile on your platform?
+    o does it work correctly on your platform? 
+      Especially with encryption, compression and remote 
+      backups.
+
+If I here nothing I will assume that all is OK :-) And release the final
+0.6.0 in the coming weeks.
