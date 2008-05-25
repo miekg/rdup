@@ -3,6 +3,7 @@
 # create a restore of a backup in -b <dir>
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 
@@ -25,7 +26,7 @@ OPTIONS:
     -k KEYFILE decrypt all files, using mcrypt (rdup-crypt -d)
     -g	       decrypt all files, using gpg (rdup-gpg -d)
     -z         decompress all files, using gzip (rdup-gzip -d)
-    -a         use extended attributes with uid/gid
+    -a         use extended attributes for reading uid/gid
     -v         echo the files processed to stderr
     -x         pass -x to rdup
     -h         this help
@@ -39,8 +40,9 @@ c=""
 pipe=""
 ssh=""
 zip=false
+enc=false
 dump=true
-while getopts ":ak:vzxhV" o; do
+while getopts ":ak:vgzxhV" o; do
         case $o in
                 k) KEYFILE=$OPTARG
                 if [[ -z "$OPTARG" ]]; then
@@ -57,7 +59,17 @@ while getopts ":ak:vzxhV" o; do
 			_echo2 "Select decryption first, then decompression"
 			exit 1
 		fi
+		enc=true
                 ;;
+		g)
+		if $enc; then
+			_echo2 "Encryption already set"
+			exit 1
+		fi
+                pipe="$pipe | @bindir@/rdup-gpg -d"
+		c="-c"
+		enc=true
+		;;
                 D)
                 dump=true;;
                 S)
@@ -136,7 +148,7 @@ while [[ $i -lt $last ]]; do
 done
 dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
-	_echo2 "Destionation cannot be a remote host"
+	_echo2 "Destination cannot be a remote host"
 	exit 1
 fi
 

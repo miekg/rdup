@@ -2,18 +2,18 @@ Source: rdup
 Section: utils
 Priority: optional
 Maintainer: Miek Gieben <miek@miek.nl>
-Build-Depends: debhelper (>= 4.0.0), autotools-dev, libglib2.0-dev
+Build-Depends: debhelper (>= 4.0.0), autotools-dev, libglib2.0-dev, autoconf, automake
 Standards-Version: 3.6.2
 
 Package: rdup
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, perl, bash (>= 3.0.0)
 Description: utility to create a file list suitable for making backups
-  rdup is a utility inspired by rsync and the plan9 way of doing
-  backups. rdup itself does not backup anything. It only prints a list
-  of files that are changed, or all files in case of a null dump. It
-  also handles files that are removed, allowing for correct incremental
-  backups. 
+ rdup is a utility inspired by rsync and the plan9 way of doing
+ backups. rdup itself does not backup anything. It only prints a list
+ of files that are changed, or all files in case of a null dump. It
+ also handles files that are removed, allowing for correct incremental
+ backups. 
 
 Package: rdup-doc
 Architecture: all

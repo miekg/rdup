@@ -46,17 +46,6 @@ what() {
         return 1
 }
 
-# fix the name argument when backing up /
-ident_root() {
-        if [[ $1 = "/" ]]; then
-                IDENT="ROOT"
-        else
-                IDENT=$1
-        fi
-        echo "$IDENT"
-        return 0
-}
-
 # create ~/.rdup
 create_rdup() {
 	if [[ ! -d $1 ]]; then

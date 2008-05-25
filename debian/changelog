@@ -1,4 +1,10 @@
-rdup (0.6.0-1) unstable; urgency=low
+rdup (0.6.0) unstable; urgency=low
+
+  * New upstream release
+
+ -- Miek Gieben <miekg@atoom.net>  Mon,  21 May 2008 23:03:13 +0200
+
+rdup (0.6.0-rc1-1) unstable; urgency=low
 
   * New upstream release
   * i18n support added

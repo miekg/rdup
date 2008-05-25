@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # updates a hardlinked backup
-# licensed under the GPL version 2
-# Copyright Miek Gieben, 2007
+# licensed under the GPL version 3
+# Copyright Miek Gieben, 2007 - 2008
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
@@ -42,7 +43,7 @@ OPTIONS:
  -E FILE    use FILE as an exclude list
  -H         perform hourly backups
  -f         force a full dump
- -a         write extended attributes with uid/gid
+ -a         write extended attributes for storing uid/gid
  -v         echo the files processed to stderr
  -x         pass -x to rdup
  -h         this help
@@ -131,11 +132,6 @@ if [[ $# -eq 0 ]]; then
 	exit
 fi
 
-# fix lonely root arg
-IDENT=`ident_root $(basename $1)`
-STAMP=$etc/$HOSTNAME.$IDENT.timestamp
-LIST=$etc/$HOSTNAME.$IDENT.list
-
 i=1; last=$#; DIRS=
 while [[ $i -lt $last ]]; do
 	DIRS="$DIRS $1"
@@ -159,7 +155,7 @@ if [[ ${dest:0:6} == "ssh://" ]]; then
 	BACKUPDIR=${rest/$h/}
 
 	c="-c"
-	l=""	# enable race checking
+	l=""	# enable race checking in rdup
 	if [[ -z $u ]]; then
 		ssh=" ssh -x $h"
 	else
@@ -174,7 +170,7 @@ if [[ ${dest:0:1} == "/" ]]; then
 	BACKUPDIR=$dest
 fi
 
-# no hits above, asume relative filename
+# no hits above, assume relative filename
 if [[ -z $BACKUPDIR ]]; then
 	BACKUPDIR=`pwd`/$dest
 fi
@@ -183,6 +179,11 @@ if [[ -z $BACKUPDIR ]]; then
         usage
 	exit 1
 fi
+
+# change all / to _ to make a valid filename
+IDENT=$(echo $dest | sed 's/\/\/*/_/g')
+STAMP=$etc/timestamp.$HOSTNAME_$IDENT
+LIST=$etc/list.$HOSTNAME_$IDENT
 
 create_rdup $etc
 

@@ -2,7 +2,7 @@
 .TH RDUP-GPG 1 "29 Apr 2007" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-rdup-gpg, encrypt \- encrypt files with gpg received from \fBrdup -c\fR
+rdup-gpg \- encrypt files with gpg received from \fBrdup -c\fR
 
 .SH SYNOPSIS
 .B rdup-gpg

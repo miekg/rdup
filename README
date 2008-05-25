@@ -4,6 +4,11 @@ Run:
 autoreconf && ./configure && make (Linux)
 autoheader259 && autoconf259 && ./configure && gmake (FreeBSD)
 
+The a:
+make install
+
+as root, to get rdup installed.
+
 rdup depends on:
 o Gmake for compilation
 o Glib to build. Glib is the lowlevel C library of the

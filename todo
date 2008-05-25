@@ -1,26 +1,29 @@
 TODO:
 
+post 0.6.0:
+* make  rdup-gzip, rdup-crypt, rdup-gpg not fail when they cannot de-*
+  something. In that case just echo the original file. This will make
+  it easier to deal with mix backups (50% gzipped, 50% not compressed).
+* enable support for sparse files; When seeing a block of NULLs just
+  do a seek in the file
+
 :install:
 
 :rdup utils:
-rdup server pkgs with only rdup-snap and rdup-snap-link??
 
 :rdup:
-o encrypted file names, is it worth the effort, needs to be done
-rdup-snap, when reading a name mangle it with a key.
-o -e option
-o check extended attributes too? 
-    Would be fairly easy?
-o -0 also affects the exclude
+o encrypted file names, is it worth the effort, needs to be done in
+  rdup-snap, when reading a name mangle it with a key? (low prio)
+o extended attributes support? How, both OS agnostic and with remote
+  dumping?
+o se linux support? See extended attributes
+o generic extended attributes. Locally we can use gnu cp 
+  - extended attributes are a todo. I would love to see this supported on
+   a generic non-FS depended way and workable with remote dumps.
 
 :tests:
 o add conformence test; symlinks etc.
 
-o se linux support?
-o generic extended attributes. Locally we can use copy
-- extended attributes are a todo. I would love to see this supported on
-a generic non-FS depended way and workable with remote dumps.
-
 :porting:
 o port extended attributes to FreeBSD
-o cp -plr is gnuis. Don't have time to port this...?
+o cp -plr is gnuis. See rdup-snap-link. 

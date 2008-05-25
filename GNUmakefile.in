@@ -5,13 +5,11 @@ SHA_IN=shared.sh shared.pl
 WRP_IN=rdup-restore rdup-snap-link rdup-simple
 PRL_IN=rdup-gzip rdup-crypt rdup-snap rdup-gpg rdup-hist
 MAN1_IN=rdup.1 rdup-restore.1 rdup-snap.1 rdup-backups.1 rdup-snap-link.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1 rdup-hist.1
-HERE_IN=rdup-snap-here
 
 SHA=$(addprefix shared/, $(SHA_IN))
 PRL=$(addprefix pl-tools/, $(PRL_IN))
 WRP=$(addprefix sh-wrapper/, $(WRP_IN))
 MAN1=$(addprefix doc/, $(MAN1_IN))
-HERE=$(addprefix sh-wrapper/, $(HERE_IN))
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -88,7 +86,6 @@ install: all
 	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${SHA}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
-	for i in ${HERE}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	make -C po install
 
@@ -97,6 +94,5 @@ uninstall:
 	for i in ${WRP}; do rm -f ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${PRL}; do rm -f ${DESTDIR}${bindir}/`basename $$i` ; done
 	for i in ${SHA}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
-	for i in ${HERE}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	make -C po uninstall

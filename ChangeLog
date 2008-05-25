@@ -1,15 +1,19 @@
-xx May 2008: 0.6.0 Miek <miek@miek.nl>
-  -- i18n added, hardlink support added, default output changed --
+25 May 2008: 0.6.0 Miek <miek@miek.nl>
+ * released 0.6.0-rc1 as 0.6.0 as-is
+
+
+23 May 2008: 0.6.0-rc1 Miek <miek@miek.nl>
+  -- i18n and hardlink support added: default output changed --
  * i18n support added, but nothing is translated yet
-   - this is for the perl scripts and the rdup core
+   - this is for the perl scripts and the rdup C core
    - shell scripts do not use i18n
  * hardlink support
    - symlink output has also changed to support this
    - each link is printed as 'link -> target'
-   - filesize is overload to take the length of 'link' in this case
+   - filesize is overloaded to take the length of 'link' in this case
    - hardlinks have the file type 'h'
    - now we have: -, d, l and h types
-   New: sample output:
+   New sample output:
 
     +d 0751 1000 1000 11 0 /home/miekg/bin
     +h 0700 1000 1000 44 21 /home/miekg/bin/acx2 -> /home/miekg/bin/cx
@@ -17,19 +21,21 @@ xx May 2008: 0.6.0 Miek <miek@miek.nl>
     +l 0777 1000 1000 24 18 /home/miekg/bin/t -> tt
     +- 0775 1000 1000 21 174 /home/miekg/bin/wifi
 
- * Added gpg encryption/decryption to rdup-simple and rdup-restore
+ * added gpg encryption/decryption to rdup-simple and rdup-restore
    (requested by: Jan Spakula)
+ * rdup-simple: be more consistent for the naming of the internal
+   filelist and timestamp files (Jan Spakula)
  * killed off rdup-cp and put that functionality in rdup-snap
- * implemented gettext for i18n and added Dutch as
-   a language for rdup, the perl utils, but not the shell
-   scripts. Those can be easily rewritten in another language
+ * implemented gettext for i18n use.
  * exit ./configure when glib2-dev is not found
- * substract the filesize when files are removed in rdup-snap
+ * subtract the filesize when files are removed in rdup-snap
  * remove last remnants of syslog from shared.pl.in
  * fixed example cron.rdup
  * use here docs in the shell script usage
  * update rdup-restore and removed rdup-snap-here
  * documentation updates and assorted tweaks
+ * removed last remnants of rdup-snap-here
+ * used lintian on the debian package
 
 
 19 Mar 2008: 0.5.7 Miek <miek@miek.nl>

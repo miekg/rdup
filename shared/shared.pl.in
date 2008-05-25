@@ -1,6 +1,8 @@
 # shared perl function
 # this is included by the other utils
 
+#datarootdir=@datarootdir@
+
 # show the version, $progname needs to be set!
 sub version {
     print "$_[0]: @PACKAGE_VERSION@ (rdup-utils)\n";
@@ -109,7 +111,8 @@ sub i18n {
 	setlocale(LC_ALL, "");
 	$d = Locale::gettext->domain("@PACKAGE_NAME@");
 	my $prefix="@prefix@"; # fuck autoconf
-	    $d->dir("@localedir@");
+	my $datarootdir="@datarootdir@"; # fuck autconf, part 2
+	$d->dir("@localedir@");
     }
     $d;
 }

@@ -2,7 +2,7 @@
 .TH RDUP-SNAP-LINK 1 "24 Oct 2006" "@PACKAGE_VERSION@" "@PACKAGE_NAME@ utils"
         
 .SH NAME
-rdup-snap-link, create a hard linked copy of a previous backup
+rdup-snap-link \- create a hard linked copy of a previous backup
 
 .SH SYNOPSIS
 .B rdup-snap-link
@@ -27,9 +27,10 @@ The -H option makes rdup-snap-link understand hourly backups. It will
 then look back DAYS \fIhours\fR.
 
 .SH FILES
-@sysconfdir@/rdup/rdup-snapshot.gnu for the location of GNU cp and GNU
+\fB@sysconfdir@/rdup/rdup-snapshot.gnu\fR with the location of GNU cp and GNU
 date. This is probably only needed on non GNU/Linux systems.
 This file has the following format:
+
 .RS
         GNU_DATE=/path/to/gnu_date
         GNU_CP=/path/to/gnu_cp

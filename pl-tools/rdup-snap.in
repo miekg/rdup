@@ -3,6 +3,8 @@
 # Copyright (c) 2005 - 2008 Miek Gieben; Mark J Hewitt
 # See LICENSE for the license
 # Hardlink script
+# See URL
+# for writing your own scripts or modify this one
 
 use strict;
 
@@ -14,6 +16,7 @@ use POSIX;
 
 # common functions
 my $prefix="@prefix@";
+my $datarootdir = "@datarootdir@";
 require "@datadir@/rdup/shared.pl";
 my $d= i18n();
 

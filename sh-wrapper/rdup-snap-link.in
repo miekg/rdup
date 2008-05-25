@@ -3,9 +3,10 @@
 # create a hardlinked backup
 # this scripts figures out if the
 # dump is incremental or full. And makes a copy
-# of the previous backup woth cp
+# of the previous backup with GNU cp
 
 prefix=@prefix@
+datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
