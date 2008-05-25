@@ -78,6 +78,8 @@ what() {
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
                         # create dir to be safe
+			# for -H we need to do this too
+			# whole setup can be made more robust
                         mkdir -p $_BACKUPDIR/$mon
                         $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
                         return 0
