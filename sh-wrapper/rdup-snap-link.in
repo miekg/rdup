@@ -36,8 +36,8 @@ It is the basis for rdup-simple
 DAYS       - look backup DAYS days for previous dumps
 	     with -H this calculates in hours
 BACKUPDIR  - where to backup to
-NOW        - Current date in YYYY/MM format
-             With -H, current date in YYYY/MM/HH format
+NOW        - Current date in YYYYMM format
+             With -H, current date in YYYYMM/HH format
 HELP
 }
 

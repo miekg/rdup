@@ -23,8 +23,11 @@ install GNU cp.
 .PP
 This utility is called from \fBrdup-simple\fR.
 .PP
-The -H option makes rdup-snap-link understand hourly backups. It will
+The \-H option makes rdup-snap-link understand hourly backups. It will
 then look back DAYS \fIhours\fR.
+.PP
+The NOW argument should be formatted as YYYYMM/DD without \-H and as
+YYYYMM/DD/HH with \-H.
 
 .SH FILES
 \fB@sysconfdir@/rdup/rdup-snapshot.gnu\fR with the location of GNU cp and GNU
