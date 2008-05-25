@@ -1,14 +1,16 @@
 #!/usr/bin/perl -w
 #
-# Copyright (c) 2005 - 2007 Miek Gieben; Mark J Hewitt
+# Copyright (c) 2005 - 2007 Miek Gieben
 # See LICENSE for the license
-#
+
+# todo; robustness
 use strict;
+
+use Net::Amazon::S3;
 
 use Getopt::Std;
 use File::Basename;
 use File::Temp qw{tempdir tempfile};
-use File::Spec;
 use POSIX;
 
 # common functions
@@ -19,6 +21,89 @@ require "@datadir@/rdup/shared.pl";
 my $progName = basename $0;
 my %opt;
 my $d = i18n();
+
+
+# options
+# -b bucketname
+# -k keyid_file
+# -s secret_key_id_file
+#
+# -f rdup-backup-filename
+
+# -l (standalone - list files in bucket named
+
+# -c (dump the output on stdout)
+
+# hV
+
+
+
+# connect to amazon
+# key id, secret key
+sub s3connect($$) {
+    my $s3 = Net::Amazon::S3->new( 
+	{
+	aws_access_key_id => shift,
+	aws_secret_access_key => shift,
+	}
+    );
+
+    if (! $s3) {
+        die "** Could not connect to S3";
+    }
+    $s3;
+}
+
+# get a file from a bucket
+# bucket, filename, localname
+sub s3get($$$) {
+    my $bucket = shift;
+    my $response = $bucket->get_key_filename(shift, 'GET', shift)
+        or die $s3->err . ": " . $s3->errstr;
+    $respons;
+}
+
+# bucket, filename, localname
+sub s3put($$$) {
+    my $bucket = shift;
+    my $response = $bucket->add_key_filename(shift, shift,
+	    {  content_type => 'application/binary', },
+	    ) or die $s3->err . ": " . $s3->errstr;
+    $respons;
+}
+
+# create a bucket
+# s3 obj, bucket name (string)
+sub s3bucket($$) {
+    my $s3 = shift;
+    my $response = $s3->add_bucket( { bucket => shift } ) or 
+	    die $s3->err . ": " . $s3->errstr;
+
+}
+
+# bucket object
+sub s3list_files($) {
+    my $bucket = shift;
+
+    my $r = $bucket->list_all;
+    my @keys = @{ $r->{keys} };
+    my @files;
+    foreach (@keys) {
+	push @files, $_->{keys};
+    }
+    @files;
+}
+
+# return a list of buckets
+# s3 object
+sub s3list_buckets($) {
+    my $s3 = shift;
+    my $r = $s3->buckets;
+
+    @ { $r->{buckets} };
+}
+
+
 
 getopts('dhV', \%opt);
 usage() if $opt{'h'};

@@ -1,3 +1,10 @@
+rdup (0.6.1) unstable; urgency=low
+
+  * New upstream release
+  * Amazon S3 support added
+
+ -- Miek Gieben <miekg@atoom.net>  Mon,  21 May 2008 23:03:13 +0200
+
 rdup (0.6.0) unstable; urgency=low
 
   * New upstream release
