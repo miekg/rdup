@@ -36,8 +36,8 @@ It is the basis for rdup-simple
 DAYS       - look backup DAYS days for previous dumps
 	     with -H this calculates in hours
 BACKUPDIR  - where to backup to
-NOW        - Current date in YYYY/MM format
-             With -H, current date in YYYY/MM/HH format
+NOW        - Current date in YYYYMM format
+             With -H, current date in YYYYMM/HH format
 HELP
 }
 
@@ -79,6 +79,9 @@ what() {
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
                         # create dir to be safe
                         mkdir -p $_BACKUPDIR/$mon
+			# it can be the case that we may also need to
+			# create the directories leading up to $_NOW
+			mkdir -p $_BACKUPDIR/$(dirname $_NOW)
                         $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
                         return 0
                 fi

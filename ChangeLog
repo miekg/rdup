@@ -1,5 +1,7 @@
 25 May 2008: 0.6.0 Miek <miek@miek.nl>
- * released 0.6.0-rc1 as 0.6.0 as-is
+ -- 0.6.0 is 0.6.0-rc1 with following tweaks --
+ * Fix a bug in which a directory can not be created
+   in rdup-snap-link (Louis-Dominique Dubeau)
 
 
 23 May 2008: 0.6.0-rc1 Miek <miek@miek.nl>
