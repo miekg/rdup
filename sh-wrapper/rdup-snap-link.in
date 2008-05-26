@@ -67,6 +67,7 @@ what() {
         fi
         # linux thing
         while [[ $i -le $_DAYS ]]; do
+	    # calculate back from the date in _NOW
 		if $hour; then
 		    dir=`$GNU_DATE +%Y%m/%d/%H --date "$i hours ago"`
 		    mon=`$GNU_DATE +%Y%m/%d`
@@ -78,10 +79,17 @@ what() {
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
                         # create dir to be safe
-			# for -H we need to do this too
-			# whole setup can be made more robust
-                        mkdir -p $_BACKUPDIR/$mon
-                        $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
+                        if ! mkdir -p $_BACKUPDIR/$mon; then
+			    return 2
+			fi
+			# it can be the case that we may also need to
+			# create the directories leading up to $_NOW
+			if ! mkdir -p $_BACKUPDIR/$(dirname $_NOW); then
+			    return 2
+			fi
+                        if ! $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW; then
+			    return 2
+			fi
                         return 0
                 fi
         (( i++ ))
