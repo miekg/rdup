@@ -78,11 +78,17 @@ what() {
                         # copy 'em over
                         _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
                         # create dir to be safe
-                        mkdir -p $_BACKUPDIR/$mon
+                        if ! mkdir -p $_BACKUPDIR/$mon; then
+			    return 2
+			fi
 			# it can be the case that we may also need to
 			# create the directories leading up to $_NOW
-			mkdir -p $_BACKUPDIR/$(dirname $_NOW)
-                        $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
+			if ! mkdir -p $_BACKUPDIR/$(dirname $_NOW); then
+			    return 2
+			fi
+                        if ! $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW; then
+			    return 2
+			fi
                         return 0
                 fi
         (( i++ ))
