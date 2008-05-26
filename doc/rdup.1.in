@@ -230,7 +230,7 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         'C': the content of the file/link (none for directories)
 .PP
-To delimit the outout of \fBrdup\fR with NULLs you can use '\\0' in the
+To delimit the output of \fBrdup\fR with NULLs you can use '\\0' in the
 format string.
 
 .SH FILELIST
@@ -283,7 +283,7 @@ spaces this can come in handy.
 the size of file pointed to by PATH. Note that if the first character of the line is '-'
 (.ie. remove) the SIZE will be zero. For directories this size will
 always be zero. Symbolic and hard links are handled differently, see
-CAVAETS.
+CAVEATS.
 .TP
 .B o PATH
 the pathname
@@ -314,7 +314,7 @@ there is one extra field and the following cavaets.
 .B o FILE_CONTENTS
 The entire file is concatenated to standard output.
 
-.SS CAVAETS
+.SS CAVEATS
 .TP
 .B o symbolic and hard links
 the PATH is generated from the link's name and its target. A symlink like
