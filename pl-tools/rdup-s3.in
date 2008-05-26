@@ -3,7 +3,7 @@
 # Copyright (c) 2005 - 2007 Miek Gieben
 # See LICENSE for the license
 
-# todo; robustness
+# todo; robustness, error checking
 use strict;
 
 use Net::Amazon::S3;
@@ -27,6 +27,12 @@ my $d = i18n();
 # -b bucketname
 # -k keyid_file
 # -s secret_key_id_file
+
+# then:
+# upload | download | delete | list  [filename]
+
+# localname is remote name?
+
 #
 # -f rdup-backup-filename
 
@@ -58,9 +64,7 @@ sub s3connect($$) {
 # bucket, filename, localname
 sub s3get($$$) {
     my $bucket = shift;
-    my $response = $bucket->get_key_filename(shift, 'GET', shift)
-        or die $s3->err . ": " . $s3->errstr;
-    $respons;
+    my $response = $bucket->get_key_filename(shift, 'GET', shift);
 }
 
 # bucket, filename, localname
@@ -68,8 +72,7 @@ sub s3put($$$) {
     my $bucket = shift;
     my $response = $bucket->add_key_filename(shift, shift,
 	    {  content_type => 'application/binary', },
-	    ) or die $s3->err . ": " . $s3->errstr;
-    $respons;
+	    );
 }
 
 # create a bucket
