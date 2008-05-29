@@ -55,7 +55,7 @@ directories will belong to 'user'. See the -a flag for a work around.
 
 .TP 
 .B ssh://host/directory
-Use `ssh' as a protocol and the current username as the remote user name. Store
+Use `ssh' as a protocol and the current user name as the remote user name. Store
 the backup in `directory` on the remote server `host'.
 
 .TP
@@ -68,6 +68,11 @@ Use `/directory` to store the backup.
 .TP
 .B directory
 Use `directory` in the current directory for the backup.
+
+.PP
+Also note that if you use \fBfile:///vol/backup\fR as the destination and later
+start using \fB/vol/backup\fR that these two represent two different
+backups and will have there own set of timestamp and file list files.
 
 .SS Making a backup
 Making a backup is as simple as:

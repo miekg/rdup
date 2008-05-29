@@ -175,11 +175,6 @@ if [[ -z $BACKUPDIR ]]; then
 	BACKUPDIR=`pwd`/$dest
 fi
 
-if [[ -z $BACKUPDIR ]]; then
-        usage
-	exit 1
-fi
-
 # change all / to _ to make a valid filename
 IDENT=$(echo $dest | sed 's/\/\/*/_/g')
 STAMP=$etc/timestamp.$HOSTNAME_$IDENT
