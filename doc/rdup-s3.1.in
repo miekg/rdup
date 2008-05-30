@@ -16,8 +16,9 @@ rdup-s3 \- communicate with Amazon's S3 service
 .B rm
 |
 .B ls
+[
 .IR  FILE
-
+]
 
 .SH DESCRIPTION
 \fBrdup-s3\fR up- or downloads data from Amazon's S3 storage service.
@@ -36,6 +37,13 @@ When begin run with
 .B get
 an object is downloaded from the named bucket and written to standard
 output.
+.PP
+When no file is given the command will be performed on the named bucket.
+A 
+
+    rdup-s3 -b my_bucket rm
+
+will remove the bucket 'my_bucket'.
 .PP
 \fBrdup-s3\fR does not really care what kind of data it uploads, in the
 case of \fBrdup\fR it just happens to be \fBrdup -c\fR data.
