@@ -6,43 +6,21 @@
 # todo; robustness, error checking
 use strict;
 
-use Net::Amazon::S3;
+#use Net::Amazon::S3;
 
-use Getopt::Std;
+use Getopt::Long;
 use File::Basename;
 use File::Temp qw{tempdir tempfile};
 use POSIX;
 
 # common functions
-my $prefix="@prefix@";
-my $datarootdir = "@datarootdir@";
+my $prefix="/usr";
+my $datarootdir = "${prefix}/share";
 require "@datadir@/rdup/shared.pl"; 
 
 my $progName = basename $0;
 my %opt;
 my $d = i18n();
-
-
-# options
-# -b bucketname
-# -k keyid_file
-# -s secret_key_id_file
-
-# then:
-# upload | download | delete | list  [filename]
-
-# localname is remote name?
-
-#
-# -f rdup-backup-filename
-
-# -l (standalone - list files in bucket named
-
-# -c (dump the output on stdout)
-
-# hV
-
-
 
 # connect to amazon
 # key id, secret key
@@ -81,7 +59,6 @@ sub s3bucket($$) {
     my $s3 = shift;
     my $response = $s3->add_bucket( { bucket => shift } ) or 
 	    die $s3->err . ": " . $s3->errstr;
-
 }
 
 # bucket object
@@ -106,73 +83,103 @@ sub s3list_buckets($) {
     @ { $r->{buckets} };
 }
 
+# options
+# -b bucketname
+# -k keyid_file
+# -s secret_key_id_file
+
+# then:
+# up | get | rm | ls  [filename]
+
+# filename is remote name
+
+# hV
 
 
-getopts('dhV', \%opt);
-usage() if $opt{'h'};
-version($progName) if $opt{'V'};
-my $crOptions = "-e ";
-$crOptions = "-d " if $opt{'d'};
-$crOptions .= "--use-agent " if $opt{'a'};
+my ($bucket, $help, $version, $key, $secret);
+GetOptions('b=s' => \$bucket,
+	   'k=s' => \$key,
+	   's=s' => \$secret,
+	   'h'	 => \$help,
+	   'V'	 => \$version
+	);
+usage() if $help || !$bucket || !$key || !$secret;
+version($progName) if $version;
 
-`which gpg >/dev/null`;
-if ($? != 0) {
-        die "** Cannot find \'gpg'";
+# re-use the names
+foreach ($key, $secret) {
+    open IN, "<", $_ or die $d-get("Can not open: ") . "$_: $!";
+	my $a = <IN>; # only the first line is read
+	chomp $a;
+    close IN;
+    $_ = $a; # eeeuw! But it works
 }
 
-my $default="--default-recipient-self";
-if (defined($ARGV[0])) {
-	$default="--default-recipient $ARGV[0]";
+print "key:\n$key\n";
+print "secret:\n$secret\n";
+
+# next we have are command, get, put, rm, ls 
+# and maybe a filename
+# for get and put we need one, for rm and ls
+# we can ignore the file, in that case we list
+# the bucket
+
+my %ops = qw/get 1 put 1 rm 1 ls 1/;
+if (! $ops{$ARGV[0]} ) {
+    die $d->get("** No valid mode given: \`$ARGV[0]\'");
+} 
+my $O = shift;
+
+if ($O eq "get" || $O eq "put") {
+    if (! $ARGV[0] ) {
+	die $d->get("** A filename is required with \`get' and \`put'");
+    }
+
+    my 
+
+    # get, put
+    # check bucket, create one if needed
+
+    exit 0;
 }
 
-$crOptions .= "-q $default";
+if ($O eq "ls" || $O eq "rm") {
 
-my $tmpDir = tempdir("rdup.gpg.XXXXXX", TMPDIR => 1, CLEANUP => 1);
+
+
+}
+
+
+exit;
+# check if the buckup exists, if not create it
+# check what we need to do
+# up or download the file
+
+my $tmpDir = tempdir("rdup.s3.XXXXXX", TMPDIR => 1, CLEANUP => 1);
 die $d->get("** could not create:") . " $tmpDir: $!" unless -d $tmpDir;
 
-while (($_ = <STDIN>)) {
-        chomp;
-        my ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
-        my $dump = substr($t, 0, 1);
-        my $type = substr($t, 1, 1);
 
-        sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
 
-        my $path = "";
-        read STDIN, $path, $psize;
-        die $d->get("** Empty path") if ($path eq "");
 
-        if ($dump eq '+') {        # add
-                if ($type eq '-') {      # REG
-                        if ($fsize != 0) {
-                                my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".gpg" );
-                                $fh->close();
-                                open CRYPT, "|gpg $crOptions 2>/dev/null > $filename" or die "** $filename: $!";
-                                copyout($fsize, *CRYPT);
-                                close CRYPT or warn "** Crypt failure: result will be empty \`$path': $!";
-                                my $size = (stat($filename))[7];
-                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
-                                catfile($filename);
-                                unlink $filename;
-                                next;
-                        }
-                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
-                        next;
-                }
-        } 
-	syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+# read STDIN and save it in the file
+my ($n, $buf, $file);
+$file = "$tmpDir/rdup.$$.s3";
+open OUT, "> $file" or die $d->get("** could not open:") . " $file: $!";
+while (($n = read STDIN, $buf, 4096) > 0) {
+    syswrite OUT, $buf, $n;
 }
+close OUT;
+print $file, "\n";
+
 
 sub usage {
-        print "$progName [OPTIONS] [RECIPIENT]\n\n";
-        print "Encrypt or decrypt the file's contents with the\n";
-        print "default public key in your key ring\n";
-	print "RECIPIENT - recipient name to use for GPG\n";
-	print "            defaults to self\n";
+        print "$progName -b BUCKET -k KEY -s SECRET [OPTIONS] put|get|rm|ls [FILENAME]\n\n";
+        print "Up- or download file to or from Amazon's S3 service\n";
+	print "BUCKET - name of the bucket to use\n";
+	print "KEY    - file containing your S3 id\n";
+	print "SECRET - file containing your private S3 key\n";
         print "\nOPTIONS:\n";
-        print " -c    ignored as rdup-gpg always works on content\n";
-        print " -a    use gpg-agent (needed when decrypting a lot files)\n";
-        print " -d    decrypt the files\n";
+        print " -c    ignored as rdup-s3 always works on content\n";
         print " -h    this help\n";
         print " -V    print version\n";
         exit;
