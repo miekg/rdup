@@ -134,11 +134,8 @@ if ($O eq "get" || $O eq "put") {
 	die $d->get("** A filename is required with \`get' and \`put'");
     }
 
-    my 
-
     # get, put
     # check bucket, create one if needed
-
     exit 0;
 }
 
