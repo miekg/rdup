@@ -100,7 +100,7 @@ dir_prepend(GTree *t, char *path)
  * We do this by giving them the value 0 (NULL_DUMP)
  */
 void
-dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
+dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 {
 	DIR 		*dir;
 	FILE 		*f;
@@ -181,10 +181,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 				pop.f_uid       = s.st_uid;
 				pop.f_gid       = s.st_gid;
 			}
-			if (new_dir)
-				pop.f_ctime     = NULL_DUMP;
-			else
-				pop.f_ctime     = s.st_ctime;
+			pop.f_ctime     = s.st_ctime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 			pop.f_dev       = s.st_dev;
@@ -273,11 +270,6 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 			dirstack[d]->f_ino        = s.st_ino;
 			dirstack[d]->f_lnk        = 0;
 
-			if (s.st_ctime > opt_timestamp)
-				new_dir = TRUE;
-			else
-				new_dir = FALSE;
-
 			if (d++ % D_STACKSIZE == 0) {
 				dirstack = g_realloc(dirstack, 
 						++dstack_cnt * D_STACKSIZE * 
@@ -300,7 +292,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir)
 		/* recurse */
 		/* potentially expensive operation. Better would be to when we hit
 		 * .nobackup to go up the tree and delete some nodes.... or not */
-		dir_crawl(t, linkhash, directory->f_name, new_dir);
+		dir_crawl(t, linkhash, directory->f_name);
 		entry_free(directory);
 	}
 	g_free(dirstack);

@@ -21,7 +21,7 @@ time_t opt_timestamp       = 0;                       /* timestamp file */
 sig_atomic_t sig           = 0;
 
 /* crawler.c */
-void dir_crawl(GTree *t, GHashTable *linkhash, char *path, gboolean new_dir);
+void dir_crawl(GTree *t, GHashTable *linkhash, char *path);
 gboolean dir_prepend(GTree *t, char *path);
 /* signal.c */
 void got_sig(int signal);
@@ -373,7 +373,7 @@ main(int argc, char **argv)
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, linkhash, path, FALSE);
+		dir_crawl(backup, linkhash, path);
 	}
 #ifdef _DEBUG_RACE
 	fprintf(stderr, _("** Sleeping\n"));

@@ -1,4 +1,5 @@
 xx Jun 208: 0.6.1 Miek <miek@miek.nl>
+ * removed the new_dir variabele from dir_crawl
  * Added support for amazon's S3 service, see s3-rdup
 
 
