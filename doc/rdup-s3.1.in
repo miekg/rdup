@@ -23,9 +23,13 @@ rdup-s3 \- communicate with Amazon's S3 service
 .SH DESCRIPTION
 \fBrdup-s3\fR up- or downloads data from Amazon's S3 storage service.
 See http://www.amazon.com/s3 for more information on S3. In short, S3
-works with buckets in which you can store objects (files). When being
+works with buckets in which you can store objects (files). Accessing S3
+requires a key-id (see \-i) and a secret key (see \-k).
+When being
 run \fBrdup-s3\fR will create the bucket named on the command line, if
 it not already exists. 
+.PP
+For each (daily) backup you can create a bucket.
 .PP
 \fBrdup-s3\fR buffers the data it receives on standard input when being
 run with the 
@@ -35,7 +39,7 @@ interface used doesn't support streaming at the moment.
 .PP
 When begin run with
 .B get
-an object is downloaded from the named bucket and written to standard
+an object is downloaded from the named bucket and then written to standard
 output.
 .PP
 When no file is given the command will be performed on the named bucket.
@@ -45,15 +49,19 @@ A
 
 will remove the bucket 'my_bucket'.
 .PP
+With \fIls\fR you may even omit the bucket name, in that case all the
+buckets will be listed.
+.PP
 \fBrdup-s3\fR does not really care what kind of data it uploads, in the
 case of \fBrdup\fR it just happens to be \fBrdup -c\fR data.
 
 .SS Upload (backup)
-For example the following will upload your encrypted and compressed
-data to Amazone:
+For example the following will upload your compressed and encrypted
+data to Amazon:
 
     rdup -c list ~/Documents | rdup-gzip | rdup-crypt key | \\
-        rdup-s3 -b my_bucket -i id_file -k key_file put my-backup-20080412
+        rdup-s3 -b $(date +%Y%m%d) -i id_file -k key_file \\
+        put backup-home-doc
 
 .PP
 Note the \fI-c\fR option for \fBrdup\fR. 
@@ -61,16 +69,30 @@ Note the \fI-c\fR option for \fBrdup\fR.
 .SS Download (restore)
 And to restore your data from Amazon:
 
-    rdup-s3 -b my_backup -i id_file -k keyfile get my-backup-20080412 \\
+    rdup-s3 -b 20080610 -i id_file -k keyfile get backup-home-doc \\
 	rdup-crypt -d key | rdup-gzip -d | rdup-snap -c -b /tmp/tada
 
-You should now be able to find your files in /tmp/tada
+You should now be able to find your files in /tmp/tada. Note that the
+backupname (20080610) and the filename (backup-home-doc) should match
+with the names used when backing up.
 
-.SH OPTIONS [TO BE EXPANDED]
+.SH OPTIONS
+.TP
+.B \-i file
+\fIfile\fR contains one line with your id as you got it from Amazon.
+.TP
+.B \-k file
+\fIfile\fR contains one line with your secret key as you got it from Amazon.
+.TP
+.B \-b bucket
+Use \fIbucket\fR as the bucket. If the bucket does not exists it is
+created for you.
 .TP
 .B \-c
 This option is ignored, \fBrdup-s3\fR always works on the files'
-content. 
+content.  Note that the
+backupname (20080610) and the filename (backup-home-doc) should match
+with the names used when backing up.
 .TP
 .B \-h
 Show a short help message.

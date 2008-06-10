@@ -182,6 +182,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 				pop.f_gid       = s.st_gid;
 			}
 			pop.f_ctime     = s.st_ctime;
+
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 			pop.f_dev       = s.st_dev;

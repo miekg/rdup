@@ -1,6 +1,14 @@
 xx Jun 208: 0.6.1 Miek <miek@miek.nl>
- * removed the new_dir variabele from dir_crawl
- * Added support for amazon's S3 service, see s3-rdup
+ * Added support for amazon's S3 service: see s3-rdup
+   this is not added to rdup-simple and probably never will,
+   but examples are given in the manual page on how
+   to use it.
+ * crawler.c: removed new_dir argument for dir_crawl
+   this would test if a directory is new and if so would
+   include all the files in it. This did not work properly
+   and would result into files being included in the backup, which 
+   would otherwise would be skipped when doing an incremental
+   (Louis-Dominique Dubeau)
 
 
 29 May 2008: 0.6.0 Miek <miek@miek.nl>
