@@ -5,7 +5,7 @@
 
 # todo; robustness, error checking
 use strict;
-##use Net::Amazon::S3;
+use Net::Amazon::S3;
 
 use Getopt::Long;
 use File::Basename;

@@ -9,6 +9,8 @@ xx Jun 208: 0.6.1 Miek <miek@miek.nl>
    and would result into files being included in the backup, which 
    would otherwise would be skipped when doing an incremental
    (Louis-Dominique Dubeau)
+ * debian/ erased as rdup is now included in Debian and there 
+   are better working builds for Ubuntu on Launchpad
 
 
 29 May 2008: 0.6.0 Miek <miek@miek.nl>
