@@ -13,6 +13,7 @@ post 0.6.0:
   can 
   doesn't work if the backup is made as a none root users - you 
   will not be able to restore. BUT still...
+* rdup-scripts; resume a backup
 
 :install:
 
