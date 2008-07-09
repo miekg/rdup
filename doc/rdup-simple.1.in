@@ -122,6 +122,10 @@ inserts \fBrdup-crypt keyfile\fR in the pipeline.
 Enable extended attributes. Write the uid/gid to the extended user
 attributes r_uid and r_gid.
 .TP
+.B \-E file
+Use file as an exclude list. Each line should contain one regular
+expression.
+.TP
 .B \-f
 Force a full dump.
 .TP
