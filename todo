@@ -28,6 +28,11 @@ o se linux support? See extended attributes
 o generic extended attributes. Locally we can use gnu cp 
   - extended attributes are a todo. I would love to see this supported on
    a generic non-FS depended way and workable with remote dumps.
+o allow the filetree to be printed in reverse - like cpio
+    helper scripts first create a directory and later correct the
+    permissions on this dir - this will allow you to have 600
+    directories in your backup WITH files in it.
+
 
 :tests:
 o add conformence test; symlinks etc.
