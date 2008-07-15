@@ -125,6 +125,8 @@ while [[ $i -lt $last ]]; do
 			ssh=" ssh -x $u@$h"
 		fi
 		SOURCE=${rest/$h/}
+		shift; ((i=$i+1))
+		continue
 	fi
 	if [[ ${src:0:7} == "file://" ]]; then
 		if $ssh_seen; then
@@ -133,18 +135,16 @@ while [[ $i -lt $last ]]; do
 		fi
 		rest=${src/file:\/\//}
 		SOURCE="$SOURCE $rest"
-	fi
-	if [[ ${src:0:1} == "/" ]]; then
-		if $ssh_seen; then
-			_echo2 "Sorry; a remote source has been specified"
-			exit 1
-		fi
-		SOURCE="$SOURCE $src"
+		shift; ((i=$i+1))
+		continue
 	fi
 
-	# relative dirs
-	shift
-	((i=$i+1))
+	if $ssh_seen; then
+	    _echo2 "Sorry; a remote source has been specified"
+	    exit 1
+	fi
+	SOURCE="$SOURCE $src"
+	shift; ((i=$i+1))
 done
 dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
