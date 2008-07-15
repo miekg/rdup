@@ -11,18 +11,18 @@ sub version {
 
 # sanity_check the input
 sub sanity_check {
-    my ($dump, $bits, $psize, $fsize, $uid, $gid) = @_;
-    die "** $progName: dump must be + or -; -c option forgotten?" 
+    my ($prog, $dump, $bits, $psize, $fsize, $uid, $gid) = @_;
+    die "** $prog: dump must be + or -; -c option forgotten?" 
 	if $dump ne "+" && $dump ne "-";
-    die "** $progName: bits must be octal; -c option forgotten?" 
+    die "** $prog: bits must be octal; -c option forgotten?" 
 	unless $bits =~ "[0-7]+";
-    die "** $progName: psize must be numeric; -c option forgotten?" 
+    die "** $prog: psize must be numeric; -c option forgotten?" 
 	unless $psize =~ "[0-9]+";
-    die "** $progName: fsize must be numeric; -c option forgotten?" 
+    die "** $prog: fsize must be numeric; -c option forgotten?" 
 	unless $fsize =~ "[0-9]+";
-    die "** $progName: uid must be numeric; -c option forgotten?" 
+    die "** $prog: uid must be numeric; -c option forgotten?" 
 	unless $uid =~ "[0-9]+";
-    die "** $progName: gid must be numeric; -c option forgotten?" 
+    die "** $prog: gid must be numeric; -c option forgotten?" 
 	unless $gid =~ "[0-9]+";
 }
 

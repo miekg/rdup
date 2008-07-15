@@ -98,7 +98,7 @@ sub _mirror {
     my $type = substr($t, 1, 1);
     my ($target, $ret, $old, $new);
 
-    sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
+    sanity_check($progName, $dump, $bits, $psize, $fsize, $uid, $gid);
     if ($remote) {
 	$path = "";
 	read STDIN, $path, $psize;

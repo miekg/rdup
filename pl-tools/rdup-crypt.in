@@ -43,7 +43,7 @@ while (<STDIN>) {
         my $dump = substr($t, 0, 1);
         my $type = substr($t, 1, 1);
 
-        sanity_check($dump, $bits, $psize, $fsize, $uid, $gid);
+        sanity_check($progName, $dump, $bits, $psize, $fsize, $uid, $gid);
 
         my $path = "";
         read STDIN, $path, $psize;
