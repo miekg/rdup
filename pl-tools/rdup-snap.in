@@ -39,8 +39,8 @@ GetOptions("h" => \$help,
 usage() if $help;
 version($progName) if $version;
 
-die $d->get("** Need a -b option") if !$backupDir;
-die $d->get("** -p is only valid with -R") if $strip && !$restore;
+die $d->get("** $progName: Need a -b option") if !$backupDir;
+die $d->get("** $progName: -p is only valid with -R") if $strip && !$restore;
 chomp (my $hostname = `hostname`);
 my $attr_there = check_attr() if $attr;
 
@@ -74,12 +74,15 @@ if ($remote) {
 foreach (keys %hardlink) {
     # create hardlinks
     link("$backupDir/$hardlink{$_}", "$backupDir/$_") or 
-	warn $d->get("** Cannot create hardlink:") .  
+	warn $d->get("** $progName: Cannot create hardlink:") .  
 	" $backupDir/$hardlink{$_} -> $backupDir/$_: $!";
 }
 
 if (! $restore) {
     my $te = time;
+    if ($ireg == 0 && $idir == 0) {
+	die $d->get("** $progName: Nothing was backed up!"); 
+    }
     printf STDERR $d->get("** #REG FILES  : %d\n"), $ireg;
     printf STDERR $d->get("** #DIRECTORIES: %d\n"), $idir;
     printf STDERR $d->get("** #SYMLINKS   : %d\n"), $ilnk;
