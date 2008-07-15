@@ -29,7 +29,7 @@ $crOptions .= "--use-agent " if $opt{'a'};
 
 `which gpg >/dev/null`;
 if ($? != 0) {
-        die "** Cannot find \'gpg'";
+        die "** $progName: Cannot find \'gpg'";
 }
 
 my $default="--default-recipient-self";
@@ -40,7 +40,7 @@ if (defined($ARGV[0])) {
 $crOptions .= "-q $default";
 
 my $tmpDir = tempdir("rdup.gpg.XXXXXX", TMPDIR => 1, CLEANUP => 1);
-die $d->get("** could not create:") . " $tmpDir: $!" unless -d $tmpDir;
+die $d->get("** $progName: could not create:") . " $tmpDir: $!" unless -d $tmpDir;
 
 while (($_ = <STDIN>)) {
         chomp;
@@ -52,16 +52,16 @@ while (($_ = <STDIN>)) {
 
         my $path = "";
         read STDIN, $path, $psize;
-        die $d->get("** Empty path") if ($path eq "");
+        die $d->get("** $progName: Empty path") if ($path eq "");
 
         if ($dump eq '+') {        # add
                 if ($type eq '-') {      # REG
                         if ($fsize != 0) {
                                 my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".gpg" );
                                 $fh->close();
-                                open CRYPT, "|gpg $crOptions 2>/dev/null > $filename" or die "** $filename: $!";
+                                open CRYPT, "|gpg $crOptions 2>/dev/null > $filename" or die "** $progName: $filename: $!";
                                 copyout($fsize, *CRYPT);
-                                close CRYPT or warn "** Crypt failure: result will be empty \`$path': $!";
+                                close CRYPT or warn "** $progName: Crypt failure: result will be empty \`$path': $!";
                                 my $size = (stat($filename))[7];
                                 syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
                                 catfile($filename);

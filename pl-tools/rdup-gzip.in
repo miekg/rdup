@@ -26,11 +26,11 @@ version($progName) if $opt{'V'};
 $zipOptions .= "-d " if $opt{'d'};
 
 my $tmpDir = tempdir("rdup.backup.XXXXXX", TMPDIR => 1, CLEANUP => 1);
-die "** $tmpDir could not be created: $!" unless -d $tmpDir;
+die "** $progName: $tmpDir could not be created: $!" unless -d $tmpDir;
 
 `which gzip >/dev/null`;
 if ($? != 0) {
-	die "** Cannot find \'gzip'";
+	die "** $progName: Cannot find \'gzip'";
 }
 
 while (<STDIN>) {
@@ -43,16 +43,16 @@ while (<STDIN>) {
 
         my $path = "";
         read STDIN, $path, $psize;
-        die "** Empty path"  if ($path eq "");
+        die "** $progName: Empty path"  if ($path eq "");
 
         if ($dump eq '+') {        # add
                 if ($type eq '-') {      # REG
                         if ($fsize != 0) {
                                 my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".gz" );
                                 $fh->close();
-                                open ZIP, "|gzip $zipOptions -c > $filename" or die "** $filename: $!";
+                                open ZIP, "|gzip $zipOptions -c > $filename" or die "** $progName: $filename: $!";
                                 copyout($fsize, *ZIP);
-                                close ZIP or warn "** Zip failure: \'$path': $!";
+                                close ZIP or warn "** $progName: Zip failure: \'$path': $!";
                                 my $size = (stat($filename))[7];
                                 syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
                                 catfile($filename);
