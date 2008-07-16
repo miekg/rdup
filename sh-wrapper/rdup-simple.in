@@ -214,4 +214,3 @@ esac
 # execute the backup command
 #_echo2 "Executing: ${cmd}"
 eval ${cmd}
-echo $?
