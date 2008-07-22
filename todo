@@ -1,5 +1,8 @@
 TODO:
 
+- d->get does not work anymore in Perl 5.10 remove it all together
+  leaving only rdup.c to be translated
+
 post 0.6.0:
 * make  rdup-gzip, rdup-crypt, rdup-gpg not fail when they cannot de-*
   something. In that case just echo the original file. This will make
