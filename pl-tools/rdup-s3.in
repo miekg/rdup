@@ -19,7 +19,6 @@ require "@datadir@/rdup/shared.pl";
 
 my $progName = basename $0;
 my %opt;
-my $d = i18n();
 
 # connect to amazon
 # key id, secret key
@@ -116,7 +115,7 @@ version($progName) if $version;
 # re-use the names
 my $i = 0;
 foreach ($key, $secret) {
-    open IN, "<", $_ or die $d-get("Can not open: ") . $_;
+    open IN, "<", $_ or die "Can not open: " . $_;
 	my $a = <IN>; # only the first line is read
 	chomp $a;
     close IN;
@@ -136,22 +135,22 @@ my $s3 = s3connect $key, $secret; # dies on failure
 
 my %ops = qw/get 1 put 1 rm 1 ls 1/;
 if (! $ops{$ARGV[0]} ) {
-    die $d->get("** No valid mode given: \`$ARGV[0]\'");
+    die "** No valid mode given: \`$ARGV[0]\'";
 } 
 my $O = shift;
 
 if ($O eq "get" || $O eq "put") {
     if (! $ARGV[0] ) {
-	die $d->get("** A filename is required with \`get' and \`put'");
+	die "** A filename is required with \`get' and \`put'";
     }
     if (! $b) {
-	die $d->get("** A bucket name is required");
+	die "** A bucket name is required";
     }
     my $bucket = $s3->bucket( { bucketname => $b });
     # put in file and cat the file
 
     my $tmpDir = tempdir("rdup.s3.XXXXXX", TMPDIR => 1, CLEANUP => 1);
-    die $d->get("** Could not create:") . " $tmpDir: $!" unless -d $tmpDir;
+    die "** Could not create:" . " $tmpDir: $!" unless -d $tmpDir;
     my ($n, $buf, $file);
     my $localname = "$tmpDir/rdup.$$.s3";
     # GET, get a file and cat it
@@ -162,7 +161,7 @@ if ($O eq "get" || $O eq "put") {
     }
     # PUT, save all input in a file and upload it
     if ($O eq "put") {
-	open OUT, "> $localname" or die $d->get("** Could not open:") . " $localname: $!";
+	open OUT, "> $localname" or die "** Could not open:" . " $localname: $!";
 	while (($n = read STDIN, $buf, 4096) > 0) {
 	    syswrite OUT, $buf, $n;
 	}
@@ -202,7 +201,7 @@ if ($O eq "ls") {
 
 # remove stuff
 if ($O eq "rm") {
-    die $d->get("** Need at a bucket when removing") unless $b;
+    die "** Need at a bucket when removing" unless $b;
     if (!$ARGV[0]) {
 	# remove the bucket
 	s3rm $s3, $b;

@@ -18,7 +18,6 @@ use POSIX;
 my $prefix="@prefix@";
 my $datarootdir = "@datarootdir@";
 require "@datadir@/rdup/shared.pl";
-my $d= i18n();
 
 my $ts = time;
 my $progName = basename $0;
@@ -39,8 +38,8 @@ GetOptions("h" => \$help,
 usage() if $help;
 version($progName) if $version;
 
-die $d->get("** $progName: Need a -b option") if !$backupDir;
-die $d->get("** $progName: -p is only valid with -R") if $strip && !$restore;
+die "** $progName: Need a -b option" if !$backupDir;
+die "** $progName: -p is only valid with -R" if $strip && !$restore;
 chomp (my $hostname = `hostname`);
 my $attr_there = check_attr() if $attr;
 
@@ -53,8 +52,7 @@ my $irm  = 0;        # Number of files removed
 my ($t, $bits, $uid, $gid, $psize, $fsize, $path);
 
 if (!exist($backupDir)) {
-    mkpath($backupDir) or die $d->get("** $progName: Cannot create") . 
-	"`$backupDir': $!";
+    mkpath($backupDir) or die "** $progName: Cannot create" .  "`$backupDir': $!";
 }
 
 if ($remote) {
@@ -74,23 +72,23 @@ if ($remote) {
 foreach (keys %hardlink) {
     # create hardlinks
     link("$backupDir/$hardlink{$_}", "$backupDir/$_") or 
-	warn $d->get("** $progName: Cannot create hardlink:") .  
+	warn "** $progName: Cannot create hardlink:" .  
 	" $backupDir/$hardlink{$_} -> $backupDir/$_: $!";
 }
 
 if (! $restore) {
     my $te = time;
     if ($ireg == 0 && $idir == 0) {
-	die $d->get("** $progName: Nothing was backed up!"); 
+	die "** $progName: Nothing was backed up!"; 
     }
-    printf STDERR $d->get("** #REG FILES  : %d\n"), $ireg;
-    printf STDERR $d->get("** #DIRECTORIES: %d\n"), $idir;
-    printf STDERR $d->get("** #SYMLINKS   : %d\n"), $ilnk;
-    printf STDERR $d->get("** #HARDLINKS  : %d\n"), 0 + keys %hardlink;
-    printf STDERR $d->get("** #(RE)MOVED  : %d\n"), $irm;
-    printf STDERR $d->get("** DELTA FSIZE : %.1f MB\n"), $ftsize/1024.0/1024.0;
-    printf STDERR $d->get("** STORED IN   : %s\n"), $backupDir;
-    printf STDERR $d->get("** ELAPSED     : %.2f m\n"), ($te - $ts) / 60.00;
+    printf STDERR "** #REG FILES  : %d\n", $ireg;
+    printf STDERR "** #DIRECTORIES: %d\n", $idir;
+    printf STDERR "** #SYMLINKS   : %d\n", $ilnk;
+    printf STDERR "** #HARDLINKS  : %d\n", 0 + keys %hardlink;
+    printf STDERR "** #(RE)MOVED  : %d\n", $irm;
+    printf STDERR "** DELTA FSIZE : %.1f MB\n", $ftsize/1024.0/1024.0;
+    printf STDERR "** STORED IN   : %s\n", $backupDir;
+    printf STDERR "** ELAPSED     : %.2f m\n", ($te - $ts) / 60.00;
     rchmod(755, $backupDir);
 }
 exit 0;
@@ -110,7 +108,7 @@ sub _mirror {
     # strip path when restoring
     if ($restore) { $path = strip_path($strip, $path); }
 
-    die $d->get("** $progName: Empty path")  if ($path eq "");
+    die "** $progName: Empty path" if ($path eq "");
     print STDERR "$path\n" if $verbose;
 
     $target = "$dir/$path";
@@ -129,26 +127,26 @@ sub _mirror {
 	if (exist($target) == 1) {
 	    if ($type eq '-' or $type eq 'l' or $type eq 'h') {
 		if (-d _) {
-		    rmtree $target or warn $d->get("** $progName: Cannot remove:") . " $target: $!";
+		    rmtree $target or warn "** $progName: Cannot remove:" . " $target: $!";
 		} else {
-		    unlink $target or warn $d->get("** $progName: Cannot unlink:") . " $target: $!";
+		    unlink $target or warn "** $progName: Cannot unlink:" . " $target: $!";
 		}
 	    } elsif ($type eq 'd') {
 		if (-f _ || -l _) {      # Type of entry has changed
-		    unlink $target or warn $d->get("** $progName: Cannot unlink:") . " $target: $!";
+		    unlink $target or warn "** $progName: Cannot unlink:" . " $target: $!";
 		}
 	    }
 	}
 
 	if ($type eq '-') {		# REG
 	    if ($remote) {
-		open FILE, ">$target" or warn $d->get("** $progName: Cannot create:") . " $target: $!";
+		open FILE, ">$target" or warn "** $progName: Cannot create:" . " $target: $!";
 		if ($fsize != 0) {
 		    copyout($fsize, *FILE);
 		}
 		close FILE or warn "** $progName: Failed to close: $!";
 	    } else {
-		$ret = copy($path, $target) or warn $d->get("** $progName: Copy failed:") . " $! $path $target";
+		$ret = copy($path, $target) or warn "** $progName: Copy failed:" . " $! $path $target";
 	    }
 	    $ftsize += $fsize;
 	    $ireg++;
@@ -158,18 +156,18 @@ sub _mirror {
 	    # fix unaccessible paths for mortal users
 	    if ($> != 0) {
 		if (length($bits) == 3 and substr($bits, 0, 1) ne "7") {
-		    print STDERR $d->get("** $progName: chmod u+rwx") . " $target\n";
+		    print STDERR "** $progName: chmod u+rwx" . " $target\n";
 		    $bits = "7" . substr($bits, 1, 2);
 		}
 		if (length($bits) == 4 and substr($bits, 1, 1) ne "7") {
-		    print STDERR $d->get("** $progName: chmod u+rwx") . " $target\n";
+		    print STDERR "** $progName: chmod u+rwx" . " $target\n";
 		    $bits = substr($bits, 0, 1) . "7" . substr($bits, 2, 2);
 		}
 	    }
 	    $idir++;
 
 	} elsif ($type eq 'l') {        # SLNK
-	    symlink($old, $target) or warn $d->get("** $progName: Cannot create symlink:") . 
+	    symlink($old, $target) or warn "** $progName: Cannot create symlink:" . 
 		" $old -> $target: $!";
 	    $ilnk++;
 	} elsif ($type eq 'h') {	# HLNK
@@ -186,9 +184,9 @@ sub _mirror {
 	next if $restore;   # not in restore mode
 	if (exist($target)) {
 	    if (-d _) {
-		rmtree $target or warn $d->get("** $progName: Cannot remove:") . " $target: $!";
+		rmtree $target or warn "** $progName: Cannot remove:" . " $target: $!";
 	    } else {
-		unlink $target or warn $d->get("** $progName: Cannot unlink:") . " $target: $!";
+		unlink $target or warn "** $progName: Cannot unlink:" . " $target: $!";
 	    }
 	}
 	$ftsize -= $fsize;
