@@ -51,7 +51,7 @@ while (($_ = <STDIN>)) {
 
         my $path = "";
         read STDIN, $path, $psize;
-        die $d->get("** $progName: Empty path") if ($path eq "");
+        die "** $progName: Empty path" if ($path eq "");
 
         if ($dump eq '+') {        # add
                 if ($type eq '-') {      # REG
