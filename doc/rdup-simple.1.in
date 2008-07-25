@@ -51,7 +51,7 @@ the backup in `directory` on the remote server `host'.
 
 Note: when doing a remove backup as a normal ssh user the ownership
 of the backup is not preserved on the remove host. All files and
-directories will belong to 'user'. See the -a flag for a work around.
+directories will belong to 'user'. 
 
 .TP 
 .B ssh://host/directory
@@ -118,10 +118,6 @@ the rdup-util scripts can be found.
 Encrypt the files while backing up with \fIkeyfile\fR. This option
 inserts \fBrdup-crypt keyfile\fR in the pipeline. 
 .TP
-.B \-a
-Enable extended attributes. Write the uid/gid to the extended user
-attributes r_uid and r_gid.
-.TP
 .B \-E file
 Use file as an exclude list. Each line should contain one regular
 expression.
@@ -133,8 +129,7 @@ Force a full dump.
 GPG encrypt the files. This option inserts \fBrdup-gpg\fR in the
 pipeline. Note that when you need to restore you will be prompted
 for your GPG passphrase for \fIevery\fR encrypted file! Unless you
-have configured `gpg-agent`. See the \fI\-a\fR flag of
-\fBrdup-restore\fR.
+have configured `gpg-agent`. 
 .TP
 .B \-x
 See \-x in rdup(1).

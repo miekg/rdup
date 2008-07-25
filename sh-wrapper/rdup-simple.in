@@ -43,7 +43,6 @@ OPTIONS:
  -E FILE    use FILE as an exclude list
  -H         perform hourly backups
  -f         force a full dump
- -a         write extended attributes for storing uid/gid
  -v         echo the files processed to stderr
  -x         pass -x to rdup
  -h         this help
@@ -105,7 +104,7 @@ while getopts "E:k:vfgzxahHV" o; do
 		c="-c"
 		;;
                 f) force=true;;
-                a) OPT="$OPT -a";;
+                a) ;;
                 v) OPT="$OPT -v";;
                 x) x="-x";;
                 H) NOW=`date +%Y%m/%d/%H`;hour="-H";;

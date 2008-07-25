@@ -56,10 +56,6 @@ inserts \fBrdup-gzip \-d\fR in the pipeline. If both \fI\-z\fR and
 \fI\-k\fR are given a file is first decrypted and then unzipped. This 
 the opposite of what \fBrdup-simple\fR does.
 .TP
-.B \-a
-Enable extended attributes. Read the uid/gid to the extended user
-attributes r_uid and r_gid. See rdup(1) for a more detailed explanation.
-.TP
 .B \-g
 Decrypt all files with GPG (using rdup-gpg). Note: without gpg-agent
 this isn't fun.
