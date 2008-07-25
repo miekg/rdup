@@ -28,7 +28,7 @@ my ($restore, $strip);
 $strip = 0;
 GetOptions("h" => \$help,
 	"V" => \$version,
-	"a" => \$attr, # extended attr support
+	"a" => \$attr, # extended attr support, disabled!
 	"c" => \$remote,
 	"R" => \$restore,	# restore mode (ala the old rdup-cp)
 	"p=i" => \$strip,	# strip i slashes (only when restoring)
@@ -41,7 +41,6 @@ version($progName) if $version;
 die "** $progName: Need a -b option" if !$backupDir;
 die "** $progName: -p is only valid with -R" if $strip && !$restore;
 chomp (my $hostname = `hostname`);
-my $attr_there = check_attr() if $attr;
 
 # Statistics
 my $ftsize = 0;        # Total file size
@@ -176,7 +175,6 @@ sub _mirror {
 
 	if ($type ne 'l' and $type ne 'h') {
 	    rchown($uid, $gid, $target);
-	    chown_attr($attr_there, $uid, $gid, $target);
 	    rchmod($bits, $target);
 	}
 
@@ -200,7 +198,6 @@ sub usage {
     print "OPTIONS\n";
     print " -b DIR  use DIR as the backup directory\n";
     print " -R      restore mode\n";
-    print " -a      write extended attributes r_uid/r_gid with uid/gid\n";
     print " -c      process the file content also (rdup -c), for remote backups\n";
     print " -v      print the files processed to standard error\n";
     print " -p NUM  strip NUM slashes from the filenames (only valid with -R)\n";

@@ -60,32 +60,6 @@ sub catfile {
     close FILE;
 }
 
-# set the r_uid/g_uid with the original uid/gid
-# usefull for remote backups. SLOOOOWWW
-sub chown_attr {
-    my ($attr, $xuid, $xgid, $file) = @_;
-    return unless $attr;
-    if ($^O eq "linux") {
-	$err += system("attr -q -s r_uid -V$xuid \"$file\" 2>/dev/null; attr -q -s r_gid -V$xgid \"$file\" 2>/dev/null");
-    }
-    if ($^O eq "solaris") {
-	$err += system("runat \"$file\" \"echo $xuid > r_uid\" 2>/dev/null; runat \"$file\" \"echo $xgid > r_gid\" 2>/dev/null");
-    }
-    #warn "** Could not set xattr on $file" if ($err ne 0); Happens too often
-}
-
-# check if the system supports extended attributes
-sub check_attr {
-    if ($^O eq "linux") {
-	map {return 1 if -x $_ . '/' . "attr"}  split(/:/, $ENV{'PATH'});
-    }
-    if ($^O eq "solaris") {
-	map {return 1 if -x $_ . '/' . "runat"}  split(/:/, $ENV{'PATH'});
-    }
-    warn "** Cannot set extended attributes";
-    0;
-}
-
 # chmod or warn
 sub rchmod {
     my ($bits, $file) = (shift, shift);
@@ -103,30 +77,6 @@ sub exist {
     lstat(shift);
     return 0 unless -e _;
     1;
-}
-
-# check if gettext is there, if so return object of that class
-# otherwise return fake object and we will use our own get (see below)
-# on that
-## Doesn't work on Perl 5.10 anymore... :(
-#sub i18n {
-#    my $d;
-#    eval('use Locale::gettext;');
-#    if ($@) {
-#	$d = bless \$d, "main";
-#    } else {
-#	setlocale(LC_ALL, "");
-#	$d = Locale::gettext->domain("@PACKAGE_NAME@");
-#	my $prefix="@prefix@"; # fuck autoconf
-#	my $datarootdir="@datarootdir@"; # fuck autconf, part 2
-#	$d->dir("@localedir@");
-#    }
-#    $d;
-#}
-
-# fake get for systems without gettext, the identity function
-sub get {
-    @_;
 }
 
 # keep
