@@ -8,7 +8,6 @@
 
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
-extern gboolean opt_attr;
 extern time_t opt_timestamp;
 extern gint opt_verbose;
 extern GSList *regex_list;
@@ -74,13 +73,8 @@ dir_prepend(GTree *t, char *path)
 		}
 		e.f_name      = path2;
 		e.f_name_size = strlen(path2);
-		if (opt_attr) {
-			e.f_uid = read_attr_uid(e.f_name, s.st_uid);
-			e.f_gid = read_attr_gid(e.f_name, s.st_gid);
-		} else {
-			e.f_uid       = s.st_uid;
-			e.f_gid       = s.st_gid;
-		}
+		e.f_uid       = s.st_uid;
+		e.f_gid       = s.st_gid;
 		e.f_ctime     = s.st_ctime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
@@ -174,15 +168,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) {
 			pop.f_name      = curpath;
 			pop.f_name_size = curpath_len;
-			if (opt_attr) {
-				pop.f_uid       = read_attr_uid(pop.f_name, s.st_uid);
-				pop.f_gid       = read_attr_gid(pop.f_name, s.st_gid);
-			} else {
-				pop.f_uid       = s.st_uid;
-				pop.f_gid       = s.st_gid;
-			}
+			pop.f_uid       = s.st_uid;
+			pop.f_gid       = s.st_gid;
 			pop.f_ctime     = s.st_ctime;
-
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 			pop.f_dev       = s.st_dev;
@@ -255,15 +243,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			dirstack[d] = g_malloc(sizeof(struct entry));
 			dirstack[d]->f_name       = g_strdup(curpath); 
 			dirstack[d]->f_name_size  = curpath_len;
-			if (opt_attr) {
-				dirstack[d]->f_uid = 
-					read_attr_uid(dirstack[d]->f_name, s.st_uid);
-				dirstack[d]->f_gid = 
-					read_attr_gid(dirstack[d]->f_name, s.st_gid);
-			} else {
-				dirstack[d]->f_uid = s.st_uid;
-				dirstack[d]->f_gid = s.st_gid;
-			}
+			dirstack[d]->f_uid	  = s.st_uid;
+			dirstack[d]->f_gid        = s.st_gid;
 			dirstack[d]->f_ctime      = s.st_ctime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;

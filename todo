@@ -1,5 +1,9 @@
 TODO:
 
+remove -a sucks
+
+split off the scripts
+
 - d->get does not work anymore in Perl 5.10 remove it all together
   leaving only rdup.c to be translated
 

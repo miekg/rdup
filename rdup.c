@@ -11,7 +11,9 @@ gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
+#if 0
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
+#endif
 gboolean opt_local  	   = FALSE; 		      /* check for file size changes */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
@@ -276,12 +278,7 @@ main(int argc, char **argv)
 					exit(EXIT_FAILURE);
 				break;
 			case 'a':
-#ifdef HAVE_ATTR_XATTR_H
-				opt_attr = TRUE;
-#endif /* HAVE_ATTR_XATTR_H */
-#ifdef HAVE_OPENAT
-				opt_attr = TRUE;
-#endif /* HAVE_OPENAT */
+				msg(_("-a is not supported anymore"), PROGNAME);
 				break;
 			case 'c':
 				opt_format = "%p%T %b %u %g %l %s\n%n%C";

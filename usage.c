@@ -25,12 +25,6 @@ implement a (incremental) backup scheme.\n\
 	-E FILE\tuse FILE as an exclude list\n\
         -0\t\tdelimit internal filelist with NULLs\n\
         -V\t\tprint version\n"), f);
-#ifdef HAVE_ATTR_XATTR_H
-	fputs( _("	-a\t\tread the extended attributes: r_uid, r_gid\n"), f);
-#endif /* HAVE_ATTR_XATTR_H */
-#ifdef HAVE_ATTROPEN
-        fputs( _("	-a\t\tread the extended attributes: r_uid, r_gid\n"), f);
-#endif /* HAVE_ATTROPEN */
 	fputs( _("\
         -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s %n%C\")\n\
         -h\t\tthis help\n\
