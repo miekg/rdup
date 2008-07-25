@@ -104,11 +104,7 @@ rdup-simple -z -k 'secret-file' ~ ssh://miekg@remote/vol/backup/$HOSTNAME
 .SH RESTORE
 
 In principle a restore is as easy as using the standard system tools to
-copy a directory to another location. However when the
-\-a flag is used extended attributes are set, these are normally not
-read by the unix utilities. In this case you should restore by using
-\fBrdup-snap -R\fR to copy the files to another location. But there is also
-a script that can be used: \fBrdup-restore\fR.
+copy a directory to another location. 
 
 .SS LOCAL RESTORE
 Restoring my homedir to a temporaty directory:
