@@ -103,7 +103,7 @@ sub s3rm($$;$) {
 # where filename is remote name
 
 my ($bucket, $help, $version, $key, $secret);
-GetOptions('b=s' => \$bucket,
+GetOptions('b=s' => \$b,
 	   'i=s' => \$key,
 	   'k=s' => \$secret,
 	   'h'	 => \$help,
@@ -134,10 +134,10 @@ my $s3 = s3connect $key, $secret; # dies on failure
 # list all the files in the bucket
 
 my %ops = qw/get 1 put 1 rm 1 ls 1/;
-if (! $ops{$ARGV[0]} ) {
+if (! $ops{lc $ARGV[0]} ) {
     die "** No valid mode given: \`$ARGV[0]\'";
 } 
-my $O = shift;
+my $O = lc shift;
 
 if ($O eq "get" || $O eq "put") {
     if (! $ARGV[0] ) {
@@ -153,10 +153,11 @@ if ($O eq "get" || $O eq "put") {
     die "** Could not create:" . " $tmpDir: $!" unless -d $tmpDir;
     my ($n, $buf, $file);
     my $localname = "$tmpDir/rdup.$$.s3";
+    print "local $localname\n";
     # GET, get a file and cat it
     if ($O eq "get") {
 	s3get $bucket, $ARGV[0], $localname;
-	cat $localname;
+	catfile $localname;
 	unlink $localname;
     }
     # PUT, save all input in a file and upload it
@@ -178,8 +179,9 @@ if ($O eq "ls") {
     if (! $b) {
 	# no bucket given list them
 	my @buckets = s3list_buckets $s3;
-	print "@buckets";
-	print "\n";
+	foreach (@buckets) {
+	    print $_->bucket, "\n";
+	}
     } else {
 	# list the files in the bucket
 	my $bucket = $s3->bucket( { bucketname => $b });
@@ -214,13 +216,16 @@ if ($O eq "rm") {
 sub usage {
         print "$progName [-b BUCKET] -i ID -k SECRET [OPTIONS] put|get|rm|ls [FILENAME]\n\n";
         print "Manipulate files and buckets from Amazon's S3 service\n\n";
+	print "\nput  upload a file\n";
+	print "get   download a file and cat it";
+	print "rm    remove a file or bucket";
+	print "ls    list files or buckets";
 	print "OPTIONS\n";
-	print "-b BUCKET - name of the bucket to use\n";
-	print "-i ID     - file containing your S3 id\n";
-	print "-k SECRET - file containing your private S3 key\n";
-        print "\nOPTIONS:\n";
-        print " -c    ignored as rdup-s3 always works on content\n";
-        print " -h    this help\n";
-        print " -V    print version\n";
+	print "-b BUCKET  name of the bucket to use\n";
+	print "-i ID      file containing your S3 id\n";
+	print "-k SECRET  file containing your private S3 key\n";
+        print "-c         ignored as rdup-s3 always works on content\n";
+        print "-h         this help\n";
+        print "-V         print version\n";
         exit;
 }
