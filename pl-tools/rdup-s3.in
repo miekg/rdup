@@ -13,8 +13,8 @@ use File::Temp qw{tempdir tempfile};
 use POSIX;
 
 # common functions
-my $prefix="/usr";
-my $datarootdir = "${prefix}/share";
+my $prefix="@prefix@";
+my $datarootdir = "@datarootdir@";
 require "@datadir@/rdup/shared.pl"; 
 
 my $progName = basename $0;
@@ -39,8 +39,7 @@ sub s3connect($$) {
 # bucket, filename, localname
 sub s3get($$$) {
     my $bucket = shift;
-    my $response = $bucket->get_key_filename(shift, 'GET', shift);
-    # check for failure
+    my $response = $bucket->get_key_filename(shift, 'GET', shift)
 }
 
 # bucket, filename, localname
@@ -66,9 +65,13 @@ sub s3list_files($) {
     my $bucket = shift;
 
     my $r = $bucket->list_all;
+
+    print $r;
     my @keys = @{ $r->{keys} };
+    print @keys, "\n";
     my @files;
     foreach (@keys) {
+	print;
 	push @files, $_->{keys};
     }
     @files;
@@ -109,8 +112,8 @@ GetOptions('b=s' => \$b,
 	   'h'	 => \$help,
 	   'V'	 => \$version
 	);
-usage() if $help || !$key || !$secret;
 version($progName) if $version;
+usage() if $help || !$key || !$secret;
 
 # re-use the names
 my $i = 0;
@@ -147,17 +150,20 @@ if ($O eq "get" || $O eq "put") {
 	die "** A bucket name is required";
     }
     my $bucket = $s3->bucket( { bucketname => $b });
-    # put in file and cat the file
 
     my $tmpDir = tempdir("rdup.s3.XXXXXX", TMPDIR => 1, CLEANUP => 1);
     die "** Could not create:" . " $tmpDir: $!" unless -d $tmpDir;
     my ($n, $buf, $file);
     my $localname = "$tmpDir/rdup.$$.s3";
-    print "local $localname\n";
     # GET, get a file and cat it
     if ($O eq "get") {
-	s3get $bucket, $ARGV[0], $localname;
-	catfile $localname;
+	print $s3, $b, $ARGV[0],"\n";
+        my $response = $bucket->get_key_filename($ARGV[0], 'GET', $localname) or print $s3->err, "\n";
+#	if (! s3get $bucket, $ARGV[0], $localname) {
+#	    print $s3->err, "\n";
+#	    exit 1;
+	#}
+	catfile($localname);
 	unlink $localname;
     }
     # PUT, save all input in a file and upload it
@@ -184,6 +190,7 @@ if ($O eq "ls") {
 	}
     } else {
 	# list the files in the bucket
+	print $b, "\n";
 	my $bucket = $s3->bucket( { bucketname => $b });
 	my @files = s3list_files $bucket;
 	# if file name given, show that one
@@ -216,10 +223,10 @@ if ($O eq "rm") {
 sub usage {
         print "$progName [-b BUCKET] -i ID -k SECRET [OPTIONS] put|get|rm|ls [FILENAME]\n\n";
         print "Manipulate files and buckets from Amazon's S3 service\n\n";
-	print "\nput  upload a file\n";
-	print "get   download a file and cat it";
-	print "rm    remove a file or bucket";
-	print "ls    list files or buckets";
+	print "put   upload a file\n";
+	print "get   download a file and cat it\n";
+	print "rm    remove a file or bucket\n";
+	print "ls    list files or buckets\n";
 	print "OPTIONS\n";
 	print "-b BUCKET  name of the bucket to use\n";
 	print "-i ID      file containing your S3 id\n";
