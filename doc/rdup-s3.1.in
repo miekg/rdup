@@ -29,7 +29,9 @@ When being
 run \fBrdup-s3\fR will create the bucket named on the command line, if
 it not already exists. 
 .PP
-For each (daily) backup you can create a bucket.
+For each (daily) backup you can create a bucket or you can put multiple 
+files in one bucket. There is a 5 Gigabyte limit on the size of files
+you can store on S3. \fBrdup-s3\fR does not automatically split files.
 .PP
 \fBrdup-s3\fR buffers the data it receives on standard input when being
 run with the 
@@ -37,7 +39,7 @@ run with the
 command. After \fIall\fR data is collected it is uploaded. The Perl
 interface used doesn't support streaming at the moment.
 .PP
-When begin run with
+When being run with
 .B get
 an object is downloaded from the named bucket and then written to standard
 output.
@@ -50,7 +52,7 @@ A
 will remove the bucket 'my_bucket'.
 .PP
 With \fIls\fR you may even omit the bucket name, in that case all the
-buckets will be listed.
+buckets you have will be listed.
 .PP
 \fBrdup-s3\fR does not really care what kind of data it uploads, in the
 case of \fBrdup\fR it just happens to be \fBrdup -c\fR data.
@@ -60,17 +62,31 @@ For example the following will upload your compressed and encrypted
 data to Amazon:
 
     rdup -c list ~/Documents | rdup-gzip | rdup-crypt key | \\
+.BR
         rdup-s3 -b $(date +%Y%m%d) -i id_file -k key_file \\
+.BR
         put backup-home-doc
 
 .PP
 Note the \fI-c\fR option for \fBrdup\fR. 
 
+.PP
+Or, if you just want to store a file on S3, you can just use
+
+.BR
+    cat my-local-file | rdup-s3 -i id_file -k key_file put \\
+.BR
+    my-remote-file
+
 .SS Download (restore)
 And to restore your data from Amazon:
 
-    rdup-s3 -b 20080610 -i id_file -k keyfile get backup-home-doc \\
-	rdup-crypt -d key | rdup-gzip -d | rdup-snap -c -b /tmp/tada
+.BR
+rdup-s3 -b 20080610 -i id_file -k keyfile get backup-home-doc \\
+.BR
+rdup-crypt -d key | rdup-gzip -d | \\
+.BR
+rdup-snap -c -b /tmp/tada
 
 You should now be able to find your files in /tmp/tada. Note that the
 backupname (20080610) and the filename (backup-home-doc) should match
@@ -90,9 +106,7 @@ created for you.
 .TP
 .B \-c
 This option is ignored, \fBrdup-s3\fR always works on the files'
-content.  Note that the
-backupname (20080610) and the filename (backup-home-doc) should match
-with the names used when backing up.
+content.  
 .TP
 .B \-h
 Show a short help message.
