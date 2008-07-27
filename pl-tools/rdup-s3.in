@@ -15,10 +15,11 @@ use POSIX;
 # common functions
 my $prefix="@prefix@";
 my $datarootdir = "@datarootdir@";
-require "@datadir@/rdup/shared.pl"; 
+require "@datadir@/rdup/shared.pl";
 
 my $progName = basename $0;
 my %opt;
+my $s3;
 
 # connect to amazon
 # key id, secret key
@@ -30,7 +31,7 @@ sub s3connect($$) {
 	}
     );
     if (! $s3) {
-        die "** Could not connect to S3";
+        die "** $progName: Could not connect to S3";
     }
     $s3;
 }
@@ -47,7 +48,7 @@ sub s3put($$$) {
     my $bucket = shift;
     my $response = $bucket->add_key_filename(shift, shift,
 	    {  content_type => 'application/binary', },
-	    );
+	    ) or die "** $progName: Upload failed: " . $s3->errstr . "\n";
 }
 
 # create a bucket
@@ -58,21 +59,16 @@ sub s3bucket($$) {
 	    die $s3->err . ": " . $s3->errstr;
     # check the error, if the bucket is already there
     # its ok, otherwise it is now created :-)
+    # TODO
 }
 
 # bucket object
 sub s3list_files($) {
     my $bucket = shift;
-
-    my $r = $bucket->list_all;
-
-    print $r;
-    my @keys = @{ $r->{keys} };
-    print @keys, "\n";
+    my $r = $bucket->list_all or die "** $progName: can't get a file listing";
     my @files;
-    foreach (@keys) {
-	print;
-	push @files, $_->{keys};
+    foreach ( @{ $r->{keys} } ) {
+	push @files, $_->{key};
     }
     @files;
 }
@@ -89,11 +85,15 @@ sub s3list_buckets($) {
 # remove file from bucket, or the bucket itself
 # s3 conn, bucketname, filename
 sub s3rm($$;$) {
-    my ($s3, $bucket, $file) = (shift, shift, shift);
+    my ($s3, $b, $file) = (shift, shift, shift);
     if ($file) {
 	# remove it
+	my $bucket = $s3->bucket($b);
+	$bucket->delete_key($file) or die
+	    "** $progName: can not remove $file " . $s3->errstr;
     } else {
-	# remove the bucket itself
+	$s3->delete_bucket({ bucket =>$b}) or
+	    die "** $progName: can not remove the bucket " . $s3->errstr;
     }
 }
 
@@ -118,7 +118,7 @@ usage() if $help || !$key || !$secret;
 # re-use the names
 my $i = 0;
 foreach ($key, $secret) {
-    open IN, "<", $_ or die "Can not open: " . $_;
+    open IN, "<", $_ or die "** $progName: Can not open: " . $_;
 	my $a = <IN>; # only the first line is read
 	chomp $a;
     close IN;
@@ -127,7 +127,7 @@ foreach ($key, $secret) {
     $i++
 }
 
-my $s3 = s3connect $key, $secret; # dies on failure
+$s3 = s3connect $key, $secret; # dies on failure
 
 # next we have are command, get, put, rm, ls 
 # and maybe a filename
@@ -138,43 +138,40 @@ my $s3 = s3connect $key, $secret; # dies on failure
 
 my %ops = qw/get 1 put 1 rm 1 ls 1/;
 if (! $ops{lc $ARGV[0]} ) {
-    die "** No valid mode given: \`$ARGV[0]\'";
+    die "** $progName: No valid command given";
 } 
 my $O = lc shift;
 
 if ($O eq "get" || $O eq "put") {
     if (! $ARGV[0] ) {
-	die "** A filename is required with \`get' and \`put'";
+	die "** $progName: A filename is required with \`get' and \`put'";
     }
     if (! $b) {
-	die "** A bucket name is required";
+	die "** $progName: A bucket name is required";
     }
-    my $bucket = $s3->bucket( { bucketname => $b });
+    s3bucket $s3, $b; # create one or 
+    my $bucket = $s3->bucket($b);
 
+    # if we have a filename argument, this isn't exactly needed
     my $tmpDir = tempdir("rdup.s3.XXXXXX", TMPDIR => 1, CLEANUP => 1);
-    die "** Could not create:" . " $tmpDir: $!" unless -d $tmpDir;
+    die "** $progName: Could not create:" . " $tmpDir: $!" unless -d $tmpDir;
     my ($n, $buf, $file);
     my $localname = "$tmpDir/rdup.$$.s3";
     # GET, get a file and cat it
     if ($O eq "get") {
-	print $s3, $b, $ARGV[0],"\n";
-        my $response = $bucket->get_key_filename($ARGV[0], 'GET', $localname) or print $s3->err, "\n";
-#	if (! s3get $bucket, $ARGV[0], $localname) {
-#	    print $s3->err, "\n";
-#	    exit 1;
-	#}
+	# TODO errors
+        my $response = $bucket->get_key_filename($ARGV[0], 'GET', $localname) or 
+	    die "** $progName: failed to retrieve file";
 	catfile($localname);
 	unlink $localname;
     }
-    # PUT, save all input in a file and upload it
+    # PUT, save all stdin in the file and upload it
     if ($O eq "put") {
-	open OUT, "> $localname" or die "** Could not open:" . " $localname: $!";
+	open OUT, "> $localname" or die "** $progName: Could not open:" . " $localname: $!";
 	while (($n = read STDIN, $buf, 4096) > 0) {
 	    syswrite OUT, $buf, $n;
 	}
 	close OUT;
-	# arg0 must be a basename, don't know if the directory structure
-	# can also be put on S3
 	s3put $bucket, $ARGV[0], $localname;
 	unlink $localname;
     }
@@ -183,34 +180,22 @@ if ($O eq "get" || $O eq "put") {
 
 if ($O eq "ls") {
     if (! $b) {
-	# no bucket given list them
+	# no bucket given, list them all
 	my @buckets = s3list_buckets $s3;
 	foreach (@buckets) {
 	    print $_->bucket, "\n";
 	}
     } else {
-	# list the files in the bucket
-	print $b, "\n";
-	my $bucket = $s3->bucket( { bucketname => $b });
+	my $bucket = $s3->bucket($b);
 	my @files = s3list_files $bucket;
-	# if file name given, show that one
-	if ($ARGV[0]) {
-	    foreach (@files) {
-		if ($_ eq $ARGV[0]) {
-		    print $_,"\n";
-		}
-	    }
-	} else {
-	    print "@files";
-	    print "\n";
-	}
+	print "@files\n" if $#files > -1;
     }
     exit 0;
 }
 
 # remove stuff
 if ($O eq "rm") {
-    die "** Need at a bucket when removing" unless $b;
+    die "** $progName: Need at a bucket name when removing" unless $b;
     if (!$ARGV[0]) {
 	# remove the bucket
 	s3rm $s3, $b;
@@ -223,11 +208,11 @@ if ($O eq "rm") {
 sub usage {
         print "$progName [-b BUCKET] -i ID -k SECRET [OPTIONS] put|get|rm|ls [FILENAME]\n\n";
         print "Manipulate files and buckets from Amazon's S3 service\n\n";
-	print "put   upload a file\n";
-	print "get   download a file and cat it\n";
-	print "rm    remove a file or bucket\n";
-	print "ls    list files or buckets\n";
-	print "OPTIONS\n";
+	print " put   upload a file\n";
+	print " get   download a file and cat it\n";
+	print " rm    remove a file or bucket\n";
+	print " ls    list files or buckets\n";
+	print "\nOPTIONS\n";
 	print "-b BUCKET  name of the bucket to use\n";
 	print "-i ID      file containing your S3 id\n";
 	print "-k SECRET  file containing your private S3 key\n";

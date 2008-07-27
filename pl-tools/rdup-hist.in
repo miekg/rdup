@@ -53,11 +53,11 @@ usage() if $help;
 version($progName) if $version;
 
 if (! defined $BACKUPROOT) {
-    die "** Need the -b option";
+    die "** $progName: Need the -b option";
 }
 	
 if (! defined $ARGV[0]) {
-    die "** Need a pathname";
+    die "** $progName: Need a pathname";
 }
 
 $abs_path = File::Spec->rel2abs($ARGV[0]);
@@ -112,7 +112,7 @@ for (my $i = 0; $i < 5; $i++) {
     my ($uid, $gid, $size) = backinfo($p);
     # cat
     if ($cat) {
-	open F, $p or die "** Can not open \'$p'";
+	open F, $p or die "** $progName: Can not open \'$p'";
 	while(<F>) { print; }
 	close F;
 	last;
