@@ -63,14 +63,13 @@ sub s3bucket($$) {
 }
 
 # bucket object
+# return 2 refs to arrays
 sub s3list_files($) {
     my $bucket = shift;
     my $r = $bucket->list_all or die "** $progName: can't get a file listing";
-    my @files;
     foreach ( @{ $r->{keys} } ) {
-	push @files, $_->{key};
+	printf "%15d %s\n", $_->{size}, $_->{key};
     }
-    @files;
 }
 
 # return a list of buckets
@@ -187,8 +186,8 @@ if ($O eq "ls") {
 	}
     } else {
 	my $bucket = $s3->bucket($b);
-	my @files = s3list_files $bucket;
-	print "@files\n" if $#files > -1;
+	# only usage of this function, let it print the stuff there
+	s3list_files $bucket;
     }
     exit 0;
 }

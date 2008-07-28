@@ -31,7 +31,8 @@ it not already exists.
 .PP
 For each (daily) backup you can create a bucket or you can put multiple 
 files in one bucket. There is a 5 Gigabyte limit on the size of files
-you can store on S3. \fBrdup-s3\fR does not automatically split files.
+you can store on S3. \fBrdup-s3\fR does not automatically split files,
+nor does it warn when the file size exceeds this threshold.
 .PP
 \fBrdup-s3\fR buffers the data it receives on standard input when being
 run with the 
@@ -57,13 +58,36 @@ buckets you have will be listed.
 \fBrdup-s3\fR does not really care what kind of data it uploads, in the
 case of \fBrdup\fR it just happens to be \fBrdup -c\fR data.
 
+.SH COMMANDS
+.TP 
+.B get
+Download a file from the named bucket, the file is printed to standard
+output, so to actually save it you will need to redirect \fBrdup-s3\fRs output.
+
+.TP 
+.B put
+Upload a file to the named bucket, the file contents is read from
+standard input,
+the filename given on the command line is used as the remote name.
+
+.TP 
+.B rm
+Remove a file from the named bucket, or when no file name is given try
+to remove the bucket. This can only be done when the bucket is empty.
+
+.TP 
+.B ls
+List files from the named bucket or when no bucket has been given list
+all know buckets.
+
 .SS Upload (backup)
 For example the following will upload your compressed and encrypted
-data to Amazon:
+data to Amazon and save it under the name 'backup-home-doc' in the
+bucket '20080610'.
 
     rdup -c list ~/Documents | rdup-gzip | rdup-crypt key | \\
 .BR
-        rdup-s3 -b $(date +%Y%m%d) -i id_file -k key_file \\
+        rdup-s3 -b 20080610 -i id_file -k key_file \\
 .BR
         put backup-home-doc
 
@@ -81,15 +105,14 @@ Or, if you just want to store a file on S3, you can just use
 .SS Download (restore)
 And to restore your data from Amazon:
 
+      rdup-s3 -b 20080610 -i id_file -k keyfile get backup-home-doc \\
 .BR
-rdup-s3 -b 20080610 -i id_file -k keyfile get backup-home-doc \\
+      rdup-crypt -d key | rdup-gzip -d | \\
 .BR
-rdup-crypt -d key | rdup-gzip -d | \\
-.BR
-rdup-snap -c -b /tmp/tada
+      rdup-snap -c -b /tmp/tada
 
 You should now be able to find your files in /tmp/tada. Note that the
-backupname (20080610) and the filename (backup-home-doc) should match
+bucket name (20080610) and the filename (backup-home-doc) should match
 with the names used when backing up.
 
 .SH OPTIONS
