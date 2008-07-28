@@ -1,4 +1,4 @@
-xx Jun 208: 0.6.1 Miek <miek@miek.nl>
+xx Jul 208: 0.6.1 Miek <miek@miek.nl>
  * Added support for amazon's S3 service: see s3-rdup
    this is not added to rdup-simple and probably never will,
    but examples are given in the manual page on how
@@ -9,12 +9,12 @@ xx Jun 208: 0.6.1 Miek <miek@miek.nl>
    and would result into files being included in the backup, which 
    would otherwise would be skipped when doing an incremental
    (Louis-Dominique Dubeau)
- * debian/ erased as rdup is now included in Debian and there 
+ * debian/ directory erased as rdup is now included in Debian and there 
    are better working builds for Ubuntu on Launchpad
  * Remove translation stuff from Perl utils - Perl 5.10 has a
    problem with the hack I employed. Thanks to Dawid Ciezarkiewicz
    for lending his machine with Arch Linux (and Perl 5.10)
- * Remove the -a flag from rdup. Never like this anyway.
+ * Remove the -a flag from rdup and all the uilts. Never like this hack anyway.
 
 
 29 May 2008: 0.6.0 Miek <miek@miek.nl>
