@@ -137,5 +137,8 @@ Show a short help message.
 .B \-V
 Show the version.
 
+.SH BUGS
+\fBrdup-s3\fR will not check the 5 Gigabyte file limit.
+
 .SH SEE ALSO
 rdup(1).

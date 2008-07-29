@@ -1,4 +1,4 @@
-xx Jul 208: 0.6.1 Miek <miek@miek.nl>
+31 Jul 208: 0.6.1 Miek <miek@miek.nl>
  * Added support for amazon's S3 service: see s3-rdup
    this is not added to rdup-simple and probably never will,
    but examples are given in the manual page on how
