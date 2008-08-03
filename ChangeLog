@@ -1,3 +1,7 @@
+xx yyy iii: 0.6.2 Miek <miek@miek.nl>
+ * jjj
+
+
 31 Jul 208: 0.6.1 Miek <miek@miek.nl>
  * Added support for amazon's S3 service: see s3-rdup
    this is not added to rdup-simple and probably never will,
@@ -14,7 +18,7 @@
  * Remove translation stuff from Perl utils - Perl 5.10 has a
    problem with the hack I employed. Thanks to Dawid Ciezarkiewicz
    for lending his machine with Arch Linux (and Perl 5.10)
- * Remove the -a flag from rdup and all the uilts. Never like this hack anyway.
+ * Remove the -a flag from rdup and all the utils. Never like this hack anyway.
 
 
 29 May 2008: 0.6.0 Miek <miek@miek.nl>

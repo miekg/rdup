@@ -7,10 +7,10 @@ rdup-simple \- create a hard linked backup
 .SH SYNOPSIS
 .B rdup-simple
 [
-.B +DAYS
+.IR OPTION
 ]
 [
-.IR OPTION
+.B +DAYS
 ]
 DIR|FILE
 [
