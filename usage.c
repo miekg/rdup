@@ -18,11 +18,11 @@ implement a (incremental) backup scheme.\n\
 \n\
 \n\
         OPTIONS:\n\
-        -N FILE\tuse the timestamp of FILE for incremental dumps\n\
+        -N FILE\t\tuse the timestamp of FILE for incremental dumps\n\
         \t\tif FILE does not exist, a full dump is performed\n\
         -F FORMAT\tuse specified format string\n\
         \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
-	-E FILE\tuse FILE as an exclude list\n\
+	-E FILE\t\tuse FILE as an exclude list\n\
         -0\t\tdelimit internal filelist with NULLs\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
@@ -32,7 +32,7 @@ implement a (incremental) backup scheme.\n\
         -l\t\tdon't check for file size changes\n\
         -n\t\tignore .nobackup files\n\
         -r\t\tonly print removed files (unsets -m)\n\
-        -s SIZE\tonly output files smaller then SIZE bytes\n\
+        -s SIZE\t\tonly output files smaller then SIZE bytes\n\
         -v\t\tbe more verbose\n\
         -x\t\tstay in local file system\n\
 \n\
