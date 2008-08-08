@@ -6,10 +6,10 @@
  */
 
 #include "rdup.h"
-#include <regex.h>
+#include <pcre.h>
 
 extern gboolean opt_null;
-GSList *regex_list = NULL;
+GSList *pregex_list = NULL;
 
 /**
  * Read the filename and create the compiled regexp
@@ -20,14 +20,14 @@ gboolean
 regexp_init(char *file) {
 	FILE 	      	*fp;
 	char 		*buf;
-	char 		*errbuf;
+	const char	*errbuf;
+	int		erroff;
 	char          	delim;
 	gpointer 	d;
 	size_t 	 	l;
 	size_t		s;
 	ssize_t	 	j;
-	regex_t		R;
-	int 		i;
+	pcre		*P;
 
 	if ((fp = fopen(file, "r")) == NULL) {
 		msg(_("Could not open '%s\': %s"), file, strerror(errno));
@@ -35,7 +35,6 @@ regexp_init(char *file) {
 	}	
 	/* read the regexp */
 	buf  = g_malloc(BUFSIZE + 1);
-	errbuf = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 
 	if (opt_null)
@@ -50,22 +49,21 @@ regexp_init(char *file) {
 
 		/* buf[j - 1] holds the delimeter */
 		buf[j - 1] = '\0';
-		if ((i = regcomp(&R, buf, REG_EXTENDED | REG_NOSUB)) != 0) {
+
+		if ((P = pcre_compile(buf, 0, &errbuf, &erroff, NULL)) == NULL) {
+			/* error */
 			fclose(fp);
-			(void)regerror(i, &R, errbuf, BUFSIZE);
-			msg(_("Corrupt regular expression line: %zd: %s"), l, errbuf); 
-			g_free(errbuf); 
+			msg(_("Corrupt regular expression line: %zd, column %d: %s"), l, erroff, errbuf); 
 			g_free(buf);
 			return FALSE;
 		} else {
-			d = g_malloc(sizeof R);
-			d = memcpy(d, &R, sizeof R);
-			regex_list = g_slist_append(regex_list, d);
+			d = g_malloc(sizeof P);
+			d = memcpy(d, &P, sizeof P);
+			pregex_list = g_slist_append(pregex_list, d);
 		}
 		l++;
 	}
 	fclose(fp);
-	g_free(errbuf); 
 	g_free(buf);
 	return TRUE;
 }

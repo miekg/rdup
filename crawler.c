@@ -10,7 +10,7 @@ extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
 extern time_t opt_timestamp;
 extern gint opt_verbose;
-extern GSList *regex_list;
+extern GSList *pregex_list;
 
 /* xattr.c */
 uid_t read_attr_uid(char *path, uid_t u);
@@ -177,7 +177,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			pop.f_ino       = s.st_ino;
 			pop.f_lnk	= 0;
 
-			if (gfunc_regexp(regex_list, curpath)) {
+			if (gfunc_regexp(pregex_list, curpath, curpath_len)) {
 				g_free(curpath);
 				continue;
 			}
@@ -235,7 +235,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 				continue;
 			}
 			/* Exclude list */
-			if (gfunc_regexp(regex_list, curpath)) {
+			if (gfunc_regexp(pregex_list, curpath, curpath_len)) {
 				g_free(curpath);
 				continue;
 			}

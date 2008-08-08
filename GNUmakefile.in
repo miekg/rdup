@@ -39,7 +39,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 all:	rdup scripts
 
 rdup:	${OBJ} ${HDR} 
-	${GCC} ${GLIB_LIBS} ${OBJ} -o rdup
+	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ} -o rdup
 
 scripts:
 	chmod +x $(RES) $(PRL) $(WRP)

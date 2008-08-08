@@ -6,6 +6,7 @@
  */
 
 #include "rdup.h"
+#include "pcre.h"
 
 extern gboolean opt_null;
 extern gboolean opt_removed;
@@ -499,18 +500,21 @@ gfunc_substract(gpointer data, gpointer value, gpointer diff)
  * matches, otherwise return FALSE
  */
 gboolean
-gfunc_regexp(GSList *l, char *n)
+gfunc_regexp(GSList *l, char *n, size_t len)
 {
         GSList *k;
-        regex_t *R;
-	int e;
+        pcre *P;
+	int ovector[REG_VECTOR];
 
         for (k = g_slist_nth(l, 0); k; k = g_slist_next(k)) { 
 		if (sig != 0)
 			signal_abort(sig);
 
-                R = (regex_t*) k->data;
-                if ((e = regexec(R, n, 0, NULL, 0)) == 0)
+                P = (pcre*) k->data;
+		/* pcre_exec errors are all < 0, so >= 0 is some kind
+		 * of success
+		 */
+                if (pcre_exec(P, NULL, n, len, 0, 0, ovector, REG_VECTOR) >= 0)
                         return TRUE;
         }
         return FALSE;
