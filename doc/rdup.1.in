@@ -84,10 +84,16 @@ will create/touch \fBtimestamp\fR after it has printed the file list.
 This means if something goes wrong, you still have the original
 timestamp.
 .TP
+.B \-R
+Reverse the output of \fBrdup\fR. Tools accepting this ouput must
+create leading directory as the see them. This option allows a script --
+running as a normal user -- to put files in a directory which could have
+0600 as its permission.
+.TP
 .B \-E file
-The file named 'file' contains a list of extended POSIX regular
-expressions, one per line, that \fBrdup\fR will use to \fIexclude\fR
-names. A '#' at the start of the line can be used to signal a comment.
+The file named 'file' contains a list of Perl-compatible regular
+expressions (PCRE) , one per line, that \fBrdup\fR will use to 
+\fIexclude\fR names. A '#' at the start of the line can be used to signal a comment.
 Empty lines are discarded. The \fI\-0\fR option also affects the
 format of this file.
 
