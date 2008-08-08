@@ -1,5 +1,8 @@
 xx yyy iii: 0.6.2 Miek <miek@miek.nl>
- * jjj
+ * Added -R switch, which will reverse rdup's output
+   This is a depth first output, first the directories
+   then the files.
+ * use libpcre3 for regular expressions, MUCH much more powerfull
 
 
 31 Jul 208: 0.6.1 Miek <miek@miek.nl>

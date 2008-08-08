@@ -11,6 +11,7 @@ gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
+gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 #if 0
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
 #endif
@@ -268,7 +269,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "acrlmhVnN:s:vqx0F:E:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVRnN:s:vqx0F:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -295,6 +296,9 @@ main(int argc, char **argv)
 			case 'N': 
 				opt_timestamp = timestamp(optarg);
 				time = optarg;
+				break;
+			case 'R':
+				opt_reverse = TRUE;
 				break;
 			case 'v':
 				opt_verbose++; 
@@ -391,9 +395,19 @@ main(int argc, char **argv)
 	changed = g_tree_substract(changed, remove);
 
 	/* first what to remove, then what to backup */
-	g_tree_foreach(remove, gfunc_remove, NULL);
-	g_tree_foreach(changed, gfunc_backup, NULL);
-	g_tree_foreach(new, gfunc_new, NULL);
+	if (opt_reverse) {
+		GList *list_remove, *list_changed, *list_new = NULL;
+		list_remove = reverse(remove);
+		list_changed = reverse(changed);
+		list_new = reverse(new);
+		g_list_foreach(list_remove, gfunc_remove_list, NULL); 
+		g_list_foreach(list_changed, gfunc_backup_list, NULL); 
+		g_list_foreach(list_new, gfunc_new_list, NULL); 
+	} else {
+		g_tree_foreach(remove, gfunc_remove, NULL);
+		g_tree_foreach(changed, gfunc_backup, NULL);
+		g_tree_foreach(new, gfunc_new, NULL);
+	}
 
 	/* write new filelist */
 	if (!devnull) {

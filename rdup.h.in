@@ -103,6 +103,9 @@ gboolean gfunc_new(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_substract(gpointer data, gpointer value, gpointer diff);
 gboolean gfunc_remove_path(gpointer data, gpointer value, gpointer path);
 gboolean gfunc_regexp(GSList *l, char *n);
+gboolean gfunc_tree2list(gpointer data, gpointer value, 
+	__attribute__((unused)) gpointer l);
+
 /* rdup.c */
 void msg(const char *fmt, ...);
 /* getdelim.c */
@@ -113,4 +116,9 @@ char * abspath(char *path);
 void signal_abort(int signal);
 /* link.c */
 gchar * hardlink(GHashTable *t, struct entry *e);
+/* reverse.c */
+GList * reverse(GTree *g);
+void  gfunc_new_list(gpointer data, gpointer userdata);
+void  gfunc_remove_list(gpointer data, gpointer userdata);
+void  gfunc_backup_list(gpointer data, gpointer userdata);
 #endif  /* _RDUP_H */

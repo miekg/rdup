@@ -18,6 +18,7 @@ extern char qstr[];
 extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
+extern GList *list;
 
 /* sha1.c */
 int sha1_stream(FILE *stream, void *resblock);
@@ -512,5 +513,22 @@ gfunc_regexp(GSList *l, char *n)
                 if ((e = regexec(R, n, 0, NULL, 0)) == 0)
                         return TRUE;
         }
+        return FALSE;
+}
+
+/**
+ * put an element of the tree in a double linked list
+ */
+gboolean
+gfunc_tree2list(gpointer data, gpointer value, 
+		__attribute__((unused)) gpointer l)  
+{
+        if (sig != 0)
+                signal_abort(sig);
+
+	if (value == NO_PRINT)
+		return FALSE;
+
+        list = g_list_prepend(list, data);
         return FALSE;
 }

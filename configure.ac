@@ -15,9 +15,10 @@ AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([libglib2-dev not found !]))
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION
 AC_CHECK_FUNCS([dirfd openat attropen])
+#AC_CHECK_LIB(attr, lgetxattr)
 AC_CHECK_LIB(attr, lgetxattr)
 AC_CHECK_HEADERS(attr/xattr.h,,,[AC_INCLUDES_DEFAULT])
-AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h])
+AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h pcre.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 [
   [

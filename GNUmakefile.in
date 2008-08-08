@@ -1,4 +1,4 @@
-OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o xattr.o abspath.o link.o
+OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o xattr.o abspath.o link.o reverse.o
 HDR=rdup.h
 CMD=rdup
 SHA_IN=shared.sh shared.pl

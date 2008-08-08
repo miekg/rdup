@@ -22,6 +22,7 @@ implement a (incremental) backup scheme.\n\
         \t\tif FILE does not exist, a full dump is performed\n\
         -F FORMAT\tuse specified format string\n\
         \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
+	-R\t\treverse the output (depth first, first the dirs then the files)\n\
 	-E FILE\t\tuse FILE as an exclude list\n\
         -0\t\tdelimit internal filelist with NULLs\n\
         -V\t\tprint version\n"), f);
