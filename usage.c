@@ -44,7 +44,7 @@ implement a (incremental) backup scheme.\n\
         \'%m\': file mode bits\n\
         \'%u\': uid\n\
         \'%g\': gid\n\
-        \'%l\': path length (for links: size of \'path -> target\')\n\
+        \'%l\': path length (for links: length of \'path -> target\')\n\
         \'%s\': file size\n\
         \'%n\': path (for links: \'path -> target\')\n\
         \'%t\': time of modification (epoch)\n\
