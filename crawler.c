@@ -99,7 +99,6 @@ void
 dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 {
 	DIR 		*dir;
-	FILE 		*f;
 	struct dirent 	*dent;
 	struct entry    *directory;
 	char 		*curpath;
@@ -117,10 +116,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
 
 	if (!(dir = opendir(path))) {
-		/* files are also allowed, check for this, if it isn't give the error */
-		/* why would I do this??? MIEK XXX */
-		if ((f = fopen(path, "r"))) {
-			fclose(f);
+		/* non-dirs are also allowed, check for this, if it isn't give the error */
+		if (access(path, R_OK) == 0) {
 			g_free(dirstack);
 			return;
 		}
