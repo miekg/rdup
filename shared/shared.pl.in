@@ -19,7 +19,7 @@ sub sanity_check {
     die "** $prog: psize must be numeric; -c option forgotten?" 
 	unless $psize =~ "[0-9]+";
     die "** $prog: fsize must be numeric; -c option forgotten?" 
-	unless $fsize =~ "[0-9]+";
+	unless $fsize =~ "[0-9,]+";
     die "** $prog: uid must be numeric; -c option forgotten?" 
 	unless $uid =~ "[0-9]+";
     die "** $prog: gid must be numeric; -c option forgotten?" 
