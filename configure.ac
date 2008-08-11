@@ -24,7 +24,7 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
    #endif
   ]
 ])
-AC_CHECK_LIB(pcre, pcre_info, 
+AC_CHECK_LIB(pcre, pcre_fullinfo, 
 	[
 	    LIBS="$LIBS -lpcre"
 	],
