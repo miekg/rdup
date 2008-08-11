@@ -1,11 +1,6 @@
 TODO:
 
-remove -a sucks
-
 split off the scripts
-
-- d->get does not work anymore in Perl 5.10 remove it all together
-  leaving only rdup.c to be translated
 
 post 0.6.0:
 * make  rdup-gzip, rdup-crypt, rdup-gpg not fail when they cannot de-*
@@ -13,13 +8,6 @@ post 0.6.0:
   it easier to deal with mix backups (50% gzipped, 50% not compressed).
 * enable support for sparse files; When seeing a block of NULLs just
   do a seek in the file
-* rdup-s3 bucket filename
-    rdup-s3 --download bucket filename
-* reverse the output of rdup, so directories come last. This way
-  directories  can be made with the default permissions and these
-  can 
-  doesn't work if the backup is made as a none root users - you 
-  will not be able to restore. BUT still...
 * rdup-scripts; resume a backup
 
 :install:

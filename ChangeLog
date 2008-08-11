@@ -5,6 +5,8 @@ xx yyy iii: 0.6.2 Miek <miek@miek.nl>
  * Use libpcre3 for regular expressions, MUCH much more powerfull
    than the POSIX regex previously used. This does add an extra
    dependency for libpcre3 (requested by Sorin Ionescu)
+ * support for named pipe's, sockets and character and
+   block devices. The rdup-utils IGNORE these files.
 
 
 31 Jul 208: 0.6.1 Miek <miek@miek.nl>

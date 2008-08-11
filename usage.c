@@ -49,7 +49,8 @@ implement a (incremental) backup scheme.\n\
         \'%n\': path (for links: \'path -> target\')\n\
         \'%t\': time of modification (epoch)\n\
         \'%H\': the sha1 hash of the file's contents\n\
-        \'%T\': \'type\' (d, l, h or -: dir, symlink, hardlink or file)\n\
+        \'%T\': \'type\' (d, l, h, -, c, b, p or s: dir, symlink, hardlink, file, \n\
+	      character device, block device, named pipe or socket)\n\
         \'%C\': file contents\n\
 \n\
 Report bugs to <miek@miek.nl>\n\

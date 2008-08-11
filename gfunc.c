@@ -215,6 +215,12 @@ entry_print_data(FILE *out, char n, struct entry *e)
 				fputc('0', out);
 				break;
 			}
+			/* hijack size for major,minor number when special */
+			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode)) {
+				fprintf(out, "%d,%d", major(e->f_rdev), minor(e->f_rdev));
+				break;
+			}
+
 			fprintf(out, "%zd", (size_t)e->f_size);
 			break;
 		case 'H': /* sha1 hash */
@@ -230,6 +236,14 @@ entry_print_data(FILE *out, char n, struct entry *e)
 		case 'T': /* file type */
 			if (S_ISDIR(e->f_mode)) {
 				fputc('d', out);
+			} else if (S_ISCHR(e->f_mode)) {
+				fputc('c', out);
+			} else if (S_ISBLK(e->f_mode)) {
+				fputc('b', out);
+			} else if (S_ISFIFO(e->f_mode)) {
+				fputc('p', out);
+			} else if (S_ISSOCK(e->f_mode)) {
+				fputc('s', out);
 			} else if (S_ISLNK(e->f_mode)) {
 				fputc('l', out);
 			} else {

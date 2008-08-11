@@ -63,12 +63,21 @@
 #define LIST_MINSIZE   6
 #define LIST_SPACEPOS  5
 
+#if 0
 /* extended attributes */
 #define ATTR_SIZE       10
 #define R_MAX_ID        2147483646  /* 2 ^ 31 - 2 */
+#endif
 
 #define F_PERM          07777
 
+#if 0
+/* copied from coreutils-6.10 */
+# define major(dev)  (((dev) >> 8) & 0xff)
+# define minor(dev)  ((dev) & 0xff)
+#endif
+
+/* almost the whole stat structure... */
 struct entry {
         char *f_name;		/* filename, or hardlink target */
         size_t f_name_size;	/* size of filename */
@@ -78,7 +87,8 @@ struct entry {
         mode_t f_mode;		/* mode bits */
         time_t f_ctime;		/* change time of the inode */
         off_t f_size;		/* file size */
-	dev_t f_dev;		/* device id */
+	dev_t f_dev;		/* ID of device containing file */
+	dev_t f_rdev;		/* device ID (if special file) */
 	ino_t f_ino;		/* inode number */
 };
 

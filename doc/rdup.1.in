@@ -217,11 +217,13 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         't': time of modification (seconds from epoch)
 .BR
-        'H': the SHA1 hash of the file, all zeros "0" for directories, symlinks and hardlinks
+        'H': the SHA1 hash of the regular file, all zeros ("0") for all other types
 .BR
-        'T': file type: -, l, h or d (normal file, symlink, hardlink or directory)
+        'T': file type: -: normal file, l: symlink, h: hardlink, d:
+	directory, c: character device, b: block device, p: named pipe
+	and s: socket.
 .BR
-        'C': the content of the file/link (none for directories)
+        'C': the content of the file (none for all other types)
 .PP
 To delimit the output of \fBrdup\fR with NULLs you can use '\\0' in the
 format string.

@@ -31,6 +31,7 @@ entry_dup(struct entry *f)
 	g->f_ctime      = f->f_ctime;
 	g->f_size       = f->f_size;
 	g->f_dev        = f->f_dev;
+	g->f_rdev       = f->f_rdev;
 	g->f_ino        = f->f_ino;
         return g;
 }
@@ -79,6 +80,7 @@ dir_prepend(GTree *t, char *path)
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
 		e.f_dev       = s.st_dev;
+		e.f_rdev      = s.st_rdev;
 		e.f_ino       = s.st_ino;
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
@@ -114,8 +116,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 	struct entry **dirstack =
 		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
 
-	if(!(dir = opendir(path))) {
+	if (!(dir = opendir(path))) {
 		/* files are also allowed, check for this, if it isn't give the error */
+		/* why would I do this??? MIEK XXX */
 		if ((f = fopen(path, "r"))) {
 			fclose(f);
 			g_free(dirstack);
@@ -165,7 +168,10 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			continue;
 		}
 
-		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) {
+		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode) || 
+				S_ISBLK(s.st_mode) || S_ISCHR(s.st_mode) ||
+				S_ISFIFO(s.st_mode) || S_ISSOCK(s.st_mode) ) {
+
 			pop.f_name      = curpath;
 			pop.f_name_size = curpath_len;
 			pop.f_uid       = s.st_uid;
@@ -174,6 +180,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 			pop.f_dev       = s.st_dev;
+			pop.f_rdev      = s.st_rdev;
 			pop.f_ino       = s.st_ino;
 			pop.f_lnk	= 0;
 
@@ -249,6 +256,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
 			dirstack[d]->f_dev        = s.st_dev;
+			dirstack[d]->f_rdev       = s.st_rdev;
 			dirstack[d]->f_ino        = s.st_ino;
 			dirstack[d]->f_lnk        = 0;
 
