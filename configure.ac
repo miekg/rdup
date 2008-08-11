@@ -24,13 +24,49 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
    #endif
   ]
 ])
-AC_CHECK_LIB(pcre, pcre_fullinfo, 
-	[
-	    LIBS="$LIBS -lpcre"
-	],
-	[
+
+AC_ARG_WITH(libpcre_includes,
+       [  --with-libpcre-includes=DIR  libpcre include directory],
+       [with_libpcre_includes="$withval"],[with_libpcre_includes=no])
+
+AC_ARG_WITH(libpcre_libraries,
+       [  --with-libpcre-libraries=DIR  libpcre library directory],
+       [with_libpcre_libraries="$withval"],[with_libpcre_libraries=no])
+
+if test "$with_libpcre_includes" != "no"; then
+   CPPFLAGS="${CPPFLAGS} -I${with_libpcre_includes}"
+else
+   CPPFLAGS="${CPPFLAGS} `pcre-config --cflags`"
+fi
+
+if test "$with_libpcre_libraries" != "no"; then
+   LDFLAGS="${LDFLAGS}  -L${with_libpcre_libraries}"
+else
+   LDFLAGS="${LDFLAGS} `pcre-config --libs`"
+fi
+
+# PCRE configuration (required)
+# Verify that we have the headers
+PCRE_H=""
+AC_CHECK_HEADERS(pcre.h,, PCRE_H="no")
+if test "$PCRE_H" = "no"; then
 	AC_MSG_ERROR([*** No regex library found.])
-])
+fi
+
+# Verify that we have the library
+PCRE_L=""
+AC_CHECK_LIB(pcre, pcre_compile, ,PCRE_L="no")
+if test "$PCRE_L" = "no"; then
+	AC_MSG_ERROR([*** No regex library found.])
+fi
+
+#AC_CHECK_LIB(pcre, pcre_fullinfo, 
+#	[
+#	    LIBS="$LIBS -lpcre"
+#	],
+#	[
+#	AC_MSG_ERROR([*** No regex library found.])
+#])
 AC_C_BIGENDIAN
 
 # sysconfdir
