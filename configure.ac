@@ -34,15 +34,15 @@ AC_ARG_WITH(libpcre_libraries,
        [with_libpcre_libraries="$withval"],[with_libpcre_libraries=no])
 
 if test "$with_libpcre_includes" != "no"; then
-   CPPFLAGS="${CPPFLAGS} -I${with_libpcre_includes}"
+   CFLAGS="${CFLAGS} -I${with_libpcre_includes}"
 else
-   CPPFLAGS="${CPPFLAGS} `pcre-config --cflags`"
+   CFLAGS="${CFLAGS} `pcre-config --cflags`"
 fi
 
 if test "$with_libpcre_libraries" != "no"; then
-   LDFLAGS="${LDFLAGS}  -L${with_libpcre_libraries}"
+   LIBS="${LIBS} -L${with_libpcre_libraries}"
 else
-   LDFLAGS="${LDFLAGS} `pcre-config --libs`"
+   LIBS="${LIBS} `pcre-config --libs`"
 fi
 
 # PCRE configuration (required)
@@ -60,13 +60,6 @@ if test "$PCRE_L" = "no"; then
 	AC_MSG_ERROR([*** No regex library found.])
 fi
 
-#AC_CHECK_LIB(pcre, pcre_fullinfo, 
-#	[
-#	    LIBS="$LIBS -lpcre"
-#	],
-#	[
-#	AC_MSG_ERROR([*** No regex library found.])
-#])
 AC_C_BIGENDIAN
 
 # sysconfdir
