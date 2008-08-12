@@ -86,7 +86,7 @@ timestamp.
 .TP
 .B \-R
 Reverse the output of \fBrdup\fR. Tools accepting this ouput must
-create leading directory as the see them. This option allows a script --
+create leading directory as they see them. This option allows a script --
 running as a normal user -- to put files in a directory which could have
 0600 as its permission.
 .TP
@@ -324,6 +324,13 @@ name, in this case the length of '/home/bin/blaat'.
 
 If rdup encounters a hardlink it is handled in the same way, but the
 output type is set to 'h' instead of 'l'.
+
+.TP
+.B o character/block devices
+The size field (%s) is changed to hold the major,minor number of
+the device. So if a major number is 8 and the minor number is 0 (under
+Linux this is /dev/sda), its size will be \fB8,0\fR. The numbers are
+only seperated with a comma (,).
 
 The output when using the \-c is changed as follows, for:
 .TP
