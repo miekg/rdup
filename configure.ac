@@ -11,7 +11,7 @@ AC_AIX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
-AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([*** No libglib2-dev found.]))
+AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No libglib2-dev found.]))
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION
 AC_CHECK_FUNCS([dirfd])
@@ -50,14 +50,14 @@ fi
 PCRE_H=""
 AC_CHECK_HEADERS(pcre.h,, PCRE_H="no")
 if test "$PCRE_H" = "no"; then
-	AC_MSG_ERROR([*** No regex library found.])
+	AC_MSG_ERROR([** No pcre library found.])
 fi
 
 # Verify that we have the library
 PCRE_L=""
 AC_CHECK_LIB(pcre, pcre_compile, ,PCRE_L="no")
 if test "$PCRE_L" = "no"; then
-	AC_MSG_ERROR([*** No regex library found.])
+	AC_MSG_ERROR([** No pcre library found.])
 fi
 
 AC_C_BIGENDIAN
