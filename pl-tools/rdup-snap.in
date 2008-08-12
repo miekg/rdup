@@ -173,7 +173,7 @@ sub _mirror {
 	    $hardlink{$new} = $old;
 	}
 
-	if ($type ne 'l' and $type ne 'h') {
+	if ($type eq '-' or $type eq 'd') {
 	    rchown($uid, $gid, $target);
 	    rchmod($bits, $target);
 	}
