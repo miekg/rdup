@@ -9,6 +9,7 @@ post 0.6.0:
 * enable support for sparse files; When seeing a block of NULLs just
   do a seek in the file
 * rdup-scripts; resume a backup
+* filetype changes
 
 :install:
 

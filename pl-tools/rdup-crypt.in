@@ -49,26 +49,38 @@ while (<STDIN>) {
         read STDIN, $path, $psize;
         die "** $progName: Empty path"  if ($path eq "");
 
-        if ($dump eq '+') {        # add
-                if ($type eq '-') {      # REG
-                        if ($fsize != 0) {
-                                my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
-                                $fh->close();
-                                open CRYPT, "|mcrypt $crOptions 2>/dev/null > $filename" or die "** $progName: $filename: $!";
-                                copyout($fsize, *CRYPT);
-                                close CRYPT or warn "** $progName: Crypt failure: result will be empty \`$path': $!";
-                                my $size = (stat($filename))[7];
-                                syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
-                                catfile($filename);
-                                unlink $filename;
-                                next;
-                        }
-                        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
-                        next;
-                } 
+	if ($dump eq '+') {
+	    if ($type eq '-') {
+		# try to read first 3 chars to check the file magic, IS the file encrypted?
+		if ($fsize > 2) {
+		    my ($a, $b, $c) = (getc, getc, getc);
+		    # from the magic database \0m\3 and \0m\2 is mcrypt, this is 0 109 3 and 0 109 2 in dec
+		    if (ord $a == 0 and ord $b == 109 and (ord $c == 2 or ord $c == 3)) {
+			my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
+			$fh->close();
+			open CRYPT, "|mcrypt $crOptions 2>/dev/null > $filename" or die "** $progName: $filename: $!";
+			# put our stolen characters back in the stream
+			syswrite CRYPT, "$a$b$c";
+			copyout($fsize - 3, *CRYPT); # and fix the amount we still need to echo
+			close CRYPT or warn "** $progName: Crypt failure: result will be empty \`$path': $!";
+			my $size = (stat($filename))[7];
+			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
+			catfile($filename);
+			unlink $filename;
+		    } else {
+			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+			syswrite STDOUT, "$a$b$c";
+			copyout($fsize - 3, *STDOUT);
+		    }
+		} else {
+			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+			copyout($fsize, *STDOUT);
+		}
+	    }
 	}
-        syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
 }
+
+
 
 sub usage {
         print "$progName [OPTIONS] KEYFILE\n\n";
