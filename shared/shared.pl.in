@@ -60,19 +60,18 @@ sub catfile {
     close FILE;
 }
 
-# chmod or warn
+# chmod(bits, file)
 sub rchmod {
-    my ($bits, $file) = (shift, shift);
-    chmod oct($bits), $file or warn "** Cannot chmod $file: $!";
+    chmod oct(shift), shift or warn "** Cannot chmod: $!";
 }
 
-# chown or warn
+# chown(uid, gid, file)
 sub rchown {
-    my ($uid, $gid, $file) = (shift, shift, shift);
-    chown $uid, $gid, $file; # or warn "** Cannot chown $file: $!";
+    chown shift, shift, shift; # or warn "** Cannot chown $file: $!";
 }
 
 # check if a file exists
+# exists(file)
 sub exist {
     lstat(shift);
     return 0 unless -e _;
