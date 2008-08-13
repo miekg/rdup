@@ -1,14 +1,16 @@
 xx Aug 2008: 0.6.2 Miek <miek@miek.nl>
- * Added -R switch, which will reverse rdup's output
+ * rdup: Added -R switch, which will reverse rdup's output
    This is a depth first output, first the directories
    then the files.
- * Use libpcre3 for regular expressions, MUCH much more powerfull
+ * rdup: Use libpcre3 for regular expressions, MUCH much more powerfull
    than the POSIX regex previously used. This does add an extra
    dependency for libpcre3 (requested by Sorin Ionescu)
- * support for named pipe's, sockets and character and
+ * rdup: support for named pipe's, sockets and character and
    block devices. The rdup-utils IGNORE these files.
    This overloads the size (%s) in case of block/character
    devices - then it is major,minor number
+ * rdup-utils: check if a file is encrypted/compressed before
+   decrypting/decompressing it
 
 
 31 Jul 2008: 0.6.1 Miek <miek@miek.nl>

@@ -20,16 +20,16 @@ my $progName = basename $0;
 my %opt;
 
 getopts('dhV', \%opt);
-usage() if $opt{'h'};
-version($progName) if $opt{'V'};
-my $crOptions .= "-d " if $opt{'d'};
+usage() if $opt{h};
+version($progName) if $opt{V};
+my $crOptions .= "-d " if $opt{d};
 
 if (!defined($ARGV[0]) or ! -f $ARGV[0]) {
-        die "** $progName: Cannot open keyfile";
+    die "** $progName: Cannot open keyfile";
 }
 `which mcrypt >/dev/null`;
 if ($? != 0) {
-	die "** $progName: Cannot find \'mcrypt'";
+    die "** $progName: Cannot find \'mcrypt'";
 }
 
 $crOptions .= "-q -F -f $ARGV[0] -a blowfish";
@@ -53,16 +53,31 @@ while (<STDIN>) {
 	    if ($type eq '-') {
 		# try to read first 3 chars to check the file magic, IS the file encrypted?
 		if ($fsize > 2) {
-		    my ($a, $b, $c) = (getc, getc, getc);
+		    my ($a, $b, $c);
+		    if ($opt{d}) {
+			($a, $b, $c) = (getc, getc, getc);
+		    } else {
+			# ooohhh, this *IS* dirty, fake the bytes, so the
+			# the next if-statement will trigger
+			($a, $b, $c) = (chr 0, chr 109, chr 3);
+		    }
+
 		    # from the magic database \0m\3 and \0m\2 is mcrypt, this is 0 109 3 and 0 109 2 in dec
 		    if (ord $a == 0 and ord $b == 109 and (ord $c == 2 or ord $c == 3)) {
+
 			my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
 			$fh->close();
+
 			open CRYPT, "|mcrypt $crOptions 2>/dev/null > $filename" or die "** $progName: $filename: $!";
-			# put our stolen characters back in the stream
-			syswrite CRYPT, "$a$b$c";
-			copyout($fsize - 3, *CRYPT); # and fix the amount we still need to echo
+			if ($opt{d}) {
+			    # put our stolen characters back in the stream
+			    syswrite CRYPT, "$a$b$c";
+			    copyout($fsize - 3, *CRYPT); # and fix the amount we still need to echo
+			} else {
+			    copyout($fsize, *CRYPT); 
+			}
 			close CRYPT or warn "** $progName: Crypt failure: result will be empty \`$path': $!";
+
 			my $size = (stat($filename))[7];
 			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
 			catfile($filename);
@@ -76,6 +91,9 @@ while (<STDIN>) {
 			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
 			copyout($fsize, *STDOUT);
 		}
+	    } else {
+		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+		copyout($fsize, *STDOUT);
 	    }
 	}
 }
