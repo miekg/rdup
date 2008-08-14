@@ -13,8 +13,10 @@ rdup depends on:
 o Gmake for compilation
 o Glib to build. Glib is the low level C library of the
   GTK project. Configure will check for this.
-o Perl for the scripts. 
 o PCRE library
+
+the rdup-utils depend on:
+o Perl for the scripts. 
 o File::copy module for Perl
 o rdup-snap-link depends on GNU cp to create the hardlinked directories
 
