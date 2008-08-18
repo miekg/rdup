@@ -354,7 +354,8 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (value == NO_PRINT)
 		return FALSE;
 
-	fprintf((FILE*) fp, "%ld %ld %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
+	/* first position is fixed after 5 character */
+	fprintf((FILE*) fp, "%5ld %ld %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
 			(long int)e->f_ino, (long int)e->f_name_size, e->f_name);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);
@@ -381,9 +382,11 @@ gfunc_backup(gpointer data, gpointer value,
 	if (S_ISDIR(((struct entry*)data)->f_mode)) {
 		entry_print(stdout, '+', (struct entry*)data);
 		return FALSE;
-	}
+	} else {
+		#if 0
 	if (S_ISREG(((struct entry*)data)->f_mode) ||
 			S_ISLNK(((struct entry*)data)->f_mode)) {
+		#endif
 
 		if (opt_size != 0 && ((struct entry*)data)->f_size > (ssize_t)opt_size) {
 			return FALSE;
@@ -395,6 +398,7 @@ gfunc_backup(gpointer data, gpointer value,
 			default: /* INC_DUMP */
 				if (((struct entry*)data)->f_ctime > opt_timestamp)
 					entry_print(stdout, '+', (struct entry*)data);
+			
 				return FALSE;
 		}
 	}
@@ -441,6 +445,7 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 
 /**
  * decide whether 2 struct entries are equal or not
+ * 0 = equal
  */
 gint
 gfunc_equal(gconstpointer a, gconstpointer b)
@@ -454,10 +459,10 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 	if (e == 0) {
 		if (((struct entry*)a)->f_dev != ((struct entry*)b)->f_dev)
 			return -1;
-		if (((struct entry*)a)->f_ino != ((struct entry*)b)->f_ino)
-			return -1;
-		if (((struct entry*)a)->f_mode == ((struct entry*)b)->f_mode)
-			return 0;
+		if (((struct entry*)a)->f_ino != ((struct entry*)b)->f_ino) 
+			return -2;
+		if (((struct entry*)a)->f_mode != ((struct entry*)b)->f_mode) 
+			return -3;
 	}
 	return e;
 }
@@ -471,9 +476,8 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
 	if (sig != 0)
 		signal_abort(sig);
 
-	if (!strncmp(((struct entry*)data)->f_name,
-				((struct remove_path *)r)->path,
-				((struct remove_path *)r)->len)) {
+	if (strcmp(((struct entry*)data)->f_name,
+				((struct remove_path *)r)->path) == 0) {
 
 		/* don't remove the directory itself */
 		if (S_ISDIR( ((struct entry*)data)->f_mode))
@@ -487,7 +491,7 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
 
 /**
  * traverse function
- * implement the tree substraction
+ * implement the tree subtraction
  * everything in A, but NOT in b
  * (data := element out of A)
  * (b    := packed in diff, diff->b)
@@ -495,16 +499,16 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
  * in rdup...
  */
 gboolean
-gfunc_substract(gpointer data, gpointer value, gpointer diff)
+gfunc_subtract(gpointer data, gpointer value, gpointer diff)
 {
 	gpointer v;
 	if (sig != 0)
 		signal_abort(sig);
 
-	v = g_tree_lookup((GTree*)((struct substract*)diff)->b, data);
+	v = g_tree_lookup((GTree*)((struct subtract*)diff)->b, data);
 
 	if (!v) 
-		g_tree_insert(((struct substract*)diff)->d, data, value);
+		g_tree_insert(((struct subtract*)diff)->d, data, value);
 
 	return FALSE;
 }

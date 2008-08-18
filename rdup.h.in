@@ -92,7 +92,7 @@ struct entry {
 	ino_t f_ino;		/* inode number */
 };
 
-struct substract {
+struct subtract {
         GTree *d; /* diff */
         GTree *b;
 };
@@ -110,7 +110,7 @@ gboolean gfunc_write(gpointer data, gpointer value, gpointer fp);
 gboolean gfunc_backup(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_remove(gpointer data, gpointer value, gpointer usr);
 gboolean gfunc_new(gpointer data, gpointer value, gpointer usr);
-gboolean gfunc_substract(gpointer data, gpointer value, gpointer diff);
+gboolean gfunc_subtract(gpointer data, gpointer value, gpointer diff);
 gboolean gfunc_remove_path(gpointer data, gpointer value, gpointer path);
 gboolean gfunc_regexp(GSList *l, char *n, size_t len);
 gboolean gfunc_tree2list(gpointer data, gpointer value, 

@@ -229,7 +229,7 @@ To delimit the output of \fBrdup\fR with NULLs you can use '\\0' in the
 format string.
 
 .SH FILELIST
-\fBrdup\fR write the FILELIST in the following format:
+\fBrdup\fR writes the FILELIST in the following format:
 .RS
 MODE DEV INODE PATH_SIZE PATH
 .RE

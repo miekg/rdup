@@ -56,17 +56,17 @@ msg(const char *fmt, ...)
  * a double diff: A diff (A diff B)
  */
 static GTree *
-g_tree_substract(GTree *a, GTree *b)
+g_tree_subtract(GTree *a, GTree *b)
 {
 	GTree 	         *diff;
-	struct substract s;
+	struct subtract s;
 
 	diff = g_tree_new(gfunc_equal);
 	s.d = diff;
 	s.b = b;
 	/* everything in a, but NOT in b 
 	 * diff gets filled inside this function */
-	g_tree_foreach(a, gfunc_substract, (gpointer)&s);
+	g_tree_foreach(a, gfunc_subtract, (gpointer)&s);
 	return diff;
 }
 
@@ -382,17 +382,17 @@ main(int argc, char **argv)
 #endif /* _DEBUG_RACE */
 
 	/* everything that is gone from the filesystem */
-	remove  = g_tree_substract(curtree, backup);
+	remove  = g_tree_subtract(curtree, backup);
 
 	/* everything that is really new on the filesystem */
-	new     = g_tree_substract(backup, curtree);
+	new     = g_tree_subtract(backup, curtree);
 
 	/* all stuff that should be ctime checked, to see if it has 
 	 * changed */
-	changed = g_tree_substract(backup, new);
+	changed = g_tree_subtract(backup, new);
 	/* some dirs might still linger in changed, while they are in fact
 	 * removed, kill those here */
-	changed = g_tree_substract(changed, remove);
+	changed = g_tree_subtract(changed, remove);
 
 	/* first what to remove, then what to backup */
 	if (opt_reverse) {

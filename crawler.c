@@ -90,11 +90,6 @@ dir_prepend(GTree *t, char *path)
 	return TRUE;
 }
 
-/**
- * If new_dir is true then the directory is new - 
- * so all files under it should be included
- * We do this by giving them the value 0 (NULL_DUMP)
- */
 void
 dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 {
