@@ -38,64 +38,65 @@ my $tmpDir = tempdir("rdup.crypt.XXXXXX", TMPDIR => 1, CLEANUP => 1);
 die "** $progName: $tmpDir could not be created: $!" unless -d $tmpDir;
 
 while (<STDIN>) {
-        chomp;
-        my ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
-        my $dump = substr($t, 0, 1);
-        my $type = substr($t, 1, 1);
+    chomp;
+    my ($t, $bits, $uid, $gid, $psize, $fsize) = split(" ", $_, 6);
+    my $dump = substr($t, 0, 1);
+    my $type = substr($t, 1, 1);
 
-        sanity_check($progName, $dump, $bits, $psize, $fsize, $uid, $gid);
+    sanity_check($progName, $dump, $bits, $psize, $fsize, $uid, $gid);
 
-        my $path = "";
-        read STDIN, $path, $psize;
-        die "** $progName: Empty path"  if ($path eq "");
+    my $path = "";
+    read STDIN, $path, $psize;
+    die "** $progName: Empty path"  if ($path eq "");
 
-	if ($dump eq '+') {
-	    if ($type eq '-') {
-		# try to read first 3 chars to check the file magic, IS the file encrypted?
-		if ($fsize > 2) {
-		    my ($a, $b, $c);
-		    if ($opt{d}) {
-			($a, $b, $c) = (getc, getc, getc);
-		    } else {
-			# ooohhh, this *IS* dirty, fake the bytes, so the
-			# the next if-statement will trigger
-			($a, $b, $c) = (chr 0, chr 109, chr 3);
-		    }
-
-		    # from the magic database \0m\3 and \0m\2 is mcrypt, this is 0 109 3 and 0 109 2 in dec
-		    if (ord $a == 0 and ord $b == 109 and (ord $c == 2 or ord $c == 3)) {
-
-			my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
-			$fh->close();
-
-			open CRYPT, "|mcrypt $crOptions 2>/dev/null > $filename" or die "** $progName: $filename: $!";
-			if ($opt{d}) {
-			    # put our stolen characters back in the stream
-			    syswrite CRYPT, "$a$b$c";
-			    copyout($fsize - 3, *CRYPT); # and fix the amount we still need to echo
-			} else {
-			    copyout($fsize, *CRYPT); 
-			}
-			close CRYPT or warn "** $progName: Crypt failure: result will be empty \`$path': $!";
-
-			my $size = (stat($filename))[7];
-			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
-			catfile($filename);
-			unlink $filename;
-		    } else {
-			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
-			syswrite STDOUT, "$a$b$c";
-			copyout($fsize - 3, *STDOUT);
-		    }
-		} else {
-			syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
-			copyout($fsize, *STDOUT);
-		}
-	    } else {
+    if ($dump eq '+') {
+	if ($type eq '-') {
+	    if ($fsize <= 2) {
 		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
 		copyout($fsize, *STDOUT);
+		continue;
 	    }
+
+	    my ($a, $b, $c);
+	    if ($opt{d}) {
+		($a, $b, $c) = (getc, getc, getc);
+	    } else {
+		# ooohhh, this *IS* dirty, fake the bytes, so the
+		# the next if-statement will trigger
+		($a, $b, $c) = (chr 0, chr 109, chr 3);
+	    }
+
+	    # from the magic database \0m\3 and \0m\2 is mcrypt, this 
+	    # is 0 109 3 and 0 109 2 in decimal
+	    if (ord $a == 0 and ord $b == 109 and (ord $c == 2 or ord $c == 3)) {
+
+		my($fh, $filename) = tempfile("file.XXXXX", DIR => $tmpDir, SUFFIX => ".nc" );
+		$fh->close();
+
+		open CRYPT, "|mcrypt $crOptions 2>/dev/null > $filename" or die "** $progName: $filename: $!";
+		if ($opt{d}) {
+		    # put our stolen characters back in the stream
+		    syswrite CRYPT, "$a$b$c";
+		    copyout($fsize - 3, *CRYPT); # and fix the amount we still need to echo
+		} else {
+		    copyout($fsize, *CRYPT); 
+		}
+		close CRYPT or warn "** $progName: Crypt failure: result will be empty \`$path': $!";
+
+		my $size = (stat($filename))[7];
+		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
+		catfile($filename);
+		unlink $filename;
+		continue;
+	    } else {
+		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
+		syswrite STDOUT, "$a$b$c";
+		copyout($fsize - 3, *STDOUT);
+		continue;
+	    }
+
 	}
+    }
 }
 
 

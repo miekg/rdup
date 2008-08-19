@@ -123,6 +123,12 @@ g_tree_read_file(FILE *fp)
 		}
 
 		/* get modus */
+		if (buf[LIST_SPACEPOS] != ' ') {
+			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l, buf);
+			l++; 
+			continue;
+		}
+
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
