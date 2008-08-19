@@ -54,7 +54,7 @@ while (<STDIN>) {
 	    if ($fsize <= 2) {
 		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
 		copyout($fsize, *STDOUT);
-		continue;
+		next;
 	    }
 
 	    my ($a, $b, $c);
@@ -87,12 +87,12 @@ while (<STDIN>) {
 		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $size\n$path";
 		catfile($filename);
 		unlink $filename;
-		continue;
+		next;
 	    } else {
 		syswrite STDOUT, "$dump$type $bits $uid $gid $psize $fsize\n$path";
 		syswrite STDOUT, "$a$b$c";
 		copyout($fsize - 3, *STDOUT);
-		continue;
+		next;
 	    }
 
 	}
