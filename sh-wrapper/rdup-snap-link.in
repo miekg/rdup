@@ -29,7 +29,7 @@ usage() {
 $PROGNAME [-H] DAYS BACKUPDIR NOW
 
 This is a small shell script that hard links directories
-It is the basis for rdup-simple
+Its purpose is to be used from within rdup-simple
 
 -H	     include the hour in the backup directory
 
@@ -40,6 +40,13 @@ NOW        - Current date in YYYYMM format
              With -H, current date in YYYYMM/HH format
 HELP
 }
+
+# before setting the progname, check if we are called by something name
+# rdup-simple. $PROGNAME is exported by rdup-simple
+if [ "$PROGNAME" != "rdup-simple" ]; then
+    _echo2 "Can only be called from rdup-simple"
+    exit 2
+fi
 
 PROGNAME=$0
 # parse our only option
@@ -55,47 +62,6 @@ if [[ $# -ne 3 ]]; then
         usage
         exit 2
 fi
-
-what() {
-        _DAYS=$1
-        _BACKUPDIR=$2
-        _NOW=$3
-        i=1
-        if [[ -d $_BACKUPDIR/$_NOW ]]; then
-                # already there do not link
-                return 0
-        fi
-        # linux thing
-        while [[ $i -le $_DAYS ]]; do
-	    # calculate back from the date in _NOW
-		if $hour; then
-		    dir=`$GNU_DATE +%Y%m/%d/%H --date "$i hours ago"`
-		    mon=`$GNU_DATE +%Y%m/%d`
-		else
-		    dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
-		    mon=`$GNU_DATE +%Y%m`
-		fi
-                if [[ -d $_BACKUPDIR/$dir ]]; then
-                        # copy 'em over
-                        _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
-                        # create dir to be safe
-                        if ! mkdir -p $_BACKUPDIR/$mon; then
-			    return 2
-			fi
-			# it can be the case that we may also need to
-			# create the directories leading up to $_NOW
-			if ! mkdir -p $_BACKUPDIR/$(dirname $_NOW); then
-			    return 2
-			fi
-                        if ! $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW; then
-			    return 2
-			fi
-                        return 0
-                fi
-        (( i++ ))
-        done
-        return 1
-}
 
 what $1 $2 $3
 exit $?

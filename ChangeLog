@@ -13,6 +13,8 @@ xx Aug 2008: 0.6.2 Miek <miek@miek.nl>
    also have resulted in too large incrementals
  * rdup-utils: check if a file is encrypted/compressed before
    decrypting/decompressing it
+ * rdup-utils: rdup-snap-link will now check if its called from
+   rdup-simple. Dropped the manpage for rdup-snap-link
 
 
 31 Jul 2008: 0.6.1 Miek <miek@miek.nl>

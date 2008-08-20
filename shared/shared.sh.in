@@ -1,5 +1,4 @@
-
-# source this file to get some commonly
+# source this file to get some common
 # used functions in the rdup-utils.
 
 # show the version of the tool
@@ -24,26 +23,44 @@ _echo2() {
 
 # find out what kind of snapshot to make
 what() {
-        _DAYS=$1
-        _BACKUPDIR=$2
-        _NOW=$3
-        i=1
-        if [[ -d $_BACKUPDIR/$_NOW ]]; then
-                # already there do not link
-                return 0
-        fi
-        # linux thing
-        while [[ $i -le $DAYS ]]; do
-                dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
-                if [[ -d $_BACKUPDIR/$dir ]]; then
-                        # copy 'em over
-                        _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
-                        $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW
-                        return 0
-                fi
-        (( i++ ))
-        done
-        return 1
+    _DAYS=$1
+    _BACKUPDIR=$2
+    _NOW=$3
+    i=1
+    if [[ -d $_BACKUPDIR/$_NOW ]]; then
+	    # already there do not link
+	    return 0
+    fi
+    # linux thing
+    while [[ $i -le $_DAYS ]]; do
+	# calculate back from the date in _NOW
+	    if $hour; then
+		dir=`$GNU_DATE +%Y%m/%d/%H --date "$i hours ago"`
+		mon=`$GNU_DATE +%Y%m/%d`
+	    else
+		dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
+		mon=`$GNU_DATE +%Y%m`
+	    fi
+	    if [[ -d $_BACKUPDIR/$dir ]]; then
+		    # copy 'em over
+		    _echo2 "Linking dir: \`$_BACKUPDIR/$dir'"
+		    # create dir to be safe
+		    if ! mkdir -p $_BACKUPDIR/$mon; then
+			return 2
+		    fi
+		    # it can be the case that we may also need to
+		    # create the directories leading up to $_NOW
+		    if ! mkdir -p $_BACKUPDIR/$(dirname $_NOW); then
+			return 2
+		    fi
+		    if ! $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW; then
+			return 2
+		    fi
+		    return 0
+	    fi
+    (( i++ ))
+    done
+    return 1
 }
 
 # create ~/.rdup

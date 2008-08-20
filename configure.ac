@@ -72,7 +72,6 @@ AC_CONFIG_FILES([GNUmakefile
                  rdup.h
                  doc/rdup.1
                  doc/rdup-restore.1
-                 doc/rdup-snap-link.1
                  doc/rdup-snap.1
                  doc/rdup-simple.1
                  doc/rdup-crypt.1
