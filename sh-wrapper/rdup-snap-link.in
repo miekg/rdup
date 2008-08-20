@@ -44,6 +44,7 @@ HELP
 # before setting the progname, check if we are called by something name
 # rdup-simple. $PROGNAME is exported by rdup-simple
 if [ "$PROGNAME" != "rdup-simple" ]; then
+    PROGNAME=$0; # so the error is ok
     _echo2 "Can only be called from rdup-simple"
     exit 2
 fi
