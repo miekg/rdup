@@ -3,17 +3,12 @@ TODO:
 split off the scripts
 
 post 0.6.0:
-* kill rdup-snap-link and put that into rdup-simple instead
-* ...
 * make  rdup-gzip, rdup-crypt, rdup-gpg not fail when they cannot de-*
   something. In that case just echo the original file. This will make
   it easier to deal with mix backups (50% gzipped, 50% not compressed).
 * enable support for sparse files; When seeing a block of NULLs just
   do a seek in the file
 * rdup-scripts; resume a backup
-* filetype changes testing!
-* rdup-snap-link
-* rdup-snap-link; put this in rdup-simple and be done with it
 
 :install:
 

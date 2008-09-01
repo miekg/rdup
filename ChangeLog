@@ -9,10 +9,11 @@ xx Aug 2008: 0.6.2 Miek <miek@miek.nl>
    block devices. The rdup-utils IGNORE these files.
    This overloads the size (%s) in case of block/character
    devices - then it is major,minor number
- * rdup: always write the device out with 5 position. This could
-   also have resulted in too large incrementals
+ * rdup: always write the device out with 5 position for the 
+   internal filelist. This could also have resulted in too large 
+   incrementals
  * rdup-utils: check if a file is encrypted/compressed before
-   decrypting/decompressing it
+   decrypting/decompressing it.
  * rdup-utils: rdup-snap-link will now check if its called from
    rdup-simple. Dropped the manpage for rdup-snap-link
 

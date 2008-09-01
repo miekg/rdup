@@ -10,7 +10,6 @@ exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
 lockdir=/var/lock
-GNU_DEFS=rdup-simple.gnu
 
 # common stuff
 if ! source $datadir/shared.sh; then

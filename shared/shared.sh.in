@@ -35,11 +35,11 @@ what() {
     while [[ $i -le $_DAYS ]]; do
 	# calculate back from the date in _NOW
 	    if $hour; then
-		dir=`$GNU_DATE +%Y%m/%d/%H --date "$i hours ago"`
-		mon=`$GNU_DATE +%Y%m/%d`
+		dir=`date +%Y%m/%d/%H --date "$i hours ago"`
+		mon=`date +%Y%m/%d`
 	    else
-		dir=`$GNU_DATE +%Y%m/%d --date "$i days ago"`
-		mon=`$GNU_DATE +%Y%m`
+		dir=`date +%Y%m/%d --date "$i days ago"`
+		mon=`date +%Y%m`
 	    fi
 	    if [[ -d $_BACKUPDIR/$dir ]]; then
 		    # copy 'em over
@@ -53,7 +53,7 @@ what() {
 		    if ! mkdir -p $_BACKUPDIR/$(dirname $_NOW); then
 			return 2
 		    fi
-		    if ! $GNU_CP -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW; then
+		    if ! cp -plr $_BACKUPDIR/$dir $_BACKUPDIR/$_NOW; then
 			return 2
 		    fi
 		    return 0

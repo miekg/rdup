@@ -5,42 +5,27 @@
 # dump is incremental or full. And makes a copy
 # of the previous backup with GNU cp
 
+#$PROGNAME [-H] DAYS BACKUPDIR NOW
+#
+#This is a small shell script that hard links directories
+#Its purpose is to be used from within rdup-simple
+#
+#-H	     include the hour in the backup directory
+#
+#DAYS       - look backup DAYS days for previous dumps
+#	     with -H this calculates in hours
+#BACKUPDIR  - where to backup to
+#NOW        - Current date in YYYYMM format
+#             With -H, current date in YYYYMM/HH format
+
 prefix=@prefix@
 datarootdir=@datarootdir@
 exec_prefix=@exec_prefix@
 datadir=@datadir@/rdup
 sysconfdir=@sysconfdir@/rdup
-GNU_DEFS=rdup-snapshot.gnu
 
 # shared stuff
 . $datadir/shared.sh
-if [[ -r $sysconfdir/$GNU_DEFS ]]; then
-        source $sysconfdir/$GNU_DEFS
-fi
-if [[ -z $GNU_DATE ]]; then
-        GNU_DATE=date
-fi
-if [[ -z $GNU_CP ]] ;then
-        GNU_CP=cp
-fi
-
-usage() {
-	cat << HELP
-$PROGNAME [-H] DAYS BACKUPDIR NOW
-
-This is a small shell script that hard links directories
-Its purpose is to be used from within rdup-simple
-
--H	     include the hour in the backup directory
-
-DAYS       - look backup DAYS days for previous dumps
-	     with -H this calculates in hours
-BACKUPDIR  - where to backup to
-NOW        - Current date in YYYYMM format
-             With -H, current date in YYYYMM/HH format
-HELP
-}
-
 # before setting the progname, check if we are called by something name
 # rdup-simple. $PROGNAME is exported by rdup-simple
 if [ "$PROGNAME" != "rdup-simple" ]; then
