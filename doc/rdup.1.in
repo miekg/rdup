@@ -351,7 +351,7 @@ is printed to standard output. Thus:
 Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
 
 .SH UTILITIES
-Various perl scripts are included with rdup. Linked together these
+Various perl scripts that can be used with rdup. Linked together these
 script actually implement the backup scheme. 
 .PP
 The more important scripts are:

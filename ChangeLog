@@ -1,6 +1,6 @@
 xx Aug 2008: 0.6.2 Miek <miek@miek.nl>
  * rdup-utils: completely removed from rdup(-core).
-   There is now a seperate svn repos with those tools
+   There is now a seperate svn repos with those tools. 
  * rdup: Added -R switch, which will reverse rdup's output
    This is a depth first output, first the directories
    then the files.

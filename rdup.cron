@@ -1,2 +1,0 @@
-# sample cron file of rdup
-11 02 * * * root rdup-simple /etc /home /var file:///raid/backup/$HOSTNAME 

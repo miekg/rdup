@@ -1,4 +1,4 @@
-Rdup is a small program, which depends on a number of a other programs
+rdup is a small program, which depends on a number of a other programs
 and tools to make it all work. The dependencies are listed here:
 
 Mandatory:
@@ -6,21 +6,6 @@ rdup:
 o libglib (core C gtk library)
 o libpcre (Perl regular expressions)
 
-rdup-utils:
-o Perl,  perl-module: file-copy
-o Bash, version 3, for the (shell) rdup-utils
-  rdup-snapshot depends on GNU date for date calculations
-o GNU cp for making a hard linked copy of a previous dump
-
 To build:
 o automake
 o autoconf
-
-Optional:
-o ssh     (remote backups and restores)
-o mcrypt  (encryption)
-o gpg 	  (gpg encryption)
-o gpg-agent 	  (gpg decryption)
-o gzip    (compression)
-o gettext (i18n)
-o cstream (bandwidth shaping)

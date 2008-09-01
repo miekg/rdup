@@ -1,1 +1,0 @@
-./rdup -c HERE . | ssh miekg@localhost ~/svn/rdup/trunk/mirror.sh -c -b /tmp/storage  
