@@ -1,14 +1,8 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o xattr.o abspath.o link.o reverse.o
 HDR=rdup.h
 CMD=rdup
-SHA_IN=shared.sh shared.pl
-WRP_IN=rdup-restore rdup-snap-link rdup-simple
-PRL_IN=rdup-gzip rdup-crypt rdup-snap rdup-gpg rdup-hist rdup-s3
-MAN1_IN=rdup.1 rdup-restore.1 rdup-snap.1 rdup-backups.1 rdup-simple.1 rdup-crypt.1 rdup-gzip.1 rdup-gpg.1 rdup-hist.1 rdup-s3.1
+MAN1_IN=rdup.1 rdup-backups.1
 
-SHA=$(addprefix shared/, $(SHA_IN))
-PRL=$(addprefix pl-tools/, $(PRL_IN))
-WRP=$(addprefix sh-wrapper/, $(WRP_IN))
 MAN1=$(addprefix doc/, $(MAN1_IN))
 
 prefix=@prefix@
@@ -36,13 +30,10 @@ INSTALL_DATA=$(INSTALL) -m 644
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
-all:	rdup scripts
+all:	rdup 
 
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ} -o rdup
-
-scripts:
-	chmod +x $(RES) $(PRL) $(WRP)
 
 po:	rdup.pot 
 	( cd po ; make -f GNUmakefile all )
@@ -75,16 +66,10 @@ install: all
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${datadir}
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
-	for i in ${WRP}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
-	for i in ${PRL}; do ${INSTALL} $$i ${DESTDIR}${bindir}/`basename $$i` ; done
-	for i in ${SHA}; do ${INSTALL_DATA} $$i ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	make -C po install
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
-	for i in ${WRP}; do rm -f ${DESTDIR}${bindir}/`basename $$i` ; done
-	for i in ${PRL}; do rm -f ${DESTDIR}${bindir}/`basename $$i` ; done
-	for i in ${SHA}; do rm -f ${DESTDIR}${datadir}/`basename $$i` ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	make -C po uninstall
