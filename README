@@ -1,10 +1,9 @@
 1/ TO BUILD
 
 Run:
-autoreconf && ./configure && make (Linux)
-autoheader259 && autoconf259 && ./configure && gmake (FreeBSD)
+autoreconf && ./configure && make 
 
-The a:
+Then a:
 make install
 
 as root, to get rdup installed.
@@ -14,11 +13,6 @@ o Gmake for compilation
 o Glib to build. Glib is the low level C library of the
   GTK project. Configure will check for this.
 o PCRE library
-
-the rdup-utils depend on:
-o Perl for the scripts. 
-o File::copy module for Perl
-o rdup-snap-link depends on GNU cp to create the hardlinked directories
 
 2/ DIFFERENCE WITH RSYNC
 

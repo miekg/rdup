@@ -71,7 +71,6 @@ AC_CONFIG_FILES([GNUmakefile
 		 po/GNUmakefile
                  rdup.h
                  doc/rdup.1
-                 doc/rdup-backups.1
                  ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
