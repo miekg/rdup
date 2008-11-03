@@ -1,4 +1,4 @@
-xx Sep 2008: 0.6.2 Miek <miek@miek.nl>
+xx Nov 2008: 0.6.2 Miek <miek@miek.nl>
  * rdup-utils: completely removed from rdup(-core).
    There is now a seperate svn repos with those tools. 
  * rdup: Added -R switch, which will reverse rdup's output
@@ -8,7 +8,7 @@ xx Sep 2008: 0.6.2 Miek <miek@miek.nl>
    than the POSIX regex previously used. This does add an extra
    dependency for libpcre3 (requested by Sorin Ionescu)
  * rdup: support for named pipe's, sockets and character and
-   block devices. The rdup-utils IGNORES these files.
+   block devices. The rdup-utils IGNORE these files.
    This overloads the size (%s) in case of block/character
    devices - then it is 'major,minor' numbers
  * rdup: always write the device out with 5 position for the 
