@@ -1,3 +1,6 @@
+xx yyy 2009: 0.6.2 Miek <miek@miek.nl>
+
+
 03 Nov 2008: 0.6.2 Miek <miek@miek.nl>
  * rdup-utils: completely removed from rdup(-core).
    There is now a seperate svn repos with those tools. 
