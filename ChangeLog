@@ -1,4 +1,5 @@
-xx yyy 2009: 0.6.2 Miek <miek@miek.nl>
+07 Nov 2009: 0.6.3 Miek <miek@miek.nl>
+ * make regular expressions actually work (patch from Crispin Boylan)
 
 
 03 Nov 2008: 0.6.2 Miek <miek@miek.nl>

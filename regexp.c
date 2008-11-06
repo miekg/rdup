@@ -13,8 +13,7 @@ GSList *pregex_list = NULL;
 
 /**
  * Read the filename and create the compiled regexp
- * in two linked lists; one for files and one for 
- * directories
+ * in a linked list
  */
 gboolean
 regexp_init(char *file) {
@@ -26,6 +25,7 @@ regexp_init(char *file) {
 	gpointer 	d;
 	size_t 	 	l;
 	size_t		s;
+	size_t		re_length;
 	ssize_t	 	j;
 	pcre		*P;
 
@@ -57,8 +57,9 @@ regexp_init(char *file) {
 			g_free(buf);
 			return FALSE;
 		} else {
-			d = g_malloc(sizeof P);
-			d = memcpy(d, &P, sizeof P);
+			pcre_fullinfo(P, NULL, PCRE_INFO_SIZE, &re_length);
+			d = g_malloc(re_length);
+			d = memcpy(d, P, re_length);
 			pregex_list = g_slist_append(pregex_list, d);
 		}
 		l++;
