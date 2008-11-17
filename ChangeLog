@@ -4,7 +4,7 @@ xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
    print the link's name not the '-> target'
 
 
-07 Nov 2008: 0.6.3 Miek <miek@miek.nl>
+11 Nov 2009: 0.6.3 Miek <miek@miek.nl>
  * make regular expressions actually work (patch from Crispin Boylan)
 
 
