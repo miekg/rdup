@@ -82,6 +82,7 @@ dir_prepend(GTree *t, char *path)
 		e.f_dev       = s.st_dev;
 		e.f_rdev      = s.st_rdev;
 		e.f_ino       = s.st_ino;
+		e.f_lnk	      = 0;
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
 		p = c++;
@@ -200,7 +201,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 
 			/* hardlinks */
 			if (s.st_nlink > 1) {
-				if (( lnk = hardlink(linkhash, &pop))) {
+				if ((lnk = hardlink(linkhash, &pop))) {
 					/* we got a match back */
 					pop.f_size = strlen(pop.f_name);  /* old name length */
 					lnk = g_strdup_printf("%s -> %s", pop.f_name, lnk);

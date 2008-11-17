@@ -210,17 +210,24 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         'l': path name length
 .BR
-        's': file size (zero if directory)
+        's': file size, zero if directory, major,minor for devices and
+see CAVEATS for soft- and hardlinks.
 .BR
-        'n': path
+        'n': path name
+.BR
+        'N': path name, but in case of a soft- or hardlink \fIonly\fR
+the link name.
 .BR
         't': time of modification (seconds from epoch)
 .BR
         'H': the SHA1 hash of the regular file, all zeros ("0") for all other types
 .BR
-        'T': file type: -: normal file, l: symlink, h: hardlink, d:
-	directory, c: character device, b: block device, p: named pipe
-	and s: socket.
+        'T': file type
+.RS
+       \fB-\fR normal file, \fBl\fR symlink, \fBh\fR hardlink, \fBd\fR directory,
+       \fBc\fR character device, \fBb\fR block device, \fBp\fR named pipe
+       and \fBs\fR socket.
+.RE
 .BR
         'C': the content of the file (none for all other types)
 .PP
@@ -317,13 +324,16 @@ the PATH name is generated from the link's name and its target. A symlink like
 
 is printed as '/home/bin/blaat -> /home/bin/bliep'. The PATH_SIZE
 is modified accordingly.
-The FILE_SIZE is not needed, so it is set the size of the link's
+The FILE_SIZE is not needed, so it is set the length of the link's
 name, in this case the length of '/home/bin/blaat'.
 
 If rdup encounters a hardlink it is handled in the same way, but the
 output type is set to 'h' instead of 'l'. A hardlink is only detected
 if rdup find a file with the same inode and device number as a previous
 one. 
+
+Note: with '%N' only the link's name is printed. The FILE_SIZE is
+\fIstill\fR set to the length of the link's name.
 
 .TP
 .B o character/block devices

@@ -191,6 +191,19 @@ entry_print_data(FILE *out, char n, struct entry *e)
 		case 'n':
 			fputs(e->f_name, out);
 			break;
+		case 'N':
+			/* only the name in case of soft- or hardlinks
+			 * filesize has the length what we should print */
+			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+				/* 
+				 * fputs(e->f_name, out);
+				fprintf(out, "\n%d\n%d\n", e->f_lnk, (int)e->f_size);
+				*/
+				fwrite(e->f_name, e->f_size, sizeof(char), out); 
+			} else {
+				fputs(e->f_name, out);
+			}
+			break;
 		case 'l':
 			fprintf(out, "%ld", (unsigned long)e->f_name_size);
 			break;
