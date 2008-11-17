@@ -15,7 +15,6 @@ gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 #if 0
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
 #endif
-#if 0
 gboolean opt_local  	   = FALSE; 		      /* check for file size changes */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
