@@ -45,8 +45,7 @@ main(int argc, char **argv)
 	char		 *q, *r;
 	GSList		 *p;
 	GSList		 *child = NULL;		/* to forked childs: -P option */
-	GSList		 *child_args = NULL;	/* list with the args for childs */
-	char		 *args[5 + 1];
+	char		 **args;
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
@@ -83,34 +82,34 @@ main(int argc, char **argv)
 	while ((c = getopt (argc, argv, "P:F:hV")) != -1) {
 		switch (c) {
 			case 'P':
-				printf("%s\n", optarg);
+				args = g_malloc(7 + 1);
+				/* printf("%s\n", optarg); */
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
 				 * arg0,arg1,arg2,...,argN */
 				r = strstr(q, ",");
 				if (!r) {
-					printf("child alone %s\n", q);
-					child = g_slist_append(child, q);
+					args[0] = g_strdup(q);
+					args[1] = NULL;
+					/* printf("child alone %s\n", args[0]); */
 				} else {
 					*r = '\0';
-					printf("child %s\n", q);
-
+					/* printf("child %s\n", q); */
 					for(i = 0; r; r = strstr(r + 1, ","), i++) {
 						if (i > 4) {
-							printf("only 5 args allowed");
-							break;
+							msg(_("Only 5 extra args per child allowed"), PROGNAME);
+							exit(EXIT_FAILURE);
 						}
 						*r = '\0';
-						printf("%s\n", q);
+						/* printf("%s\n", q); */
 						args[i] = g_strdup(q);
 						q = r + 1;
-						printf("%d\n", i);
+						/* printf("%d\n", i); */
 					}
-					printf("%s\n", q);
 					args[i] = g_strdup(q);
-
+					args[i + 1] = NULL;
 				}
-
+				child = g_slist_append(child, args);
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -131,15 +130,18 @@ main(int argc, char **argv)
 
 	if (argc < 2) {
 		/* usage(stdout); */
-		exit(EXIT_FAILURE);
+		/* exit(EXIT_FAILURE); */
 	}
+
+	printf("%d\n", g_slist_length(child));
 
 	for (p = g_slist_nth(child, 0); p; p = g_slist_next(p)) { 
                 if (sig != 0)
                         signal_abort(sig);
 
-                q = (char*) p->data;
-		printf("%s\n", q);
+                args = (char**) p->data;
+		for(i = 0; args[i]; i++)
+			printf("- %s\n", args[i]);
         }
         return FALSE;
 
