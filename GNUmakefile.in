@@ -1,4 +1,5 @@
-OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o xattr.o abspath.o link.o reverse.o
+OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath.o link.o reverse.o
+OBJ_TR=rdup-tr.o signal.o
 HDR=rdup.h
 CMD=rdup
 MAN1_IN=rdup.1
@@ -30,7 +31,10 @@ INSTALL_DATA=$(INSTALL) -m 644
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
-all:	rdup 
+all:	rdup rdup-tr
+
+rdup-tr: $(OBJ_TR) $(HDR)
+	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_TR} -o rdup-tr
 
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ} -o rdup

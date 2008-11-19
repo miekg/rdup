@@ -6,8 +6,8 @@
 .B @PACKAGE_NAME@
 [\fI\-N timestamp\fR]
 [\fIOPTION...\fR]
-[\fIFILELIST\fR]
-[\fIDIR/FILE...\fR]
+\fIFILELIST\fR
+\fIDIR/FILE...\fR
 
 .SH DESCRIPTION
 \fBrdup\fR is a utility inspired by rsync and the plan9 way of doing
@@ -33,7 +33,7 @@ you want to backup.
 .PP
 If the \fI\-N timestamp\fR option is not given, all paths found are
 printed. Only when a \fI\-N timestamp\fR file is given, times can be
-compared and an incremental output can be generated.
+compared and an incremental output can be generated. 
 .PP
 \fBrdup\fR prints a filelist to standard output. 
 Subsequent programs in a pipe line can be used to actually
@@ -45,7 +45,7 @@ print out only those files that have actually changed or are removed
 since the last run, thereby making incremental backups possible.
 .PP
 Files are checked for changes by comparing the c\-time (change time),
-if this time is NEWER than the c\-time of FILELIST the pathname is printed
+if this time is NEWER than the c\-time of timestamp file the pathname is printed
 to standard output. When files are removed they are also printed to 
 standard output, but they are prefixed with a '-'. See 
 .B FORMAT
@@ -142,8 +142,7 @@ rdup has crawled it and before it has been sent to the remote server,
 the backup will fail. \fBrdup\fR will check for file size changes, but
 this doesn't remove the race condition.
 
-This option is used when streaming your backup to a remote machine. Note
-that the remote machine must have \fBrdup\fR installed.
+This option is used when streaming your backup to a remote machine.
 .TP
 .B \-r
 Only print removed files; entries that start with a `\-'. This 
@@ -228,7 +227,6 @@ the link name.
        \fBc\fR character device, \fBb\fR block device, \fBp\fR named pipe
        and \fBs\fR socket.
 .RE
-.BR
         'C': the content of the file (none for all other types)
 .PP
 To delimit the output of \fBrdup\fR with NULLs you can use '\\0' in the
@@ -308,15 +306,28 @@ This makes it possible possible for a remote shell script to receive the
 actual file and make a backup.
 .PP
 All field are identical as described in \fBOUTPUT FORMAT\fR, but
-there is one extra field and the following cavaets.
-.TP
-.B o FILE_CONTENTS
-The entire file is concatenated to standard output.
+there is one extra field and also see CAVEATS.
+The extra field is the FILE_CONTENTS, which concatenates the entire file
+to standard output.
+
+The output when using the \-c is changed as follows, for
+directories: the FILE_SIZE is zero and no content is printed. Thus:
+.RS
+        +d 0755 1000 1000 11 0\\n
+        \fB/home/miekg\fR
+.RE
+For regular files the following is a sample output:
+.RS
+        +- 0644 1000 1000 32 6\\n
+        \fB/home/miekg/svn/rdup/trunk/aaa/a\fR\fIhello\fR
+.RE
+Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
+
 
 .SS CAVEATS
-.TP
-.B o symbolic and hard links
-the PATH name is generated from the link's name and its target. A symlink like
+Soft- and hardlinks are handled differently when using %n, if you don't
+like this behavior use %N.
+The PATH name is generated from the link's name and its target. A symlink like
 
 .RS
     /home/bin/blaat -> /home/bin/bliep
@@ -324,44 +335,51 @@ the PATH name is generated from the link's name and its target. A symlink like
 
 is printed as '/home/bin/blaat -> /home/bin/bliep'. The PATH_SIZE
 is modified accordingly.
-The FILE_SIZE is not needed, so it is set the length of the link's
-name, in this case the length of '/home/bin/blaat'.
+The FILE_SIZE is not needed for soft- or hardlinks, so it is set the
+length of the link's name -- the part left of the '->', in this case the 
+length of '/home/bin/blaat'.
 
 If rdup encounters a hardlink it is handled in the same way, but the
 output type is set to 'h' instead of 'l'. A hardlink is only detected
-if rdup find a file with the same inode and device number as a previous
-one. 
+if rdup finds a file with the same inode and device number as a previous
+one, i.e. such hardlinks must be contained in your backup.
 
-Note: with '%N' only the link's name is printed. The FILE_SIZE is
+Again note: with '%N' only the link's name is printed. The FILE_SIZE is
 \fIstill\fR set to the length of the link's name.
 
-.TP
-.B o character/block devices
-The size field (%s) is changed to hold the major,minor number of
+.PP
+For devices the size field (%s) is changed to hold the major,minor number of
 the device. So if a major number is 8 and the minor number is 0 (under
 Linux this is /dev/sda), its size will be \fB8,0\fR. The numbers are
-only separated with a comma (,).
-
-The output when using the \-c is changed as follows, for:
-.TP
-.B o directories:
-the FILE_SIZE is zero and no content is printed. Thus:
-.RS
-        +d 0755 1000 1000 11 0\\n
-        \fB/home/miekg\fR
-.RE
-.TP
-.B o regular files:
-the FILE_SIZE is used as-is and the entire file contents
-is printed to standard output. Thus:
-.RS
-        +- 0644 1000 1000 32 6\\n
-        \fB/home/miekg/svn/rdup/trunk/aaa/a\fR\fIhello\fR
-.RE
-Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
+only separated with a comma `,'.
 
 .SH EXIT CODE
-\fBrdup\fR return a zero exit code on success, otherwise one is returned.
+\fBrdup\fR return a zero exit code on success, otherwise 1 is returned.
+\fRrdup\fR will abort if a file can not be concatenated, if a regular
+expression can not be compiled or if a signal is received.
+
+.SH EXAMPLES
+The next set of examples will all make a full dump -- because of the use
+of /dev/null.
+
+.SS cpio
+.RS
+    rdup -R -F '%N\\n' /dev/null ~/bin | cpio -o -Hcrc > my-archive.cpio          
+.RE
+Restore with:
+.RS
+    cpio -i -d -Hcrc < my-archive.cpio          
+.RE
+
+.SS tar
+.RS
+    rdup -F '%N\\n' /dev/null ~/bin | tar c -f my-archive.tar -T - --no-recursion
+.RE
+Restore:
+.RS
+    tar x -f my-archive.tar
+.RE
+
 
 .SH AUTHOR
 Written by Miek Gieben. 
@@ -372,8 +390,6 @@ Report bugs to <miek@miek.nl>.
 .SH BUGS/LIMITATIONS
 See the \-c flag for explanation about a small race condition when doing
 remote dumps. 
-.PP
-Extended attributes are not detected.
 
 .SH SEE ALSO
 http:/www.miek.nl/projects/rdup is the main site of rdup.

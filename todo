@@ -5,4 +5,6 @@ TODO:
 :rdup:
 
 :doc:
-fix up the caveat section of the rdup.1 page
+
+:misc:
+checkout libarchive

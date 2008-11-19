@@ -1,6 +1,7 @@
 RDUP DESIGN DOC
 
 1/ GOALS
+
         1) Keep it Simple
         2) Fast
         3) Small
@@ -21,9 +22,10 @@ RDUP DESIGN DOC
         4) Write the removed items to standard output
         5) Write the modified/new items to standard output.
         6) Write a new filelist.
-        7) Touch the time stamp file
+        7) Touch the time stamp file.
 
 3/ C FILES
+
 crawler.c
         The crawler recursively descends into directories.
 
@@ -33,7 +35,7 @@ crawler.c
         When a .nobackup is found the entry's value is changed from
         VALUE to NO_PRINT. The functions that write the list know that
         NO_PRINT values should not be written nor printed.  (The entry
-        could not simple be removed, because that messes up the flow of
+        can not simple be removed, because that messes up the flow of
         the GTree).
 
         So in rdup each item (a path) can have three values:
@@ -63,7 +65,8 @@ regex.c
         Regular expression functions.
 
 xattr.c
-        Extended attributes functions.
+        Extended attributes functions. Not used anymore, because this
+	cannot be done in a portable way.
 
 sha1.c
         SHA-1 implementation, for file hashing.

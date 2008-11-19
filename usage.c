@@ -17,7 +17,7 @@ implement a (incremental) backup scheme.\n\
         DIR\t\tdirectory or directories to dump\n\
 \n\
 \n\
-        OPTIONS:\n\
+    OPTIONS:\n\
         -N FILE\t\tuse the timestamp of FILE for incremental dumps\n\
         \t\tif FILE does not exist, a full dump is performed\n\
         -F FORMAT\tuse specified format string\n\
@@ -37,7 +37,7 @@ implement a (incremental) backup scheme.\n\
         -v\t\tbe more verbose\n\
         -x\t\tstay in local file system\n\
 \n\
-        FORMAT:\n\
+    FORMAT:\n\
         The following escape sequences are recognized:\n\
         \'%p\': '+' if new, '-' if removed\n\
         \'%b\': permission bits\n\
@@ -47,6 +47,7 @@ implement a (incremental) backup scheme.\n\
         \'%l\': path length (for links: length of \'path -> target\')\n\
         \'%s\': file size\n\
         \'%n\': path (for links: \'path -> target\')\n\
+        \'%N\': path (for links: \'path')\n\
         \'%t\': time of modification (epoch)\n\
         \'%H\': the sha1 hash of the file's contents\n\
         \'%T\': \'type\' (d, l, h, -, c, b, p or s: dir, symlink, hardlink, file, \n\

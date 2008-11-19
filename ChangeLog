@@ -2,6 +2,7 @@ xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
  * Added '%N' to the format string, which prints the
    path, but in case of soft- and hardlinks it will only
    print the link's name not the '-> target'
+ * rdup.1.in had a long deserved make-over
 
 
 11 Nov 2009: 0.6.3 Miek <miek@miek.nl>
