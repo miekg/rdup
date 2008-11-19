@@ -44,8 +44,10 @@ main(int argc, char **argv)
 	int		 c, i;
 	char		 *q, *r;
 	GSList		 *p;
-	GSList		 *child = NULL;		/* to forked childs: -P option */
+	GSList		 *child = NULL;		/* forked childs args: -P option */
+	GSList		 *pipes = NULL;
 	char		 **args;
+	int		 **pipefd;
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
@@ -82,8 +84,9 @@ main(int argc, char **argv)
 	while ((c = getopt (argc, argv, "P:F:hV")) != -1) {
 		switch (c) {
 			case 'P':
-				args = g_malloc(7 + 1);
-				/* printf("%s\n", optarg); */
+				/* allocate new for each child */
+				args = g_malloc((7 + 1) * sizeof(char *));
+				pipefd = g_malloc(2 * sizeof(int));
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
 				 * arg0,arg1,arg2,...,argN */
@@ -91,25 +94,22 @@ main(int argc, char **argv)
 				if (!r) {
 					args[0] = g_strdup(q);
 					args[1] = NULL;
-					/* printf("child alone %s\n", args[0]); */
 				} else {
 					*r = '\0';
-					/* printf("child %s\n", q); */
 					for(i = 0; r; r = strstr(r + 1, ","), i++) {
 						if (i > 4) {
 							msg(_("Only 5 extra args per child allowed"), PROGNAME);
 							exit(EXIT_FAILURE);
 						}
 						*r = '\0';
-						/* printf("%s\n", q); */
 						args[i] = g_strdup(q);
 						q = r + 1;
-						/* printf("%d\n", i); */
 					}
 					args[i] = g_strdup(q);
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
+				pipes = g_slist_append(pipes, pipefd);
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -133,12 +133,13 @@ main(int argc, char **argv)
 		/* exit(EXIT_FAILURE); */
 	}
 
-	printf("%d\n", g_slist_length(child));
+	printf("Ps: %d\n", g_slist_length(child));
 
 	for (p = g_slist_nth(child, 0); p; p = g_slist_next(p)) { 
                 if (sig != 0)
                         signal_abort(sig);
 
+		/* fork, exec, childs */
                 args = (char**) p->data;
 		for(i = 0; args[i]; i++)
 			printf("- %s\n", args[i]);
