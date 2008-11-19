@@ -1,0 +1,51 @@
+#ifndef _RDUP_TR_H
+#define _RDUP_TR_H
+
+#include <glib.h>
+
+#include "config.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
+#include <ctype.h>
+#include <pwd.h>
+#include <grp.h>
+#include <time.h>
+#include <glob.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <dirent.h>
+#include <libgen.h>
+#include <syslog.h>
+#include <errno.h>
+#include <utime.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#ifdef HAVE_ARCHIVE_H
+#include <archive.h>
+#endif /* HAVE_ARCHIVE_H */
+
+#ifdef HAVE_GETTEXT
+#include <libintl.h>
+#include <locale.h>
+#define _(String) gettext (String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+#else
+#define _(String) String
+#endif /* HAVE_GETTEXT */
+
+#define VERSION     "@PACKAGE_VERSION@"
+#define PROGNAME    "@PACKAGE_NAME@-tr"
+
+#define BUFSIZE	    4096
+#define MAX_CHILD_OPT  5
+
+/* signal.c */
+void signal_abort(int signal);
+#endif  /* _RDUP_TR_H */

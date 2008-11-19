@@ -260,7 +260,7 @@ main(int argc, char **argv)
 	time = NULL;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
-		msg(_("Will not run suid/sgid for safety reasons"), PROGNAME);
+		msg(_("Will not run suid/sgid for safety reasons"));
 		exit(EXIT_FAILURE);
         }
 
@@ -285,7 +285,7 @@ main(int argc, char **argv)
 					exit(EXIT_FAILURE);
 				break;
 			case 'a':
-				msg(_("-a is not supported anymore"), PROGNAME);
+				msg(_("-a is not supported anymore"));
 				break;
 			case 'c':
 				opt_format = "%p%T %b %u %g %l %s\n%n%C";

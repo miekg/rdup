@@ -6,18 +6,16 @@
  * per file compression and/or encryption
  */
 
-#include "rdup.h"
+#include "rdup-tr.h"
 
 /* options */
-gboolean opt_null 	   = FALSE;                   /* delimit all in/output with \0  */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
-char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
-time_t opt_timestamp       = 0;                       /* timestamp file */
 sig_atomic_t sig           = 0;
 
 /* signal.c */
 void got_sig(int signal);
+
 
 static void
 msg_va_list(const char *fmt, va_list args)
@@ -66,7 +64,7 @@ main(int argc, char **argv)
 	sigaction(SIGINT, &sa, NULL);
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
-		msg(_("Will not run suid/sgid for safety reasons"), PROGNAME);
+		msg(_("Will not run suid/sgid for safety reasons"));
 		exit(EXIT_FAILURE);
         }
 
@@ -85,7 +83,7 @@ main(int argc, char **argv)
 		switch (c) {
 			case 'P':
 				/* allocate new for each child */
-				args = g_malloc((7 + 1) * sizeof(char *));
+				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
 				pipefd = g_malloc(2 * sizeof(int));
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
@@ -98,7 +96,7 @@ main(int argc, char **argv)
 					*r = '\0';
 					for(i = 0; r; r = strstr(r + 1, ","), i++) {
 						if (i > 4) {
-							msg(_("Only 5 extra args per child allowed"), PROGNAME);
+							msg(_("Only %d extra args per child allowed"), MAX_CHILD_OPT);
 							exit(EXIT_FAILURE);
 						}
 						*r = '\0';
