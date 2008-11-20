@@ -53,6 +53,9 @@ void signal_abort(int signal);
 /* getdelim.c */
 ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 
+/* usage-tr.c */
+void usage_tr(FILE *);
+
 /* archive.c */
 int r_archive_open(__attribute__((unused)) struct archive *a, 
         __attribute__((unused)) void *data);

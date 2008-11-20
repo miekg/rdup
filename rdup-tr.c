@@ -188,7 +188,7 @@ main(int argc, char **argv)
 				opt_format = optarg;
 				break;
 			case 'h':
-				/*usage(stdout); */
+				usage_tr(stdout);
 				exit(EXIT_SUCCESS);
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
@@ -206,7 +206,7 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	for (j = 0, p = g_slist_nth(child, 0); p; p = g_slist_next(p), j++) { 
+	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) { 
                 if (sig != 0)
                         signal_abort(sig);
 
@@ -226,12 +226,16 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 
-		/* need to store pids */
 		if (*cpid == 0) {			/* child */
 			_exit(EXIT_SUCCESS); /* MOET weg */
-			close(pipefd[1]);
 			close(0);
 			dup(pipefd[0]); /* make it read from the pipe */
+			close(pipefd[0]);
+
+			close(1);	/* capture what is written by the child */
+			dup(pipefd[1]);
+			close(pipefd[1]);
+
 			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
 
 			if ( execvp(args[0], args + 1) == -1) {
@@ -241,15 +245,27 @@ main(int argc, char **argv)
 			/* never reached */
 			_exit(EXIT_SUCCESS);
 		} else {				/* parent */
-			close(pipefd[0]);
+			close(pipefd[0]);		/* read from the child here */
+			fprintf(stderr, "%d\n", *cpid);
 			pids = g_slist_append(pids, cpid);
 
+			/*
 			write(pipefd[1], args[0], strlen(args[0]));
+			write(pipefd[1], "\nhallo meneer de uil\n",21 );
 			close(pipefd[1]);
+			*/
 
 			waitpid(*cpid, NULL, 0);
 		}
         }
+
+	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
+                if (sig != 0)
+                        signal_abort(sig);
+
+		cpid = p->data;
+		fprintf(stderr, "pids %d\n", *cpid);
+	}
 
 	exit(EXIT_SUCCESS);
 	/* read stdin and do something */

@@ -6,7 +6,7 @@
 #include "rdup-tr.h"
 
 void
-tr_usage(FILE *f)
+usage_tr(FILE *f)
 {
         fprintf(f, _("USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"), PROGNAME);
 	fputs( _("\
