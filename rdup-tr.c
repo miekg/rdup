@@ -10,7 +10,7 @@
 
 /* options */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
-char *opt_type	           = NULL;			 /* pax, ustar, cpio */
+gint opt_tty	           = 0;				/* force write to stdout */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 sig_atomic_t sig           = 0;
 
@@ -144,11 +144,6 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	if (isatty(1) == 1) {
-		msg("Will not print the output to a tty");
-		exit(EXIT_FAILURE);
-	}
-
 	for(c = 0; c < argc; c++) {
 		if (strlen(argv[c]) > BUFSIZE) {
 			msg(_("Argument length overrun"));
@@ -156,8 +151,11 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "P:F:hV")) != -1) {
+	while ((c = getopt (argc, argv, "cP:F:hV")) != -1) {
 		switch (c) {
+			case 'c':
+				opt_tty = 1;
+				break;
 			case 'P':
 				/* allocate new for each child */
 				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
@@ -203,9 +201,9 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc < 2) {
-		/* usage(stdout); */
-		/* exit(EXIT_FAILURE); */
+	if (!opt_tty && isatty(1) == 1) {
+		msg("Will not print to a tty");
+		exit(EXIT_FAILURE);
 	}
 
 	for (j = 0, p = g_slist_nth(child, 0); p; p = g_slist_next(p), j++) { 
@@ -253,10 +251,8 @@ main(int argc, char **argv)
 		}
         }
 
+	exit(EXIT_SUCCESS);
 	/* read stdin and do something */
 	read_stdin(pipes);
-
-
-
 	exit(EXIT_SUCCESS);
 }
