@@ -34,18 +34,80 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
+void read_stdin(GSList *pipes)
+{
+	char		*buf, *readbuf, *n;
+	char		delim;
+	size_t		len, i;
+	FILE		*fp;
+	int		f;
+	struct archive  *archive;
+	struct archive_entry *entry;
+	struct stat     s;
+
+	fp      = stdin;
+	delim   = '\n';
+	i       = BUFSIZE;
+	buf     = g_malloc(BUFSIZE + 1);
+	readbuf = g_malloc(BUFSIZE + 1);
+
+	pipes = NULL; /* MOET weg */
+
+	if ( (archive = archive_write_new()) == NULL) {
+		msg("Failed to create empty archive");
+		exit(EXIT_FAILURE);
+	}
+
+	if (archive_write_set_format_cpio(archive) != ARCHIVE_OK) {
+		msg("Failed to set archive type to cpio");
+		exit(EXIT_FAILURE);
+	}
+
+	archive_write_open(archive, NULL, r_archive_open, r_archive_write, r_archive_close);
+
+	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
+		if (sig != 0) {
+			fclose(fp);
+			signal_abort(sig);
+		}
+		n = strrchr(buf, '\n');
+		if (n) 
+			*n = '\0';
+
+		entry = archive_entry_new();
+		stat(buf, &s);
+
+		archive_entry_copy_stat(entry, &s);
+		archive_entry_set_pathname(entry, buf);
+		archive_write_header(archive, entry);
+		fprintf(stderr, "statting %s\n", buf);
+
+		f = open(buf, O_RDONLY);
+		len = read(f, readbuf, sizeof(readbuf));
+		while (len > 0) {
+			archive_write_data(archive, readbuf, len);
+			len = read(f, readbuf, sizeof(readbuf));
+		}
+		close(f);
+		archive_entry_free(entry);
+	}
+	archive_write_finish(archive);
+}
+
+
 int
 main(int argc, char **argv)
 {
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
-	int		 c, i;
+	int		 c, i, j;
+	pid_t		 cpid;
 	char		 *q, *r;
 	GSList		 *p;
 	GSList		 *child = NULL;		/* forked childs args: -P option */
 	GSList		 *pipes = NULL;
 	char		 **args;
-	int		 **pipefd;
+	int		 *pipefd;
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
@@ -88,13 +150,13 @@ main(int argc, char **argv)
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
 				 * arg0,arg1,arg2,...,argN */
-				r = strstr(q, ",");
+				r = strchr(q, ',');
 				if (!r) {
 					args[0] = g_strdup(q);
 					args[1] = NULL;
 				} else {
 					*r = '\0';
-					for(i = 0; r; r = strstr(r + 1, ","), i++) {
+					for(i = 0; r; r = strchr(r + 1, ','), i++) {
 						if (i > 4) {
 							msg(_("Only %d extra args per child allowed"), MAX_CHILD_OPT);
 							exit(EXIT_FAILURE);
@@ -131,18 +193,51 @@ main(int argc, char **argv)
 		/* exit(EXIT_FAILURE); */
 	}
 
-	printf("Ps: %d\n", g_slist_length(child));
-
-	for (p = g_slist_nth(child, 0); p; p = g_slist_next(p)) { 
+	for (j = 0, p = g_slist_nth(child, 0); p; p = g_slist_next(p), j++) { 
                 if (sig != 0)
                         signal_abort(sig);
 
 		/* fork, exec, childs */
                 args = (char**) p->data;
-		for(i = 0; args[i]; i++)
-			printf("- %s\n", args[i]);
+		pipefd = (int *) g_slist_nth_data(pipes, j);
+
+		if ( pipe(pipefd) == -1) {
+			msg("Error pipe");
+			exit(EXIT_FAILURE);
+		}
+		
+		if ( (cpid = fork()) == -1) {
+			msg("Error forking");
+			exit(EXIT_FAILURE);
+		}
+
+		/* need to store pids */
+		if (cpid == 0) {			/* child */
+			_exit(EXIT_SUCCESS); /* MOET weg */
+			close(pipefd[1]);
+			close(0);
+			dup(pipefd[0]); /* make it read from the pipe */
+			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
+
+			if ( execvp(args[0], args + 1) == -1) {
+				msg("Failed to exec %s\n", args[0]);
+				_exit(EXIT_SUCCESS);
+			}
+			/* never reached */
+			_exit(EXIT_SUCCESS);
+		} else {				/* parent */
+			close(pipefd[0]);
+			
+			write(pipefd[1], args[0], strlen(args[0]));
+			close(pipefd[1]);
+
+			waitpid(cpid, NULL, 0);
+		}
         }
-        return FALSE;
+
+	/* read stdin and do something */
+	read_stdin(pipes);
+
 
 
 	exit(EXIT_SUCCESS);

@@ -28,6 +28,7 @@
 
 #ifdef HAVE_ARCHIVE_H
 #include <archive.h>
+#include <archive_entry.h>
 #endif /* HAVE_ARCHIVE_H */
 
 #ifdef HAVE_GETTEXT
@@ -48,4 +49,16 @@
 
 /* signal.c */
 void signal_abort(int signal);
+
+/* getdelim.c */
+ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+
+/* archive.c */
+int r_archive_open(__attribute__((unused)) struct archive *a, 
+        __attribute__((unused)) void *data);
+int r_archive_close(__attribute__((unused)) struct archive *a, 
+        __attribute__((unused)) void *data);
+ssize_t r_archive_write(__attribute__((unused)) struct archive *a, 
+       __attribute__((unused)) void *client_data, void *buff, size_t n);
+
 #endif  /* _RDUP_TR_H */

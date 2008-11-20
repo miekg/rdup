@@ -25,8 +25,10 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
-# no compile when not found?
 AC_CHECK_HEADERS([archive.h])
+
+# no compile when not found?
+AC_CHECK_LIB(archive, archive_write_new, ,ARCHIVE_L="no")
 
 AC_ARG_WITH(libpcre_includes,
        [  --with-libpcre-includes=DIR  libpcre include directory],
