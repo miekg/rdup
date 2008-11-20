@@ -268,6 +268,7 @@ main(int argc, char **argv)
 		msg(_("Could not get current working directory"));
 		exit(EXIT_FAILURE);
 	}
+
 	for(c = 0; c < argc; c++) {
 		if (strlen(argv[c]) > BUFSIZE) {
 			msg(_("Argument length overrun"));

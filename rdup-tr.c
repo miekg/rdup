@@ -10,6 +10,7 @@
 
 /* options */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
+char *opt_type	           = NULL;			 /* pax, ustar, cpio */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 sig_atomic_t sig           = 0;
 
@@ -75,15 +76,21 @@ void read_stdin(GSList *pipes)
 		if (n) 
 			*n = '\0';
 
-		entry = archive_entry_new();
-		stat(buf, &s);
+		if (stat(buf, &s) == -1) {
+			 msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
+			 continue;
+		}
 
+		if ((f = open(buf, O_RDONLY)) == -1) {
+			msg(_("Could not open '%s\': %s"), buf, strerror(errno));
+			continue;
+		}
+
+		entry = archive_entry_new();
 		archive_entry_copy_stat(entry, &s);
 		archive_entry_set_pathname(entry, buf);
 		archive_write_header(archive, entry);
-		fprintf(stderr, "statting %s\n", buf);
 
-		f = open(buf, O_RDONLY);
 		len = read(f, readbuf, sizeof(readbuf));
 		while (len > 0) {
 			archive_write_data(archive, readbuf, len);
@@ -102,11 +109,12 @@ main(int argc, char **argv)
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
 	int		 c, i, j;
-	pid_t		 cpid;
+	pid_t		 *cpid;
 	char		 *q, *r;
 	GSList		 *p;
 	GSList		 *child = NULL;		/* forked childs args: -P option */
 	GSList		 *pipes = NULL;
+	GSList		 *pids  = NULL;
 	char		 **args;
 	int		 *pipefd;
 	
@@ -135,6 +143,12 @@ main(int argc, char **argv)
 		msg(_("Could not get current working directory"));
 		exit(EXIT_FAILURE);
 	}
+
+	if (isatty(1) == 1) {
+		msg("Will not print the output to a tty");
+		exit(EXIT_FAILURE);
+	}
+
 	for(c = 0; c < argc; c++) {
 		if (strlen(argv[c]) > BUFSIZE) {
 			msg(_("Argument length overrun"));
@@ -207,13 +221,15 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 		
-		if ( (cpid = fork()) == -1) {
+		cpid = g_malloc(sizeof(pid_t));
+
+		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
 			exit(EXIT_FAILURE);
 		}
 
 		/* need to store pids */
-		if (cpid == 0) {			/* child */
+		if (*cpid == 0) {			/* child */
 			_exit(EXIT_SUCCESS); /* MOET weg */
 			close(pipefd[1]);
 			close(0);
@@ -228,11 +244,12 @@ main(int argc, char **argv)
 			_exit(EXIT_SUCCESS);
 		} else {				/* parent */
 			close(pipefd[0]);
-			
+			pids = g_slist_append(pids, cpid);
+
 			write(pipefd[1], args[0], strlen(args[0]));
 			close(pipefd[1]);
 
-			waitpid(cpid, NULL, 0);
+			waitpid(*cpid, NULL, 0);
 		}
         }
 
