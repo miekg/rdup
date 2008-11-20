@@ -63,7 +63,8 @@ void read_stdin(GSList *pipes)
 		exit(EXIT_FAILURE);
 	}
 
-	archive_write_open(archive, NULL, r_archive_open, r_archive_write, r_archive_close);
+	/* wat doe ik hier fout? */
+	archive_write_open(archive, NULL, r_archive_open, (archive_write_callback *)r_archive_write, r_archive_close);
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		if (sig != 0) {
