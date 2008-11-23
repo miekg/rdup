@@ -219,7 +219,7 @@ main(int argc, char **argv)
                 if (sig != 0)
                         signal_abort(sig);
 
-		/* fork, exec, childs */
+		/* fork, exec, child */
                 args  = (char**) p->data;
 
 		/* rdfd[0] parent read 
@@ -266,7 +266,7 @@ main(int argc, char **argv)
 
 			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
 
-			if ( execlp(args[0], NULL, args[1], NULL) == -1) {
+			if ( execlp(args[0], "-n", NULL) == -1) {
 				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
 				_exit(EXIT_SUCCESS);
 			}
@@ -285,7 +285,7 @@ main(int argc, char **argv)
 			fprintf(stderr, "%d\n", *cpid);
 			pids = g_slist_append(pids, cpid);
 
-			write(wrtfd[1], "hallo\n", 7);
+			write(wrtfd[1], "hallo\ndag\n", 11);
 			sleep(1);
 			if ( (k = read(rdfd[0], buf, 100)) != -1) {
 				printf("%d\n", k);
