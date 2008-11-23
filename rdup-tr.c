@@ -112,11 +112,13 @@ main(int argc, char **argv)
 	pid_t		 *cpid;
 	char		 *q, *r;
 	GSList		 *p;
-	GSList		 *child = NULL;		/* forked childs args: -P option */
-	GSList		 *pipes = NULL;
-	GSList		 *pids  = NULL;
+	GSList		 *child     = NULL;		/* forked childs args: -P option */
+	GSList		 *rdpipes   = NULL;		/* reads from child */
+	GSList		 *wrtpipes  = NULL;		/* writes to child */
+	GSList		 *pids      = NULL;		/* child pids, for wait */
 	char		 **args;
-	int		 *pipefd;
+	int		 *wrtfd;
+	int		 *rdfd;
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
@@ -158,8 +160,10 @@ main(int argc, char **argv)
 				break;
 			case 'P':
 				/* allocate new for each child */
-				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
-				pipefd = g_malloc(2 * sizeof(int));
+				args  = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
+				wrtfd = g_malloc(2 * sizeof(int));
+				rdfd  = g_malloc(2 * sizeof(int));
+
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
 				 * arg0,arg1,arg2,...,argN */
@@ -182,7 +186,8 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
-				pipes = g_slist_append(pipes, pipefd);
+				rdpipes = g_slist_append(rdpipes, rdfd);
+				wrtpipes = g_slist_append(wrt, wrtfd);
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -211,11 +216,18 @@ main(int argc, char **argv)
                         signal_abort(sig);
 
 		/* fork, exec, childs */
-                args = (char**) p->data;
-		pipefd = (int *) g_slist_nth_data(pipes, j);
+                args  = (char**) p->data;
 
-		if ( pipe(pipefd) == -1) {
-			msg("Error pipe");
+		/* rdfd[0] parent read 
+		 * rdfd[1] child  write
+		 * wrtfd[0] child read 
+		 * wrtfd[1] parent write 
+		 */
+		rdfd  = (int *) g_slist_nth_data(rdpipes, j);
+		wrtfd = (int *) g_slist_nth_data(wrtpipes, j);
+
+		if ( pipe(rdfd) == -1 || pipe(wrtfd) == -1) {
+			msg("Error making pipes");
 			exit(EXIT_FAILURE);
 		}
 		
@@ -227,7 +239,10 @@ main(int argc, char **argv)
 		}
 
 		if (*cpid == 0) {			/* child */
-			_exit(EXIT_SUCCESS); /* MOET weg */
+			
+			close(rdfd[0]);
+			close(wrtfd[1]);
+
 			close(0);
 			dup(pipefd[0]); /* make it read from the pipe */
 			close(pipefd[0]);
@@ -235,6 +250,8 @@ main(int argc, char **argv)
 			close(1);	/* capture what is written by the child */
 			dup(pipefd[1]);
 			close(pipefd[1]);
+
+			_exit(EXIT_SUCCESS); /* MOET weg */
 
 			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
 
