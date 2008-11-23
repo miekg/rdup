@@ -119,6 +119,10 @@ main(int argc, char **argv)
 	char		 **args;
 	int		 *wrtfd;
 	int		 *rdfd;
+
+	char		 *buf;
+
+	buf = g_malloc(101);
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
@@ -187,7 +191,7 @@ main(int argc, char **argv)
 				}
 				child = g_slist_append(child, args);
 				rdpipes = g_slist_append(rdpipes, rdfd);
-				wrtpipes = g_slist_append(wrt, wrtfd);
+				wrtpipes = g_slist_append(wrtpipes, wrtfd);
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -233,44 +237,63 @@ main(int argc, char **argv)
 		
 		cpid = g_malloc(sizeof(pid_t));
 
+		printf("0 -> %s\n", args[0]);
+		printf("1 -> %s\n", args[1]);
+		printf("2 -> %s\n", args[2]);
+
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
 			exit(EXIT_FAILURE);
 		}
 
 		if (*cpid == 0) {			/* child */
-			
-			close(rdfd[0]);
-			close(wrtfd[1]);
+			close(rdfd[0]);			/* parent read */
+			close(wrtfd[1]);		/* parent write */
 
 			close(0);
-			dup(pipefd[0]); /* make it read from the pipe */
-			close(pipefd[0]);
+			if (dup2(wrtfd[0], 0) == -1) {		/* child read */
+				msg("Failed to dup2");
+				exit(EXIT_FAILURE);
+			}
+			close(wrtfd[0]);
 
-			close(1);	/* capture what is written by the child */
-			dup(pipefd[1]);
-			close(pipefd[1]);
-
-			_exit(EXIT_SUCCESS); /* MOET weg */
+			close(1);
+			if (dup2(rdfd[1], 1) == -1) {		/* child write */
+				msg("Failed to dup2");
+				exit(EXIT_FAILURE);
+			}
+			close(rdfd[1]);
 
 			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
 
-			if ( execvp(args[0], args + 1) == -1) {
-				msg("Failed to exec %s\n", args[0]);
+			if ( execlp(args[0], NULL, args[1], NULL) == -1) {
+				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
 				_exit(EXIT_SUCCESS);
 			}
 			/* never reached */
 			_exit(EXIT_SUCCESS);
 		} else {				/* parent */
-			close(pipefd[0]);		/* read from the child here */
+			int k;
+			close(wrtfd[0]);
+			close(rdfd[1]);
+
+			/* 
+			 * write to         wrtfd[1]
+			 * read back from   rdrf[0]
+			 */
+
 			fprintf(stderr, "%d\n", *cpid);
 			pids = g_slist_append(pids, cpid);
 
-			/*
-			write(pipefd[1], args[0], strlen(args[0]));
-			write(pipefd[1], "\nhallo meneer de uil\n",21 );
-			close(pipefd[1]);
-			*/
+			write(wrtfd[1], "hallo\n", 7);
+			sleep(1);
+			if ( (k = read(rdfd[0], buf, 100)) != -1) {
+				printf("%d\n", k);
+				buf[k]='\0';
+				printf("Komt hier: %s\n", buf);
+			}
+			close(rdfd[0]);
+			close(wrtfd[1]);
 
 			waitpid(*cpid, NULL, 0);
 		}
@@ -283,9 +306,5 @@ main(int argc, char **argv)
 		cpid = p->data;
 		fprintf(stderr, "pids %d\n", *cpid);
 	}
-
-	exit(EXIT_SUCCESS);
-	/* read stdin and do something */
-	read_stdin(pipes);
 	exit(EXIT_SUCCESS);
 }
