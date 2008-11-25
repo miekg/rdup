@@ -237,9 +237,8 @@ main(int argc, char **argv)
 		
 		cpid = g_malloc(sizeof(pid_t));
 
-		printf("0 -> %s\n", args[0]);
-		printf("1 -> %s\n", args[1]);
-		printf("2 -> %s\n", args[2]);
+		for(i = 0; args[i]; i++) 
+			printf("%d -> %s\n", i, args[i]);
 
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
@@ -253,29 +252,29 @@ main(int argc, char **argv)
 			close(0);
 			if (dup2(wrtfd[0], 0) == -1) {		/* child read */
 				msg("Failed to dup2");
-				exit(EXIT_FAILURE);
+				_exit(EXIT_FAILURE);
 			}
 			close(wrtfd[0]);
 
 			close(1);
 			if (dup2(rdfd[1], 1) == -1) {		/* child write */
 				msg("Failed to dup2");
-				exit(EXIT_FAILURE);
+				_exit(EXIT_FAILURE);
 			}
-			close(rdfd[1]);
+			close(rdfd[1]);	
 
 			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
 
-			if ( execlp(args[0], "-n", NULL) == -1) {
+			if (execvp(args[0], args) == -1) {
 				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
-				_exit(EXIT_SUCCESS);
+				_exit(EXIT_FAILURE);
 			}
 			/* never reached */
 			_exit(EXIT_SUCCESS);
 		} else {				/* parent */
 			int k;
-			close(wrtfd[0]);
 			close(rdfd[1]);
+			close(wrtfd[0]);
 
 			/* 
 			 * write to         wrtfd[1]
@@ -285,15 +284,19 @@ main(int argc, char **argv)
 			fprintf(stderr, "%d\n", *cpid);
 			pids = g_slist_append(pids, cpid);
 
-			write(wrtfd[1], "hallo\ndag\n", 11);
-			sleep(1);
+			write(wrtfd[1], "hallodag\n", 11);
+/*			printf("sleep\n"); sleep(1); */
+
 			if ( (k = read(rdfd[0], buf, 100)) != -1) {
 				printf("%d\n", k);
 				buf[k]='\0';
-				printf("Komt hier: %s\n", buf);
+				printf("Komt hier: %s\n", buf); 
 			}
 			close(rdfd[0]);
 			close(wrtfd[1]);
+
+			printf("waiting\n");
+			/* check exit code, for child - if failed we cannot */
 
 			waitpid(*cpid, NULL, 0);
 		}
