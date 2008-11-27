@@ -113,16 +113,16 @@ main(int argc, char **argv)
 	char		 *q, *r;
 	GSList		 *p;
 	GSList		 *child     = NULL;		/* forked childs args: -P option */
-	GSList		 *rdpipes   = NULL;		/* reads from child */
-	GSList		 *wrtpipes  = NULL;		/* writes to child */
+	GSList		 *pipes1    = NULL;		/* reads from child */
+	GSList		 *pipes2    = NULL;		/* writes to child */
 	GSList		 *pids      = NULL;		/* child pids, for wait */
 	char		 **args;
-	int		 *wrtfd;
-	int		 *rdfd;
+	int		 *p1;
+	int		 *p2;
 
 	char		 *buf;
 
-	buf = g_malloc(101);
+	buf = g_malloc(102);
 	
 	/* i18n, set domain to rdup */
 	/* really need LC_ALL? */
@@ -165,8 +165,8 @@ main(int argc, char **argv)
 			case 'P':
 				/* allocate new for each child */
 				args  = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
-				wrtfd = g_malloc(2 * sizeof(int));
-				rdfd  = g_malloc(2 * sizeof(int));
+				p1 = g_malloc(2 * sizeof(int));
+				p2  = g_malloc(2 * sizeof(int));
 
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
@@ -190,8 +190,8 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
-				rdpipes = g_slist_append(rdpipes, rdfd);
-				wrtpipes = g_slist_append(wrtpipes, wrtfd);
+				pipes1 = g_slist_append(pipes1, p1);
+				pipes2 = g_slist_append(pipes2, p2);
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -222,23 +222,20 @@ main(int argc, char **argv)
 		/* fork, exec, child */
                 args  = (char**) p->data;
 
-		/* rdfd[0] parent read 
-		 * rdfd[1] child  write
-		 * wrtfd[0] child read 
-		 * wrtfd[1] parent write 
+		/* p1[0] child read 
+		 * p1[1] parent write
+		 * p2[0] parent read 
+		 * p2[1] child write 
 		 */
-		rdfd  = (int *) g_slist_nth_data(rdpipes, j);
-		wrtfd = (int *) g_slist_nth_data(wrtpipes, j);
+		p1 = (int *) g_slist_nth_data(pipes1, j);
+		p2 = (int *) g_slist_nth_data(pipes2, j);
 
-		if ( pipe(rdfd) == -1 || pipe(wrtfd) == -1) {
+		if ( pipe(p1) == -1 || pipe(p2) == -1) {
 			msg("Error making pipes");
 			exit(EXIT_FAILURE);
 		}
 		
 		cpid = g_malloc(sizeof(pid_t));
-
-		for(i = 0; args[i]; i++) 
-			printf("%d -> %s\n", i, args[i]);
 
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
@@ -246,57 +243,45 @@ main(int argc, char **argv)
 		}
 
 		if (*cpid == 0) {			/* child */
-			close(rdfd[0]);			/* parent read */
-			close(wrtfd[1]);		/* parent write */
+			close(p1[1]);	
 
-			close(0);
-			if (dup2(wrtfd[0], 0) == -1) {		/* child read */
-				msg("Failed to dup2");
-				_exit(EXIT_FAILURE);
-			}
-			close(wrtfd[0]);
+			if (dup2(p1[0], 0) == -1)
+				exit(EXIT_FAILURE);
 
-			close(1);
-			if (dup2(rdfd[1], 1) == -1) {		/* child write */
-				msg("Failed to dup2");
-				_exit(EXIT_FAILURE);
-			}
-			close(rdfd[1]);	
+			close(p2[0]);
 
-			fprintf(stderr, "%s\n", "child speeking here - before exec \n");
+			if (dup2(p2[1], 1) == -1)
+				exit(EXIT_FAILURE);
 
-			if (execvp(args[0], args) == -1) {
+			if ( execvp(args[0], args) == -1) {
 				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
-				_exit(EXIT_FAILURE);
+				exit(EXIT_SUCCESS);
 			}
 			/* never reached */
-			_exit(EXIT_SUCCESS);
+			exit(EXIT_SUCCESS);
 		} else {				/* parent */
 			int k;
-			close(rdfd[1]);
-			close(wrtfd[0]);
+			close(p1[0]);
 
-			/* 
-			 * write to         wrtfd[1]
-			 * read back from   rdrf[0]
-			 */
-
-			fprintf(stderr, "%d\n", *cpid);
 			pids = g_slist_append(pids, cpid);
 
-			write(wrtfd[1], "hallodag\n", 11);
-/*			printf("sleep\n"); sleep(1); */
+			k = write(p1[1], "hallo\n", 6);
+			if (k == -1) 
+				printf("write %s\n", strerror(errno));
+			printf("writen %d\n", k);
 
-			if ( (k = read(rdfd[0], buf, 100)) != -1) {
+			close(p1[1]);
+
+			printf("%d\n", p2[0]);
+			if ( (k = read(p2[0], buf, 100)) != -1) {
 				printf("%d\n", k);
 				buf[k]='\0';
-				printf("Komt hier: %s\n", buf); 
+				printf("Komt hier: %s\n", buf);
+			} else {
+				printf("%s\n", strerror(errno));
 			}
-			close(rdfd[0]);
-			close(wrtfd[1]);
-
-			printf("waiting\n");
-			/* check exit code, for child - if failed we cannot */
+			close(p2[0]);
+		
 
 			waitpid(*cpid, NULL, 0);
 		}
