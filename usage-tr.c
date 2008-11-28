@@ -8,51 +8,18 @@
 void
 usage_tr(FILE *f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"), PROGNAME);
+        fprintf(f, _("USAGE: %s [OPTION]... FORMAT\n"), PROGNAME);
 	fputs( _("\
+Translate rdup output to something else	and optionally filter it\n\
+through other processes.\n\
 Generate a full or incremental file list. This list can be used to\n\
-implement a (incremental) backup scheme.\n\
-\n\
-	FILELIST\tfile to store filenames\n\
-        DIR\t\tdirectory or directories to dump\n\
-\n\
 \n\
     OPTIONS:\n\
-        -N FILE\t\tuse the timestamp of FILE for incremental dumps\n\
-        \t\tif FILE does not exist, a full dump is performed\n\
-        -F FORMAT\tuse specified format string\n\
-        \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
-	-R\t\treverse the output (depth first, first the dirs then the files)\n\
-	-E FILE\t\tuse FILE as an exclude list\n\
-        -0\t\tdelimit internal filelist with NULLs\n\
-        -V\t\tprint version\n"), f);
-	fputs( _("\
-        -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s %n%C\")\n\
-        -h\t\tthis help\n\
-        -m\t\tonly print new/modified files (unsets -r)\n\
-        -l\t\tdon't check for file size changes\n\
-        -n\t\tignore .nobackup files\n\
-        -r\t\tonly print removed files (unsets -m)\n\
-        -s SIZE\t\tonly output files smaller then SIZE bytes\n\
-        -v\t\tbe more verbose\n\
-        -x\t\tstay in local file system\n\
-\n\
-    FORMAT:\n\
-        The following escape sequences are recognized:\n\
-        \'%p\': '+' if new, '-' if removed\n\
-        \'%b\': permission bits\n\
-        \'%m\': file mode bits\n\
-        \'%u\': uid\n\
-        \'%g\': gid\n\
-        \'%l\': path length (for links: length of \'path -> target\')\n\
-        \'%s\': file size\n\
-        \'%n\': path (for links: \'path -> target\')\n\
-        \'%N\': path (for links: \'path')\n\
-        \'%t\': time of modification (epoch)\n\
-        \'%H\': the sha1 hash of the file's contents\n\
-        \'%T\': \'type\' (d, l, h, -, c, b, p or s: dir, symlink, hardlink, file, \n\
-	      character device, block device, named pipe or socket)\n\
-        \'%C\': file contents\n\
+        -c\t\tforce output to the screen\n\
+        -Pprocess,opt1,...,opt5\n\
+	    \t\tfilter through process\n\
+	\t\tthis may be repeated, all output will be filtered through\n\
+	\t\tall processes\n\
 \n\
 Report bugs to <miek@miek.nl>\n\
 Licensed under the GPL version 3.\n\
