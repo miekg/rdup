@@ -113,12 +113,12 @@ main(int argc, char **argv)
 	char		 *q, *r;
 	GSList		 *p;
 	GSList		 *child     = NULL;		/* forked childs args: -P option */
-	GSList		 *pipes1    = NULL;		/* reads from child */
-	GSList		 *pipes2    = NULL;		/* writes to child */
+	GSList		 *pipes     = NULL;		/* reads from child */
 	GSList		 *pids      = NULL;		/* child pids, for wait */
 	char		 **args;
 	int		 *p1;
 	int		 *p2;
+	int		 *pi;
 
 	char		 *buf;
 
@@ -165,8 +165,6 @@ main(int argc, char **argv)
 			case 'P':
 				/* allocate new for each child */
 				args  = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
-				p1 = g_malloc(2 * sizeof(int));
-				p2  = g_malloc(2 * sizeof(int));
 
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
@@ -190,8 +188,6 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
-				pipes1 = g_slist_append(pipes1, p1);
-				pipes2 = g_slist_append(pipes2, p2);
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -227,15 +223,14 @@ main(int argc, char **argv)
 		 * p2[0] parent read 
 		 * p2[1] child write 
 		 */
-		p1 = (int *) g_slist_nth_data(pipes1, j);
-		p2 = (int *) g_slist_nth_data(pipes2, j);
+		p1   = g_malloc(2 * sizeof(int));
+		p2   = g_malloc(2 * sizeof(int));
+		cpid = g_malloc(sizeof(pid_t));
 
 		if ( pipe(p1) == -1 || pipe(p2) == -1) {
-			msg("Error making pipes");
+			msg("Error creating pipes");
 			exit(EXIT_FAILURE);
 		}
-		
-		cpid = g_malloc(sizeof(pid_t));
 
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
@@ -244,12 +239,10 @@ main(int argc, char **argv)
 
 		if (*cpid == 0) {			/* child */
 			close(p1[1]);	
-
 			if (dup2(p1[0], 0) == -1)
 				exit(EXIT_FAILURE);
 
 			close(p2[0]);
-
 			if (dup2(p2[1], 1) == -1)
 				exit(EXIT_FAILURE);
 
@@ -262,9 +255,16 @@ main(int argc, char **argv)
 		} else {				/* parent */
 			int k;
 			close(p1[0]);
+			pi = g_malloc(2 * sizeof(int));
 
+			/* save the pids */
 			pids = g_slist_append(pids, cpid);
 
+			/* push the read and write end to the pipes list */
+			pi[0] = p2[0];
+			pi[1] = p1[1];
+			pipes = g_slist_append(pipes, pi);
+					
 			k = write(p1[1], "hallo\n", 6);
 			if (k == -1) 
 				printf("write %s\n", strerror(errno));
@@ -281,8 +281,6 @@ main(int argc, char **argv)
 				printf("%s\n", strerror(errno));
 			}
 			close(p2[0]);
-		
-
 			waitpid(*cpid, NULL, 0);
 		}
         }
