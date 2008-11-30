@@ -4,7 +4,11 @@ TODO:
 
 :rdup:
 
+:rdup-tr:
+restart_child after every file - happens in rdup-gzip, etc
+also. Expensive, but it it the only way to flush the output
+and create the file that is to be read
+
 :doc:
 
 :misc:
-checkout libarchive

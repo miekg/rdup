@@ -53,6 +53,20 @@ close_pipes(GSList *pipes, int no1, int no2)
 	}
 }
 
+void
+write_pipe(int writefd, int tmpfd) 
+{
+	int k;
+
+	k = write(writefd, "hallo\n", 6);
+	if (k == -1) {
+		msg("write error: %s\n", strerror(errno));
+	}
+
+	close(writefd);
+	close(tmpfd);
+}
+
 void 
 read_stdin(GSList *pipes)
 {
@@ -255,8 +269,11 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (*cpid == 0) {			/* child */
-
+		if (*cpid != 0) {
+			/* save the pids, parent */
+			pids = g_slist_append(pids, cpid);
+		} else {
+			/* child */
 			if (j != childs) {
 				/* not the last one */
 
@@ -294,24 +311,25 @@ main(int argc, char **argv)
 			}
 
 			/* finally ... exec */
-
 			if ( execvp(args[0], args) == -1) {
 				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
 				exit(EXIT_SUCCESS);
 			}
 			/* never reached */
 			exit(EXIT_SUCCESS);
-		} else {				/* parent */
-			/* save the pids */
-			pids = g_slist_append(pids, cpid);
-
-			/* open a file, put it through the pipes
-			 * open the tmpfile and put it in our
-			 * archive, tar, cpio or whatever
-			 */
-
 		}
         }
+
+	pips = (g_slist_nth(pipes, 0))->data;
+	close(pips[0]);
+	close_pipes(pipes, 0, -1);
+
+	/* read a file, write it to pips[1] 
+	 * when done, read tmpfile and print it out
+	 * rinse, repeat
+	 */
+	write_pipe(pips[1], tmpfile);
+	/* als geen, dan /bin/cat */
 
 	/* cleanup */
 	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
