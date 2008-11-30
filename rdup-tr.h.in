@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <utime.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -30,6 +31,10 @@
 #include <archive.h>
 #include <archive_entry.h>
 #endif /* HAVE_ARCHIVE_H */
+
+#ifdef HAVE_SELECT_H
+#include <select.h>
+#endif /* HAVE_SELECT_H */
 
 #ifdef HAVE_GETTEXT
 #include <libintl.h>

@@ -2,7 +2,7 @@ OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath
 OBJ_TR=rdup-tr.o signal.o getdelim.o archive.o usage-tr.o
 HDR=rdup.h
 CMD=rdup
-MAN1_IN=rdup.1
+MAN1_IN=rdup.1 rdup-tr.1
 
 MAN1=$(addprefix doc/, $(MAN1_IN))
 

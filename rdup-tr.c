@@ -35,7 +35,26 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
-void read_stdin(GSList *pipes)
+/* close all pipes except no1 and no2 (if not -1) */
+void
+close_pipes(GSList *pipes, int no1, int no2)
+{
+	GSList *p;
+	int *q;
+	int j;
+
+	for (j = 0, p = g_slist_nth(pipes, 0); p; p = p->next, j++) { 
+		q = p->data;
+		if ( (j != -1 && j != no1) && (j != -1 && j != no2) ) {
+			fprintf(stderr, "closing %d\n", j);
+			close(q[0]);
+			close(q[1]);
+		}
+	}
+}
+
+void 
+read_stdin(GSList *pipes)
 {
 	char		*buf, *readbuf, *n;
 	char		delim;
@@ -102,7 +121,6 @@ void read_stdin(GSList *pipes)
 	archive_write_finish(archive);
 }
 
-
 int
 main(int argc, char **argv)
 {
@@ -112,20 +130,14 @@ main(int argc, char **argv)
 	pid_t		 *cpid;
 	char		 *q, *r;
 	GSList		 *p;
-	GSList		 *child     = NULL;		/* forked childs args: -P option */
-	GSList		 *pipes     = NULL;		/* reads from child */
-	GSList		 *pids      = NULL;		/* child pids, for wait */
+	GSList		 *child    = NULL;		/* forked childs args: -P option */
+	GSList		 *pipes    = NULL;		/* inter child pipes */
+	GSList		 *pids     = NULL;		/* child pids */
 	char		 **args;
-	int		 *p1;
-	int		 *p2;
-	int		 *pi;
-
-	char		 *buf;
-
-	buf = g_malloc(102);
+	int		 *pips;
+	int		 childs    = 0;			/* number of childs */
+	int		 tmpfile;
 	
-	/* i18n, set domain to rdup */
-	/* really need LC_ALL? */
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
 	bindtextdomain(PROGNAME, LOCALEROOTDIR);
@@ -164,7 +176,14 @@ main(int argc, char **argv)
 				break;
 			case 'P':
 				/* allocate new for each child */
-				args  = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
+				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
+				pips = g_malloc(2 * sizeof(int));
+
+				if (pipe(pips) == -1) {
+					msg("Error creating pipe");
+					exit(EXIT_FAILURE);
+				}
+				pipes = g_slist_append(pipes, pips);
 
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
@@ -188,6 +207,7 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
+				childs++;
 				break;
 			case 'F':
 				opt_format = optarg;
@@ -211,26 +231,24 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+	/* tmp file to put the contents in */
+	tmpfile = mkstemp("/tmp/rdup.XXXXXX/tmp");
+	/* extra pipe for parent and first child communication */
+	pips = g_malloc(2 * sizeof(int));
+	if (pipe(pips) == -1) {
+		msg("Failed to create parent/child pipe");
+		exit(EXIT_FAILURE);
+	}
+	pipes = g_slist_prepend(pipes, pips);
+
 	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) { 
                 if (sig != 0)
                         signal_abort(sig);
 
 		/* fork, exec, child */
-                args  = (char**) p->data;
-
-		/* p1[0] child read 
-		 * p1[1] parent write
-		 * p2[0] parent read 
-		 * p2[1] child write 
-		 */
-		p1   = g_malloc(2 * sizeof(int));
-		p2   = g_malloc(2 * sizeof(int));
+                args = (char**) p->data;
 		cpid = g_malloc(sizeof(pid_t));
-
-		if ( pipe(p1) == -1 || pipe(p2) == -1) {
-			msg("Error creating pipes");
-			exit(EXIT_FAILURE);
-		}
+		pips = (g_slist_nth(pipes, j))->data;
 
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
@@ -238,13 +256,44 @@ main(int argc, char **argv)
 		}
 
 		if (*cpid == 0) {			/* child */
-			close(p1[1]);	
-			if (dup2(p1[0], 0) == -1)
-				exit(EXIT_FAILURE);
 
-			close(p2[0]);
-			if (dup2(p2[1], 1) == -1)
-				exit(EXIT_FAILURE);
+			if (j != childs) {
+				/* not the last one */
+
+				close(tmpfile);
+
+				/* close write end, connect read to stdin */
+				close(pips[1]);
+				if (dup2(pips[0], 0) == -1) {
+					exit(EXIT_FAILURE);
+				}
+
+				/* re-use pips */
+				pips = (g_slist_nth(pipes, j + 1))->data;
+
+				/* close read end, connect write to stdout */
+				close(pips[0]);
+				if (dup2(pips[1], 1) == -1) {
+					exit(EXIT_FAILURE);
+				}
+
+				close_pipes(pipes, j, j+1);
+			} else {
+				/* last one, conn to stdout */
+
+				if (dup2(tmpfile, 1) == -1) {
+					exit(EXIT_FAILURE);
+				}
+
+				/* close write end, connect read to stdin */
+				close(pips[1]);
+				if (dup2(pips[0], 0) == -1) {
+					exit(EXIT_FAILURE);
+				}
+				close_pipes(pipes, j, -1);
+			}
+
+			/* finally ... exec */
 
 			if ( execvp(args[0], args) == -1) {
 				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
@@ -253,44 +302,25 @@ main(int argc, char **argv)
 			/* never reached */
 			exit(EXIT_SUCCESS);
 		} else {				/* parent */
-			int k;
-			close(p1[0]);
-			pi = g_malloc(2 * sizeof(int));
-
 			/* save the pids */
 			pids = g_slist_append(pids, cpid);
 
-			/* push the read and write end to the pipes list */
-			pi[0] = p2[0];
-			pi[1] = p1[1];
-			pipes = g_slist_append(pipes, pi);
-					
-			k = write(p1[1], "hallo\n", 6);
-			if (k == -1) 
-				printf("write %s\n", strerror(errno));
-			printf("writen %d\n", k);
+			/* open a file, put it through the pipes
+			 * open the tmpfile and put it in our
+			 * archive, tar, cpio or whatever
+			 */
 
-			close(p1[1]);
-
-			printf("%d\n", p2[0]);
-			if ( (k = read(p2[0], buf, 100)) != -1) {
-				printf("%d\n", k);
-				buf[k]='\0';
-				printf("Komt hier: %s\n", buf);
-			} else {
-				printf("%s\n", strerror(errno));
-			}
-			close(p2[0]);
-			waitpid(*cpid, NULL, 0);
 		}
         }
 
+	/* cleanup */
 	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
                 if (sig != 0)
                         signal_abort(sig);
 
-		cpid = p->data;
-		fprintf(stderr, "pids %d\n", *cpid);
+		/* timeout and then kill the process? */
+
+		waitpid(*(pid_t* )(p->data), NULL, 0);
 	}
 	exit(EXIT_SUCCESS);
 }

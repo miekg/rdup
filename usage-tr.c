@@ -12,14 +12,15 @@ usage_tr(FILE *f)
 	fputs( _("\
 Translate rdup output to something else	and optionally filter it\n\
 through other processes.\n\
-Generate a full or incremental file list. This list can be used to\n\
+\n\
+    FORMAT\t\toutput format: pax,cpio,tar or rdup\n\
 \n\
     OPTIONS:\n\
         -c\t\tforce output to the screen\n\
-        -Pprocess,opt1,...,opt5\n\
-	    \t\tfilter through process\n\
+        -Pcmd,opt1,...,opt5\n\
+	    \t\tfilter through cmd\n\
 	\t\tthis may be repeated, all output will be filtered through\n\
-	\t\tall processes\n\
+	\t\tall commands\n\
 \n\
 Report bugs to <miek@miek.nl>\n\
 Licensed under the GPL version 3.\n\

@@ -77,6 +77,7 @@ AC_CONFIG_FILES([GNUmakefile
                  rdup.h
                  rdup-tr.h
                  doc/rdup.1
+                 doc/rdup-tr.1
                  ])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
