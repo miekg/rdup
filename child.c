@@ -40,7 +40,10 @@ wait_pids(GSList *pids)
                 if (sig != 0)
                         signal_abort(sig);
 
+		printf("waiting %d", *(pid_t*)(p->data));
+
 		waitpid(*(pid_t* )(p->data), NULL, 0);
+		printf("... done\n");
 	}
 }
 
@@ -64,10 +67,12 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	 * for the parent child communication
 	 */
 	childs = g_slist_length(child);
-	for (j = 0; j < (childs + 1); j++) { 
+	for (j = 0; j < childs; j++) { 
+		msg("Creating pipe #%d", j);
 		pips = g_malloc(2 * sizeof(int));
 		if (pipe(pips) == -1) {
-			/* FOUT */
+			msg("Failure creating pipes");
+			exit(EXIT_FAILURE);
 		}
 		cpipe = g_slist_append(cpipe, pips);
 	}	
@@ -81,6 +86,8 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 		cpid = g_malloc(sizeof(pid_t));
 		pips = (g_slist_nth(cpipe, j))->data;
 
+		msg("Handling child #%d of %d", j, childs);
+
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
 			exit(EXIT_FAILURE);
@@ -91,7 +98,7 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 			pids = g_slist_append(pids, cpid);
 		} else {
 			/* child */
-			if (j != childs) {
+			if (j != (childs - 1)) {
 				/* not the last one */
 				close(tmpfile);
 
@@ -113,6 +120,7 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 				close_pipes(cpipe, j, j + 1);
 			} else {
 				/* last one, conn stdout to tmpfile */
+				msg("Duping tmpfile");
 				if (dup2(tmpfile, 1) == -1) {
 					exit(EXIT_FAILURE);
 				}
@@ -144,6 +152,7 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	close(pips[0]);
 
 	msg("Childs alive; returning");
+	msg("Parent pipe write fd# %d", pips[1]);
 
 	*pipes = cpipe;
 

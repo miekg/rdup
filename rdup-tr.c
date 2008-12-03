@@ -126,6 +126,8 @@ stdin2archive(GSList *child, int tmpfile)
 			printf("length %d\n", g_slist_length(pipes));
 			pips = (g_slist_nth(pipes, 0))->data;
 
+			/* sleep(10); */
+
 			len = read(f, readbuf, sizeof(readbuf));
 			while (len > 0) {
 				write(pips[1], readbuf, len);
@@ -139,9 +141,17 @@ stdin2archive(GSList *child, int tmpfile)
 
 			len = read(tmpfile, readbuf, sizeof(readbuf));
 			while (len > 0) {
+				printf("Pumping out tmpfile");
 				archive_write_data(archive, readbuf, len);
 				len = read(tmpfile, readbuf, sizeof(readbuf));
 			}
+
+			/* set tmpfile to 0 */
+			if ((ftruncate(tmpfile, 0)) == -1) {
+				msg("Failed to truncate tmpfile");
+				exit(EXIT_FAILURE);
+			}
+
 		} else {
 			len = read(f, readbuf, sizeof(readbuf));
 			while (len > 0) {
@@ -256,7 +266,10 @@ main(int argc, char **argv)
 	/* we have someone to talk to */
 	if (childs != 0) {
 		/* tmp file to put the contents in */
-		tmpfile = mkstemp("/tmp/rdup.XXXXXX/tmp");
+		if ((tmpfile = mkstemp(g_strdup("/tmp/rdup.tmp.XXXXXX"))) == -1) {
+			msg("Failure to create tmp file");
+			exit(EXIT_FAILURE);
+		}
 	} else {
 		tmpfile = -1;
 	}
@@ -264,6 +277,9 @@ main(int argc, char **argv)
 
 	/* read stdin, create childeren and make an archive */
 	stdin2archive(child, tmpfile);
+
+	if (tmpfile != -1)
+		close(tmpfile);
 
 	exit(EXIT_SUCCESS);
 }
