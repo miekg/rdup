@@ -46,10 +46,11 @@ wait_pids(GSList *pids)
 
 /* create pipes and childs, return pids */
 GSList *
-create_childeren(GSList *child, GSList *pipes, int tmpfile) 
+create_childeren(GSList *child, GSList **pipes, int tmpfile) 
 {
 	GSList  *p;
 	GSList	*pids	= NULL;
+	GSList	*cpipe  = NULL;
 
 	char	**args;
 	int	*pips;
@@ -63,12 +64,12 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 	 * for the parent child communication
 	 */
 	childs = g_slist_length(child);
-	for (j = 0; j < (childs +1); j++) { 
+	for (j = 0; j < (childs + 1); j++) { 
 		pips = g_malloc(2 * sizeof(int));
 		if (pipe(pips) == -1) {
 			/* FOUT */
 		}
-		pipes = g_slist_append(pipes, pips);
+		cpipe = g_slist_append(cpipe, pips);
 	}	
 
 	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) { 
@@ -78,7 +79,7 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 		/* fork, exec, child */
                 args = (char**) p->data;
 		cpid = g_malloc(sizeof(pid_t));
-		pips = (g_slist_nth(pipes, j))->data;
+		pips = (g_slist_nth(cpipe, j))->data;
 
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
@@ -91,9 +92,7 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 		} else {
 			/* child */
 			if (j != childs) {
-
 				/* not the last one */
-
 				close(tmpfile);
 
 				/* close write end, connect read to stdin */
@@ -103,7 +102,7 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 				}
 
 				/* re-use pips */
-				pips = (g_slist_nth(pipes, j + 1))->data;
+				pips = (g_slist_nth(cpipe, j + 1))->data;
 
 				/* close read end, connect write to stdout */
 				close(pips[0]);
@@ -111,10 +110,9 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 					exit(EXIT_FAILURE);
 				}
 
-				close_pipes(pipes, j, j + 1);
+				close_pipes(cpipe, j, j + 1);
 			} else {
 				/* last one, conn stdout to tmpfile */
-
 				if (dup2(tmpfile, 1) == -1) {
 					exit(EXIT_FAILURE);
 				}
@@ -124,8 +122,10 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 				if (dup2(pips[0], 0) == -1) {
 					exit(EXIT_FAILURE);
 				}
-				close_pipes(pipes, j, -1);
+				close_pipes(cpipe, j, -1);
 			}
+
+			msg("Exec %s", args[0]);
 
 			/* finally ... exec */
 			if ( execvp(args[0], args) == -1) {
@@ -137,10 +137,15 @@ create_childeren(GSList *child, GSList *pipes, int tmpfile)
 		}
         }
 	/* all childeren created, close all pipes except 0 */
-	close_pipes(pipes, 0, -1);
+	close_pipes(cpipe, 0, -1);
 	/* close read end, we only need to write as parent */
-	pips = (g_slist_nth(pipes, 0))->data;
+	pips = (g_slist_nth(cpipe, 0))->data;
+	printf("lenghte %d\n", g_slist_length(cpipe));
 	close(pips[0]);
+
+	msg("Childs alive; returning");
+
+	*pipes = cpipe;
 
 	return pids;
 }

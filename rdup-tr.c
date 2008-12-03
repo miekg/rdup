@@ -57,7 +57,7 @@ stdin2archive(GSList *child, int tmpfile)
 	size_t		len, i;
 	FILE		*fp;
 	int		f;
-	GSList		*pipes = NULL;
+	GSList		*pipes;
 	GSList		*pids;				/* child pids */
 	int		*pips;
 	struct archive  *archive;
@@ -70,8 +70,6 @@ stdin2archive(GSList *child, int tmpfile)
 	buf     = g_malloc(BUFSIZE + 1);
 	readbuf = g_malloc(BUFSIZE + 1);
 
-	pipes = NULL; /* MOET weg */
-
 	if ( (archive = archive_write_new()) == NULL) {
 		msg("Failed to create empty archive");
 		exit(EXIT_FAILURE);
@@ -82,8 +80,8 @@ stdin2archive(GSList *child, int tmpfile)
 		exit(EXIT_FAILURE);
 	}
 
-	/* wat doe ik hier fout? */
-	archive_write_open(archive, NULL, r_archive_open, (archive_write_callback *)r_archive_write, r_archive_close);
+	archive_write_open(archive, NULL, r_archive_open, 
+			(archive_write_callback *)r_archive_write, r_archive_close);
 
 	/* for each line
 	 * read stdin
@@ -123,9 +121,10 @@ stdin2archive(GSList *child, int tmpfile)
 
 		/* fill up tmpfile */
 		if (child != NULL) {
-			pids = create_childeren(child, pipes, tmpfile);
+			pids = create_childeren(child, &pipes, tmpfile);
 
-			pips = g_slist_nth(pipes, 0)->data;
+			printf("length %d\n", g_slist_length(pipes));
+			pips = (g_slist_nth(pipes, 0))->data;
 
 			len = read(f, readbuf, sizeof(readbuf));
 			while (len > 0) {
@@ -229,6 +228,7 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
+				msg("Child seen %s", args[0]);
 				childs++;
 				break;
 			case 'F':
@@ -260,7 +260,9 @@ main(int argc, char **argv)
 	} else {
 		tmpfile = -1;
 	}
-	/* setup the pipes and return the spawned kids */
+	msg("Childeren %d", childs);
+
+	/* read stdin, create childeren and make an archive */
 	stdin2archive(child, tmpfile);
 
 	exit(EXIT_SUCCESS);
