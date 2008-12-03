@@ -35,24 +35,6 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
-/* close all pipes except no1 and no2 (if not -1) */
-void
-close_pipes(GSList *pipes, int no1, int no2)
-{
-	GSList *p;
-	int *q;
-	int j;
-
-	for (j = 0, p = g_slist_nth(pipes, 0); p; p = p->next, j++) { 
-		q = p->data;
-		if ( (j != -1 && j != no1) && (j != -1 && j != no2) ) {
-			fprintf(stderr, "closing %d\n", j);
-			close(q[0]);
-			close(q[1]);
-		}
-	}
-}
-
 void
 write_pipe(int writefd, int tmpfd) 
 {
@@ -68,13 +50,16 @@ write_pipe(int writefd, int tmpfd)
 }
 
 void 
-read_stdin(GSList *pipes)
+stdin2archive(GSList *child, int tmpfile)
 {
 	char		*buf, *readbuf, *n;
 	char		delim;
 	size_t		len, i;
 	FILE		*fp;
 	int		f;
+	GSList		*pipes = NULL;
+	GSList		*pids;				/* child pids */
+	int		*pips;
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     s;
@@ -100,6 +85,16 @@ read_stdin(GSList *pipes)
 	/* wat doe ik hier fout? */
 	archive_write_open(archive, NULL, r_archive_open, (archive_write_callback *)r_archive_write, r_archive_close);
 
+	/* for each line
+	 * read stdin
+	 * read file and 
+	 *
+	 * pipes throught pipes
+	 * if childs -> read from tmpfile
+	 * output to stdout
+	 * if no childeren, read
+	 */
+
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		if (sig != 0) {
 			fclose(fp);
@@ -109,6 +104,7 @@ read_stdin(GSList *pipes)
 		if (n) 
 			*n = '\0';
 
+		/* stat the original spot */
 		if (stat(buf, &s) == -1) {
 			 msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
 			 continue;
@@ -123,13 +119,38 @@ read_stdin(GSList *pipes)
 		archive_entry_copy_stat(entry, &s);
 		archive_entry_set_pathname(entry, buf);
 		archive_write_header(archive, entry);
+		/* update the size when finished */
 
-		len = read(f, readbuf, sizeof(readbuf));
-		while (len > 0) {
-			archive_write_data(archive, readbuf, len);
+		/* fill up tmpfile */
+		if (child != NULL) {
+			pids = create_childeren(child, pipes, tmpfile);
+
+			pips = g_slist_nth(pipes, 0)->data;
+
 			len = read(f, readbuf, sizeof(readbuf));
+			while (len > 0) {
+				write(pips[1], readbuf, len);
+				len = read(f, readbuf, sizeof(readbuf));
+			}
+			close(f);
+			close(pips[1]);  /* this should close all pipes in sequence */
+
+			/* wait for the childeren and then put tmpfile in the archive */
+			wait_pids(pids);
+
+			len = read(tmpfile, readbuf, sizeof(readbuf));
+			while (len > 0) {
+				archive_write_data(archive, readbuf, len);
+				len = read(tmpfile, readbuf, sizeof(readbuf));
+			}
+		} else {
+			len = read(f, readbuf, sizeof(readbuf));
+			while (len > 0) {
+				archive_write_data(archive, readbuf, len);
+				len = read(f, readbuf, sizeof(readbuf));
+			}
+			close(f);
 		}
-		close(f);
 		archive_entry_free(entry);
 	}
 	archive_write_finish(archive);
@@ -140,17 +161,12 @@ main(int argc, char **argv)
 {
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
-	int		 c, i, j;
-	pid_t		 *cpid;
+	int		 c, i;
 	char		 *q, *r;
-	GSList		 *p;
 	GSList		 *child    = NULL;		/* forked childs args: -P option */
-	GSList		 *pipes    = NULL;		/* inter child pipes */
-	GSList		 *pids     = NULL;		/* child pids */
 	char		 **args;
-	int		 *pips;
 	int		 childs    = 0;			/* number of childs */
-	int		 tmpfile;
+	int		 tmpfile   = -1;
 	
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
@@ -191,14 +207,6 @@ main(int argc, char **argv)
 			case 'P':
 				/* allocate new for each child */
 				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
-				pips = g_malloc(2 * sizeof(int));
-
-				if (pipe(pips) == -1) {
-					msg("Error creating pipe");
-					exit(EXIT_FAILURE);
-				}
-				pipes = g_slist_append(pipes, pips);
-
 				q = g_strdup(optarg);
 				/* this should be a comma seprated list
 				 * arg0,arg1,arg2,...,argN */
@@ -245,100 +253,15 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	/* tmp file to put the contents in */
-	tmpfile = mkstemp("/tmp/rdup.XXXXXX/tmp");
-	/* extra pipe for parent and first child communication */
-	pips = g_malloc(2 * sizeof(int));
-	if (pipe(pips) == -1) {
-		msg("Failed to create parent/child pipe");
-		exit(EXIT_FAILURE);
+	/* we have someone to talk to */
+	if (childs != 0) {
+		/* tmp file to put the contents in */
+		tmpfile = mkstemp("/tmp/rdup.XXXXXX/tmp");
+	} else {
+		tmpfile = -1;
 	}
-	pipes = g_slist_prepend(pipes, pips);
+	/* setup the pipes and return the spawned kids */
+	stdin2archive(child, tmpfile);
 
-	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) { 
-                if (sig != 0)
-                        signal_abort(sig);
-
-		/* fork, exec, child */
-                args = (char**) p->data;
-		cpid = g_malloc(sizeof(pid_t));
-		pips = (g_slist_nth(pipes, j))->data;
-
-		if ( (*cpid = fork()) == -1) {
-			msg("Error forking");
-			exit(EXIT_FAILURE);
-		}
-
-		if (*cpid != 0) {
-			/* save the pids, parent */
-			pids = g_slist_append(pids, cpid);
-		} else {
-			/* child */
-			if (j != childs) {
-				/* not the last one */
-
-				close(tmpfile);
-
-				/* close write end, connect read to stdin */
-				close(pips[1]);
-				if (dup2(pips[0], 0) == -1) {
-					exit(EXIT_FAILURE);
-				}
-
-				/* re-use pips */
-				pips = (g_slist_nth(pipes, j + 1))->data;
-
-				/* close read end, connect write to stdout */
-				close(pips[0]);
-				if (dup2(pips[1], 1) == -1) {
-					exit(EXIT_FAILURE);
-				}
-
-				close_pipes(pipes, j, j+1);
-			} else {
-				/* last one, conn to stdout */
-
-				if (dup2(tmpfile, 1) == -1) {
-					exit(EXIT_FAILURE);
-				}
-
-				/* close write end, connect read to stdin */
-				close(pips[1]);
-				if (dup2(pips[0], 0) == -1) {
-					exit(EXIT_FAILURE);
-				}
-				close_pipes(pipes, j, -1);
-			}
-
-			/* finally ... exec */
-			if ( execvp(args[0], args) == -1) {
-				msg("Failed to exec `%s\': %s\n", args[0], strerror(errno));
-				exit(EXIT_SUCCESS);
-			}
-			/* never reached */
-			exit(EXIT_SUCCESS);
-		}
-        }
-
-	pips = (g_slist_nth(pipes, 0))->data;
-	close(pips[0]);
-	close_pipes(pipes, 0, -1);
-
-	/* read a file, write it to pips[1] 
-	 * when done, read tmpfile and print it out
-	 * rinse, repeat
-	 */
-	write_pipe(pips[1], tmpfile);
-	/* als geen, dan /bin/cat */
-
-	/* cleanup */
-	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
-                if (sig != 0)
-                        signal_abort(sig);
-
-		/* timeout and then kill the process? */
-
-		waitpid(*(pid_t* )(p->data), NULL, 0);
-	}
 	exit(EXIT_SUCCESS);
 }
