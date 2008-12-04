@@ -16,6 +16,42 @@ a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
 backups. All paths printed are absolute. 
 .PP
+It works as follows, for a full dump
+.TP
+.B 1.
+Crawl all directories, and print all the names found to standard output.
+.TP
+.B 2.
+Write a filelist with all the names found when crawling.
+Use this list to calculate the correct incremental dump.
+
+.PP
+And for incremental dumps
+
+.TP
+.B 1.
+Read in the filelist that was written when doing a full dump.
+.TP
+.B 2.
+Crawl all the directories again.
+.TP
+.B 3.
+Diff 1. and 2. to get two lists; one of removed items and one
+of added/modified items.
+.TP
+.B 4.
+Write the removed items to standard output
+.TP
+.B 5.
+Write the modified/new items to standard output.
+.TP
+.B 6.
+Write a new filelist.
+.TP
+.B 7.
+Touch the time stamp file.
+
+.PP
 The
 .IR FILELIST
 is a internal list \fBrdup\fR writes to, to keep track of which files
@@ -23,8 +59,6 @@ are in a backup. If you don't want this (i.e. make a full
 backup), use \fI/dev/null\fR here. The file \fI/dev/null\fR is handled
 specially by \fBrdup\fR: if detected no new file list is written. This
 is useful when doing full backups and you want all files to be printed.
-
-FILELIST itself is needed to calculate which files are to removed from a backup.
 .PP
 The
 .IR DIRS/FILES

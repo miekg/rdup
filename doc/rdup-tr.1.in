@@ -10,20 +10,74 @@
 \fIDIR/FILE...\fR
 
 .SH DESCRIPTION
+Transform rdup output into something else. This something else can
+be a tar, cpio, pax archive or another rdup stream.
 
+When creating such output you might also want to 'pipe' the contents
+of each file through a number of commands, say a compression and 
+encryption utility. Note that this is different than compressing the
+\fIentire\fR archive which can be done by using the \-z option of
+GNU tar. This is where rdup-tr comes in. It allows you to create
+an normal tar archive in which \fIeach\fR file is encrypted.
+
+This command combines all previously written rdup-utils
+(rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
+it much more maintainable.
+
+\fBrdup-tr\fR works by forking off a number of child processes (those
+commands named with the \-P option(s)), interconnecting these
+with pipes. The output created by these child processes is
+captured in a temporary file in /tmp. From there the contents
+it put in an archive, then the file is truncated and the
+process restarts for the next file. In an ASCII image:
+
+.RS
+                     stdout
+            +----------------------------------> archive
+           /  
+    rdup-tr     loop #files        <---+
+      |                                |
+      +-> cmd1 | cmd2 | ...| cmdN > tmpfile
+
+.RE
+
+Creating a compressed and encrypted tar archive out of a full
+rdup dump might be done as follows
+
+    rdup /dev/null /home | rdup-tr -Pgzip,-c,-f\\
+    -Pmcrypt,-fKEY,-c -O tar > my-home-zipped-and-crypted.tar
+
+Or even pack and unpack it on the fly
+
+    rdup /dev/null /home | rdup-tr -Pgzip,-c,-f\\
+    -Pmcrypt,-fKEY,-c -O tar | ssh user@remotehost tar xvf -
+
+.SS NOTE
+When creating an archive out of plain rdup output you will
+loose the information concerning the files that are to be
+removed. Only the modified and new files are included in the
+archive.
 
 .SH OPTIONS
 .TP
 .B \-P\fIcommand\fR,\fIopt1\fR,...,\fIopt5\fR
-Filter all output throught command, \fIopt1\fR through \fIopt5\fR are
+Filter all output through command, \fIopt1\fR through \fIopt5\fR are
 given as options to the command. Multiple \-P can be used, there is
-however a mx
+however a maximum of five options for each command. The options
+are separated with commas, there is no space in between.
+.TP
+.B \-F
+Input format.
+.TP
+.B \-O
+Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.
 .TP
 .B \-c
-Force output to the tty. Normally \fBrdup-tr\fR want to see it's
+Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
 output redirected.
 .TP
-
+.B \-v
+Be more verbose. This may be repeated for even more verbosity.
 .TP
 .B \-V
 Print rdup-tr's version.

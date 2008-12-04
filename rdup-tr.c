@@ -208,10 +208,13 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "cP:F:hV")) != -1) {
+	while ((c = getopt (argc, argv, "cP:F:O:hVv")) != -1) {
 		switch (c) {
 			case 'c':
 				opt_tty = 1;
+				break;
+			case 'v':
+				opt_verbose++;
 				break;
 			case 'P':
 				/* allocate new for each child */
@@ -243,6 +246,9 @@ main(int argc, char **argv)
 				break;
 			case 'F':
 				opt_format = optarg;
+				break;
+			case 'O':
+				/* output format */
 				break;
 			case 'h':
 				usage_tr(stdout);
