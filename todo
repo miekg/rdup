@@ -4,9 +4,15 @@ TODO:
 
 :rdup:
 re-add extended attributes? man 5 tar explains how to do it
+-C option can go, but we can also use rdup-tr which 
+can mimake it
 
 :rdup-tr:
 *testing* *testing* *testing*
+make it understand rdup input
+let it re-create rdup input
+switch between outputs
+only null-bytes get written, huh?
 
 :doc:
 

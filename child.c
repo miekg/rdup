@@ -6,6 +6,7 @@
 #include "rdup-tr.h"
 
 extern sig_atomic_t sig;
+extern gint opt_verbose;
 
 /* signal.c */
 void got_sig(int signal);
@@ -21,7 +22,8 @@ close_pipes(GSList *pipes, int no1, int no2)
 	for (j = 0, p = g_slist_nth(pipes, 0); p; p = p->next, j++) { 
 		q = p->data;
 		if ( (j != -1 && j != no1) && (j != -1 && j != no2) ) {
-			fprintf(stderr, "closing %d\n", j);
+			if (opt_verbose > 0) 
+				msg("closing pipe %d\n", j);
 			close(q[0]);
 			close(q[1]);
 		}
@@ -40,10 +42,10 @@ wait_pids(GSList *pids)
                 if (sig != 0)
                         signal_abort(sig);
 
-		printf("waiting %d", *(pid_t*)(p->data));
+		if (opt_verbose > 0)
+			msg("waiting for child %d", *(pid_t*)(p->data));
 
 		waitpid(*(pid_t* )(p->data), NULL, 0);
-		printf("... done\n");
 	}
 }
 
@@ -68,7 +70,8 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	 */
 	childs = g_slist_length(child);
 	for (j = 0; j < childs; j++) { 
-		msg("Creating pipe #%d", j);
+		if (opt_verbose > 0)
+			msg("Creating pipe #%d", j);
 		pips = g_malloc(2 * sizeof(int));
 		if (pipe(pips) == -1) {
 			msg("Failure creating pipes");
@@ -148,7 +151,6 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	close_pipes(cpipe, 0, -1);
 	/* close read end, we only need to write as parent */
 	pips = (g_slist_nth(cpipe, 0))->data;
-	printf("lenghte %d\n", g_slist_length(cpipe));
 	close(pips[0]);
 
 	msg("Childs alive; returning");

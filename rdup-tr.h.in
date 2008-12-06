@@ -52,10 +52,6 @@
 #define BUFSIZE	    4096
 #define MAX_CHILD_OPT  5
 
-#define TAR	    1
-#define CPIO	    2
-
-
 /* signal.c */
 void signal_abort(int signal);
 

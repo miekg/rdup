@@ -137,8 +137,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
-		if (!g_ascii_strcasecmp(dent->d_name, ".") || 
-				!g_ascii_strcasecmp(dent->d_name, ".."))
+		if (!strcmp(dent->d_name, ".") || 
+				!strcmp(dent->d_name, ".."))
 			continue;
 
 		if (strcmp(path, DIR_SEP_STR) == 0)  {
