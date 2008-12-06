@@ -173,9 +173,6 @@ stdin2archive(GSList *child, int tmpfile)
 		archive_entry_copy_stat(entry, &s);
 		archive_entry_set_pathname(entry, buf);
 
-		archive_write_header(archive, entry);
-		/* update the size when finished */
-
 		/* fill up tmpfile */
 		if (child != NULL) {
 			tmp_trunc(tmpfile);
@@ -198,6 +195,11 @@ stdin2archive(GSList *child, int tmpfile)
 
 			/* wait for the childeren and then put tmpfile in the archive */
 			wait_pids(pids);
+
+			/* set the new size (this may be changed) and then write the header */
+			fstat(tmpfile, &s);
+			archive_entry_set_size(entry, s.st_size);
+			archive_write_header(archive, entry);
 
 			tmp_lseek(tmpfile);	/* rewind */
 
