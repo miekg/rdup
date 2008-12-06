@@ -11,8 +11,6 @@ can mimake it
 *testing* *testing* *testing*
 make it understand rdup input
 let it re-create rdup input
-switch between outputs
-only null-bytes get written, huh?
 
 :doc:
 
