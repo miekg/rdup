@@ -28,6 +28,24 @@ char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup" };
 void got_sig(int signal);
 
 void
+tmp_lseek(int tmpfile) {
+	/* rewind tmpfile so it can be read from the start */
+	if ((lseek(tmpfile, 0, SEEK_SET)) == -1) {
+		msg("Failed to seek in tmpfile %s", strerror(errno));
+	exit(EXIT_FAILURE);
+	}
+}
+
+void
+tmp_trunc(int tmpfile) {
+	/* set tmpfile to size 0 */
+	if ((ftruncate(tmpfile, 0)) == -1) {
+		msg("Failed to truncate tmpfile");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void
 tmp_clean(int tmpfile, char *template) 
 {
 	if (tmpfile != -1) {
@@ -87,7 +105,7 @@ stdin2archive(GSList *child, int tmpfile)
 		/* setup some rdup foo */
 	} else {
 		if ( (archive = archive_write_new()) == NULL) {
-			msg("Failed to create empty archive");
+			msg("Failed to create new archive");
 			exit(EXIT_FAILURE);
 		}
 
@@ -110,9 +128,6 @@ stdin2archive(GSList *child, int tmpfile)
 			msg("Failed to set archive type to %s", o_fmt[opt_output]);
 			exit(EXIT_FAILURE);
 		} else {
-/*			archive_write_open(archive, NULL, r_archive_open, 
-				r_archive_write, r_archive_close);
-				*/
 			archive_write_open_fd(archive, 1);
 		}
 	}
@@ -163,17 +178,20 @@ stdin2archive(GSList *child, int tmpfile)
 
 		/* fill up tmpfile */
 		if (child != NULL) {
+			tmp_trunc(tmpfile);
+			tmp_lseek(tmpfile);
+
 			pids = create_childeren(child, &pipes, tmpfile);
 			pips = (g_slist_nth(pipes, 0))->data;
 
-			len = read(f, readbuf, sizeof(readbuf));
+			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
 				exit(EXIT_FAILURE); /* should skip */
 			}
 			while (len > 0) {
 				write(pips[1], readbuf, len);
-				len = read(f, readbuf, sizeof(readbuf));
+				len = read(f, readbuf, BUFSIZE);
 			}
 			close(f);
 			close(pips[1]);  /* this should close all pipes in sequence */
@@ -181,13 +199,9 @@ stdin2archive(GSList *child, int tmpfile)
 			/* wait for the childeren and then put tmpfile in the archive */
 			wait_pids(pids);
 
-			/* rewind tmpfile so it can be read from the start */
-			if ((lseek(tmpfile, 0, SEEK_SET)) == -1) {
-				msg("Failed to seek in tmpfile %s", strerror(errno));
-				exit(EXIT_FAILURE);
-			}
+			tmp_lseek(tmpfile);	/* rewind */
 
-			len = read(tmpfile, readbuf, sizeof(readbuf));
+			len = read(tmpfile, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
 				exit(EXIT_FAILURE); /* should skip */
@@ -196,20 +210,13 @@ stdin2archive(GSList *child, int tmpfile)
 				/* signal */
 				/* hier iets anders voor rdup */
 
-				/* write(2, readbuf, len); */
-
-				archive_write_data(archive, readbuf, len); 
-				len = read(tmpfile, readbuf, sizeof(readbuf));
-			}
-
-			/* set tmpfile to 0 */
-			if ((ftruncate(tmpfile, 0)) == -1) {
-				msg("Failed to truncate tmpfile");
-				exit(EXIT_FAILURE);
+				/* write(2, readbuf, len); */ /* DEBUG */
+				archive_write_data(archive, readbuf, len);
+				len = read(tmpfile, readbuf, BUFSIZE);
 			}
 
 		} else {
-			len = read(f, readbuf, sizeof(readbuf));
+			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
 				exit(EXIT_FAILURE); /* should skip? */
@@ -218,12 +225,13 @@ stdin2archive(GSList *child, int tmpfile)
 				/* signal */
 				/* hier iets anders for rdup */
 				archive_write_data(archive, readbuf, len);
-				len = read(f, readbuf, sizeof(readbuf));
+				len = read(f, readbuf, BUFSIZE);
 			}
 			close(f);
 		}
 		archive_entry_free(entry);
 	}
+	archive_write_close(archive);
 	archive_write_finish(archive);
 }
 
@@ -269,12 +277,6 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
-
-	if (argc == 1) {
-		usage_tr(stdout);
-		exit(EXIT_SUCCESS);
-	}
-
 
 	while ((c = getopt (argc, argv, "cP:F:O:hVv")) != -1) {
 		switch (c) {
