@@ -12,6 +12,8 @@ can mimake it
 make it understand rdup input
 let it re-create rdup input
 
+use gfunc.c entry_print to print entry?
+
 :doc:
 
 :misc:

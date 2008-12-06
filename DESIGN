@@ -71,6 +71,9 @@ xattr.c
 sha1.c
         SHA-1 implementation, for file hashing.
 
+link.c
+	Hardlink detection; have we seen this dev,ino pair already?
+
 4/ UTILITIES
 
 A reference implementation share a similar setup.

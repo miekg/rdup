@@ -92,6 +92,7 @@ stdin2archive(GSList *child, int tmpfile)
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     s;
+	struct r_entry  *rdup_entry;
 
 	fp      = stdin;
 	delim   = '\n';
@@ -133,17 +134,12 @@ stdin2archive(GSList *child, int tmpfile)
 		}
 	}
 
-	/* for each line
-	 * read stdin
-	 * read file and 
-	 *
-	 * pipes throught pipes
-	 * if childs -> read from tmpfile
-	 * output to stdout
-	 * if no childeren, read
-	 */
-
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
+
+		if (!(rdup_entry = parse_entry(buf))) {
+			exit(EXIT_FAILURE);
+		}
+
 		if (sig != 0) {
 			tmp_clean(tmpfile, template);
 			signal_abort(sig);
@@ -152,7 +148,7 @@ stdin2archive(GSList *child, int tmpfile)
 		if (n) 
 			*n = '\0';
 
-		/* stat the original spot */
+		/* stat the original spot of the file */
 		if (stat(buf, &s) == -1) {
 			 msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
 			 continue;
