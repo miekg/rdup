@@ -276,11 +276,6 @@ main(int argc, char **argv)
 		}
 	}
 
-	if (argc < 3) {
-		usage(stdout);
-		exit(EXIT_FAILURE);
-	}
-
 	while ((c = getopt (argc, argv, "acrlmhVRnN:s:vqx0F:E:")) != -1) {
 		switch (c) {
 			case 'F':
@@ -349,6 +344,11 @@ main(int argc, char **argv)
 	}
 	argc -= optind;
 	argv += optind;
+
+	if (argc == 0) {
+		usage(stdout);
+		exit(EXIT_FAILURE);
+	}
 
 	if (strcmp(argv[0], "/dev/null") == 0)
 		devnull = TRUE;
