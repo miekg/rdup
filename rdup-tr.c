@@ -64,7 +64,8 @@ stdin2archive(GSList *child, int tmpfile)
 {
 	char		*buf, *readbuf, *n;
 	char		delim;
-	size_t		len, i;
+	size_t		i;
+	ssize_t		len;
 	FILE		*fp;
 	int		f, j;
 	GSList		*pipes;
@@ -109,8 +110,10 @@ stdin2archive(GSList *child, int tmpfile)
 			msg("Failed to set archive type to %s", o_fmt[opt_output]);
 			exit(EXIT_FAILURE);
 		} else {
-			archive_write_open(archive, NULL, r_archive_open, 
-				(archive_write_callback *)r_archive_write, r_archive_close);
+/*			archive_write_open(archive, NULL, r_archive_open, 
+				r_archive_write, r_archive_close);
+				*/
+			archive_write_open_fd(archive, 1);
 		}
 	}
 
@@ -154,6 +157,7 @@ stdin2archive(GSList *child, int tmpfile)
 		entry = archive_entry_new();
 		archive_entry_copy_stat(entry, &s);
 		archive_entry_set_pathname(entry, buf);
+
 		archive_write_header(archive, entry);
 		/* update the size when finished */
 
@@ -163,6 +167,10 @@ stdin2archive(GSList *child, int tmpfile)
 			pips = (g_slist_nth(pipes, 0))->data;
 
 			len = read(f, readbuf, sizeof(readbuf));
+			if (len == -1) {
+				msg("Failure to read from file: %s", strerror(errno));
+				exit(EXIT_FAILURE); /* should skip */
+			}
 			while (len > 0) {
 				write(pips[1], readbuf, len);
 				len = read(f, readbuf, sizeof(readbuf));
@@ -173,12 +181,24 @@ stdin2archive(GSList *child, int tmpfile)
 			/* wait for the childeren and then put tmpfile in the archive */
 			wait_pids(pids);
 
+			/* rewind tmpfile so it can be read from the start */
+			if ((lseek(tmpfile, 0, SEEK_SET)) == -1) {
+				msg("Failed to seek in tmpfile %s", strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+
 			len = read(tmpfile, readbuf, sizeof(readbuf));
+			if (len == -1) {
+				msg("Failure to read from file: %s", strerror(errno));
+				exit(EXIT_FAILURE); /* should skip */
+			}
 			while (len > 0) {
 				/* signal */
-				printf("Pumping out tmpfile");
 				/* hier iets anders voor rdup */
-				archive_write_data(archive, readbuf, len);
+
+				/* write(2, readbuf, len); */
+
+				archive_write_data(archive, readbuf, len); 
 				len = read(tmpfile, readbuf, sizeof(readbuf));
 			}
 
@@ -190,6 +210,10 @@ stdin2archive(GSList *child, int tmpfile)
 
 		} else {
 			len = read(f, readbuf, sizeof(readbuf));
+			if (len == -1) {
+				msg("Failure to read from file: %s", strerror(errno));
+				exit(EXIT_FAILURE); /* should skip? */
+			}
 			while (len > 0) {
 				/* signal */
 				/* hier iets anders for rdup */
@@ -245,6 +269,12 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
+
+	if (argc == 1) {
+		usage_tr(stdout);
+		exit(EXIT_SUCCESS);
+	}
+
 
 	while ((c = getopt (argc, argv, "cP:F:O:hVv")) != -1) {
 		switch (c) {
