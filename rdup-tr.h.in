@@ -46,6 +46,8 @@
 #define _(String) String
 #endif /* HAVE_GETTEXT */
 
+#include "entry.h"
+
 #define VERSION     "@PACKAGE_VERSION@"
 #define PROGNAME    "@PACKAGE_NAME@-tr"
 

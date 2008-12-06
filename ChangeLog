@@ -4,7 +4,7 @@ xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
    print the link's name not the '-> target'
  * rdup.1.in had a long deserved make-over
  * Added rdup-tr; a tool to convert rdup output to
-   encrypted rdup output, tar and cpio files
+   (modified) rdup output, tar, pax or cpio files
 
 
 11 Nov 2009: 0.6.3 Miek <miek@miek.nl>

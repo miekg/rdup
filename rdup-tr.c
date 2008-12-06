@@ -99,6 +99,7 @@ stdin2archive(GSList *child, int tmpfile)
 	buf     = g_malloc(BUFSIZE + 1);
 	readbuf = g_malloc(BUFSIZE + 1);
 	j	= ARCHIVE_OK;
+	entry   = NULL;
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
@@ -144,7 +145,6 @@ stdin2archive(GSList *child, int tmpfile)
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		if (sig != 0) {
-			fclose(fp);
 			tmp_clean(tmpfile, template);
 			signal_abort(sig);
 		}
@@ -163,15 +163,11 @@ stdin2archive(GSList *child, int tmpfile)
 			continue;
 		}
 
-		/* update the size with the stat information from 
-		 * the newly create file
-		 * fstat(tmpfile) -> use st_size
-		 */
-
-		/* dit hoeft ook niet voor rdup */
-		entry = archive_entry_new();
-		archive_entry_copy_stat(entry, &s);
-		archive_entry_set_pathname(entry, buf);
+		if (opt_output != O_RDUP) {
+			entry = archive_entry_new();
+			archive_entry_copy_stat(entry, &s);
+			archive_entry_set_pathname(entry, buf);
+		}
 
 		/* fill up tmpfile */
 		if (child != NULL) {
@@ -198,22 +194,30 @@ stdin2archive(GSList *child, int tmpfile)
 
 			/* set the new size (this may be changed) and then write the header */
 			fstat(tmpfile, &s);
-			archive_entry_set_size(entry, s.st_size);
-			archive_write_header(archive, entry);
+			if (opt_output == O_RDUP) {
+				/* rdup stuff */
+			} else {
+				archive_entry_set_size(entry, s.st_size);
+				archive_write_header(archive, entry);
+			}
 
 			tmp_lseek(tmpfile);	/* rewind */
 
 			len = read(tmpfile, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
-				exit(EXIT_FAILURE); /* should skip */
+				exit(EXIT_FAILURE); /* should skip? */
 			}
 			while (len > 0) {
-				/* signal */
-				/* hier iets anders voor rdup */
-
-				/* write(2, readbuf, len); */ /* DEBUG */
-				archive_write_data(archive, readbuf, len);
+				if (sig != 0) {
+					tmp_clean(tmpfile, template);
+					signal_abort(sig);
+				}
+				if (opt_output == O_RDUP) {
+					/* niks nog */
+				} else {
+					archive_write_data(archive, readbuf, len);
+				}
 				len = read(tmpfile, readbuf, BUFSIZE);
 			}
 
@@ -221,20 +225,30 @@ stdin2archive(GSList *child, int tmpfile)
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
-				exit(EXIT_FAILURE); /* should skip? */
+				exit(EXIT_FAILURE); 
 			}
 			while (len > 0) {
-				/* signal */
-				/* hier iets anders for rdup */
-				archive_write_data(archive, readbuf, len);
+				if (sig != 0) {
+					close(f);
+					signal_abort(sig);
+				}
+
+				if (opt_output == O_RDUP) {
+					/* rdup out */
+				} else {
+					archive_write_data(archive, readbuf, len);
+				}
 				len = read(f, readbuf, BUFSIZE);
 			}
 			close(f);
 		}
-		archive_entry_free(entry);
+		if (opt_output != O_RDUP) 
+			archive_entry_free(entry);
 	}
-	archive_write_close(archive);
-	archive_write_finish(archive);
+	if (opt_output != O_RDUP) {
+		archive_write_close(archive);
+		archive_write_finish(archive);
+	}
 }
 
 int

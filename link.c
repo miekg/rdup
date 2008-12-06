@@ -14,7 +14,7 @@
  * the hashtable.
  */
 gchar *
-hardlink(GHashTable *t, struct entry *e)
+hardlink(GHashTable *t, struct r_entry *e)
 {
 	gchar *key;
 	gchar *name;

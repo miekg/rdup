@@ -16,11 +16,11 @@ extern GSList *pregex_list;
 uid_t read_attr_uid(char *path, uid_t u);
 gid_t read_attr_gid(char *path, gid_t g);
 
-static struct entry *
-entry_dup(struct entry *f)
+static struct r_entry *
+entry_dup(struct r_entry *f)
 {
-        struct entry *g;
-        g = g_malloc(sizeof(struct entry));
+        struct r_entry *g;
+        g = g_malloc(sizeof(struct r_entry));
 
         g->f_name       = g_strdup(f->f_name);
         g->f_name_size  = f->f_name_size;
@@ -37,7 +37,7 @@ entry_dup(struct entry *f)
 }
 
 static void
-entry_free(struct entry *f)
+entry_free(struct r_entry *f)
 {
 	g_free(f->f_name);
 	g_free(f);
@@ -54,7 +54,7 @@ dir_prepend(GTree *t, char *path)
 	char *path2;
 	size_t len;
 	struct stat s;
-	struct entry e;
+	struct r_entry e;
 
 	path2 = g_strdup(path);
 	len   = strlen(path);
@@ -96,11 +96,11 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 {
 	DIR 		*dir;
 	struct dirent 	*dent;
-	struct entry    *directory;
+	struct r_entry  *directory;
 	char 		*curpath;
 	gchar		*lnk;
 	struct stat   	s;
-	struct entry	pop;
+	struct r_entry  pop;
 	struct remove_path rp;
 	dev_t 		current_dev;
 	size_t 		curpath_len;
@@ -108,8 +108,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 	/* dir stack */
 	gint32 d = 0;
 	gint32 dstack_cnt  = 1;
-	struct entry **dirstack =
-		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct entry *));
+	struct r_entry **dirstack =
+		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct r_entry *));
 
 	if (!(dir = opendir(path))) {
 		/* non-dirs are also allowed, check for this, if it isn't give the error */
@@ -240,7 +240,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 				continue;
 			}
 
-			dirstack[d] = g_malloc(sizeof(struct entry));
+			dirstack[d] = g_malloc(sizeof(struct r_entry));
 			dirstack[d]->f_name       = g_strdup(curpath); 
 			dirstack[d]->f_name_size  = curpath_len;
 			dirstack[d]->f_uid	  = s.st_uid;
@@ -256,7 +256,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			if (d++ % D_STACKSIZE == 0) {
 				dirstack = g_realloc(dirstack, 
 						++dstack_cnt * D_STACKSIZE * 
-						sizeof(struct entry *));
+						sizeof(struct r_entry *));
 			}
 			g_free(curpath);
 			continue;

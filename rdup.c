@@ -84,7 +84,7 @@ g_tree_read_file(FILE *fp)
 	char 	      delim;
 	mode_t        modus;
 	GTree         *tree;
-	struct entry *e;
+	struct r_entry *e;
 	size_t        s;
 	size_t 	      l;
 	size_t        f_name_size;
@@ -187,7 +187,7 @@ g_tree_read_file(FILE *fp)
 			continue;
 		}
 
-		e = g_malloc(sizeof(struct entry));
+		e = g_malloc(sizeof(struct r_entry));
 		e->f_name      = g_strdup(p + 1);
 		e->f_name_size = f_name_size;
 		e->f_mode      = modus;
