@@ -10,7 +10,7 @@
 \fIDIR/FILE...\fR
 
 .SH DESCRIPTION
-Transform rdup output into something else. This something else can
+Transform rdup output into something else. Where something else can
 be a tar, cpio, pax archive or another rdup stream.
 
 When creating such output you might also want to 'pipe' the contents
