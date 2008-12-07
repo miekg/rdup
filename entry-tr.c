@@ -7,22 +7,25 @@
 
 #include "rdup-tr.h"
 
-/* buf is NULL delimited */
+/*
+ * parse a standard rdup output entry
+ * +- 0775 1000 1000 18 2947 /home/miekg/bin/tt
+ * buf is NULL delimited 
+ */
 struct r_entry *
-parse_entry(char *buf) 
+parse_entry(char *buf, size_t l) 
 {
-	buf = buf;
+	return NULL;	/* XXX */
 
-	return NULL;
+	/* strnlen? */
+	if (strlen(buf) < LIST_MINSIZE){
+		msg(_("Corrupt entry in filelist at line: %zd"), l);
+		return NULL;
+	}
 }
 
 #if 0
 
-		if (s < LIST_MINSIZE) {
-			msg(_("Corrupt entry in filelist at line: %zd"), l);
-			l++;
-			continue;
-		}
 		if (!opt_null) {
 			n = strrchr(buf, '\n');
 			if (n)
@@ -31,17 +34,15 @@ parse_entry(char *buf)
 
 		/* get modus */
 		if (buf[LIST_SPACEPOS] != ' ') {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l, buf);
-			l++; 
-			continue;
+			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
+			return NULL;
 		}
 
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0) {
 			msg(_("Corrupt entry in filelist at line: %zd, `%s\' should be numerical"), l, buf);
-			l++; 
-			continue;
+			return NULL;
 		}
 
 		/* the dev */
@@ -56,8 +57,7 @@ parse_entry(char *buf)
 		f_dev = (dev_t)atoi(q);
 		if (f_dev == 0) {
 			msg(_("Corrupt entry in filelist at line: %zd, zero device"), l);
-			l++; 
-			continue;
+			return NULL;
 		}
 
 		/* the inode */
@@ -65,23 +65,20 @@ parse_entry(char *buf)
 		p = strchr(p + 1, ' ');
 		if (!p) {
 			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
+			return NULL;
 		}
 		*p = '\0';
 		f_ino = (ino_t)atoi(q);
 		if (f_ino == 0) {
 			msg(_("Corrupt entry in filelist at line: %zd, zero inode"), l);
-			l++; 
-			continue;
+			return NULL;
 		}
 		/* the path size */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) {
 			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
+			return NULL;
 		}
 		/* the file's name */
 		*p = '\0';
@@ -90,8 +87,7 @@ parse_entry(char *buf)
 		if (str_len != f_name_size) {
 			msg(_("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'"), l,
 					str_len, f_name_size);
-			l++; 
-			continue;
+			return NULL;
 		}
 
 		e = g_malloc(sizeof(struct r_entry));
@@ -104,10 +100,20 @@ parse_entry(char *buf)
 		e->f_ctime     = 0;
 		e->f_dev       = f_dev;
 		e->f_ino       = f_ino;
-		g_tree_insert(tree, (gpointer)e, VALUE);
-		l++;
 	}
-	g_free(buf);
-	return tree;
 }
 #endif
+
+void
+rdup_write_header(struct r_entry *r)
+{
+	r=r;
+	return;
+}
+
+void
+rdup_write_data(struct r_entry *r, char *buf, size_t len) {
+	r=r;buf=buf;len=len;
+
+	return;
+}

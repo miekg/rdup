@@ -82,7 +82,7 @@ stdin2archive(GSList *child, int tmpfile)
 {
 	char		*buf, *readbuf, *n;
 	char		delim;
-	size_t		i;
+	size_t		i, line;
 	ssize_t		len;
 	FILE		*fp;
 	int		f, j;
@@ -101,6 +101,7 @@ stdin2archive(GSList *child, int tmpfile)
 	readbuf = g_malloc(BUFSIZE + 1);
 	j	= ARCHIVE_OK;
 	entry   = NULL;
+	line    = 0;
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
@@ -135,9 +136,10 @@ stdin2archive(GSList *child, int tmpfile)
 	}
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
+		line++;
 
-		if (!(rdup_entry = parse_entry(buf))) {
-			exit(EXIT_FAILURE);
+		if (!(rdup_entry = parse_entry(buf, line))) {
+		/*	continue; XXX */
 		}
 
 		if (sig != 0) {
@@ -165,7 +167,17 @@ stdin2archive(GSList *child, int tmpfile)
 			archive_entry_set_pathname(entry, buf);
 		}
 
-		/* fill up tmpfile */
+		if (! S_ISREG(s.st_mode)) {
+			if (opt_output != O_RDUP) {
+				archive_write_header(archive, entry);
+			} else {
+				rdup_write_header(rdup_entry);
+			}
+			msg("Including non reg object");
+			goto not_s_isreg; 
+		}
+
+		/* fill up tmpfile - only for files */
 		if (child != NULL) {
 			tmp_trunc(tmpfile);
 			tmp_lseek(tmpfile);
@@ -176,7 +188,7 @@ stdin2archive(GSList *child, int tmpfile)
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
-				exit(EXIT_FAILURE); /* should skip */
+				exit(EXIT_FAILURE); /* or should skip? */
 			}
 			while (len > 0) {
 				write(pips[1], readbuf, len);
@@ -191,7 +203,8 @@ stdin2archive(GSList *child, int tmpfile)
 			/* set the new size (this may be changed) and then write the header */
 			fstat(tmpfile, &s);
 			if (opt_output == O_RDUP) {
-				/* rdup stuff */
+				rdup_entry->f_size = s.st_size;
+				rdup_write_header(rdup_entry);
 			} else {
 				archive_entry_set_size(entry, s.st_size);
 				archive_write_header(archive, entry);
@@ -210,7 +223,7 @@ stdin2archive(GSList *child, int tmpfile)
 					signal_abort(sig);
 				}
 				if (opt_output == O_RDUP) {
-					/* niks nog */
+					rdup_write_data(rdup_entry, readbuf, len);
 				} else {
 					archive_write_data(archive, readbuf, len);
 				}
@@ -230,7 +243,7 @@ stdin2archive(GSList *child, int tmpfile)
 				}
 
 				if (opt_output == O_RDUP) {
-					/* rdup out */
+					rdup_write_data(rdup_entry, readbuf, len);
 				} else {
 					archive_write_data(archive, readbuf, len);
 				}
@@ -238,6 +251,7 @@ stdin2archive(GSList *child, int tmpfile)
 			}
 			close(f);
 		}
+not_s_isreg: 
 		if (opt_output != O_RDUP) 
 			archive_entry_free(entry);
 	}
