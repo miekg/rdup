@@ -92,7 +92,6 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				*n = '\0';
 			}
 			e->f_uid = atoi(buf + 8);
-			fprintf(stderr, "uid %d\n", e->f_uid);
 			pos = n + 1;
 
 			/* gid */
@@ -104,21 +103,15 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				*n = '\0';
 			}
 			e->f_gid = atoi(pos);
-			fprintf(stderr, "gid %d\n", e->f_gid);
 			pos = n + 1;
 
-			/* check uid/gid */
-			
 			/* pathname size */
 			n = strchr(pos, ' ');
 			if (!n) {
 				msg("Malformed input for path length at line: %zd", l);
 				return NULL;
 			}
-			e->f_name_size = atoi(pos);
-			/* checks */
-
-			fprintf(stderr, "name size %d\n", e->f_name_size);
+			e->f_name_size = atoi(pos); /* checks */
 			pos = n + 1;
 
 			/* filesize - may be overloaded for rdev */
@@ -129,12 +122,14 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			}
 			/* atoi? */
 			e->f_size = atoi(pos);
-			fprintf(stderr, "file size %zd\n", (int)e->f_size);
 			pos = n + 1;
 
 			/* pathname */
 			e->f_name      = g_strdup(pos);
-			fprintf(stderr, "name %s\n", e->f_name);
+			if (strlen(e->f_name) != f_name_size) {
+				msg("Real pathname length is not equal to pathname length at line: %zd", l);
+				return NULL;
+			}
 
 			break;
 	}
