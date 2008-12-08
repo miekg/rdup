@@ -144,17 +144,13 @@ stdin2archive(GSList *child, int tmpfile)
 			signal_abort(sig);
 		}
 
-		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
-			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
-			continue;
-		}
-
 		if (opt_output != O_RDUP) {
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, &s);
 			archive_entry_set_pathname(entry, rdup_entry->f_name);
 		}
 
+		/* bail out for not regular files */
 		if (! S_ISREG(rdup_entry->f_mode)) {
 			if (opt_output != O_RDUP) {
 				archive_write_header(archive, entry);
@@ -165,7 +161,11 @@ stdin2archive(GSList *child, int tmpfile)
 			goto not_s_isreg; 
 		}
 
-		/* fill up tmpfile - only for files */
+		/* regular files */
+		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
+			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
+			continue;
+		}
 		if (child != NULL) {
 			tmp_trunc(tmpfile);
 			tmp_lseek(tmpfile);
@@ -199,7 +199,6 @@ stdin2archive(GSList *child, int tmpfile)
 			}
 
 			tmp_lseek(tmpfile);	/* rewind */
-
 			len = read(tmpfile, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));

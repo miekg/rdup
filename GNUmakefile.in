@@ -1,7 +1,7 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath.o link.o reverse.o
 OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry-tr.o
-HDR=rdup.h
-CMD=rdup
+HDR=rdup.h rdup-tr.h
+CMD=rdup rdup-tr
 MAN1_IN=rdup.1 rdup-tr.1
 
 MAN1=$(addprefix doc/, $(MAN1_IN))
@@ -29,7 +29,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 .PHONY:	all clean install all uninstall
 
-%.o:    %.c ${HDR}
+%.o:    %.c ${HDR} 
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 ifeq (${ARCHIVE_L},no)
@@ -65,8 +65,6 @@ realclean: clean
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${MAN1}
-	rm -f ${PRL}
-	rm -f ${WRP}
 	make -C po realclean
 
 distclean: 

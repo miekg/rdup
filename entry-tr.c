@@ -8,6 +8,7 @@
 #include "rdup-tr.h"
 
 extern gint opt_input;
+extern gint opt_output;
 
 /*
  * parse a standard rdup output entry
@@ -59,6 +60,11 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				return NULL;
 			}
 			e->plusmin = buf[0];
+
+			if (opt_output != O_RDUP && e->plusmin == '-') {
+				msg("Removing files it not supported for any output except rdup");
+				return NULL;
+			}
 
 			/* type */
 			switch(buf[1]) {
@@ -130,10 +136,8 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				msg("Real pathname length is not equal to pathname length at line: %zd", l);
 				return NULL;
 			}
-
 			break;
 	}
-
 	return e;
 }
 
