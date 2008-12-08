@@ -17,8 +17,8 @@ When creating such output you might also want to 'pipe' the contents
 of each file through a number of commands, say a compression and 
 encryption utility. Note that this is different than compressing the
 \fIentire\fR archive which can be done by using the \-z option of
-GNU tar. This is where rdup-tr comes in. It allows you to create
-an normal tar archive in which \fIeach\fR file is encrypted.
+GNU tar. So this is where rdup-tr comes in. It allows you to create
+an normal archive in which \fIeach\fR file is encrypted.
 
 This command combines all previously written rdup-utils
 (rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
@@ -50,7 +50,7 @@ rdup dump might be done as follows
 Or even pack and unpack it on the fly
 
     rdup /dev/null /home | rdup-tr -Pgzip,-c,-f\\
-    -Pmcrypt,-fKEY,-c -O tar | ssh user@remotehost tar xvf -
+    -Pmcrypt,-fKEY,-c -O tar | ssh user@remotehost tar xvCf /tmp -
 
 .SS NOTE
 When creating an archive out of plain rdup output you will
@@ -78,7 +78,7 @@ Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
 output redirected.
 .TP
 .B \-v
-Be more verbose. This may be repeated for even more verbosity.
+Be more verbose. 
 .TP
 .B \-V
 Print rdup-tr's version.

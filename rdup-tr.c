@@ -3,15 +3,19 @@
  * See LICENSE for the license
  * rdup-tr -- rdup translate, transform an
  * rdup filelist to an tar/cpio archive with 
- * per file compression and/or encryption
+ * per file compression and/or encryption or whatever
+ */
+
+/* stdio is only used for errors
+ * the rest is all read, write and pipe
  */
 
 #include "rdup-tr.h"
 /* options */
 char *template;
-gint opt_tty	           = 0;				/* force write to stdout */
+gint opt_tty	           = 0;				/* force write to tty */
 gint opt_verbose 	   = 0;                         /* be more verbose */
-gint opt_output	           = O_RDUP;			/* default output tar */
+gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
@@ -98,7 +102,6 @@ stdin2archive(GSList *child, int tmpfile)
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
-		/* setup some rdup foo */
 	} else {
 		if ( (archive = archive_write_new()) == NULL) {
 			msg("Failed to create new archive");
@@ -157,7 +160,6 @@ stdin2archive(GSList *child, int tmpfile)
 			} else {
 				rdup_write_header(rdup_entry);
 			}
-			msg("Including non reg object");
 			goto not_s_isreg; 
 		}
 

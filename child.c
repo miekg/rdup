@@ -23,7 +23,7 @@ close_pipes(GSList *pipes, int no1, int no2)
 		q = p->data;
 		if ( (j != -1 && j != no1) && (j != -1 && j != no2) ) {
 			if (opt_verbose > 0) 
-				msg("closing pipe %d\n", j);
+				msg("Closing pipe %d\n", j);
 			close(q[0]);
 			close(q[1]);
 		}
@@ -34,7 +34,6 @@ void
 wait_pids(GSList *pids)
 {
 	GSList *p;
-
 	if (!pids)
 		return;
 
@@ -43,7 +42,7 @@ wait_pids(GSList *pids)
                         signal_abort(sig);
 
 		if (opt_verbose > 0)
-			msg("waiting for child %d", *(pid_t*)(p->data));
+			msg("Waiting for child %d", *(pid_t*)(p->data));
 
 		waitpid(*(pid_t* )(p->data), NULL, 0);
 	}
@@ -92,11 +91,10 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 			exit(EXIT_FAILURE);
 		}
 
-		if (*cpid != 0) {	/* parent */
+		if (*cpid != 0) {			/* parent */
 			/* save the pids */
 			pids = g_slist_append(pids, cpid);
-		} else {
-			/* child */
+		} else {				/* child */
 			if (j != (childs - 1)) {
 				/* not the last one */
 				close(tmpfile);
