@@ -16,6 +16,7 @@ mandir=@mandir@
 sysconfdir=@sysconfdir@
 datadir=@datadir@/rdup
 
+ARCHIVE_L=@ARCHIVE_L@
 GCC=@CC@
 GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
@@ -31,7 +32,11 @@ INSTALL_DATA=$(INSTALL) -m 644
 %.o:    %.c ${HDR}
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
+ifeq (${ARCHIVE_L},no)
+all:	rdup
+else
 all:	rdup rdup-tr
+endif
 
 rdup-tr: $(OBJ_TR) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_TR} -o rdup-tr

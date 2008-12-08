@@ -25,10 +25,11 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
-AC_CHECK_HEADERS([archive.h])
-
-# no compile when not found?
 AC_CHECK_LIB(archive, archive_write_new, ,ARCHIVE_L="no")
+if test "$ARCHIVE_L" == "no"; then
+    AC_MSG_WARN([** libarchive not found; not building rdup-tr.])
+fi
+AC_SUBST(ARCHIVE_L)
 
 AC_ARG_WITH(libpcre_includes,
        [  --with-libpcre-includes=DIR  libpcre include directory],
