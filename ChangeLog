@@ -5,6 +5,7 @@ xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
  * rdup.1.in had a long deserved make-over
  * Added rdup-tr; a tool to convert rdup output to
    (modified) rdup output, tar, pax or cpio files
+ * Don't compile rdup-tr if libarchive is not found
  * Set the copyright to 2009 already
 
 

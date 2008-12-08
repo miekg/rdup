@@ -4,18 +4,13 @@ TODO:
 
 :rdup:
 re-add extended attributes? man 5 tar explains how to do it
--C option can go, but we can also use rdup-tr which 
-can mimake it
+-C option can go? We should use rdup-tr?
 
 :rdup-tr:
 *testing* *testing* *testing*
-make it understand rdup input
-let it re-create rdup input
 
 opt_null ala rdup
-
 test it with different file types, symlnks hardlinks etc.
-
 overflow in entry-tr for reading rdup entry
 
 :doc:
