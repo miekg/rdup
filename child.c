@@ -70,8 +70,6 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	 */
 	childs = g_slist_length(child);
 	for (j = 0; j < childs; j++) { 
-		if (opt_verbose > 0)
-			msg("Creating pipe #%d", j);
 		pips = g_malloc(2 * sizeof(int));
 		if (pipe(pips) == -1) {
 			msg("Failure creating pipes");
@@ -88,8 +86,6 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
                 args = (char**) p->data;
 		cpid = g_malloc(sizeof(pid_t));
 		pips = (g_slist_nth(cpipe, j))->data;
-
-		msg("Handling child #%d of %d", j, childs);
 
 		if ( (*cpid = fork()) == -1) {
 			msg("Error forking");
@@ -123,7 +119,6 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 				close_pipes(cpipe, j, j + 1);
 			} else {
 				/* last one, conn stdout to tmpfile */
-				msg("Duping tmpfile");
 				if (dup2(tmpfile, 1) == -1) {
 					exit(EXIT_FAILURE);
 				}
@@ -135,8 +130,6 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 				}
 				close_pipes(cpipe, j, -1);
 			}
-
-			msg("Exec %s", args[0]);
 
 			/* finally ... exec */
 			if ( execvp(args[0], args) == -1) {
@@ -153,10 +146,6 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	pips = (g_slist_nth(cpipe, 0))->data;
 	close(pips[0]);
 
-	msg("Childs alive; returning");
-	msg("Parent pipe write fd# %d", pips[1]);
-
 	*pipes = cpipe;
-
 	return pids;
 }

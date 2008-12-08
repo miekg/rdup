@@ -18,7 +18,10 @@ struct r_entry *
 parse_entry(char *buf, size_t l, struct stat *s) 
 {
 	struct r_entry *e;
+	gint i;
+	char *n, *pos;
 	e = g_malloc(sizeof(struct r_entry));
+	e->f_ctime = 0;		/* not used in rdup-tr */
 
 	switch (opt_input) {
 		case I_LIST:
@@ -26,10 +29,17 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
 				return NULL;
 			}
-			e->f_name = g_strdup(buf);
-			/* other values */
-			return e;
-		break;
+			e->plusmin     = '+';
+			e->f_name      = g_strdup(buf);
+			e->f_name_size = strlen(buf);
+			e->f_mode      = s->st_mode;
+			e->f_uid       = s->st_uid;
+			e->f_gid       = s->st_gid;
+			e->f_size      = s->st_size;
+			e->f_dev       = s->st_dev;
+			e->f_ino       = s->st_ino;
+			e->f_rdev      = s->st_rdev;
+			break;
 
 		case I_RDUP:
 			if (strlen(buf) < LIST_MINSIZE){
@@ -37,120 +47,145 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				return NULL;
 			}
 
-			/* when complete parsed fill in the structure */
-			e->f_name      = g_strdup(buf);
+			/* not filled with rdup input */
+			e->f_dev       = 0;
+			e->f_rdev      = 0;
+			e->f_ino       = 0;
 
-			/*
-			e->f_name_size = f_name_size;
-			e->f_mode      = modus;
-			e->f_uid       = 0;
-			e->f_gid       = 0;
-			e->f_size      = 0;
-			e->f_ctime     = 0;
-			e->f_dev       = f_dev;
-			e->f_ino       = f_ino;
-			*/
 
-			return e;
+			/* 1st char should + or - */
+			if (buf[0] != '-' && buf[0] != '+') {
+				msg("First character should \'-\' or \'+\' at line: %zd", l);
+				return NULL;
+			}
+			e->plusmin = buf[0];
 
-		break;
-
-	}
-	return NULL;	/* XXX */
-
-}
-
-#if 0
-		if (!opt_null) {
-			n = strrchr(buf, '\n');
-			if (n)
+			/* type */
+			switch(buf[1]) {
+				case '-': e->f_mode = S_IFREG; break;
+				case 'd': e->f_mode = S_IFDIR; break;
+				case 'l': e->f_mode = S_IFLNK; break;
+				case 'h': e->f_mode = S_IFLNK; e->f_lnk = 1; break;
+				case 'c': e->f_mode = S_IFCHR; break;
+				case 'b': e->f_mode = S_IFBLK; break;
+				case 'p': e->f_mode = S_IFIFO; break;
+				case 's': e->f_mode = S_IFSOCK; break;
+				default:
+					msg("Type must be one of d, l, h, -, c, b, p or s");
+					return NULL;
+			}
+			/* perm */
+			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 + 
+				(buf[5] - 48) * 8 + (buf[6] - 48);
+			if (i < 0 || i > 04777) {
+				msg("Invalid permissions at line: %zd", l);
+				return NULL;
+			}
+			e->f_mode |= i;
+			
+			/* uid  */
+			n = strchr(buf + 8, ' ');
+			if (!n) {
+				msg("Malformed input for uid at line: %zd", l);
+				return NULL;
+			} else {
 				*n = '\0';
-		}
+			}
+			e->f_uid = atoi(buf + 8);
+			fprintf(stderr, "uid %d\n", e->f_uid);
+			pos = n + 1;
 
-		/* get modus */
-		if (buf[LIST_SPACEPOS] != ' ') {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			return NULL;
-		}
+			/* gid */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg("Malformed input for gid at line: %zd", l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_gid = atoi(pos);
+			fprintf(stderr, "gid %d\n", e->f_gid);
+			pos = n + 1;
 
-		buf[LIST_SPACEPOS] = '\0';
-		modus = (mode_t)atoi(buf);
-		if (modus == 0) {
-			msg(_("Corrupt entry in filelist at line: %zd, `%s\' should be numerical"), l, buf);
-			return NULL;
-		}
+			/* check uid/gid */
+			
+			/* pathname size */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg("Malformed input for path length at line: %zd", l);
+				return NULL;
+			}
+			e->f_name_size = atoi(pos);
+			/* checks */
 
-		/* the dev */
-		q = buf + LIST_SPACEPOS + 1;
-		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
-		}
-		*p = '\0';
-		f_dev = (dev_t)atoi(q);
-		if (f_dev == 0) {
-			msg(_("Corrupt entry in filelist at line: %zd, zero device"), l);
-			return NULL;
-		}
+			fprintf(stderr, "name size %d\n", e->f_name_size);
+			pos = n + 1;
 
-		/* the inode */
-		q = p + 1;
-		p = strchr(p + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			return NULL;
-		}
-		*p = '\0';
-		f_ino = (ino_t)atoi(q);
-		if (f_ino == 0) {
-			msg(_("Corrupt entry in filelist at line: %zd, zero inode"), l);
-			return NULL;
-		}
-		/* the path size */
-		q = p + 1;
-		p = strchr(p + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			return NULL;
-		}
-		/* the file's name */
-		*p = '\0';
-		f_name_size = (size_t)atoi(q);
-		str_len = strlen(p + 1);
-		if (str_len != f_name_size) {
-			msg(_("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'"), l,
-					str_len, f_name_size);
-			return NULL;
-		}
+			/* filesize - may be overloaded for rdev */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg("Malformed input for file size at line: %zd", l);
+				return NULL;
+			}
+			/* atoi? */
+			e->f_size = atoi(pos);
+			fprintf(stderr, "file size %zd\n", (int)e->f_size);
+			pos = n + 1;
 
-		e = g_malloc(sizeof(struct r_entry));
-		e->f_name      = g_strdup(p + 1);
-		e->f_name_size = f_name_size;
-		e->f_mode      = modus;
-		e->f_uid       = 0;
-		e->f_gid       = 0;
-		e->f_size      = 0;
-		e->f_ctime     = 0;
-		e->f_dev       = f_dev;
-		e->f_ino       = f_ino;
+			/* pathname */
+			e->f_name      = g_strdup(pos);
+			fprintf(stderr, "name %s\n", e->f_name);
+
+			break;
 	}
-}
-#endif
 
+	return e;
+}
+
+/* ALmost the same of entry_print_data in gfunc.c, but
+ * not quite as we don't break up symlinks (source -> target)
+ * for instance
+ */
 void
-rdup_write_header(struct r_entry *r)
+rdup_write_header(struct r_entry *e)
 {
-	r=r;
+	char *out;
+	char t;
+
+	if (S_ISDIR(e->f_mode)) {
+		t = 'd';
+	} else if (S_ISCHR(e->f_mode)) {
+		t = 'c';
+	} else if (S_ISBLK(e->f_mode)) {
+		t = 'b';
+	} else if (S_ISFIFO(e->f_mode)) {
+		t = 'p';
+	} else if (S_ISSOCK(e->f_mode)) {
+		t = 's';
+	} else if (S_ISLNK(e->f_mode)) {
+		t = 'l';
+	} else {
+		if (e->f_lnk == 1) {
+			t = 'h';
+		} else
+			t = '-';
+	}
+
+	out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd %s", 
+			e->plusmin,		
+			t,
+			(int)e->f_mode & F_PERM,
+			(unsigned long)e->f_uid,
+			(unsigned long)e->f_gid,
+			(unsigned long)e->f_name_size,
+			(size_t)e->f_size,
+			e->f_name);
+	write(2, out, strlen(out));
 	return;
 }
 
 void
-rdup_write_data(struct r_entry *r, char *buf, size_t len) {
-	r=r;
-	buf = buf;
-	len = len;
-
+rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
+	write(1, buf, len);
 	return;
 }

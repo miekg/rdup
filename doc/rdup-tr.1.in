@@ -54,9 +54,9 @@ Or even pack and unpack it on the fly
 
 .SS NOTE
 When creating an archive out of plain rdup output you will
-loose the information concerning the files that are to be
+\fIloose\fR the information concerning the files that are to be
 removed. Only the modified and new files are included in the
-archive.
+archive. The output format 'rdup' does not have this limitation.
 
 .SH OPTIONS
 .TP

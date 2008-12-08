@@ -8,11 +8,10 @@
 
 #include "rdup-tr.h"
 /* options */
-char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 char *template;
 gint opt_tty	           = 0;				/* force write to stdout */
-gint opt_verbose 	   = 0;                       /* be more verbose */
-gint opt_output	           = O_TAR;			/* default output tar */
+gint opt_verbose 	   = 0;                         /* be more verbose */
+gint opt_output	           = O_TAR;			/* default output tar */ /* XXX rdup*/
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
@@ -117,6 +116,7 @@ stdin2archive(GSList *child, int tmpfile)
 				j = archive_write_set_format_pax(archive);
 				break;
 			case O_RDUP:
+				/* never reached, but here for completeness */
 				j = ARCHIVE_OK;
 				break;
 		}
@@ -144,19 +144,18 @@ stdin2archive(GSList *child, int tmpfile)
 			signal_abort(sig);
 		}
 
-		/* where do I get buf? */
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
-			msg(_("Could not open '%s\': %s"), buf, strerror(errno));
+			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
 			continue;
 		}
 
 		if (opt_output != O_RDUP) {
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, &s);
-			archive_entry_set_pathname(entry, buf);
+			archive_entry_set_pathname(entry, rdup_entry->f_name);
 		}
 
-		if (! S_ISREG(s.st_mode)) {
+		if (! S_ISREG(rdup_entry->f_mode)) {
 			if (opt_output != O_RDUP) {
 				archive_write_header(archive, entry);
 			} else {
@@ -220,6 +219,12 @@ stdin2archive(GSList *child, int tmpfile)
 			}
 
 		} else {
+			if (opt_output == O_RDUP) {
+				rdup_write_header(rdup_entry);
+			} else {
+				archive_write_header(archive, entry);
+			}
+
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
@@ -293,7 +298,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "cP:F:O:LhVv")) != -1) {
+	while ((c = getopt (argc, argv, "cP:O:LhVv")) != -1) {
 		switch (c) {
 			case 'c':
 				opt_tty = 1;
@@ -331,9 +336,6 @@ main(int argc, char **argv)
 				child = g_slist_append(child, args);
 				msg("Child seen %s", args[0]);
 				childs++;
-				break;
-			case 'F':
-				opt_format = optarg;
 				break;
 			case 'O':
 				opt_output = O_NONE;
@@ -382,11 +384,10 @@ main(int argc, char **argv)
 	} else {
 		tmpfile = -1;
 	}
-	msg("Childeren %d", childs);
 
 	/* read stdin, create childeren and make an archive */
 	stdin2archive(child, tmpfile);
-	tmp_clean(tmpfile, template);
 
+	tmp_clean(tmpfile, template);
 	exit(EXIT_SUCCESS);
 }

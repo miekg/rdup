@@ -12,9 +12,12 @@ can mimake it
 make it understand rdup input
 let it re-create rdup input
 
-use gfunc.c entry_print to print entry?
-
 opt_null ala rdup
+
+test it with different file types, symlnks hardlinks etc.
+
+overflow in entry-tr for reading rdup entry
+
 
 :doc:
 

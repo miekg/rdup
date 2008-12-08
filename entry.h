@@ -3,6 +3,7 @@
 
 /* almost the whole stat structure... */
 struct r_entry {
+	char plusmin;	        /* '-' remove, '+' add. Added because of rdup-tr */
         char *f_name;		/* filename, or hardlink target */
         size_t f_name_size;	/* size of filename */
 	guint f_lnk;		/* 0, 1 if hardlink */
