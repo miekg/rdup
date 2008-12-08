@@ -75,7 +75,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 					return NULL;
 			}
 			/* perm */
-			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 + 
+			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 +	/* oct -> dec */
 				(buf[5] - 48) * 8 + (buf[6] - 48);
 			if (i < 0 || i > 04777) {
 				msg("Invalid permissions at line: %zd", l);
@@ -126,7 +126,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 
 			/* pathname */
 			e->f_name      = g_strdup(pos);
-			if (strlen(e->f_name) != f_name_size) {
+			if (strlen(e->f_name) != e->f_name_size) {
 				msg("Real pathname length is not equal to pathname length at line: %zd", l);
 				return NULL;
 			}
@@ -175,7 +175,7 @@ rdup_write_header(struct r_entry *e)
 			(unsigned long)e->f_name_size,
 			(size_t)e->f_size,
 			e->f_name);
-	write(2, out, strlen(out));
+	write(1, out, strlen(out));
 	return;
 }
 

@@ -11,7 +11,7 @@
 char *template;
 gint opt_tty	           = 0;				/* force write to stdout */
 gint opt_verbose 	   = 0;                         /* be more verbose */
-gint opt_output	           = O_TAR;			/* default output tar */ /* XXX rdup*/
+gint opt_output	           = O_RDUP;			/* default output tar */
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
