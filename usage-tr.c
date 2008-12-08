@@ -21,9 +21,9 @@ through other processes.\n\
 	\t\tthis may be repeated, output will be filtered\n\
 	\t\tthrough all commands\n\
 	-h\t\tthis help\n\
-	-F\t\tinput format: see rdup\n\
 	-V\t\tprint version\n\
         -O\t\toutput format: pax, cpio, tar or rdup\n\
+	-L\t\tset input format to a list of pathnames\n\
 	-v\t\tbe more verbose\n\
 \n\
 Report bugs to <miek@miek.nl>\n\

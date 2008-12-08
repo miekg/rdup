@@ -7,22 +7,16 @@
  */
 
 #include "rdup-tr.h"
-
-#define O_NONE	    0
-#define O_TAR	    1
-#define O_CPIO	    2
-#define O_PAX	    3
-#define O_RDUP	    4
-
 /* options */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 char *template;
 gint opt_tty	           = 0;				/* force write to stdout */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 gint opt_output	           = O_TAR;			/* default output tar */
+gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
-char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup" };
+char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup" };	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
 /* signal.c */
 void got_sig(int signal);
@@ -137,26 +131,21 @@ stdin2archive(GSList *child, int tmpfile)
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		line++;
+		n = strrchr(buf, '\n');
+		if (n) 
+			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line))) {
-		/*	continue; XXX */
+		if (!(rdup_entry = parse_entry(buf, line, &s))) {
+			continue;
 		}
 
 		if (sig != 0) {
 			tmp_clean(tmpfile, template);
 			signal_abort(sig);
 		}
-		n = strrchr(buf, '\n');
-		if (n) 
-			*n = '\0';
 
-		/* stat the original spot of the file */
-		if (stat(buf, &s) == -1) {
-			 msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
-			 continue;
-		}
-
-		if ((f = open(buf, O_RDONLY)) == -1) {
+		/* where do I get buf? */
+		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
 			msg(_("Could not open '%s\': %s"), buf, strerror(errno));
 			continue;
 		}
@@ -304,13 +293,16 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "cP:F:O:hVv")) != -1) {
+	while ((c = getopt (argc, argv, "cP:F:O:LhVv")) != -1) {
 		switch (c) {
 			case 'c':
 				opt_tty = 1;
 				break;
 			case 'v':
 				opt_verbose++;
+				break;
+			case 'L':
+				opt_input = I_LIST;
 				break;
 			case 'P':
 				/* allocate new for each child */
