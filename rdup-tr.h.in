@@ -61,8 +61,9 @@
 #define O_CPIO	    2
 #define O_PAX	    3
 #define O_RDUP	    4
+#define O_HEAD	    5
 
-#define I_LIST      1			/* the input is a list of files */
+#define I_LIST      1			/* the input is a list of files names */
 #define I_RDUP      2			/* the input is the standard rdup output */
 
 /* signal.c */

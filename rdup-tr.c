@@ -19,7 +19,7 @@ gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
-char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup" };	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
+char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup", "head" };	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP, O_HEAD */
 
 /* signal.c */
 void got_sig(int signal);
@@ -118,6 +118,7 @@ stdin2archive(GSList *child, int tmpfile)
 			case O_PAX:
 				j = archive_write_set_format_pax(archive);
 				break;
+			case O_HEAD:
 			case O_RDUP:
 				/* never reached, but here for completeness */
 				j = ARCHIVE_OK;
@@ -147,6 +148,19 @@ stdin2archive(GSList *child, int tmpfile)
 			signal_abort(sig);
 		}
 
+		if (opt_output == O_HEAD) {
+			switch (opt_input) {
+				case I_LIST:
+					write(1, rdup_entry->f_name, strlen(rdup_entry->f_name));
+					write(1, "\n", 1);
+					break;
+				case I_RDUP:
+					rdup_write_header(rdup_entry);
+					break;
+			}
+			continue;
+		}
+
 		if (opt_output != O_RDUP) {
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, &s);
@@ -156,6 +170,8 @@ stdin2archive(GSList *child, int tmpfile)
 		/* bail out for not regular files */
 		if (! S_ISREG(rdup_entry->f_mode)) {
 			if (opt_output != O_RDUP) {
+				/* need to have a target here */
+			archive_entry_set_symlink(entry, rdup_entry->f_name);
 				archive_write_header(archive, entry);
 			} else {
 				rdup_write_header(rdup_entry);
@@ -191,7 +207,7 @@ stdin2archive(GSList *child, int tmpfile)
 			wait_pids(pids);
 
 			/* set the new size (this may be changed) and then write the header */
-			fstat(tmpfile, &s);
+			fstat(tmpfile, &s);	/* will not be a symlink */
 			if (opt_output == O_RDUP) {
 				rdup_entry->f_size = s.st_size;
 				rdup_write_header(rdup_entry);
@@ -250,7 +266,7 @@ not_s_isreg:
 		if (opt_output != O_RDUP) 
 			archive_entry_free(entry);
 	}
-	if (opt_output != O_RDUP) {
+	if (opt_output != O_RDUP && opt_output != O_HEAD) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
 	}
@@ -349,6 +365,8 @@ main(int argc, char **argv)
 					opt_output = O_PAX;
 				if (strcmp(optarg, o_fmt[O_RDUP]) == 0)
 					opt_output = O_RDUP;
+				if (strcmp(optarg, o_fmt[O_HEAD]) == 0)
+					opt_output = O_HEAD;
 
 				if (opt_output == O_NONE) {
 					msg("Invalid output format: `%s\'", optarg);

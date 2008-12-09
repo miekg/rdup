@@ -11,7 +11,10 @@ re-add extended attributes? man 5 tar explains how to do it
 
 opt_null ala rdup
 test it with different file types, symlnks hardlinks etc.
-overflow in entry-tr for reading rdup entry
+overflow in entry-tr for reading rdup entry?
+add support for symlinks
+
+extra field in r_entry to hold the pointer for symlinks?
 
 :doc:
 

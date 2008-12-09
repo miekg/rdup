@@ -26,7 +26,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 
 	switch (opt_input) {
 		case I_LIST:
-			if (stat(buf, s) == -1) {
+			if (lstat(buf, s) == -1) {
 				msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
 				return NULL;
 			}
@@ -40,6 +40,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_dev       = s->st_dev;
 			e->f_ino       = s->st_ino;
 			e->f_rdev      = s->st_rdev;
+			e->f_lnk       = 0;
 			break;
 
 		case I_RDUP:
@@ -48,11 +49,11 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				return NULL;
 			}
 
-			/* not filled with rdup input */
-			e->f_dev       = 0;
-			e->f_rdev      = 0;
-			e->f_ino       = 0;
-
+			/* defaults */
+			e->f_dev  = 0;
+			e->f_rdev = 0;
+			e->f_ino  = 0;
+			e->f_lnk  = 0;
 
 			/* 1st char should + or - */
 			if (buf[0] != '-' && buf[0] != '+') {
@@ -71,7 +72,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				case '-': e->f_mode = S_IFREG; break;
 				case 'd': e->f_mode = S_IFDIR; break;
 				case 'l': e->f_mode = S_IFLNK; break;
-				case 'h': e->f_mode = S_IFLNK; e->f_lnk = 1; break;
+				case 'h': e->f_mode = S_IFREG; e->f_lnk = 1; break;
 				case 'c': e->f_mode = S_IFCHR; break;
 				case 'b': e->f_mode = S_IFBLK; break;
 				case 'p': e->f_mode = S_IFIFO; break;
@@ -131,9 +132,18 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			pos = n + 1;
 
 			/* pathname */
-			e->f_name      = g_strdup(pos);
+			e->f_name = g_strdup(pos);
 			if (strlen(e->f_name) != e->f_name_size) {
 				msg("Real pathname length is not equal to pathname length at line: %zd", l);
+				return NULL;
+			}
+
+
+			/* no symlink twiggling,
+			 * do this in rdup-tr.c
+			 */
+			if (lstat(e->f_name, s) == -1) {
+				msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
 				return NULL;
 			}
 			break;
@@ -170,7 +180,9 @@ rdup_write_header(struct r_entry *e)
 			t = '-';
 	}
 
-	out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd %s", 
+	/* -c format of rdup */
+	if (opt_output == O_HEAD) {
+		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd %s\n", 
 			e->plusmin,		
 			t,
 			(int)e->f_mode & F_PERM,
@@ -179,6 +191,17 @@ rdup_write_header(struct r_entry *e)
 			(unsigned long)e->f_name_size,
 			(size_t)e->f_size,
 			e->f_name);
+	} else {
+		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
+			e->plusmin,		
+			t,
+			(int)e->f_mode & F_PERM,
+			(unsigned long)e->f_uid,
+			(unsigned long)e->f_gid,
+			(unsigned long)e->f_name_size,
+			(size_t)e->f_size,
+			e->f_name);
+	}
 	write(1, out, strlen(out));
 	return;
 }
