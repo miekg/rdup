@@ -71,9 +71,7 @@ Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
 which this option you can read a list of path names.
 .TP
 .B \-O
-Output format. This can be 'tar', 'cpio', 'pax', 'rdup' or 'head'.
-With 'head' only the file names are echoed to stdout and in case
-of 'rdup' input the rdup header. 'head' is mainly used for debugging.
+Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.
 .TP
 .B \-c
 Force output to the tty. Normally \fBrdup-tr\fR wants to see it's

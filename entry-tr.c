@@ -138,14 +138,16 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				return NULL;
 			}
 
-
-			/* no symlink twiggling,
-			 * do this in rdup-tr.c
+			/* don't stat, but fill the structure
+			 * with the values above
+			 * stat values ARE needed for creating
+			 * correct archive
 			 */
 			if (lstat(e->f_name, s) == -1) {
 				msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
 				return NULL;
 			}
+
 			break;
 	}
 	return e;
@@ -180,9 +182,7 @@ rdup_write_header(struct r_entry *e)
 			t = '-';
 	}
 
-	/* -c format of rdup */
-	if (opt_output == O_HEAD) {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd %s\n", 
+	out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
 			e->plusmin,		
 			t,
 			(int)e->f_mode & F_PERM,
@@ -191,17 +191,6 @@ rdup_write_header(struct r_entry *e)
 			(unsigned long)e->f_name_size,
 			(size_t)e->f_size,
 			e->f_name);
-	} else {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
-			e->plusmin,		
-			t,
-			(int)e->f_mode & F_PERM,
-			(unsigned long)e->f_uid,
-			(unsigned long)e->f_gid,
-			(unsigned long)e->f_name_size,
-			(size_t)e->f_size,
-			e->f_name);
-	}
 	write(1, out, strlen(out));
 	return;
 }

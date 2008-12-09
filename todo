@@ -8,13 +8,10 @@ re-add extended attributes? man 5 tar explains how to do it
 
 :rdup-tr:
 *testing* *testing* *testing*
-
 opt_null ala rdup
-test it with different file types, symlnks hardlinks etc.
-overflow in entry-tr for reading rdup entry?
-add support for symlinks
+fill struct stat in entry-tr from rdup info
 
-extra field in r_entry to hold the pointer for symlinks?
+
 
 :doc:
 
