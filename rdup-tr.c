@@ -361,7 +361,6 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
-				msg("Child seen %s", args[0]);
 				childs++;
 				break;
 			case 'O':
