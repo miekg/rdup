@@ -6,6 +6,9 @@ TODO:
 re-add extended attributes? man 5 tar explains how to do it
 -C option can go? We should use rdup-tr?
 
+giving a symlink on the command line will not be printed
+correctly...
+
 :rdup-tr:
 *testing* *testing* *testing*
 opt_null ala rdup
