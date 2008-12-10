@@ -86,7 +86,7 @@ dir_prepend(GTree *t, char *path)
 
 		/* symlinks; also put the -> name in f_name */
 		if (S_ISLNK(s.st_mode))
-			e = *(sym_link(&e));
+			e = *(sym_link(&e, NULL));
 
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
@@ -207,17 +207,12 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			/* hardlinks */
 			if (s.st_nlink > 1) {
 				if ((lnk = hard_link(linkhash, &pop))) {
-					/* we got a match back - cannot use sym_link which does 
-					 * a readlink */
-					pop.f_size = strlen(pop.f_name);  /* old name length */
-					lnk = g_strdup_printf("%s -> %s", pop.f_name, lnk);
-					pop.f_lnk = 1;
-					pop.f_name = lnk;
-					pop.f_name_size = strlen(pop.f_name);
+					/* we got a match back, modify pop */
+					pop = *(sym_link(&pop, lnk));
 				}
 			}
 			if (S_ISLNK(s.st_mode)) 
-				pop = *(sym_link(&pop));
+				pop = *(sym_link(&pop, NULL));
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);

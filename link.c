@@ -31,17 +31,26 @@ hard_link(GHashTable *t, struct r_entry *e)
 
 /* symlinks; also put the -> name in f_name */
 struct r_entry *
-sym_link(struct r_entry *e) 
+sym_link(struct r_entry *e, char *h_lnk) 
 {
 	char buf[BUFSIZE + 1]; 
 	ssize_t i;
-	if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-		msg(_("Error reading link `%s\': %s"), e->f_name, strerror(errno));
-	} else {
-		buf[i] = '\0';
-		e->f_size = strlen(e->f_name); /* old name length */
-		e->f_name = g_strdup_printf("%s -> %s", e->f_name, buf);
+
+	if (h_lnk) {		/* hardlink */
+		e->f_size = strlen(e->f_name);  /* old name length */
+		h_lnk = g_strdup_printf("%s -> %s", e->f_name, h_lnk);
+		e->f_lnk = 1;
+		e->f_name = h_lnk;
 		e->f_name_size = strlen(e->f_name);
+	} else {			/* symlink */
+		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
+			msg(_("Error reading link `%s\': %s"), e->f_name, strerror(errno));
+		} else {
+			buf[i] = '\0';
+			e->f_size = strlen(e->f_name); /* old name length */
+			e->f_name = g_strdup_printf("%s -> %s", e->f_name, buf);
+			e->f_name_size = strlen(e->f_name);
+		}
 	}
 	return e;
 }

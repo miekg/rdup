@@ -88,6 +88,6 @@ void rdup_write_header(struct r_entry *e);
 void rdup_write_data(struct r_entry *e, char *buf, size_t len);
 
 /* link.c */
-struct r_entry *sym_link(struct r_entry *e);
+struct r_entry *sym_link(struct r_entry *e, char *h_lnk);
 
 #endif  /* _RDUP_TR_H */
