@@ -13,6 +13,22 @@ fill struct stat in entry-tr from rdup info - does not work
 fix sym and hardlink when input is list and output is rdup
 
 
+0 all ok
+H loose hardlinks
+D loose deletion information
+
+  output fmt	rdup	tar,cpio,pax
+input fmt
+    
+    list	H       H
+
+    rdup        0	D
+
+
+explain rdup output in rdup-tr manpage, refer to FORMAT in rdup
+and give format string.
+
+
 
 :doc:
 

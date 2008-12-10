@@ -20,10 +20,11 @@ parse_entry(char *buf, size_t l, struct stat *s)
 {
 	struct r_entry *e;
 	gint i;
+	gint j;
 	char *n, *pos;
 	e = g_malloc(sizeof(struct r_entry));
 	e->f_ctime = 0;		/* not used in rdup-tr */
-
+	
 	switch (opt_input) {
 		case I_LIST:
 			if (lstat(buf, s) == -1) {
@@ -41,6 +42,13 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_ino       = s->st_ino;
 			e->f_rdev      = s->st_rdev;
 			e->f_lnk       = 0;
+
+			/* you will loose hardlink information
+			 * here 
+			 */
+			if (S_ISLNK(e->f_mode)) 	
+				e = sym_link(e, NULL);
+
 			break;
 
 		case I_RDUP:
@@ -138,12 +146,15 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				return NULL;
 			}
 
-			/* don't stat, but fill the structure
-			 * with the values above
-			 * stat values ARE needed for creating
-			 * correct archive
-			 */
-			if (lstat(e->f_name, s) == -1) {
+			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+				e->f_name[e->f_size] = '\0';
+				j = lstat(e->f_name, s);
+				e->f_name[e->f_size] = ' ';
+			} else {
+				j = lstat(e->f_name, s);
+			}
+
+			if (j == -1) {
 				msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
 				return NULL;
 			}

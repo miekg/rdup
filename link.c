@@ -36,7 +36,7 @@ sym_link(struct r_entry *e, char *h_lnk)
 	char buf[BUFSIZE + 1]; 
 	ssize_t i;
 
-	if (h_lnk) {		/* hardlink */
+	if (h_lnk) {			/* hardlink */
 		e->f_size = strlen(e->f_name);  /* old name length */
 		h_lnk = g_strdup_printf("%s -> %s", e->f_name, h_lnk);
 		e->f_lnk = 1;

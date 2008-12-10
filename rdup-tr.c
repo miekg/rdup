@@ -155,13 +155,26 @@ stdin2archive(GSList *child, int tmpfile)
 		if (opt_output != O_RDUP) {
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, &s);
+			archive_entry_copy_pathname(entry, rdup_entry->f_name);
 
-			/* sym and hardlink */
-			archive_entry_set_pathname(entry, rdup_entry->f_name);
-#if 0
-			/* need to have a target here */
-			archive_entry_set_symlink(entry, rdup_entry->f_name);
-#endif
+			/* with list input rdup-tr cannot possibly see
+			 * that a file is hardlinked - but the code
+			 * to handle that case is here anyway
+			 */
+			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
+				/* source */
+				rdup_entry->f_name[rdup_entry->f_size] = '\0';
+				archive_entry_copy_pathname(entry, rdup_entry->f_name);
+				rdup_entry->f_name[rdup_entry->f_size] = ' ';
+
+				/* target, +4 == ' -> ' */
+				if (S_ISLNK(rdup_entry->f_mode))
+					archive_entry_copy_symlink(entry, 
+						rdup_entry->f_name + rdup_entry->f_size + 4);
+				else 
+					archive_entry_copy_hardlink(entry, 
+						rdup_entry->f_name + rdup_entry->f_size + 4);
+			}
 		}
 
 		/* bail out for non regular files */
@@ -242,6 +255,7 @@ stdin2archive(GSList *child, int tmpfile)
 				msg("Failure to read from file: %s", strerror(errno));
 				exit(EXIT_FAILURE); 
 			}
+
 			while (len > 0) {
 				if (sig != 0) {
 					close(f);
@@ -260,6 +274,7 @@ stdin2archive(GSList *child, int tmpfile)
 not_s_isreg: 
 		if (opt_output != O_RDUP) 
 			archive_entry_free(entry);
+
 	}
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
