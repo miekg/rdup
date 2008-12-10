@@ -6,13 +6,11 @@ TODO:
 re-add extended attributes? man 5 tar explains how to do it
 -C option can go? We should use rdup-tr?
 
-giving a symlink on the command line will not be printed
-correctly...
-
 :rdup-tr:
 *testing* *testing* *testing*
 opt_null ala rdup
-fill struct stat in entry-tr from rdup info
+fill struct stat in entry-tr from rdup info - does not work
+fix sym and hardlink when input is list and output is rdup
 
 
 

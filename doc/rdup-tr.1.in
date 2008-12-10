@@ -58,6 +58,18 @@ When creating an archive out of plain rdup output you will
 removed. Only the modified and new files are included in the
 archive. The output format 'rdup' does not have this limitation.
 
+The following table 
+
+
+      output    tar cpio pax     rdup
+input
+
+rdup 
+
+list
+
+
+
 .SH OPTIONS
 .TP
 .B \-P\fIcommand\fR,\fIopt1\fR,...,\fIopt5\fR
