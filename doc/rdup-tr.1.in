@@ -61,12 +61,16 @@ archive. The output format 'rdup' does not have this limitation.
 The following table 
 
 
-      output    tar cpio pax     rdup
-input
+.TS
+LLCC.
+    output  tar,cpio,pax    rdup
+input	    
 
-rdup 
+rdup		D	    0
 
-list
+list		DH	    H
+
+.TE
 
 
 
