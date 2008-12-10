@@ -28,6 +28,8 @@ input fmt
 explain rdup output in rdup-tr manpage, refer to FORMAT in rdup
 and give format string.
 
+skip 0 bytes reg files
+
 
 
 :doc:

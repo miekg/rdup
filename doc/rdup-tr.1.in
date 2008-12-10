@@ -13,6 +13,16 @@
 Transform rdup output into something else. Where something else can
 be a tar, cpio, pax archive or another rdup stream.
 
+The default is reading and writing an rdup stream. The input
+expected is the normal (format: XXX) rdup output. The output
+of \fBrdup-tr\fI is equal to the \-c output (format: XXY) of rdup.
+
+You can select other types of output (\-O flag), but you must be aware
+thay you may loose some information, see the table below.
+
+You may also supply \fBrdup-tr\fR with a list of pathnames, this can 
+be selected with the \-L flag.
+
 When creating such output you might also want to 'pipe' the contents
 of each file through a number of commands, say a compression and 
 encryption utility. Note that this is different than compressing the
@@ -58,8 +68,9 @@ When creating an archive out of plain rdup output you will
 removed. Only the modified and new files are included in the
 archive. The output format 'rdup' does not have this limitation.
 
-The following table 
-
+The following table show what happens with the output
+depending on the input. 0 = ok, D = deletion information is lost
+and H; hardlink information is lost.
 
 .TS
 LLCC.
