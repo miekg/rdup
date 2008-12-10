@@ -112,7 +112,8 @@ char * abspath(char *path);
 /* signal.c */
 void signal_abort(int signal);
 /* link.c */
-gchar * hardlink(GHashTable *t, struct r_entry *e);
+gchar * hard_link(GHashTable *t, struct r_entry *e);
+struct r_entry *sym_link(struct r_entry *e);
 /* reverse.c */
 GList * reverse(GTree *g);
 void  gfunc_new_list(gpointer data, gpointer userdata);

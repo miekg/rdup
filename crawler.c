@@ -83,6 +83,11 @@ dir_prepend(GTree *t, char *path)
 		e.f_rdev      = s.st_rdev;
 		e.f_ino       = s.st_ino;
 		e.f_lnk	      = 0;
+
+		/* symlinks; also put the -> name in f_name */
+		if (S_ISLNK(s.st_mode))
+			e = *(sym_link(&e));
+
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = DIR_SEP;
 		p = c++;
@@ -201,8 +206,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 
 			/* hardlinks */
 			if (s.st_nlink > 1) {
-				if ((lnk = hardlink(linkhash, &pop))) {
-					/* we got a match back */
+				if ((lnk = hard_link(linkhash, &pop))) {
+					/* we got a match back - cannot use sym_link which does 
+					 * a readlink */
 					pop.f_size = strlen(pop.f_name);  /* old name length */
 					lnk = g_strdup_printf("%s -> %s", pop.f_name, lnk);
 					pop.f_lnk = 1;
@@ -210,19 +216,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 					pop.f_name_size = strlen(pop.f_name);
 				}
 			}
-			/* symlinks; also put the -> name in f_name */
-			if (S_ISLNK(s.st_mode)) {
-				char buf[BUFSIZE + 1]; 
-				ssize_t i;
-				if ((i = readlink(pop.f_name, buf, BUFSIZE)) == -1) {
-					msg(_("Error reading link `%s\': %s"), pop.f_name, strerror(errno));
-				} else {
-					buf[i] = '\0';
-					pop.f_size = strlen(pop.f_name); /* old name length */
-					pop.f_name = g_strdup_printf("%s -> %s", pop.f_name, buf);
-					pop.f_name_size = strlen(pop.f_name);
-				}
-			}
+			if (S_ISLNK(s.st_mode)) 
+				pop = *(sym_link(&pop));
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);

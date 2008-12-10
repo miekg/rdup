@@ -14,7 +14,7 @@
  * the hashtable.
  */
 gchar *
-hardlink(GHashTable *t, struct r_entry *e)
+hard_link(GHashTable *t, struct r_entry *e)
 {
 	gchar *key;
 	gchar *name;
@@ -27,4 +27,21 @@ hardlink(GHashTable *t, struct r_entry *e)
 	}
 	g_free(key);
 	return name;
+}
+
+/* symlinks; also put the -> name in f_name */
+struct r_entry *
+sym_link(struct r_entry *e) 
+{
+	char buf[BUFSIZE + 1]; 
+	ssize_t i;
+	if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
+		msg(_("Error reading link `%s\': %s"), e->f_name, strerror(errno));
+	} else {
+		buf[i] = '\0';
+		e->f_size = strlen(e->f_name); /* old name length */
+		e->f_name = g_strdup_printf("%s -> %s", e->f_name, buf);
+		e->f_name_size = strlen(e->f_name);
+	}
+	return e;
 }
