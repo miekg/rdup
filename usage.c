@@ -27,7 +27,7 @@ implement a (incremental) backup scheme.\n\
         -0\t\tdelimit internal filelist with NULLs\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
-        -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s %n%C\")\n\
+        -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n\
         -h\t\tthis help\n\
         -m\t\tonly print new/modified files (unsets -r)\n\
         -l\t\tdon't check for file size changes\n\
