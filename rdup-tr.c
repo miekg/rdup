@@ -25,7 +25,7 @@ char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O
 void got_sig(int signal);
 
 void
-tmp_lseek(int tmpfile) {
+fd_lseek(int tmpfile) {
 	/* rewind tmpfile so it can be read from the start */
 	if ((lseek(tmpfile, 0, SEEK_SET)) == -1) {
 		msg("Failed to seek in tmpfile %s", strerror(errno));
@@ -34,7 +34,7 @@ tmp_lseek(int tmpfile) {
 }
 
 void
-tmp_trunc(int tmpfile) {
+fd_trunc(int tmpfile) {
 	/* set tmpfile to size 0 */
 	if ((ftruncate(tmpfile, 0)) == -1) {
 		msg("Failed to truncate tmpfile");
@@ -193,8 +193,8 @@ stdin2archive(GSList *child, int tmpfile)
 			continue;
 		}
 		if (child != NULL) {
-			tmp_trunc(tmpfile);
-			tmp_lseek(tmpfile);
+			fd_trunc(tmpfile);
+			fd_lseek(tmpfile);
 
 			pids = create_childeren(child, &pipes, tmpfile);
 			pips = (g_slist_nth(pipes, 0))->data;
@@ -208,23 +208,36 @@ stdin2archive(GSList *child, int tmpfile)
 				write(pips[1], readbuf, len);
 				len = read(f, readbuf, BUFSIZE);
 			}
-			close(f);
 			close(pips[1]);  /* this should close all pipes in sequence */
 
 			/* wait for the childeren and then put tmpfile in the archive */
-			wait_pids(pids);
-
-			/* set the new size (this may be changed) and then write the header */
-			fstat(tmpfile, &s);	/* will not be a symlink */
-			if (opt_output == O_RDUP) {
-				rdup_entry->f_size = s.st_size;
-				rdup_write_header(rdup_entry);
+			if (wait_pids(pids) != 0) {
+				/* oh oh, shit hit the fan. Print the original file */
+				msg("Conversion error, falling back to original file");
+				/* 
+				 * THIS ASSUMES THE CHILD DID NOT OUTPUT
+				 * ANYTHING
+				 * THIS ASSUMPTION MAY NOT HOLD!!!
+				 */
+				fd_lseek(f);	/* rewind */
+				/* yes, goto's are ugly, but here we want to
+				 * recover from an error and instead of duplicating
+				 * the code we jump to it */
+				goto write_plain_file;
 			} else {
-				archive_entry_set_size(entry, s.st_size);
-				archive_write_header(archive, entry);
+				close(f); /* close f here */
+				/* set the new size (this may be changed) and then write the header */
+				fstat(tmpfile, &s);	/* will not be a symlink */
+				if (opt_output == O_RDUP) {
+					rdup_entry->f_size = s.st_size;
+					rdup_write_header(rdup_entry);
+				} else {
+					archive_entry_set_size(entry, s.st_size);
+					archive_write_header(archive, entry);
+				}
 			}
 
-			tmp_lseek(tmpfile);	/* rewind */
+			fd_lseek(tmpfile);	/* rewind */
 			len = read(tmpfile, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
@@ -244,6 +257,9 @@ stdin2archive(GSList *child, int tmpfile)
 			}
 
 		} else {
+
+write_plain_file:
+
 			if (opt_output == O_RDUP) {
 				rdup_write_header(rdup_entry);
 			} else {
@@ -271,7 +287,9 @@ stdin2archive(GSList *child, int tmpfile)
 			}
 			close(f);
 		}
+
 not_s_isreg: 
+
 		if (opt_output != O_RDUP) 
 			archive_entry_free(entry);
 
@@ -349,7 +367,7 @@ main(int argc, char **argv)
 				} else {
 					*r = '\0';
 					for(i = 0; r; r = strchr(r + 1, ','), i++) {
-						if (i > 4) {
+						if (i > MAX_CHILD_OPT) {
 							msg(_("Only %d extra args per child allowed"), MAX_CHILD_OPT);
 							exit(EXIT_FAILURE);
 						}

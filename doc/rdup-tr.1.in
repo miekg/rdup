@@ -13,14 +13,18 @@
 Transform rdup output into something else. Where something else can
 be a tar, cpio, pax archive or another rdup stream.
 
-The default is reading and writing an rdup stream. The input
-expected is the normal (format: XXX) rdup output. The output
-of \fBrdup-tr\fI is equal to the \-c output (format: XXY) of rdup.
+The default is reading and writing rdup streams. The input
+expected is the normal rdup output, i.e. the list of pathnames
+and some extra information, but \fIno\fR file contents.
+
+The output of \fBrdup-tr\fR is a rdup \-c stream, i.e. the list
+of pathnames \fIwith\fR the file contents (which is possibly 
+transformed).
 
 You can select other types of output (\-O flag), but you must be aware
 thay you may loose some information, see the table below.
 
-You may also supply \fBrdup-tr\fR with a list of pathnames, this can 
+You may also supply \fBrdup-tr\fR with only a list of pathnames, this can 
 be selected with the \-L flag.
 
 When creating such output you might also want to 'pipe' the contents
@@ -28,7 +32,10 @@ of each file through a number of commands, say a compression and
 encryption utility. Note that this is different than compressing the
 \fIentire\fR archive which can be done by using the \-z option of
 GNU tar. So this is where rdup-tr comes in. It allows you to create
-an normal archive in which \fIeach\fR file is encrypted.
+an normal archive in which \fIeach\fR file is encrypted. If one of
+the forked off childeren return an exit code other than zero (0), it
+is assumed the whole conversion process failed. In that case the
+original file is printed as-is.
 
 This command combines all previously written rdup-utils
 (rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
@@ -62,6 +69,32 @@ Or even pack and unpack it on the fly
     rdup /dev/null /home | rdup-tr -Pgzip,-c,-f\\
     -Pmcrypt,-fKEY,-c -O tar | ssh user@remotehost tar xvCf /tmp -
 
+When unzipping an "archive", gzip will do the right thing wrt to files
+that are not compressed and will just print them as-is. So the following
+will work
+
+    rdup /dev/null /home | ./rdup-tr -c -Pgzip,-d,-c,-f 
+
+Encryption with openssl
+
+    rdup /dev/null /home | ./rdup-tr -c -Popenssl,enc,-e,-des-cbc,-k,secret 
+
+Or, compressing wit gzip, encrypting with openssl and then compressing
+the entire archive yet again
+
+    rdup /dev/null /home | ./rdup-tr -Pgzip,-c,-f \\
+    -Popenssl,enc,-e,-des-cbc,-k,secret | gzip -c -f >\\
+    my_compressed_encrypted_rdup_archive.gz
+
+Recreating the original rdup (-c) output, which can be fed to rdup-snap
+(XXX todo, rdup-snap?)
+
+    gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
+    rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d-c,-f >\\
+    my_rdup_archive
+
+Notice the reversal of the \-P options.
+
 .SS NOTE
 When creating an archive out of plain rdup output you will
 \fIloose\fR the information concerning the files that are to be
@@ -69,17 +102,26 @@ removed. Only the modified and new files are included in the
 archive. The output format 'rdup' does not have this limitation.
 
 The following table show what happens with the output
-depending on the input. 0 = ok, D = deletion information is lost
-and H; hardlink information is lost.
+depending on the input. 
+.BR
+.TP 
+.B 0
+OK
+.TP 
+.B D
+delete information is lost
+.TP 
+.B H
+hardlink information is lost
+.BR
 
 .TS
-LLCC.
-    output  tar,cpio,pax    rdup
+L|L|CC.
+    output	tar,cpio,pax	rdup
 input	    
-
-rdup		D	    0
-
-list		DH	    H
+-------------	-------------	------
+rdup	    D	0
+list	    DH	H
 
 .TE
 
@@ -87,8 +129,8 @@ list		DH	    H
 
 .SH OPTIONS
 .TP
-.B \-P\fIcommand\fR,\fIopt1\fR,...,\fIopt5\fR
-Filter all output through command, \fIopt1\fR through \fIopt5\fR are
+.B \-P\fIcommand\fR,\fIopt1\fR,...,\fIopt7\fR
+Filter all output through command, \fIopt1\fR through \fIopt7\fR are
 given as options to the command. Multiple \-P can be used, there is
 however a maximum of five options for each command. The options
 are separated with commas, there is no space in between.
@@ -123,7 +165,8 @@ Written by Miek Gieben.
 Report bugs to <miek@miek.nl>. 
 
 .SH SEE ALSO
-http:/www.miek.nl/projects/rdup is the main site of rdup.
+http:/www.miek.nl/projects/rdup is the main site of rdup. And rdup(1) or
+rdup-backups(7).
 
 .SH COPYRIGHT
 Copyright (C) 2005-2009 Miek Gieben. This is free software. There is NO

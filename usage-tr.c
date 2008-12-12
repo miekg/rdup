@@ -17,7 +17,7 @@ format: \'%p%T %b %u %g %l %s %n\\n\'.\n\
 \n\
     OPTIONS:\n\
         -c\t\tforce output to tty\n\
-        -Pcmd,opt1,...,opt5\n\
+        -Pcmd,opt1,...,opt7\n\
 	    \t\tfilter through cmd\n\
 	\t\tthis may be repeated, output will be filtered\n\
 	\t\tthrough all commands\n\

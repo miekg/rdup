@@ -52,7 +52,7 @@
 #define PROGNAME    "@PACKAGE_NAME@-tr"
 
 #define BUFSIZE	    4096
-#define MAX_CHILD_OPT  5
+#define MAX_CHILD_OPT  7
 #define LIST_MINSIZE   15
 #define F_PERM          07777
 
@@ -79,7 +79,7 @@ void usage_tr(FILE *);
 
 /* child.c */
 void close_pipes(GSList *p, int no1, int no2);
-void wait_pids(GSList *pids);
+int wait_pids(GSList *pids);
 GSList *create_childeren(GSList *child, GSList **pipes, int tmpfile);
 
 /* entry-tr.c */

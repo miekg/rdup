@@ -3,8 +3,10 @@ OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry-tr.o link.o
 HDR=rdup.h rdup-tr.h
 CMD=rdup rdup-tr
 MAN1_IN=rdup.1 rdup-tr.1
+MAN7_IN=rdup-backups.7
 
 MAN1=$(addprefix doc/, $(MAN1_IN))
+MAN7=$(addprefix doc/, $(MAN7_IN))
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@

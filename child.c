@@ -30,12 +30,16 @@ close_pipes(GSList *pipes, int no1, int no2)
 	}
 }
 
-void
+/* return 0 if all ok, 1 for trouble */
+int
 wait_pids(GSList *pids)
 {
 	GSList *p;
+	int status;
+	int ret;
+
 	if (!pids)
-		return;
+		return 0;
 
 	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
                 if (sig != 0)
@@ -44,8 +48,16 @@ wait_pids(GSList *pids)
 		if (opt_verbose > 0)
 			msg("Waiting for child %d", *(pid_t*)(p->data));
 
-		waitpid(*(pid_t* )(p->data), NULL, 0);
+		waitpid(*(pid_t* )(p->data), &status, 0);
+		if (WIFEXITED(status)) {
+			/* fprintf(stderr, "exit %d\n", WEXITSTATUS(status)); */
+			ret = 1;
+		} else {
+			/* abnormal termination,
+			 * should have received sigpipe? */
+		}
 	}
+	return ret;
 }
 
 /* create pipes and childs, return pids */
