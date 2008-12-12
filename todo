@@ -13,6 +13,9 @@ glib also has pcre-compat regexp -- oops
 opt_null ala rdup
 skip 0 bytes reg files?
 
+:rdup-up:
+add this - simular to rdup-snap
+
 :doc:
 
 :misc:

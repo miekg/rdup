@@ -1,5 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath.o link.o reverse.o
 OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry-tr.o link.o
+OBJ_UP=rdup-up.o
 HDR=rdup.h rdup-tr.h
 CMD=rdup rdup-tr
 MAN1_IN=rdup.1 rdup-tr.1
@@ -51,7 +52,6 @@ po:	rdup.pot
 
 rdup.pot:
 	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 
-	xgettext -j -Lperl -kget -d rdup -s -o rdup.pot pl-tools/*.in
 
 clean:
 	rm -f *.o

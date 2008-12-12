@@ -1,0 +1,15 @@
+
+
+all functionally of rdup-snap but then in a C program
+needs recursive delete
+hardlink cache for after the fact hard lnks creation
+set write permission on directories where I want to 
+write in - restore after the backup
+
+rdup-up - update a directory tree with a rdup archive
+
+remove files and directories that need to be removed
+and add the files that need to be added
+
+support rdup and rdup -c input
+for rdup input, call an external program? Or just do copy-in-out?
