@@ -6,13 +6,12 @@ TODO:
 re-add extended attributes? man 5 tar explains how to do it
 -C option can go? We should use rdup-tr?
 
+glib also has pcre-compat regexp -- oops
+
 :rdup-tr:
 *testing* *testing* *testing*
 opt_null ala rdup
-
 skip 0 bytes reg files?
-
-
 
 :doc:
 
