@@ -6,6 +6,7 @@
  */
 
 #include "rdup-tr.h"
+#include "generic.h"
 
 extern gint opt_input;
 extern gint opt_output;
@@ -13,6 +14,12 @@ extern gint opt_output;
 /*
  * parse a standard rdup output entry
  * +- 0775 1000 1000 18 2947 /home/miekg/bin/tt
+ *
+ * or parse a standard rdup -c output entry
+ * +- 0775 1000 1000 18 2947\n
+ * /home/miekg/bin/tt
+ * <contents>
+ *
  * buf is NULL delimited 
  */
 struct r_entry *
@@ -23,7 +30,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 	gint j;
 	char *n, *pos;
 	e = g_malloc(sizeof(struct r_entry));
-	e->f_ctime = 0;		/* not used in rdup-tr */
+	e->f_ctime = 0;		/* not used in rdup-* */
 	
 	switch (opt_input) {
 		case I_LIST:
@@ -43,9 +50,8 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_rdev      = s->st_rdev;
 			e->f_lnk       = 0;
 
-			/* you will loose hardlink information
-			 * here 
-			 */
+			/* you will loose hardlink information here 
+			 * as 'stat' cannot check this */
 			if (S_ISLNK(e->f_mode)) 	
 				e = sym_link(e, NULL);
 

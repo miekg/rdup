@@ -8,6 +8,9 @@ xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
    (modified) rdup output, tar, pax or cpio files
  * rdup-tr: Don't compile rdup-tr if libarchive is not found
  * rdup-tr: rdup-tr.1 manpage
+ * rdup-up: Added rdup-up; C version of rdup-snap
+ * rdup-up: added rdup-up.1 manpage
+ * updated rdup-backups.7 as general info about backups with rdup
  * Set the copyright to 2009 already
 
 
