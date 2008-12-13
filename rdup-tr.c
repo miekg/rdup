@@ -140,7 +140,7 @@ stdin2archive(GSList *child, int tmpfile)
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s, I_NONE))) {
+		if (!(rdup_entry = parse_entry(buf, line, &s, DO_STAT))) {
 			continue;
 		}
 

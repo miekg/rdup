@@ -27,7 +27,7 @@ extern gint opt_output;
  * with opt_input because rdup-tr cannot handle this (yet!)
  */
 struct r_entry *
-parse_entry(char *buf, size_t l, struct stat *s, gint fmt) 
+parse_entry(char *buf, size_t l, struct stat *s, gint stat) 
 {
 	struct r_entry *e;
 	gint i;
@@ -154,8 +154,8 @@ parse_entry(char *buf, size_t l, struct stat *s, gint fmt)
 			 * I_RDUP_C -> rdup -c input, no stat
 			 */
 
-			switch(fmt) {
-				case I_NONE:
+			switch(stat) {
+				case DO_STAT:
 					/* pathname */
 					e->f_name = g_strdup(pos);
 					if (strlen(e->f_name) != e->f_name_size) {
@@ -177,7 +177,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint fmt)
 					}
 
 					break;
-				case I_RDUP:
+				case NO_STAT:
 					/* pathname */
 					e->f_name = g_strdup(pos);
 					if (strlen(e->f_name) != e->f_name_size) {
@@ -187,7 +187,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint fmt)
 
 					break;
 
-				case I_RDUP_C:
+				case NO_STAT_CONTENT:
 					/* pathname will be present but after a newline
 					 * so there isn't much to do here - this must
 					 * be read from within the calling function */
