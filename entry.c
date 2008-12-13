@@ -23,7 +23,7 @@ extern gint opt_output;
  * buf is NULL delimited 
  *
  * fmt is extra and is used by rdup-up to say that it
- * wants to parse rdup-c ouput. This cannot be handled
+ * wants to parse rdup -c ouput. This cannot be handled
  * with opt_input because rdup-tr cannot handle this (yet!)
  */
 struct r_entry *
@@ -149,11 +149,6 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_size = atoi(pos);
 			pos = n + 1;
 
-			/* fmt = I_NONE -> do the stat and fill out the entry
-			 * I_RDUP -> rdup input, no stat
-			 * I_RDUP_C -> rdup -c input, no stat
-			 */
-
 			switch(stat) {
 				case DO_STAT:
 					/* pathname */
@@ -186,7 +181,6 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					}
 
 					break;
-
 				case NO_STAT_CONTENT:
 					/* pathname will be present but after a newline
 					 * so there isn't much to do here - this must

@@ -15,7 +15,7 @@
 
 /* options */
 char *template;
-gint opt_tty	           = 0;				/* force write to tty */
+gboolean opt_tty           = FALSE;				/* force write to tty */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -348,7 +348,7 @@ main(int argc, char **argv)
 	while ((c = getopt (argc, argv, "cP:O:LhVv")) != -1) {
 		switch (c) {
 			case 'c':
-				opt_tty = 1;
+				opt_tty = TRUE;
 				break;
 			case 'v':
 				opt_verbose++;
@@ -433,7 +433,7 @@ main(int argc, char **argv)
 
 	/* read stdin, create childeren and make an archive */
 	stdin2archive(child, tmpfile);
-
 	tmp_clean(tmpfile, template);
+
 	exit(EXIT_SUCCESS);
 }

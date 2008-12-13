@@ -10,7 +10,7 @@
 
 /* options */
 gint opt_verbose 	   = 0;                         /* be more verbose */
-gint opt_output		   = O_RDUP;
+gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 sig_atomic_t sig           = 0;
 
@@ -34,12 +34,54 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
+/* update the directory with the archive */
+void
+update(char *path)
+{
+	path = path;
+	struct r_entry *rdup_entry;
+	size_t         line, i;
+	char           *buf, *pathbuf, *n;
+	char           delim;
+	FILE           *fp;
+	struct stat    s;
+	
+	buf	= g_malloc(BUFSIZE + 1);
+	pathbuf = g_malloc(BUFSIZE + 1);
+	i       = BUFSIZE;
+	fp  	= stdin;
+	delim   = '\n';
+	line    = 0;
+
+	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
+		line++;
+		n = strrchr(buf, '\n');
+		if (n) 
+			*n = '\0';
+
+		if (!(rdup_entry = parse_entry(buf, line, &s, DO_STAT))) {
+			msg("Invalid rdup entry, bailing out");
+			exit(EXIT_FAILURE);
+		}
+
+		/* we have a valid entry, read the filename */
+
+		/* next read the filecontents */
+
+
+
+	}
+
+}
+
+
 int
 main(int argc, char **argv)
 {
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
+	char		 *path;
 	
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
@@ -90,6 +132,22 @@ main(int argc, char **argv)
 	}
 	argc -= optind;
 	argv += optind;
+
+	if (argc != 1) {
+		msg("A single destination directory is required");
+		exit(EXIT_FAILURE);
+	}
+	if (!g_path_is_absolute(argv[0])) 
+		path = abspath(g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[0]));
+	else
+		path = abspath(argv[0]);
+
+	if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
+		msg("Not a directory: `%s\'", path);
+		exit(EXIT_FAILURE);
+	}
+
+	update(path);
 
 	exit(EXIT_SUCCESS);
 }

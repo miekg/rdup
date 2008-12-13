@@ -3,6 +3,7 @@ TODO:
 :general:
 - move to more glib functions
   + pcre regexp
+- test -0 for rdup*
 
 :doc:
 
