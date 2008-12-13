@@ -6,7 +6,7 @@
  */
 
 #include "rdup-tr.h"
-#include "generic.h"
+#include "io.h"
 
 extern gint opt_input;
 extern gint opt_output;
