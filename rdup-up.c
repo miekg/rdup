@@ -34,13 +34,40 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
+/* read e->f_size bytes from *in
+ * and store them in e->f_name
+ */
+void
+read_write(FILE *in, struct r_entry *e) 
+{
+	char     *buf;
+	size_t   i, mod, rest;
+
+	if (S_ISREG(e->f_mode) && !e->f_lnk) {
+		/* only for files, but skip hardlinks */
+
+		buf   = g_malloc(BUFSIZE + 1);
+		rest = e->f_size % BUFSIZE;	      /* then we need to read this many */
+		mod  = (e->f_size - rest) / BUFSIZE;  /* main loop happens mod times */
+
+		fprintf(stderr, "Reading %zd bytes\n", (size_t) e->f_size);
+
+		/* mod loop */
+		for(i = 0; i < mod; i += BUFSIZE) {
+			i = fread(buf, sizeof(char), BUFSIZE, in);
+		}
+		/* rest */
+		i = fread(buf, sizeof(char), rest, in);
+	}
+	return;
+}
+
 /* update the directory with the archive */
 void
 update(char *path)
 {
-	path = path;
 	struct r_entry *rdup_entry;
-	size_t         line, i;
+	size_t         line, i, pathsize, filesize;
 	char           *buf, *pathbuf, *n;
 	char           delim;
 	FILE           *fp;
@@ -53,23 +80,35 @@ update(char *path)
 	delim   = '\n';
 	line    = 0;
 
+	/* XXX */
+	path = path;
+	filesize = 0;
+
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		line++;
 		n = strrchr(buf, '\n');
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s, DO_STAT))) {
-			msg("Invalid rdup entry, bailing out");
+		if (!(rdup_entry = parse_entry(buf, line, &s, NO_STAT_CONTENT))) {
 			exit(EXIT_FAILURE);
 		}
 
 		/* we have a valid entry, read the filename */
+		pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, stdin);
+
+		if (pathsize != rdup_entry->f_name_size) {
+			msg("Reported name size (%zd) does not match actual name size (%zd)",
+					rdup_entry->f_name_size, pathsize);
+			exit(EXIT_FAILURE);
+		}
+		pathbuf[pathsize] = '\0';
+
+		/* XXX */
+		fprintf(stderr, "path:%d %d %s\n", pathsize, rdup_entry->f_name_size, pathbuf);
 
 		/* next read the filecontents */
-
-
-
+		read_write(stdin, rdup_entry);
 	}
 
 }

@@ -140,14 +140,20 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			pos = n + 1;
 
 			/* filesize - may be overloaded for rdev */
-			n = strchr(pos, ' ');
-			if (!n) {
-				msg("Malformed input for file size at line: %zd", l);
-				return NULL;
+			/* XXX TODO */
+
+			if (stat == NO_STAT_CONTENT) {
+				e->f_size = atoi(pos);
+			} else {
+				n = strchr(pos, ' ');
+				if (!n) {
+					msg("Malformed input for file size at line: %zd", l);
+					return NULL;
+				}
+				/* atoi? */
+				e->f_size = atoi(pos);
+				pos = n + 1;
 			}
-			/* atoi? */
-			e->f_size = atoi(pos);
-			pos = n + 1;
 
 			switch(stat) {
 				case DO_STAT:
