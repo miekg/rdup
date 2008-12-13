@@ -4,10 +4,8 @@
 @PACKAGE_NAME@-tr \- transform rdup output
 .SH SYNOPSIS
 .B @PACKAGE_NAME@-tr
-[\fI\-N timestamp\fR]
-[\fIOPTION...\fR]
-\fIFILELIST\fR
-\fIDIR/FILE...\fR
+[\fI\-Pcmd,opt1,...,opt7\fR]...
+[\fIOPTION\fR]...
 
 .SH DESCRIPTION
 Transform rdup output into something else. Where something else can

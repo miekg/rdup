@@ -5,7 +5,7 @@
 .SH SYNOPSIS
 .B @PACKAGE_NAME@
 [\fI\-N timestamp\fR]
-[\fIOPTION...\fR]
+[\fIOPTION\fR]...
 \fIFILELIST\fR
 \fIDIR/FILE...\fR
 

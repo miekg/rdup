@@ -1,0 +1,136 @@
+'\" t
+.TH RDUP-BACKUPS 1 "28 Oct 2006" "0.6.2" "rdup utils"
+
+.SH NAME
+rdup-backups \- introduction into making backups with rdup
+
+.SH WORK IN PROGRESS
+This is entire document is a work in progress.
+
+.SH INTRODUCTION
+\fBrdup\fR is a simple program that prints out a list of files and
+directories that are changed changed on a filesystem. It is much
+more sophisticated than for instance \fIfind\fR, because \fBrdup\fR
+will find files that are removed are directories that are renamed.
+By glueing \fBrdup\fR together with a few very simple shell and
+perl scripts you can create a simple to understand, but powerfull
+backup solution. \fBrdup\fR includes a few scripts to make backups
+and restores easy to perform. \fRrdup\fR supports remote, encrypted
+and compressed backups.
+
+It is always best to backup to \fIanother\fR medium, be it a different
+local harddisk or a NFS mounted filesystem or use the remote backup
+capabilities to securely copy the backup to another system all together.
+
+There is one wrapper script for rdup to make backups. This is
+\fBrdup-simple\fR.  It uses a hardlinked backup scheme where each day
+has its own directory.  This wrapper calls; \fBrdup\fR, \fBrdup-snap\fR
+and \fBrdup-snap-link\fR. It further more supports encryption,
+compressions and remote backups. This works by inserting the
+apropiate rdup helper utility in the pipeline.
+
+\fBrdup\fR can be used to create a backup and to restore from a backup.
+In either case it is a matter a generating a list of files and copying
+them somewhere else.
+
+.SH BACKUP AND RESTORE
+Because making a backup means copying a list of files somewhere else and
+restoring is essentially the same operation, albeit the other way around,
+\fBrdup\fR can be used for both. 
+
+.SH BACKING UP WITH RDUP-SIMPLE
+When using \fBrdup-simple\fR the backup process consists out of two
+phases. During phase one a copy is made of any previous backups backups.
+This a hardlinked copy, meaning that it will take up very little space.
+It uses GNU 'cp -l' to make this copy. See the manual page of
+\fBrdup-snap-link\fR for more information. \fBrdup-simple\fR uses
+~/.rdup as the directory to write its internal filelist and timestamp
+file.
+
+In phase two, \fBrdup-simple\fR will only update the files that
+are changed since the last backup. For these files the hardlink is
+removed or overwritten with a new version of the file. The net result
+is that each backup represents a complete view of your filesystem.
+
+With \fBrdup-simple\fR you have a full view on what your filesystem
+looked like at any specific date. I personly keep about 3 months of
+backups and I can go back to any specific date in that time frame.
+
+.SH EXAMPLES
+
+.SS LOCAL BACKUPS
+
+Backing up my homedir to the backup directory:
+
+.RS
+rdup-simple ~ /vol/backup/$HOSTNAME
+.RE
+
+This will create a backup in /vol/backup/$HOSTNAME/200705/15. So
+each day will have its own directory. Multiple sources are allowed, so:
+
+.RS
+rdup-simple ~ /etc/ /var/lib /vol/backup/$HOSTNAME
+.RE
+
+Will backup your homedirectory, /etc and /var/lib to the backup
+location. Also if you need to compress your backup, simple add
+a '-z' switch:
+
+.RS
+rdup-simple -z ~ /etc/ /var/lib /vol/backup/$HOSTNAME
+.RE
+
+.SS REMOTE BACKUPS
+For a remote backup to work, both the sending machine and the receiving
+machine must have \fBrdup\fR installed. The currently implemented
+protocol is \fIssh\fR.
+
+Dumping my homedir to the remote server:
+
+.RS
+rdup-simple ~ ssh://miekg@remote/vol/backup/$HOSTNAME
+.RE
+
+The syntax is almost identical only the destination starts with
+the magic string 'ssh://'. Compression and encryption are just
+as easily enabled as with a local backup, just add '-z' and/or
+a '-k keyfile' argument:
+
+.RS
+rdup-simple -z -k 'secret-file' ~ ssh://miekg@remote/vol/backup/$HOSTNAME
+.RE
+
+.SH RESTORE
+
+In principle a restore is as easy as using the standard system tools to
+copy a directory to another location. 
+
+.SS LOCAL RESTORE
+Restoring my homedir to a temporaty directory:
+
+.RS
+rdup-restore /vol/backup/$HOSTNAME/200705/14/home/miekg \
+/tmp/restore-miek
+.RE
+
+And ofcourse the compression and encryption also works here, so
+to restore a compressed backup you need only to add the 'z' flag:
+
+.RS
+rdup-restore -z /vol/backup/$HOSTNAME/200705/14/home/miekg \
+/tmp/restore-miek
+.RE
+
+.SS REMOTE RESTORE
+When doing a remote restore the files are \fIpulled\fR from the
+remote server and then copied to your local server.
+
+.RS
+ rdup-restore ssh://miek@remote/vol/backup/$HOSTNAME /tmp/restore
+.RE
+
+Compression and encryption will work as expected.
+
+.SH SEE ALSO
+rdup(1), rdup-snap(1), rdup-gzip(1), rdup-gpg(1) and rdup-crypt(1).

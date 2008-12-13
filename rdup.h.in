@@ -73,12 +73,6 @@
 
 #define F_PERM          07777
 
-#if 0
-/* copied from coreutils-6.10 */
-# define major(dev)  (((dev) >> 8) & 0xff)
-# define minor(dev)  ((dev) & 0xff)
-#endif
-
 struct subtract {
         GTree *d; /* diff */
         GTree *b;

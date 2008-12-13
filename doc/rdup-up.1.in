@@ -1,0 +1,37 @@
+'\" t
+.TH RDUP-UP 1 "13 Dec 2008" "@PACKAGE_VERSION@" "@PACKAGE_NAME@"
+.SH NAME
+@PACKAGE_NAME@-up \- update a directory tree with a rdup archive
+.SH SYNOPSIS
+.B @PACKAGE_NAME@-up
+\fIDIRECTORY\fR
+
+.SH DESCRIPTION
+Transform rdup output into something else. Where something else can
+be a tar, cpio, pax archive or another rdup stream.
+
+
+
+
+.SH OPTIONS
+
+.SH EXIT CODE
+\fBrdup-up\fR return a zero exit code on success, otherwise 1 is returned.
+
+.SH AUTHOR
+Written by Miek Gieben. 
+
+.SH REPORTING BUGS
+Report bugs to <miek@miek.nl>. 
+
+.SH SEE ALSO
+http:/www.miek.nl/projects/rdup is the main site of rdup. And rdup(1) or
+rdup-backups(7).
+
+.SH COPYRIGHT
+Copyright (C) 2005-2009 Miek Gieben. This is free software. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.
+.PP
+Licensed under the GPL version 3. See the file LICENSE in the source distribution
+of rdup.

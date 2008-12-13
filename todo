@@ -1,21 +1,26 @@
 TODO:
 
-:install:
-
-:rdup:
-re-add extended attributes? man 5 tar explains how to do it
--C option can go? We should use rdup-tr?
-
-glib also has pcre-compat regexp -- oops
-
-:rdup-tr:
-*testing* *testing* *testing*
-opt_null ala rdup
-skip 0 bytes reg files?
-
-:rdup-up:
-add this - simular to rdup-snap
+:general:
+- move to more glib functions
+  + pcre regexp
 
 :doc:
 
 :misc:
+
+:install:
+
+:rdup:
+- add extended attributes? man 5 tar explains how to do it
+- -c option can go? You should use rdup-tr?
+
+:rdup-tr:
+- *testing* *testing* *testing* and add these too
+- test cases
+- opt_null ala rdup
+- skip 0 bytes reg files?
+- fifo, sockets, devices testing
+
+:rdup-up:
+- add this - simular to rdup-snap
+
