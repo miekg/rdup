@@ -11,6 +11,8 @@
  */
 
 #include "rdup-tr.h"
+#include "io.h"
+
 /* options */
 char *template;
 gint opt_tty	           = 0;				/* force write to tty */
@@ -138,7 +140,7 @@ stdin2archive(GSList *child, int tmpfile)
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s))) {
+		if (!(rdup_entry = parse_entry(buf, line, &s, I_NONE))) {
 			continue;
 		}
 

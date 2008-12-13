@@ -21,9 +21,13 @@ extern gint opt_output;
  * <contents>
  *
  * buf is NULL delimited 
+ *
+ * fmt is extra and is used by rdup-up to say that it
+ * wants to parse rdup-c ouput. This cannot be handled
+ * with opt_input because rdup-tr cannot handle this (yet!)
  */
 struct r_entry *
-parse_entry(char *buf, size_t l, struct stat *s) 
+parse_entry(char *buf, size_t l, struct stat *s, gint fmt) 
 {
 	struct r_entry *e;
 	gint i;
@@ -145,26 +149,50 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_size = atoi(pos);
 			pos = n + 1;
 
-			/* pathname */
-			e->f_name = g_strdup(pos);
-			if (strlen(e->f_name) != e->f_name_size) {
-				msg("Real pathname length is not equal to pathname length at line: %zd", l);
-				return NULL;
-			}
+			/* fmt = I_NONE -> do the stat and fill out the entry
+			 * I_RDUP -> rdup input, no stat
+			 * I_RDUP_C -> rdup -c input, no stat
+			 */
 
-			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-				e->f_name[e->f_size] = '\0';
-				j = lstat(e->f_name, s);
-				e->f_name[e->f_size] = ' ';
-			} else {
-				j = lstat(e->f_name, s);
-			}
+			switch(fmt) {
+				case I_NONE:
+					/* pathname */
+					e->f_name = g_strdup(pos);
+					if (strlen(e->f_name) != e->f_name_size) {
+						msg("Real pathname length is not equal to pathname length at line: %zd", l);
+						return NULL;
+					}
 
-			if (j == -1) {
-				msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
-				return NULL;
-			}
+					if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+						e->f_name[e->f_size] = '\0';
+						j = lstat(e->f_name, s);
+						e->f_name[e->f_size] = ' ';
+					} else {
+						j = lstat(e->f_name, s);
+					}
 
+					if (j == -1) {
+						msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
+						return NULL;
+					}
+
+					break;
+				case I_RDUP:
+					/* pathname */
+					e->f_name = g_strdup(pos);
+					if (strlen(e->f_name) != e->f_name_size) {
+						msg("Real pathname length is not equal to pathname length at line: %zd", l);
+						return NULL;
+					}
+
+					break;
+
+				case I_RDUP_C:
+					/* pathname will be present but after a newline
+					 * so there isn't much to do here - this must
+					 * be read from within the calling function */
+					break;
+			}
 			break;
 	}
 	return e;
