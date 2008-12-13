@@ -155,6 +155,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				pos = n + 1;
 			}
 
+			/* all path should begin with / */ /* DIR_SEP? */
 			switch(stat) {
 				case DO_STAT:
 					/* pathname */

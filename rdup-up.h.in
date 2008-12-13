@@ -2,6 +2,7 @@
 #define _RDUP_UP_H
 
 #include <glib.h>
+#include <glib/gstdio.h>
 
 #include "config.h"
 
@@ -73,5 +74,8 @@ struct r_entry *sym_link(struct r_entry *e, char *h_lnk);
 
 /* abspath.c */
 char * abspath(char *path);
+
+/* rm.c */
+gboolean rm(gchar *p);
 
 #endif  /* _RDUP_UP_H */

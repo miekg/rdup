@@ -34,31 +34,92 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
-/* read e->f_size bytes from *in
- * and store them in e->f_name
- */
-void
-read_write(FILE *in, struct r_entry *e) 
+
+/* make the object in the fs */
+void	/* XXX failure?? */
+mk_obj(FILE *in, char *p, struct r_entry *e) 
 {
 	char     *buf;
 	size_t   i, mod, rest;
+	char     *s, *t;
+	FILE	 *out;
 
-	if (S_ISREG(e->f_mode) && !e->f_lnk) {
-		/* only for files, but skip hardlinks */
+	/* PERMISSIONS!! */
+	/* devices sockets and other stuff! */
+
+	/* hardlink */
+	if (e->f_lnk || S_ISLNK(e->f_mode)) {
+		s = g_strdup(e->f_name);
+		t = s + e->f_size + 4; /* ' -> ' */
+		s[e->f_size] = '\0';
+
+		if (g_file_test(s, G_FILE_TEST_EXISTS) || g_file_test(e->f_name, G_FILE_TEST_IS_SYMLINK)) {
+			rm(s);
+		}
+
+		if (S_ISLNK(e->f_mode)) {
+			fprintf(stderr, "s %s||%s\n", s, t);
+			if (symlink(t, s) == -1) {
+				msg("Failed to make symlink: `%s -> %s\': %s", s, t, strerror(errno));
+				return;
+			}
+		} else {
+			/* make target also fall in the backup dir */
+			t = g_strdup_printf("%s%s", p, s + e->f_size + 4);
+			fprintf(stderr, "h %s||%s\n", s, t);
+			/* safe in link list with hardlinks */
+		}
+		return;
+	}
+
+	/* for all other objs we can call rm */
+	if (g_file_test(e->f_name, G_FILE_TEST_EXISTS)) {
+		/* XXX return value */
+		rm(e->f_name);
+	}
+
+	/* regular file */
+	if (S_ISREG(e->f_mode)) {
+
+		if (!(out = fopen(e->f_name, "w"))) {
+			msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
+			if (!(out = fopen("/dev/null", "w"))) {
+				msg("Failed to open `/dev/null\': %s", strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+		}
 
 		buf   = g_malloc(BUFSIZE + 1);
 		rest = e->f_size % BUFSIZE;	      /* then we need to read this many */
 		mod  = (e->f_size - rest) / BUFSIZE;  /* main loop happens mod times */
 
-		fprintf(stderr, "Reading %zd bytes\n", (size_t) e->f_size);
-
 		/* mod loop */
 		for(i = 0; i < mod; i += BUFSIZE) {
 			i = fread(buf, sizeof(char), BUFSIZE, in);
+			if (fwrite(buf, sizeof(char), i, out) != i) {
+				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
+				fclose(out);
+				return; /* XXX */
+			}
 		}
 		/* rest */
 		i = fread(buf, sizeof(char), rest, in);
+		if (fwrite(buf, sizeof(char), i, out) != i) {
+			msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
+			fclose(out);
+			return; /* XXX */
+		}
+		g_chmod(e->f_name, e->f_mode);
+		return;
 	}
+
+	/* directory */
+	if (S_ISDIR(e->f_mode)) {
+		fprintf(stderr, "d %s\n", e->f_name);
+		g_mkdir(e->f_name, e->f_mode);
+		return;
+	}
+
 	return;
 }
 
@@ -67,8 +128,8 @@ void
 update(char *path)
 {
 	struct r_entry *rdup_entry;
-	size_t         line, i, pathsize, filesize;
-	char           *buf, *pathbuf, *n;
+	size_t         line, i, pathsize;
+	char           *buf, *pathbuf, *n, *p;
 	char           delim;
 	FILE           *fp;
 	struct stat    s;
@@ -79,10 +140,6 @@ update(char *path)
 	fp  	= stdin;
 	delim   = '\n';
 	line    = 0;
-
-	/* XXX */
-	path = path;
-	filesize = 0;
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		line++;
@@ -103,14 +160,22 @@ update(char *path)
 			exit(EXIT_FAILURE);
 		}
 		pathbuf[pathsize] = '\0';
+		if (pathbuf[0] != '/') {
+			msg("Pathname does not start with /: `%s\'", pathbuf);
+			exit(EXIT_FAILURE);
+		}
+		p = g_strdup_printf("%s%s", path, pathbuf);
+		rdup_entry->f_name_size += strlen(path);
+		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk)
+			rdup_entry->f_size += strlen(path);
 
-		/* XXX */
-		fprintf(stderr, "path:%d %d %s\n", pathsize, rdup_entry->f_name_size, pathbuf);
+		rdup_entry->f_name = p;
 
-		/* next read the filecontents */
-		read_write(stdin, rdup_entry);
+		mk_obj(stdin, path, rdup_entry);
+
 	}
-
+	/* post-process hardlinks */
+	/* mk_hardlink(GSList *hl); */
 }
 
 
