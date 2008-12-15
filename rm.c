@@ -15,23 +15,24 @@ rm(gchar *p)
 	int ret;
 	gchar *dirp;
 	GDir *d;
+	struct stat st;
+	gboolean exists;
 
-	/* er gaat hier iets mis met symlinks  ... */
-	fprintf(stderr, "rm [%s]\n", p);
+	if (lstat(p, &st) == -1)
+		exists = FALSE;
+	else 
+		exists = TRUE;
 
-	if (g_file_test(p, G_FILE_TEST_IS_SYMLINK)) {
-		if (g_remove(p) == -1) {
-			msg("Failed to remove `%s\': %s", p, "errno");
-			return FALSE;
-		}
-	}
+	fprintf(stderr, "removing %s\n", p);
 
-	/* do this again (race conditions) */
-	if (!g_file_test(p, G_FILE_TEST_EXISTS)) 
-		return TRUE;		/* heh :), it's already gone */
+	if (!exists)
+		return TRUE;	/* the easy life */
 
-	if (g_file_test(p, G_FILE_TEST_IS_DIR)) {
-		ret = g_remove(p);
+	fprintf(stderr, " really removing %s\n", p);
+
+	if (S_ISDIR(st.st_mode)) {
+		fprintf(stderr, "rm directory [%s]\n", p);
+		ret = remove(p);
 		if (ret == -1) {
 			/* hmm, failed... */
 			if (errno == ENOTEMPTY) {
@@ -46,6 +47,7 @@ rm(gchar *p)
 					/* gaat die ALTIJD goed? */
 					dirp = g_strdup_printf("%s%c%s", p, DIR_SEP, dirp);
 
+					fprintf(stderr, "removing the next %s\n", dirp);
 					rm(dirp);
 					/* a) uhh, error checking */
 					/* b) max diepte */
@@ -53,18 +55,19 @@ rm(gchar *p)
 				g_dir_close(d);
 				return TRUE;
 			} else {
-				msg("Failed to remove directory `%s\': %s", p, "errno");
+				/* not ENOEMPTY */
+				msg("Failed to remove directory `%s\': %s", p, strerror(errno));
 				return FALSE;
 			}
 		}
-	} else {
-		if (g_remove(p) == -1) {
-			msg("Failed to remove `%s\': %s", p, "errno");
-			return FALSE;
-		}
+		fprintf(stderr, "ret from rec, doing %s\n", p);
+		ret = remove(p);	/* try to remove the top level dir again */
 		return TRUE;
 	}
 
+	if (remove(p) == -1) {
+		msg("Failed to remove `%s\': %s", p, strerror(errno));
+		return FALSE;
+	}
 	return TRUE;
 }
-

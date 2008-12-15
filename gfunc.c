@@ -533,7 +533,7 @@ gfunc_regexp(GSList *l, char *n, size_t len)
         pcre *P;
 	int ovector[REG_VECTOR];
 
-        for (k = g_slist_nth(l, 0); k; k = g_slist_next(k)) { 
+        for (k = g_slist_nth(l, 0); k; k = k->next) { 
 		if (sig != 0)
 			signal_abort(sig);
 

@@ -78,4 +78,11 @@ char * abspath(char *path);
 /* rm.c */
 gboolean rm(gchar *p);
 
+/* fs-up.c */
+gboolean mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p);
+gboolean mk_reg(FILE *in, struct r_entry *e, gboolean exists);
+gboolean mk_dir(struct r_entry *e, struct stat *st, gboolean exists);
+gboolean mk_hlink(GSList *h);
+gboolean mk_obj(FILE *in, char *p, struct r_entry *e);
+
 #endif  /* _RDUP_UP_H */

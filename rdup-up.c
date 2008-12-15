@@ -13,7 +13,7 @@ gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 sig_atomic_t sig           = 0;
-
+GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 /* signal.c */
 void got_sig(int signal);
 
@@ -34,97 +34,8 @@ msg(const char *fmt, ...)
         va_end(args);
 }
 
-
-/* make the object in the fs */
-void	/* XXX failure?? */
-mk_obj(FILE *in, char *p, struct r_entry *e) 
-{
-	char     *buf;
-	size_t   i, mod, rest;
-	char     *s, *t;
-	FILE	 *out;
-
-	/* PERMISSIONS!! */
-	/* devices sockets and other stuff! */
-
-	/* hardlink */
-	if (e->f_lnk || S_ISLNK(e->f_mode)) {
-		s = g_strdup(e->f_name);
-		t = s + e->f_size + 4; /* ' -> ' */
-		s[e->f_size] = '\0';
-
-		if (g_file_test(s, G_FILE_TEST_EXISTS) || g_file_test(e->f_name, G_FILE_TEST_IS_SYMLINK)) {
-			rm(s);
-		}
-
-		if (S_ISLNK(e->f_mode)) {
-			fprintf(stderr, "s %s||%s\n", s, t);
-			if (symlink(t, s) == -1) {
-				msg("Failed to make symlink: `%s -> %s\': %s", s, t, strerror(errno));
-				return;
-			}
-		} else {
-			/* make target also fall in the backup dir */
-			t = g_strdup_printf("%s%s", p, s + e->f_size + 4);
-			fprintf(stderr, "h %s||%s\n", s, t);
-			/* safe in link list with hardlinks */
-		}
-		return;
-	}
-
-	/* for all other objs we can call rm */
-	if (g_file_test(e->f_name, G_FILE_TEST_EXISTS)) {
-		/* XXX return value */
-		rm(e->f_name);
-	}
-
-	/* regular file */
-	if (S_ISREG(e->f_mode)) {
-
-		if (!(out = fopen(e->f_name, "w"))) {
-			msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
-			if (!(out = fopen("/dev/null", "w"))) {
-				msg("Failed to open `/dev/null\': %s", strerror(errno));
-				exit(EXIT_FAILURE);
-			}
-		}
-
-		buf   = g_malloc(BUFSIZE + 1);
-		rest = e->f_size % BUFSIZE;	      /* then we need to read this many */
-		mod  = (e->f_size - rest) / BUFSIZE;  /* main loop happens mod times */
-
-		/* mod loop */
-		for(i = 0; i < mod; i += BUFSIZE) {
-			i = fread(buf, sizeof(char), BUFSIZE, in);
-			if (fwrite(buf, sizeof(char), i, out) != i) {
-				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-				fclose(out);
-				return; /* XXX */
-			}
-		}
-		/* rest */
-		i = fread(buf, sizeof(char), rest, in);
-		if (fwrite(buf, sizeof(char), i, out) != i) {
-			msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-			fclose(out);
-			return; /* XXX */
-		}
-		g_chmod(e->f_name, e->f_mode);
-		return;
-	}
-
-	/* directory */
-	if (S_ISDIR(e->f_mode)) {
-		fprintf(stderr, "d %s\n", e->f_name);
-		g_mkdir(e->f_name, e->f_mode);
-		return;
-	}
-
-	return;
-}
-
 /* update the directory with the archive */
-void
+gboolean
 update(char *path)
 {
 	struct r_entry *rdup_entry;
@@ -133,6 +44,7 @@ update(char *path)
 	char           delim;
 	FILE           *fp;
 	struct stat    s;
+	gboolean       err;
 	
 	buf	= g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
@@ -171,11 +83,14 @@ update(char *path)
 
 		rdup_entry->f_name = p;
 
-		mk_obj(stdin, path, rdup_entry);
+		if (mk_obj(stdin, path, rdup_entry) == FALSE)
+			err = FALSE;
 
 	}
 	/* post-process hardlinks */
-	/* mk_hardlink(GSList *hl); */
+	if (mk_hlink(hlink) == FALSE)
+		err = FALSE;
+	return err;
 }
 
 
@@ -251,7 +166,8 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	update(path);
+	if (update(path) == FALSE)
+		exit(EXIT_FAILURE);
 
 	exit(EXIT_SUCCESS);
 }

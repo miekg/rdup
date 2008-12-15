@@ -4,6 +4,7 @@ xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
    print the link's name not the '-> target' part
  * rdup: rdup.1.in had a long deserved make-over
  * rdup: Print symlinks correctly when there named on the cmd line
+ * rdup: don't use g_slist_next, but k->next in gfunc.c
  * rdup-tr: Added rdup-tr; a tool to convert rdup output to
    (modified) rdup output, tar, pax or cpio files
  * rdup-tr: Don't compile rdup-tr if libarchive is not found
