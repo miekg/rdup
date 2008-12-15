@@ -18,13 +18,11 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 {
 	/* there is something */
 	if (exists) {
-		fprintf(stderr, "removing %s\n", s);	
 		(void)rm(s);
 	}
 
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
-		fprintf(stderr, "s %s||%s\n", s, t);
 		if (symlink(t, s) == -1) {
 			msg("Failed to make symlink: `%s -> %s\': %s", s, t, strerror(errno));
 			return FALSE;
@@ -51,7 +49,6 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 
 	/* there is something */
 	if (exists) {
-		fprintf(stderr, "remving %s\n", e->f_name);	
 		(void)rm(e->f_name);
 	}
 
@@ -98,10 +95,10 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 		return TRUE;
 	}
 
-	fprintf(stderr, "remove %s", e->f_name);
-
-	if (g_mkdir(e->f_name, e->f_mode) == -1)
+	if (g_mkdir(e->f_name, e->f_mode) == -1) {
+		msg("Failed to created directory `%s\'", e->f_name);
 		return FALSE;
+	}
 
 	g_chmod(e->f_name, e->f_mode);
 	return TRUE;
@@ -133,18 +130,15 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 			} else {
 				s = e->f_name;
 			}
-			(void) rm(s);
-			return TRUE;
+			return rm(s);
 		case '+':
 			if (S_ISDIR(e->f_mode)) {
-				(void) mk_dir(e, &st, exists);	
-				break;
+				return  mk_dir(e, &st, exists);	
 			}
 
 			/* no, first sym and hardlinks and then 
 			 * a regular file 
 			 */
-
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
 				/* get out the source name and re-stat it */
 				s = e->f_name;
@@ -156,14 +150,11 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 				else
 					exists = TRUE;
 
-				(void)mk_link(e, exists, s, t, p);
-				break;
+				return mk_link(e, exists, s, t, p);
 			}
 
-
 			if (S_ISREG(e->f_mode)) {
-				mk_reg(in, e, exists);
-				break;
+				return mk_reg(in, e, exists);
 			}
 #if 0
 			if (S_ISSOCK(e->fmode)) {
@@ -172,6 +163,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 			}
 #endif
 	}
+	/* huh still alive */
 	return TRUE;
 }
 

@@ -44,7 +44,7 @@ update(char *path)
 	char           delim;
 	FILE           *fp;
 	struct stat    s;
-	gboolean       err;
+	gboolean       ok;
 	
 	buf	= g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
@@ -52,6 +52,7 @@ update(char *path)
 	fp  	= stdin;
 	delim   = '\n';
 	line    = 0;
+	ok      = TRUE;
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		line++;
@@ -84,13 +85,14 @@ update(char *path)
 		rdup_entry->f_name = p;
 
 		if (mk_obj(stdin, path, rdup_entry) == FALSE)
-			err = FALSE;
-
+			ok = FALSE;
 	}
+
 	/* post-process hardlinks */
 	if (mk_hlink(hlink) == FALSE)
-		err = FALSE;
-	return err;
+		ok = FALSE;
+
+	return ok;
 }
 
 
@@ -166,8 +168,10 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	if (update(path) == FALSE)
+	if (update(path) == FALSE) {
+	printf("ghallo");
 		exit(EXIT_FAILURE);
+	}
 
 	exit(EXIT_SUCCESS);
 }

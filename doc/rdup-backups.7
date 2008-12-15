@@ -4,9 +4,6 @@
 .SH NAME
 rdup-backups \- introduction into making backups with rdup
 
-.SH WORK IN PROGRESS
-This is entire document is a work in progress.
-
 .SH INTRODUCTION
 \fBrdup\fR is a simple program that prints out a list of files and
 directories that are changed changed on a filesystem. It is much
@@ -23,7 +20,8 @@ currently \fBrdup\fR consists out of three basic utilties:
 .TP
 .B rdup
 With rdup you create the filelist on which later programs in the
-pipeline can work. 
+pipeline can work. With \fBrdup \fI\-c\fR the file's contents
+is also echo-ed to stdout.
 
 .TP
 .B rdup-tr
@@ -35,40 +33,31 @@ files rdup delivers to you.
 With rdup-up you can update an existing directory stucture with the
 updates as describe in the rdup archive. 
 
+With these three tools you can create your own backup solution, see
+SNAPHOST BACKUPS later in this document.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
 restores. I you think about this a minute you understand why.
 
-Because making a backup means copying a list of files somewhere else and
-restoring is essentially the same operation, albeit the other way around,
-\fBrdup\fR can be used for both. 
+Making a backup means copying a list of files somewhere else. Restoring
+files is copying a list of files back to the place they came from. Same
+difference. So \fBrdup\fR can be used for both, if you did any
+transformation with \fBrdup-tr\fR during the backup you just need to
+reverse those operations during the restore.
 
 .SH BACKUPS
 It is always best to backup to \fIanother\fR medium, be it a different
 local harddisk or a NFS/CIFS mounted filesystem or use the remote backup
 capabilities to securely copy the backup to another system all together.
+
+If you backup to a local disk you can just as well use \fBrsync\fR or
+plain old tar, but if you store your files at somebody else's disk you
+will need encryption. This is where you go beyond \fBrsync\fR.
 	 
 
-.SH BACKING UP WITH RDUP AND FRIENDS
-look for an existing backup - and mimic rdup-simple
+.SH SNAPSHOT BACKUPS
 
-
-
-.SH RESTORE WITH RDUP AND FRIENDS
-
-
-
-.SH EXAMPLES
-
-.SS LOCAL BACKUPS
-
-Backing up my homedir to the backup directory:
-
-.RS
-XXX
-.RE
 
 .SH ALSO SEE
-rdup(1), rdup-tr(1), rdup-up(1)
-    miek
+rdup(1), rdup-tr(1), rdup-up(1) or http://www.miek.nl/projects/rdup/

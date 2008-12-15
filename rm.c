@@ -23,15 +23,10 @@ rm(gchar *p)
 	else 
 		exists = TRUE;
 
-	fprintf(stderr, "removing %s\n", p);
-
 	if (!exists)
 		return TRUE;	/* the easy life */
 
-	fprintf(stderr, " really removing %s\n", p);
-
 	if (S_ISDIR(st.st_mode)) {
-		fprintf(stderr, "rm directory [%s]\n", p);
 		ret = remove(p);
 		if (ret == -1) {
 			/* hmm, failed... */
@@ -60,7 +55,6 @@ rm(gchar *p)
 				return FALSE;
 			}
 		}
-		fprintf(stderr, "ret from rec, doing %s\n", p);
 		ret = remove(p);	/* try to remove the top level dir again */
 		return TRUE;
 	}

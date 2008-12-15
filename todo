@@ -4,6 +4,7 @@ TODO:
 - move to more glib functions
   + pcre regexp
 - test -0 for rdup*
+- define msg() ONE time in all three the programs
 
 - entry dup terug naar crawler
 
