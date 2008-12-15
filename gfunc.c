@@ -213,7 +213,7 @@ entry_print_data(FILE *out, char n, struct r_entry *e)
 			fprintf(out, "%d", (int)e->f_mode);
 			break;
 	        case 'b':
-                       fprintf(out, "%.4o", (int)e->f_mode & F_PERM);
+                       fprintf(out, "%.4o", (int)e->f_mode & ~S_IFMT);
                        break;
 		case 't':
 			fprintf(out, "%ld", (unsigned long)e->f_ctime);

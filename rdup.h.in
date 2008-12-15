@@ -71,8 +71,6 @@
 #define R_MAX_ID        2147483646  /* 2 ^ 31 - 2 */
 #endif
 
-#define F_PERM          07777
-
 struct subtract {
         GTree *d; /* diff */
         GTree *b;

@@ -164,7 +164,7 @@ main(int argc, char **argv)
 		path = abspath(argv[0]);
 
 	if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-		msg("Not a directory: `%s\'", path);
+		msg("No such directory: `%s\'", path);
 		exit(EXIT_FAILURE);
 	}
 

@@ -231,7 +231,7 @@ rdup_write_header(struct r_entry *e)
 	out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
 			e->plusmin,		
 			t,
-			(int)e->f_mode & F_PERM,
+			(int)e->f_mode & ~S_IFMT,
 			(unsigned long)e->f_uid,
 			(unsigned long)e->f_gid,
 			(unsigned long)e->f_name_size,

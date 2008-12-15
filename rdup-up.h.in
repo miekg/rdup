@@ -49,7 +49,6 @@
 
 #define BUFSIZE	    4096
 #define LIST_MINSIZE   15
-#define F_PERM          07777
 
 #define DIR_SEP         '/'
 #define DIR_SEP_STR    "/"
