@@ -112,7 +112,7 @@ cat(FILE *fp, char *filename, off_t f_size)
 }
 
 /*
- * cat the contents, only when adding and only for files/links
+ * cat the contents, only when adding and only for files
  */
 static void
 entry_cat_data(FILE *fp, struct r_entry *e)
@@ -123,22 +123,6 @@ entry_cat_data(FILE *fp, struct r_entry *e)
 		}
 		return;
 	}
-	/* special case for links isn't needed anymore
-	 * link name is now embedded in the path: link -> target
-	 */
-#if 0
-	if (S_ISLNK(e->f_mode)) {
-		char buf[BUFSIZE + 1];
-		ssize_t i;
-		if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {
-			msg(_("Error reading link `%s\': %s"), e->f_name, strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-		buf[i] = '\0';
-		fprintf(fp, "%s", buf);
-		return;
-	}
-#endif
 }
 
 /**
@@ -313,6 +297,15 @@ entry_print(FILE *out, char plusmin, struct r_entry *e)
 			return;
 		}
 #endif /* _DEBUG_RACE */
+	}
+
+	/* next check if we can read the file, if not - skip it and don't emit
+	 * anything */
+	if (S_ISREG(e->f_mode) && plusmin == '+' && e->f_lnk == 0) {
+		if (access(e->f_name, R_OK) == -1) {
+			msg("Unable to open file `%s\': %s", e->f_name, strerror(errno));
+			return;
+		}
 	}
 
 	for (pos = opt_format; *pos != '\0';  ++pos) {

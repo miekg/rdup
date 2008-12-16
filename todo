@@ -3,11 +3,13 @@ TODO:
 :general:
 - move to more glib functions
   + pcre regexp
-- test -0 for rdup*
+- test -0 for rdup-*
 - define msg() ONE time in all three the programs
-
-- files without read permission, check this
-
+- check memory
+- fifo, sockets, devices testing
+- (void) remove in fs-up
+- non-writable directories - make them writeable and and
+  then return them to the proper state
 
 :doc:
 
@@ -20,12 +22,10 @@ TODO:
 - -c option can go? You should use rdup-tr?
 
 :rdup-tr:
-- *testing* *testing* *testing* and add these too
-- test cases
+- *testing* *testing* *testing* 
 - opt_null ala rdup
 - skip 0 bytes reg files?
-- fifo, sockets, devices testing
 
 :rdup-up:
-- add this - simular to rdup-snap
-
+- *testing* *testing*
+- opt_null?

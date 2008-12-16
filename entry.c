@@ -22,7 +22,7 @@ extern gint opt_output;
  *
  * buf is NULL delimited 
  *
- * fmt is extra and is used by rdup-up to say that it
+ * stat is extra and is used by rdup-up to say that it
  * wants to parse rdup -c ouput. This cannot be handled
  * with opt_input because rdup-tr cannot handle this (yet!)
  */
@@ -63,7 +63,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 
 		case I_RDUP:
 			if (strlen(buf) < LIST_MINSIZE){
-				msg(_("Corrupt entry in filelist at line: %zd"), l);
+				msg(_("Corrupt entry `%s\' in input at line: %zd"), buf, l);
 				return NULL;
 			}
 
@@ -75,7 +75,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 
 			/* 1st char should + or - */
 			if (buf[0] != '-' && buf[0] != '+') {
-				msg("First character should \'-\' or \'+\' at line: %zd", l);
+				msg("First character should \'-\' or \'+\', `%s\' at line: %zd", buf, l);
 				return NULL;
 			}
 			e->plusmin = buf[0];
@@ -102,7 +102,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			/* perm */
 			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 +	/* oct -> dec */
 				(buf[5] - 48) * 8 + (buf[6] - 48);
-			if (i < 0 || i > 04777) {
+			if (i < 0 || i > 07777) {
 				msg("Invalid permissions at line: %zd", l);
 				return NULL;
 			}
@@ -139,22 +139,47 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_name_size = atoi(pos); /* checks */
 			pos = n + 1;
 
-			/* filesize - may be overloaded for rdev */
 			/* XXX TODO */
-
-			if (stat == NO_STAT_CONTENT) {
-				e->f_size = atoi(pos);
-			} else {
-				n = strchr(pos, ' ');
+			/* check for , get left (major) get right (minor)
+			 * and e->f_rdev = makedev(x, y)
+			 * e->f_size = 0
+			 * NO_CONTENT
+			 */
+			if (S_ISCHR(e->f_mode) || S_ISBLK(e->f_mode)) {
+				int major, minor;
+				n = strchr(pos, ',');
 				if (!n) {
-					msg("Malformed input for file size at line: %zd", l);
+					msg("No major,minor found for device at line: %zd", l);
 					return NULL;
 				}
-				/* atoi? */
-				e->f_size = atoi(pos);
-				pos = n + 1;
-			}
+				*n = '\0';
+				major = atoi(pos); minor = atoi(n + 1);
+				e->f_size = 0;
+				e->f_rdev = makedev(major, minor);
 
+				if (stat != NO_STAT_CONTENT) {
+					/* there are entries left, correctly
+					 * set the pointer 
+					 */
+					pos = strchr(n + 1, ' ');
+/*					fprintf(stderr, "pos %s\n", pos); */
+					pos++;
+				}
+			} else {
+				/* XXX check */
+				if (stat == NO_STAT_CONTENT) {
+					e->f_size = atoi(pos);
+				} else {
+					n = strchr(pos, ' ');
+					if (!n) {
+						msg("Malformed input for file size at line: %zd", l);
+						return NULL;
+					}
+					/* atoi? */
+					e->f_size = atoi(pos);
+					pos = n + 1;
+				}
+			}
 			/* all path should begin with / */ /* DIR_SEP? */
 			switch(stat) {
 				case DO_STAT:

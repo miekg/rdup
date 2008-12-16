@@ -8,24 +8,19 @@
 void
 usage_up(FILE *f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... \n"), PROGNAME);
+        fprintf(f, _("USAGE: %s [OPTION]... DIRECTORY\n"), PROGNAME);
 	fputs( _("\
-Pietje\n\
-format: \'%p%T %b %u %g %l %s %n\\n\'.\n\
+Update a directory tree with an rdup archive.\n\
+\n\
+        DIRECTORY\twhere to unpack the archive\n\
 \n\
 \n\
     OPTIONS:\n\
-        -c\t\tforce output to tty\n\
-        -Pcmd,opt1,...,opt7\n\
-	    \t\tfilter through cmd\n\
-	\t\tthis may be repeated, output will be filtered\n\
-	\t\tthrough all commands\n\
 	-h\t\tthis help\n\
+	-t\t\tcreate DIRECTORY if is does not exist\n\
+	-n\t\tdry run, do not touch the filesystem\n\
 	-V\t\tprint version\n\
-        -Ofmt\t\toutput format: pax, cpio, tar or rdup\n\
-	\t\trdup uses format: \"%p%T %b %u %g %l %s\\n%n%C\"\n\
-	-L\t\tset input format to a list of pathnames\n\
-	-v\t\tbe more verbose and print process files to stderr\n\
+	-v\t\tbe more verbose and print processed files to stderr\n\
 \n\
 Report bugs to <miek@miek.nl>\n\
 Licensed under the GPL version 3.\n\

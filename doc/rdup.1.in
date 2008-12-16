@@ -394,7 +394,7 @@ expression can not be compiled or if a signal is received.
 
 .SH EXAMPLES
 The next set of examples will all make a full dump -- because of the use
-of /dev/null.
+of /dev/null. See rdup-tr(1) for much more advanced examples.
 
 .SS cpio
 .RS
@@ -414,7 +414,6 @@ Restore:
     tar x -f my-archive.tar
 .RE
 
-
 .SH AUTHOR
 Written by Miek Gieben. 
 
@@ -426,8 +425,8 @@ See the \-c flag for explanation about a small race condition when doing
 remote dumps. 
 
 .SH SEE ALSO
-http:/www.miek.nl/projects/rdup is the main site of rdup. And rdup-tr(1)
-or rdup-backups(7).
+http:/www.miek.nl/projects/rdup is the main site of rdup. And
+rdup-tr(1), rdup-up(1) or rdup-backups(7).
 
 .SH COPYRIGHT
 Copyright (C) 2005-2008 Miek Gieben. This is free software. There is NO

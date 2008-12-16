@@ -8,14 +8,52 @@
 #include "rdup-up.h"
 
 extern sig_atomic_t sig;
+extern gboolean opt_dry;
+extern gint opt_verbose;
 extern GSList *hlink;
 
 /* signal.c */
 void got_sig(int signal);
 
 gboolean
+mk_dev(struct r_entry *e, gboolean exists) {
+	if (opt_dry)
+		return TRUE;
+
+	if (exists) {
+		(void)rm(e->f_name);
+	}
+
+	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
+		msg("Failed to make device: `%s\': %s", e->f_name, strerror(errno));
+	}
+	g_chmod(e->f_name, e->f_mode);
+	return TRUE;
+}
+
+gboolean
+mk_sock(struct r_entry *e, gboolean exists) {
+	if (opt_dry)
+		return TRUE;
+
+	if (exists) {
+		(void)rm(e->f_name);
+	}
+
+	if (mkfifo(e->f_name, e->f_mode) == -1) {
+		msg("Failed to make socket: `%s\': %s", e->f_name, strerror(errno));
+	}
+	g_chmod(e->f_name, e->f_mode);
+	return TRUE;
+}
+
+
+gboolean
 mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 {
+	if (opt_dry)
+		return TRUE;
+
 	/* there is something */
 	if (exists) {
 		(void)rm(s);
@@ -45,22 +83,30 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 {
 	FILE *out;
 	char *buf;
-	size_t   i, mod, rest;
+	size_t   i, j, mod, rest;
 
 	/* there is something */
-	if (exists) {
+	if (exists && !opt_dry) {
 		(void)rm(e->f_name);
 	}
 
-	if (!(out = fopen(e->f_name, "w"))) {
-		msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
+	if (opt_dry) {
 		if (!(out = fopen("/dev/null", "w"))) {
 			msg("Failed to open `/dev/null\': %s", strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	} else {
-		/* set permissions right away */
-		g_chmod(e->f_name, e->f_mode);
+
+		if (!(out = fopen(e->f_name, "w"))) {
+			msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
+			if (!(out = fopen("/dev/null", "w"))) {
+				msg("Failed to open `/dev/null\': %s", strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+		} else {
+			/* set permissions right away */
+			g_chmod(e->f_name, e->f_mode);
+		}
 	}
 
 	buf   = g_malloc(BUFSIZE + 1);
@@ -68,7 +114,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	mod  = (e->f_size - rest) / BUFSIZE;  /* main loop happens mod times */
 
 	/* mod loop */
-	for(i = 0; i < mod; i += BUFSIZE) {
+	for(j = 0; j < mod; j++) {
 		i = fread(buf, sizeof(char), BUFSIZE, in);
 		if (fwrite(buf, sizeof(char), i, out) != i) {
 			msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
@@ -89,6 +135,9 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 gboolean
 mk_dir(struct r_entry *e, struct stat *st, gboolean exists) 
 {
+	if (opt_dry)
+		return TRUE;
+
 	/* there is something and it's a dir */
 	if (exists && S_ISDIR(st->st_mode)) {
 		g_chmod(e->f_name, e->f_mode);
@@ -99,7 +148,6 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 		msg("Failed to created directory `%s\'", e->f_name);
 		return FALSE;
 	}
-
 	g_chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
@@ -113,15 +161,21 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 	gboolean exists;
 	struct stat st;
 
-	/* devices sockets and other fluf! */
+	/* XXX devices sockets and other fluf! */
 
 	if (lstat(e->f_name, &st) == -1) 
 		exists = FALSE;
 	else
 		exists = TRUE;
 
+	if (opt_verbose > 0)
+		printf("%c %s\n", e->plusmin, e->f_name);
+
 	switch(e->plusmin) {
 		case '-':
+			if (opt_dry)
+				return TRUE;
+
 			/* remove all stuff you can find */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
 				/* get out the source name */
@@ -132,13 +186,11 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 			}
 			return rm(s);
 		case '+':
-			if (S_ISDIR(e->f_mode)) {
+			/* opt_dry handled within the subfunctions */
+			if (S_ISDIR(e->f_mode))
 				return  mk_dir(e, &st, exists);	
-			}
 
-			/* no, first sym and hardlinks and then 
-			 * a regular file 
-			 */
+			/* First sym and hardlinks and then * a regular file */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
 				/* get out the source name and re-stat it */
 				s = e->f_name;
@@ -153,15 +205,14 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 				return mk_link(e, exists, s, t, p);
 			}
 
-			if (S_ISREG(e->f_mode)) {
+			if (S_ISREG(e->f_mode))
 				return mk_reg(in, e, exists);
-			}
-#if 0
-			if (S_ISSOCK(e->fmode)) {
-				mk_sock(e, exists);
-				break;
-			}
-#endif
+
+			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
+				return mk_dev(e, exists);
+
+			if (S_ISSOCK(e->f_mode))
+				return mk_sock(e, exists);
 	}
 	/* huh still alive */
 	return TRUE;

@@ -12,6 +12,8 @@
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
+gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
+gboolean opt_top	   = FALSE;			/* create top dir is it does not exist */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 /* signal.c */
@@ -95,7 +97,6 @@ update(char *path)
 	return ok;
 }
 
-
 int
 main(int argc, char **argv)
 {
@@ -135,7 +136,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "hVv")) != -1) {
+	while ((c = getopt (argc, argv, "thnVv")) != -1) {
 		switch (c) {
 			case 'v':
 				opt_verbose++;
@@ -143,6 +144,12 @@ main(int argc, char **argv)
 			case 'h':
 				usage_up(stdout);
 				exit(EXIT_SUCCESS);
+			case 'n':
+				opt_dry = TRUE;
+				break;
+			case 't':
+				opt_top = TRUE;
+				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
 				exit(EXIT_SUCCESS);
@@ -164,14 +171,19 @@ main(int argc, char **argv)
 		path = abspath(argv[0]);
 
 	if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-		msg("No such directory: `%s\'", path);
-		exit(EXIT_FAILURE);
+		if (!opt_top) {
+			msg("No such directory: `%s\'", path);
+			exit(EXIT_FAILURE);
+		} else {
+			if (g_mkdir_with_parents(path, 00777) == -1) {
+				msg("Failed to create directory `%s\': %s", path, strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+		}
 	}
 
-	if (update(path) == FALSE) {
-	printf("ghallo");
+	if (update(path) == FALSE)
 		exit(EXIT_FAILURE);
-	}
 
 	exit(EXIT_SUCCESS);
 }

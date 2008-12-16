@@ -13,7 +13,7 @@ struct r_entry {
         time_t f_ctime;		/* change time of the inode */
         off_t f_size;		/* file size */
 	dev_t f_dev;		/* ID of device containing file */
-	dev_t f_rdev;		/* device ID (if special file) */
+	dev_t f_rdev;		/* device ID (if special file), we use this for major, minor */
 	ino_t f_ino;		/* inode number */
 };
 

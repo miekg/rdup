@@ -28,13 +28,27 @@ is also echo-ed to stdout.
 With rdup-tr you can transform (encrypt, compress, whatever...) the
 files rdup delivers to you.
 
+\fBrdup-tr\fR reads \fBrdup\fR input and will create \fBrdup \fI\-c\fR
+output.
+
 .TP 
 .B rdup-up
 With rdup-up you can update an existing directory stucture with the
 updates as describe in the rdup archive. 
 
+\fBrdup-tr\fR reads \fBrdup -c\fR input and will create the files,
+symlinks, hardlinks and directories (and sockets, pipe and devices
+on the file system
+
+So the general backup pipeline for \fBrdup\fR will look some like
+this:
+
+    create filelist  |  transform file content  |  update filesystem
+
 With these three tools you can create your own backup solution, see
 SNAPHOST BACKUPS later in this document.
+
+Note that the \fIcombined\fR size of the tools is 50KB.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and

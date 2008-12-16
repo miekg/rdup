@@ -48,7 +48,7 @@ void
 tmp_clean(int tmpfile, char *template) 
 {
 	if (tmpfile != -1) {
-		if (opt_verbose > 0)
+		if (opt_verbose > 1)
 			msg("Cleaning up `%s\'", template);
 		close(tmpfile);
 		unlink(template);
@@ -145,8 +145,9 @@ stdin2archive(GSList *child, int tmpfile)
 		}
 
 		if (opt_verbose > 0) {
-			out = g_strdup_printf("%s\n", rdup_entry->f_name);
-			write(2, out, rdup_entry->f_name_size + 1);
+			out = g_strdup_printf("%c %s\n", rdup_entry->plusmin,
+					rdup_entry->f_name);
+			write(2, out, rdup_entry->f_name_size + 3);
 		}
 
 		if (sig != 0) {

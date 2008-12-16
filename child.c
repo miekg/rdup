@@ -36,7 +36,7 @@ wait_pids(GSList *pids)
 {
 	GSList *p;
 	int status;
-	int ret;
+	int ret = 0;
 
 	if (!pids)
 		return 0;
@@ -45,16 +45,17 @@ wait_pids(GSList *pids)
                 if (sig != 0)
                         signal_abort(sig);
 
-		if (opt_verbose > 0)
-			msg("Waiting for child %d", *(pid_t*)(p->data));
-
 		waitpid(*(pid_t* )(p->data), &status, 0);
 		if (WIFEXITED(status)) {
-			/* fprintf(stderr, "exit %d\n", WEXITSTATUS(status)); */
-			ret = 1;
+#if 0
+			msg("Child exit %d\n", WEXITSTATUS(status)); 
+#endif
+			if (WEXITSTATUS(status) != 0)
+				ret = -1;
 		} else {
 			/* abnormal termination,
 			 * should have received sigpipe? */
+			/* XXX TODO */
 		}
 	}
 	return ret;

@@ -1,17 +1,22 @@
 xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
+  - major feature enhancements, two new programs
+    + rdup-tr: transform rdup output to something else
+    + rdup-up: update a directory tree with rdup archive
+
  * rdup: Added '%N' to the format string, which prints the
    path, but in case of soft- and hardlinks it will only
    print the link's name not the '-> target' part
  * rdup: rdup.1.in had a long deserved make-over
  * rdup: Print symlinks correctly when there named on the cmd line
- * rdup: don't use g_slist_next, but k->next in gfunc.c
- * rdup: suid/sgid/sticky bits output was corrected
+ * rdup: regexp: don't use g_slist_next, but k->next in gfunc.c
+ * rdup: suid/sgid/sticky bit output was corrected
  * rdup-tr: Added rdup-tr; a tool to convert rdup output to
    (modified) rdup output, tar, pax or cpio files
  * rdup-tr: Don't compile rdup-tr if libarchive is not found
  * rdup-tr: rdup-tr.1 manpage
  * rdup-up: Added rdup-up; C version of rdup-snap
- * rdup-up: added rdup-up.1 manpage
+ * rdup-up: Added rdup-up.1 manpage
+ * rdup-up: Support for fifos, pipes, devices
  * updated rdup-backups.7 as general info about backups with rdup
  * Set the copyright to 2009 already
 

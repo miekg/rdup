@@ -345,7 +345,7 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc == 0) {
+	if (argc < 2) {
 		usage(stdout);
 		exit(EXIT_FAILURE);
 	}
