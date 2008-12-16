@@ -6,7 +6,7 @@ TODO:
 - test -0 for rdup-*
 - define msg() ONE time in all three the programs
 - check memory
-- fifo, sockets, devices testing
+- sockets
 - (void) remove in fs-up
 - non-writable directories - make them writeable and and
   then return them to the proper state
