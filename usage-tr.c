@@ -11,8 +11,9 @@ usage_tr(FILE *f)
         fprintf(f, _("USAGE: %s [OPTION]... \n"), PROGNAME);
 	fputs( _("\
 Translate rdup output to something else	and optionally filter it\n\
-through other processes. To input must be rdup's default ouput\n\
+through other processes. The input must be rdup's default ouput\n\
 format: \'%p%T %b %u %g %l %s %n\\n\'.\n\
+The output is equal to rdup -c ouput.\n\
 \n\
 \n\
     OPTIONS:\n\
@@ -26,7 +27,7 @@ format: \'%p%T %b %u %g %l %s %n\\n\'.\n\
         -Ofmt\t\toutput format: pax, cpio, tar or rdup\n\
 	\t\trdup uses format: \"%p%T %b %u %g %l %s\\n%n%C\"\n\
 	-L\t\tset input format to a list of pathnames\n\
-	-v\t\tbe more verbose and print process files to stderr\n\
+	-v\t\tbe more verbose and print processed files to stderr\n\
 \n\
 Report bugs to <miek@miek.nl>\n\
 Licensed under the GPL version 3.\n\
