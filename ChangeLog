@@ -1,3 +1,8 @@
+xx Dec 2008: 0.6.4 Miek <miek@miek.nl>
+  * bliep
+  * blaat
+
+
 17 Dec 2008: 0.6.4-rc1 Miek <miek@miek.nl>
   - major feature enhancements, two new programs
     + rdup-tr: transform rdup output to something else
