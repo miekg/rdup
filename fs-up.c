@@ -3,6 +3,9 @@
  * See LICENSE for the license
  * rdup-up -- update an directory tree with 
  * and rdup archive
+ *
+ * File related functions
+ *
  */
 
 #include "rdup-up.h"
@@ -84,29 +87,18 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	FILE *out;
 	char *buf;
 	size_t   i, j, mod, rest;
+	gboolean ok = TRUE;
 
 	/* there is something */
-	if (exists && !opt_dry) {
+	if (exists && !opt_dry) 
 		(void)rm(e->f_name);
-	}
 
-	if (opt_dry) {
-		if (!(out = fopen("/dev/null", "w"))) {
-			msg("Failed to open `/dev/null\': %s", strerror(errno));
-			exit(EXIT_FAILURE);
-		}
+	if (!(out = fopen(e->f_name, "w"))) {
+		msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
+		ok = FALSE;
 	} else {
-
-		if (!(out = fopen(e->f_name, "w"))) {
-			msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
-			if (!(out = fopen("/dev/null", "w"))) {
-				msg("Failed to open `/dev/null\': %s", strerror(errno));
-				exit(EXIT_FAILURE);
-			}
-		} else {
-			/* set permissions right away */
-			g_chmod(e->f_name, e->f_mode);
-		}
+		/* set permissions right away */
+		g_chmod(e->f_name, e->f_mode);
 	}
 
 	buf   = g_malloc(BUFSIZE + 1);
@@ -116,18 +108,22 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	/* mod loop */
 	for(j = 0; j < mod; j++) {
 		i = fread(buf, sizeof(char), BUFSIZE, in);
+		if (ok && !opt_dry) {
+			if (fwrite(buf, sizeof(char), i, out) != i) {
+				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
+				fclose(out);
+				return FALSE;
+			}
+		}
+	}
+	/* rest */
+	i = fread(buf, sizeof(char), rest, in);
+	if (ok && !opt_dry) {
 		if (fwrite(buf, sizeof(char), i, out) != i) {
 			msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
 			fclose(out);
 			return FALSE;
 		}
-	}
-	/* rest */
-	i = fread(buf, sizeof(char), rest, in);
-	if (fwrite(buf, sizeof(char), i, out) != i) {
-		msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-		fclose(out);
-		return FALSE;
 	}
 	return TRUE;
 }
