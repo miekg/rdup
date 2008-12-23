@@ -165,11 +165,15 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 
 /* make an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct r_entry *e) 
+mk_obj(FILE *in, char *p, struct r_entry *e, guint strip) 
 {
 	char     *s, *t;
 	gboolean exists;
 	struct stat st;
+
+
+	/* XXX*/
+	strip = strip;
 
 	if (lstat(e->f_name, &st) == -1) 
 		exists = FALSE;

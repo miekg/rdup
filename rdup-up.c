@@ -38,7 +38,7 @@ msg(const char *fmt, ...)
 
 /* update the directory with the archive */
 gboolean
-update(char *path)
+update(char *path, guint strip)
 {
 	struct r_entry *rdup_entry;
 	size_t         line, i, pathsize;
@@ -104,7 +104,7 @@ main(int argc, char **argv)
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
 	char		 *path;
-	guint		 strip;
+	guint		 strip = 0;
 	
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");

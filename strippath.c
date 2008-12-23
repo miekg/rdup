@@ -7,7 +7,7 @@
  */
 
 char *
-strip(char *path, guint strip)
+strippath(char *path, guint strip)
 {
 	char *p;
 	guint i;
