@@ -84,4 +84,7 @@ gboolean mk_dir(struct r_entry *e, struct stat *st, gboolean exists);
 gboolean mk_hlink(GSList *h);
 gboolean mk_obj(FILE *in, char *p, struct r_entry *e);
 
+/* strippath.c */
+char * strippath(char *path, guint n);
+
 #endif  /* _RDUP_UP_H */

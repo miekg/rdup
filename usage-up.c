@@ -18,6 +18,7 @@ The input must be rdup -c output\n\
 \n\
     OPTIONS:\n\
 	-t\t\tcreate DIRECTORY if is does not exist\n\
+	-s N\tstrip N path components from each path\n\
 	-n\t\tdry run, do not touch the filesystem\n\
 	-V\t\tprint version\n\
 	-h\t\tthis help\n\

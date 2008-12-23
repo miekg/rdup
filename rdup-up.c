@@ -86,7 +86,7 @@ update(char *path)
 
 		rdup_entry->f_name = p;
 
-		if (mk_obj(stdin, path, rdup_entry) == FALSE)
+		if (mk_obj(stdin, path, rdup_entry, strip) == FALSE)
 			ok = FALSE;
 	}
 
@@ -104,6 +104,7 @@ main(int argc, char **argv)
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
 	char		 *path;
+	guint		 strip;
 	
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
@@ -136,7 +137,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "thnVv")) != -1) {
+	while ((c = getopt (argc, argv, "thnVvs:")) != -1) {
 		switch (c) {
 			case 'v':
 				opt_verbose++;
@@ -150,8 +151,17 @@ main(int argc, char **argv)
 			case 't':
 				opt_top = TRUE;
 				break;
+			case 's':
+				strip = atoi(optarg);
+				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
+				printf("bla %d %s\n", 0, strippath("/usr/local/bin/blaat", 0));
+				printf("bla %d %s\n", 1, strippath("/usr/local/bin/blaat", 1));
+				printf("bla %d %s\n", 2, strippath("/usr/local/bin/blaat", 2));
+				printf("bla %d %s\n", 3, strippath("/usr/local/bin/blaat", 3));
+				printf("bla %d %s\n", 4, strippath("/usr/local/bin/blaat", 4));
+				printf("bla %d %s\n", 5, strippath("/usr/local/bin/blaat", 5));
 				exit(EXIT_SUCCESS);
 			default:
 				msg(_("Unknown option seen"));
@@ -182,7 +192,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	if (update(path) == FALSE)
+	if (update(path, strip) == FALSE)
 		exit(EXIT_FAILURE);
 
 	exit(EXIT_SUCCESS);
