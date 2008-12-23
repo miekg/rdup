@@ -179,7 +179,10 @@ entry_print_data(FILE *out, char n, struct r_entry *e)
 			/* only the name in case of soft- or hardlinks
 			 * filesize has the length what we should print */
 			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-				fwrite(e->f_name, e->f_size, sizeof(char), out); 
+				if (fwrite(e->f_name, e->f_size, sizeof(char), out) != e->f_size) {
+					msg(_("Write failure: %s"), strerror(errno));
+				
+				}
 			} else {
 				fputs(e->f_name, out);
 			}

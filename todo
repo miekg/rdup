@@ -10,6 +10,7 @@ TODO:
 - (void) remove in fs-up
 - non-writable directories - make them writeable and and
   then return them to the proper state
+- massive move to glib, g_progname etc
 
 :doc:
 

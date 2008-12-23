@@ -274,12 +274,15 @@ rdup_write_header(struct r_entry *e)
 			(size_t)e->f_size,
 			e->f_name);
 	}
-	write(1, out, strlen(out));
+	/* XXX bail out? see below too */
+	if (write(1, out, strlen(out)) == -1) 
+		msg("Failed to write to stdout: %s", strerror(errno));
 	return;
 }
 
 void
 rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
-	write(1, buf, len);
+	if (write(1, buf, len) == -1) 
+		msg("Failed to write to stdout: %s", strerror(errno));
 	return;
 }

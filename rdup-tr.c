@@ -145,9 +145,11 @@ stdin2archive(GSList *child, int tmpfile)
 		}
 
 		if (opt_verbose > 0) {
-			out = g_strdup_printf("%c %s\n", rdup_entry->plusmin,
-					rdup_entry->f_name);
-			write(2, out, rdup_entry->f_name_size + 3);
+			out = g_strdup_printf("%s\n", rdup_entry->f_name);
+			if (write(2, out, rdup_entry->f_name_size + 1) == -1) {
+				/* XXX not good */
+			}
+			
 		}
 
 		if (sig != 0) {
@@ -208,7 +210,11 @@ stdin2archive(GSList *child, int tmpfile)
 				exit(EXIT_FAILURE); /* or should skip? */
 			}
 			while (len > 0) {
-				write(pips[1], readbuf, len);
+				if (write(pips[1], readbuf, len) == -1) {
+					msg("Failure to read from file: %s", strerror(errno));
+					exit(EXIT_FAILURE); /* or should skip? */
+				}
+
 				len = read(f, readbuf, BUFSIZE);
 			}
 			close(pips[1]);  /* this should close all pipes in sequence */

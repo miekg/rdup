@@ -134,8 +134,22 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 	if (opt_dry)
 		return TRUE;
 
-	/* there is something and it's a dir */
+	/* there is something and it's a dir, update permissions */
+	/* if we don't have write permission to this directory, we
+	 * might fail to update any files in it, so check for this */
 	if (exists && S_ISDIR(st->st_mode)) {
+		if (access(e->f_name, W_OK | X_OK) == -1) {
+			/* unable to access this dir IF there any
+			 * files placed in this directory,
+			 * so set permissive bits and correct that
+			 * later on
+			 */
+		}
+		/* which permissions to set? */
+
+
+
+
 		g_chmod(e->f_name, e->f_mode);
 		return TRUE;
 	}
@@ -157,15 +171,13 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 	gboolean exists;
 	struct stat st;
 
-	/* XXX devices sockets and other fluf! */
-
 	if (lstat(e->f_name, &st) == -1) 
 		exists = FALSE;
 	else
 		exists = TRUE;
 
 	if (opt_verbose > 0)
-		printf("%c %s\n", e->plusmin, e->f_name);
+		printf("%s\n", e->f_name);
 
 	switch(e->plusmin) {
 		case '-':
