@@ -3,14 +3,13 @@ TODO:
 :general:
 - move to more glib functions
   + pcre regexp
+- massive move to glib, g_progname etc
+- glib test framework?
 - test -0 for rdup-*
 - define msg() ONE time in all three the programs
 - check memory
-- sockets
-- (void) remove in fs-up
 - non-writable directories - make them writeable and and
-  then return them to the proper state
-- massive move to glib, g_progname etc
+  then return them to the proper state?
 
 :doc:
 

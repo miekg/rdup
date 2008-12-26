@@ -24,7 +24,10 @@ mk_dev(struct r_entry *e, gboolean exists) {
 		return TRUE;
 
 	if (exists) {
-		(void)rm(e->f_name);
+		if (!rm(e->f_name)) {
+			msg("Failed to remove existing entry: '%s\'", e->f_name);
+			return FALSE;
+		}
 	}
 
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
@@ -40,7 +43,10 @@ mk_sock(struct r_entry *e, gboolean exists) {
 		return TRUE;
 
 	if (exists) {
-		(void)rm(e->f_name);
+		if (!rm(e->f_name)) {
+			msg("Failed to remove existing entry: '%s\'", e->f_name);
+			return FALSE;
+		}
 	}
 
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
@@ -59,7 +65,10 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 
 	/* there is something */
 	if (exists) {
-		(void)rm(s);
+		if (!rm(s)) {
+			msg("Failed to remove existing entry: '%s\'", s);
+			return FALSE;
+		}
 	}
 
 	/* symlink */
@@ -90,8 +99,12 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	gboolean ok = TRUE;
 
 	/* there is something */
-	if (exists && !opt_dry) 
-		(void)rm(e->f_name);
+	if (exists && !opt_dry)  {
+		if (!rm(e->f_name)) {
+			msg("Failed to remove existing entry: '%s\'", e->f_name);
+			return FALSE;
+		}
+	}
 
 	if (!(out = fopen(e->f_name, "w"))) {
 		msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
@@ -170,7 +183,6 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 	char     *s, *t;
 	gboolean exists;
 	struct stat st;
-
 
 	/* XXX*/
 	strip = strip;
