@@ -3,7 +3,8 @@
   * rdup-up: added strippath() function to strip leading path components
   * doc: minor updates to the manual pages
   * rdup-ln: a shell script for checking and copying a previous
-    rdup backup. Depends on GNU date and GNU cp
+    rdup backup. Depends on GNU date and GNU cp. Installs into 
+    /usr/lib/rdup/
 
 
 17 Dec 2008: 0.6.4-rc1 Miek <miek@miek.nl>

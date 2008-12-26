@@ -3,6 +3,8 @@ OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry.o link.o
 OBJ_UP=rdup-up.o entry.o usage-up.o signal.o link.o getdelim.o abspath.o rm.o fs-up.o strippath.o
 HDR=rdup.h rdup-tr.h rdup-up.h io.h
 CMD=rdup rdup-tr rdup-up
+# installs to /usr/lib/rdup
+SH=rdup-ln.sh
 MAN1_IN=rdup.1 rdup-tr.1 rdup-up.1
 MAN7_IN=rdup-backups.7
 
@@ -14,6 +16,7 @@ exec_prefix=@exec_prefix@
 datarootdir=@datarootdir@
 localedir=@localedir@
 bindir=@bindir@
+libdir=@libdir@
 sbindir=@sbindir@
 mandir=@mandir@
 sysconfdir=@sysconfdir@
@@ -50,7 +53,7 @@ rdup:	${OBJ} ${HDR}
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ} -o rdup
 
 strip:	rdup-up rdup-tr rdup
-	strip rdup-up rdup-tr rdup
+	strip ${CMD}
 
 po:	rdup.pot 
 	( cd po ; make -f GNUmakefile all )
@@ -60,7 +63,7 @@ rdup.pot:
 
 clean:
 	rm -f *.o
-	rm -f rdup rdup.mo rdup-tr rdup-up
+	rm -f rdup.mo ${CMD}
 	( cd po ; make -f GNUmakefile clean )
 
 realclean: clean
@@ -79,13 +82,16 @@ distclean:
 install: all
 	mkdir -p ${DESTDIR}${mandir}/man1
 	mkdir -p ${DESTDIR}${datadir}
+	mkdir -p ${DESTDIR}${libdir}/rdup
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
+	for i in ${SH}; do ${INSTALL} sh/$$i ${DESTDIR}${libdir}/rdup/$$i ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	for i in ${MAN7}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man7/`basename $$i` ; done; exit 0
 	make -C po install
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
+	for i in ${SH}; do rm -f ${DESTDIR}${libdir}/rdup/$$i ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	for i in ${MAN7}; do rm -f  ${DESTDIR}${mandir}/man7/`basename $$i` ; done
 	make -C po uninstall
