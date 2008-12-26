@@ -36,12 +36,25 @@ updates as describe in the rdup archive.
 symlinks, hardlinks and directories (and sockets, pipe and devices
 on the file system
 
+.PP
 So the general backup pipeline for \fBrdup\fR will look some like
 this:
 
     create filelist  |  transform file content  |  update filesystem
 
-With these three tools you can create your own backup solution, see
+There is also a little shell script that can be used to create a hard
+linked directory structure, this script \fBrdup-ln.sh\fR is installed
+in '/usr/lib/rdup/'. The script looks back for previous backup and
+then creates a hardlinked directory structure. By using this script
+you create a YYYYMM/DD backup structure, where each YYYYMM/DD directory
+contains a full view of your filesystem \fIat that date\fR.
+
+From the return code of this script you now what to do, if the exit code
+is 0 an incremental backup needs to be made. If the exit code is 1 a
+full backup is in order. An exit code of 2 means there was some kind of
+error.
+
+With these three (four) tools you can create your own backup solution, see
 SNAPSHOT BACKUPS later in this document.
 
 .SH BACKUPS AND RESTORES
@@ -64,7 +77,54 @@ plain old tar, but if you store your files at somebody else's disk you
 will need encryption. This is where you go beyond \fBrsync\fR.
 	 
 .SH SNAPSHOT BACKUPS
+We need a little help here in the form of the \fBrdup-ln.sh\fR script.
+Keep in mind that the following scripts can also be run remotely with
+the help of \fBssh\fR.
 
+The following script implements the algorithm which was implemented by
+\fBrdup-simple\fR in previous versions of rdup.
+
+.RS
+.nf
+#!/bin/bash
+
+# some tmp. file are saved in ~/.rdup. This directory must exist
+
+DIR=/home	    # what to backup
+BACKUP=/vol/backup
+TODAY=$(date +%Y%m/%d)	# same as in rdup-ln.sh
+LIST=~/.rdup/list-$HOSTNAME
+STAMP=~/.rdup/timestamp-$HOSTNAME
+
+/usr/lib/rdup/rdup-ln.sh $BACKUP/$HOSTNAME
+RET=$?
+
+case $RET in
+    2|*)
+	echo Error >&2
+	exit 1
+	;;
+    1)
+	# full dump, remove filelist and timestamp file
+	rm $LIST $STAMP
+	;;
+    2)
+	# inc dump
+	# do nothing here
+	;;
+esac
+
+# this is the place where want to modify the commandline
+# right now, nothing is translated we just use 'cat'
+
+rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | rdup-up $BACKUP/$HOSTNAME/$TODAY
+
+# remote backup
+#rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | ssh root@remotehost \\
+#	rdup-up $BACKUP/$HOSTNAME/$TODAY
+
+.fi
+.RE
 
 .SH ALSO SEE
 rdup(1), rdup-tr(1), rdup-up(1) or http://www.miek.nl/projects/rdup/
