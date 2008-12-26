@@ -1,6 +1,7 @@
-24 Dec 2008: 0.6.4 Miek <miek@miek.nl>
+25 Dec 2008: 0.6.4 Miek <miek@miek.nl>
   * rdup-up: further updates and refinements
-  * rdup-up: added strip() function to strip leading path components
+  * rdup-up: added strippath() function to strip leading path components
+  * doc: minor updates to the manual pages
 
 
 17 Dec 2008: 0.6.4-rc1 Miek <miek@miek.nl>

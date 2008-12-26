@@ -153,15 +153,10 @@ main(int argc, char **argv)
 				break;
 			case 's':
 				strip = atoi(optarg);
+				msg("Not implemented (yet)");
 				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
-				printf("bla %d %s\n", 0, strippath("/usr/local/bin/blaat", 0));
-				printf("bla %d %s\n", 1, strippath("/usr/local/bin/blaat", 1));
-				printf("bla %d %s\n", 2, strippath("/usr/local/bin/blaat", 2));
-				printf("bla %d %s\n", 3, strippath("/usr/local/bin/blaat", 3));
-				printf("bla %d %s\n", 4, strippath("/usr/local/bin/blaat", 4));
-				printf("bla %d %s\n", 5, strippath("/usr/local/bin/blaat", 5));
 				exit(EXIT_SUCCESS);
 			default:
 				msg(_("Unknown option seen"));

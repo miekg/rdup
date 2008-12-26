@@ -8,24 +8,20 @@ rdup-backups \- introduction into making backups with rdup
 \fBrdup\fR is a simple program that prints out a list of files and
 directories that are changed changed on a filesystem. It is much
 more sophisticated than for instance \fIfind\fR, because \fBrdup\fR
-will find files that are removed are directories that are renamed.
-By glueing \fBrdup\fR together with a few very simple shell and
-perl scripts you can create a simple to understand, but powerfull
-backup solution. \fBrdup\fR includes a few utilities to make backups
-and restores easy to perform. \fRrdup\fR supports remote, encrypted
-and compressed backups (with the right scripts).
+will find files that are removed or directories that are renamed.
 
 A long time ago \fBrdup\fR included a bunch of shell and perl scripts,
-currently \fBrdup\fR consists out of three basic utilties:
+that implemented a backup policy. 
+Currently \fBrdup\fR consists out of three basic utilities:
 .TP
 .B rdup
-With rdup you create the filelist on which later programs in the
+With \fBrdup\fR you create the filelist on which later programs in the
 pipeline can work. With \fBrdup \fI\-c\fR the file's contents
 is also echo-ed to stdout.
 
 .TP
 .B rdup-tr
-With rdup-tr you can transform (encrypt, compress, whatever...) the
+With \fBrdup-tr\fR you can transform (encrypt, compress, whatever...) the
 files rdup delivers to you.
 
 \fBrdup-tr\fR reads \fBrdup\fR input and will create \fBrdup \fI\-c\fR
@@ -33,7 +29,7 @@ output.
 
 .TP 
 .B rdup-up
-With rdup-up you can update an existing directory stucture with the
+With \fBrdup-up\fR you can update an existing directory structure with the
 updates as describe in the rdup archive. 
 
 \fBrdup-tr\fR reads \fBrdup -c\fR input and will create the files,
@@ -46,9 +42,7 @@ this:
     create filelist  |  transform file content  |  update filesystem
 
 With these three tools you can create your own backup solution, see
-SNAPHOST BACKUPS later in this document.
-
-Note that the \fIcombined\fR size of the tools is 50KB.
+SNAPSHOT BACKUPS later in this document.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
@@ -63,13 +57,12 @@ reverse those operations during the restore.
 .SH BACKUPS
 It is always best to backup to \fIanother\fR medium, be it a different
 local harddisk or a NFS/CIFS mounted filesystem or use the remote backup
-capabilities to securely copy the backup to another system all together.
+capabilities (\fI\-c\fR) to securely copy the backup to another system all together.
 
 If you backup to a local disk you can just as well use \fBrsync\fR or
 plain old tar, but if you store your files at somebody else's disk you
 will need encryption. This is where you go beyond \fBrsync\fR.
 	 
-
 .SH SNAPSHOT BACKUPS
 
 

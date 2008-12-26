@@ -13,7 +13,6 @@ structure with a rdup archive.
 
 \fRrdup-up\fR reads \fBrdup \fI\-c\fR input.
 
-
 .SH OPTIONS
 .TP
 .B \-s N

@@ -20,7 +20,7 @@ of pathnames \fIwith\fR the file content (which is possibly
 transformed).
 
 You can select other types of output (\-O flag), but you must be aware
-thay you may loose some information, see the table below.
+that you may loose some information, see the table below.
 
 You may also supply \fBrdup-tr\fR with only a list of pathnames, this can 
 be selected with the \-L flag.
@@ -30,10 +30,13 @@ of each file through a number of commands, say a compression and
 encryption utility. Note that this is different than compressing the
 \fIentire\fR archive which can be done by using the \-z option of
 GNU tar. So this is where rdup-tr comes in. It allows you to create
-an normal archive in which \fIeach\fR file is encrypted. If one of
-the forked off childeren return an exit code other than zero (0), it
+a normal archive in which \fIeach\fR file is encrypted (or compressed.
+reversed or whatever). 
+
+If one of
+the forked children returns an exit code other than zero (0), it
 is assumed the whole conversion process failed. In that case the
-original file is printed as-is.
+original file content is printed as-is.
 
 This command combines all previously written rdup-utils
 (rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
