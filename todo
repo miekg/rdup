@@ -4,12 +4,14 @@ TODO:
 - move to more glib functions
   + pcre regexp
 - massive move to glib, g_progname etc
-- glib test framework?
+- glib test framework also?
 - test -0 for rdup-*
 - define msg() ONE time in all three the programs
 - check memory
-- non-writable directories - make them writeable and and
+- rdup-up: non-writable directories - make them writeable and and
   then return them to the proper state?
+- *testing* *testing* *testing* 
+- move to git for version control
 
 :doc:
 
@@ -22,10 +24,8 @@ TODO:
 - -c option can go? You should use rdup-tr?
 
 :rdup-tr:
-- *testing* *testing* *testing* 
 - opt_null ala rdup
 - skip 0 bytes reg files?
 
 :rdup-up:
-- *testing* *testing*
 - opt_null?

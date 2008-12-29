@@ -1,10 +1,12 @@
-25 Dec 2008: 0.6.4 Miek <miek@miek.nl>
+28 Dec 2008: 0.6.4 Miek <miek@miek.nl>
   * rdup-up: further updates and refinements
   * rdup-up: added strippath() function to strip leading path components
-  * doc: minor updates to the manual pages
+  * doc: minor updates to the manual pages, added a rdup-simple like
+    script to rdup-backups.7
   * rdup-ln: a shell script for checking and copying a previous
     rdup backup. Depends on GNU date and GNU cp. Installs into 
-    /usr/lib/rdup/
+    /usr/lib/rdup/. Previously a small script called rdup-snap-link
+    did this.
 
 
 17 Dec 2008: 0.6.4-rc1 Miek <miek@miek.nl>

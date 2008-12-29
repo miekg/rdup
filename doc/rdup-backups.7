@@ -10,7 +10,7 @@ directories that are changed changed on a filesystem. It is much
 more sophisticated than for instance \fIfind\fR, because \fBrdup\fR
 will find files that are removed or directories that are renamed.
 
-A long time ago \fBrdup\fR included a bunch of shell and perl scripts,
+A long time ago \fBrdup\fR included a bunch of shell and perl scripts
 that implemented a backup policy. 
 Currently \fBrdup\fR consists out of three basic utilities:
 .TP
@@ -49,7 +49,7 @@ then creates a hardlinked directory structure. By using this script
 you create a YYYYMM/DD backup structure, where each YYYYMM/DD directory
 contains a full view of your filesystem \fIat that date\fR.
 
-From the return code of this script you now what to do, if the exit code
+From the return code of this script you know what to do, if the exit code
 is 0 an incremental backup needs to be made. If the exit code is 1 a
 full backup is in order. An exit code of 2 means there was some kind of
 error.
@@ -74,14 +74,15 @@ capabilities (\fI\-c\fR) to securely copy the backup to another system all toget
 
 If you backup to a local disk you can just as well use \fBrsync\fR or
 plain old tar, but if you store your files at somebody else's disk you
-will need encryption. This is where you go beyond \fBrsync\fR.
+will need encryption. This is where you go beyond \fBrsync\fR and
+\fBrdup\fR comes in.
 	 
 .SH SNAPSHOT BACKUPS
 We need a little help here in the form of the \fBrdup-ln.sh\fR script.
 Keep in mind that the following scripts can also be run remotely with
 the help of \fBssh\fR.
 
-The following script implements the algorithm which was implemented by
+The script implements the algorithm which was implemented by
 \fBrdup-simple\fR in previous versions of rdup.
 
 .RS
@@ -96,6 +97,7 @@ TODAY=$(date +%Y%m/%d)	# same as in rdup-ln.sh
 LIST=~/.rdup/list-$HOSTNAME
 STAMP=~/.rdup/timestamp-$HOSTNAME
 
+# for remote backup, this has to run on the remote host!
 /usr/lib/rdup/rdup-ln.sh $BACKUP/$HOSTNAME
 RET=$?
 
@@ -108,7 +110,7 @@ case $RET in
 	# full dump, remove filelist and timestamp file
 	rm $LIST $STAMP
 	;;
-    2)
+    0)
 	# inc dump
 	# do nothing here
 	;;
@@ -119,7 +121,7 @@ esac
 
 rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | rdup-up $BACKUP/$HOSTNAME/$TODAY
 
-# remote backup
+# or do a remote backup
 #rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | ssh root@remotehost \\
 #	rdup-up $BACKUP/$HOSTNAME/$TODAY
 
