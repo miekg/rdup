@@ -1,4 +1,5 @@
-28 Dec 2008: 0.6.4 Miek <miek@miek.nl>
+30 Dec 2008: 0.6.4 Miek <miek@miek.nl>
+ - further refinements and tweaks -
   * rdup-up: further updates and refinements
   * rdup-up: added strippath() function to strip leading path components
   * doc: minor updates to the manual pages, added a rdup-simple like
@@ -10,7 +11,7 @@
 
 
 17 Dec 2008: 0.6.4-rc1 Miek <miek@miek.nl>
-  - major feature enhancements, two new programs
+  - major feature enhancements, two new programs -
     + rdup-tr: transform rdup output to something else
     + rdup-up: update a directory tree with rdup archive
 
