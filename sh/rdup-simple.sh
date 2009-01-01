@@ -2,33 +2,21 @@
 
 # updates a hardlinked backup
 # licensed under the GPL version 3
-# Copyright Miek Gieben, 2007 - 2008
+# Copyright Miek Gieben, 2007 - 2009
+# Completely rewritten for rdup-up + rdup-tr
 
-prefix=@prefix@
-datarootdir=@datarootdir@
-exec_prefix=@exec_prefix@
-datadir=@datadir@/rdup
-sysconfdir=@sysconfdir@/rdup
-lockdir=/var/lock
-GNU_DEFS=rdup-snapshot.gnu
-
-# common stuff
-if ! source $datadir/shared.sh; then
-	# no _echo2
-	echo ** $0: Failed to source $datadir/shared.sh >&2
-	exit 1
-fi
-
+echo2() {
+    echo "** $PROGNAME: $@" >&2
+}
 
 usage() {
         cat << HELP
 $PROGNAME [+N] DIR [DIR ...] DEST
 
-This is a wrapper around rdup and rdup-snap
+This is a wrapper around rdup, rdup-tr and rdup-up
 
 DIR  - directories to back up
 +N   - Look N days back for previous backups, defaults to 8
-       hours when using -H
 DEST - where to store the backup. This can be:
 	ssh://user@host/directory (note: no colon after the hostname
 	ssh://host/directory
@@ -37,11 +25,10 @@ DEST - where to store the backup. This can be:
 	directory
 
 OPTIONS:
- -k KEYFILE encrypt all files, using mcrypt (rdup-crypt)
- -g	    encrypt all files, using gpg (rdup-gpg)
- -z         compress all files, using gzip (rdup-gzip)
+ -k KEYFILE encrypt all files: rdup-tr -Pmcrypt,-fKEYFILE,-c
+ -g	    encrypt all files: rdup-tr -Pgpg,??
+ -z         compress all files: rdup-tr -Pgzip,-c,-f
  -E FILE    use FILE as an exclude list
- -H         perform hourly backups
  -f         force a full dump
  -v         echo the files processed to stderr
  -x         pass -x to rdup
@@ -52,52 +39,48 @@ HELP
 
 PROGNAME=$0
 NOW=`date +%Y%m/%d`
-c=""
+DAYS=8
 ssh=""
-pipe=""
+trans=""
 l="-l"
 enc=false
 etc=~/.rdup
 force=false
-hour=""
-DAYS=8
 
-while getopts "E:k:vfgzxahHV" o; do
+while getopts "E:k:vfgzxhV" o; do
         case $o in
 		E)
                 if [[ -z "$OPTARG" ]]; then
-                        _echo2 "-E needs an argument"
+                        echo2 "-E needs an argument"
                         exit 1
                 fi
                 E="-E $OPTARG"
                 ;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
-                        _echo2 "-k needs an argument"
+                        echo2 "-k needs an argument"
                         exit 1
                 fi
                 if [[ ! -r "$OPTARG" ]]; then
-                        _echo2 "Cannot read keyfile \`$OPTARG': failed"
+                        echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                pipe="$pipe | @bindir@/rdup-crypt $OPTARG"
+                trans="$trans -Pmcrypt,-f$OPTARG,-c"
 		if $enc; then
-			_echo2 "Encryption already set"
+			echo2 "Encryption already set"
 			exit 1
 		fi
 		enc=true
-                c="-c"
                 ;;
-                z) pipe="$pipe | @bindir@/rdup-gzip"
+                z) trans="$trans -Pgzip,-f,-c"
 		if $enc; then
-			_echo2 "Select compression first, then encryption"
+			echo2 "Select compression first, then encryption"
 			exit 1
 		fi
-                c="-c"
                 ;;
-		g) pipe="$pipe | @bindir@/rdup-gpg"
+		g) trans="$trans -Pgpg,--default-recipient-self"
 		if $enc; then
-			_echo2 "Encryption already set"
+			echo2 "Encryption already set"
 			exit 1
 		fi
 		enc=true
@@ -107,10 +90,9 @@ while getopts "E:k:vfgzxahHV" o; do
                 a) ;;
                 v) OPT="$OPT -v";;
                 x) x="-x";;
-                H) NOW=`date +%Y%m/%d/%H`;hour="-H";;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) _echo2 "Invalid option: $OPTARG"; exit 1;;
+                \?) echo2 "Invalid option: $OPTARG"; exit 1;;
         esac
 done
 shift $((OPTIND - 1))
@@ -118,7 +100,7 @@ shift $((OPTIND - 1))
 if [[ ${1:0:1} == "+" ]]; then
         DAYS=${1:1}
         if [[ $DAYS -lt 1 || $DAYS -gt 99 ]]; then
-                _echo2 "+N needs to be a number [1..99]"
+                echo2 "+N needs to be a number [1..99]"
                 exit 1
         fi
         shift
@@ -126,10 +108,7 @@ else
         DAYS=8
 fi
 
-if [[ $# -eq 0 ]]; then
-	usage
-	exit
-fi
+[[ $# -eq 0 ]] && usage && exit
 
 i=1; last=$#; DIRS=
 while [[ $i -lt $last ]]; do
@@ -165,51 +144,47 @@ if [[ ${dest:0:7} == "file://" ]]; then
 	rest=${dest/file:\/\//}
 	BACKUPDIR=$rest
 fi
-if [[ ${dest:0:1} == "/" ]]; then
-	BACKUPDIR=$dest
-fi
+[[ ${dest:0:1} == "/" ]] && BACKUPDIR=$dest
 
 # no hits above, assume relative filename
-if [[ -z $BACKUPDIR ]]; then
-	BACKUPDIR=`pwd`/$dest
-fi
+[[ -z $BACKUPDIR ]] && BACKUPDIR=`pwd`/$dest
 
 # change all / to _ to make a valid filename
 IDENT=$(echo $dest | sed 's/\/\/*/_/g')
 STAMP=$etc/timestamp.$HOSTNAME_$IDENT
 LIST=$etc/list.$HOSTNAME_$IDENT
 
-create_rdup $etc
+[[ ! -d $etc ]] && mkdir $etc
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="$pipe | ${exec_prefix}/bin/rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | ${exec_prefix}/bin/rdup-up $OPT $BACKUPDIR/$NOW"
 else
-        pipe="$pipe | $ssh rdup-snap $c $OPT -b $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | $ssh rdup-up $OPT $BACKUPDIR/$NOW"
 fi
-cmd="${exec_prefix}/bin/rdup $E $x $l $c -N $STAMP $LIST $DIRS $pipe"
+cmd="${exec_prefix}/bin/rdup $E $x $l -c -N $STAMP $LIST $DIRS | $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then
-                ${exec_prefix}/bin/rdup-snap-link $hour $DAYS $BACKUPDIR $NOW
+		/usr/lib/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-                $ssh "rdup-snap-link $hour $DAYS $BACKUPDIR $NOW"
+                $ssh "rdup-ln.sh -l $DAYS $BACKUPDIR"
                 purpose=$?
         fi
 else
         purpose=1
 fi
 case $purpose in
-        0) _echo2 "INCREMENTAL DUMP" ;;
+        0) echo2 "INCREMENTAL DUMP" ;;
         1)
-        _echo2 "FULL DUMP"
+        echo2 "FULL DUMP"
         rm -f $LIST
         rm -f $STAMP ;;
         *)
-        _echo2 "Illegal return code from rdup-snap-link"
+        echo2 "Illegal return code from rdup-snap-link"
         exit 1 ;;
 esac
 # execute the backup command
-#_echo2 "Executing: ${cmd}"
-eval ${cmd}
+echo2 "Executing: ${cmd}"
+# eval ${cmd}

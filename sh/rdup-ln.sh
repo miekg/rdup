@@ -16,10 +16,16 @@
 # 1: BACKUPDIR/YYYYMM/DD is created (now make a full dump)
 # 2: an error occured
 
+if [[ "$1" == "-l" ]]; then
+    LOOKBACK=$2
+    shift; shift;
+else
+    LOOKBACK=8
+fi
+
 DATESTR='+%Y%m/%d'
 TODAY=$(date $DATESTR)
 TOPDIR=$1
-LOOKBACK=8
 
 if [[ -z $TOPDIR ]]; then
     exit 2
@@ -36,7 +42,7 @@ fi
 let i=1
 while [[ $i -le $LOOKBACK ]]; do
 	D=$(date $DATESTR --date "$i days ago")
-	echo $D >&2
+	#echo $D >&2
 	if [[ -d $TOPDIR/$D ]]; then
 	    echo "Hardlinking: \`$TOPDIR/$D'" >&2
 	    if ! cp -plr $TOPDIR/$D $TOPDIR/$TODAY; then
