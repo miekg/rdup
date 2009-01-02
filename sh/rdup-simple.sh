@@ -4,6 +4,7 @@
 # licensed under the GPL version 3
 # Copyright Miek Gieben, 2007 - 2009
 # Completely rewritten for rdup-up + rdup-tr
+#{exec_prefix}
 
 echo2() {
     echo "** $PROGNAME: $@" >&2
@@ -55,7 +56,7 @@ while getopts "E:k:vfgzxhV" o; do
                         echo2 "-E needs an argument"
                         exit 1
                 fi
-                E="-E $OPTARG"
+                E=" -E $OPTARG "
                 ;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
@@ -91,8 +92,8 @@ while getopts "E:k:vfgzxhV" o; do
 		;;
                 f) force=true;;
                 a) ;;
-                v) OPT="$OPT -v";;
-                x) x="-x";;
+                v) OPT=" $OPT -v ";;
+                x) x=" -x ";;
                 h) usage && exit;;
                 V) version && exit;;
                 \?) echo2 "Invalid option: $OPTARG"; exit 1;;
@@ -160,18 +161,18 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="rdup-tr$trans | ${exec_prefix}/bin/rdup-up $OPT $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | rdup-up$OPT$BACKUPDIR/$NOW"
 else
-        pipe="rdup-tr$trans | $ssh rdup-up $OPT $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | $ssh rdup-up$OPT$BACKUPDIR/$NOW"
 fi
-cmd="${exec_prefix}/bin/rdup $c $E $x $l -N $STAMP $LIST $DIRS | $pipe"
+cmd="rdup$E$x$l -N $STAMP $LIST $DIRS | $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then
 		/usr/lib/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-                $ssh "rdup-ln.sh -l $DAYS $BACKUPDIR"
+                $ssh "/usr/lib/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR"
                 purpose=$?
         fi
 else
@@ -189,4 +190,4 @@ case $purpose in
 esac
 # execute the backup command
 echo2 "Executing: ${cmd}"
-# eval ${cmd}
+eval ${cmd}

@@ -149,12 +149,21 @@ stdin2archive(GSList *child, int tmpfile)
 			if (write(2, out, rdup_entry->f_name_size + 1) == -1) {
 				/* XXX not good */
 			}
-			
 		}
 
 		if (sig != 0) {
 			tmp_clean(tmpfile, template);
 			signal_abort(sig);
+		}
+
+		if (rdup_entry->plusmin == '-') {
+			if (opt_output == O_RDUP) {
+				rdup_write_header(rdup_entry);
+				goto not_s_isreg;
+			}
+			/* all other outputs cannot handle this, but this
+			 * is ALSO checked in parse_entry() */
+			continue;
 		}
 
 		if (opt_output != O_RDUP) {

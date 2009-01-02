@@ -1,6 +1,8 @@
 xx Jan 2009: 0.6.5 Miek <miek@miek.nl>
   * rdup-simple back as rdup-simple.sh
-  * rdup-ln.sh: small tweaks
+    (installs to /usr/lib/rdup)
+  * rdup-ln.sh: small tweaks and bugfixes
+  * rdup-tr: handle files that should be removed
 
 
 30 Dec 2008: 0.6.4 Miek <miek@miek.nl>

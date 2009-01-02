@@ -81,7 +81,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->plusmin = buf[0];
 
 			if (opt_output != O_RDUP && e->plusmin == '-') {
-				msg("Removing files it not supported for any output except rdup");
+				msg("Removing files is not supported for any output except rdup");
 				return NULL;
 			}
 
@@ -139,12 +139,6 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_name_size = atoi(pos); /* checks */
 			pos = n + 1;
 
-			/* XXX TODO */
-			/* check for , get left (major) get right (minor)
-			 * and e->f_rdev = makedev(x, y)
-			 * e->f_size = 0
-			 * NO_CONTENT
-			 */
 			if (S_ISCHR(e->f_mode) || S_ISBLK(e->f_mode)) {
 				int major, minor;
 				n = strchr(pos, ',');
@@ -162,7 +156,6 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					 * set the pointer 
 					 */
 					pos = strchr(n + 1, ' ');
-/*					fprintf(stderr, "pos %s\n", pos); */
 					pos++;
 				}
 			} else {
@@ -180,6 +173,11 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					pos = n + 1;
 				}
 			}
+			if (e->plusmin == '-' && e->f_size != 0) {
+				msg("Filesize should be 0 when an object is to be removed");
+				return NULL;
+			}
+
 			/* all path should begin with / */ /* DIR_SEP? */
 			switch(stat) {
 				case DO_STAT:
@@ -198,7 +196,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 						j = lstat(e->f_name, s);
 					}
 
-					if (j == -1) {
+					if (j == -1 && e->plusmin == '+') {
 						msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
 						return NULL;
 					}

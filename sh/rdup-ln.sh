@@ -45,10 +45,10 @@ while [[ $i -le $LOOKBACK ]]; do
 	#echo $D >&2
 	if [[ -d $TOPDIR/$D ]]; then
 	    echo "Hardlinking: \`$TOPDIR/$D'" >&2
-	    if ! cp -plr $TOPDIR/$D $TOPDIR/$TODAY; then
+	    if ! cp -plr $TOPDIR/$D/* $TOPDIR/$TODAY; then
 		exit 2
 	    fi
-	    return 0
+	    exit 0
 	fi
         let i=i+1
 done

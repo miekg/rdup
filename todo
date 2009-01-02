@@ -12,6 +12,7 @@ TODO:
   then return them to the proper state?
 - *testing* *testing* *testing* 
 - move to git for version control
+- path's in rdup-simple.sh for rdup-ln.sh
 
 :doc:
 
