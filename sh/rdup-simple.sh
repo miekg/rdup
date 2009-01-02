@@ -43,6 +43,7 @@ DAYS=8
 ssh=""
 trans=""
 l="-l"
+c="-c"
 enc=false
 etc=~/.rdup
 force=false
@@ -71,12 +72,14 @@ while getopts "E:k:vfgzxhV" o; do
 			exit 1
 		fi
 		enc=true
+		c=""   # rdup-tr expects a list of filenames, so reset -c
                 ;;
                 z) trans="$trans -Pgzip,-f,-c"
 		if $enc; then
 			echo2 "Select compression first, then encryption"
 			exit 1
 		fi
+		c=""
                 ;;
 		g) trans="$trans -Pgpg,--default-recipient-self"
 		if $enc; then
@@ -84,7 +87,7 @@ while getopts "E:k:vfgzxhV" o; do
 			exit 1
 		fi
 		enc=true
-		c="-c"
+		c=""
 		;;
                 f) force=true;;
                 a) ;;
@@ -147,12 +150,11 @@ fi
 [[ ${dest:0:1} == "/" ]] && BACKUPDIR=$dest
 
 # no hits above, assume relative filename
-[[ -z $BACKUPDIR ]] && BACKUPDIR=`pwd`/$dest
+[[ -z $BACKUPDIR ]] && BACKUPDIR=$PWD/$dest
 
 # change all / to _ to make a valid filename
-IDENT=$(echo $dest | sed 's/\/\/*/_/g')
-STAMP=$etc/timestamp.$HOSTNAME_$IDENT
-LIST=$etc/list.$HOSTNAME_$IDENT
+STAMP=$etc/timestamp.${HOSTNAME}.${dest//\//_}
+LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 [[ ! -d $etc ]] && mkdir $etc
 
@@ -162,7 +164,7 @@ if [[ -z $ssh ]]; then
 else
         pipe="rdup-tr$trans | $ssh rdup-up $OPT $BACKUPDIR/$NOW"
 fi
-cmd="${exec_prefix}/bin/rdup $E $x $l -c -N $STAMP $LIST $DIRS | $pipe"
+cmd="${exec_prefix}/bin/rdup $c $E $x $l -N $STAMP $LIST $DIRS | $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then

@@ -84,7 +84,7 @@ L|L|CC.
 input	    
 -------------	-------------	------
 rdup	    D	0
-list	    DH	H
+filelist	    DH	H
 
 .TE
 
