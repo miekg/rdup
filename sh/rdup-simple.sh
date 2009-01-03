@@ -161,9 +161,9 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="rdup-tr$trans | rdup-up$OPT$BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | rdup-up$OPT $BACKUPDIR/$NOW"
 else
-        pipe="rdup-tr$trans | $ssh rdup-up$OPT$BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | $ssh rdup-up$OPT $BACKUPDIR/$NOW"
 fi
 cmd="rdup$E$x$l -N $STAMP $LIST $DIRS | $pipe"
 
