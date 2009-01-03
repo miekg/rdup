@@ -3,8 +3,8 @@
 # updates a hardlinked backup
 # licensed under the GPL version 3
 # Copyright Miek Gieben, 2007 - 2009
-# Completely rewritten for rdup-up + rdup-tr
-#{exec_prefix}
+# rewritten for rdup-up + rdup-tr
+#{exec_prefix} XXX todo?
 
 echo2() {
     echo "** $PROGNAME: $@" >&2
@@ -130,10 +130,9 @@ done
 dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
 	rest=${dest/ssh:\/\//}
-	u=`echo $rest | cut -s -f1 -d@`
+	u=${rest%%@*}
 	rest=${rest/$u@/}
 	h=`echo $rest | cut -s -f1 -d/`
-
 	BACKUPDIR=${rest/$h/}
 
 	c="-c"
