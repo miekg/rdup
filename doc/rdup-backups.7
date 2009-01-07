@@ -10,7 +10,7 @@ directories that are changed changed on a filesystem. It is much
 more sophisticated than for instance \fIfind\fR, because \fBrdup\fR
 will find files that are removed or directories that are renamed.
 
-A long time ago \fBrdup\fR included a bunch of shell and perl scripts
+A long time ago \fBrdup\fR included a bunch of shell and Perl scripts
 that implemented a backup policy. 
 Currently \fBrdup\fR consists out of three basic utilities:
 .TP
@@ -34,7 +34,7 @@ updates as describe in the rdup archive.
 
 \fBrdup-tr\fR reads \fBrdup -c\fR input and will create the files,
 symlinks, hardlinks and directories (and sockets, pipe and devices
-on the file system
+on the file system.
 
 .PP
 So the general backup pipeline for \fBrdup\fR will look some like
@@ -47,7 +47,8 @@ linked directory structure, this script \fBrdup-ln.sh\fR is installed
 in '/usr/lib/rdup/'. The script looks back for previous backup and
 then creates a hardlinked directory structure. By using this script
 you create a YYYYMM/DD backup structure, where each YYYYMM/DD directory
-contains a full view of your filesystem \fIat that date\fR.
+contains a full view of your filesystem \fIat that date\fR. This script
+very much depends on being able to use GNU date and GNU cp.
 
 From the return code of this script you know what to do, if the exit code
 is 0 an incremental backup needs to be made. If the exit code is 1 a
@@ -59,7 +60,7 @@ SNAPSHOT BACKUPS later in this document.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
-restores. I you think about this a minute you understand why.
+restores. If you think about this a minute you understand why.
 
 Making a backup means copying a list of files somewhere else. Restoring
 files is copying a list of files back to the place they came from. Same
@@ -82,8 +83,7 @@ We need a little help here in the form of the \fBrdup-ln.sh\fR script.
 Keep in mind that the following scripts can also be run remotely with
 the help of \fBssh\fR.
 
-The script implements the algorithm which was implemented by
-\fBrdup-simple\fR in previous versions of rdup.
+The following script implements the algorithm of \fBrdup-simple\fR.
 
 .RS
 .nf

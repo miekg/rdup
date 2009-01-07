@@ -33,7 +33,7 @@ mk_dev(struct r_entry *e, gboolean exists) {
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
 		msg("Failed to make device: `%s\': %s", e->f_name, strerror(errno));
 	}
-	g_chmod(e->f_name, e->f_mode);
+	chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
 
@@ -52,7 +52,7 @@ mk_sock(struct r_entry *e, gboolean exists) {
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
 		msg("Failed to make socket: `%s\': %s", e->f_name, strerror(errno));
 	}
-	g_chmod(e->f_name, e->f_mode);
+	chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
 
@@ -111,7 +111,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 		ok = FALSE;
 	} else {
 		/* set permissions right away */
-		g_chmod(e->f_name, e->f_mode);
+		chmod(e->f_name, e->f_mode);
 	}
 
 	buf   = g_malloc(BUFSIZE + 1);
@@ -163,15 +163,15 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 
 
 
-		g_chmod(e->f_name, e->f_mode);
+		chmod(e->f_name, e->f_mode);
 		return TRUE;
 	}
 
-	if (g_mkdir(e->f_name, e->f_mode) == -1) {
+	if (mkdir(e->f_name, e->f_mode) == -1) {
 		msg("Failed to created directory `%s\'", e->f_name);
 		return FALSE;
 	}
-	g_chmod(e->f_name, e->f_mode);
+	chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
 

@@ -180,7 +180,7 @@ main(int argc, char **argv)
 			msg("No such directory: `%s\'", path);
 			exit(EXIT_FAILURE);
 		} else {
-			if (g_mkdir_with_parents(path, 00777) == -1) {
+			if (mkdir(path, 00777) == -1) {
 				msg("Failed to create directory `%s\': %s", path, strerror(errno));
 				exit(EXIT_FAILURE);
 			}

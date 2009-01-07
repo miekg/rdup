@@ -2,7 +2,6 @@
 #define _RDUP_UP_H
 
 #include <glib.h>
-#include <glib/gstdio.h>
 
 #include "config.h"
 

@@ -23,8 +23,7 @@ empty after this operation the entire entry is skipped.
 Do a dry-run and do not create anything on disk.
 .TP
 .B \-t
-Create DIRECTORY (and all directories leading up to it) 
-if it does not exist.
+Create DIRECTORY if it does not exist.
 .TP
 .B \-v
 Be more verbose and echo the processed files.

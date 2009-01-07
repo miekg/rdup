@@ -215,7 +215,7 @@ With:
         rm -f timestamp && rdup -N timestamp LIST DIR
 .RE
 
-All full-dump filelist is printed to standard output. And with:
+A full-dump filelist is printed to standard output. And with:
 .RS
         rdup -N timestamp LIST DIR
 .RE

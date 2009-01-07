@@ -4,6 +4,8 @@ xx Jan 2009: 0.6.5 Miek <miek@miek.nl>
     (installs to /usr/lib/rdup)
   * rdup-ln.sh: small tweaks and bugfixes
   * rdup-tr: also handle files that should be removed
+  * don't include glib/stdio.h as this needs a glib version
+    which is too new.
 
 
 30 Dec 2008: 0.6.4 Miek <miek@miek.nl>
