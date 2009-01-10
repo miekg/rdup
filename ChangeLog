@@ -1,11 +1,14 @@
-xx Jan 2009: 0.6.5 Miek <miek@miek.nl>
+xx yyy 2009: 0.6.6 Miek <miek@miek.nl>
+
+
+10 Jan 2009: 0.6.5 Miek <miek@miek.nl>
   * rdup-simple back as rdup-simple.sh, re-written to 
     use rdup-tr and rdup-up
     (installs to /usr/lib/rdup)
   * rdup-ln.sh: small tweaks and bugfixes
   * rdup-tr: also handle files that should be removed
   * don't include glib/stdio.h as this needs a glib version
-    which is too new.
+    which is too new. (Dag Wieers)
 
 
 30 Dec 2008: 0.6.4 Miek <miek@miek.nl>
