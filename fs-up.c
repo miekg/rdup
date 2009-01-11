@@ -138,6 +138,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 			return FALSE;
 		}
 	}
+	fclose(out); 
 	return TRUE;
 }
 

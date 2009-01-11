@@ -1,6 +1,7 @@
 xx yyy 2009: 0.6.6 Miek <miek@miek.nl>
   * fix to minor bug in rdup-simple which prevented local
     backups from working. (Tom Hendrikx)
+  * do a fclose() in fs-up.c (Tom Hendrikx)
 
 
 10 Jan 2009: 0.6.5 Miek <miek@miek.nl>
