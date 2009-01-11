@@ -188,5 +188,5 @@ case $purpose in
         exit 1 ;;
 esac
 # execute the backup command
-echo2 "Executing: ${cmd}"
+##echo2 "Executing: ${cmd}"
 eval ${cmd}
