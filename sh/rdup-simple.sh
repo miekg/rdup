@@ -43,8 +43,8 @@ NOW=`date +%Y%m/%d`
 DAYS=8
 ssh=""
 trans=""
-l="-l"
-c="-c"
+l=" -l"
+c=" -c"
 enc=false
 etc=~/.rdup
 force=false
@@ -184,7 +184,7 @@ case $purpose in
         rm -f $LIST
         rm -f $STAMP ;;
         *)
-        echo2 "Illegal return code from rdup-snap-link"
+        echo2 "Illegal return code from rdup-ln.sh"
         exit 1 ;;
 esac
 # execute the backup command
