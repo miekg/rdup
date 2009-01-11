@@ -450,6 +450,5 @@ main(int argc, char **argv)
 	/* read stdin, create childeren and make an archive */
 	stdin2archive(child, tmpfile);
 	tmp_clean(tmpfile, template);
-
 	exit(EXIT_SUCCESS);
 }
