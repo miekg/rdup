@@ -13,7 +13,7 @@ gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
-gboolean opt_top	   = FALSE;			/* create top dir is it does not exist */
+gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 /* signal.c */
@@ -175,15 +175,16 @@ main(int argc, char **argv)
 	else
 		path = abspath(argv[0]);
 
-	if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-		if (!opt_top) {
+
+	if (opt_top) {
+		if (mkpath(path, 00777) == -1) {
+			msg("Failed to create directory `%s\': %s", path, strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+	} else {
+		if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
 			msg("No such directory: `%s\'", path);
 			exit(EXIT_FAILURE);
-		} else {
-			if (mkdir(path, 00777) == -1) {
-				msg("Failed to create directory `%s\': %s", path, strerror(errno));
-				exit(EXIT_FAILURE);
-			}
 		}
 	}
 

@@ -3,7 +3,7 @@
 # updates a hardlinked backup
 # licensed under the GPL version 3
 # Copyright Miek Gieben, 2007 - 2009
-# rewritten for rdup-up + rdup-tr
+# rewritten for rdup-up and rdup-tr
 #{exec_prefix} XXX todo?
 
 echo2() {
@@ -160,9 +160,9 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="rdup-tr$trans | rdup-up$OPT $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | rdup-up$OPT -t $BACKUPDIR/$NOW"
 else
-        pipe="rdup-tr$trans | $ssh rdup-up$OPT $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | $ssh rdup-up$OPT -t $BACKUPDIR/$NOW"
 fi
 cmd="rdup$E$x$l -N $STAMP $LIST $DIRS | $pipe"
 

@@ -86,4 +86,6 @@ gboolean mk_obj(FILE *in, char *p, struct r_entry *e, guint strip);
 /* strippath.c */
 char * strippath(char *path, guint n);
 
+/* mkpath.c */
+int mkpath(const char *path, mode_t mode);
 #endif  /* _RDUP_UP_H */
