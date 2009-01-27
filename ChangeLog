@@ -1,6 +1,11 @@
 xx yyy 2009: 0.6.7 Miek <miek@miek.nl>
   * rdup-backups.7: typo (Johann Klähn)
   * rdup-simple.sh: check for a minimum of 2 arguments (Tom Hendrikx)
+  * rdup-simple.sh: fix -f (full dump)
+  * rdup-up: add mkpath (works like mkdir -p) function and fix -t option
+    (reported by Tom Hendrikx)
+  * rdup-simple.sh/rdup-ln.sh:  only report errors on stderr, for the rest 
+    use stdout (Tom Hendrikx)
 
 
 

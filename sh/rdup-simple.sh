@@ -178,9 +178,9 @@ else
         purpose=1
 fi
 case $purpose in
-        0) echo2 "INCREMENTAL DUMP" ;;
+        0) echo "INCREMENTAL DUMP" ;;
         1)
-        echo2 "FULL DUMP"
+        echo "FULL DUMP"
         rm -f $LIST
         rm -f $STAMP ;;
         *)
@@ -188,5 +188,5 @@ case $purpose in
         exit 1 ;;
 esac
 # execute the backup command
-##echo2 "Executing: ${cmd}"
+##echo "Executing: ${cmd}"
 eval ${cmd}

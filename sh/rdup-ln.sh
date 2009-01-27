@@ -42,9 +42,8 @@ fi
 let i=1
 while [[ $i -le $LOOKBACK ]]; do
 	D=$(date $DATESTR --date "$i days ago")
-	#echo $D >&2
 	if [[ -d $TOPDIR/$D ]]; then
-	    echo "Hardlinking: \`$TOPDIR/$D'" >&2
+	    echo "Hardlinking: \`$TOPDIR/$D'"
 	    if ! cp -plr $TOPDIR/$D/* $TOPDIR/$TODAY; then
 		exit 2
 	    fi
