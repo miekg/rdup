@@ -1,5 +1,7 @@
 xx yyy 2009: 0.6.7 Miek <miek@miek.nl>
   * rdup-backups.7: typo (Johann Klähn)
+  * rdup-simple.sh: check for a minimum of 2 arguments (Tom Hendrikx)
+
 
 
 12 Jan 2009: 0.6.6 Miek <miek@miek.nl>

@@ -112,7 +112,7 @@ else
         DAYS=8
 fi
 
-[[ $# -eq 0 ]] && usage && exit
+[[ $# -lt 2 ]] && usage && exit
 
 i=1; last=$#; DIRS=
 while [[ $i -lt $last ]]; do
