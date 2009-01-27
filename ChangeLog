@@ -6,6 +6,7 @@ xx yyy 2009: 0.6.7 Miek <miek@miek.nl>
     (reported by Tom Hendrikx)
   * rdup-simple.sh/rdup-ln.sh:  only report errors on stderr, for the rest 
     use stdout (Tom Hendrikx)
+  * rdup: honor .nobackup files again (Tom Hendrikx)
 
 
 
