@@ -82,12 +82,14 @@ g_tree_read_file(FILE *fp)
 	char          *p;
 	char 	      *q;
 	char 	      delim;
+	char	      linktype;
 	mode_t        modus;
 	GTree         *tree;
 	struct r_entry *e;
 	size_t        s;
 	size_t 	      l;
 	size_t        f_name_size;
+	size_t        f_size;
 	size_t        str_len;
 	dev_t	      f_dev;
 	ino_t	      f_ino;
@@ -111,11 +113,16 @@ g_tree_read_file(FILE *fp)
 			signal_abort(sig);
 		}
 
+		/* comment */
+		if (buf[0] == '#') 
+			continue;
+
 		if (s < LIST_MINSIZE) {
 			msg(_("Corrupt entry in filelist at line: %zd"), l);
 			l++;
 			continue;
 		}
+
 		if (!opt_null) {
 			n = strrchr(buf, '\n');
 			if (n)
@@ -168,6 +175,15 @@ g_tree_read_file(FILE *fp)
 			l++; 
 			continue;
 		}
+		/* hardlink or anything else: h or * */
+		q = p + 1;
+		p = strchr(p + 1, ' ');
+		if (!p) {
+			msg(_("Corrupt entry in filelist at line: %zd, no link information found"), l);
+			continue;
+		}
+		linktype = *q;
+
 		/* the path size */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
@@ -176,9 +192,20 @@ g_tree_read_file(FILE *fp)
 			l++; 
 			continue;
 		}
-		/* the file's name */
 		*p = '\0';
 		f_name_size = (size_t)atoi(q);
+
+		/* filesize */
+		q = p + 1;
+		p = strchr(p + 1, ' ');
+		if (!p) {
+			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
+			l++; 
+			continue;
+		}
+		*p = '\0';
+		f_size = (size_t)atoi(q);
+
 		str_len = strlen(p + 1);
 		if (str_len != f_name_size) {
 			msg(_("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'"), l,
@@ -190,13 +217,18 @@ g_tree_read_file(FILE *fp)
 		e = g_malloc(sizeof(struct r_entry));
 		e->f_name      = g_strdup(p + 1);
 		e->f_name_size = f_name_size;
+		e->f_size      = f_size;
 		e->f_mode      = modus;
 		e->f_uid       = 0;
 		e->f_gid       = 0;
-		e->f_size      = 0;
 		e->f_ctime     = 0;
 		e->f_dev       = f_dev;
 		e->f_ino       = f_ino;
+		if (linktype == 'h')
+			e->f_lnk = 1;
+		else
+			e->f_lnk = 0;
+
 		g_tree_insert(tree, (gpointer)e, VALUE);
 		l++;
 	}
@@ -421,7 +453,9 @@ main(int argc, char **argv)
 	    if (!(fplist = fopen(argv[0], "w"))) {
 		    msg(_("Could not write filelist `%s\': %s"), argv[0], strerror(errno));
 	    } else {
-		/* write temporary file and the move it */
+		/* write temporary file, add little comment */
+		fprintf(fplist, 
+			"# mode dev inode linktype pathlen filesize path\n");
 		g_tree_foreach(backup, gfunc_write, fplist);
 		fclose(fplist);
 	    }

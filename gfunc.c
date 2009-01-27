@@ -353,15 +353,20 @@ gboolean
 gfunc_write(gpointer data, gpointer value, gpointer fp)
 {
 	struct r_entry *e = (struct r_entry*)data;
+	char linktype = '*';
+
 	if (sig != 0)
 		signal_abort(sig);
 
 	if (value == NO_PRINT)
 		return FALSE;
 
-	/* first position is fixed after 5 character */
-	fprintf((FILE*) fp, "%5ld %ld %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
-			(long int)e->f_ino, (long int)e->f_name_size, e->f_name);
+	if (e->f_lnk == 1)
+		linktype = 'h';
+
+	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
+			(long int)e->f_ino, linktype, (long int)strlen(e->f_name), (long int)e->f_size, 
+			e->f_name);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);
 	} else {

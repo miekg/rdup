@@ -42,7 +42,7 @@ rm(gchar *p)
 					/* gaat die ALTIJD goed? */
 					dirp = g_strdup_printf("%s%c%s", p, DIR_SEP, dirp);
 
-					fprintf(stderr, "removing the next %s\n", dirp);
+/* XXX					fprintf(stderr, "removing the next %s\n", dirp); */
 					rm(dirp);
 					/* a) uhh, error checking */
 					/* b) max diepte */

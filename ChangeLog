@@ -1,4 +1,5 @@
-xx yyy 2009: 0.6.7 Miek <miek@miek.nl>
+29 Jan 2009: 0.7.0 Miek <miek@miek.nl>
+  -- major bugfixes, internal filelist format change --
   * rdup-backups.7: typo (Johann Klähn)
   * rdup-simple.sh: check for a minimum of 2 arguments (Tom Hendrikx)
   * rdup-simple.sh: fix -f (full dump)
@@ -7,7 +8,14 @@ xx yyy 2009: 0.6.7 Miek <miek@miek.nl>
   * rdup-simple.sh/rdup-ln.sh:  only report errors on stderr, for the rest 
     use stdout (Tom Hendrikx)
   * rdup: honor .nobackup files again (Tom Hendrikx)
-
+  * rdup: Add filesize to the internal filelist - this is mostly to
+    better support hard- and softlinks.
+  * rdup: allow comments in the internal filelist, this is completely
+    useless except that rdup now writes a line describing what's in the
+    filelist using a comment: '# blaa ' etc.
+  * rdup, rdup-tr, rdup-simple: handle link removals better and add
+    a test case that will test this specific bug (reported by Tom
+    Hendrikx)
 
 
 12 Jan 2009: 0.6.6 Miek <miek@miek.nl>
