@@ -1,14 +1,18 @@
 29 Jan 2009: 0.7.0 Miek <miek@miek.nl>
   -- major bugfixes, internal filelist format change --
+  - slowly going to a 1.0.0 release -
+  * version bumped to 0.7.0 as the internal file list format
+    has changed. Using this new version as a drop-in replacement
+    for 0.6.6 you will get a larger backup then you expected.
   * rdup-backups.7: typo (Johann Klähn)
   * rdup-simple.sh: check for a minimum of 2 arguments (Tom Hendrikx)
   * rdup-simple.sh: fix -f (full dump)
   * rdup-up: add mkpath (works like mkdir -p) function and fix -t option
     (reported by Tom Hendrikx)
-  * rdup-simple.sh/rdup-ln.sh:  only report errors on stderr, for the rest 
+  * rdup-simple.sh/rdup-ln.sh: only report errors on stderr, for the rest 
     use stdout (Tom Hendrikx)
   * rdup: honor .nobackup files again (Tom Hendrikx)
-  * rdup: Add filesize to the internal filelist - this is mostly to
+  * rdup: Add filesize and linktype to the internal filelist - this is mostly to
     better support hard- and softlinks.
   * rdup: allow comments in the internal filelist, this is completely
     useless except that rdup now writes a line describing what's in the
@@ -16,6 +20,7 @@
   * rdup, rdup-tr, rdup-simple: handle link removals better and add
     a test case that will test this specific bug (reported by Tom
     Hendrikx)
+  * small document tweaks and cleanups
 
 
 12 Jan 2009: 0.6.6 Miek <miek@miek.nl>

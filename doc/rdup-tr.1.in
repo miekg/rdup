@@ -94,11 +94,14 @@ filelist	    DH	H
 Filter all output through command, \fIopt1\fR through \fIopt7\fR are
 given as options to the command. Multiple \-P can be used, there is
 however a maximum of five options for each command. The options
-are separated with commas, there is no space in between.
+are separated with commas, there must be no space in between.
+
+Due to the nature of pipes in Unix, this pipeline is recreated for
+every file processed.
 .TP
 .B \-L
 Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
-which this option you can read a list of path names.
+with this option you can read a list of path names.
 .TP
 .B \-O
 Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.

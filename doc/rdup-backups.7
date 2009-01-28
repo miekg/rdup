@@ -58,6 +58,28 @@ error.
 With these three (four) tools you can create your own backup solution, see
 SNAPSHOT BACKUPS later in this document.
 
+.SH TYPES OF OUTPUT     
+\fBrdup\fR can create two types of output:
+.PP
+.TP
+.B 1.
+a list of pathnames and path attributes
+.TP 
+.B 2.
+a list of pathnames and path attributes \fIand\fR the
+files' contents
+.PP
+
+The latter is often called 'rdup \-c' output after the switch
+(\-c) which enables this ouput. 'rdup \-c' output is
+comparable to archive formats like tar or pax.
+
+The first one is just called the normal or list output.
+
+In rdup(1), rdup-tr(1) and rdup-up(1) it says what output
+a command can create and what input it expects.
+
+
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
 restores. If you think about this a minute you understand why.

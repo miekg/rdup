@@ -73,11 +73,3 @@ sha1.c
 
 link.c
 	Hardlink detection; have we seen this dev,ino pair already?
-
-4/ UTILITIES
-
-A reference implementation share a similar setup.
-   o Parse the output from rdup
-   o Check whether the current line is a directory, link or file
-   o Act accordingly
-   o Continue with next line or EOF

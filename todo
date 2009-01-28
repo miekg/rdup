@@ -7,12 +7,12 @@ TODO:
 - glib test framework also?
 - test -0 for rdup-*
 - define msg() ONE time in all three the programs
-- check memory
+- check memory and see if we can do make it use less
 - rdup-up: non-writable directories - make them writeable and and
   then return them to the proper state?
 - *testing* *testing* *testing* 
 - move to git for version control
-- path's in rdup-simple.sh for rdup-ln.sh
+- paths in rdup-simple.sh for rdup-ln.sh
 
 :doc:
 
@@ -22,7 +22,6 @@ TODO:
 
 :rdup:
 - add extended attributes? man 5 tar explains how to do it
-- -c option can go? You should use rdup-tr?
 
 :rdup-tr:
 - opt_null ala rdup

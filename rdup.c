@@ -183,6 +183,11 @@ g_tree_read_file(FILE *fp)
 			continue;
 		}
 		linktype = *q;
+		if (linktype != '*' && linktype != 'h') {
+			msg("Illegal link type as line: %zd", l);
+			l++;
+			continue;
+		}
 
 		/* the path size */
 		q = p + 1;
