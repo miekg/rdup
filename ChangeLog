@@ -1,4 +1,4 @@
-29 Jan 2009: 0.7.0 Miek <miek@miek.nl>
+01 Feb 2009: 0.7.0 Miek <miek@miek.nl>
   -- major bugfixes, internal filelist format change --
   - slowly going to a 1.0.0 release -
   * version bumped to 0.7.0 as the internal file list format

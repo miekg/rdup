@@ -478,7 +478,7 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 }
 
 /**
- * used in the crawler, remove specific paths
+ * used in the crawler, remove specific paths on finding a .nobackup
  */
 gboolean
 gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointer r)
