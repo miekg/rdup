@@ -256,14 +256,14 @@ rdup_write_header(struct r_entry *e)
 	}
 	
 	if (t == 'b' || t == 'c') {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %ld,%ld\n%s", 
+		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %d,%d\n%s", 
 			e->plusmin,		
 			t,
 			(int)e->f_mode & ~S_IFMT,
 			(unsigned long)e->f_uid,
 			(unsigned long)e->f_gid,
 			(unsigned long)e->f_name_size,
-			major(e->f_rdev), minor(e->f_rdev),
+			(unsigned int)major(e->f_rdev), (unsigned int)minor(e->f_rdev),
 			e->f_name);
 	} else {
 		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
