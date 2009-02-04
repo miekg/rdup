@@ -22,6 +22,7 @@
 #include <syslog.h>
 #include <errno.h>
 #include <utime.h>
+#include <sys/sysmacros.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>

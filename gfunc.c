@@ -213,7 +213,7 @@ entry_print_data(FILE *out, char n, struct r_entry *e)
 			}
 			/* hijack size for major,minor number when special */
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode)) {
-				fprintf(out, "%d,%d", major(e->f_rdev), minor(e->f_rdev));
+				fprintf(out, "%ld,%ld", major(e->f_rdev), minor(e->f_rdev));
 				break;
 			}
 

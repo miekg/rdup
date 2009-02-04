@@ -256,7 +256,7 @@ rdup_write_header(struct r_entry *e)
 	}
 	
 	if (t == 'b' || t == 'c') {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %d,%d\n%s", 
+		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %ld,%ld\n%s", 
 			e->plusmin,		
 			t,
 			(int)e->f_mode & ~S_IFMT,
