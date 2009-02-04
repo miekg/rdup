@@ -11,13 +11,15 @@ more sophisticated than for instance \fIfind\fR, because \fBrdup\fR
 will find files that are removed or directories that are renamed.
 
 A long time ago \fBrdup\fR included a bunch of shell and Perl scripts
-that implemented a backup policy. 
+that implemented a backup policy. These could be used in a pipeline
+to perform a backup.
+.PP
 Currently \fBrdup\fR consists out of three basic utilities:
 .TP
 .B rdup
 With \fBrdup\fR you create the filelist on which later programs in the
 pipeline can work. With \fBrdup \fI\-c\fR the file's contents
-is also echo-ed to stdout.
+is also echo-ed to stdout. See rdup(1) for more infomation.
 
 .TP
 .B rdup-tr
@@ -25,22 +27,23 @@ With \fBrdup-tr\fR you can transform (encrypt, compress, whatever...) the
 files rdup delivers to you.
 
 \fBrdup-tr\fR reads \fBrdup\fR input and will create \fBrdup \fI\-c\fR
-output.
+output. See rdup-tr(1) for more information.
 
 .TP 
 .B rdup-up
 With \fBrdup-up\fR you can update an existing directory structure with the
-updates as describe in the rdup archive. 
+updates as describe by rdup. 
 
 \fBrdup-up\fR reads \fBrdup -c\fR input and will create the files,
-symlinks, hardlinks and directories (and sockets, pipe and devices
-on the file system.
+symlinks, hardlinks and directories (and sockets, pipes and devices)
+in the file system. See rdup-up(1) for more information.
 
 .PP
-So the general backup pipeline for \fBrdup\fR will look some like
+So the general backup pipeline for \fBrdup\fR will look something like
 this:
 
     create filelist  |  transform file content  |  update filesystem
+    ( rdup           |  rdup-tr                 |  rdup-up )
 
 There is also a little shell script that can be used to create a hard
 linked directory structure, this script \fBrdup-ln.sh\fR is installed
@@ -82,7 +85,7 @@ a command can create and what input it expects.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
-restores. If you think about this a minute you understand why.
+restores. If you think about this for a minute you understand why.
 
 Making a backup means copying a list of files somewhere else. Restoring
 files is copying a list of files back to the place they came from. Same
@@ -92,13 +95,15 @@ reverse those operations during the restore.
 
 .SH BACKUPS
 It is always best to backup to \fIanother\fR medium, be it a different
-local harddisk or a NFS/CIFS mounted filesystem or use the remote backup
-capabilities (\fI\-c\fR) to securely copy the backup to another system all together.
+local harddisk or a NFS/CIFS mounted filesystem or use \-c switch
+of rdup to copy the files and direcories to a remote server, ala rsync.
 
 If you backup to a local disk you can just as well use \fBrsync\fR or
 plain old tar, but if you store your files at somebody else's disk you
 will need encryption. This is where you go beyond \fBrsync\fR and
-\fBrdup\fR comes in.
+\fBrdup\fR comes in. Rsync cannot do per-file encryption, sure you
+can encrypt the network traffic with ssh, but at the remote side
+your files are kept in plain view.
 	 
 .SH SNAPSHOT BACKUPS
 We need a little help here in the form of the \fBrdup-ln.sh\fR script.
@@ -138,10 +143,15 @@ case $RET in
 	;;
 esac
 
-# this is the place where want to modify the commandline
+# this is the place where you want to modify the commandline
+#
 # right now, nothing is translated we just use 'cat'
 
 rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | rdup-up $BACKUP/$HOSTNAME/$TODAY
+
+# Note that rdup-up expects rdup-c output, so if you leave out
+# rdup-tr, you must tell rdup to generate the correct output
+# rdup -c -N $STAMP $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
 
 # or do a remote backup
 #rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | ssh root@remotehost \\

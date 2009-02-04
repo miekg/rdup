@@ -9,7 +9,8 @@
 
 .SH DESCRIPTION
 Transform rdup output into something else. Where something else can
-be a tar, cpio, pax archive or another rdup stream.
+be a tar, cpio, pax archive or another rdup stream (An rdup stream
+is rdup \fI\-c\fR output).
 
 The default is reading and writing rdup streams. The input
 expected is the normal rdup output, i.e. the list of pathnames
@@ -17,7 +18,7 @@ and some extra information, but \fIno\fR file content.
 
 The output of \fBrdup-tr\fR is a \fBrdup \fI\-c\fR stream, i.e. the list
 of pathnames \fIwith\fR the file content (which is possibly 
-transformed).
+transformed by \fBrdup-tr\fR).
 
 You can select other types of output (\-O flag), but you must be aware
 that you may loose some information, see the table below.
@@ -28,10 +29,11 @@ be selected with the \-L flag.
 When creating such output you might also want to 'pipe' the contents
 of each file through a number of commands, say a compression and 
 encryption utility. Note that this is different than compressing the
-\fIentire\fR archive which can be done by using the \-z option of
+\fIentire\fR archive which can be done (for instance) by using the \-z option of
 GNU tar. So this is where rdup-tr comes in. It allows you to create
 a normal archive in which \fIeach\fR file is encrypted (or compressed.
-reversed or whatever). 
+reversed or whatever). \fBrdup-tr\fR does this by creating child
+processes which transform the contents.
 
 If one of
 the forked children returns an exit code other than zero (0), it
@@ -42,7 +44,7 @@ This command combines all previously written rdup-utils
 (rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
 it much more maintainable.
 
-\fBrdup-tr\fR works by forking off a number of child processes (those
+As said \fBrdup-tr\fR works by forking off a number of child processes (those
 commands named with the \-P option(s)), interconnecting these
 with pipes. The output created by these child processes is
 captured in a temporary file in /tmp. From there the contents
@@ -58,13 +60,8 @@ process restarts for the next file. In an ASCII image:
       +-> cmd1 | cmd2 | ...| cmdN > tmpfile
 
 .RE
-.SS NOTE
-When creating an archive out of plain rdup output you will
-\fIloose\fR the information concerning the files that are to be
-removed. Only the modified and new files are included in the
-archive. The output format 'rdup' does not have this limitation.
 
-The following table show what happens with the output
+The following table shows what happens with the output
 depending on the input. 
 .BR
 .TP 
@@ -92,8 +89,8 @@ filelist	    DH	H
 .TP
 .B \-P\fIcommand\fR,\fIopt1\fR,...,\fIopt7\fR
 Filter all output through command, \fIopt1\fR through \fIopt7\fR are
-given as options to the command. Multiple \-P can be used, there is
-however a maximum of five options for each command. The options
+given as options to the command. Multiple \-P's can be used, there is
+however a maximum of seven options for each command. The options
 are separated with commas, there must be no space in between.
 
 Due to the nature of pipes in Unix, this pipeline is recreated for
@@ -141,7 +138,7 @@ Encryption with openssl
 
     rdup /dev/null /home | ./rdup-tr -c -Popenssl,enc,-e,-des-cbc,-k,secret 
 
-Or, compressing wit gzip, encrypting with openssl and then compressing
+Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again
 
     rdup /dev/null /home | ./rdup-tr -Pgzip,-c,-f \\
@@ -166,7 +163,7 @@ Written by Miek Gieben.
 Report bugs to <miek@miek.nl>. 
 
 .SH SEE ALSO
-http:/www.miek.nl/projects/rdup is the main site of rdup. And rdup(1),
+http:/www.miek.nl/projects/rdup/ is the main site of rdup. And rdup(1),
 rdup-up(1) and rdup-backups(7).
 
 .SH COPYRIGHT

@@ -17,6 +17,12 @@ o PCRE library
 optional:
 o Libarchive - if you want to have rdup-tr
 
+rdup should compile on all unix platforms out there. It is tested on
+the following
+o Linux
+o Solaris
+o FreeBSD
+
 2/ DIFFERENCE WITH RSYNC
 
 While rsync really works well, I wanted to have the ability to gzip
