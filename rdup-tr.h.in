@@ -22,7 +22,9 @@
 #include <syslog.h>
 #include <errno.h>
 #include <utime.h>
-#include <sys/sysmacros.h>
+#ifdef HAVE_SYS_SYSMACROS_H
+    #include <sys/sysmacros.h>
+#endif /* HAVE_SYS_SYSMACROS_H */
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
