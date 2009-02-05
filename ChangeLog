@@ -1,5 +1,8 @@
 xx yyy 2009: 0.7.1 Miek <miek@miek.nl>
-  * rdup*: solaris fixes. It now compiles
+  * rdup*: solaris fixes. It now compiles and
+    runs on solaris
+  * doc tweaks and typos
+
 
 
 
