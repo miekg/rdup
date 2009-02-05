@@ -21,7 +21,8 @@ close_pipes(GSList *pipes, int no1, int no2)
 
 	for (j = 0, p = g_slist_nth(pipes, 0); p; p = p->next, j++) { 
 		q = p->data;
-		if ( (no1 != -1 && j != no1) && (no2 != -1 && j != no2) ) {
+		if ( (j != -1 && j != no1) && (j != -1 && j != no2) ) {
+		/* if ( (no1 != -1 && j != no1) && (no2 != -1 && j != no2) ) { */
 			if (opt_verbose > 0) 
 				msg("Closing pipe %d\n", j);
 			close(q[0]);
