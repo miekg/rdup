@@ -25,7 +25,7 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
-AC_CHECK_LIB(archive, archive_write_new, ,ARCHIVE_L="no")
+AC_CHECK_LIB(archive, archive_entry_copy_symlink, ,ARCHIVE_L="no")
 if test "$ARCHIVE_L" == "no"; then
     AC_MSG_WARN([** libarchive not found; not building rdup-tr.])
 fi
