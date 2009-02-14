@@ -2,7 +2,7 @@ TODO:
 
 :general:
 - move to more glib functions
-  + pcre regexp
+  + pcre regexp?
 - massive move to glib, g_progname etc
 - glib test framework also?
 - test -0 for rdup-*
@@ -11,7 +11,6 @@ TODO:
 - rdup-up: non-writable directories - make them writeable and and
   then return them to the proper state?
 - *testing* *testing* *testing* 
-- move to git for version control
 - paths in rdup-simple.sh for rdup-ln.sh
 
 :doc:
@@ -21,7 +20,8 @@ TODO:
 :install:
 
 :rdup:
-- add extended attributes? man 5 tar explains how to do it
+- add extended attributes? man 5 tar explains how to do it, but it
+  is A LOT of work AND it is not portable over unixes...?
 
 :rdup-tr:
 - opt_null ala rdup
