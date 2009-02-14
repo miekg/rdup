@@ -1,9 +1,10 @@
-xx yyy 2009: 0.7.1 Miek <miek@miek.nl>
+14 Feb 2009: 0.7.1 Miek <miek@miek.nl>
   * rdup*: solaris fixes. It now compiles and
     runs on solaris
+  * rdup: change configure so that it will check
+    for a newer function in libarchive. If this
+    function is not found, rdup-tr is not build
   * doc tweaks and typos
-
-
 
 
 01 Feb 2009: 0.7.0 Miek <miek@miek.nl>
