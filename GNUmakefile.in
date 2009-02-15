@@ -56,7 +56,7 @@ strip:	rdup-up rdup-tr rdup
 	strip ${CMD}
 
 po:	rdup.pot 
-	( cd po ; make -f GNUmakefile all )
+	( cd po ; $(MAKE) -f GNUmakefile all )
 
 rdup.pot:
 	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 
@@ -64,7 +64,7 @@ rdup.pot:
 clean:
 	rm -f *.o
 	rm -f rdup.mo ${CMD}
-	( cd po ; make -f GNUmakefile clean )
+	( cd po ; $(MAKE) -f GNUmakefile clean )
 
 realclean: clean
 	rm -rf autom4te.cache
@@ -75,7 +75,7 @@ realclean: clean
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${MAN1} ${MAN7}
-	make -C po realclean
+	$(MAKE) -C po realclean
 
 distclean: 
 
@@ -87,11 +87,11 @@ install: all
 	for i in ${SH}; do ${INSTALL} sh/$$i ${DESTDIR}${libdir}/rdup/$$i ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	for i in ${MAN7}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man7/`basename $$i` ; done; exit 0
-	make -C po install
+	$(MAKE) -C po install
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
 	for i in ${SH}; do rm -f ${DESTDIR}${libdir}/rdup/$$i ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	for i in ${MAN7}; do rm -f  ${DESTDIR}${mandir}/man7/`basename $$i` ; done
-	make -C po uninstall
+	$(MAKE) -C po uninstall
