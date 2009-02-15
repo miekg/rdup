@@ -31,7 +31,7 @@ OPTIONS:
  -z         compress all files: rdup-tr -Pgzip,-c,-f
  -E FILE    use FILE as an exclude list
  -f         force a full dump
- -v         echo the files processed to stderr
+ -v         echo the files processed to stderr and be more verbose
  -x         pass -x to rdup
  -h         this help
  -V         print version
@@ -48,6 +48,7 @@ c=" -c"
 enc=false
 etc=~/.rdup
 force=false
+verbose=false
 
 while getopts "E:k:vfgzxhV" o; do
         case $o in
@@ -92,7 +93,7 @@ while getopts "E:k:vfgzxhV" o; do
 		;;
                 f) force=true;;
                 a) ;;
-                v) OPT=" $OPT -v ";;
+                v) OPT=" $OPT -v "; verbose=true;;
                 x) x=" -x ";;
                 h) usage && exit;;
                 V) version && exit;;
@@ -178,9 +179,10 @@ else
         purpose=1
 fi
 case $purpose in
-        0) echo "INCREMENTAL DUMP" ;;
+        0)
+	$verbose && echo "INCREMENTAL DUMP" ;;
         1)
-        echo "FULL DUMP"
+        $verbose && echo "FULL DUMP"
         rm -f $LIST
         rm -f $STAMP ;;
         *)
