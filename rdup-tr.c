@@ -55,23 +55,6 @@ tmp_clean(int tmpfile, char *template)
 	}
 }
 
-static void
-msg_va_list(const char *fmt, va_list args)
-{
-        fprintf(stderr, "** %s: ", PROGNAME);
-        vfprintf(stderr, fmt, args);
-        fprintf(stderr, "\n");
-}
-
-void
-msg(const char *fmt, ...)
-{
-        va_list args;
-        va_start(args, fmt);
-        msg_va_list(fmt, args);
-        va_end(args);
-}
-
 /* read filenames from stdin, put them through
  * the childeren, collect the output in tmpfile
  * and create the archive on stdout
