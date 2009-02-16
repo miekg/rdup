@@ -1,0 +1,62 @@
+#!/bin/bash
+
+[[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
+
+# this should work otherwise
+cd $RDUP_SOURCE
+./rdup -V && ./rdup-up -V && ./rdup-tr -V
+
+rm -rf A
+
+mkdir -p A/a A/b
+touch A/a/1 A/a/2 A/a/3
+touch A/b/1 A/b/2 A/b/3
+
+# full dump
+./rdup -N $$.timestamp $$.lijst A > /dev/null
+
+( cd A
+mv a c	# swap
+mv b a
+mv c b )
+
+# we expect a b to be included in the backup
+./rdup -N $$.timestamp $$.lijst A | \
+ awk 'FS="/" { print substr($0,length($1 $2 $3 $4) + 4) } ' | \
+ tail -n +4  > $$.diff
+
+echo "/a/3
+/b
+/b/1
+/b/2
+/b/3
+
+
+
+/a
+/a/1
+/a/2
+/a/3
+/b
+/b/1
+/b/2
+/b/3" | diff - $$.diff
+
+if [[ $? -ne 0 ]]; then
+    ERROR=1
+fi
+
+rm $$.timestamp
+rm $$.lijst
+rm $$.diff
+rm -rf A
+
+case $ERROR in
+    0)
+    exit 0
+    ;;
+    1)
+    echo "dir move failure"
+    exit 1
+    ;;
+esac
