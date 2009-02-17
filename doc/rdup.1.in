@@ -171,10 +171,8 @@ printed to standard output, now they are.
 Print the files' contents to standard output. This sets
 the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C"
 
-Note this creates a race condition: if a file changes in size after
-rdup has crawled it and before it has been sent to the remote server,
-the backup will fail. \fBrdup\fR will check for file size changes, but
-this doesn't remove the race condition.
+XXX TODO
+Tell about the blocks
 
 This option is used when streaming your backup to a remote machine.
 .TP
@@ -185,9 +183,6 @@ option unsets \-m.
 .B \-m
 Only print modified/new files; entries that start with a `+'. This
 option unsets \-r.
-.TP
-.B \-l
-Local backups, do not check for file size changes.
 .TP
 .B \-v
 Be more verbose. 

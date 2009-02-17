@@ -68,6 +68,10 @@
 #define LIST_MINSIZE   6
 #define LIST_SPACEPOS  5
 
+#define PROTO_BLOCK	"BLOCK"
+#define PROTO_VERSION_MAJOR	0
+#define	PROTO_VERSION_MINOR	1
+
 #if 0
 /* extended attributes */
 #define ATTR_SIZE       10
@@ -114,4 +118,9 @@ GList * reverse(GTree *g);
 void  gfunc_new_list(gpointer data, gpointer userdata);
 void  gfunc_remove_list(gpointer data, gpointer userdata);
 void  gfunc_backup_list(gpointer data, gpointer userdata);
+/* protocol.c */
+gint block_out_header(FILE *f, size_t size);
+gint block_out(FILE *f, size_t size, char *buf);
+size_t block_in_header(FILE *f);
+gint block_in(FILE *f, size_t size, char *buf);
 #endif  /* _RDUP_H */

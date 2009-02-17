@@ -27,7 +27,7 @@ char * abspath(char *path) {
 	abspath = NULL;
 	abspath2 = g_strdup(path);
 	i = strlen(abspath2);
-	if (i > BUFSIZ)
+	if (i > BUFSIZE)
 		return NULL;
 
 	/* add closing / (guard) */

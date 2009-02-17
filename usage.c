@@ -30,7 +30,6 @@ implement a (incremental) backup scheme.\n\
         -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n\
         -h\t\tthis help\n\
         -m\t\tonly print new/modified files (unsets -r)\n\
-        -l\t\tdon't check for file size changes\n\
         -n\t\tignore .nobackup files\n\
         -r\t\tonly print removed files (unsets -m)\n\
         -s SIZE\t\tonly output files smaller then SIZE bytes\n\

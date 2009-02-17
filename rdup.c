@@ -15,7 +15,6 @@ gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 #if 0
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
 #endif
-gboolean opt_local  	   = FALSE; 		      /* check for file size changes */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
@@ -350,9 +349,6 @@ main(int argc, char **argv)
 					opt_verbose = 2;
 				}
 				break;
-			case 'l':
-				opt_local = TRUE;
-				break;
 			case 'r':
 				opt_removed = TRUE;
 				opt_modified = FALSE;
@@ -403,10 +399,6 @@ main(int argc, char **argv)
 		else
 		    path = abspath(argv[i]);
 
-#ifdef _DEBUG_RACE
-		msg(_("path %s\n"), path);
-#endif /* _DEBUG_RACE */
-		
 		if (!path) {
 			msg(_("Skipping `%s\'"), argv[i]);
 			continue;
@@ -420,10 +412,6 @@ main(int argc, char **argv)
 		/* descend into the dark, misty directory */
 		dir_crawl(backup, linkhash, path);
 	}
-#ifdef _DEBUG_RACE
-	fprintf(stderr, _("** Sleeping\n"));
-	sleep(3);
-#endif /* _DEBUG_RACE */
 
 	/* everything that is gone from the filesystem */
 	remove  = g_tree_subtract(curtree, backup);

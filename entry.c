@@ -20,6 +20,20 @@ extern gint opt_output;
  * /home/miekg/bin/tt
  * <contents>
  *
+ * or parse a new style rdup -c output entry
+ * +- 0775 1000 1000 18 2947\n
+ * /home/miekg/bin/tt
+ * <contents>
+ *
+ * where contents is block based
+ * 1BLOCK8192
+ * 8192 bytes of data
+ * 1BLOCK15
+ * 15 bytes of data
+ * 1BLOCK0
+ * the-end
+ *
+ *
  * buf is NULL delimited 
  *
  * stat is extra and is used by rdup-up to say that it

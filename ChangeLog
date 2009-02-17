@@ -1,5 +1,6 @@
 xx Feb 2009: 0.7.2 Miek <miek@miek.nl>
   - ? -
+  kill -l, also save a stat for every file
 
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>

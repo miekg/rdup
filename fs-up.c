@@ -9,6 +9,7 @@
  */
 
 #include "rdup-up.h"
+#include "protocol.h"
 
 extern sig_atomic_t sig;
 extern gboolean opt_dry;
@@ -95,7 +96,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 {
 	FILE *out;
 	char *buf;
-	size_t   i, j, mod, rest;
+	size_t  bytes;
 	gboolean ok = TRUE;
 
 	/* there is something */
@@ -115,29 +116,17 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	}
 
 	buf   = g_malloc(BUFSIZE + 1);
-	rest = e->f_size % BUFSIZE;	      /* then we need to read this many */
-	mod  = (e->f_size - rest) / BUFSIZE;  /* main loop happens mod times */
-
-	/* mod loop */
-	for(j = 0; j < mod; j++) {
-		i = fread(buf, sizeof(char), BUFSIZE, in);
+	while ((bytes = block_in_header(in)) > 0) {
+		block_in(in, bytes, buf); /* XXX */
 		if (ok && !opt_dry) {
-			if (fwrite(buf, sizeof(char), i, out) != i) {
+			if (fwrite(buf, sizeof(char), bytes, out) != bytes) {
 				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
 				fclose(out);
 				return FALSE;
 			}
 		}
 	}
-	/* rest */
-	i = fread(buf, sizeof(char), rest, in);
-	if (ok && !opt_dry) {
-		if (fwrite(buf, sizeof(char), i, out) != i) {
-			msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-			fclose(out);
-			return FALSE;
-		}
-	}
+	
 	fclose(out); 
 	return TRUE;
 }

@@ -6,13 +6,13 @@
  */
 
 #include "rdup.h"
+#include "protocol.h"
 #include <pcre.h>
 
 extern gboolean opt_null;
 extern gboolean opt_removed;
 extern gboolean opt_modified;
 extern gboolean opt_skip;
-extern gboolean opt_local;
 extern gint opt_verbose;
 extern char *opt_format;
 extern char qstr[];
@@ -53,61 +53,47 @@ sha1(FILE *fp, char *filename)
  * cat the files' contents
  */
 static gboolean
-cat(FILE *fp, char *filename, off_t f_size)
+cat(FILE *fp, char *filename)
 {
 	char buf[BUFSIZE + 1];
 	FILE *file;
 	size_t i;
-	size_t t;
-	size_t missing;
 
 	if ((file = fopen(filename, "r")) == NULL) {
 		msg(_("Could not open '%s\': %s"), filename, strerror(errno));
 		return FALSE;
 	}
 
-	t = 0;
 	while (!feof(file) && (!ferror(file))) {
 		if (sig != 0) {
 			fclose(file);
 			signal_abort(sig);
 		}
 		i = fread(buf, sizeof(char), BUFSIZE, file);
-		t += i;
-		if (t > (size_t) f_size) {
-			/* the file has grown. Break off the write!! */
-			msg(_("File grown larger (%zd) than original file size (%zd) , cutting off: `%s\'"), t, (size_t) f_size, filename);
-			/* what's missing and what is read in the previous read */
-			missing = t - i;
-			missing = (size_t) f_size - missing;
-			if (missing > 0) {
-				/* write the missing bytes till f_size */
-				if (fwrite(buf, sizeof(char), missing, fp) != missing) {
-					msg(_("Write failure `%s\': %s"), filename, strerror(errno));
-					fclose(file);
-					return FALSE;
-				}
-			}
-			fclose(file);
-			return TRUE;
-		}
+		block_out_header(fp, i);
+		block_out(fp, i, buf);
 
+		/*
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
 			msg(_("Write failure `%s\': %s"), filename, strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
+		*/
 	}
 	fclose(file);
+	block_out_header(fp, 0); /* tell the other side, this was the last one */
 
 	/* file has shrunken! Fill the rest with NULLs, this works
 	 * but is slow! */
+	/*
 	if (t < (size_t) f_size) {
 		msg(_("File has shrunk, filling with NULLs: `%s\'"), filename);
 		for(i = t; i < (size_t) f_size; i++) {
 			fputc('\0', fp);
 		}
 	}
+	*/
 	return TRUE;
 }
 
@@ -118,7 +104,7 @@ static void
 entry_cat_data(FILE *fp, struct r_entry *e)
 {
 	if (S_ISREG(e->f_mode) && e->f_lnk == 0) {
-		if (!cat(fp, e->f_name, e->f_size)) {
+		if (!cat(fp, e->f_name)) {
 			exit(EXIT_FAILURE);
 		}
 		return;
@@ -262,8 +248,6 @@ void
 entry_print(FILE *out, char plusmin, struct r_entry *e)
 {
 	char *pos;
-	struct stat s;
-
 	if ((plusmin == '+') && (opt_modified == FALSE)) {
 		return;
 	}
@@ -278,6 +262,8 @@ entry_print(FILE *out, char plusmin, struct r_entry *e)
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 
+#if 0
+	# DONT DO THIS ANYMORE
 	if (S_ISREG(e->f_mode) && plusmin == '+' && !opt_local
 		&& e->f_lnk == 0) {
 		/* check if the file has changed since we first
@@ -301,6 +287,7 @@ entry_print(FILE *out, char plusmin, struct r_entry *e)
 		}
 #endif /* _DEBUG_RACE */
 	}
+#endif
 
 	/* next check if we can read the file, if not - skip it and don't emit
 	 * anything */
