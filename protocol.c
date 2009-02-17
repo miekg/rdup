@@ -49,7 +49,6 @@ block_out(FILE *f, size_t size, char *buf, int fp) {
  */
 gint
 block_in(FILE *f, size_t size, char *buf) {
-	fprintf(stderr, "readning %d\n", (int)size);
 	if (fread(buf, sizeof(char), size, f) != size) {
 		/* read less then expected */
 	}
@@ -74,7 +73,6 @@ block_in_header(FILE *f) {
 	/* version check */
 	c[0] = fgetc(f);
 	c[1] = fgetc(f);
-	fprintf(stderr, "%c|%c", c[0], c[1]);
 	if (c[0] != PROTO_VERSION_MAJOR &&
 			c[1] != PROTO_VERSION_MAJOR) {
 		msg("Wrong protocol version");
@@ -114,9 +112,6 @@ block_in_header(FILE *f) {
 		msg("Block size larger then BUFSIZE");
 		return -1;
 	}
-
-	fprintf(stderr, "Reading %d\n", bytes);
-
 	/* file pointer should now be correctly positioned */
 	return bytes;
 }
