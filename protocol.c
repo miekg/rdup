@@ -23,9 +23,12 @@ block_out_header(FILE *f, size_t size, int fp) {
 	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR, 
 			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
 	if (f) {
-		fwrite(p, sizeof(char), strlen(p), f);
+		if (fwrite(p, sizeof(char), strlen(p), f) != strlen(p))
+			return -1;
+
 	} else if (fp != -1) {
-		write(fp, p, strlen(p));
+		if (write(fp, p, strlen(p)) == -1)
+			return -1;
 	}
 	return 0;
 }
@@ -37,9 +40,12 @@ gint
 block_out(FILE *f, size_t size, char *buf, int fp) {
 /*	if (fwrite(buf, sizeof(char), size, f) != size) { */
 	if (f) {
-		fwrite(buf, sizeof(char), size, f);
+		if (fwrite(buf, sizeof(char), size, f) != size)
+			return -1;
+
 	} else if (fp != -1) {
-		write(fp, buf, size);
+		if (write(fp, buf, size) == -1)
+			return -1;
 	}
 	return 0;
 }
