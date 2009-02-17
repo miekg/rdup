@@ -217,8 +217,7 @@ stdin2archive(GSList *child, int tmpfile)
 				/* oh oh, shit hit the fan. Print the original file */
 				msg("Conversion error, falling back to original file");
 				/* 
-				 * THIS ASSUMES THE CHILD DID NOT OUTPUT
-				 * ANYTHING
+				 * THIS ASSUMES THE CHILD DID NOT OUTPUT ANYTHING
 				 * THIS ASSUMPTION MAY NOT HOLD!!!
 				 */
 				fd_lseek(f);	/* rewind */
