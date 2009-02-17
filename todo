@@ -1,6 +1,9 @@
 TODO:
 
-make temp path configurable in rdup-tr
+make rdup-tr read -c input, and only that
+if that works we can kill tmp file usage in rdup-tr
+
+rdup-up reads rdup-c output which is created by rdup-tr
 
 :general:
 - move to more glib functions
