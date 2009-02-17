@@ -118,9 +118,9 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	buf   = g_malloc(BUFSIZE + 1);
 	while ((bytes = block_in_header(in)) > 0) {
 		if (block_in(in, bytes, buf) == -1) {
-			msg("Gaat niet goed");
+			fclose(out);
+			return FALSE;
 		}
-		fprintf(stderr, "Hallo\n");
 		if (ok && !opt_dry) {
 			if (fwrite(buf, sizeof(char), bytes, out) != bytes) {
 				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
