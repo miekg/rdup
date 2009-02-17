@@ -16,6 +16,7 @@
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;				/* force write to tty */
+char *opt_tmp	           = "/tmp";			/* where to put the tmp files */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -53,23 +54,6 @@ tmp_clean(int tmpfile, char *template)
 		close(tmpfile);
 		unlink(template);
 	}
-}
-
-static void
-msg_va_list(const char *fmt, va_list args)
-{
-        fprintf(stderr, "** %s: ", PROGNAME);
-        vfprintf(stderr, fmt, args);
-        fprintf(stderr, "\n");
-}
-
-void
-msg(const char *fmt, ...)
-{
-        va_list args;
-        va_start(args, fmt);
-        msg_va_list(fmt, args);
-        va_end(args);
 }
 
 /* read filenames from stdin, put them through
@@ -361,13 +345,16 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "cP:O:LhVv")) != -1) {
+	while ((c = getopt (argc, argv, "cP:O:t:LhVv")) != -1) {
 		switch (c) {
 			case 'c':
 				opt_tty = TRUE;
 				break;
 			case 'v':
 				opt_verbose++;
+				break;
+			case 't':
+				opt_tmp = g_strdup(optarg);
 				break;
 			case 'L':
 				opt_input = I_LIST;
@@ -438,7 +425,7 @@ main(int argc, char **argv)
 	/* we have someone to talk to */
 	if (childs != 0) {
 		/* tmp file to put the contents in */
-		template = g_strdup("/tmp/rdup.tmp.XXXXXX");
+		template = g_strdup_printf("%s/%s", opt_tmp, "rdup.tmp.XXXXXX");
 		if ((tmpfile = mkstemp(template)) == -1) {
 			msg("Failure to create tmp file: `%s\'", template);
 			exit(EXIT_FAILURE);

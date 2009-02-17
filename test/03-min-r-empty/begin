@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
+# this should work otherwise
+cd $RDUP_SOURCE
+
+NUM=$(./rdup -r HERE . | wc -l)
+echo "FILES FOUND $NUM"
+[[ $NUM -eq 0 ]] && exit 0
+exit 1

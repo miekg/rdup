@@ -107,6 +107,9 @@ Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.
 Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
 output redirected.
 .TP
+.B \-t PATH
+Use PATH for temporary files. Defaults to /tmp.
+.TP
 .B \-v
 Be more verbose. 
 .TP

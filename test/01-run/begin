@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
+
+# this should work otherwise
+cd $RDUP_SOURCE
+./rdup -V && ./rdup-up -V && ./rdup-tr -V

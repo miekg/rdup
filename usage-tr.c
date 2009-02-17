@@ -22,6 +22,7 @@ The output is equal to rdup -c ouput.\n\
 	    \t\tfilter through cmd\n\
 	\t\tthis may be repeated, output will be filtered\n\
 	\t\tthrough all commands\n\
+	-t TMPDIR\twhere to put the temporary files\n\
 	-h\t\tthis help\n\
 	-V\t\tprint version\n\
         -Ofmt\t\toutput format: pax, cpio, tar or rdup\n\

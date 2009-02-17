@@ -1,0 +1,1 @@
+check coding style: -l90 -nut -ce -nfca -nlp -ncdb -nsai -br -ts08 -i8

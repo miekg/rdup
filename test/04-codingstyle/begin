@@ -1,0 +1,17 @@
+#!/bin/bash
+
+[[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
+# this should work otherwise
+cd $RDUP_SOURCE
+
+st=0
+for i in *.c; do
+	if [ $i == "sha1.c" ]; then
+	    continue
+	fi
+        diff -w -u $i <(cat $i | indent -l90 -nut -ce -nfca -nlp -ncdb -nsai -br -ts08 -i8)
+        if [[ $? -eq 1 ]]; then
+                st=1
+        fi
+done
+exit $st

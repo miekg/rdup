@@ -1,5 +1,7 @@
 TODO:
 
+make temp path configurable in rdup-tr
+
 :general:
 - move to more glib functions
   + pcre regexp?
