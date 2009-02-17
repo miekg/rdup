@@ -1,5 +1,5 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath.o link.o reverse.o protocol.o msg.o
-OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry.o link.o msg.o
+OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry.o link.o protocol.o msg.o
 OBJ_UP=rdup-up.o entry.o usage-up.o signal.o link.o getdelim.o abspath.o rm.o fs-up.o strippath.o mkpath.o protocol.o msg.o
 HDR=rdup.h rdup-tr.h rdup-up.h io.h
 CMD=rdup rdup-tr rdup-up

@@ -18,9 +18,15 @@
  * output a block header
  */
 gint
-block_out_header(FILE *f, size_t size) {
-	fprintf(f, "%1d%1d%s%05d\n", PROTO_VERSION_MAJOR, 
-			PROTO_VERSION_MINOR, PROTO_BLOCK, size);
+block_out_header(FILE *f, size_t size, int fp) {
+	char *p;
+	p = g_strdup_printf("%1d%1d%s%05d\n", PROTO_VERSION_MAJOR, 
+			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
+	if (f) {
+		fwrite(p, sizeof(char), strlen(p), f);
+	} else if (fp != -1) {
+		write(fp, p, strlen(p));
+	}
 	return 0;
 }
 
@@ -28,10 +34,12 @@ block_out_header(FILE *f, size_t size) {
  * output a block
  */
 gint
-block_out(FILE *f, size_t size, char *buf) {
-	/* error checking */
-	if (fwrite(buf, sizeof(char), size, f) != size) {
-		/* shit */
+block_out(FILE *f, size_t size, char *buf, int fp) {
+/*	if (fwrite(buf, sizeof(char), size, f) != size) { */
+	if (f) {
+		fwrite(buf, sizeof(char), size, f);
+	} else if (fp != -1) {
+		write(fp, buf, size);
 	}
 	return 0;
 }

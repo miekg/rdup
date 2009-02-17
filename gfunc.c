@@ -70,8 +70,8 @@ cat(FILE *fp, char *filename)
 			signal_abort(sig);
 		}
 		i = fread(buf, sizeof(char), BUFSIZE, file);
-		block_out_header(fp, i);
-		block_out(fp, i, buf);
+		block_out_header(fp, i, -1);
+		block_out(fp, i, buf, -1);
 
 		/*
 		if (fwrite(buf, sizeof(char), i, fp) != i) {
@@ -82,7 +82,7 @@ cat(FILE *fp, char *filename)
 		*/
 	}
 	fclose(file);
-	block_out_header(fp, 0); /* tell the other side, this was the last one */
+	block_out_header(fp, 0, -1); /* tell the other side, this was the last one */
 
 	/* file has shrunken! Fill the rest with NULLs, this works
 	 * but is slow! */

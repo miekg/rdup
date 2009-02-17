@@ -11,6 +11,7 @@
  */
 
 #include "rdup-tr.h"
+#include "protocol.h"
 #include "io.h"
 
 /* options */
@@ -261,7 +262,6 @@ stdin2archive(GSList *child, int tmpfile)
 		} else {
 
 write_plain_file:
-
 			if (opt_output == O_RDUP) {
 				rdup_write_header(rdup_entry);
 			} else {
@@ -291,9 +291,11 @@ write_plain_file:
 		}
 
 not_s_isreg: 
-
-		if (opt_output != O_RDUP) 
+		if (opt_output == O_RDUP) {
+			block_out_header(NULL, 0, 1);
+		} else {
 			archive_entry_free(entry);
+		}
 
 	}
 	if (opt_output != O_RDUP) {

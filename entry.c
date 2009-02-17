@@ -6,6 +6,7 @@
  */
 
 #include "rdup-tr.h"
+#include "protocol.h"
 #include "io.h"
 
 extern gint opt_input;
@@ -298,7 +299,10 @@ rdup_write_header(struct r_entry *e)
 
 void
 rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
-	if (write(1, buf, len) == -1) 
+	block_out_header(NULL, len, 1);
+	block_out(NULL, len, buf, 1);
+/*	if (write(1, buf, len) == -1) 
 		msg("Failed to write to stdout: %s", strerror(errno));
+XXX TODO errors		*/
 	return;
 }
