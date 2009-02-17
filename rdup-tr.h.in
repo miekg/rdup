@@ -51,10 +51,11 @@
 
 #include "entry.h"
 
+#include "common.h"
+
 #define VERSION     "@PACKAGE_VERSION@"
 #define PROGNAME    "@PACKAGE_NAME@-tr"
 
-#define BUFSIZE	    4096
 #define MAX_CHILD_OPT  7
 #define LIST_MINSIZE   15
 

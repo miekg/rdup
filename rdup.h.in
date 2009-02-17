@@ -48,16 +48,14 @@
 #endif /* HAVE_ATTR_XATTR_H */
 
 #include "entry.h"
+#include "common.h"
 
 #define VERSION     "@PACKAGE_VERSION@"
 #define PROGNAME    "@PACKAGE_NAME@"
 
 #define REG_VECTOR	30
-#define BUFSIZE         4096
 #define NOBACKUP        ".nobackup"
 #define NULL_DUMP       0
-#define DIR_SEP         '/'
-#define DIR_SEP_STR    "/"
 #define VALUE          (void*)1 /* g_tree_lookup returns this in rdup */
 #define NO_PRINT       (void*)2 /* don't print values with this flag */
 #define D_STACKSIZE    100
