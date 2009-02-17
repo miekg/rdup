@@ -48,16 +48,14 @@
 #endif /* HAVE_ATTR_XATTR_H */
 
 #include "entry.h"
+#include "common.h"
 
 #define VERSION     "@PACKAGE_VERSION@"
 #define PROGNAME    "@PACKAGE_NAME@"
 
 #define REG_VECTOR	30
-#define BUFSIZE         4096
 #define NOBACKUP        ".nobackup"
 #define NULL_DUMP       0
-#define DIR_SEP         '/'
-#define DIR_SEP_STR    "/"
 #define VALUE          (void*)1 /* g_tree_lookup returns this in rdup */
 #define NO_PRINT       (void*)2 /* don't print values with this flag */
 #define D_STACKSIZE    100
@@ -118,9 +116,4 @@ GList * reverse(GTree *g);
 void  gfunc_new_list(gpointer data, gpointer userdata);
 void  gfunc_remove_list(gpointer data, gpointer userdata);
 void  gfunc_backup_list(gpointer data, gpointer userdata);
-/* protocol.c */
-gint block_out_header(FILE *f, size_t size);
-gint block_out(FILE *f, size_t size, char *buf);
-size_t block_in_header(FILE *f);
-gint block_in(FILE *f, size_t size, char *buf);
 #endif  /* _RDUP_H */
