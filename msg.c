@@ -1,5 +1,7 @@
 #include "rdup.h"
 
+extern char *PROGNAME;
+
 void
 msg_va_list(const char *fmt, va_list args)
 {

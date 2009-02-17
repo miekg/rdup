@@ -5,6 +5,8 @@
 
 #include "rdup-up.h"
 
+extern char *PROGNAME;
+
 void
 usage_up(FILE *f)
 {

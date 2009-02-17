@@ -54,7 +54,6 @@
 #include "common.h"
 
 #define VERSION     "@PACKAGE_VERSION@"
-#define PROGNAME    "@PACKAGE_NAME@-tr"
 
 #define MAX_CHILD_OPT  7
 #define LIST_MINSIZE   15

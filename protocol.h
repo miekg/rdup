@@ -2,8 +2,8 @@
 #define _PROTOCOL_H
 
 #define PROTO_BLOCK	"BLOCK"
-#define PROTO_VERSION_MAJOR	0
-#define	PROTO_VERSION_MINOR	1
+#define PROTO_VERSION_MAJOR	'0'
+#define	PROTO_VERSION_MINOR	'1'
 
 /* protocol.c */
 gint block_out_header(FILE *f, size_t size, int fp);

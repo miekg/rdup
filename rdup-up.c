@@ -8,6 +8,7 @@
 #include "rdup-up.h"
 #include "io.h"
 
+char *PROGNAME="rdup-up";
 /* options */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */

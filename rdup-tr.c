@@ -14,6 +14,7 @@
 #include "protocol.h"
 #include "io.h"
 
+char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;				/* force write to tty */
@@ -257,6 +258,8 @@ stdin2archive(GSList *child, int tmpfile)
 				}
 				len = read(tmpfile, readbuf, BUFSIZE);
 			}
+			if (opt_output == O_RDUP)
+				block_out_header(NULL, 0, 1);
 
 		} else {
 
@@ -286,16 +289,14 @@ write_plain_file:
 				}
 				len = read(f, readbuf, BUFSIZE);
 			}
+			if (opt_output == O_RDUP)
+				block_out_header(NULL, 0, 1);
 			close(f);
 		}
 
 not_s_isreg: 
-		if (opt_output == O_RDUP) {
-			block_out_header(NULL, 0, 1);
-		} else {
+		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
-		}
-
 	}
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);

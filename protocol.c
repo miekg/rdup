@@ -20,7 +20,7 @@
 gint
 block_out_header(FILE *f, size_t size, int fp) {
 	char *p;
-	p = g_strdup_printf("%1d%1d%s%05d\n", PROTO_VERSION_MAJOR, 
+	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR, 
 			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
 	if (f) {
 		fwrite(p, sizeof(char), strlen(p), f);
@@ -49,6 +49,7 @@ block_out(FILE *f, size_t size, char *buf, int fp) {
  */
 gint
 block_in(FILE *f, size_t size, char *buf) {
+	fprintf(stderr, "readning %d\n", (int)size);
 	if (fread(buf, sizeof(char), size, f) != size) {
 		/* read less then expected */
 	}
@@ -73,9 +74,12 @@ block_in_header(FILE *f) {
 	/* version check */
 	c[0] = fgetc(f);
 	c[1] = fgetc(f);
-	if (c[0] != PROTO_VERSION_MAJOR ||
-			c[1] != PROTO_VERSION_MAJOR)
+	fprintf(stderr, "%c|%c", c[0], c[1]);
+	if (c[0] != PROTO_VERSION_MAJOR &&
+			c[1] != PROTO_VERSION_MAJOR) {
+		msg("Wrong protocol version");
 		return -1;
+	}
 
 	/* 'block' */
 	c[0] = fgetc(f); /* B */
@@ -85,8 +89,10 @@ block_in_header(FILE *f) {
 	c[4] = fgetc(f); /* K */
 
 	if (c[0] != 'B' || c[1] != 'L' || c[2] != 'O' ||
-			c[3] != 'C' || c[4] != 'K')
+			c[3] != 'C' || c[4] != 'K') {
+		msg("BLOCK protocol seperator not found");
 		return -1;
+	}
 
 	/* the bytes */
 	c[0] = fgetc(f); 
@@ -96,14 +102,20 @@ block_in_header(FILE *f) {
 	c[4] = fgetc(f); 
 	c[5] = fgetc(f); /* \n */
 	if (!isdigit(c[0]) || !isdigit(c[1]) || !isdigit(c[2]) ||
-			!isdigit(c[3]) || !isdigit(c[4]))
+			!isdigit(c[3]) || !isdigit(c[4])) {
+		msg("Illegal block size");
 		return -1;
+	}
 	
 	bytes = atoi(g_strdup_printf("%c%c%c%c%c",
 			c[0], c[1], c[2], c[3], c[4]));
 
-	if (bytes > BUFSIZE)		/* out of bounds...? */
+	if (bytes > BUFSIZE) {		/* out of bounds...? */
+		msg("Block size larger then BUFSIZE");
 		return -1;
+	}
+
+	fprintf(stderr, "Reading %d\n", bytes);
 
 	/* file pointer should now be correctly positioned */
 	return bytes;

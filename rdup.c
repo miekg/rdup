@@ -5,6 +5,7 @@
 
 #include "rdup.h"
 
+char *PROGNAME="rdup";
 /* options */
 gboolean opt_null 	   = FALSE;                   /* delimit all in/output with \0  */
 gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */

@@ -51,7 +51,6 @@
 #include "common.h"
 
 #define VERSION     "@PACKAGE_VERSION@"
-#define PROGNAME    "@PACKAGE_NAME@"
 
 #define REG_VECTOR	30
 #define NOBACKUP        ".nobackup"
@@ -65,16 +64,6 @@
 
 #define LIST_MINSIZE   6
 #define LIST_SPACEPOS  5
-
-#define PROTO_BLOCK	"BLOCK"
-#define PROTO_VERSION_MAJOR	0
-#define	PROTO_VERSION_MINOR	1
-
-#if 0
-/* extended attributes */
-#define ATTR_SIZE       10
-#define R_MAX_ID        2147483646  /* 2 ^ 31 - 2 */
-#endif
 
 struct subtract {
         GTree *d; /* diff */

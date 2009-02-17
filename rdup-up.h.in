@@ -46,7 +46,6 @@
 #include "common.h"
 
 #define VERSION     "@PACKAGE_VERSION@"
-#define PROGNAME    "@PACKAGE_NAME@-up"
 
 #define LIST_MINSIZE   15
 

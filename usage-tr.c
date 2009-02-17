@@ -5,6 +5,8 @@
 
 #include "rdup-tr.h"
 
+extern char *PROGNAME;
+
 void
 usage_tr(FILE *f)
 {
