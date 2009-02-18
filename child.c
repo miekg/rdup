@@ -46,6 +46,7 @@ wait_pids(GSList *pids)
                 if (sig != 0)
                         signal_abort(sig);
 
+		/* WNOHANG */
 		waitpid(*(pid_t* )(p->data), &status, 0);
 		if (WIFEXITED(status)) {
 #if 0
@@ -64,7 +65,7 @@ wait_pids(GSList *pids)
 
 /* create pipes and childs, return pids */
 GSList *
-create_childeren(GSList *child, GSList **pipes, int tmpfile) 
+create_childeren(GSList *child, GSList **pipes, int file) 
 {
 	GSList  *p;
 	GSList	*pids	= NULL;
@@ -78,8 +79,9 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 	if (!child)
 		return NULL;
 
-	/* create ALL pipes before forking and one more
-	 * for the parent child communication
+	/* create ALL pipes before forking 
+	 * As a parent we read from the last pipe created
+	 * We attach file to the input of the first child
 	 */
 	childs = g_slist_length(child);
 	for (j = 0; j < childs; j++) { 
@@ -95,7 +97,7 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
                 if (sig != 0)
                         signal_abort(sig);
 
-		/* fork, exec, child */
+		/* fork, exec child */
                 args = (char**) p->data;
 		cpid = g_malloc(sizeof(pid_t));
 		pips = (g_slist_nth(cpipe, j))->data;
@@ -109,35 +111,36 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
 			/* save the pids */
 			pids = g_slist_append(pids, cpid);
 		} else {				/* child */
-			if (j != (childs - 1)) {
-				/* not the last one */
-				close(tmpfile);
+			if (j == 0) {
+				/* connect f to stdin */
+				if (dup2(file, 0) == -1)
+					exit(EXIT_FAILURE);
+				/* pipes leading into me may go */
+				close(pips[0]);
+			} else {
+				close(file); 
 
 				/* close write end, connect read to stdin */
 				close(pips[1]);
-				if (dup2(pips[0], 0) == -1) {
+				/* MSG XXX */
+				if (dup2(pips[0], 0) == -1)
 					exit(EXIT_FAILURE);
-				}
+			}
 
-				/* re-use pips */
+			if (j < (childs - 1) ) {
+				/* re-use pips for the next pipe pair */
 				pips = (g_slist_nth(cpipe, j + 1))->data;
-
 				/* close read end, connect write to stdout */
 				close(pips[0]);
 				if (dup2(pips[1], 1) == -1) {
+					/* MSG XXX */
 					exit(EXIT_FAILURE);
 				}
-
 				close_pipes(cpipe, j, j + 1);
 			} else {
-				/* last one, conn stdout to tmpfile */
-				if (dup2(tmpfile, 1) == -1) {
-					exit(EXIT_FAILURE);
-				}
-
-				/* close write end, connect read to stdin */
-				close(pips[1]);
-				if (dup2(pips[0], 0) == -1) {
+				/* last one, conn write to stdout */
+				close(pips[0]);
+				if (dup2(pips[1], 1) == -1) {
 					exit(EXIT_FAILURE);
 				}
 				close_pipes(cpipe, j, -1);
@@ -154,9 +157,9 @@ create_childeren(GSList *child, GSList **pipes, int tmpfile)
         }
 	/* all childeren created, close all pipes except 0 */
 	close_pipes(cpipe, 0, -1);
-	/* close read end, we only need to write as parent */
-	pips = (g_slist_nth(cpipe, 0))->data;
-	close(pips[0]);
+	/* close write end, we only need to read as parent */
+	pips = (g_slist_last(cpipe))->data;
+	close(pips[1]);
 
 	*pipes = cpipe;
 	return pids;

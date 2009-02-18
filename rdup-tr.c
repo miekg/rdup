@@ -18,7 +18,6 @@ char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;				/* force write to tty */
-char *opt_tmp	           = "/tmp";			/* where to put the tmp files */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -29,41 +28,12 @@ char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O
 /* signal.c */
 void got_sig(int signal);
 
-void
-fd_lseek(int tmpfile) {
-	/* rewind tmpfile so it can be read from the start */
-	if ((lseek(tmpfile, 0, SEEK_SET)) == -1) {
-		msg("Failed to seek in tmpfile %s", strerror(errno));
-	exit(EXIT_FAILURE);
-	}
-}
-
-void
-fd_trunc(int tmpfile) {
-	/* set tmpfile to size 0 */
-	if ((ftruncate(tmpfile, 0)) == -1) {
-		msg("Failed to truncate tmpfile");
-		exit(EXIT_FAILURE);
-	}
-}
-
-void
-tmp_clean(int tmpfile, char *template) 
-{
-	if (tmpfile != -1) {
-		if (opt_verbose > 1)
-			msg("Cleaning up `%s\'", template);
-		close(tmpfile);
-		unlink(template);
-	}
-}
-
 /* read filenames from stdin, put them through
- * the childeren, collect the output in tmpfile
- * and create the archive on stdout
+ * the childeren, collect the output from the last
+ * child and create the archive on stdout
  */
 void 
-stdin2archive(GSList *child, int tmpfile)
+stdin2archive(GSList *child)
 {
 	char		*buf, *readbuf, *n, *out;
 	char		delim;
@@ -73,7 +43,7 @@ stdin2archive(GSList *child, int tmpfile)
 	int		f, j;
 	GSList		*pipes;
 	GSList		*pids;				/* child pids */
-	int		*pips;				/* used pipes */
+	int		*parent;			/* parent pipe */
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     s;
@@ -138,7 +108,6 @@ stdin2archive(GSList *child, int tmpfile)
 		}
 
 		if (sig != 0) {
-			tmp_clean(tmpfile, template);
 			signal_abort(sig);
 		}
 
@@ -177,15 +146,16 @@ stdin2archive(GSList *child, int tmpfile)
 			}
 		}
 
-		/* bail out for non regular files */
-		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
-			if (opt_output != O_RDUP) {
-				archive_write_header(archive, entry);
-			} else {
-				rdup_write_header(rdup_entry);
-			}
-			goto not_s_isreg; 
+		/* size may be changed - we don't care anymore */
+		if (opt_output != O_RDUP) {
+			archive_write_header(archive, entry);
+		} else {
+			rdup_write_header(rdup_entry);
 		}
+
+		/* bail out for non regular files */
+		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
+			goto not_s_isreg; 
 
 		/* regular files */
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
@@ -193,82 +163,48 @@ stdin2archive(GSList *child, int tmpfile)
 			continue;
 		}
 		if (child != NULL) {
-			fd_trunc(tmpfile);
-			fd_lseek(tmpfile);
-
-			pids = create_childeren(child, &pipes, tmpfile);
-			pips = (g_slist_nth(pipes, 0))->data;
-
-			len = read(f, readbuf, BUFSIZE);
+			pids = create_childeren(child, &pipes, f);
+			close(f); /* not needed in parent */
+			parent = (g_slist_last(pipes))->data;
+			/* everything is closed in create_children */
+						
+			/* now we must read from from the last pipe 
+			 * read end, here, parent[0]
+			 */
+			len = read(parent[0], readbuf, BUFSIZE);
 			if (len == -1) {
-				msg("Failure to read from file: %s", strerror(errno));
-				exit(EXIT_FAILURE); /* or should skip? */
-			}
-			while (len > 0) {
-				if (write(pips[1], readbuf, len) == -1) {
-					msg("Failure to read from file: %s", strerror(errno));
-					exit(EXIT_FAILURE); /* or should skip? */
-				}
-
-				len = read(f, readbuf, BUFSIZE);
-			}
-			close(pips[1]);  /* this should close all pipes in sequence */
-
-			/* wait for the childeren and then put tmpfile in the archive */
-			if (wait_pids(pids) != 0) {
-				/* oh oh, shit hit the fan. Print the original file */
-				msg("Conversion error, falling back to original file");
-				/* 
-				 * THIS ASSUMES THE CHILD DID NOT OUTPUT ANYTHING
-				 * THIS ASSUMPTION MAY NOT HOLD!!!
-				 */
-				fd_lseek(f);	/* rewind */
-				/* yes, goto's are ugly, but here we want to
-				 * recover from an error and instead of duplicating
-				 * the code we jump to it */
+				msg("Failure to read from pipe: %s", strerror(errno));
 				goto write_plain_file;
-			} else {
-				close(f); /* close f here */
-				/* set the new size (this may be changed) and then write the header */
-				fstat(tmpfile, &s);	/* will not be a symlink */
-				if (opt_output == O_RDUP) {
-					rdup_entry->f_size = s.st_size;
-					rdup_write_header(rdup_entry);
-				} else {
-					archive_entry_set_size(entry, s.st_size);
-					archive_write_header(archive, entry);
-				}
-			}
-
-			fd_lseek(tmpfile);	/* rewind */
-			len = read(tmpfile, readbuf, BUFSIZE);
-			if (len == -1) {
-				msg("Failure to read from file: %s", strerror(errno));
-				exit(EXIT_FAILURE); /* should skip? */
 			}
 			while (len > 0) {
+				/* write archive */
 				if (sig != 0) {
-					tmp_clean(tmpfile, template);
 					signal_abort(sig);
 				}
-				if (opt_output == O_RDUP) {
+
+				/* check child status */
+				/* if something went wrong we can still bail
+				 * out, after writing part of the archive
+				 * that is a lot harder to do
+				 */
+				if (opt_output == O_RDUP) 
 					rdup_write_data(rdup_entry, readbuf, len);
-				} else {
+				else
 					archive_write_data(archive, readbuf, len);
-				}
-				len = read(tmpfile, readbuf, BUFSIZE);
+				
+				len = read(parent[0], readbuf, BUFSIZE);
+
+				len = read(parent[0], readbuf, BUFSIZE);
 			}
-			if (opt_output == O_RDUP)
-				block_out_header(NULL, 0, 1);
+			close(parent[0]);  /* we're done */
 
 		} else {
 
 write_plain_file:
-			if (opt_output == O_RDUP) {
+			if (opt_output == O_RDUP)
 				rdup_write_header(rdup_entry);
-			} else {
+			else
 				archive_write_header(archive, entry);
-			}
 
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
@@ -289,10 +225,11 @@ write_plain_file:
 				}
 				len = read(f, readbuf, BUFSIZE);
 			}
-			if (opt_output == O_RDUP)
-				block_out_header(NULL, 0, 1);
 			close(f);
 		}
+		/* final block for rdup */
+		if (opt_output == O_RDUP)
+			block_out_header(NULL, 0, 1);
 
 not_s_isreg: 
 		if (opt_output != O_RDUP)
@@ -314,7 +251,6 @@ main(int argc, char **argv)
 	GSList		 *child    = NULL;		/* forked childs args: -P option */
 	char		 **args;
 	int		 childs    = 0;			/* number of childs */
-	int		 tmpfile   = -1;
 	
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
@@ -354,9 +290,6 @@ main(int argc, char **argv)
 				break;
 			case 'v':
 				opt_verbose++;
-				break;
-			case 't':
-				opt_tmp = g_strdup(optarg);
 				break;
 			case 'L':
 				opt_input = I_LIST;
@@ -424,20 +357,7 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	/* we have someone to talk to */
-	if (childs != 0) {
-		/* tmp file to put the contents in */
-		template = g_strdup_printf("%s/%s", opt_tmp, "rdup.tmp.XXXXXX");
-		if ((tmpfile = mkstemp(template)) == -1) {
-			msg("Failure to create tmp file: `%s\'", template);
-			exit(EXIT_FAILURE);
-		}
-	} else {
-		tmpfile = -1;
-	}
-
 	/* read stdin, create childeren and make an archive */
-	stdin2archive(child, tmpfile);
-	tmp_clean(tmpfile, template);
+	stdin2archive(child);
 	exit(EXIT_SUCCESS);
 }
