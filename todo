@@ -1,6 +1,7 @@
 TODO:
 
 make temp path configurable in rdup-tr
+cleanup entry.c - we only need to able to parse -c input
 
 :general:
 - move to more glib functions
