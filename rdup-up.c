@@ -47,6 +47,7 @@ update(char *path, guint strip)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line, &s, NO_STAT_CONTENT))) {
+			/* XXX msg */
 			exit(EXIT_FAILURE);
 		}
 

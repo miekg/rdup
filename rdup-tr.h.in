@@ -82,7 +82,7 @@ void usage_tr(FILE *);
 /* child.c */
 void close_pipes(GSList *p, int no1, int no2);
 int wait_pids(GSList *pids);
-GSList *create_childeren(GSList *child, GSList **pipes, int tmpfile);
+GSList *create_childeren(GSList *child, GSList **pipes, int f);
 
 /* entry.c */
 struct r_entry * parse_entry(char *buf, size_t l, struct stat *s, gint fmt);
