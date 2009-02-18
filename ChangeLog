@@ -10,9 +10,9 @@ xx Feb 2009: 0.7.2 Miek <miek@miek.nl>
   * rdup: -c output changes for files: use blocks
   * rdup: -l switch is not needed anymore
   * rdup-up: expects the new -c format as input
-  * rdup-tr: expects the new -c format as input, NOT
-    the normal list output of rdup
-
+  * rdup-tr: still expects normal rdup list as input
+  * rdup-tr: do away with the tmp file (John Goerzen)
+    this saves a lot of IO as it is all piping now
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>
   * rdup*: solaris fixes. It now compiles and

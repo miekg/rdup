@@ -38,7 +38,6 @@ block_out_header(FILE *f, size_t size, int fp) {
  */
 gint
 block_out(FILE *f, size_t size, char *buf, int fp) {
-/*	if (fwrite(buf, sizeof(char), size, f) != size) { */
 	if (f) {
 		if (fwrite(buf, sizeof(char), size, f) != size)
 			return -1;
