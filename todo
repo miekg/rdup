@@ -1,5 +1,8 @@
 TODO:
-override bufsize
+ - override bufsize
+ - d dup filelist to a file
+ - strippath support in rdup-tr? if strip paht need
+ - rdup echo filelist to an file
 
 :general:
 - move to more glib functions

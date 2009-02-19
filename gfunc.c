@@ -15,7 +15,6 @@ extern gboolean opt_modified;
 extern gboolean opt_skip;
 extern gint opt_verbose;
 extern char *opt_format;
-extern char qstr[];
 extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;

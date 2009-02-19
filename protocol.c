@@ -70,7 +70,7 @@ block_in(FILE *f, size_t size, char *buf) {
  */
 size_t
 block_in_header(FILE *f) {
-	/* we are expecting an block header:
+	/* we are expecting a block header:
 	 * 2 pos version; the word block; 5 digit number; newline
 	 */
 	char c[6];
@@ -119,8 +119,8 @@ block_in_header(FILE *f) {
 		msg("Block size larger then BUFSIZE");
 		return -1;
 	}
-	if (opt_verbose > 0)
+	if (opt_verbose > 2)
 		msg("Block seen, start read of %d bytes", bytes);
-	/* file pointer should now be correctly positioned */
+	
 	return bytes;
 }

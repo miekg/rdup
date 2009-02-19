@@ -17,7 +17,7 @@ gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
 #endif
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
-char qstr[BUFSIZE + 1];				      /* static string for quoting */
+char *opt_dup	           = NULL;		      /* write a duplicate of the filelist to this file */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file */

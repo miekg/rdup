@@ -103,7 +103,8 @@ stdin2archive(GSList *child)
 		if (opt_verbose > 0) {
 			out = g_strdup_printf("%s\n", rdup_entry->f_name);
 			if (write(2, out, rdup_entry->f_name_size + 1) == -1) {
-				/* XXX not good */
+				msg("Writing to stderr failed");
+				exit(EXIT_FAILURE);
 			}
 		}
 
@@ -196,6 +197,10 @@ stdin2archive(GSList *child)
 				len = read(parent[0], readbuf, BUFSIZE);
 			}
 			close(parent[0]);  /* we're done */
+			if (wait_pids(pids, 0) == -1) {
+				/* weird child exit */
+				/* Huh and now?   */
+			}
 
 		} else {
 

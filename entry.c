@@ -39,7 +39,8 @@ extern gint opt_output;
  *
  * stat is extra and is used by rdup-up to say that it
  * wants to parse rdup -c ouput. This cannot be handled
- * with opt_input because rdup-tr cannot handle this (yet!)
+ * with opt_input because rdup-tr cannot handle this
+ * so opt_input is for normal rdup inupt and
  */
 struct r_entry *
 parse_entry(char *buf, size_t l, struct stat *s, gint stat) 
@@ -264,9 +265,9 @@ rdup_write_header(struct r_entry *e)
 	} else if (S_ISLNK(e->f_mode)) {
 		t = 'l';
 	} else {
-		if (e->f_lnk == 1) {
+		if (e->f_lnk == 1)
 			t = 'h';
-		} else
+		else
 			t = '-';
 	}
 	

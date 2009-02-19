@@ -58,6 +58,7 @@ wait_pids(GSList *pids, int flags)
 			/* abnormal termination,
 			 * should have received sigpipe? */
 			/* XXX TODO */
+			ret = -1;
 		}
 	}
 	return ret;
