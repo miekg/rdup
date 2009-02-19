@@ -20,8 +20,9 @@ implement a (incremental) backup scheme.\n\
 \n\
 \n\
     OPTIONS:\n\
-        -N FILE\t\tuse the timestamp of FILE for incremental dumps\n\
+        -N FILE\t\tuse the (c_time) timestamp of FILE for incremental dumps\n\
         \t\tif FILE does not exist, a full dump is performed\n\
+	-M FILE\t\tas -N, but use the m_time\n\
         -F FORMAT\tuse specified format string\n\
         \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
 	-R\t\treverse the output (depth first, first the dirs then the files)\n\
