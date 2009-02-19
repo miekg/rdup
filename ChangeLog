@@ -3,16 +3,17 @@ xx Feb 2009: 0.7.2 Miek <miek@miek.nl>
   * rdup*: make the -c output block based.
     Every BUFSIZE bytes a block is started.
     The last block is signaled with a size
-    of 0. This eleminates a race condition,
+    of 0. This eleminates the race condition,
     removes an extra stat() for every file
-    and makes rdup-tr not used any temporary
-    files.
+    and makes rdup-tr not use any temporary
+    files. (Idea from: John Goerzen)
   * rdup: -c output changes for files: use blocks
-  * rdup: -l switch is not needed anymore
+  * rdup: -l switch is not needed anymore, so removed
   * rdup-up: expects the new -c format as input
   * rdup-tr: still expects normal rdup list as input
   * rdup-tr: do away with the tmp file (John Goerzen)
     this saves a lot of IO as it is all piping now
+
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>
   * rdup*: solaris fixes. It now compiles and

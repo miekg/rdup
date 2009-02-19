@@ -218,7 +218,7 @@ write_plain_file:
 			 * have read from it */
 			if (lseek(f, 0, SEEK_SET)  == -1) {
 				msg("Failure to rewind...");
-				EXIT(EXIT_FAILURE);
+				exit(EXIT_FAILURE);
 			}
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {

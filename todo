@@ -1,9 +1,9 @@
 TODO:
- - override bufsize
+ - override bufsize??? low prio
  - d dup filelist to a file
 
  - rdup echo filelist to an file
-    better in rdup-up - that were the backup 's at
+    better in rdup-up - that were the backup 's at?
 
 :general:
 - move to more glib functions
