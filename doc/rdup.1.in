@@ -169,10 +169,19 @@ printed to standard output, now they are.
 Print the files' contents to standard output. This sets
 the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C"
 
-Any file content is written in a block/chunk based manner...
-...
-XXX TODO
-Tell about the blocks
+Any file content is written in a block/chunk based manner. The
+last block is signaled with a null block. A block entry is 
+ascii and is formatted as follows: VVBLOCKBBBBB\\n
+
+Where 'VV' is the version, now '01', then the literal string 'BLOCK'
+and then the amount of bytes, typical '08192'. And then a newline.
+
+An example:
+
+    01BLOCK08192
+    <START OF THE FIRST 8192 BYTES>01BLOCK00015
+    <ANOTHER 15 BYTES>01BLOCK00000
+
 
 This option is used when streaming your backup to a remote machine.
 .TP
