@@ -81,7 +81,7 @@ void usage_tr(FILE *);
 
 /* child.c */
 void close_pipes(GSList *p, int no1, int no2);
-int wait_pids(GSList *pids);
+int wait_pids(GSList *pids, int flags);
 GSList *create_childeren(GSList *child, GSList **pipes, int f);
 
 /* entry.c */

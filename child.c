@@ -34,7 +34,7 @@ close_pipes(GSList *pipes, int n1, int n2)
 
 /* return 0 if all ok, 1 for trouble */
 int
-wait_pids(GSList *pids)
+wait_pids(GSList *pids, int flags)
 {
 	GSList *p;
 	int status;
@@ -47,8 +47,7 @@ wait_pids(GSList *pids)
                 if (sig != 0)
                         signal_abort(sig);
 
-		/* WNOHANG */
-		waitpid(*(pid_t* )(p->data), &status, 0);
+		waitpid(*(pid_t* )(p->data), &status, flags);
 		if (WIFEXITED(status)) {
 #if 0
 			msg("Child exit %d\n", WEXITSTATUS(status)); 
@@ -80,9 +79,10 @@ create_childeren(GSList *child, GSList **pipes, int file)
 	if (!child)
 		return NULL;
 
-	/* create ALL pipes before forking 
+	/* create all pipes before forking 
 	 * As a parent we read from the last pipe created
 	 * We attach file to the input of the first child
+	 * This eliminates to use of a tmp file
 	 */
 	childs = g_slist_length(child);
 	for (j = 0; j < childs; j++) { 
