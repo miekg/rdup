@@ -20,7 +20,7 @@ char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 char qstr[BUFSIZE + 1];				      /* static string for quoting */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
-time_t opt_timestamp       = 0;                       /* timestamp file */
+time_t opt_timestamp       = 0;                       /* timestamp file c|m time */
 sig_atomic_t sig           = 0;
 
 /* crawler.c */
@@ -225,16 +225,18 @@ g_tree_read_file(FILE *fp)
 }
 
 /**
- * return the m_time of the filelist
+ * return the c_time of the filelist
  */
 static time_t
-timestamp(char *f)
+timestamp(char *f, gboolean ctime)
 {
 	struct stat s;
 	if (lstat(f, &s) != 0) {
 		return 0;
 	}
-	return s.st_ctime;
+	if (ctime)
+		return s.st_ctime;
+	return s.st_mtime;
 }
 
 int
@@ -321,9 +323,12 @@ main(int argc, char **argv)
 				opt_nobackup = FALSE;
 				break;
 			case 'N': 
-				opt_timestamp = timestamp(optarg);
+				opt_timestamp = timestamp(optarg, TRUE);
 				time = optarg;
 				break;
+			case 'M':
+				opt_timestamp = timestamp(optarg, FALSE);
+				time = optarg;
 			case 'R':
 				opt_reverse = TRUE;
 				break;

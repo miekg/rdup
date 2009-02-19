@@ -108,13 +108,16 @@ to the scripts.
 Specify a printf-style format to use. See \fBFORMAT\fR below.
 .TP
 .B \-N timestamp
-use the m_time of file \fBtimestamp\fR as the timestamp to decide what to
+use the c_time of file \fBtimestamp\fR as the timestamp to decide what to
 include in the incremental backup list. If \fBtimestamp\fR does not exist
 of full dump is performed. 
 .B rdup
 will create/touch \fBtimestamp\fR after it has printed the file list.
 This means if something goes wrong, you still have the original
 timestamp.
+.TP
+.B \-M timestamp
+As \-N, but look at the m_time.
 .TP
 .B \-R
 Reverse the output of \fBrdup\fR. Tools accepting this ouput must
