@@ -54,11 +54,6 @@ wait_pids(GSList *pids, int flags)
 #endif
 			if (WEXITSTATUS(status) != 0)
 				ret = -1;
-		} else {
-			/* abnormal termination,
-			 * should have received sigpipe? */
-			/* XXX TODO */
-			ret = -1;
 		}
 	}
 	return ret;

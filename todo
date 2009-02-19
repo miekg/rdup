@@ -2,9 +2,6 @@ TODO:
  - override bufsize
  - d dup filelist to a file
 
- - strippath support in rdup-tr? if strip paht need
-   do it in perl or whatever
-
  - rdup echo filelist to an file
     better in rdup-up - that were the backup 's at
 

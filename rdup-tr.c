@@ -165,7 +165,6 @@ stdin2archive(GSList *child)
 		}
 		if (child != NULL) {
 			pids = create_childeren(child, &pipes, f);
-			close(f); /* not needed in parent */
 			parent = (g_slist_last(pipes))->data;
 			/* everything is closed in create_children */
 						
@@ -177,16 +176,21 @@ stdin2archive(GSList *child)
 				msg("Failure to read from pipe: %s", strerror(errno));
 				goto write_plain_file;
 			}
+
+			if (wait_pids(pids, WNOHANG) == -1) {
+				/* weird child exit */
+				msg("Child exit, giving you the original file");
+				goto write_plain_file;
+			}
+			/* close f here as we might need if the 
+			 * 'goto write_plain_file'
+			 * where we happily read from that descriptor
+			 */
+			close(f); 
 			while (len > 0) {
 				/* write archive */
 				if (sig != 0) {
 					signal_abort(sig);
-				}
-
-				/* check child status */
-				if (wait_pids(pids, WNOHANG) == -1) {
-					/* weird child exit */
-					goto write_plain_file;
 				}
 				 
 				if (opt_output == O_RDUP) 
@@ -208,7 +212,14 @@ write_plain_file:
 			/* header already sent, don't care about file size
 			 * so this is ok
 			 */
-
+				
+			/* if we had child trouble we need to 
+			 * reset the file as some child might
+			 * have read from it */
+			if (lseek(f, 0, SEEK_SET)  == -1) {
+				msg("Failure to rewind...");
+				EXIT(EXIT_FAILURE);
+			}
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg("Failure to read from file: %s", strerror(errno));
