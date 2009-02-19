@@ -17,7 +17,8 @@ gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
 #endif
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
-char *opt_dup	           = NULL;		      /* write a duplicate of the filelist to this file */
+char *def_format 	   = "%p%T %b %u %g %l %s %n\n"; /* default format of rdup output */
+FILE *opt_dup	           = NULL;		      /* write a duplicate of the filelist to this file */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file */
@@ -260,8 +261,8 @@ main(int argc, char **argv)
 	/* really need LC_ALL? */
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
-	bindtextdomain(PROGNAME, LOCALEROOTDIR);
-	(void)textdomain(PROGNAME);
+	bindtextdomain("rdup", LOCALEROOTDIR);
+	(void)textdomain("rdup");
 #endif /* ENABLE_NLS */
 	
 	/* setup our signal handling */
@@ -296,7 +297,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "acrlmhVRnN:s:vqx0F:E:")) != -1) {
+	while ((c = getopt (argc, argv, "crlmhVRnd:N:s:vqx0F:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -305,8 +306,11 @@ main(int argc, char **argv)
 				if (!regexp_init(optarg)) 
 					exit(EXIT_FAILURE);
 				break;
-			case 'a':
-				msg(_("-a is not supported anymore"));
+			case 'd':
+				if (!(opt_dup = fopen(optarg, "w"))) {
+					msg(_("Could not open duplicate filelist `%s\': %s"), optarg, strerror(errno));
+					exit(EXIT_FAILURE);
+				}
 				break;
 			case 'c':
 				opt_format = "%p%T %b %u %g %l %s\n%n%C";
@@ -416,13 +420,13 @@ main(int argc, char **argv)
 		list_remove = reverse(remove);
 		list_changed = reverse(changed);
 		list_new = reverse(new);
-		g_list_foreach(list_remove, gfunc_remove_list, NULL); 
-		g_list_foreach(list_changed, gfunc_backup_list, NULL); 
-		g_list_foreach(list_new, gfunc_new_list, NULL); 
+		g_list_foreach(list_remove, gfunc_remove_list, opt_dup); 
+		g_list_foreach(list_changed, gfunc_backup_list, opt_dup); 
+		g_list_foreach(list_new, gfunc_new_list, opt_dup); 
 	} else {
-		g_tree_foreach(remove, gfunc_remove, NULL);
-		g_tree_foreach(changed, gfunc_backup, NULL);
-		g_tree_foreach(new, gfunc_new, NULL);
+		g_tree_foreach(remove, gfunc_remove, opt_dup);
+		g_tree_foreach(changed, gfunc_backup, opt_dup);
+		g_tree_foreach(new, gfunc_new, opt_dup);
 	}
 
 	/* write new filelist */

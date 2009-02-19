@@ -244,7 +244,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 
 /* ALmost the same of entry_print_data in gfunc.c, but
  * not quite as we don't break up symlinks (source -> target)
- * for instance
+ * for instance. TODO: integrate the two functions
  */
 void
 rdup_write_header(struct r_entry *e)

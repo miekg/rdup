@@ -15,6 +15,7 @@ extern gboolean opt_modified;
 extern gboolean opt_skip;
 extern gint opt_verbose;
 extern char *opt_format;
+extern char *def_format;
 extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
@@ -244,7 +245,7 @@ entry_print_data(FILE *out, char n, struct r_entry *e)
  * print function
  */
 void
-entry_print(FILE *out, char plusmin, struct r_entry *e)
+entry_print(FILE *out, char plusmin, struct r_entry *e, char *fmt)
 {
 	char *pos;
 	if ((plusmin == '+') && (opt_modified == FALSE)) {
@@ -297,7 +298,7 @@ entry_print(FILE *out, char plusmin, struct r_entry *e)
 		}
 	}
 
-	for (pos = opt_format; *pos != '\0';  ++pos) {
+	for (pos = fmt; *pos != '\0';  ++pos) {
 		switch (*pos) {
 			/* c-style escapes are valid */
 			case '\\':
@@ -365,8 +366,7 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
  * write out the list of to be backupped items
  */
 gboolean
-gfunc_backup(gpointer data, gpointer value,
-		__attribute__((unused)) gpointer usr)
+gfunc_backup(gpointer data, gpointer value, gpointer usr)
 {
 	if (sig != 0)
 		signal_abort(sig);
@@ -376,7 +376,10 @@ gfunc_backup(gpointer data, gpointer value,
 		return FALSE;
 
 	if (S_ISDIR(((struct r_entry*)data)->f_mode)) {
-		entry_print(stdout, '+', (struct r_entry*)data);
+		if (usr)
+			entry_print((FILE*)usr, '+', (struct r_entry*)data, def_format);
+		else
+			entry_print(stdout, '+', (struct r_entry*)data, opt_format);
 		return FALSE;
 	} else {
 		#if 0
@@ -389,11 +392,18 @@ gfunc_backup(gpointer data, gpointer value,
 		}
 		switch (opt_timestamp) {
 			case NULL_DUMP:
-				entry_print(stdout, '+', (struct r_entry*)data);
+				if (usr)
+					entry_print((FILE*)usr, '+', (struct r_entry*)data, def_format);
+				else
+					entry_print(stdout, '+', (struct r_entry*)data, opt_format);
 				return FALSE;
 			default: /* INC_DUMP */
-				if (((struct r_entry*)data)->f_ctime > opt_timestamp)
-					entry_print(stdout, '+', (struct r_entry*)data);
+				if (((struct r_entry*)data)->f_ctime > opt_timestamp) {
+					if (usr)
+						entry_print((FILE*)usr, '+', (struct r_entry*)data, def_format);
+					else
+						entry_print(stdout, '+', (struct r_entry*)data, opt_format);
+				}
 			
 				return FALSE;
 		}
@@ -405,8 +415,7 @@ gfunc_backup(gpointer data, gpointer value,
  * write out the list of removed items
  */
 gboolean
-gfunc_remove(gpointer data, gpointer value,
-		__attribute__((unused)) gpointer usr)
+gfunc_remove(gpointer data, gpointer value, gpointer usr)
 {
 	if (sig != 0)
 		signal_abort(sig);
@@ -417,7 +426,11 @@ gfunc_remove(gpointer data, gpointer value,
 		return FALSE;
 	}
 
-	entry_print(stdout, '-', (struct r_entry*)data);
+	if (usr)
+		entry_print((FILE *)usr, '-', (struct r_entry*)data, def_format);
+	else
+		entry_print(stdout, '-', (struct r_entry*)data, opt_format);
+
 	return FALSE;
 }
 
@@ -425,8 +438,7 @@ gfunc_remove(gpointer data, gpointer value,
  * Print out the list of new item
  */
 gboolean
-gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
-		__attribute__((unused)) gpointer usr)
+gfunc_new(gpointer data, __attribute__((unused)) gpointer value, gpointer usr)
 {
 	if (sig != 0)
 		signal_abort(sig);
@@ -435,7 +447,10 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 	if (value == NO_PRINT) 
 		return FALSE;
 
-	entry_print(stdout, '+', (struct r_entry*)data);
+	if (usr)
+		entry_print((FILE*)usr, '+', (struct r_entry*)data, def_format);
+	else
+		entry_print(stdout, '+', (struct r_entry*)data, opt_format);
 	return FALSE;
 }
 
