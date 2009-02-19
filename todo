@@ -1,4 +1,5 @@
 TODO:
+override bufsize
 
 :general:
 - move to more glib functions

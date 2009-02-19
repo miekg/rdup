@@ -193,8 +193,6 @@ stdin2archive(GSList *child)
 					archive_write_data(archive, readbuf, len);
 				
 				len = read(parent[0], readbuf, BUFSIZE);
-
-				len = read(parent[0], readbuf, BUFSIZE);
 			}
 			close(parent[0]);  /* we're done */
 

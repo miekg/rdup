@@ -14,6 +14,8 @@
 #include "rdup.h"
 #include "protocol.h"
 
+extern gint opt_verbose;
+
 /**
  * output a block header
  */
@@ -117,6 +119,8 @@ block_in_header(FILE *f) {
 		msg("Block size larger then BUFSIZE");
 		return -1;
 	}
+	if (opt_verbose > 0)
+		msg("Block seen, start read of %d bytes", bytes);
 	/* file pointer should now be correctly positioned */
 	return bytes;
 }
