@@ -199,10 +199,12 @@ stdin2archive(GSList *child)
 		} else {
 
 write_plain_file:
+			/*
 			if (opt_output == O_RDUP)
 				rdup_write_header(rdup_entry);
 			else
 				archive_write_header(archive, entry);
+			*/
 
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
