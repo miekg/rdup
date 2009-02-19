@@ -156,11 +156,9 @@ trailing slash.
 .RE
 
 .TP
-.B \-V
-Print rdup's version.
-.TP
-.B \-h
-Give an overview of the options.
+.B \-d FILE
+Duplicate rdup filelist to FILE. This file is always written 
+in the default rdup format.
 .TP
 .B \-n
 Don't honor .nobackup files. Normally if such a file is found the
@@ -171,6 +169,8 @@ printed to standard output, now they are.
 Print the files' contents to standard output. This sets
 the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C"
 
+Any file content is written in a block/chunk based manner...
+...
 XXX TODO
 Tell about the blocks
 
@@ -203,6 +203,12 @@ Delimit \fBfilelist\fR with NULL's instead of a newline. Use '\\0' in the
 .TP
 .B \-x
 Stay on the local filesystem.
+.TP
+.B \-V
+Print rdup's version.
+.TP
+.B \-h
+Give an overview of the options.
 
 .SH BACKUPS
 With:
