@@ -12,7 +12,8 @@ Transform rdup output into something else. Where something else can
 be a tar, cpio, pax archive or another rdup stream (An rdup stream
 is rdup \fI\-c\fR output).
 
-The default is reading and writing rdup streams. The input
+The default is reading a normal rdup file list and writing rdup streams.
+Thus the input
 expected is the normal rdup output, i.e. the list of pathnames
 and some extra information, but \fIno\fR file content.
 
@@ -21,13 +22,14 @@ of pathnames \fIwith\fR the file content (which is possibly
 transformed by \fBrdup-tr\fR).
 
 You can select other types of output (\-O flag), but you must be aware
-that you may loose some information, see the table below.
+that you may loose some information in formats other than rdup's own, see 
+the table below.
 
 You may also supply \fBrdup-tr\fR with only a list of pathnames, this can 
-be selected with the \-L flag.
+be selected with the \-L flag. 
 
-When creating such output you might also want to 'pipe' the contents
-of each file through a number of commands, say a compression and 
+When creating output you might also want to 'pipe' the contents
+of \fIeach\fR file through a number of commands, say a compression and 
 encryption utility. Note that this is different than compressing the
 \fIentire\fR archive which can be done (for instance) by using the \-z option of
 GNU tar. So this is where rdup-tr comes in. It allows you to create
@@ -46,18 +48,21 @@ it much more maintainable.
 
 As said \fBrdup-tr\fR works by forking off a number of child processes (those
 commands named with the \-P option(s)), interconnecting these
-with pipes. The output created by these child processes is
-captured in a temporary file in /tmp. From there the contents
-it put in an archive, then the file is truncated and the
-process restarts for the next file. In an ASCII image:
+with pipes. The current file is connected to the first child.
+The output created by these child processes is
+captured back by the parent. 
+The contents is then put in an archive. As a picture says more
+than a thousand words here is an ASCII image:
 
 .RS
-                     stdout
-            +----------------------------------> archive
+                    
+            +--- ...   (stdout)    ... ----> archive
            /  
-    rdup-tr     loop #files        <---+
-      |                                |
-      +-> cmd1 | cmd2 | ...| cmdN > tmpfile
+    rdup-tr  <--- ...   ... <----+
+                                 |
+   loop #files                   |
+                                 |
+  file ---> cmd1 | cmd2 | ...| cmdN
 
 .RE
 
@@ -91,7 +96,7 @@ filelist	    DH	H
 Filter all output through command, \fIopt1\fR through \fIopt7\fR are
 given as options to the command. Multiple \-P's can be used, there is
 however a maximum of seven options for each command. The options
-are separated with commas, there must be no space in between.
+are separated with commas, there must be \fIno\fR space in between.
 
 Due to the nature of pipes in Unix, this pipeline is recreated for
 every file processed.
@@ -120,19 +125,19 @@ A short help.
 Creating a compressed and encrypted tar archive out of a full
 rdup dump might be done as follows
 
-    rdup /dev/null /home | rdup-tr -Pgzip,-c,-f\\
+    rdup /dev/null /home | rdup-tr -Pgzip\\
     -Pmcrypt,-fKEY,-c -O tar > my-home-zipped-and-crypted.tar
 
 Or even pack and unpack it on the fly
 
-    rdup /dev/null /home | rdup-tr -Pgzip,-c,-f\\
+    rdup /dev/null /home | rdup-tr -Pgzip\\
     -Pmcrypt,-fKEY,-c -O tar | ssh user@remotehost tar xvCf /tmp -
 
 When unzipping an "archive", gzip will do the right thing wrt to files
 that are not compressed and will just print them as-is. So the following
 will work
 
-    rdup /dev/null /home | ./rdup-tr -c -Pgzip,-d,-c,-f 
+    rdup /dev/null /home | ./rdup-tr -c -Pgzip 
 
 Encryption with openssl
 
@@ -141,14 +146,14 @@ Encryption with openssl
 Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again
 
-    rdup /dev/null /home | ./rdup-tr -Pgzip,-c,-f \\
-    -Popenssl,enc,-e,-des-cbc,-k,secret | gzip -c -f >\\
+    rdup /dev/null /home | ./rdup-tr -Pgzip\\
+    -Popenssl,enc,-e,-des-cbc,-k,secret | gzip >\\
     my_compressed_encrypted_rdup_archive.gz
 
 Recreating the original rdup (-c) output, which can be fed to rdup-up.
 
     gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
-    rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d-c,-f >\\
+    rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d >\\
     my_rdup_archive
 
 Notice the reversal of the \-P options.

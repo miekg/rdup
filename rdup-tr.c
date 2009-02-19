@@ -183,10 +183,11 @@ stdin2archive(GSList *child)
 				}
 
 				/* check child status */
-				/* if something went wrong we can still bail
-				 * out, after writing part of the archive
-				 * that is a lot harder to do
-				 */
+				if (wait_pids(pids, WNOHANG) == -1) {
+					/* weird child exit */
+					goto write_plain_file;
+				}
+				 
 				if (opt_output == O_RDUP) 
 					rdup_write_data(rdup_entry, readbuf, len);
 				else
@@ -199,7 +200,9 @@ stdin2archive(GSList *child)
 		} else {
 
 write_plain_file:
-			/* header already sent */
+			/* header already sent, don't care about file size
+			 * so this is ok
+			 */
 
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
@@ -222,7 +225,7 @@ write_plain_file:
 			}
 			close(f);
 		}
-		/* final block for rdup */
+		/* final block for rdup output */
 		if (opt_output == O_RDUP)
 			block_out_header(NULL, 0, 1);
 

@@ -32,7 +32,7 @@ close_pipes(GSList *pipes, int n1, int n2)
 	}
 }
 
-/* return 0 if all ok, 1 for trouble */
+/* return 0 if all ok, -1 for trouble */
 int
 wait_pids(GSList *pids, int flags)
 {
