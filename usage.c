@@ -30,7 +30,6 @@ implement a (incremental) backup scheme.\n\
         -0\t\tdelimit internal filelist with NULLs\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
-	-d FILE\t\tduplicate rdup output to FILE (in the default fmt)\n\
         -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n\
         -m\t\tonly print new/modified files (unsets -r)\n\
         -n\t\tignore .nobackup files\n\

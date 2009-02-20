@@ -159,10 +159,6 @@ trailing slash.
 .RE
 
 .TP
-.B \-d FILE
-Duplicate rdup filelist to FILE. This file is always written 
-in the default rdup format.
-.TP
 .B \-n
 Don't honor .nobackup files. Normally if such a file is found the
 directory and all files containing it, are not 
