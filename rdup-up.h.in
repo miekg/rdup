@@ -89,4 +89,5 @@ int mkpath(const char *path, mode_t mode);
 /* dir.c */
 struct stat * dir_write(gchar *p);
 void dir_restore(gchar *p, struct stat *s);
+gchar *dir_parent(gchar *p);
 #endif  /* _RDUP_UP_H */
