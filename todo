@@ -1,10 +1,5 @@
 TODO:
- - override bufsize??? low prio
-
- - normal user backup
-    none writable dirs
-    none removable files (chmod 0)
-
+ - override bufsize??? low prio. nobody cares (I think)
 
 :general:
 - move to more glib functions
@@ -12,10 +7,8 @@ TODO:
 - massive move to glib, g_progname etc
 - glib test framework also?
 - test -0 for rdup-*
-- define msg() ONE time in all three the programs
 - check memory and see if we can do make it use less
-- rdup-up: non-writable directories - make them writeable and and
-  then return them to the proper state?
+  use g_free() more
 - *testing* *testing* *testing* 
 - paths in rdup-simple.sh for rdup-ln.sh
 
