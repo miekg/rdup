@@ -16,15 +16,10 @@ rm(gchar *p)
 	gchar *dirp;
 	GDir *d;
 	struct stat st;
-	gboolean exists;
+	struct stat st2;
 
 	if (lstat(p, &st) == -1)
-		exists = FALSE;
-	else 
-		exists = TRUE;
-
-	if (!exists)
-		return TRUE;	/* the easy life */
+		return TRUE;    /* the easy life */
 
 	if (S_ISDIR(st.st_mode)) {
 		ret = remove(p);
@@ -60,6 +55,20 @@ rm(gchar *p)
 	}
 
 	if (remove(p) == -1) {
+		if (errno == EACCES) {
+			/* we have no access, ok ...
+			 * chmod +w . && rm $file && chmod -w #and hope for the best */
+			dirp = dirname(p);
+			stat(dirp, &st2);
+			chmod(dirp, st2.st_mode | S_IWUSR);
+			if (remove(p) == -1) {
+				msg("Still failing to remove `%s\'`: %s", dirp, strerror(errno));
+				chmod(dirp, st2.st_mode);
+				return FALSE;
+			}
+			chmod(dirp, st2.st_mode);
+			return TRUE;
+		}
 		msg("Failed to remove `%s\': %s", p, strerror(errno));
 		return FALSE;
 	}
