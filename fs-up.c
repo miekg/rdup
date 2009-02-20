@@ -63,6 +63,7 @@ mk_sock(struct r_entry *e, gboolean exists) {
 gboolean
 mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 {
+	/* dir write perms XXX */
 	if (opt_dry)
 		return TRUE;
 

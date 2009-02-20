@@ -25,7 +25,6 @@ rm(gchar *p)
 	if (S_ISDIR(st.st_mode)) {
 		ret = remove(p);
 		if (ret == -1) {
-			/* hmm, failed... */
 			switch(errno) {
 				case ENOTEMPTY:
 					/* recursive into this dir and do our bidding */
@@ -42,10 +41,11 @@ rm(gchar *p)
 					return TRUE;
 				
 				case EACCES:
+					/* no write to dir */
 					parent = dir_parent(p);
 					st2 = dir_write(parent);
 					if (remove(p) == -1) {
-						msg("Still failing to remove '%s\': %s",
+						msg("Failed to remove '%s\': %s",
 								p, strerror(errno));
 						dir_restore(parent, st2);
 						g_free(parent);
@@ -56,27 +56,40 @@ rm(gchar *p)
 					return FALSE;
 
 				default:
-				/* not ENOEMPTY */
-				msg("Failed to remove directory `%s\': %s", p, strerror(errno));
-				return FALSE;
+					/* not ENOEMPTY */
+					msg("Failed to remove directory `%s\': %s", p, strerror(errno));
+					return FALSE;
 			}
 		}
-		ret = remove(p);	/* try to remove the top level dir again */
 		return TRUE;
 	}
 
 	if (remove(p) == -1) {
-		if (errno == EACCES) {
-			/* we have no access, ok ... */
-			st2 = dir_write(dirname(p));
-			if (remove(p) == -1) {
-				msg("Still failing to remove `%s\'`: %s", p, strerror(errno));
+		switch(errno) {
+			case EACCES:
+				/* we have no access, ok ... */
+				st2 = dir_write(dirname(p));
+				if (remove(p) == -1) {
+					msg("Still failing to remove `%s\'`: %s", p, strerror(errno));
+					dir_restore(dirname(p), st2);
+					return FALSE;
+				}
 				dir_restore(dirname(p), st2);
-				return FALSE;
-			}
-			dir_restore(dirname(p), st2);
-			return TRUE;
+				return TRUE;
+
+			case EPERM:
+				/* no write on file, reuse st */
+				stat(p, &st);
+				chmod(p, st.st_mode | S_IWUSR);
+				if (remove(p) == -1) {
+					msg("Failed to remove '%s\': %s",
+							p, strerror(errno));
+					chmod(p, st.st_mode); /* is this usefull then? */
+					return FALSE;
+				} 
+				return TRUE;	
 		}
+		
 		msg("Failed to remove `%s\': %s", p, strerror(errno));
 		return FALSE;
 	}
