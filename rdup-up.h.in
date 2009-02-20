@@ -85,4 +85,8 @@ char * strippath(char *path, guint n);
 
 /* mkpath.c */
 int mkpath(const char *path, mode_t mode);
+
+/* dir.c */
+struct stat * dir_write(gchar *p);
+void dir_restore(gchar *p, struct stat *s);
 #endif  /* _RDUP_UP_H */
