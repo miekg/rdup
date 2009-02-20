@@ -21,6 +21,7 @@ void got_sig(int signal);
 
 gboolean
 mk_dev(struct r_entry *e, gboolean exists) {
+	/* XXX check dir write perms */
 	if (opt_dry)
 		return TRUE;
 
@@ -40,6 +41,7 @@ mk_dev(struct r_entry *e, gboolean exists) {
 
 gboolean
 mk_sock(struct r_entry *e, gboolean exists) {
+	/* XXX check dir write perms */
 	if (opt_dry)
 		return TRUE;
 
@@ -143,6 +145,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 		}
 	}
 	
+	g_free(buf);
 	fclose(out); 
 	return TRUE;
 }
@@ -150,34 +153,37 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 gboolean
 mk_dir(struct r_entry *e, struct stat *st, gboolean exists) 
 {
+	struct stat *s;
+	gchar *parent;
+
 	if (opt_dry)
 		return TRUE;
 
-	/* there is something and it's a dir, update permissions */
-	/* if we don't have write permission to this directory, we
-	 * might fail to update any files in it, so check for this */
 	if (exists && S_ISDIR(st->st_mode)) {
-		if (access(e->f_name, W_OK | X_OK) == -1) {
-			/* unable to access this dir IF there any
-			 * files placed in this directory,
-			 * so set permissive bits and correct that
-			 * later on
-			 */
-		}
-		/* which permissions to set? */
-
-
-
-
+		/* something is here - update the permissions */
 		chmod(e->f_name, e->f_mode);
 		return TRUE;
 	}
 
 	if (mkdir(e->f_name, e->f_mode) == -1) {
-		msg("Failed to created directory `%s\'", e->f_name);
-		return FALSE;
+		if (errno == EACCES) {
+			/* make parent dir writable, and try again */
+			parent = dir_parent(e->f_name);
+			s = dir_write(parent);
+			if (mkdir(e->f_name, e->f_mode) == -1) {
+				msg("Failed to created directory `%s\': %s", e->f_name, strerror(errno));
+				dir_restore(parent, s);
+				g_free(parent);
+				return FALSE;
+			}
+			dir_restore(parent, s);
+			g_free(parent);
+			return TRUE;
+		} else {
+			msg("Failed to created directory `%s\': %s", e->f_name, strerror(errno));
+			return FALSE;
+		}
 	}
-	chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
 
@@ -220,7 +226,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 			if (S_ISDIR(e->f_mode))
 				return  mk_dir(e, &st, exists);	
 
-			/* First sym and hardlinks and then * a regular file */
+			/* First sym and hardlinks and then regular files */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
 				/* get out the source name and re-stat it */
 				s = e->f_name;
@@ -252,6 +258,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 gboolean
 mk_hlink(GSList *h)
 {
+	/* XXX dir write perm */
 	struct r_entry *e;
 	GSList *p;
 	char *s, *t;
