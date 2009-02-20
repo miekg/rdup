@@ -16,7 +16,7 @@ rm(gchar *p)
 	gchar *dirp;
 	GDir *d;
 	struct stat st;
-	struct stat st2;
+	struct stat *st2;
 
 	if (lstat(p, &st) == -1)
 		return TRUE;    /* the easy life */
@@ -56,17 +56,14 @@ rm(gchar *p)
 
 	if (remove(p) == -1) {
 		if (errno == EACCES) {
-			/* we have no access, ok ...
-			 * chmod +w . && rm $file && chmod -w #and hope for the best */
-			dirp = dirname(p);
-			stat(dirp, &st2);
-			chmod(dirp, st2.st_mode | S_IWUSR);
+			/* we have no access, ok ... */
+			st2 = dir_write(dirname(p));
 			if (remove(p) == -1) {
-				msg("Still failing to remove `%s\'`: %s", dirp, strerror(errno));
-				chmod(dirp, st2.st_mode);
+				msg("Still failing to remove `%s\'`: %s", p, strerror(errno));
+				dir_restore(dirname(p), st2);
 				return FALSE;
 			}
-			chmod(dirp, st2.st_mode);
+			dir_restore(dirname(p), st2);
 			return TRUE;
 		}
 		msg("Failed to remove `%s\': %s", p, strerror(errno));

@@ -96,10 +96,9 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 {
 	FILE *out;
 	char *buf;
-	char *d;
 	size_t  bytes;
 	gboolean ok = TRUE;
-	struct stat st;
+	struct stat *st;
 
 	/* there is something */
 	if (exists && !opt_dry)  {
@@ -112,17 +111,14 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	/* XXX uhm opt_dry ? */
 	if (!(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
-			/* same code as in rm.c */
-			d = dirname(e->f_name);
-			stat(d, &st);
-			chmod(d, st.st_mode | S_IWUSR); /* again assume I'm the owner */
+			st = dir_write(dirname(e->f_name));
 			if (!(out = fopen(e->f_name, "w"))) {
 				msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
 				ok = FALSE;
 			} else {
 				ok = TRUE;
 			}
-			chmod(d, st.st_mode); /* reset */
+			dir_restore(dirname(e->f_name), st);
 		} else {
 			msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
 			ok = FALSE;
