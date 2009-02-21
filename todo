@@ -1,5 +1,6 @@
 TODO:
  - override bufsize??? low prio. nobody cares (I think)
+    - fix - byte files and block based writing
 
 :general:
 - move to more glib functions
