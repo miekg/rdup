@@ -260,33 +260,6 @@ entry_print(FILE *out, char plusmin, struct r_entry *e, char *fmt)
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 
-#if 0
-	# DONT DO THIS ANYMORE
-	if (S_ISREG(e->f_mode) && plusmin == '+' && !opt_local
-		&& e->f_lnk == 0) {
-		/* check if the file has changed since we first
-		 * visited it. If so, skip it as it will tear
-		 * up the entire print. Esp. when also printing
-		 * the contents. The recheck here, minimizes the
-		 * race, it's NOT GONE!!
-		 *
-		 * This is not a problem for directories, nor sym- and
-		 * hard links
-		 */
-		if (lstat(e->f_name, &s) != 0) {
-			msg(_("Could not stat path `%s\': %s"), e->f_name,
-				strerror(errno));
-			return;
-		}
-#ifndef _DEBUG_RACE
-		if (e->f_size != s.st_size) {
-			msg(_("File size has changed, skipping `%s\'"), e->f_name);
-			return;
-		}
-#endif /* _DEBUG_RACE */
-	}
-#endif
-
 	/* next check if we can read the file, if not - skip it and don't emit
 	 * anything */
 	if (S_ISREG(e->f_mode) && plusmin == '+' && e->f_lnk == 0) {

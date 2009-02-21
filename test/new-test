@@ -1,1 +1,3 @@
 backup with 0 bytes files
+comprare rdup -c and rdup | ./rdup-tr -P ct output
+they should be identical

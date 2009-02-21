@@ -17,7 +17,7 @@
 char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
-gboolean opt_tty           = FALSE;				/* force write to tty */
+gboolean opt_tty           = FALSE;			/* force write to tty */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
