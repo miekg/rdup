@@ -42,12 +42,10 @@
 #endif /* HAVE_GETTEXT */
 
 #include "entry.h"
-
 #include "common.h"
-
 #define VERSION     "@PACKAGE_VERSION@"
 
-#define LIST_MINSIZE   15
+/* #define LIST_MINSIZE   15 */
 
 /* signal.c */
 void signal_abort(int signal);

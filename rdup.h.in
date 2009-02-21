@@ -62,8 +62,11 @@
 #define SHA1_LEN       20 /* bytes of digest */
 #define NO_SHA         "0000000000000000000000000000000000000000"
 
+/* common.h */
+#if 0
 #define LIST_MINSIZE   6
 #define LIST_SPACEPOS  5
+#endif
 
 struct subtract {
         GTree *d; /* diff */

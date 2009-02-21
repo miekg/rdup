@@ -13,14 +13,17 @@ gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup 
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
-#if 0
-gboolean opt_attr	   = FALSE; 	              /* whether to use xattr */
-#endif
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file c|m time */
 sig_atomic_t sig           = 0;
+
+#define CORRUPT(x)	{ \
+			msg((x), l); \
+			l++; \
+			continue; \
+			}
 
 /* crawler.c */
 void dir_crawl(GTree *t, GHashTable *linkhash, char *path);
@@ -99,11 +102,8 @@ g_tree_read_file(FILE *fp)
 		if (buf[0] == '#') 
 			continue;
 
-		if (s < LIST_MINSIZE) {
-			msg(_("Corrupt entry in filelist at line: %zd"), l);
-			l++;
-			continue;
-		}
+		if (s < LIST_MINSIZE) 
+			CORRUPT("Corrupt entry in filelist at line: %zd"); 
 
 		if (!opt_null) {
 			n = strrchr(buf, '\n');
@@ -112,72 +112,64 @@ g_tree_read_file(FILE *fp)
 		}
 
 		/* get modus */
-		if (buf[LIST_SPACEPOS] != ' ') {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
-		}
+		if (buf[LIST_SPACEPOS] != ' ')
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
 
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
-		if (modus == 0) {
-			msg(_("Corrupt entry in filelist at line: %zd, `%s\' should be numerical"), l, buf);
-			l++; 
-			continue;
-		}
+		if (modus == 0)
+			CORRUPT("Corrupt entry in filelist at line: %zd, mode should be numerical");
 
 		/* the dev */
 		q = buf + LIST_SPACEPOS + 1;
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
-		}
+		if (!p)
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+		
 		*p = '\0';
 		f_dev = (dev_t)atoi(q);
-		if (f_dev == 0) {
-			msg(_("Corrupt entry in filelist at line: %zd, zero device"), l);
-			l++; 
-			continue;
-		}
+		if (f_dev == 0)
+			CORRUPT("Corrupt entry in filelist at line: %zd, zero device");
 
 		/* the inode */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
-		}
+		if (!p) 
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+		
 		*p = '\0';
 		f_ino = (ino_t)atoi(q);
-		if (f_ino == 0) {
-			msg(_("Corrupt entry in filelist at line: %zd, zero inode"), l);
-			l++; 
-			continue;
-		}
+		if (f_ino == 0)
+			CORRUPT("Corrupt entry in filelist at line: %zd, zero inode");
+
 		/* hardlink or anything else: h or * */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no link information found"), l);
-			continue;
-		}
+		if (!p) 
+			CORRUPT("Corrupt entry in filelist at line: %zd, no link information found");
+
 		linktype = *q;
-		if (linktype != '*' && linktype != 'h') {
-			msg("Illegal link type as line: %zd", l);
-			l++;
-			continue;
-		}
+		if (linktype != '*' && linktype != 'h')
+			CORRUPT("Illegal link type as line: %zd");
+
+		/* skip these for now - but useful to have */
+		/* uid */
+		q = p + 1;
+		p = strchr(p + 1, ' ');
+		if (!p)
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+		
+		/* gid */
+		q = p + 1;
+		p = strchr(p + 1, ' ');
+		if (!p)
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
 
 		/* the path size */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
 		}
 		*p = '\0';
 		f_name_size = (size_t)atoi(q);
@@ -185,11 +177,9 @@ g_tree_read_file(FILE *fp)
 		/* filesize */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
-		if (!p) {
-			msg(_("Corrupt entry in filelist at line: %zd, no space found"), l);
-			l++; 
-			continue;
-		}
+		if (!p)
+			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+		
 		*p = '\0';
 		f_size = (size_t)atoi(q);
 
@@ -206,8 +196,8 @@ g_tree_read_file(FILE *fp)
 		e->f_name_size = f_name_size;
 		e->f_size      = f_size;
 		e->f_mode      = modus;
-		e->f_uid       = 0;
-		e->f_gid       = 0;
+		e->f_uid       = 0;	/* keep this 0 for now */
+		e->f_gid       = 0;	/* keep this 0 for now */
 		e->f_ctime     = 0;
 		e->f_dev       = f_dev;
 		e->f_ino       = f_ino;
