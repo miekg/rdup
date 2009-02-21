@@ -57,6 +57,7 @@ cat(FILE *fp, char *filename)
 	char buf[BUFSIZE + 1];
 	FILE *file;
 	size_t i;
+	gboolean nullblock = FALSE;
 
 	if ((file = fopen(filename, "r")) == NULL) {
 		msg(_("Could not open '%s\': %s"), filename, strerror(errno));
@@ -69,30 +70,28 @@ cat(FILE *fp, char *filename)
 			signal_abort(sig);
 		}
 		i = fread(buf, sizeof(char), BUFSIZE, file);
-		block_out_header(fp, i, -1);
-		block_out(fp, i, buf, -1);
-
-		/*
-		if (fwrite(buf, sizeof(char), i, fp) != i) {
+		if (block_out_header(fp, i, -1) == -1 ||
+				block_out(fp, i, buf, -1)) {
 			msg(_("Write failure `%s\': %s"), filename, strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
-		*/
-	}
-	fclose(file);
-	block_out_header(fp, 0, -1); /* tell the other side, this was the last one */
 
-	/* file has shrunken! Fill the rest with NULLs, this works
-	 * but is slow! */
-	/*
-	if (t < (size_t) f_size) {
-		msg(_("File has shrunk, filling with NULLs: `%s\'"), filename);
-		for(i = t; i < (size_t) f_size; i++) {
-			fputc('\0', fp);
+		/* there is no diff between 0 bytes block and a ending block */
+		if (i == 0)
+			nullblock = TRUE;
+
+	}
+
+	fclose(file);
+	if (!nullblock) {
+		block_out_header(fp, 0, -1); /* tell the other side, this was the last one */
+		if (block_out_header(fp, 0, -1) == -1) {
+			msg(_("Write failure `%s\': %s"), filename, strerror(errno));
+			fclose(file);
+			return FALSE;
 		}
 	}
-	*/
 	return TRUE;
 }
 
