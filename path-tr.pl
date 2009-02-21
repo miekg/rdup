@@ -68,7 +68,7 @@ while (<>) {
 	    print "l";
 	}
 
-	# ...
+	# ... other fs type too, TODO
     }
 
     # perms
@@ -79,5 +79,4 @@ while (<>) {
 
     # pathlen
     printf " %s %s %s\n", $p[PLEN], $p[FSIZE], $p[PATH];
-
 }

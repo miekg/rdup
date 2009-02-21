@@ -16,7 +16,7 @@ touch aaa/r
 cd aaa
 ln -sf b def
 cd ..
-../../rdup /dev/null aaa | grep -- '+l'
+./rdup /dev/null aaa | grep -- '+l'
 RET=$?
 rm -rf aaa
 exit $RET

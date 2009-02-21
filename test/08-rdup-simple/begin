@@ -4,5 +4,6 @@
 
 # this should work otherwise
 cd $RDUP_SOURCE
+PATH=$PATH:$RDUP_SOURCE
 # still uses stuff from $PATH
 ./sh/rdup-simple.sh -f test /tmp/rdup-test$$
