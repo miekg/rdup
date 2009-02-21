@@ -1,6 +1,8 @@
 TODO:
- - override bufsize??? low prio. nobody cares (I think)
-    - fix - byte files and block based writing
+ - rdup internal filelist is fast becoming identical as its
+   output. So any special reading of this list can go
+   and we can just use stuff for entry.c
+   extending this list also has other interesting applictions
 
 :general:
 - move to more glib functions
