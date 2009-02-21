@@ -189,15 +189,6 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					pos = n + 1;
 				}
 			}
-			/* not anymore, because of sym- and
-			 * hard-links
-			 */
-			/*
-			if (e->plusmin == '-' && e->f_size != 0) {
-				msg("Filesize should be 0 when an object is to be removed");
-				return NULL;
-			}
-			*/
 			/* all path should begin with / */ /* DIR_SEP? */
 			switch(stat) {
 				case DO_STAT:

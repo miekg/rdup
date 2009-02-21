@@ -1,6 +1,6 @@
-xx Feb 2009: 0.8.0 Miek <miek@miek.nl>
+22 Feb 2009: 0.8.0 Miek <miek@miek.nl>
   - major feature enhancements - 
-  - again internal file list change -
+  - again: internal file list change -
   * internal filelist: add uid/gid here, 
     see http://miek.nl/blog/blaat on why
   * rdup*: make the -c output block based.

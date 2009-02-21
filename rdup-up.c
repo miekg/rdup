@@ -79,6 +79,8 @@ update(char *path, guint strip)
 	if (mk_hlink(hlink) == FALSE)
 		ok = FALSE;
 
+	g_free(buf);
+	g_free(pathbuf);
 	return ok;
 }
 

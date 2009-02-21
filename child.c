@@ -139,8 +139,8 @@ create_childeren(GSList *child, GSList **pipes, int file)
 
 			/* finally ... exec */
 			if ( execvp(args[0], args) == -1) {
-				msg("Failed to exec `%s\': %s", args[0], strerror(errno));
-				exit(EXIT_SUCCESS);
+				/* msg("Failed to exec `%s\': %s", args[0], strerror(errno)); */
+				exit(EXIT_FAILURE);
 			}
 			/* never reached */
 			exit(EXIT_SUCCESS);
