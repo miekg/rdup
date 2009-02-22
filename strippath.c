@@ -12,7 +12,7 @@ strippath(char *path, guint strip)
 	char *p;
 	guint i;
 
-	for(i = 1, p = strchr(path, '/'); p; p = strchr(p + 1, '/'), i++) {
+	for(i = 1, p = strchr(path, DIR_SEP); p; p = strchr(p + 1, DIR_SEP), i++) {
 		if (i > strip)
 			break;
 	}

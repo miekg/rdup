@@ -356,13 +356,24 @@ main(int argc, char **argv)
 				break;
 			case 'X':
 				/* read from file XXX */
+#if 0
 				opt_crypt_key = "0123456789abcdef";
-
 				struct aes_ctx *c;
 				c = crypt_init(opt_crypt_key, 16, TRUE);
-				fprintf(stderr, "crypto to test `%s\'", crypt_path(c, "/home", 5));
+
+				/* gchar *mypath = g_strdup("/home/miekg/tmp");   _ in de base64 */
+				gchar *mypath = g_strdup("/home/miekg/../tmp");  /* _ in de base64 */
+				gchar *crypt = crypt_path(c, mypath);
+
+				fprintf(stderr, "%s\n%s\n", mypath, crypt);
+
+				c = crypt_init(opt_crypt_key, 16, FALSE);
+				gchar *plain = decrypt_path(c, crypt);
+				fprintf(stderr, "%s\n", plain);
+
 
 				exit(0);
+#endif
 				break;
 			case 'Y':
 				/* read from file XXX */

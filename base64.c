@@ -230,8 +230,8 @@ static unsigned char decode(char c) {
 static int is_base64(char c) {
 
   if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-     (c >= '0' && c <= '9') || (c == '+')             ||
-     (c == '/')             || (c == '=')) {
+     (c >= '0' && c <= '9') || (c == '-')             ||
+     (c == '_')             || (c == '=')) {
     
     return TRUE;
     
