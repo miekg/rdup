@@ -11,6 +11,8 @@
 
 extern gint opt_input;
 extern gint opt_output;
+extern gchar *opt_crypt_key;
+extern gchar *opt_decrypt_key;
 
 /*
  * parse a standard rdup output entry
