@@ -357,6 +357,12 @@ main(int argc, char **argv)
 			case 'X':
 				/* read from file XXX */
 				opt_crypt_key = "0123456789abcdef";
+
+				struct aes_ctx *c;
+				c = crypt_init(opt_crypt_key, 16, TRUE);
+				fprintf(stderr, "crypto to test `%s\'", crypt_path(c, "/home", 5));
+
+				exit(0);
 				break;
 			case 'Y':
 				/* read from file XXX */

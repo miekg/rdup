@@ -16,7 +16,7 @@
  * return aes context
  */
 struct aes_ctx *
-init(gchar *key, guint length, gboolean crypt)
+crypt_init(gchar *key, guint length, gboolean crypt)
 {
 	struct aes_ctx *ctx = g_malloc(sizeof(struct aes_ctx));
 	if (crypt)
@@ -26,32 +26,31 @@ init(gchar *key, guint length, gboolean crypt)
 	return ctx;
 }
 
-/* encrypt and base64 encode pelem
+/* encrypt and base64 encode path element
  * return the result
  */
 gchar *
-path_crypt(struct aes_ctx *ctx, gchar *pelem)
+crypt_path(struct aes_ctx *ctx, gchar *elem, guint len)
 {
-	guint plen;
 	guint aes_size;
 	guchar *source;
 	guchar *dest;
 	gchar *b64;
 
-	plen = strlen(pelem);
-	aes_size = AES_BLOCK_SIZE * ((plen % AES_BLOCK_SIZE) + 1);
+	aes_size = ( (len / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
+
 	/* pad the string to be crypted */
 	source = g_malloc0(aes_size);
 	dest   = g_malloc0(aes_size);
 	
-	g_memmove(source, pelem, plen);
+	g_memmove(source, elem, len);
 	aes_encrypt(ctx, aes_size, dest, source);
 	
 	b64 = encode_base64(aes_size, dest);
 	g_free(source);
 	g_free(dest);
 	if (!b64) {
-		return pelem; /* as if nothing happened */
+		return elem; /* as if nothing happened */
 	} else {
 		return b64;
 	}
