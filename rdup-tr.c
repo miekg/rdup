@@ -28,7 +28,6 @@ gint opt_input		   = I_RDUP;			/* default intput */
 sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
-
 /* same as in crawler.c */
 static struct r_entry *
 entry_dup(struct r_entry *f)
@@ -53,7 +52,7 @@ entry_dup(struct r_entry *f)
 
 /* encrypt an rdup_entry (just the path of course) */
 static struct r_entry *
-crypt_entry(struct r_entry *e) 
+crypt_entry(struct r_entry *e, GHashTable *tr) 
 {
         gchar *crypt;
         /* for links we must do something special */
@@ -61,7 +60,7 @@ crypt_entry(struct r_entry *e)
 	struct r_entry *d = entry_dup(e);
 	g_free(d->f_name);
              
-        crypt = crypt_path(aes_ctx, e->f_name);
+        crypt = crypt_path(aes_ctx, e->f_name, tr);
         d->f_name = crypt;
         d->f_name_size = strlen(crypt);
         return d;
@@ -69,14 +68,14 @@ crypt_entry(struct r_entry *e)
 
 /* decrypt an rdup_entry */
 static struct r_entry *
-decrypt_entry(struct r_entry *e) 
+decrypt_entry(struct r_entry *e, GHashTable *tr) 
 {
         gchar *plain;
 
 	struct r_entry *d = entry_dup(e);
 	g_free(d->f_name);
 
-        plain = decrypt_path(aes_ctx, e->f_name);
+        plain = decrypt_path(aes_ctx, e->f_name, tr);
         d->f_name = plain;
         d->f_name_size = strlen(plain);
         return d;
@@ -103,6 +102,7 @@ stdin2archive(GSList *child)
 	struct stat     s;
 	struct r_entry  *rdup_entry = NULL;
 	struct r_entry  *rdup_entry_c = NULL;
+	GHashTable *trhash;				/* look up for encrypted/decrypted strs */
 
 	fp      = stdin;
 	delim   = '\n';
@@ -112,6 +112,7 @@ stdin2archive(GSList *child)
 	j	= ARCHIVE_OK;
 	entry   = NULL;
 	line    = 0;
+	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
@@ -169,9 +170,9 @@ stdin2archive(GSList *child)
 
 		rdup_entry_c = rdup_entry;
 		if (opt_crypt_key) 
-			rdup_entry_c = crypt_entry(rdup_entry);
+			rdup_entry_c = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
-			rdup_entry_c = decrypt_entry(rdup_entry);
+			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
 
 		if (rdup_entry->plusmin == '-') {
 			if (opt_output == O_RDUP) {

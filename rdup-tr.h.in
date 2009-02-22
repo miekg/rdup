@@ -92,9 +92,9 @@ struct r_entry *sym_link(struct r_entry *e, char *h_lnk);
 
 /* crypt.c */
 struct aes_ctx * crypt_init(gchar *key, guint length, gboolean crypt);
-gchar * crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len);
-gchar * decrypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len);
-gchar * crypt_path(struct aes_ctx *ctx, gchar *p);
-gchar * decrypt_path(struct aes_ctx *ctx, gchar *p);
+gchar * crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr);
+gchar * decrypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr);
+gchar * crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr);
+gchar * decrypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr);
 
 #endif  /* _RDUP_TR_H */

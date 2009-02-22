@@ -3,9 +3,7 @@ TODO:
    output. So any special reading of this list can go
    and we can just use stuff for entry.c
    extending this list also has other interesting applictions
- - path crypting
-   encrypt each path component with a standard encryption proto and
-   a key
+ - with libnettle we have sha1 there too, so sha1.c can go
 
 :general:
 - move to more glib functions

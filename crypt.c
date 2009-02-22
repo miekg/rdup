@@ -7,8 +7,9 @@
 
 #include "rdup-tr.h"
 #include "base64.h"
-
 #include <nettle/aes.h>
+
+extern GHashTable *trhash;
 
 /** init the cryto
  * with key  *key
@@ -41,12 +42,16 @@ is_plain(gchar *s) {
  * return the result
  */
 gchar *
-crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len)
+crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr)
 {
 	guint aes_size;
 	guchar *source;
 	guchar *dest;
-	gchar *b64;
+	gchar *b64, *hashed;
+
+	hashed = g_hash_table_lookup(tr, elem);
+	if (hashed) 
+		return hashed;
 
 	aes_size = ( (len / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
 
@@ -61,8 +66,10 @@ crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len)
 	g_free(source);
 	g_free(dest);
 	if (!b64) {
+		/* hash insert? */
 		return elem; /* as if nothing happened */
 	} else {
+		g_hash_table_insert(tr, elem, b64);
 		return b64;
 	}
 }
@@ -71,14 +78,17 @@ crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len)
  * return the result
  */
 gchar *
-decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len)
+decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 {
 	guint aes_size;
 	guchar *source;
 	guchar *dest;
-	gchar *crypt;
+	gchar *crypt, *hashed;
 	guint crypt_size;
 
+	hashed = g_hash_table_lookup(tr, b64);
+	if (hashed)
+		return hashed;
 	crypt = g_malloc(len); /* is this large enough? XXX */
 
 	crypt_size = decode_base64((guchar*)crypt, b64);
@@ -105,15 +115,15 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len)
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);
 	} 
+	g_hash_table_insert(tr, b64, dest);
 	return (gchar*) dest;
 }
 
 /** 
  * encrypt an entire path
- * XXX hash for already encrypted elements
  */
 gchar *
-crypt_path(struct aes_ctx *ctx, gchar *p) {
+crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 	gchar *q, *c, *crypt, *xpath, d;
 
 	if (!g_path_is_absolute(p))
@@ -136,24 +146,22 @@ crypt_path(struct aes_ctx *ctx, gchar *p) {
 			*c = d;
 			continue;
 		}
-		crypt = crypt_path_ele(ctx, q, strlen(q));
+		crypt = crypt_path_ele(ctx, q, strlen(q), tr);
 
 		if (xpath)
 			xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, crypt);
 		else 
 			xpath = g_strdup_printf("%c%s", DIR_SEP, crypt);
 
-		g_free(crypt);
 		q = c;
 		*c = d;
 	}
-	crypt = crypt_path_ele(ctx, q, strlen(q));
+	crypt = crypt_path_ele(ctx, q, strlen(q), tr);
 	if (xpath)
 		xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, crypt);
 	else 
 		xpath = g_strdup_printf("%c%s", DIR_SEP, crypt);
 
-	g_free(crypt);
 	return xpath;
 }
 
@@ -162,7 +170,7 @@ crypt_path(struct aes_ctx *ctx, gchar *p) {
  * decrypt an entire path
  */
 gchar *
-decrypt_path(struct aes_ctx *ctx, gchar *x) {
+decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 
 	gchar *path, *q, *c, *plain, d;
 
@@ -186,23 +194,21 @@ decrypt_path(struct aes_ctx *ctx, gchar *x) {
 			*c = d;
 			continue;
 		}
-		plain = decrypt_path_ele(ctx, q, strlen(q));
+		plain = decrypt_path_ele(ctx, q, strlen(q), tr);
 
 		if (path) 
 			path = g_strdup_printf("%s%c%s", path, DIR_SEP, plain);
 		else
 			path = g_strdup_printf("%c%s", DIR_SEP, plain);
 
-		g_free(plain);
 		q = c;
 		*c = d;
 	}
-	plain = decrypt_path_ele(ctx, q, strlen(q));
+	plain = decrypt_path_ele(ctx, q, strlen(q), tr);
 	if (path) 
 		path = g_strdup_printf("%s%c%s", path, DIR_SEP, plain);
 	else
 		path = g_strdup_printf("%c%s", DIR_SEP, plain);
 
-	g_free(plain);
 	return path;
 }
