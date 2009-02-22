@@ -25,6 +25,12 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
+AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
+if test "$NETTLE_L" == "no"; then
+    AC_MSG_WARN([** libnettle not found; not using crypto in rdup-tr.])
+fi
+AC_SUBST(NETTLE_L)
+
 AC_CHECK_LIB(archive, archive_entry_copy_symlink, ,ARCHIVE_L="no")
 if test "$ARCHIVE_L" == "no"; then
     AC_MSG_WARN([** libarchive not found; not building rdup-tr.])

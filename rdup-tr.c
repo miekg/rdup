@@ -18,6 +18,8 @@ char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
+gchar opt_crypt_key	   = NULL;			/* encryption key */
+gchar opt_decrypt_key	   = NULL;			/* encryption key */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -297,7 +299,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "cP:O:t:LhVv")) != -1) {
+	while ((c = getopt (argc, argv, "cP:O:t:LhVvX:Y:")) != -1) {
 		switch (c) {
 			case 'c':
 				opt_tty = TRUE;
@@ -351,6 +353,14 @@ main(int argc, char **argv)
 					msg("Invalid output format: `%s\'", optarg);
 					exit(EXIT_FAILURE);
 				}
+				break;
+			case 'X':
+				/* read from file XXX */
+				opt_crypt_key = "0123456789abcdef";
+				break;
+			case 'Y':
+				/* read from file XXX */
+				opt_decrypt_key = "0123456789abcdef";
 				break;
 			case 'h':
 				usage_tr(stdout);
