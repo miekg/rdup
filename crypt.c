@@ -30,9 +30,10 @@ crypt_init(gchar *key, guint length, gboolean crypt)
 static gboolean
 is_plain(gchar *s) {
 	char *p;
-	for (p = s; p; p++)
+	for (p = s; *p; p++)
 		if (!isalnum(*p))
 			return FALSE;
+		
 	return TRUE;
 }
 
@@ -100,10 +101,11 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len)
 	 * if the result is now garbled instead of nice plain
 	 * test assume this was the case. 
 	 */
-	if (is_plain((char*) dest))
-		return (gchar*) dest;
-	else
-		return (gchar *)b64;
+	if (!is_plain((char*) dest)) {
+		g_free(dest);
+		dest = (guchar*) g_strdup(b64);
+	} 
+	return (gchar*) dest;
 }
 
 /** 
