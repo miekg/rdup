@@ -35,7 +35,7 @@ rm(gchar *p)
 					while ( (dirp = (gchar*)g_dir_read_name(d))) {
 						dirp = g_strdup_printf("%s%c%s", p, DIR_SEP, dirp);
 						rm(dirp);
-						/* a) XXX uhh, error checking */
+						g_free(dirp);
 					}
 					g_dir_close(d);
 					return TRUE;

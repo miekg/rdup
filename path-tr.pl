@@ -2,9 +2,11 @@
 
 use Fcntl ':mode';
 use feature 'switch';
-
 use warnings;
 use strict;
+
+# SYNOPSIS
+# path-tr.pl [PREFIX] LIST
 
 # convert rdup's internal list to rdup output
 # if you save this list on your backup. You
@@ -24,25 +26,31 @@ use strict;
 # #type perm user/group pathlen filesize path
 # +d 0755 0 0 5 0 /home
 
+my $prefix;
+my $prelen;
+
 use constant { 
     MODE    => 0,
     DEV     => 1,
     INODE   => 2,
     LINK    => 3,
-    PLEN    => 4,
-    FSIZE   => 5,
-    PATH    => 6
+    UID	    => 4,
+    GID	    => 5,
+    PLEN    => 6,
+    FSIZE   => 7,
+    PATH    => 8,
+    P	    => 9
 };
 
-my $prefix = "/vol/backup";
-my $prelen = length($prefix);
+if ($#ARGV > -1) {
+    $prefix = shift;
+    $prelen = length($prefix);
+}
 
 my @p;
 <>;
 while (<>) {
-    chomp;
-    @p = split / /, $_, 7;
-
+    @p = split / /, $_, P;
     if (S_ISDIR($p[MODE])) { $p[FSIZE] = 0; }
 
     if (defined $prefix) {
@@ -64,20 +72,19 @@ while (<>) {
 	    if ($p[LINK] eq '*') { print "-"; }
 	}
 
-	when (S_ISLNK $_) {
+	when (S_ISLNK $_ or $p[LINK] eq 'h') {
 	    print "l";
+	    if (defined($prefix)) {
+		$p[FSIZE] += $prelen;
+	    }
 	}
-
-	# ...
+	# ... other fs type too, TODO
     }
 
     # perms
     printf " %04o", $p[MODE] & 07777;
-
-    # user/group (don't have that info (yet))
-    print " 1000 1000";
-
+    # user/group 
+    printf " %s %s", $p[UID], $p[GID];
     # pathlen
-    printf " %s %s %s\n", $p[PLEN], $p[FSIZE], $p[PATH];
-
+    printf " %s %s %s", $p[PLEN], $p[FSIZE], $p[PATH];
 }

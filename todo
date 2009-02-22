@@ -1,8 +1,11 @@
 TODO:
- - rdup internal filelist is fast becoming identical as its
+ - rdup internal filelist is fast becoming identical to its
    output. So any special reading of this list can go
    and we can just use stuff for entry.c
    extending this list also has other interesting applictions
+ - path crypting
+   encrypt each path component with a standard encryption proto and
+   a key
 
 :general:
 - move to more glib functions

@@ -27,9 +27,6 @@ gint opt_input		   = I_RDUP;			/* default intput */
 sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
-/* signal.c */
-void got_sig(int signal);
-
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last
  * child and create the archive on stdout
@@ -49,7 +46,7 @@ stdin2archive(GSList *child)
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     s;
-	struct r_entry  *rdup_entry;
+	struct r_entry  *rdup_entry = NULL;
 
 	fp      = stdin;
 	delim   = '\n';
@@ -255,6 +252,9 @@ not_s_isreg:
 		archive_write_close(archive);
 		archive_write_finish(archive);
 	}
+	g_free(readbuf);
+	g_free(buf);
+	g_free(rdup_entry);
 }
 
 int

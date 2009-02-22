@@ -32,6 +32,7 @@ block_out_header(FILE *f, size_t size, int fp) {
 		if (write(fp, p, strlen(p)) == -1)
 			return -1;
 	}
+	g_free(p);
 	return 0;
 }
 
@@ -58,6 +59,7 @@ gint
 block_in(FILE *f, size_t size, char *buf) {
 	if (fread(buf, sizeof(char), size, f) != size) {
 		/* read less then expected */
+		return -1;
 	}
 	return 0;
 }

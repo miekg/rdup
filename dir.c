@@ -29,7 +29,6 @@ dir_restore(gchar *p, struct stat *s)
 {
 	if (!s || !p)
 		return;
-
 	/* restore perms - assumes *s has not be f*cked up */
 	chmod(p, s->st_mode);
 }
@@ -43,5 +42,4 @@ dir_parent(gchar *p)
 	gchar *p2;
 	p2 = g_strdup_printf("%s%c%s", p, DIR_SEP, "..");
 	return p2;
-	/* XXX freeing this up again ?*/
 }

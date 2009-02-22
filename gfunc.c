@@ -322,8 +322,12 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (e->f_lnk == 1)
 		linktype = 'h';
 
-	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %s", (long int)e->f_mode, (long int)e->f_dev, 
-			(long int)e->f_ino, linktype, (long int)strlen(e->f_name), (long int)e->f_size, 
+	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %ld %ld %s", (long int)e->f_mode, 
+			(long int)e->f_dev, 
+			(long int)e->f_ino, linktype, 
+			(long int)e->f_uid, 
+			(long int)e->f_gid,
+			(long int)strlen(e->f_name), (long int)e->f_size, 
 			e->f_name);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);

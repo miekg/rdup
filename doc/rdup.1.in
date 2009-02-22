@@ -58,7 +58,7 @@ is a internal list \fBrdup\fR writes to, to keep track of which files
 are in a backup. If you don't want this (i.e. make a full
 backup), use \fI/dev/null\fR here. The file \fI/dev/null\fR is handled
 specially by \fBrdup\fR: if detected no new file list is written. This
-is useful when doing full backups and you want all files to be printed.
+is useful when only doing full backups and you want all files to be printed.
 .PP
 The
 .IR DIRS/FILES
@@ -117,7 +117,7 @@ This means if something goes wrong, you still have the original
 timestamp.
 .TP
 .B \-M timestamp
-As \-N, but look at the m_time.
+As \-N, but look at the m_time of timestamp.
 .TP
 .B \-R
 Reverse the output of \fBrdup\fR. Tools accepting this ouput must
@@ -162,14 +162,14 @@ trailing slash.
 .B \-n
 Don't honor .nobackup files. Normally if such a file is found the
 directory and all files containing it, are not 
-printed to standard output, now they are.
+printed to standard output. Now they are.
 .TP
 .B \-c
 Print the files' contents to standard output. This sets
 the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C"
 
 Any file content is written in a block/chunk based manner. The
-last block is signaled with a null block. A block entry is 
+last block is signaled with a null block. A block start entry is 
 ascii and is formatted as follows: VVBLOCKBBBBB\\n
 
 Where 'VV' is the version, now '01', then the literal string 'BLOCK'
@@ -197,7 +197,8 @@ Be more verbose.
 When used once, processed .nobackup files will be
 printed to standard error. When used twice each path will also be
 printed to standard error. This is usefull in case of a remote
-backup (\fI\-c\fR) where the normal output is not seen.
+backup (\fI\-c\fR) where the normal output is not seen. Using
+tee(1) might even be better...
 .TP
 .B \-s size
 Only output files smaller then \fBsize\fR bytes. This can be used to limit

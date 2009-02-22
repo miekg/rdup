@@ -1,8 +1,8 @@
-xx Feb 2009: 0.8.0 Miek <miek@miek.nl>
+22 Feb 2009: 0.8.0 Miek <miek@miek.nl>
   - major feature enhancements - 
-  - again internal file list change -
-  * internal filelist: add uid/gid here
-    see http://miek.nl/blog/blaat for more info
+  - again: internal file list change -
+  * internal filelist: add uid/gid here, 
+    see http://miek.nl/blog/blaat on why
   * rdup*: make the -c output block based.
     Every BUFSIZE bytes a block is started.
     The last block is signaled with a size
@@ -16,6 +16,8 @@ xx Feb 2009: 0.8.0 Miek <miek@miek.nl>
   * rdup-tr: still expects normal rdup list as input
   * rdup-tr: do away with the tmp file (John Goerzen)
     this saves a lot of IO as it is all piping now
+  * rdup: add -M same as -N but check the mctime of the
+    timestamp file
 
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>
