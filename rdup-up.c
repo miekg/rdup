@@ -17,9 +17,6 @@ gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
-/* signal.c */
-void got_sig(int signal);
-
 /* update the directory with the archive */
 gboolean
 update(char *path, guint strip)

@@ -25,9 +25,6 @@ gint opt_input		   = I_RDUP;			/* default intput */
 sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
-/* signal.c */
-void got_sig(int signal);
-
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last
  * child and create the archive on stdout

@@ -16,6 +16,8 @@
   * rdup-tr: still expects normal rdup list as input
   * rdup-tr: do away with the tmp file (John Goerzen)
     this saves a lot of IO as it is all piping now
+  * rdup: add -M same as -N but check the mctime of the
+    timestamp file
 
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>

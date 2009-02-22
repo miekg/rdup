@@ -17,6 +17,7 @@ char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file c|m time */
+
 sig_atomic_t sig           = 0;
 
 #define CORRUPT(x)	{ \
@@ -24,17 +25,6 @@ sig_atomic_t sig           = 0;
 			l++; \
 			continue; \
 			}
-
-/* crawler.c */
-void dir_crawl(GTree *t, GHashTable *linkhash, char *path);
-gboolean dir_prepend(GTree *t, char *path);
-/* signal.c */
-void got_sig(int signal);
-/* usage.c */
-void usage(FILE *f);
-/* regexp.c */
-int regexp_init(char *f);
-
 /**
  * subtrace tree *b from tree *a, leaving
  * the elements that are only in *a. Essentially
@@ -287,7 +277,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "crlmhVRnd:N:s:vqx0F:E:")) != -1) {
+	while ((c = getopt (argc, argv, "crlmhVRnd:N:M:s:vqx0F:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -315,6 +305,7 @@ main(int argc, char **argv)
 			case 'M':
 				opt_timestamp = timestamp(optarg, FALSE);
 				time = optarg;
+				break;
 			case 'R':
 				opt_reverse = TRUE;
 				break;
@@ -402,6 +393,7 @@ main(int argc, char **argv)
 	changed = g_tree_subtract(changed, remove);
 
 	/* first what to remove, then what to backup */
+
 	if (opt_reverse) {
 		GList *list_remove, *list_changed, *list_new = NULL;
 		list_remove = reverse(remove);
@@ -423,7 +415,7 @@ main(int argc, char **argv)
 	    } else {
 		/* write temporary file, add little comment */
 		fprintf(fplist, 
-			"# mode dev inode linktype pathlen filesize path\n");
+			"# mode dev inode linktype uid gid pathlen filesize path\n");
 		g_tree_foreach(backup, gfunc_write, fplist);
 		fclose(fplist);
 	    }
