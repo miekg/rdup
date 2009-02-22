@@ -1,8 +1,7 @@
 22 Feb 2009: 0.8.0 Miek <miek@miek.nl>
   - major feature enhancements - 
   - again: internal file list change -
-  * internal filelist: add uid/gid here, 
-    see 
+  * internal filelist: add uid/gid here, see 
     http://www.miek.nl/blog/archives/2009/02/21/backing_up_remotely_as_a_normal_user/index.html
   * rdup*: make the -c output block based.
     Every BUFSIZE bytes a block is started.

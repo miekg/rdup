@@ -24,6 +24,8 @@ The output is equal to rdup -c ouput.\n\
 	    \t\tfilter through cmd\n\
 	\t\tthis may be repeated, output will be filtered\n\
 	\t\tthrough all commands\n\
+	-Xfile\t\tencrypt all paths with AES and the key from file\n\
+	-Yfile\t\tdecrypt all paths with AES and the key from file\n\
 	-h\t\tthis help\n\
 	-V\t\tprint version\n\
         -Ofmt\t\toutput format: pax, cpio, tar or rdup\n\

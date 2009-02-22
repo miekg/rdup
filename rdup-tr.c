@@ -417,28 +417,14 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'X':
-				opt_crypt_key = "0123456789abcdef";
-				aes_ctx = crypt_init(opt_crypt_key, 16, TRUE);
-				/* read from file XXX */
-#if 0
-				opt_crypt_key = "0123456789abcdef";
-				struct aes_ctx *c;
-
-				/* gchar *mypath = g_strdup("/home/miekg/tmp");   _ in de base64 */
-				gchar *mypath = g_strdup("/home/miekg/../tmp");  /* _ in de base64 */
-				gchar *crypt = crypt_path(c, mypath);
-
-				fprintf(stderr, "%s\n%s\n", mypath, crypt);
-
-				c = crypt_init(opt_crypt_key, 16, FALSE);
-				gchar *plain = decrypt_path(c, crypt);
-				fprintf(stderr, "%s\n", plain);
-#endif
+				if (! (opt_crypt_key = crypt_key(optarg)))
+					exit(EXIT_FAILURE);
+				aes_ctx = crypt_init(opt_crypt_key, strlen(opt_crypt_key), TRUE);
 				break;
 			case 'Y':
-				/* read from file XXX */
-				opt_decrypt_key = "0123456789abcdef";
-				aes_ctx = crypt_init(opt_decrypt_key, 16, FALSE);
+				if (! (opt_crypt_key = crypt_key(optarg)))
+					exit(EXIT_FAILURE);
+				aes_ctx = crypt_init(opt_crypt_key, strlen(opt_crypt_key), TRUE);
 				break;
 			case 'h':
 				usage_tr(stdout);

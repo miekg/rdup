@@ -96,5 +96,5 @@ gchar * crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *
 gchar * decrypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr);
 gchar * crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr);
 gchar * decrypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr);
-
+gchar * crypt_key(gchar *file);
 #endif  /* _RDUP_TR_H */
