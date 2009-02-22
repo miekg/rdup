@@ -130,10 +130,10 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 	abs = g_path_is_absolute(p);
 
 	xpath = NULL;
-	for (q = p; (c = strchr(q, DIR_SEP)); q++) {
+	for (q = (p + abs); (c = strchr(q, DIR_SEP)); q++) {
 		d = *c;
 		*c = '\0';	
-		
+
 		/* don't encrypt '..' */
 		if (strcmp(q, "..") == 0) {
 			if (xpath)
@@ -153,7 +153,6 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 		else 
 			abs ? (xpath = g_strdup_printf("%c%s", DIR_SEP, crypt)) :
 				(xpath = g_strdup(crypt));
-			
 		q = c;
 		*c = d;
 	}
@@ -174,9 +173,13 @@ gchar *
 decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 
 	gchar *path, *q, *c, *plain, d;
+	gboolean abs;
+
+	/* links */
+	abs = g_path_is_absolute(x);
 
 	path = NULL;
-	for (q = x; (c = strchr(q, DIR_SEP)); q++) {
+	for (q = (x + abs); (c = strchr(q, DIR_SEP)); q++) {
 		d = *c;
 		*c = '\0';	
 
@@ -185,7 +188,8 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 			if (path)
 				path = g_strdup_printf("%s%c%s", path, DIR_SEP, "..");
 			else 
-				path = g_strdup("/..");
+				abs ?  (path = g_strdup("/..")) :
+					(path = g_strdup(".."));
 
 			q = c;
 			*c = d;
@@ -196,8 +200,8 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 		if (path) 
 			path = g_strdup_printf("%s%c%s", path, DIR_SEP, plain);
 		else
-			path = g_strdup_printf("%c%s", DIR_SEP, plain);
-
+			abs ? (path = g_strdup_printf("%c%s", DIR_SEP, plain)) :
+				(path = g_strdup(plain));
 		q = c;
 		*c = d;
 	}
@@ -205,8 +209,8 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 	if (path) 
 		path = g_strdup_printf("%s%c%s", path, DIR_SEP, plain);
 	else
-		path = g_strdup_printf("%c%s", DIR_SEP, plain);
-
+		abs ? (path = g_strdup_printf("%c%s", DIR_SEP, plain)) :
+			(path = g_strdup(plain));
 	return path;
 }
 
