@@ -55,15 +55,28 @@ static struct r_entry *
 crypt_entry(struct r_entry *e, GHashTable *tr) 
 {
         gchar *crypt;
+	gchar *dest;
+	gchar p;
         /* for links we must do something special */
 
 	struct r_entry *d = entry_dup(e);
-	g_free(d->f_name);
-             
-        crypt = crypt_path(aes_ctx, e->f_name, tr);
-        d->f_name = crypt;
-        d->f_name_size = strlen(crypt);
-        return d;
+	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
+		p = *(d->f_name + d->f_size);
+		d->f_name[d->f_size] = '\0';
+		crypt = crypt_path(aes_ctx, d->f_name, tr);
+		dest = crypt_path(aes_ctx, d->f_name + d->f_size + 4, tr);
+
+		sprintf(d->f_name, "%s -> %s", crypt, dest);
+		d->f_name_size = strlen(d->f_name);
+		d->f_size = strlen(crypt);
+		/* free ? XXX */
+	} else {
+		g_free(d->f_name);
+		crypt = crypt_path(aes_ctx, e->f_name, tr);
+		d->f_name = crypt;
+		d->f_name_size = strlen(crypt);
+	}
+	return d;
 }
 
 /* decrypt an rdup_entry */

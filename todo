@@ -4,6 +4,7 @@ TODO:
    and we can just use stuff for entry.c
    extending this list also has other interesting applictions
  - with libnettle we have sha1 there too, so sha1.c can go
+ - Kill DIR_SEP
 
 :general:
 - move to more glib functions

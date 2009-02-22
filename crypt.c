@@ -9,7 +9,8 @@
 #include "base64.h"
 #include <nettle/aes.h>
 
-/** init the cryto
+/** 
+ * init the cryto
  * with key  *key
  * and length length
  * lenght MUST be 16, 24 or 32
@@ -105,9 +106,9 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	g_free(source);
 	g_free(crypt);
 
-	/* we could have been valid string to begin with
+	/* we could have gotten valid string to begin with
 	 * if the result is now garbled instead of nice plain
-	 * test assume this was the case. 
+	 * text assume this was the case. 
 	 */
 	if (!is_plain((char*) dest)) {
 		g_free(dest);
@@ -123,13 +124,13 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 gchar *
 crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 	gchar *q, *c, *crypt, *xpath, d;
+	gboolean abs;
 
-	if (!g_path_is_absolute(p))
-		return NULL;
+	/* links might have relative targets */
+	abs = g_path_is_absolute(p);
 
 	xpath = NULL;
-	/* p + 1, path should be absolute */
-	for (q = p + 1; (c = strchr(q, DIR_SEP)); q++) {
+	for (q = p; (c = strchr(q, DIR_SEP)); q++) {
 		d = *c;
 		*c = '\0';	
 		
@@ -138,7 +139,8 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 			if (xpath)
 				xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, "..");
 			else 
-				xpath = g_strdup("/..");
+				abs ?  (xpath = g_strdup("/..")) :
+					(xpath = g_strdup(".."));
 
 			q = c;
 			*c = d;
@@ -149,8 +151,9 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 		if (xpath)
 			xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, crypt);
 		else 
-			xpath = g_strdup_printf("%c%s", DIR_SEP, crypt);
-
+			abs ? (xpath = g_strdup_printf("%c%s", DIR_SEP, crypt)) :
+				(xpath = g_strdup(crypt));
+			
 		q = c;
 		*c = d;
 	}
@@ -158,8 +161,8 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 	if (xpath)
 		xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, crypt);
 	else 
-		xpath = g_strdup_printf("%c%s", DIR_SEP, crypt);
-
+		abs ? (xpath = g_strdup_printf("%c%s", DIR_SEP, crypt)) :
+			(xpath = g_strdup(crypt));
 	return xpath;
 }
 
@@ -172,12 +175,8 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 
 	gchar *path, *q, *c, *plain, d;
 
-	if (!g_path_is_absolute(x))
-		return NULL;
-
 	path = NULL;
-	/* x + 1, path should be absolute */
-	for (q = x + 1; (c = strchr(q, DIR_SEP)); q++) {
+	for (q = x; (c = strchr(q, DIR_SEP)); q++) {
 		d = *c;
 		*c = '\0';	
 
