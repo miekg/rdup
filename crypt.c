@@ -7,6 +7,7 @@
 
 #include "rdup-tr.h"
 #include "base64.h"
+
 #include <nettle/aes.h>
 
 /** init the cryto
@@ -24,6 +25,15 @@ crypt_init(gchar *key, guint length, gboolean crypt)
 	else 
 		aes_set_decrypt_key(ctx, length, (uint8_t*)key);
 	return ctx;
+}
+
+static gboolean
+is_plain(gchar *s) {
+	char *p;
+	for (p = s; p; p++)
+		if (!isalnum(*p))
+			return FALSE;
+	return TRUE;
 }
 
 /* encrypt and base64 encode path element
@@ -62,14 +72,13 @@ crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len)
 gchar *
 decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len)
 {
-	/* XXX NULL termination..????. */
 	guint aes_size;
 	guchar *source;
 	guchar *dest;
 	gchar *crypt;
 	guint crypt_size;
 
-	crypt = g_malloc(len); /* is this large enough */
+	crypt = g_malloc(len); /* is this large enough? XXX */
 
 	crypt_size = decode_base64((guchar*)crypt, b64);
 	if (!crypt_size)
@@ -87,7 +96,14 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len)
 	g_free(source);
 	g_free(crypt);
 
-	return (gchar*)dest;
+	/* we could have been valid string to begin with
+	 * if the result is now garbled instead of nice plain
+	 * test assume this was the case. 
+	 */
+	if (is_plain((char*) dest))
+		return (gchar*) dest;
+	else
+		return (gchar *)b64;
 }
 
 /** 
@@ -188,4 +204,3 @@ decrypt_path(struct aes_ctx *ctx, gchar *x) {
 	g_free(plain);
 	return path;
 }
-

@@ -19,7 +19,7 @@
 #include "rdup-tr.h"
 #include "base64.h"
 
-/* See Section 4 of RFC 3548, be URL safe */
+/* See Section 4 of RFC 3548, be URL safe, modified by Miek Gieben, 2009 */
 
 /* Private prototypes */
 static int is_base64(char c);

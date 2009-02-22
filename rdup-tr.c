@@ -20,12 +20,67 @@ char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* encryption key */
+struct aes_ctx * aes_ctx   = NULL;
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
+
+
+/* same as in crawler.c */
+static struct r_entry *
+entry_dup(struct r_entry *f)
+{
+        struct r_entry *g;
+        g = g_malloc(sizeof(struct r_entry));
+
+	g->plusmin	= f->plusmin;
+        g->f_name       = g_strdup(f->f_name);
+        g->f_name_size  = f->f_name_size;
+        g->f_lnk        = f->f_lnk;
+        g->f_uid        = f->f_uid;
+        g->f_gid        = f->f_gid;
+        g->f_mode       = f->f_mode;
+        g->f_ctime      = f->f_ctime;
+        g->f_size       = f->f_size;
+        g->f_dev        = f->f_dev;
+        g->f_rdev       = f->f_rdev;
+        g->f_ino        = f->f_ino;
+        return g;
+}
+
+/* encrypt an rdup_entry (just the path of course) */
+static struct r_entry *
+crypt_entry(struct r_entry *e) 
+{
+        gchar *crypt;
+        /* for links we must do something special */
+
+	struct r_entry *d = entry_dup(e);
+	g_free(d->f_name);
+             
+        crypt = crypt_path(aes_ctx, e->f_name);
+        d->f_name = crypt;
+        d->f_name_size = strlen(crypt);
+        return d;
+}
+
+/* decrypt an rdup_entry */
+static struct r_entry *
+decrypt_entry(struct r_entry *e) 
+{
+        gchar *plain;
+
+	struct r_entry *d = entry_dup(e);
+	g_free(d->f_name);
+
+        plain = decrypt_path(aes_ctx, e->f_name);
+        d->f_name = plain;
+        d->f_name_size = strlen(plain);
+        return d;
+}
 
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last
@@ -47,6 +102,7 @@ stdin2archive(GSList *child)
 	struct archive_entry *entry;
 	struct stat     s;
 	struct r_entry  *rdup_entry = NULL;
+	struct r_entry  *rdup_entry_c = NULL;
 
 	fp      = stdin;
 	delim   = '\n';
@@ -111,20 +167,26 @@ stdin2archive(GSList *child)
 			signal_abort(sig);
 		}
 
+		rdup_entry_c = rdup_entry;
+		if (opt_crypt_key) 
+			rdup_entry_c = crypt_entry(rdup_entry);
+		if (opt_decrypt_key)
+			rdup_entry_c = decrypt_entry(rdup_entry);
+
 		if (rdup_entry->plusmin == '-') {
 			if (opt_output == O_RDUP) {
-				rdup_write_header(rdup_entry);
+				rdup_write_header(rdup_entry_c);
 				goto not_s_isreg;
 			}
 			/* all other outputs cannot handle this, but this
-			 * is ALSO checked in parse_entry() */
+			 * is ALSO checked in parse_entry() TODO XXX make more obvious*/
 			continue;
 		}
 
 		if (opt_output != O_RDUP) {
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, &s);
-			archive_entry_copy_pathname(entry, rdup_entry->f_name);
+			archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
 			/* with list input rdup-tr cannot possibly see
 			 * that a file is hardlinked - but the code
@@ -150,7 +212,7 @@ stdin2archive(GSList *child)
 		if (opt_output != O_RDUP) {
 			archive_write_header(archive, entry);
 		} else {
-			rdup_write_header(rdup_entry);
+			rdup_write_header(rdup_entry_c);
 		}
 
 		/* bail out for non regular files */
@@ -209,8 +271,7 @@ stdin2archive(GSList *child)
 
 write_plain_file:
 			/* header already sent, don't care about file size
-			 * so this is ok
-			 */
+			 * so this is ok */
 				
 			/* if we had child trouble we need to 
 			 * reset the file as some child might
@@ -355,11 +416,12 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'X':
+				opt_crypt_key = "0123456789abcdef";
+				aes_ctx = crypt_init(opt_crypt_key, 16, TRUE);
 				/* read from file XXX */
 #if 0
 				opt_crypt_key = "0123456789abcdef";
 				struct aes_ctx *c;
-				c = crypt_init(opt_crypt_key, 16, TRUE);
 
 				/* gchar *mypath = g_strdup("/home/miekg/tmp");   _ in de base64 */
 				gchar *mypath = g_strdup("/home/miekg/../tmp");  /* _ in de base64 */
@@ -370,14 +432,12 @@ main(int argc, char **argv)
 				c = crypt_init(opt_crypt_key, 16, FALSE);
 				gchar *plain = decrypt_path(c, crypt);
 				fprintf(stderr, "%s\n", plain);
-
-
-				exit(0);
 #endif
 				break;
 			case 'Y':
 				/* read from file XXX */
 				opt_decrypt_key = "0123456789abcdef";
+				aes_ctx = crypt_init(opt_decrypt_key, 16, FALSE);
 				break;
 			case 'h':
 				usage_tr(stdout);

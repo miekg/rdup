@@ -24,6 +24,7 @@ entry_dup(struct r_entry *f)
         struct r_entry *g;
         g = g_malloc(sizeof(struct r_entry));
 
+	g->plusmin	= f->plusmin;
         g->f_name       = g_strdup(f->f_name);
         g->f_name_size  = f->f_name_size;
         g->f_lnk	= f->f_lnk;
