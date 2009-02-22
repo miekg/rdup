@@ -19,6 +19,8 @@
 #include "rdup-tr.h"
 #include "base64.h"
 
+/* See Section 4 of RFC 3548, be URL safe */
+
 /* Private prototypes */
 static int is_base64(char c);
 static char encode(unsigned char u);
@@ -199,9 +201,10 @@ static char encode(unsigned char u) {
   if(u < 26)  return 'A'+u;
   if(u < 52)  return 'a'+(u-26);
   if(u < 62)  return '0'+(u-52);
-  if(u == 62) return '+';
+  if(u == 62) return '-';  /* was + */
   
-  return '/';
+  /* return '/'; */
+  return '_';
 
 }
 
@@ -214,7 +217,7 @@ static unsigned char decode(char c) {
   if(c >= 'A' && c <= 'Z') return(c - 'A');
   if(c >= 'a' && c <= 'z') return(c - 'a' + 26);
   if(c >= '0' && c <= '9') return(c - '0' + 52);
-  if(c == '+')             return 62;
+  if(c == '-')             return 62;  /* was '+' */
   
   return 63;
   
