@@ -1,4 +1,4 @@
-i/*
+/*
  * Copyright (C), 2000-2007 by the monit project group.
  * All Rights Reserved.
  *
@@ -16,20 +16,7 @@ i/*
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
-
-#ifdef HAVE_STDIO_H
-#include <stdio.h>
-#endif
-
-#ifdef HAVE_STDLIB_H
-#include <stdlib.h>
-#endif
-
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-
+#include "rdup-tr.h"
 #include "base64.h"
 
 /* Private prototypes */
@@ -72,7 +59,7 @@ char *encode_base64(int size, unsigned char *src) {
   if(!size)
     size= strlen((char *)src);
     
-  out= xcalloc(sizeof(char), size*4/3+4);
+  out= g_malloc0(size*4/3+4);
 
   p= out;
     
@@ -130,7 +117,7 @@ int decode_base64(unsigned char *dest, const char *src) {
   
     unsigned char *p= dest;
     int k, l= strlen(src)+1;
-    unsigned char *buf= xcalloc(sizeof(unsigned char), l);
+    unsigned char *buf= g_malloc0(l);
 
     
     /* Ignore non base64 chars as per the POSIX standard */
@@ -190,7 +177,7 @@ int decode_base64(unsigned char *dest, const char *src) {
       
     }
     
-    FREE(buf);
+    g_free(buf);
     
     return(p-dest);
 

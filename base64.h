@@ -16,13 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef BASE64_H
 #define BASE64_H
-
-#include <config.h>
-
 int   decode_base64(unsigned char *dest, const char *src);
 char *encode_base64(int size, unsigned char *src);
-
 #endif
