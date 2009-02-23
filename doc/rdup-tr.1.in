@@ -44,7 +44,8 @@ original file content is printed as-is.
 
 This command combines all previously written rdup-utils
 (rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
-it much more maintainable.
+it much more maintainable. And allowing for cool features, see \-X for
+instance.
 
 As said \fBrdup-tr\fR works by forking off a number of child processes (those
 commands named with the \-P option(s)), interconnecting these
@@ -111,15 +112,16 @@ Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.
 .B \-X \fIkey\fR
 Read the encryption key from the file key and encrypt all paths
 with AES and this key. After the encryption the binary data is
-converted into ascii using an URL save version of base64 encode.
+converted into ascii using an URL safe (Section 4 of RFC 3548)
+version of base64 encode.
 
-The encryption key file must be only one line. The key size
+The encryption key must be on the first line and the key size
 must be 16, 24 or 32 bytes. Anything above 32 will be truncated.
 .TP
 .B \-Y \fIkey\fR
 Read the decryption key from the file key and decrypt all paths
-with AES and this key. Before the encryption the pathn names
-are converted to binary by using an URL save version of base64 decode.
+with AES and this key. Before the encryption the paths
+are converted to binary by using an URL safe version of base64 decode.
 .TP
 .B \-c
 Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
@@ -135,6 +137,17 @@ Print rdup-tr's version.
 A short help.
 
 .SH EXAMPLES
+I have new a new favorite pipeline since rdup release 0.8.0
+
+    rdup /dev/null /home | \\
+    rdup-tr -Pgzip -Pmcrypt,-fKEY,-c -O tar -Xboe | \\
+    gzip > my-home-zipped-crypted-pathcrypted-tar.gz
+
+That is: all files under /home are gzipped and encrypted
+on a per file basis. Further more, all pathnames are
+AES encrypted. This is put in a tar file, which is then
+compressed, resulting in the final output.
+
 Creating a compressed and encrypted tar archive out of a full
 rdup dump might be done as follows
 
@@ -150,7 +163,7 @@ When unzipping an "archive", gzip will do the right thing wrt to files
 that are not compressed and will just print them as-is. So the following
 will work
 
-    rdup /dev/null /home | ./rdup-tr -c -Pgzip 
+    rdup /dev/null /home | ./rdup-tr -c -Pgunzip 
 
 Encryption with openssl
 
@@ -181,7 +194,7 @@ Written by Miek Gieben.
 Report bugs to <miek@miek.nl>. 
 
 .SH SEE ALSO
-http:/www.miek.nl/projects/rdup/ is the main site of rdup. And rdup(1),
+http:/www.miek.nl/projects/rdup/ is the main site of rdup. Aslo see rdup(1),
 rdup-up(1) and rdup-backups(7).
 
 .SH COPYRIGHT

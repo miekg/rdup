@@ -221,22 +221,24 @@ stdin2archive(GSList *child)
 			archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
 			/* with list input rdup-tr cannot possibly see
-			 * that a file is hardlinked - but the code
+			 * that a file is hardlinked - but the '||'
 			 * to handle that case is here anyway
 			 */
 			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
 				/* source */
-				rdup_entry->f_name[rdup_entry->f_size] = '\0';
-				archive_entry_copy_pathname(entry, rdup_entry->f_name);
-				rdup_entry->f_name[rdup_entry->f_size] = ' ';
+				rdup_entry_c->f_name[rdup_entry_c->f_size] = '\0';
+				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
+				rdup_entry_c->f_name[rdup_entry_c->f_size] = ' ';
 
+				/* XXX does hardlinking work here
+				 * TEST and update the manual page table */
 				/* target, +4 == ' -> ' */
 				if (S_ISLNK(rdup_entry->f_mode))
 					archive_entry_copy_symlink(entry, 
-						rdup_entry->f_name + rdup_entry->f_size + 4);
+						rdup_entry_c->f_name + rdup_entry_c->f_size + 4);
 				else 
 					archive_entry_copy_hardlink(entry, 
-						rdup_entry->f_name + rdup_entry->f_size + 4);
+						rdup_entry_c->f_name + rdup_entry_c->f_size + 4);
 			}
 		}
 

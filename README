@@ -16,12 +16,16 @@ o PCRE library
 
 optional:
 o Libarchive - if you want to have rdup-tr
+o LibNettle  - if you want rdup-tr to do path encryption
 
 rdup should compile on all unix platforms out there. It is tested on
 the following
 o Linux
 o Solaris
 o FreeBSD
+
+./configure will try to do the right thing, if you don't have
+specific libraries certain functionality isn't built.
 
 2/ DIFFERENCE WITH RSYNC
 
