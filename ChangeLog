@@ -1,4 +1,4 @@
-22 Feb 2009: 0.9.0 Miek <miek@miek.nl>
+26? Feb 2009: 0.9.0 Miek <miek@miek.nl>
   - major feature enhancements - 
   - again: internal file list change -
   * internal filelist: add uid/gid here. Why? See 
