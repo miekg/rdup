@@ -230,8 +230,6 @@ stdin2archive(GSList *child)
 				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 				rdup_entry_c->f_name[rdup_entry_c->f_size] = ' ';
 
-				/* XXX does hardlinking work here
-				 * TEST and update the manual page table */
 				/* target, +4 == ' -> ' */
 				if (S_ISLNK(rdup_entry->f_mode))
 					archive_entry_copy_symlink(entry, 
