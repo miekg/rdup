@@ -18,9 +18,11 @@ char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
+#ifdef HAVE_LIBNETTLE
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* encryption key */
 struct aes_ctx * aes_ctx   = NULL;
+#endif
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -28,6 +30,7 @@ gint opt_input		   = I_RDUP;			/* default intput */
 sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
+#ifdef HAVE_LIBNETTLE
 /* same as in crawler.c */
 static struct r_entry *
 entry_dup(struct r_entry *f)
@@ -105,6 +108,7 @@ decrypt_entry(struct r_entry *e, GHashTable *tr)
 
         return d;
 }
+#endif
 
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last
@@ -194,10 +198,12 @@ stdin2archive(GSList *child)
 		}
 
 		rdup_entry_c = rdup_entry;
+#ifdef HAVE_LIBNETTLE
 		if (opt_crypt_key) 
 			rdup_entry_c = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
 			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
+#endif
 
 		if (rdup_entry->plusmin == '-') {
 			if (opt_output == O_RDUP) {
@@ -442,14 +448,18 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'X':
+#ifdef HAVE_LIBNETTLE
 				if (! (opt_crypt_key = crypt_key(optarg)))
 					exit(EXIT_FAILURE);
 				aes_ctx = crypt_init(opt_crypt_key, strlen(opt_crypt_key), TRUE);
+#endif
 				break;
 			case 'Y':
+#ifdef HAVE_LIBNETTLY
 				if (! (opt_decrypt_key = crypt_key(optarg)))
 					exit(EXIT_FAILURE);
 				aes_ctx = crypt_init(opt_decrypt_key, strlen(opt_decrypt_key), FALSE);
+#endif
 				break;
 			case 'h':
 				usage_tr(stdout);

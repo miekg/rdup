@@ -11,6 +11,8 @@
 
 extern guint opt_verbose;
 
+#ifdef HAVE_LIBNETTLE
+
 /** 
  * init the cryto
  * with key  *key
@@ -261,3 +263,4 @@ crypt_key(gchar *file)
 	}
 	return buf;
 }
+#endif
