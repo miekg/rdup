@@ -245,11 +245,11 @@ crypt_key(gchar *file)
 	buf[strlen(buf) - 1] = '\0';		/* kill \n */
 	s = strlen(buf);
 	if (s > 32) {
-		msg("Maximum AES key size is 32 octect, truncating!");
+		msg("Maximum AES key size is 32 bytes, truncating!");
 		buf[32] = '\0';
 		return buf;
 	}
-	if (s != 16 && s != 24) {
+	if (s != 16 && s != 24 && s != 32) {
 		msg("AES key must be 16, 24 or 32 bytes");
 		g_free(buf);
 		return NULL;
