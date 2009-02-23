@@ -9,6 +9,8 @@
 #include "base64.h"
 #include <nettle/aes.h>
 
+extern guint opt_verbose;
+
 /** 
  * init the cryto
  * with key  *key
@@ -30,9 +32,6 @@ crypt_init(gchar *key, guint length, gboolean crypt)
 static gboolean
 is_plain(gchar *s) {
 	char *p;
-	/* isascii is also not real ALL valid unix
-	 * filenames...
-	 */
 	for (p = s; *p; p++)
 		if (!isascii(*p))
 			return FALSE;
@@ -114,8 +113,9 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	 * text assume this was the case. 
 	 */
 	if (!is_plain((char*) dest)) {
-		fprintf(stderr, "Returning original [%s] ->%s<\n",
-				b64, dest);
+		if (opt_verbose > 2)
+			msg("Returning original string '%s\'", b64);
+
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);
 	} 
