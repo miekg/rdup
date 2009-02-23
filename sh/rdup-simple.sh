@@ -33,6 +33,8 @@ OPTIONS:
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
  -x         pass -x to rdup
+ -X FILE    encrypt all paths with AES and key in FILE
+ -Y FILE    decrypt all paths with AES and key in FILE
  -h         this help
  -V         print version
 HELP
@@ -41,16 +43,15 @@ HELP
 PROGNAME=$0
 NOW=`date +%Y%m/%d`
 DAYS=8
-ssh=""
-trans=""
-l=" -l"
+ssh=
+trans=
 c=" -c"
 enc=false
 etc=~/.rdup
 force=false
 verbose=false
 
-while getopts "E:k:vfgzxhV" o; do
+while getopts "E:k:vfgzxhVX:Y:" o; do
         case $o in
 		E)
                 if [[ -z "$OPTARG" ]]; then
@@ -59,6 +60,9 @@ while getopts "E:k:vfgzxhV" o; do
                 fi
                 E=" -E $OPTARG "
                 ;;
+		Y|X)
+		trans="$trans -$o $OPTARG";
+		;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
                         echo2 "-k needs an argument"
@@ -137,7 +141,6 @@ if [[ ${dest:0:6} == "ssh://" ]]; then
 	BACKUPDIR=${rest/$h/}
 
 	c="-c"
-	l=""	# enable race checking in rdup
 	if [[ -z $u ]]; then
 		ssh=" ssh -x $h"
 	else
@@ -165,7 +168,7 @@ if [[ -z $ssh ]]; then
 else
         pipe="rdup-tr$trans | $ssh rdup-up$OPT -t $BACKUPDIR/$NOW"
 fi
-cmd="rdup$E$x$l -N $STAMP $LIST $DIRS | $pipe"
+cmd="rdup$E$x -N $STAMP $LIST $DIRS | $pipe"
 
 if ! $force; then
         if [[ -z $ssh ]]; then
