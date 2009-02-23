@@ -42,6 +42,32 @@ is_plain(gchar *s) {
 	return TRUE;
 }
 
+/*
+ * don't do anything with the strings .. and .
+ */
+gchar *
+dot_dotdot(gchar *q, gchar *p, gboolean abs) 
+{
+	gchar *r = NULL;
+
+	if (strcmp(q, "..") == 0) {
+		if (p)
+			r =  g_strdup_printf("%s/%s", p, "..");
+		else
+			abs ?  (r = g_strdup("/..")) :
+				(r = g_strdup(".."));
+	}
+
+	if (strcmp(q, ".") == 0) {
+		if (p)
+			r =  g_strdup_printf("%s/%s", p, ".");
+		else
+			abs ?  (r = g_strdup("/.")) :
+				(r = g_strdup("."));
+	}
+	return r;
+}
+
 /* encrypt and base64 encode path element
  * return the result
  */
@@ -131,7 +157,7 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
  */
 gchar *
 crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
-	gchar *q, *c, *crypt, *xpath, d;
+	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
 
 	/* links might have relative targets */
@@ -142,14 +168,9 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 		d = *c;
 		*c = '\0';	
 
-		/* don't encrypt '..' */
-		if (strcmp(q, "..") == 0) {
-			if (xpath)
-				xpath = g_strdup_printf("%s/%s", xpath, "..");
-			else 
-				abs ?  (xpath = g_strdup("/..")) :
-					(xpath = g_strdup(".."));
-
+		/* don't decrypt '..' and '.' */
+		if ( (t = dot_dotdot(q, xpath, abs)) ) {
+			xpath = t;
 			q = c;
 			*c = d;
 			continue;
@@ -180,7 +201,7 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 gchar *
 decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 
-	gchar *path, *q, *c, *plain, d;
+	gchar *path, *q, *c, *t, *plain, d;
 	gboolean abs;
 
 	/* links */
@@ -191,14 +212,9 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 		d = *c;
 		*c = '\0';	
 
-		/* don't decrypt '..' */
-		if (strcmp(q, "..") == 0) {
-			if (path)
-				path = g_strdup_printf("%s/%s", path, "..");
-			else 
-				abs ?  (path = g_strdup("/..")) :
-					(path = g_strdup(".."));
-
+		/* don't decrypt '..' and '.' */
+		if ( (t = dot_dotdot(q, path, abs)) ) {
+			path = t;
 			q = c;
 			*c = d;
 			continue;
