@@ -7,11 +7,12 @@
 
 #include "rdup-tr.h"
 #include "base64.h"
+
+#ifdef HAVE_LIBNETTLE
 #include <nettle/aes.h>
 
 extern guint opt_verbose;
 
-#ifdef HAVE_LIBNETTLE
 
 /** 
  * init the cryto
@@ -263,4 +264,4 @@ crypt_key(gchar *file)
 	}
 	return buf;
 }
-#endif
+#endif /* HAVE_LIBNETTLE */
