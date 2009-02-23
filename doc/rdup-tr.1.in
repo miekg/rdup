@@ -108,6 +108,19 @@ with this option you can read a list of path names.
 .B \-O
 Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.
 .TP
+.B \-X \fIkey\fR
+Read the encryption key from the file key and encrypt all paths
+with AES and this key. After the encryption the binary data is
+converted into ascii using an URL save version of base64 encode.
+
+The encryption key file must be only one line. The key size
+must be 16, 24 or 32 bytes. Anything above 32 will be truncated.
+.TP
+.B \-Y \fIkey\fR
+Read the decryption key from the file key and decrypt all paths
+with AES and this key. Before the encryption the pathn names
+are converted to binary by using an URL save version of base64 decode.
+.TP
 .B \-c
 Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
 output redirected.

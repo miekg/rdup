@@ -30,8 +30,11 @@ crypt_init(gchar *key, guint length, gboolean crypt)
 static gboolean
 is_plain(gchar *s) {
 	char *p;
+	/* isascii is also not real ALL valid unix
+	 * filenames...
+	 */
 	for (p = s; *p; p++)
-		if (!isalnum(*p))
+		if (!isascii(*p))
 			return FALSE;
 		
 	return TRUE;
@@ -111,6 +114,8 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	 * text assume this was the case. 
 	 */
 	if (!is_plain((char*) dest)) {
+		fprintf(stderr, "Returning original [%s] ->%s<\n",
+				b64, dest);
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);
 	} 
