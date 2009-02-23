@@ -361,7 +361,7 @@ main(int argc, char **argv)
 	
 	for (i = 1; i < argc; i++) {
 		if (!g_path_is_absolute(argv[i])) 
-		    path = abspath(g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[i]));
+		    path = abspath(g_strdup_printf("%s/%s", pwd, argv[i]));
 		else
 		    path = abspath(argv[i]);
 

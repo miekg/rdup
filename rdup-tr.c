@@ -108,7 +108,7 @@ decrypt_entry(struct r_entry *e, GHashTable *tr)
 
         return d;
 }
-#endif
+#endif /* HAVE_LIBNETTLE */
 
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last

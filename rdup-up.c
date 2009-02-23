@@ -155,7 +155,7 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	if (!g_path_is_absolute(argv[0])) 
-		path = abspath(g_strdup_printf("%s%c%s", pwd, DIR_SEP, argv[0]));
+		path = abspath(g_strdup_printf("%s/%s", pwd, argv[0]));
 	else
 		path = abspath(argv[0]);
 
