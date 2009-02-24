@@ -40,6 +40,6 @@ gchar *
 dir_parent(gchar *p)
 {
 	gchar *p2;
-	p2 = g_strdup_printf("%s%c%s", p, DIR_SEP, "..");
+	p2 = g_strdup_printf("%s/%s", p, "..");
 	return p2;
 }

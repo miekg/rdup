@@ -1,0 +1,1918 @@
++d 0755 0 0 5 0
+/home+d 0755 1000 1000 11 0
+/home/miekg+d 0775 1000 1000 16 0
+/home/mi/ekg/bin+- 0775 1000 1000 19 9138
+/home/mi/ekg/bin/VI01BLOCK02138
+#!/bin/sh
+EDITOR=${EDITOR-vi}
+
+if test "$1" = "-g"
+then
+	GROUP="TRUE"
+	shift
+fi
+
+for feil
+do
+user=`whoami`
+
+if test -z "$feil"
+then
+	case $user in
+	*)
+		echo "Usage: $0 [-g] <RCS filename>"
+		echo "	-g checks on group access rather than user access."
+		exit 1
+	;;
+	esac
+fi
+
+if test ! -f "$feil"
+then
+	echo "File $feil does not exist."
+	echo "Do you want me to create the file and bring it under RCS?"
+	read ack
+	if test "$ack" = "y"
+	then
+		touch $feil
+		chmod 444 $feil
+		rcs -i -q $feil
+	else
+		echo "No changes made."
+		continue
+	fi
+fi
+
+owner=`ls -l $feil | awk '{print $3}'`
+group=`ls -lg $feil | awk '{print $3}'`
+usergroup=`groups | grep $group`
+
+if test ! -f "`dirname $feil`/RCS/`basename $feil`,v" -a ! -f "$feil,v"
+then
+	echo "File not yet under RCS. Do you want me to put it under RCS?"
+	read ack
+	if test "$ack" != "y"
+	then
+		echo "No changes made."
+		continue
+	else
+		ci -q $feil
+	fi
+fi
+
+if test "$GROUP" != "TRUE"
+then
+	if test "$owner" != "$user" 
+	then
+		echo "You should su $owner first or use the -g option."
+		exit 1
+	fi
+else
+	if test -z "$usergroup"
+	then
+		echo "No group permission."
+		exit 1
+	fi
+fi
+
+# Check to see if any changes have been made by an unsuspecting user
+if `rcsdiff $feil > /dev/null 2> /dev/null`
+then
+	:
+else
+	echo
+	echo 'These undocumented changes have been made:'
+	echo
+	rcsdiff -q $feil
+	echo
+	echo 'Do you want these changes to be discarded?'
+	read ack
+	if test "$ack" = "y"
+	then
+		co -f -l -q $feil
+		ci -u $feil
+	else
+		rcs -l -q $feil
+		ci -u -q $feil
+	fi
+	echo
+fi
+
+if `co -l -q $feil`
+then
+	echo
+	ack="X"
+	while `test "$ack" != "y"`
+	do
+		${EDITOR} $feil
+		if `rcsdiff -q $feil >/dev/null`
+		then
+			echo 'No changes made'
+			ack="y"
+		else
+			rcsdiff -q $feil
+			echo
+			echo "Are these changes correct? (y/n/p/q)"
+			echo "        (yes/no/pause/quit, no changes)"
+			read ack
+			if test "$ack" = "p"
+			then
+				echo "Use exit to return."
+				echo "Please note $feil may be changed."
+				echo
+				sh
+			fi
+			if test "$ack" = "q"
+			then
+				co -f -l -q $feil
+				echo
+				ack="y"
+			fi
+		fi
+	done
+	ci -u -q $feil
+	echo
+	continue
+else	
+	echo
+	echo "No changes made."
+	continue
+fi
+
+done
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 39 902
+/home/miekg/bin/apache2-ssl-certificate01BLOCK00902
+#!/bin/sh -e
+
+if [ "$1" != "--force" -a -f /etc/apache2/ssl/apache.pem ]; then
+  echo "/etc/apache2/ssl/apache.pem exists!  Use \"$0 --force.\""
+  exit 0
+fi
+
+if [ "$1" = "--force" ]; then
+  shift
+fi
+
+echo
+echo creating selfsigned certificate
+echo "replace it with one signed by a certification authority (CA)"
+echo
+echo enter your ServerName at the Common Name prompt
+echo
+echo If you want your certificate to expire after x days call this programm 
+echo with "-days x" 
+
+# use special .cnf, because with normal one no valid selfsigned
+# certificate is created
+
+export RANDFILE=/dev/random
+openssl req $@ -config /etc/apache-ssl/ssleay.cnf \
+  -new -x509 -nodes -out /etc/apache2/ssl/apache.pem \
+  -keyout /etc/apache2/ssl/apache.pem
+chmod 600 /etc/apache2/ssl/apache.pem
+ln -sf /etc/apache2/ssl/apache.pem \
+  /etc/apache2/ssl/`/usr/bin/openssl \
+  x509 -noout -hash < /etc/apache2/ssl/apache.pem`.0
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 18 14
+/home/miekg/bin/cx01BLOCK00014
+chmod +x "$@"
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 21 1651
+/home/miekg/bin/diary01BLOCK01651
+#!/bin/bash
+
+
+# default maak notitie
+EDITOR=vim
+# git kan niet overweg met een absolute padnaam
+# gpg encrypt de entries. We laten dit doen door VIM
+# die snapt gewoon .gpg extensies
+DOCDIR=docs/.diary
+
+CMD=$(basename $0)
+
+if [ "$1" = "-h" ]; then
+    echo "Gebruik: diary cat [YYYY-[MM-[DD]]] | ls N | wc"
+    echo "         diary [yesterday|gisteren]"
+    exit 0
+fi
+
+if [ ! -d ~/$DOCDIR ]; then
+    echo $CMD: ~/$DOCDIR moet een directory zijn >&2
+    exit 1
+fi
+
+case $1 in
+    cat)
+	#2 heeft jaar 2008, maand 2008-04 of dag 2008-04-15
+	P=$2
+	case $P in
+	    yest*|gist*)
+		P=$(date --date '1 day ago' +%Y-%m-%d)
+	    ;;
+	    la*)
+	        P=$(ls -tr ~/$DOCDIR | tail -1)
+	    ;;
+	esac
+	for i in ~/$DOCDIR/$P*; do
+	    # with zero files * does not expand
+	    if [ -f $i ]; then
+		echo $i
+		if echo $i | grep -q '.gpg$'; then
+		    # gpg extension
+		    gpg -d $i
+		else
+		    cat $i
+		fi
+		echo \$
+	    fi
+	done
+	exit 0
+    ;;
+
+    ls)
+	# $2 heeft aantal
+	ls ~/$DOCDIR | sort -n | tail -$2
+	exit 0
+    ;;
+
+    wc)
+	ls ~/$DOCDIR | wc -l
+	exit 0
+    ;;
+
+    *)
+    # een argument als yesterday of gisteren snappen we wel
+    case $1 in
+    yest*|gist*)
+	DIARY=$(date --date '1 day ago' +%Y-%m-%d_%H:%M).$$.gpg
+	;;
+    *)
+	DIARY=$(date +%Y-%m-%d_%H:%M).$$.gpg
+	;;
+    esac
+    DIARY=$DOCDIR/$DIARY
+
+    if $EDITOR -c 'set ft=mkd' ~/$DIARY; then
+	if ! [ -s ~/$DIARY ]; then
+	    echo $CMD: lege notitie >&2
+	    rm -f ~/$DIARY
+	    exit 0
+	else
+	    ( cd ; git add -- $DIARY )
+	    if [ $? -ne 0 ]; then
+		echo $CMD: git add faalde >&2
+	    else
+		echo $CMD: commiting >&2
+		( cd ; git commit -m"commit dagboek" $DIARY )
+	    fi
+	fi
+    fi
+    ;;
+esac
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 24 152
+/home/miekg/bin/docpurge01BLOCK00152
+#!/bin/bash
+# delete stuff in /usr/share/doc
+
+DOCDIR=/usr/share/doc
+for i in $DOCDIR/*; do
+    rm -rf $i
+done
+echo $0: Removed docs from /usr/share/doc
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 19 207
+/home/miekg/bin/eee01BLOCK00207
+#!/bin/zsh
+
+case $1 in 
+	off)
+		xrandr --output LVDS --mode 800x480
+		xrandr --output VGA --off
+		;;
+	12*)
+		xrandr --output VGA --mode 1280x1024
+		;;
+	10*|*)
+		xrandr --output VGA --mode 1024x768
+		;;
+esac
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 21 4543
+/home/miekg/bin/gb.pl01BLOCK04543
+#!/usr/bin/perl
+
+use DBI;
+use strict;
+
+my $dbh;
+my $dryrun = 0;
+my %genre = (
+'none', 			'none',
+'Misc', 			'Misc',
+'Comics & Graphic Novels', 	'Comics',
+'Games', 			'Comics',
+'Language Arts & Disciplines',	'Art',
+'Art', 				'Art',
+'Music', 			'Art',
+'Sports & Recreation', 		'Recreation',
+'Cooking',			'Cooking',
+'Literature',			'Literature',
+'Mathematics', 		'Science',
+'Technology', 		'Science',
+'Science', 		'Science',
+'Political Science', 	'Science',
+'Social Science', 	'Science',
+'Business & Economics', 'Science',
+'Psychology', 		'Science',
+'Computer viruses', 	'Computer',
+'Computers', 		'Computer',
+'Computer programming', 'Computer',
+'Juvenile Fiction', 	'Fiction',
+'Fiction', 		'Fiction',
+'Humor', 		'Fiction',
+'Science Fiction',	'Science Fiction',
+'Fantasy',		'Fantasy',
+'dictionary',		'Encyclopedia',
+'Travel',		'Travel'
+	);
+
+sub normalize_genre {
+    my $g = shift;
+    if ($genre{$g}) {
+	print "** Genre genormaliseerd naar $genre{$g}\n";
+	return $genre{$g};
+    } else {
+	return $g;
+    }
+}
+
+# title:author:genre:year of first publication
+sub details {
+    my @html = @_;
+
+    my @author = ();
+    my @details = ();
+    my $i = 0;
+    my $j = 0;
+    my $s = 0;
+    # read ISBN numbers
+    foreach (@html) {
+	next if /^[ \t]*$/;
+	s/^[ \t]+//;
+#	print;
+	# 3 of 3 on 9780201541991. (0.01 seconds)
+	if (/(\d) of (\d) on/) {
+	    my $aantal = $2;
+	    if ($aantal gt 1) {
+		print "** Meer dan 1 boek gevonden, neem de eerste hit\n";
+#		return ();
+	    }
+	}
+	if ($i) {
+	    if (/sponsored links/i) {
+		print "** Sponsered link, continue\n";
+		$s = 1;
+		next;
+	    }
+
+	    if ($s == 1) {
+		# reclame is altijd van bol.com... dit veranderd nog wel eens dus!
+		if (/www.bol.com/) {
+		    $s = 0;
+		}
+		next;
+	    }
+
+	    if ($j == 0) {
+		# title
+		chomp;
+		s/[ \t]+$//;
+		s/^ ?//;
+		# may some times contain - Page xxx
+		s/ - Page.*$//;
+		push @details, $_;
+	    } elsif ($j == 1) {
+		chomp;
+		s/[ \t]+$//;
+		s/^by //;
+		@author = split /[ \t]+-[ \t]+/;
+		# it happens that there is no genre, in that case we find the year in the genre 
+		# fix this
+		if ($author[1] =~ /^\d+$/) {
+		    ($author[2], $author[1]) = ($author[1], "");
+		}
+		if ($author[1] eq "") {
+		    # no genre
+		    $author[1] = "none";
+		}
+		push @details, @author[0..2];
+	    }
+	    $j++;
+	}
+	if (/list.*view.*cover.*view/i) { $i = 1; }
+	return @details if $j > 1;
+    }
+    return ();
+}
+
+sub retrieve {
+    my $isbn = shift;
+    my $sth = $dbh->prepare('SELECT * FROM books WHERE isbn = ?')
+	or die "Couldn't prepare statement: " . $dbh->errstr;
+    $sth->execute($isbn);
+    while (my @data = $sth->fetchrow_array()) {
+	#print "@data" . "\n";
+    }
+# ... We have to do this after the while loop that fetches whatever rows were available, because with some
+# databases you don't know how many rows there were until after you've gotten them all.
+    my $row = $sth->rows;
+    $sth->finish;
+    if ($dryrun == 0) {
+        return ($row == 0);
+    } else {
+	return 1;
+    }
+}
+
+sub insert {
+    my ($isbn, $title, $author, $genre, $year, $epoch) = @_;
+
+    $genre = lc normalize_genre $genre;
+    print join "|", $title, $author, $genre, $year, $epoch . "\n";
+    if ($dryrun == 0) {
+	my $sth = $dbh->prepare('INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+	    or die "Couldn't prepare statement: " . $dbh->errstr;
+	$sth->execute(undef, $isbn, "$title", "$author", "$genre", $year, $epoch, undef) 
+	    or die "Couldn't insert book: " . $dbh->errstr;
+	$sth->finish;
+    } else {
+	print "** No commit\n";
+    }
+}
+
+$dbh = DBI->connect("dbi:SQLite:dbname=biblio.db", "", "");
+# optional argument
+if ($ARGV[0] eq "-n") {
+    print "** Dryrun, geen DB commits\n";
+    $dryrun = 1;
+    shift;
+}
+if ($ARGV[0] eq "-g") {
+    # print genres
+    my %uniq;
+    foreach (values %genre) {
+	$uniq{lc $_} = 1;
+    }
+    print join "\n", keys %uniq;
+    #print "\n";
+    exit 0;
+}
+
+# read isbn numbers
+while(<>) {
+    chomp;
+    if (! /^\d+$/) {
+	print "** Ongeldig\n";
+	next;
+    }
+    my @html = `links -width 200 -dump "http://books.google.com/books?q=+$_&btnG=Search+Books"`;
+# title,author,genre,year of first publication
+    my @det = details(@html);
+    if (scalar @det == 0) {
+	print "** Onbekend\n";
+    } else {
+	my $epoch = time();
+
+	# genre
+	if ($det[2] =~ /pages/) {
+	    # problably couldn't fetch it
+	    $det[2] = "none";
+	}
+	# first published, if empty, make it up
+	if ($det[3] eq "") {
+	    $det[3] = "0";
+	}
+
+	if (retrieve $_) {
+	    insert $_, $det[0], $det[1], $det[2], $det[3], $epoch;
+	} else {
+	    print "** Boek al aanwezig: $_: $det[0]\n";
+	}
+    }
+}
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 21 1556
+/home/miekg/bin/gconf01BLOCK01556
+#!/bin/zsh
+
+# set gnome specific settings
+GC=gconftool-2
+
+for type keyname value in \
+    string  /desktop/gnome/background/picture_filename ~/.themes/eunight2_pv_big.jpg \
+    string  /apps/metacity/general/focus_mode sloppy \
+    string  /apps/metacity/general/action_double_click_tittlebar toggle_shade \
+    bool    /apps/metacity/general/visual_bell True \
+    string  /apps/metacity/general/theme Metabox \
+    string  /apps/metacity/general/visual_bell_type frame_flash \
+    string  /apps/metacity/global_keybindings/switch_to_workspace_left "<Control>Left" \
+    string  /apps/metacity/global_keybindings/switch_to_workspace_right "<Control>Right" \
+    string  /apps/metacity/global_keybindings/run_command_1 "<Control>Return" \
+    string  /apps/metacity/keybinding_commands/command_1 ~/bin/xterm \
+    integer /apps/metacity/general/num_workspaces 4 \
+    string /apps/gnome-terminal/keybindings/prev_tab "<Shift>Left" \
+    string /apps/gnome-terminal/keybindings/next_tab "<Shift>Right" \
+    bool   /apps/gnome-terminal/profiles/Default/default_show_menubar False \
+    bool   /apps/gnome-terminal/profiles/Default/login_shell True \
+    string /apps/gnome-terminal/profiles/Default/background_type transparant \
+    string /apps/gnome-terminal/profiles/Default/scrollbar_position hidden \
+    string /apps/gnome-terminal/profiles/Default/font "Terminus 9" \
+    float  /apps/gnome-terminal/profiles/Default/background_darkness 0.85 \
+    bool   /apps/gnome/interface/cursor_blink False;\
+do
+    gconftool-2 -t $type -s $keyname $value
+done
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 21 1432
+/home/miekg/bin/gitvi01BLOCK01432
+#!/bin/zsh
+# a wrapper around git and vi
+# (c) Copyright Miek Gieben, 2009
+# Licensed under GPL v3
+# expands $[H]ash$ to $[H]ash: file short_hash date committer $
+# block quotes are there to fool gitvi
+# $Hash$
+
+[[ ! -x =git ]] && exit 1
+
+who=${SUDO_USER:-$LOGNAME}
+full=$(getent passwd $who | awk -F: '{ gsub(/,*/, ""); print $5 }')
+author="$full <$who@atoom.net>"
+
+function usage {
+    cat <<-EOF
+ gitvi [-h] [-m MSG] FILE [FILE]...
+
+ use git and vi together
+
+     -m MSG    use MSG as commit message
+     -h        this help
+EOF
+    exit
+}
+
+zparseopts -D -K -- m:=o_msg h=o_help
+[[ $? != 0 || "$o_help" != "" ]] && usage
+o_msg=$o_msg[2]
+
+for file in "$@"; do
+    dir=$(dirname "$file")
+    cd "$dir"
+    base=$(basename "$file")
+
+    if [[ x"$(git rev-parse --git-dir 2>/dev/null)" = x"" ]]; then
+	# make a new one in $PWD
+	git init || exit 1
+    fi
+    chmod +w "$base" 2> /dev/null
+
+    if ${EDITOR:-/usr/bin/vi} "$base"; then
+	[[ ! -e $base ]] && exit 0
+	git add $base
+	# collapse $Hash$ line
+	sed -i -e 's/\$[H]ash:.*\$/$H''ash$/' "$base"
+	if [[ -z "$o_msg" ]]; then
+	    git commit --author "$author" "$base"
+	else
+	    git commit -m "$o_msg" --author "$author" "$base"
+	fi
+    fi
+
+    id=$(git-show -s --pretty=format:$base\ %h\ %ci\ $who%n -- "$base") 
+    [[ -z $id ]] && exit 1
+
+    # re-add $Hash$ line
+    sed -i -e 's/\$[H]ash\$'/\$H''ash:\ $id\ \$/ "$base"
+
+    chmod a-w $base 2> /dev/null
+    cd - >/dev/null
+done
+01BLOCK00000
+01BLOCK00000
++- 0664 1000 1000 23 1243
+/home/miekg/bin/gitvi.101BLOCK01243
+'\" t
+.TH GITVI 1 "27 Dec 2008" "0.1.0" "gitvi"
+
+.SH NAME
+gitvi \- a wrapper around git and vi(m)
+
+.SH SYNOPSIS
+gitvi [-m MSG] [-h] [\fIFILE\fR]
+
+.SH DESCRIPTION
+Edit files and commit them to a git repository. If FILE is not
+given nothing is done.
+
+All the directories from the current one up to the root are
+search for a .git directory. If no directory is found
+a new git repository is created in the directory where
+FILE is located. A new repository will never be created in the root directory.
+.PP
+The special sequence $Hash$ is expanded by \fBgit-vi\fR to 
+
+.RS
+$Hash: sha1hash filename date committer $
+.RE
+.PP
+This expanded $Hash$ syntax is \fInot\fR commited to git, this
+is done after the commit has taken place. This means there will
+also be a diff between the file on disk and the one committed in
+git.
+
+Note, due to the expansion of $Hash$ it is impossible to edit
+\fBgit-vi\fR with \fBgit-vi\fR.
+
+.SH OPTIONS
+.TP
+.B o
+\-h
+a short unhelpfull help message.
+.TP
+.B o
+\-m MSG
+use MSG as a commit message, when editing multiple files \fIall\fR
+edits will get this a their commit message.
+
+.SH AUTHOR
+Miek Gieben <miek@miek.nl>
+
+.SH LICENSE
+Licensed under the GPL version 3. Copyright (c) Miek Gieben, 2009
+
+.SH SEE ALSO
+vim(1), git(1).
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 25 504
+/home/miekg/bin/htmlwdiff01BLOCK00504
+#!/bin/sh
+#
+# htmlwdiff
+# Requires: wdiff from ftp://ftp.gnu.org/gnu/wdiff/
+# $Id: htmlwdiff,v 1.1 2004/01/05 09:39:55 leinen Exp leinen $
+#
+: ${TMPDIR:=/tmp}
+a1=$TMPDIR/htmlwdiff1.$$
+a2=$TMPDIR/htmlwdiff2.$$
+sed -e 's/&/&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' $1 > $a1
+sed -e 's/&/&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' $2 > $a2
+echo "<pre>"
+wdiff -w "<strike><font color=red>" -x "</font></strike>" -y "<strong><font color=green>" -z "</font></strong>" $a1 $a2
+echo "</pre>"
+rm -f $a1
+rm -f $a2
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 23 1169
+/home/miekg/bin/nbadmin01BLOCK01169
+#!/bin/bash
+
+COM_BASE="/home/miekg/miek.nl/blog/comments"
+NB_BASE="/home/miekg/miek.nl/blog"
+
+# a clone of listadmin, but then for acking comments in my site
+
+for art in $COM_BASE/*.txt; do
+    com=$art/new/*
+    bart=$(basename $art)
+    title=$(grep '^TITLE' $NB_BASE/data/${bart//e/} | head -1)
+    set -- $com     # turn $com in $@
+    while (($# > 0)); do
+	if [ "$(basename $1)" = "*" ]; then
+	    # empty dir
+	    shift
+	    continue
+	fi
+
+	echo "> ${title//TITLE: /}"
+	echo "> $(basename $art)"
+	echo " >> Comment: $(basename $1)"
+	cat $1 | sed -e 's/^/    /' -e '2,/^.*@.*\..*$/G'
+	echo
+
+	read -p "(A)approve (D)discard (N)skip [E]edit: [N] "  reply
+	[[ -z $reply ]] && reply="N"
+	case $reply in
+	    A*|a*)
+	    echo "new/$(basename $1) -> ok/$(basename $1)"
+	    if ! mv $1 $art/ok ; then
+		echo "$0: mv failed!" >&2
+	    fi
+	    shift
+	    ;;
+	    D*|d*)
+	    echo rm "new/$(basename $1)"
+	    if ! rm -f $1; then
+		echo "$0: rm failed!" >&2
+	    fi
+	    shift
+	    ;;
+	    N*|n*)
+	    echo "Skipping"
+	    shift
+	    ;;
+	    E*|e*)
+	    ${EDITOR} $1
+	    # no shift
+	    ;;
+	    *)
+	    echo "$0: invalid choice $reply" >&2
+	    ;;
+	esac
+	echo
+    done
+done
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 23 279
+/home/miekg/bin/nbemail01BLOCK00279
+#!/bin/bash
+
+# gather all email addresses of all comments
+# tijdspanne, 30 dagen
+NB_COM_BASE=/home/miekg/miek.nl/blog/comments
+
+com=$(find $NB_COM_BASE -type f -mtime -30 -regex '.*\.txt/ok/[0-9]+_.*')
+set -- $com
+while (($# > 0)); do
+    sed -n 2p < $1
+    shift
+done | sort -u
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 24 655
+/home/miekg/bin/nbnotify01BLOCK00655
+#!/bin/bash
+# send email for the comments that are found in my website
+COM_BASE="/home/miekg/miek.nl/blog/comments"
+NB_BASE="/home/miekg/miek.nl/blog"
+
+BODY=""
+let i=0
+
+for art in $COM_BASE/*.txt; do
+    bart=$(basename $art)
+    title=$(grep '^TITLE' $NB_BASE/data/${bart//e/} | head -1)
+    for com in $art/new/*; do
+	if [[ "$com" = "$art/new/*" ]]; then continue; fi
+	BODY="$BODY\n o \"${title//TITLE: /}\"    ${com//$art\/}"
+	let i=i+1
+    done
+done
+
+if [[ ! -z "$BODY" ]]; then
+    if [[ $i -eq 1 ]]; then
+        echo "$i new comment found for miek.nl, in"
+    else
+        echo "$i new comments found for miek.nl, in"
+    fi
+    echo -e ${BODY}
+fi
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 27 1655
+/home/miekg/bin/post-commit01BLOCK01655
+#!/bin/bash
+
+PATH=$PATH:/usr/local/bin:/usr/local/sbin:.
+TPKG=/home/miekg/bin/tpkg
+SVN_BAR="------------------------------------------------------------------------"
+
+REPOS="$1"
+REV="$2"
+
+START=`date +%s`
+export BUILD_DIR=`mktemp -d /tmp/XXXXXX`
+export MAIL_FILE=`mktemp /tmp/XXXXXXX`
+# if svnlook does not return a full path with a file
+# this will fail
+BRANCH="none"
+LOOK=`/usr/bin/svnlook changed -r$REV $REPOS | /usr/bin/awk '{ print $2 }' | head -1`
+if [[ $LOOK =~ 'trunk/' ]]; then
+        BRANCH="trunk"
+fi
+if [[ $LOOK =~ 'branches/' ]]; then
+        BRANCH=`echo $LOOK | cut -f1,2 -d /`
+fi
+if [[ $LOOK =~ 'tags/' ]]; then
+        BRANCH=`echo $LOOK | cut -f1,2 -d /`
+fi
+
+# checkout to $BUILD_DIR
+/usr/bin/svn co -r$REV file://$REPOS/$BRANCH $BUILD_DIR
+( cd $BUILD_DIR ; svn log -r$REV > $MAIL_FILE )
+svnlook changed -r$REV $REPOS >> $MAIL_FILE
+echo $SVN_BAR >> $MAIL_FILE
+
+echo "PATH=$PATH" > $BUILD_DIR/test/.tpkg.var.master
+echo "TPKG_BUILD=$BUILD_DIR" >> $BUILD_DIR/test/.tpkg.var.master
+
+# RUN THE TESTS
+for tests in $BUILD_DIR/test/*.tpkg
+do
+        /usr/bin/nice /bin/bash \
+       $TPKG -q -b $BUILD_DIR/test -a $BUILD_DIR exe `basename $tests`
+done
+
+END=`date +%s`
+echo ELAPSED: $((END - START)) s >> $MAIL_FILE
+echo $SVN_BAR >> $MAIL_FILE
+
+/bin/bash $TPKG -b $BUILD_DIR/test report >> $MAIL_FILE
+/bin/bash $TPKG -b $BUILD_DIR/test clean
+# END
+
+# SVN STUFF
+echo $SVN_BAR >> $MAIL_FILE
+( cd $BUILD_DIR ; svn diff -rPREV:$REV | diffstat >> $MAIL_FILE )
+echo >> $MAIL_FILE
+( cd $BUILD_DIR ; svn diff -rPREV:$REV >> $MAIL_FILE )
+
+rm -rf $BUILD_DIR
+
+cat $MAIL_FILE | \
+mail -s "[svn: rdup/$BRANCH] r$REV status" miek@atoom.net
+rm -f $MAIL_FILE
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 22 33
+/home/miekg/bin/svnexe01BLOCK00033
+svn propset svn:executable on $@
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 21 31
+/home/miekg/bin/svnid01BLOCK00031
+svn propset svn:keywords Id $@
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 22 528
+/home/miekg/bin/svnlog01BLOCK00528
+#!/bin/sh
+
+# give some more logging
+# syn: svnlog [linestart] [lineend] file(s)
+# nothing is optional - todo
+
+if [ "x$1" = "x" ]; then 
+	echo "svnlog [linestart] [lineend] file(s)"
+	exit
+fi
+
+start=$1
+end=$2
+showdiff=yes
+shift
+shift
+
+for file in $@; do 
+	if [ -f $file ]; then 
+		echo -e " lineno  revision   userid\t"
+		svn ann $file | awk "NR >= $start && NR <= $end" | nl -ba -v$start | tee $$.repo
+		for rev in `cat $$.repo | awk '{ print $2 }' | sort -n | uniq`;  do
+			svn -r$rev log $file 
+		done
+		rm -f $$.repo
+	fi
+done
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 21 163
+/home/miekg/bin/svnrm01BLOCK00163
+#!/bin/zsh
+
+if [[ `pwd` = "/home/miekg" ]]; then
+        exit
+fi
+
+svn st --no-ignore | grep '^[I\?]' | sed 's/^[I\?] *//' | \
+tr '\n' '\0' | xargs -i -0  rm  "{}"
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 17 2947
+/home/miekg/bin/t01BLOCK02947
+#!/usr/bin/perl
+#
+# Dit scriptje laat de NOS teletext zien
+#
+# (c) 2001, 2002, 2003 by Bas Zoetekouw <bas@debian.org>
+# All rights reserved.
+# 
+# Naar een idee van Wouter Bergmann-Tiest
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice and this list of conditions.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice and this list of conditions in the
+#    documentation and/or other materials provided with the distribution.
+#
+#
+## 2003-01-06: niew teletekst format
+## 2003-01-06: kleurtjes
+## 2003-01-06: meer html entities toegevoegd (dank Richard)
+## 2003-01-22: VRT support
+## 2003-02-07: kleur support aangepast
+
+#use strict;
+
+#my $SOURCE = "VRT"; 
+my $SOURCE = "NOS"; 
+my $LYNX;
+
+foreach my $l (qw|/usr/bin/links /usr/bin/lynx lynx|) {
+    if (-x $l) {
+	$LYNX=$l; last;
+    }
+}
+
+my $color = 1;
+if ((scalar @ARGV > 0) && ($ARGV[0] eq "-m")) {
+    $color = 0;
+    shift @ARGV;
+}
+
+my %COLORS = ( "000000" => "\e[30m",  #black
+               "black"  => "\e[30m",  #black
+               "ff0000" => "\e[31m",  #red
+               "red"    => "\e[31m",  #red
+               "00ff00" => "\e[32m",  #green
+               "lime"   => "\e[32m",  #green
+               "0000ff" => "\e[34m",  #blue
+               "blue"   => "\e[34m",  #blue
+               "ffff00" => "\e[33m",  #yellow
+               "yellow" => "\e[33m",  #yellow
+               "ff00ff" => "\e[35m",  #magenta
+               "fuchsia"=> "\e[35m",  #magenta
+               "00ffff" => "\e[36m",  #cyan
+               "aqua"   => "\e[36m",  #cyan
+               "ffffff" => "\e[37m",  #white
+               "white"  => "\e[37m",  #white
+	       "reset"  => "\e[0m");  #reset color
+my %HTML   = ( "&quot;" => '"',
+	"&shy;"  => "",
+	"&lt;"   => '<',
+	"&amp;"  => '&',
+	"&gt;"   => '>');
+
+
+sub display(\@) {
+    my @Output=@{(shift)};
+    my ($print, $last) = (0, 0);
+    foreach my $line (@Output) {
+#	print "--> $line";
+	($print = 1) if ($line =~ s/^.*<pre>//i);
+	($last  = 1) if ($line =~ s/<\/pre>.*$//i);
+
+	next unless ($print==1);
+
+	if ($color==1) { 
+	    foreach (keys %COLORS) {
+		$line =~ s/COLOR=$_[^>]*>/>$COLORS{"$_"}/ig;
+	    } 
+	}
+	foreach (keys %HTML) {
+	    $line =~ s/$_/$HTML{"$_"}/ig;
+	} 
+	$line =~ s,<[^>]+>,,g;
+
+	last if ($last == 1);
+
+	print $line;
+
+    } 
+    print $COLORS{"reset"};
+}
+
+my ($Pagina, $SubPagina) = @ARGV;
+
+$Pagina    = "100"  if  (scalar @ARGV == 0);
+$SubPagina = "1"    if  (scalar @ARGV <= 1);  
+
+my @Output = ("");
+if ($SOURCE eq "NOS") {
+    $SubPagina = sprintf("%02i", $SubPagina);
+    @Output = `$LYNX -source 'http://teletekst.nos.nl/tekst/${Pagina}-${SubPagina}.html'`;
+} elsif ($SOURCE eq "VRT") {
+    @Output = `$LYNX -source 'http://193.121.55.225/tt/tt.php?p=${Pagina}/${SubPagina}&g=0&s=0&r=0&x=1'`
+}
+
+display @Output;
+01BLOCK00000
+01BLOCK00000
++- 0775 1000 1000 20 28303
+/home/miekg/bin/tpkg01BLOCK08192
+#!/bin/bash
+
+# a utlity to run a shar test archive (aka tpkg)
+# Created by Miek Gieben, NLnetLabs, (c) 2005, 2006
+# Licensed under GPL version 2
+
+export TPKG_VAR_MASTER="../.tpkg.var.master"
+export TPKG_VAR_TEST=".tpkg.var.test"
+export TPKG_VERSION="1.11";
+export SHELL="/bin/sh"
+TPKG_LOGGER=/usr/bin/logger
+TPKG_BASE="."
+TPKG_ARGS=""
+TPKG_CURRENT=`pwd`
+TPKG_QUIET=0   # only output err() msgs
+TPKG_KEEP=0    # tpkg create doesn't remove dir/
+TPKG_PASS=0    # how much must succeed
+TPKG_LOG=0     # don't log
+TPKG_PRI=""    # log facility
+
+_DESC_WIDTH=${COLUMNS:-55}
+if [ $_DESC_WIDTH -ge 70 ]; then
+        _DESC_WIDTH=70
+fi
+
+### Helper functions
+function cleanup() {
+        out "[log] Cleaning up"
+	if [[ $TPKG_BASE = "." ]]; then
+        	[[ -f result.$dsc_basename ]] && cp result.$dsc_basename ../
+	else
+	        [[ -f result.$dsc_basename ]] && cp result.$dsc_basename $TPKG_BASE
+	fi
+        cd ..
+	if [[ ! -z "$dir" ]]; then
+		rm -rf `basename $dir`
+	fi
+	cd $TPKG_CURRENT
+}
+
+function cleanup_and_exit() {
+        cleanup; exit 1
+}
+
+function err() {
+        if [[ -z $testname ]]; then
+                echo -e "  $1" 
+        else
+                echo -e "[$testname]  $1" 
+        fi
+}
+
+function tpkg_log() {
+        if [[ $TPKG_LOG -eq 0 ]]; then
+                return
+        fi
+
+        if [[ -e $TPKG_LOGGER ]]; then
+                if [[ -z $TPKG_PRI ]]; then
+                        $TPKG_LOGGER "$1"
+                else
+                        $TPKG_LOGGER -p "$TPKG_PRI" "$1"
+                fi
+        fi
+}
+
+function out() {
+        if [[ $TPKG_QUIET -eq 1 ]]; then
+                return
+        fi
+        if [[ -z $testname ]]; then
+                echo -e "  $1"
+        else
+                echo -e "[$testname]  $1"
+        fi
+}
+
+function epoch() {
+        # make this sorta portable allthough not needed now
+        epoch=0
+        case $OSTYPE in
+                linux*)
+                epoch=`date +%s`
+                ;;
+                freebsd*)
+                epoch=`date +%s`
+                ;;
+        esac
+}
+
+function post() {
+        if [ -f "${dsc_post}" ]; then 
+                err "[log] Executing post script: ${dsc_post} ${TPKG_ARGS}"
+                echo "--------- Start Post Output ------------------ " >> result.$dsc_basename
+                ${SHELL} ${dsc_post} ${TPKG_ARGS} >> result.$dsc_basename
+                echo "----------- End Post Output ------------------ " >> result.$dsc_basename
+                result=$?
+                if [ $result -ne 0 ]; then
+                        err "[warning] Post-script executed with errors: $result."
+                fi
+        fi
+}
+
+function pre() {
+        if [ -f "${dsc_pre}" ]; then 
+                err "[log] Executing pre script: ${dsc_pre} ${TPKG_ARGS}"
+                echo "--------- Start Pre Output ------------------- " >> result.$dsc_basename
+                ${SHELL} ${dsc_pre} ${TPKG_ARGS} >> result.$dsc_basename
+                echo "----------- End Pre Output ------------------- " >> result.$dsc_basename
+                result=$?
+                if [ $result -ne 0 ]; then
+                        err "[warning] Pre-script executed with errors: $result."
+                fi
+        fi
+}
+ 
+function write_done() {
+        # we are executing in a subdir
+        if [ -f "../.done-${testname}" ]; then
+                err "[warning] Overwriting .done-${testname}"
+        fi
+        > ../.done-${testname}
+}
+
+# write done file in current dir
+function write_fake_done() {
+        if [ -f ".done-${testname}" ]; then
+                err "[warning] Overwriting .done-${testname}"
+        fi
+        > .done-${testname}
+}
+
+function mktempdir() {
+        # check if mktemp is there, if not use plain mkdir with $$
+        # as a side effect set $dir
+        dir=
+        case $OSTYPE in
+                solaris*)
+                # use mkdir
+                dir="$1.$$"
+                mkdir "$dir"
+                return
+                ;;
+                *)
+                dir=`mktemp -d "$1"`
+                return
+                ;;
+        esac
+}
+
+function usage() {
+        out "Usage:"
+        out "$0 [OPTIONS] [exe|create|extract|tmpl|fake] test.tpkg"
+        out "or:"
+        out "$0 [OPTIONS] [report|clean|list|desc|help] test.tpkg"
+        out "or:"
+        out "$0 [OPTIONS] clone test1.tpkg test2.tpkg"
+        out
+        out "Testing"
+        out " exe.........:\texecute a test, safe the result result.testname"
+        out " c | create..:\tcreate a .tpkg out of the test.{pre, post, test} files"
+        out " e | extract.:\textract a .tpkg to tmp. dir"
+        out " t | tmpl....:\tcreate empty template files for a new test"
+        out " f | fake....:\tfake the running of test, but do create a .done file"
+        out 
+        out "When no action is given a test is executed"
+        out
+        out "Reporting/Cleanup"
+        out " clean........:\tremove all the result files"
+        out " cd | cleandir:\tremove all .dir directories"
+        out " r  | report..:\tcreate a nice report from all the result files"
+        out " cl | clone...:\tclone test1.tpkg to test2.tkpg"
+        out " l  | list....:\tprint the files of the test to stdout"
+        out " d  | desc....:\tprint the test's description to stdout"
+        out " h  | help....:\tprint the help message for this test, if available"
+        out
+        out " When multiple tests depend on a single other test, this"
+        out " other test is only executed once."
+	out
+	out "OPTIONS"
+	out " -h\t\tshow this help"
+	out " -v\t\tshow version"
+        out " -q\t\tonly print errors"
+        out " -l\t\tlog test name to syslog when starting the test (using logger)"
+        out " -p PRI\tlog using PRI as priority"
+        out " -k\t\tdon't remove test directory when creating/executing a tpkg package"
+        out " -n NUM\tif less than NUM of the tests are passed exit with 1"
+        out " \t\tOtherwise exit with 0. Only valid when running tpkg report"
+	out " -b DIR\tuse DIR is a base directory in stead of ."
+	out " -a ARGS\tpass the string ARGS through to the test scripts"
+        out 
+        out " (C) NLnetLabs, Miek Gieben. Licensed under the GPL version 2."
+}
+
+function version() {
+	out "tpkg (test package), version $TPKG_VERSION"
+	out "Written by Miek Gieben, NLnet Labs"
+	out
+	out "Copyright (C) 2005, 2006 NLnet Labs"
+	out
+	out "This is free software; see the source for copying conditions. There is no"
+	out "warranty; even not for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE"
+}
+
+function cleanreport() {
+        # cleanup all the result. files
+        for result in `ls result.* 2>/dev/null`; do 
+                err "[log] rm $result"
+                rm $result
+        done
+        # rm any .var files
+        out "[log] rm `basename $TPKG_VAR_MASTER`"
+        rm -f `basename $TPKG_VAR_MASTER`
+        rm -f $TPKG_VAR_TEST
+        out "[log] rm .done files"
+        rm -f .done*
+	cd $TPKG_CURRENT
+}
+
+function cleandirs() {
+        for result in `ls -d *.dir 2> /dev/null`; do
+                err "[log] rm -rf $result"
+                rm -rf $result
+        done
+}
+
+function report() {
+        # generate a report from the result. files.
+        passed=0
+        failed=0
+        unknown=0
+        first=0
+
+        tp="passed"
+        tf="failed"
+        tu="unknown"
+        for result in `ls result.* 2>/dev/null` ; do 
+                passfailed=`head -1 $result | awk ' { print $2 }'`
+                basename=`head -3 $result | grep BaseName | awk -F': ?' ' { print $2 }'`
+                description=`head -4 $result | grep Description | awk -F': ?' ' { print $2 }'`
+                runend=`head -2 $result | grep DateRunEnd | awk -F': ?' ' { print $2 }'`
+                runstart=`head -5 $result | grep DateRunStart | awk -F': ?' ' { print $2 }'`
+
+                # truncate the description to 35 chars
+                if [ ${#description} -gt $_DESC_WIDTH ]; then
+                        description=${description:0:$_DESC_WIDTH}
+                        description=$description"..."
+                fi
+
+                if [ -z $runend ]; then
+                        runend=0
+                fi
+                if [ -z $runstart ]; then
+                     01BLOCK08192
+   runstart=0
+                fi
+
+                ((period=$runend - $runstart))
+                # prefix period if < 9
+                if [ $period -lt 10 ]; then
+                        period="0$period"
+                fi
+
+                case $passfailed in
+                "FAILED")
+                        if [ $first -eq 0 ]; then
+                                echo "   STATUS    : ELAPSED : TESTNAME : TESTDESCRIPTION"
+                                first=1
+                        fi
+                        echo -e "!! $passfailed !! : $period s : $basename : $description"
+                        ((failed=$failed + 1)) 
+                        failed_tests="$failed_tests $basename"
+                        tf="FAILED"
+                        ;;
+                "PASSED")
+                        if [ $TPKG_QUIET -eq 0 ]; then
+                                if [ $first -eq 0 ]; then
+                                        echo "   STATUS    : ELAPSED : TESTNAME : TESTDESCRIPTION"
+                                        first=1
+                                fi
+                                echo -e "** $passfailed ** : $period s : $basename : $description"
+                        fi
+                        ((passed=$passed + 1)) 
+                        tp="PASSED"
+                        ;;
+                *) 
+                        if [ $first -eq 0 ]; then
+                                echo "   STATUS    : ELAPSED : TESTNAME : TESTDESCRIPTION"
+                                first=1
+                        fi
+                        echo -e "-- $passfailed -- : $period s : $basename : $description"
+                        ((unknown=$unknown + 1)) 
+                        failed_tests="$failed_tests $basename"
+                        tu="UNKNOWN"
+                        ;;
+                esac
+        done
+        ((total=$passed + $failed + $unknown))
+        if [[ $total -eq 0 ]]; then
+                fper=0
+                pper=0
+                uper=0
+        else
+                fper=`echo -e "scale=4\n$failed/$total*100" | bc | sed 's/00$//'`
+                pper=`echo -e "scale=4\n$passed/$total*100" | bc | sed 's/00$//'`
+                uper=`echo -e "scale=4\n$unknown/$total*100" | bc | sed 's/00$//'`
+        fi
+        echo
+        echo -e "$tp: $passed ($pper %)\t$tf: $failed ($fper %)\t$tu: $unknown ($uper %)"
+
+        # for each failed test include the complete result file
+        # $i is basename
+        echo
+        for i in $failed_tests; do 
+                echo --------------- Start Output: $i ------------------
+                cat result.$i
+                echo ---------------   End Output: $i   ------------------
+        done
+	cd $NT
+        if [[ $TPKG_PASS -gt 0 ]]; then
+                if [[ $passed -lt $TPKG_PASS ]]; then
+                        exit 1
+                fi
+        fi
+        exit 0
+}
+
+# clone test1 to test2
+function clone() {
+        $0 extract $test1.tpkg
+        if [ $? -ne 0 ]; then
+                err "[fatal] Extract of $test1.tpkg failed. Abort."
+                exit 1
+        fi
+
+        if [ ! -d "$test1.dir" ]; then
+                err "[fatal] No $test1.dir directory? Abort."
+                exit 1
+        fi
+        cd $test1.dir
+        for i in $test1.* ; do 
+                ext=`echo $i | sed s/$test1//`
+                if [ ! -z "$ext" ]; then
+                        # rename the content of the files too
+                        sed  "s/$test1/$test2/g" < $i > $i.$$
+                        mv $i.$$ $i
+                        # rename
+                        mv $i $test2$ext
+                fi
+        done
+        # edit the dsc file too
+        # update the date
+        sed "s/^CreationDate:.*/CreationDate: `date`/"  < $test2.dsc > $test2.dsc.$$
+        mv $test2.dsc.$$ $test2.dsc
+
+        cd ..
+        # rename the dir
+        mv $test1.dir $test2.dir
+        if [ $TPKG_KEEP -eq 0 ]; then
+                $0 create $test2.tpkg
+        else
+                $0 -k create $test2.tpkg
+        fi
+        if [ $? -ne 0 ]; then
+                err "[warning] Creating of $test2.tpkg failed."
+        fi
+	cd $TPKG_CURRENT
+}
+
+# try to find the specific cmd
+function find_cmd {
+        which "${i}" >/dev/null
+        if [ $? -ne 0 ]; then                
+                err "[fatal] CmdDepend \"$i\" could not be satisfied: not found. Abort."
+                cleanup; exit 1  
+        fi
+}
+
+# extract a tpkg to the given dir. The dir must exist already.
+function extract_tpkg_to { # <dir>
+        out "[log] Extracting..."
+        # tar xfz ${testname}.tpkg -C $1 2>/dev/null
+	gzip -cd ${testname}.tpkg | (cd $1; tar xf -) 2>/dev/null
+	if [ $? -ne 0 ]; then
+		err "[fatal] Could not untar archive. Abort."
+		cd $TPKG_CURRENT; exit 1
+	fi
+	# now stuff is in: $1/testname.dir/...
+	mv $1/${testname}.dir $1/${testname}.dir.tmp$$
+	mv $1/${testname}.dir.tmp$$/* $1/.
+	rm -rf $1/${testname}.dir.tmp$$
+}
+
+### MAIN 
+# check the arguments
+while getopts ":vhkqb:a:n:lp:" o
+do case "$o" in
+	b) 	TPKG_BASE="$OPTARG";;
+	h) 	usage; exit 0;;
+	v) 	version; exit 0;;
+        l)      TPKG_LOG=1;;
+        p)      TPKG_PRI="$OPTARG";;
+	a) 	TPKG_ARGS="$OPTARG";;
+        q)      TPKG_QUIET=1;;
+        k)      TPKG_KEEP=1;;
+        n)      TPKG_PASS=$OPTARG
+                if [ $TPKG_PASS -eq 0 ]; then
+                        err "[fatal] A null or non numerical value is not valid. Abort."
+                        exit 1
+                fi
+                ;;
+        *)      err "[fatal] Unknown option. Abort."; exit 1;;
+esac
+done
+shift $(($OPTIND - 1))
+
+# go to the base dir
+if [ ! -d $TPKG_BASE ]; then
+	err "[fatal] Directory $TPKG_BASE does not exist. Abort"
+	exit 1
+else
+	cd $TPKG_BASE
+fi
+
+# either create a tpkg (ie. call shar) or exe (do a test)
+goal=$1
+archive=$2
+if [ -z "${goal}" ]; then
+        usage
+        cd $TPKG_CURRENT; exit 0
+fi
+
+# allow short goals
+case $goal in
+        # none for exe - short enough
+        c)      goal="create";;
+        e)      goal="extract";;
+        t)      goal="tmpl";;
+        f)      goal="fake";;
+        cd)     goal="cleandir";;
+
+        r)      goal="report";;
+        # none for clean
+        cl)     goal="clone";;
+        l)      goal="list";;
+        d)      goal="desc";;
+        h)      goal="help";;
+esac
+
+### REPORT ###
+# no extra args required
+if [ "${goal}" = "report" ]; then
+        report;
+fi
+if [ "${goal}" = "clean" ]; then
+        cleanreport; exit 0
+fi
+if [ "${goal}" = "cleandir" ]; then
+        cleandirs; exit 0
+fi
+if [ "${goal}" = "clone" ]; then
+        test1=`basename $2 .tpkg`
+        test2=`basename $3 .tpkg`;
+        if [ -z "$test1" -o -z "$test2" ]; then
+                usage; cd $TPKG_CURRENT; exit 0
+        fi
+        clone; exit 0
+fi
+
+if [ -z "${archive}" ]; then
+        out "[log] Defaulting to \`execute'"
+        archive=$1
+        goal="exe"
+fi
+
+if [ -z $archive ]; then
+        usage; cd $TPKG_CURRENT; exit 0
+fi
+
+testname=`basename $archive .tpkg`
+testpath=`dirname $archive`
+dsc_file=$testname.dsc                  
+if  [ -z $testname ]; then
+        err "[fatal] The test package should have a .tpkg extension. Abort."
+	cd $TPKG_CURRENT; exit 1
+fi
+
+if [ "${goal}" = "fake" ]; then
+        out "[log] Writing .done-$testname file."
+        write_fake_done; exit 0
+fi
+
+if [ $goal = "create" ]; then
+### CREATE ###
+# get all files with the same basename except those that ends in .tpkg
+
+        # check for shar
+        which tar >/dev/null
+        if [ $? -ne 0 ]; then
+                err "[fatal] Tar command not found. Abort."
+                cd $TPKG_CURRENT; exit 1
+        fi
+
+        # assume there is a dir named $testname.dir
+        if [ ! -d "${testname}.dir" ]; then
+                err "[fatal] No $testname.dir directory found. Abort."
+        	cd $TPKG_CURRENT; exit 1
+        fi
+        cd $testname.dir
+
+        # rm unwanted files
+        cleanreport # this cd's to $TPKG_CURRENT
+        cd - >/dev/null # jump back
+
+        # tar is smart enough to handle this
+        cd ../
+        i=$( ls ${testname}.dir/$testname.* 2>/dev/null )
+        if [ -z "${i}" ]; then
+                err "[fatal] No $testname.* files found. Abort."
+		cd $TPKG_CURRENT; exit 1
+        fi01BLOCK08192
+
+
+
+        # tar --create --file $testname.tpkg --gzip ${testname}.dir
+	tar -cf - ${testname}.dir | gzip - > $testname.tpkg
+	if [ $? -ne 0 ]; then
+		err "[fatal] Tar create error. Abort."
+		cd $TPKG_CURRENT; exit 1
+	fi
+        if [ $TPKG_KEEP -eq 0 ]; then
+                out "[log] Removing member files"
+                rm $i
+        fi
+        if [ $TPKG_KEEP -eq 0 ]; then
+                out "[log] Removing directory"
+                rmdir $testname.dir
+        fi
+	cd $TPKG_CURRENT; exit 0
+fi
+
+### TMPL ####
+# write out a .dsc and touch a .pre/.post/.test
+if [ $goal = "tmpl" ]; then
+        if [ -f $testname.dsc ]; then
+                err "[fatal] $testname.dsc already exists. Abort."
+		cd $TPKG_CURRENT; exit 1
+        fi
+        
+        # make tmp dir
+        dir="$testname.dir"
+        mkdir $dir
+        if [ ! -d $dir ]; then 
+                err "[fatal] Failure to create a temporary working directory. Abort."
+		cd $TPKG_CURRENT; exit 1
+        fi
+        cd $dir
+        
+        cat <<TMPL_EOF > $testname.dsc
+BaseName: $testname
+Version: 1.0
+Description: [Put something nice here]
+CreationDate: `date`
+Maintainer: `grep $LOGNAME /etc/passwd | awk -F: ' { print $5 }' | sed s/,//g`
+Category: 
+Component:
+CmdDepends: 
+Depends: 
+Help: $testname.help
+Pre: $testname.pre
+Post: $testname.post
+Test: $testname.test
+AuxFiles: 
+Passed:
+Failure:
+TMPL_EOF
+        # .help file
+        echo "Please describe how to use this test."  > $testname.help
+        echo "i.e. tpkg -a ARG exe testname:"  >> $testname.help
+        echo "   ARG is used to ..."  >> $testname.help
+
+        # .test file
+        echo "# #-- $testname.test --#" > $testname.test
+        echo "# source the master var file when it's there" >> $testname.test
+        echo "[ -f $TPKG_VAR_MASTER ] && source $TPKG_VAR_MASTER" >> $testname.test 
+        echo "# use $TPKG_VAR_TEST for in test variable passing" >> $testname.test
+        echo "[ -f $TPKG_VAR_TEST ] && source $TPKG_VAR_TEST" >> $testname.test
+
+        # .post file
+        echo "# #-- $testname.post --#" > $testname.post
+        echo "# source the master var file when it's there" >> $testname.post
+        echo "[ -f $TPKG_VAR_MASTER ] && source $TPKG_VAR_MASTER" >> $testname.post 
+        echo "# source the test var file when it's there" >> $testname.post
+        echo "[ -f $TPKG_VAR_TEST ] && source $TPKG_VAR_TEST" >> $testname.post 
+        echo "#" >> $testname.post 
+        echo "# do your teardown here" >> $testname.post
+
+        # .pre file
+        echo "# #-- $testname.pre--#" > $testname.pre
+        echo "# source the master var file when it's there" >> $testname.pre
+        echo "[ -f $TPKG_VAR_MASTER ] && source $TPKG_VAR_MASTER" >> $testname.pre
+        echo "# use $TPKG_VAR_TEST for in test variable passing" >> $testname.pre
+        echo "[ -f $TPKG_VAR_TEST ] && source $TPKG_VAR_TEST" >> $testname.pre
+
+        out "[log] created $testname.{dsc, test, help, pre, post}"
+        out "[log] please create the script(s) and then run: tpkg create $testname.tpkg"
+        out "[log] created $testname in $dir."
+	cd $TPKG_CURRENT; exit 0
+fi
+
+if [ ! -f $archive ]; then
+        err "[fatal] Cannot find the test package: $archive. Abort."
+        cd $TPKG_CURRENT; exit 1
+fi
+
+## EXTRACT
+if [ $goal = "extract" ]; then
+        dir="${testpath}/${testname}.dir"
+        if [ -d $dir ]; then 
+                err "[fatal] Directory $dir already exists. Abort."
+		cd $TPKG_CURRENT; exit 1
+        fi
+        mkdir $dir
+        if [ ! -d $dir ]; then 
+                err "[fatal] Failure to create $dir directory. Abort."
+		cd $TPKG_CURRENT; exit 1
+        fi
+
+	extract_tpkg_to $dir
+        cd $dir
+        trap cleanup_and_exit INT
+
+        # stop here
+        out "[log] extracted $testname.tpkg to $dir."
+        cd $TPKG_CURRENT; exit 0
+fi
+
+## LIST OR DESC OR HELP
+if [ $goal = "list" -o $goal = "desc" -o $goal = "help" ]; then
+        $0 extract ${testname}.tpkg
+        if [ $? -ne 0 ]; then
+                cd $TPKG_CURRENT; exit 1
+        fi
+
+        cd ${testname}.dir/
+        
+        case $goal in
+        list*)
+                cat *
+                ;;
+        desc*)
+                echo -n "$testname: "
+                cat $testname.dsc | awk -F': ?' '/^Description/ { print $2 }'
+                ;;
+        help*)
+                if [ -f $testname.help ]; then
+                        cat $testname.help
+                else
+                        err "[warning] No help file found."
+                fi
+                ;;
+        esac
+        cd $TPKG_CURRENT
+        # dir can go
+        rm -rf ${testname}.dir; exit 0
+fi
+
+trap cleanup_and_exit INT
+
+# make a tmp dir during execution
+if [ "$goal" != "exe" ]; then
+        err "[fatal] What do you mean with $goal?. Abort."
+	cd $TPKG_CURRENT; exit 1
+fi
+
+mktempdir "${testpath}/${testname}.XXXXXX"
+if [ ! -d $dir ]; then 
+        err "[fatal] Failure to create a temporary working directory. Abort."
+	cd $TPKG_CURRENT; exit 1
+fi
+## EXTRACT
+extract_tpkg_to $dir
+cd $dir
+
+### EXE ###
+# extract the information out of the *.dsc files
+if [ ! -f $dsc_file ]; then
+        err "[fatal] Can't locate the description file: $dsc_file. Abort."
+        cleanup; exit 1
+fi
+
+SHELL=`which bash`
+if [ -z ${SHELL} ]; then
+       SHELL=/usr/local/bin/bash
+       if [ ! -x $SHELL ]; then
+               err "[fatal] Can't find the bash shell. Abort."
+               cleanup; exit 1
+       fi
+fi
+
+# check for a .done file
+if [ -f "../.done-${testname}" ]; then
+        out "[log] Found .done-${testname}. Not executing this test."
+        cleanup; exit 0
+fi
+
+# this is the template for .dsc files
+# we need to check if all these files also exist TODO
+dsc_basename=$testname
+function get_field_from_dsc() # fieldname
+{
+	grep "^$1: " $dsc_file | sed -e "s/^$1:[ 	]*//" -e "s/[ 	]*$//"
+}
+dsc_version=`get_field_from_dsc Version`
+dsc_description=`get_field_from_dsc Description`
+dsc_creationdate=`get_field_from_dsc CreationDate`
+dsc_category=`get_field_from_dsc Category`
+dsc_component=`get_field_from_dsc Component`
+dsc_cmddepends=`get_field_from_dsc CmdDepends`
+dsc_depends=`get_field_from_dsc Depends`
+dsc_maintainer=`get_field_from_dsc Maintainer`
+dsc_help=`get_field_from_dsc Help`
+dsc_pre=`get_field_from_dsc Pre`
+dsc_post=`get_field_from_dsc Post`
+dsc_test=`get_field_from_dsc Test`
+dsc_aux=`get_field_from_dsc AuxFiles`
+dsc_passed=`get_field_from_dsc Passed`
+dsc_failure=`get_field_from_dsc Failure`
+
+# consistency check the lot
+for i in $dsc_pre $dsc_post $dsc_test $dsc_help; do
+        if [ ! -z ${i} ]; then
+                if [ ! -f "${i}" ]; then
+                        err "[fatal] File defined, but ${i} cannot be found. Abort."
+                        cleanup; exit 1
+                fi
+        fi
+done
+for i in $dsc_pre $dsc_post $dsc_test $dsc_help; do
+        if [ -z ${i} ]; then
+                if [ -f "${i}" ]; then
+                        err "[fatal] File not defined, but ${i} is included in the package. Abort."
+                        cleanup; exit 1
+                fi
+        fi
+done
+
+# if we depend on another test to that one first and then return
+for deptest in ${dsc_depends}; do
+	cd ..  # go up one dir
+        out "[log] executing dependency test: $deptest"
+        ${SHELL} $0 "-b ${TPKG_BASE}" exe $deptest
+        test_result=$?
+        cd - > /dev/null  # back where we belong
+        if [ $test_result -ne 0 ]; then
+                err "[fatal] Test depends on $deptest which failed.  Abort."
+                cleanup; exit 1
+        fi
+done
+
+# this enhances the template from above
+## Post Processing of some of these variables
+# dsc_aux is a comma seperated list of files, max 8 files
+i=$( echo $dsc_aux | awk -F', ?' '{ print $1 "\n" $2 "\n" $3 "\n" $4 "\n" \
+$5 "\n" $6 "\n" $7 "\n" $8 }' )
+dsc_aux_files=($i)
+dsc_aux_files_total=${#dsc_aux_files[*]}
+# cmd depends
+i=$( echo $dsc_cmddepends | awk -F', ?' '{ print $1 "\n" $2 "\n" $3 "\n" $4 "\n" \
+$5 "\n" $6 "\n" $7 "\n" $8 }' )
+dsc_cmddepends_files=($i)
+dsc_cmddepends_files_total=${#dsc_cmddepends_files[*]}
+
+for i in ${dsc_cmddepends_files[*]}; do
+        find_cmd $i
+done
+# depends can also be a comma seperated list of package
+# TODO 
+
+# check is the aux files are also really in 01BLOCK03727
+the shar
+for i in ${dsc_aux_files[*]}; do
+        if [ ! -f $i ]; then
+                err "[fatal] Aux. file $i must be in the archive. Abort."
+                cleanup; exit 1
+        fi
+done
+
+if [ ! -f $dsc_test ]; then
+        err "[fatal] Can't locate the test script: $dsc_test. Abort."
+        cleanup; exit 1
+fi
+
+### Actual executing of the scripts
+tpkg_log "Starting test: '$dsc_basename'"
+
+epoch  # run before pre()
+echo "BaseName: $dsc_basename" > result.$dsc_basename
+echo "Description: $dsc_description" >> result.$dsc_basename
+echo "DateRunStart: $epoch " >> result.$dsc_basename
+echo "--------------- Test Output ------------------" >> result.$dsc_basename
+
+pre
+
+out "[log] Executing test" 
+
+( ${SHELL} $dsc_test ${TPKG_ARGS} 2>&1 ) >> result.$dsc_basename
+test_result=$?
+epoch   # would like to run after post, but that is not possible :-(
+if [ $test_result -ne 0 ]; then
+        err "[warning] Test executed with errors: $test_result." 
+        echo "!! FAILED !!     !! FAILED !!" > result.$dsc_basename.tmp
+        echo "DateRunEnd: $epoch" >> result.$dsc_basename.tmp
+        err "[log] !! FAILED !!"
+        cat result.$dsc_basename >> result.$dsc_basename.tmp
+        echo "exit code: $test_result" >> result.$dsc_basename.tmp
+        mv result.$dsc_basename.tmp result.$dsc_basename
+        post;
+        if [ $TPKG_KEEP -eq 0 ]; then
+                out "[log] Removing temp directory $dir"
+                cleanup
+        else
+        	out "[log] Keeping temp directory $dir"
+        fi
+        exit 1
+fi
+ 
+cp -f result.$dsc_basename result.$dsc_basename.$$
+
+failed=-1  # -1 undef, 0 passed, 1 failed
+## PASSED
+[ ! -z "${dsc_passed}" ] && egrep "${dsc_passed}" result.$dsc_basename.$$ > /dev/null
+if [ $? -eq 0 ]; then
+        err "[log] ** PASSED **"
+        echo "** PASSED **     ** PASSED **" > result.$dsc_basename.tmp
+        echo "DateRunEnd: $epoch" >> result.$dsc_basename.tmp
+        cat result.$dsc_basename >> result.$dsc_basename.tmp
+        echo "exit code: $test_result" >> result.$dsc_basename.tmp
+        mv result.$dsc_basename.tmp result.$dsc_basename
+        write_done
+        failed=0
+fi 
+## FAILED
+[ ! -z "${dsc_failure}" ] && egrep "${dsc_failure}" result.$dsc_basename.$$ > /dev/null
+# if not found this actually means PASSED
+if [ $? -eq 0 ]; then
+        err "[log] !! FAILED !!"
+        echo "!! FAILED !!     !! FAILED !!" > result.$dsc_basename.tmp
+        echo "DateRunEnd: $epoch" >> result.$dsc_basename.tmp
+        cat result.$dsc_basename >> result.$dsc_basename.tmp
+        echo "exit code: $test_result" >> result.$dsc_basename.tmp
+        mv result.$dsc_basename.tmp result.$dsc_basename
+        failed=1
+else
+        err "[log] ** PASSED **"
+        echo "** PASSED **     ** PASSED **" > result.$dsc_basename.tmp
+        echo "DateRunEnd: $epoch" >> result.$dsc_basename.tmp
+        cat result.$dsc_basename >> result.$dsc_basename.tmp
+        echo "exit code: $test_result" >> result.$dsc_basename.tmp
+        mv result.$dsc_basename.tmp result.$dsc_basename
+        write_done
+        failed=0
+fi
+
+## UNKNOWN
+if [ $failed -eq -1 ]; then
+        # neither failed, not success, unknown
+        err "[log] -- UNKNOWN --"
+        echo "-- UNKNOWN --     -- UNKNOWN --" > result.$dsc_basename.tmp
+        echo "DateRunEnd: $epoch" >> result.$dsc_basename.tmp
+        cat result.$dsc_basename >> result.$dsc_basename.tmp
+        echo "exit code: $test_result" >> result.$dsc_basename.tmp
+        mv result.$dsc_basename.tmp result.$dsc_basename
+        write_done
+        failed=1 # not passed
+fi
+        
+post
+if [ $TPKG_KEEP -eq 0 ]; then
+        out "[log] Removing temp directory $dir"
+        cleanup
+else
+	out "[log] Keeping temp directory $dir"
+fi
+exit $failed
+01BLOCK00000
+01BLOCK00000
++l 0777 1000 1000 23 18
+/home/miekg/bin/tt -> t+l 0777 1000 1000 46 19
+/home/miekg/bin/ztf -> /home/miekg/git/ztf/ztf

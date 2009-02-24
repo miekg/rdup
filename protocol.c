@@ -8,7 +8,13 @@
  * and makes everything else somewhat simpler
  *
  * block header is VERSION BLOCK BLOCKSIZE as in
- * 01BLOCK8192
+ * 01BLOCK08192
+ * So a small 4 byte file becomes:
+ *
+ * 01BLOCK00004
+ * <4 bytes of the file>01BLOCK00000
+ *
+ *
  */
 
 #include "rdup.h"

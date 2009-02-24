@@ -7,7 +7,12 @@
 
 #include "rdup-tr.h"
 #include "base64.h"
+
+#ifdef HAVE_LIBNETTLE
 #include <nettle/aes.h>
+
+extern guint opt_verbose;
+
 
 /** 
  * init the cryto
@@ -31,10 +36,36 @@ static gboolean
 is_plain(gchar *s) {
 	char *p;
 	for (p = s; *p; p++)
-		if (!isalnum(*p))
+		if (!isascii(*p))
 			return FALSE;
 		
 	return TRUE;
+}
+
+/*
+ * don't do anything with the strings .. and .
+ */
+gchar *
+dot_dotdot(gchar *q, gchar *p, gboolean abs) 
+{
+	gchar *r = NULL;
+
+	if (strcmp(q, "..") == 0) {
+		if (p)
+			r =  g_strdup_printf("%s/%s", p, "..");
+		else
+			abs ?  (r = g_strdup("/..")) :
+				(r = g_strdup(".."));
+	}
+
+	if (strcmp(q, ".") == 0) {
+		if (p)
+			r =  g_strdup_printf("%s/%s", p, ".");
+		else
+			abs ?  (r = g_strdup("/.")) :
+				(r = g_strdup("."));
+	}
+	return r;
 }
 
 /* encrypt and base64 encode path element
@@ -111,6 +142,9 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	 * text assume this was the case. 
 	 */
 	if (!is_plain((char*) dest)) {
+		if (opt_verbose > 2)
+			msg("Returning original string '%s\'", b64);
+
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);
 	} 
@@ -123,25 +157,20 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
  */
 gchar *
 crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
-	gchar *q, *c, *crypt, *xpath, d;
+	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
 
 	/* links might have relative targets */
 	abs = g_path_is_absolute(p);
 
 	xpath = NULL;
-	for (q = (p + abs); (c = strchr(q, DIR_SEP)); q++) {
+	for (q = (p + abs); (c = strchr(q, '/')); q++) {
 		d = *c;
 		*c = '\0';	
 
-		/* don't encrypt '..' */
-		if (strcmp(q, "..") == 0) {
-			if (xpath)
-				xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, "..");
-			else 
-				abs ?  (xpath = g_strdup("/..")) :
-					(xpath = g_strdup(".."));
-
+		/* don't decrypt '..' and '.' */
+		if ( (t = dot_dotdot(q, xpath, abs)) ) {
+			xpath = t;
 			q = c;
 			*c = d;
 			continue;
@@ -149,18 +178,18 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 		crypt = crypt_path_ele(ctx, q, strlen(q), tr);
 
 		if (xpath)
-			xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, crypt);
+			xpath = g_strdup_printf("%s/%s", xpath, crypt);
 		else 
-			abs ? (xpath = g_strdup_printf("%c%s", DIR_SEP, crypt)) :
+			abs ? (xpath = g_strdup_printf("/%s", crypt)) :
 				(xpath = g_strdup(crypt));
 		q = c;
 		*c = d;
 	}
 	crypt = crypt_path_ele(ctx, q, strlen(q), tr);
 	if (xpath)
-		xpath = g_strdup_printf("%s%c%s", xpath, DIR_SEP, crypt);
+		xpath = g_strdup_printf("%s/%s", xpath, crypt);
 	else 
-		abs ? (xpath = g_strdup_printf("%c%s", DIR_SEP, crypt)) :
+		abs ? (xpath = g_strdup_printf("/%s", crypt)) :
 			(xpath = g_strdup(crypt));
 	return xpath;
 }
@@ -172,25 +201,20 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 gchar *
 decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 
-	gchar *path, *q, *c, *plain, d;
+	gchar *path, *q, *c, *t, *plain, d;
 	gboolean abs;
 
 	/* links */
 	abs = g_path_is_absolute(x);
 
 	path = NULL;
-	for (q = (x + abs); (c = strchr(q, DIR_SEP)); q++) {
+	for (q = (x + abs); (c = strchr(q, '/')); q++) {
 		d = *c;
 		*c = '\0';	
 
-		/* don't decrypt '..' */
-		if (strcmp(q, "..") == 0) {
-			if (path)
-				path = g_strdup_printf("%s%c%s", path, DIR_SEP, "..");
-			else 
-				abs ?  (path = g_strdup("/..")) :
-					(path = g_strdup(".."));
-
+		/* don't decrypt '..' and '.' */
+		if ( (t = dot_dotdot(q, path, abs)) ) {
+			path = t;
 			q = c;
 			*c = d;
 			continue;
@@ -198,18 +222,18 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 		plain = decrypt_path_ele(ctx, q, strlen(q), tr);
 
 		if (path) 
-			path = g_strdup_printf("%s%c%s", path, DIR_SEP, plain);
+			path = g_strdup_printf("%s/%s", path, plain);
 		else
-			abs ? (path = g_strdup_printf("%c%s", DIR_SEP, plain)) :
+			abs ? (path = g_strdup_printf("/%s", plain)) :
 				(path = g_strdup(plain));
 		q = c;
 		*c = d;
 	}
 	plain = decrypt_path_ele(ctx, q, strlen(q), tr);
 	if (path) 
-		path = g_strdup_printf("%s%c%s", path, DIR_SEP, plain);
+		path = g_strdup_printf("%s/%s", path, plain);
 	else
-		abs ? (path = g_strdup_printf("%c%s", DIR_SEP, plain)) :
+		abs ? (path = g_strdup_printf("/%s", plain)) :
 			(path = g_strdup(plain));
 	return path;
 }
@@ -256,3 +280,4 @@ crypt_key(gchar *file)
 	}
 	return buf;
 }
+#endif /* HAVE_LIBNETTLE */

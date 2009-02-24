@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export RDUP_SOURCE=~/git/rdup
+export ZTF_TEST_00_COMPILE=1
+
+ztf run $@

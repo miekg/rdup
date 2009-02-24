@@ -31,14 +31,14 @@ char * abspath(char *path) {
 		return NULL;
 
 	/* add closing / (guard) */
-	if (abspath2[i - 1] != DIR_SEP) {
+	if (abspath2[i - 1] != '/') {
 		abspath2 = g_realloc(abspath2, i + 2);
-		abspath2[i] = DIR_SEP;
+		abspath2[i] = '/';
 		abspath2[i + 1] = '\0';
 	}
 
 	/* jump from slash to slash */
-	for (p = abspath2; (c = strchr(p, DIR_SEP)); p++) {
+	for (p = abspath2; (c = strchr(p, '/')); p++) {
 		*c = '\0';
 		if (*p == '\0' || (strcmp(p, ".") == 0)) {
 			/* do nothing */
@@ -46,25 +46,25 @@ char * abspath(char *path) {
 		} else if (strcmp(p, "..") == 0) {
 			/* go back a slash */
 			if (abspath == NULL || abspath[0] == '\0') {
-				abspath = g_strdup(DIR_SEP_STR);
+				abspath = g_strdup("/");
 			} else {
-				slash = strrchr(abspath, DIR_SEP);
+				slash = strrchr(abspath, '/');
 				*slash = '\0';
-				*c = DIR_SEP;
+				*c = '/';
 			}
 		} else {
 			if (abspath == NULL || abspath[0] == '\0' ||
-				(strcmp(abspath, DIR_SEP_STR) == 0) )  {
-				abspath = g_strconcat(DIR_SEP_STR, p, NULL);
+				(strcmp(abspath, "/") == 0) )  {
+				abspath = g_strconcat("/", p, NULL);
 			} else {
-				abspath = g_strjoin(DIR_SEP_STR, abspath, p, NULL);
+				abspath = g_strjoin("/", abspath, p, NULL);
 			}
-			*c = DIR_SEP;
+			*c = '/';
 		}
 		p = c;
 	}
 	if (abspath == NULL || abspath[0] == '\0')
-		abspath = g_strdup(DIR_SEP_STR);
+		abspath = g_strdup("/");
 
 	return abspath;
 }

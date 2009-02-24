@@ -16,6 +16,7 @@ o PCRE library
 
 optional:
 o Libarchive - if you want to have rdup-tr
+o LibNettle  - if you want rdup-tr to do path encryption
 
 rdup should compile on all unix platforms out there. It is tested on
 the following
@@ -23,11 +24,14 @@ o Linux
 o Solaris
 o FreeBSD
 
+./configure will try to do the right thing, if you don't have
+specific libraries certain functionality isn't built.
+
 2/ DIFFERENCE WITH RSYNC
 
 While rsync really works well, I wanted to have the ability to gzip
 and/or encrypt the backed up files. rsync can not do that. That is why I
-wrote rdup, which, with the help of some scripts will do that.
+wrote rdup, which, with the help of rdup-tr and rdup-up will do that.
 
 3/ DOCUMENTATION
 
@@ -35,8 +39,8 @@ rdup is a utility inspired by rsync and the plan9 way of doing backups.
 rdup it self does not backup anything, it only print a list of absolute
 filenames to standard output. Auxiliary scripts are needed that act on
 this list and implement the backup strategy.  This way rdup can be kept
-lean and mean. Currently the (stripped) rdup executable measures 32 KB (on
-AMD64) and I don't expect that to increase much.
+lean and mean. Currently the (stripped) rdup executable measures 31 KB (on
+i386) and I don't expect that to increase much.
 
 The manual page explains rdup's options and usage, see rdup(1). For an
 introduction into making backups see rdup-backups(1).
@@ -45,7 +49,7 @@ The file list as printed starts with the root of the file dump and then
 descends into directories. This way all top level directories can be
 created in sequence. If you process the files in the same order no magic
 is needed to create directories that otherwise might be missing. 
-With the -R flag the order is reversed, as script must then create
+With the -R flag the order is reversed, a script must then create
 intermediate directories - but it can set the permissions of these
 later on. This allows directories with 600 permissions to contain
 files.

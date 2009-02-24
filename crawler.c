@@ -63,13 +63,13 @@ dir_prepend(GTree *t, char *path)
 	len   = strlen(path);
 
 	/* add closing / */
-	if (path2[len - 1] != DIR_SEP) {
+	if (path2[len - 1] != '/') {
 		path2 = g_realloc(path2, len + 2);
-		path2[len] = DIR_SEP;
+		path2[len] = '/';
 		path2[len + 1] = '\0';
 	}
 
-	for (p = path2 + 1; (c = strchr(p, DIR_SEP)); p++) {
+	for (p = path2 + 1; (c = strchr(p, '/')); p++) {
 		*c = '\0';
 		if (lstat(path2, &s) != 0) {
 			msg(_("Could not stat path `%s\': %s"), path2, strerror(errno));
@@ -92,7 +92,7 @@ dir_prepend(GTree *t, char *path)
 			e = *(sym_link(&e, NULL));
 
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
-		*c = DIR_SEP;
+		*c = '/';
 		p = c++;
 	}
 	g_free(path2);
@@ -149,11 +149,11 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 				!strcmp(dent->d_name, ".."))
 			continue;
 
-		if (strcmp(path, DIR_SEP_STR) == 0)  {
-			curpath = g_strdup_printf("%c%s", DIR_SEP, dent->d_name);
+		if (strcmp(path, "/") == 0)  {
+			curpath = g_strdup_printf("/%s", dent->d_name);
 			curpath_len = strlen(curpath);
 		} else {
-			curpath = g_strdup_printf("%s%c%s", path, DIR_SEP, dent->d_name);
+			curpath = g_strdup_printf("%s/%s", path, dent->d_name);
 			curpath_len = strlen(curpath);
 		}
 

@@ -44,7 +44,7 @@ Written by Miek Gieben.
 Report bugs to <miek@miek.nl>. 
 
 .SH SEE ALSO
-http:/www.miek.nl/projects/rdup/ is the main site of rdup. And rdup(1),
+http:/www.miek.nl/projects/rdup/ is the main site of rdup. Also see rdup(1),
 rdup-tr(1) or rdup-backups(7).
 
 .SH COPYRIGHT

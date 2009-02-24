@@ -1,23 +1,25 @@
-22 Feb 2009: 0.8.0 Miek <miek@miek.nl>
+26? Feb 2009: 0.9.0 Miek <miek@miek.nl>
   - major feature enhancements - 
   - again: internal file list change -
-  * internal filelist: add uid/gid here, see 
+  * internal filelist: add uid/gid here. Why? See 
     http://www.miek.nl/blog/archives/2009/02/21/backing_up_remotely_as_a_normal_user/index.html
-  * rdup*: make the -c output block based.
+  * rdup*: make the -c output block based:
     Every BUFSIZE bytes a block is started.
     The last block is signaled with a size
-    of 0. This eleminates the race condition,
+    of 0. This eliminates the race condition,
     removes an extra stat() for every file
     and makes rdup-tr not use any temporary
     files. (Idea from: John Goerzen)
   * rdup: -c output changes for files: use blocks
   * rdup: -l switch is not needed anymore, so removed
-  * rdup-up: expects the new -c format as input
-  * rdup-tr: still expects normal rdup list as input
-  * rdup-tr: do away with the tmp file (John Goerzen)
-    this saves a lot of IO as it is all piping now
   * rdup: add -M same as -N but check the mctime of the
     timestamp file
+  * rdup-up: expects the new -c format as input
+  * rdup-up: better handle non-writable directories;
+    make them temp. writable (if possible)
+  * rdup-tr: add path encryption/decryption. Not only
+    can you encrypt the files' contents but also
+    the actual file names. See options -X and -Y.
 
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>

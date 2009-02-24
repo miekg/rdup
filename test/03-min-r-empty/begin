@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
+[[ -z $ZTF_TEST_00_COMPILE ]] && { echo "no succesful compile"; exit 1; }
 # this should work otherwise
 cd $RDUP_SOURCE
 

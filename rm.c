@@ -33,7 +33,7 @@ rm(gchar *p)
 						return FALSE;
 					}
 					while ( (dirp = (gchar*)g_dir_read_name(d))) {
-						dirp = g_strdup_printf("%s%c%s", p, DIR_SEP, dirp);
+						dirp = g_strdup_printf("%s/%s", p, dirp);
 						rm(dirp);
 						g_free(dirp);
 					}

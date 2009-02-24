@@ -147,7 +147,8 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	}
 	
 	g_free(buf);
-	fclose(out); 
+	if (ok)
+		fclose(out); 
 	return TRUE;
 }
 
