@@ -2,9 +2,8 @@ TODO:
  - rdup internal filelist is fast becoming identical to its
    output. So any special reading of this list can go
    and we can just use stuff for entry.c
-   extending this list also has other interesting applictions
+   extending this list also has other interesting applications
  - with libnettle we have sha1 there too, so sha1.c can go
- - crypt path, check relative links with more path
 
 :general:
 - move to more glib functions

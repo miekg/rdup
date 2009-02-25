@@ -97,7 +97,7 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 gboolean
 mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 {
-	FILE *out;
+	FILE *out = NULL;
 	char *buf;
 	size_t  bytes;
 	gboolean ok = TRUE;
@@ -111,8 +111,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 		}
 	}
 
-	/* XXX uhm opt_dry ? */
-	if (!(out = fopen(e->f_name, "w"))) {
+	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
 			st = dir_write(dirname(e->f_name));
 			if (!(out = fopen(e->f_name, "w"))) {
@@ -131,6 +130,10 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	if (ok && !opt_dry)
 		chmod(e->f_name, e->f_mode);
 
+	/* we need to read the input to not upset
+	 * the flow into rdup-up, but we are not
+	 * creating anything when opt_dry is active
+	 */
 	buf   = g_malloc(BUFSIZE + 1);
 	while ((bytes = block_in_header(in)) > 0) {
 		if (block_in(in, bytes, buf) == -1) {

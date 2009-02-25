@@ -88,9 +88,12 @@ block_in_header(FILE *f) {
 	/* version check */
 	c[0] = fgetc(f);
 	c[1] = fgetc(f);
-	if (c[0] != PROTO_VERSION_MAJOR &&
-			c[1] != PROTO_VERSION_MAJOR) {
-		msg("Wrong protocol version");
+	if (c[0] != PROTO_VERSION_MAJOR ||
+			c[1] != PROTO_VERSION_MINOR) {
+		msg(_("Wrong protocol version `%c%c\': want `%c%c'"),
+				c[0], c[1],
+				PROTO_VERSION_MAJOR,
+				PROTO_VERSION_MINOR);
 		return -1;
 	}
 
@@ -103,7 +106,8 @@ block_in_header(FILE *f) {
 
 	if (c[0] != 'B' || c[1] != 'L' || c[2] != 'O' ||
 			c[3] != 'C' || c[4] != 'K') {
-		msg("BLOCK protocol seperator not found");
+		msg(_("BLOCK protocol seperator not found: `%c%c%c%c%c\'"),
+				c[0], c[1], c[2], c[3], c[4]);
 		return -1;
 	}
 
@@ -116,7 +120,7 @@ block_in_header(FILE *f) {
 	c[5] = fgetc(f); /* \n */
 	if (!isdigit(c[0]) || !isdigit(c[1]) || !isdigit(c[2]) ||
 			!isdigit(c[3]) || !isdigit(c[4])) {
-		msg("Illegal block size");
+		msg(_("Illegal block size"));
 		return -1;
 	}
 	
@@ -124,11 +128,11 @@ block_in_header(FILE *f) {
 			c[0], c[1], c[2], c[3], c[4]));
 
 	if (bytes > BUFSIZE) {		/* out of bounds...? */
-		msg("Block size larger then BUFSIZE");
+		msg(_("Block size larger then BUFSIZE"));
 		return -1;
 	}
 	if (opt_verbose > 2)
-		msg("Block seen, start read of %d bytes", bytes);
+		msg(_("Block seen, start read of %d bytes"), bytes);
 	
 	return bytes;
 }

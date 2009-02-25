@@ -6,6 +6,8 @@
 
 #include "rdup-up.h"
 
+extern gboolean opt_dry;
+
 /* ENOENT */
 /* errno */
 
@@ -18,6 +20,9 @@ rm(gchar *p)
 	GDir *d;
 	struct stat st;
 	struct stat *st2;
+
+	if (opt_dry)
+		return TRUE;	/* the very easy life */
 
 	if (lstat(p, &st) == -1)
 		return TRUE;    /* the easy life */
@@ -70,7 +75,7 @@ rm(gchar *p)
 				/* we have no access, ok ... */
 				st2 = dir_write(dirname(p));
 				if (remove(p) == -1) {
-					msg("Still failing to remove `%s\'`: %s", p, strerror(errno));
+					msg("Failed to remove `%s\'`: %s", p, strerror(errno));
 					dir_restore(dirname(p), st2);
 					return FALSE;
 				}

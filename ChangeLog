@@ -12,7 +12,7 @@
     files. (Idea from: John Goerzen)
   * rdup: -c output changes for files: use blocks
   * rdup: -l switch is not needed anymore, so removed
-  * rdup: add -M same as -N but check the mctime of the
+  * rdup: add -M same as -N but check the mtime of the
     timestamp file
   * rdup-up: expects the new -c format as input
   * rdup-up: better handle non-writable directories;

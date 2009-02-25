@@ -17,7 +17,8 @@ structure with a rdup archive.
 .TP
 .B \-s N
 Strip N path components from a pathname. If the resulting pathname is
-empty after this operation the entire entry is skipped.
+empty after this operation the entire entry is skipped. Not yet
+implemented.
 .TP
 .B \-n
 Do a dry-run and do not create anything on disk.

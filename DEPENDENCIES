@@ -13,6 +13,12 @@ Some very small shell scripts are included in the sh/ directory
 they depend on bash and GNU date and GNU cp.
 
 rdup-tr has an extra dependency on
-o libarchive
+o libarchive 
 
-rdup-up has no extra dependencies.
+If libarchive is not found rdup-tr is not built.
+
+rdup-up has an extra dependencies on
+o lbnettle
+
+If libnettle is not found rdup-up will not be able to do
+path encryption (-X/-Y options).

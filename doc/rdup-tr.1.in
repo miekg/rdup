@@ -51,8 +51,8 @@ As said \fBrdup-tr\fR works by forking off a number of child processes (those
 commands named with the \-P option(s)), interconnecting these
 with pipes. The current file is connected to the first child.
 The output created by these child processes is
-captured back by the parent. 
-The contents is then put in an archive. As a picture says more
+captured by the parent (rdup-tr).
+The contents is then echoed to stdout in an archive format. As a picture says more
 than a thousand words here is an ASCII image:
 
 .RS
@@ -93,8 +93,8 @@ filelist	    DH	H
 
 .SH OPTIONS
 .TP
-.B \-P\fIcommand\fR,\fIopt1\fR,...,\fIopt7\fR
-Filter all output through command, \fIopt1\fR through \fIopt7\fR are
+.B \-P\fIcommand\fR,\fIopt0\fR,...,\fIopt6\fR
+Filter all output through command, \fIopt0\fR through \fIopt6\fR are
 given as options to the command. Multiple \-P's can be used, there is
 however a maximum of seven options for each command. The options
 are separated with commas, there must be \fIno\fR space in between.
@@ -107,7 +107,8 @@ Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
 with this option you can read a list of path names.
 .TP
 .B \-O
-Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'.
+Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'. If
+defaults to 'rdup'.
 .TP
 .B \-X \fIkey\fR
 Read the encryption key from the file key and encrypt all paths
@@ -137,7 +138,7 @@ Print rdup-tr's version.
 A short help.
 
 .SH EXAMPLES
-I have new a new favorite pipeline since rdup release 0.8.0
+I have a new favorite pipeline since rdup release 0.9.0
 
     rdup /dev/null /home | \\
     rdup-tr -Pgzip -Pmcrypt,-fKEY,-c -O tar -Xboe | \\
