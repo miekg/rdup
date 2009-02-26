@@ -20,15 +20,15 @@ The output is equal to rdup -c ouput.\n\
 \n\
     OPTIONS:\n\
         -c\t\tforce output to tty\n\
-        -Pcmd,opt1,...,opt7\n\
-	    \t\tfilter through cmd\n\
+        -P CMD,opt0,...,opt6\n\
+	    \t\tfilter through CMD\n\
 	\t\tthis may be repeated, output will be filtered\n\
 	\t\tthrough all commands\n\
-	-Xfile\t\tencrypt all paths with AES and the key from file\n\
-	-Yfile\t\tdecrypt all paths with AES and the key from file\n\
+	-X FILE\t\tencrypt all paths with AES and the key from FILE\n\
+	-Y FILE\t\tdecrypt all paths with AES and the key from FILE\n\
 	-h\t\tthis help\n\
 	-V\t\tprint version\n\
-        -Ofmt\t\toutput format: pax, cpio, tar or rdup\n\
+        -O FMT\t\toutput format: pax, cpio, tar or rdup\n\
 	\t\trdup uses format: \"%p%T %b %u %g %l %s\\n%n%C\"\n\
 	-L\t\tset input format to a list of pathnames\n\
 	-v\t\tbe more verbose and print processed files to stderr\n\

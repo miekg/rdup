@@ -243,26 +243,26 @@ entry_print_data(FILE *out, char n, struct r_entry *e)
  * print function
  */
 void
-entry_print(FILE *out, char plusmin, struct r_entry *e, char *fmt)
+entry_print(FILE *out, guint pm, struct r_entry *e, char *fmt)
 {
 	char *pos;
-	if ((plusmin == '+') && (opt_modified == FALSE)) {
+	if ((pm == PLUS) && (opt_modified == FALSE)) {
 		return;
 	}
 
-	if ((plusmin == '-') && (opt_removed == FALSE)) {
+	if ((pm == MINUS) && (opt_removed == FALSE)) {
 		return;
 	}
 
 	if (opt_verbose > 1) {
 		fputs("** ", stderr);
-		fputc(plusmin, stderr);
+		fputc(pm == PLUS ? '+' : '-', stderr);
 		fprintf(stderr, " %s\n", e->f_name);
 	}
 
 	/* next check if we can read the file, if not - skip it and don't emit
 	 * anything */
-	if (S_ISREG(e->f_mode) && plusmin == '+' && e->f_lnk == 0) {
+	if (S_ISREG(e->f_mode) && pm == PLUS && e->f_lnk == 0) {
 		if (access(e->f_name, R_OK) == -1) {
 			msg("Unable to open file `%s\': %s", e->f_name, strerror(errno));
 			return;
@@ -284,10 +284,10 @@ entry_print(FILE *out, char plusmin, struct r_entry *e, char *fmt)
 						  fputc('%', out);
 						  break;
 					case 'p':
-						  fputc(plusmin, out);
+						  fputc(pm == PLUS ? '+' : '-', out);
 						  break;
 					case 'C':
-						  if (plusmin == '+') {
+						  if (pm == PLUS) {
 						  	entry_cat_data(out, e);
 						  }
 						  break;
@@ -353,7 +353,7 @@ gfunc_backup(gpointer data, gpointer value,
 		return FALSE;
 
 	if (S_ISDIR(((struct r_entry*)data)->f_mode)) {
-		entry_print(stdout, '+', (struct r_entry*)data, opt_format);
+		entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 		return FALSE;
 	} else {
 		#if 0
@@ -366,11 +366,11 @@ gfunc_backup(gpointer data, gpointer value,
 		}
 		switch (opt_timestamp) {
 			case NULL_DUMP:
-				entry_print(stdout, '+', (struct r_entry*)data, opt_format);
+				entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 				return FALSE;
 			default: /* INC_DUMP */
 				if (((struct r_entry*)data)->f_ctime > opt_timestamp) {
-					entry_print(stdout, '+', (struct r_entry*)data, opt_format);
+					entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 				}
 				return FALSE;
 		}
@@ -394,7 +394,7 @@ gfunc_remove(gpointer data, gpointer value,
 		msg(_("Internal error: NO_PRINT in remove tree!"));
 		return FALSE;
 	}
-	entry_print(stdout, '-', (struct r_entry*)data, opt_format);
+	entry_print(stdout, MINUS, (struct r_entry*)data, opt_format);
 	return FALSE;
 }
 
@@ -412,7 +412,7 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 	if (value == NO_PRINT) 
 		return FALSE;
 
-	entry_print(stdout, '+', (struct r_entry*)data, opt_format);
+	entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 	return FALSE;
 }
 

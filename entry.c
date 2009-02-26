@@ -43,6 +43,8 @@ extern gchar *opt_decrypt_key;
  * wants to parse rdup -c ouput. This cannot be handled
  * with opt_input because rdup-tr cannot handle this
  * so opt_input is for normal rdup inupt and
+ *
+ * XXX could use a cleanup
  */
 struct r_entry *
 parse_entry(char *buf, size_t l, struct stat *s, gint stat) 
@@ -60,7 +62,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
 				return NULL;
 			}
-			e->plusmin     = '+';
+			e->plusmin     = PLUS;
 			e->f_name      = g_strdup(buf);
 			e->f_name_size = strlen(buf);
 			e->f_mode      = s->st_mode;
@@ -96,9 +98,12 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				msg("First character should \'-\' or \'+\', `%s\' at line: %zd", buf, l);
 				return NULL;
 			}
-			e->plusmin = buf[0];
+			if (buf[0] == '+')
+				e->plusmin = PLUS;
+			if (buf[0] == '-')
+				e->plusmin = MINUS;
 
-			if (opt_output != O_RDUP && e->plusmin == '-') {
+			if (opt_output != O_RDUP && e->plusmin == MINUS) {
 				msg("Removing files is not supported for any output except rdup");
 				return NULL;
 			}
@@ -209,7 +214,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 						j = lstat(e->f_name, s);
 					}
 
-					if (j == -1 && e->plusmin == '+') {
+					if (j == -1 && e->plusmin == PLUS) {
 						msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
 						return NULL;
 					}
@@ -267,7 +272,7 @@ rdup_write_header(struct r_entry *e)
 	
 	if (t == 'b' || t == 'c') {
 		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %d,%d\n%s", 
-			e->plusmin,		
+			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
 			(unsigned long)e->f_uid,
@@ -277,7 +282,7 @@ rdup_write_header(struct r_entry *e)
 			e->f_name);
 	} else {
 		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
-			e->plusmin,		
+			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
 			(unsigned long)e->f_uid,

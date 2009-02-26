@@ -31,7 +31,7 @@ sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
 #ifdef HAVE_LIBNETTLE
-/* same as in crawler.c */
+/* same as in crawler.c XXX  */
 static struct r_entry *
 entry_dup(struct r_entry *f)
 {
@@ -205,7 +205,7 @@ stdin2archive(GSList *child)
 			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
 #endif
 
-		if (rdup_entry->plusmin == '-') {
+		if (rdup_entry->plusmin == MINUS) {
 			if (opt_output == O_RDUP) {
 				rdup_write_header(rdup_entry_c);
 				goto not_s_isreg;

@@ -434,5 +434,6 @@ main(int argc, char **argv)
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
+	g_hash_table_destroy(linkhash);
 	exit(EXIT_SUCCESS);
 }

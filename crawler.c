@@ -12,12 +12,6 @@ extern time_t opt_timestamp;
 extern gint opt_verbose;
 extern GSList *pregex_list;
 
-#if 0
-/* xattr.c */
-uid_t read_attr_uid(char *path, uid_t u);
-gid_t read_attr_gid(char *path, gid_t g);
-#endif
-
 static struct r_entry *
 entry_dup(struct r_entry *f)
 {

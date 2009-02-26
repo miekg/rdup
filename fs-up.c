@@ -213,7 +213,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 		printf("%s\n", e->f_name);
 
 	switch(e->plusmin) {
-		case '-':
+		case MINUS:
 			if (opt_dry)
 				return TRUE;
 
@@ -226,7 +226,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 				s = e->f_name;
 			}
 			return rm(s);
-		case '+':
+		case PLUS:
 			/* opt_dry handled within the subfunctions */
 			if (S_ISDIR(e->f_mode))
 				return  mk_dir(e, &st, exists);	

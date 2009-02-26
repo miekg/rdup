@@ -1,12 +1,15 @@
 #ifndef _ENTRY_H
 #define _ENTRY_H
 
+#define PLUS	    1
+#define MINUS	    0
+
 /* almost the whole stat structure... */
 struct r_entry {
-	char plusmin;	        /* '-' remove, '+' add. Added because of rdup-tr */
+	guint plusmin:1;        /* '-' remove, '+' add. Added because of rdup-tr */
+	guint f_lnk:1;		/* 0, 1 if hardlink */
         char *f_name;		/* filename, or hardlink target */
         size_t f_name_size;	/* size of filename */
-	guint f_lnk;		/* 0, 1 if hardlink */
         uid_t f_uid;		/* uid */
         gid_t f_gid;		/* gid */
         mode_t f_mode;		/* mode bits */

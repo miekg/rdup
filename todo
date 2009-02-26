@@ -1,20 +1,23 @@
 TODO:
- - rdup internal filelist is fast becoming identical to its
-   output. So any special reading of this list can go
-   and we can just use stuff for entry.c
-   extending this list also has other interesting applications
- - with libnettle we have sha1 there too, so sha1.c can go
+
+post 1.0
+- rdup internal filelist is fast becoming identical to its
+  output. So any special reading of this list can go
+  and we can just use stuff for entry.c
+  extending this list also has other interesting applications
+- with libnettle we have sha1 there too, so sha1.c can go
+- remove a lot of parsing code - entry.c rdup.c have some
+  incommon - check this. Less code -> less maintenance
+- drop pcre3 and use regexp from glib
+- i18n - it's ALL C now - so much more easy, than the 
+  C/Perl/sh kludge we had
 
 :general:
-- move to more glib functions
-  + pcre regexp?
-- massive move to glib, g_progname etc
-- glib test framework also?
+- glib test unit framework also?
 - test -0 for rdup-*
-- check memory and see if we can do make it use less
-  use g_free() more
-- *testing* *testing* *testing* 
 - paths in rdup-simple.sh for rdup-ln.sh
+- add extended attributes? man 5 tar explains how to do it, but it
+  is A LOT of work AND it is not portable over unixes...?
 
 :doc:
 
@@ -23,12 +26,9 @@ TODO:
 :install:
 
 :rdup:
-- add extended attributes? man 5 tar explains how to do it, but it
-  is A LOT of work AND it is not portable over unixes...?
 
 :rdup-tr:
 - opt_null ala rdup
-- skip 0 bytes reg files?
 
 :rdup-up:
 - opt_null
