@@ -143,7 +143,7 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	 */
 	if (!is_plain((char*) dest)) {
 		if (opt_verbose > 2)
-			msg("Returning original string '%s\'", b64);
+			msg(_("Returning original string '%s\'"), b64);
 
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);
@@ -253,14 +253,14 @@ crypt_key(gchar *file)
 	buf = g_malloc(BUFSIZE);
 	s = BUFSIZE;
 	if (! (f = fopen(file, "r"))) {
-		msg("Failure to read AES key from `%s\': %s",
+		msg(_("Failed to open `%s\': %s"),
 				file, strerror(errno));
 		g_free(buf);
 		return NULL;
 	}
 	
 	if (rdup_getdelim(&buf, &s, '\n', f) == -1) {
-		msg("Failure to read AES key from `%s\': %s",
+		msg(_("Failed to read AES key from `%s\': %s"),
 				file, strerror(errno));
 		g_free(buf);
 		return NULL;
@@ -269,12 +269,12 @@ crypt_key(gchar *file)
 	buf[strlen(buf) - 1] = '\0';		/* kill \n */
 	s = strlen(buf);
 	if (s > 32) {
-		msg("Maximum AES key size is 32 bytes, truncating!");
+		msg(_("Maximum AES key size is 32 bytes, truncating!"));
 		buf[32] = '\0';
 		return buf;
 	}
 	if (s != 16 && s != 24 && s != 32) {
-		msg("AES key must be 16, 24 or 32 bytes");
+		msg(_("AES key must be 16, 24 or 32 bytes"));
 		g_free(buf);
 		return NULL;
 	}

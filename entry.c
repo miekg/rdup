@@ -95,7 +95,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 
 			/* 1st char should + or - */
 			if (buf[0] != '-' && buf[0] != '+') {
-				msg("First character should \'-\' or \'+\', `%s\' at line: %zd", buf, l);
+				msg(_("First character should \'-\' or \'+\', `%s\' at line: %zd"), buf, l);
 				return NULL;
 			}
 			if (buf[0] == '+')
@@ -104,7 +104,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				e->plusmin = MINUS;
 
 			if (opt_output != O_RDUP && e->plusmin == MINUS) {
-				msg("Removing files is not supported for any output except rdup");
+				msg(_("Removing files is not supported for any output except rdup"));
 				return NULL;
 			}
 
@@ -119,14 +119,14 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				case 'p': e->f_mode = S_IFIFO; break;
 				case 's': e->f_mode = S_IFSOCK; break;
 				default:
-					msg("Type must be one of d, l, h, -, c, b, p or s");
+					msg(_("Type must be one of d, l, h, -, c, b, p or s"));
 					return NULL;
 			}
 			/* perm */
 			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 +	/* oct -> dec */
 				(buf[5] - 48) * 8 + (buf[6] - 48);
 			if (i < 0 || i > 07777) {
-				msg("Invalid permissions at line: %zd", l);
+				msg(_("Invalid permissions at line: %zd"), l);
 				return NULL;
 			}
 			e->f_mode |= i;
@@ -134,7 +134,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			/* uid  */
 			n = strchr(buf + 8, ' ');
 			if (!n) {
-				msg("Malformed input for uid at line: %zd", l);
+				msg(_("Malformed input for uid at line: %zd"), l);
 				return NULL;
 			} else {
 				*n = '\0';
@@ -145,7 +145,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			/* gid */
 			n = strchr(pos, ' ');
 			if (!n) {
-				msg("Malformed input for gid at line: %zd", l);
+				msg(_("Malformed input for gid at line: %zd"), l);
 				return NULL;
 			} else {
 				*n = '\0';
@@ -156,7 +156,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			/* pathname size */
 			n = strchr(pos, ' ');
 			if (!n) {
-				msg("Malformed input for path length at line: %zd", l);
+				msg(_("Malformed input for path length at line: %zd"), l);
 				return NULL;
 			}
 			e->f_name_size = atoi(pos); /* checks */
@@ -188,7 +188,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				} else {
 					n = strchr(pos, ' ');
 					if (!n) {
-						msg("Malformed input for file size at line: %zd", l);
+						msg(_("Malformed input for file size at line: %zd"), l);
 						return NULL;
 					}
 					/* atoi? */
@@ -202,7 +202,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					/* pathname */
 					e->f_name = g_strdup(pos);
 					if (strlen(e->f_name) != e->f_name_size) {
-						msg("Real pathname length is not equal to pathname length at line: %zd", l);
+						msg(_("Actual pathname length is not equal to pathname length at line: %zd"), l);
 						return NULL;
 					}
 
@@ -224,7 +224,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					/* pathname */
 					e->f_name = g_strdup(pos);
 					if (strlen(e->f_name) != e->f_name_size) {
-						msg("Real pathname length is not equal to pathname length at line: %zd", l);
+						msg(_("Actual pathname length is not equal to pathname length at line: %zd"), l);
 						return NULL;
 					}
 
@@ -293,7 +293,7 @@ rdup_write_header(struct r_entry *e)
 	}
 	/* XXX bail out? see below too */
 	if (write(1, out, strlen(out)) == -1) 
-		msg("Failed to write to stdout: %s", strerror(errno));
+		msg(_("Failed to write to stdout: %s"), strerror(errno));
 	return;
 }
 
@@ -301,8 +301,6 @@ void
 rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
 	block_out_header(NULL, len, 1);
 	block_out(NULL, len, buf, 1);
-/*	if (write(1, buf, len) == -1) 
-		msg("Failed to write to stdout: %s", strerror(errno));
-XXX TODO errors		*/
+/* XXX TODO errors		*/
 	return;
 }

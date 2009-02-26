@@ -34,7 +34,7 @@ rm(gchar *p)
 				case ENOTEMPTY:
 					/* recursive into this dir and do our bidding */
 					if (!(d = g_dir_open(p, 0, NULL))) {
-						msg("Failed to open directory `%s\': %s", p, "errno");
+						msg(_("Failed to open directory `%s\': %s"), p, "errno");
 						return FALSE;
 					}
 					while ( (dirp = (gchar*)g_dir_read_name(d))) {
@@ -50,7 +50,7 @@ rm(gchar *p)
 					parent = dir_parent(p);
 					st2 = dir_write(parent);
 					if (remove(p) == -1) {
-						msg("Failed to remove '%s\': %s",
+						msg(_("Failed to remove '%s\': %s"),
 								p, strerror(errno));
 						dir_restore(parent, st2);
 						g_free(parent);
@@ -62,7 +62,7 @@ rm(gchar *p)
 
 				default:
 					/* not ENOEMPTY */
-					msg("Failed to remove directory `%s\': %s", p, strerror(errno));
+					msg(_("Failed to remove directory `%s\': %s"), p, strerror(errno));
 					return FALSE;
 			}
 		}
@@ -75,7 +75,7 @@ rm(gchar *p)
 				/* we have no access, ok ... */
 				st2 = dir_write(dirname(p));
 				if (remove(p) == -1) {
-					msg("Failed to remove `%s\'`: %s", p, strerror(errno));
+					msg(_("Failed to remove `%s\'`: %s"), p, strerror(errno));
 					dir_restore(dirname(p), st2);
 					return FALSE;
 				}
@@ -87,7 +87,7 @@ rm(gchar *p)
 				stat(p, &st);
 				chmod(p, st.st_mode | S_IWUSR);
 				if (remove(p) == -1) {
-					msg("Failed to remove '%s\': %s",
+					msg(_("Failed to remove '%s\': %s"),
 							p, strerror(errno));
 					chmod(p, st.st_mode); /* is this usefull then? */
 					return FALSE;
@@ -95,7 +95,7 @@ rm(gchar *p)
 				return TRUE;	
 		}
 		
-		msg("Failed to remove `%s\': %s", p, strerror(errno));
+		msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
 		return FALSE;
 	}
 	return TRUE;

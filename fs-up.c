@@ -27,13 +27,13 @@ mk_dev(struct r_entry *e, gboolean exists) {
 
 	if (exists) {
 		if (!rm(e->f_name)) {
-			msg("Failed to remove existing entry: '%s\'", e->f_name);
+			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
 			return FALSE;
 		}
 	}
 
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
-		msg("Failed to make device: `%s\': %s", e->f_name, strerror(errno));
+		msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
 	}
 	chmod(e->f_name, e->f_mode);
 	return TRUE;
@@ -47,13 +47,13 @@ mk_sock(struct r_entry *e, gboolean exists) {
 
 	if (exists) {
 		if (!rm(e->f_name)) {
-			msg("Failed to remove existing entry: '%s\'", e->f_name);
+			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
 			return FALSE;
 		}
 	}
 
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
-		msg("Failed to make socket: `%s\': %s", e->f_name, strerror(errno));
+		msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
 	}
 	chmod(e->f_name, e->f_mode);
 	return TRUE;
@@ -70,7 +70,7 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 	/* there is something */
 	if (exists) {
 		if (!rm(s)) {
-			msg("Failed to remove existing entry: '%s\'", s);
+			msg(_("Failed to remove existing entry: '%s\'"), s);
 			return FALSE;
 		}
 	}
@@ -78,7 +78,7 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
 		if (symlink(t, s) == -1) {
-			msg("Failed to make symlink: `%s -> %s\': %s", s, t, strerror(errno));
+			msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
 			return FALSE;
 		}
 		return TRUE;
@@ -106,7 +106,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	/* there is something */
 	if (exists && !opt_dry)  {
 		if (!rm(e->f_name)) {
-			msg("Failed to remove existing entry: '%s\'", e->f_name);
+			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
 			return FALSE;
 		}
 	}
@@ -115,14 +115,14 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 		if (errno == EACCES) {
 			st = dir_write(dirname(e->f_name));
 			if (!(out = fopen(e->f_name, "w"))) {
-				msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
+				msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 				ok = FALSE;
 			} else {
 				ok = TRUE;
 			}
 			dir_restore(dirname(e->f_name), st);
 		} else {
-			msg("Failed to open file `%s\': %s", e->f_name, strerror(errno));
+			msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;
 		}
 	} 
@@ -176,7 +176,7 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 			parent = dir_parent(e->f_name);
 			s = dir_write(parent);
 			if (mkdir(e->f_name, e->f_mode) == -1) {
-				msg("Failed to created directory `%s\': %s", e->f_name, strerror(errno));
+				msg(_("Failed to created directory `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, s);
 				g_free(parent);
 				return FALSE;
@@ -185,7 +185,7 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 			g_free(parent);
 			return TRUE;
 		} else {
-			msg("Failed to created directory `%s\': %s", e->f_name, strerror(errno));
+			msg(_("Failed to created directory `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -274,7 +274,7 @@ mk_hlink(GSList *h)
 		s[e->f_size] = '\0';
 		t = s + e->f_size + 4; /* ' -> ' */
 		if (link(t, s) == -1) {
-			msg("Failed to create hardlink `%s -> %s\': %s",
+			msg(_("Failed to create hardlink `%s -> %s\': %s"),
 					s, t, strerror(errno));
 			return FALSE;
 		}

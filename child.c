@@ -24,9 +24,10 @@ close_pipes(GSList *pipes, int n1, int n2)
 /*		msg("Pipe set %d fds %d %d", j, q[0], q[1]); */
 		if (j == n1 || j == n2)
 			continue;
-
+#if 0
 		if (opt_verbose > 0) 
 			msg("Closing pipe set %d", j);
+#endif
 		close(q[0]);
 		close(q[1]);
 	}
@@ -84,7 +85,7 @@ create_childeren(GSList *child, GSList **pipes, int file)
 	for (j = 0; j < childs; j++) { 
 		pips = g_malloc(2 * sizeof(int));
 		if (pipe(pips) == -1) {
-			msg("Failure creating pipes");
+			msg(_("Failure creating pipes"));
 			exit(EXIT_FAILURE);
 		}
 		cpipe = g_slist_append(cpipe, pips);
@@ -100,7 +101,7 @@ create_childeren(GSList *child, GSList **pipes, int file)
 		pips = (g_slist_nth(cpipe, j))->data;
 
 		if ( (*cpid = fork()) == -1) {
-			msg("Error forking");
+			msg(_("Fork error"));
 			exit(EXIT_FAILURE);
 		}
 
@@ -138,10 +139,9 @@ create_childeren(GSList *child, GSList **pipes, int file)
 			}
 
 			/* finally ... exec */
-			if ( execvp(args[0], args) == -1) {
-				/* msg("Failed to exec `%s\': %s", args[0], strerror(errno)); */
+			if ( execvp(args[0], args) == -1)
 				exit(EXIT_FAILURE);
-			}
+			
 			/* never reached */
 			exit(EXIT_SUCCESS);
 		}
