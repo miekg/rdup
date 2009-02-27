@@ -52,13 +52,13 @@ update(char *path, guint strip)
 		pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, stdin);
 
 		if (pathsize != rdup_entry->f_name_size) {
-			msg("Reported name size (%zd) does not match actual name size (%zd)",
+			msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
 					rdup_entry->f_name_size, pathsize);
 			exit(EXIT_FAILURE);
 		}
 		pathbuf[pathsize] = '\0';
 		if (pathbuf[0] != '/') {
-			msg("Pathname does not start with /: `%s\'", pathbuf);
+			msg(_("Pathname does not start with /: `%s\'"), pathbuf);
 			exit(EXIT_FAILURE);
 		}
 		p = g_strdup_printf("%s%s", path, pathbuf);
@@ -137,7 +137,7 @@ main(int argc, char **argv)
 				break;
 			case 's':
 				strip = atoi(optarg);
-				msg("Not implemented (yet)");
+				msg(_("Not implemented (yet)"));
 				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
@@ -151,7 +151,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (argc != 1) {
-		msg("A single destination directory is required");
+		msg(_("Single destination directory is required"));
 		exit(EXIT_FAILURE);
 	}
 	if (!g_path_is_absolute(argv[0])) 
@@ -162,12 +162,12 @@ main(int argc, char **argv)
 
 	if (opt_top) {
 		if (mkpath(path, 00777) == -1) {
-			msg("Failed to create directory `%s\': %s", path, strerror(errno));
+			msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	} else {
 		if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-			msg("No such directory: `%s\'", path);
+			msg(_("No such directory: `%s\'"), path);
 			exit(EXIT_FAILURE);
 		}
 	}

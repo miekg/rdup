@@ -147,7 +147,7 @@ stdin2archive(GSList *child)
 		archive = NULL;
 	} else {
 		if ( (archive = archive_write_new()) == NULL) {
-			msg("Failed to create new archive");
+			msg(_("Failed to create new archive"));
 			exit(EXIT_FAILURE);
 		}
 
@@ -168,7 +168,7 @@ stdin2archive(GSList *child)
 		}
 
 		if (j != ARCHIVE_OK) {
-			msg("Failed to set archive type to %s", o_fmt[opt_output]);
+			msg(_("Failed to set archive type to %s"), o_fmt[opt_output]);
 			exit(EXIT_FAILURE);
 		} else {
 			archive_write_open_fd(archive, 1);
@@ -188,7 +188,7 @@ stdin2archive(GSList *child)
 		if (opt_verbose > 0) {
 			out = g_strdup_printf("%s\n", rdup_entry->f_name);
 			if (write(2, out, rdup_entry->f_name_size + 1) == -1) {
-				msg("Writing to stderr failed");
+				msg(_("Writing to stderr failed"));
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -266,13 +266,13 @@ stdin2archive(GSList *child)
 			 */
 			len = read(parent[0], readbuf, BUFSIZE);
 			if (len == -1) {
-				msg("Failure to read from pipe: %s", strerror(errno));
+				msg(_("Failure to read from pipe: %s"), strerror(errno));
 				goto write_plain_file;
 			}
 
 			if (wait_pids(pids, WNOHANG) == -1) {
 				/* weird child exit */
-				msg("Child exit, giving you the original file");
+				msg(_("Child exit, giving you the original file"));
 				goto write_plain_file;
 			}
 			/* close f here as we might need if the 
@@ -309,13 +309,12 @@ write_plain_file:
 			 * reset the file as some child might
 			 * have read from it */
 			if (lseek(f, 0, SEEK_SET)  == -1) {
-				/* XXX errno */
-				msg("Failure to rewind...");
+				msg(_("Failure to rewind: %s"), strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 			len = read(f, readbuf, BUFSIZE);
 			if (len == -1) {
-				msg("Failure to read from file: %s", strerror(errno));
+				msg(_("Failure to read from file: %s"), strerror(errno));
 				exit(EXIT_FAILURE); 
 			}
 
@@ -444,14 +443,14 @@ main(int argc, char **argv)
 					opt_output = O_RDUP;
 
 				if (opt_output == O_NONE) {
-					msg("Invalid output format: `%s\'", optarg);
+					msg(_("Invalid output format: `%s\'"), optarg);
 					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'X':
 #ifdef HAVE_LIBNETTLE
 				if (opt_decrypt_key) {
-					msg("Can not do both encryption and decryption");
+					msg(_("Will not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
 				if (! (opt_crypt_key = crypt_key(optarg)))
@@ -462,7 +461,7 @@ main(int argc, char **argv)
 			case 'Y':
 #ifdef HAVE_LIBNETTLE
 				if (opt_crypt_key) {
-					msg("Can not do both encryption and decryption");
+					msg(_("Can not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
 				if (! (opt_decrypt_key = crypt_key(optarg)))
@@ -485,7 +484,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (!opt_tty && isatty(1) == 1) {
-		msg("Will not print to a tty");
+		msg(_("Will not print to a tty"));
 		exit(EXIT_FAILURE);
 	}
 
