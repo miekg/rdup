@@ -19,7 +19,7 @@ extern GSList *hlink;
 /* signal.c */
 void got_sig(int signal);
 
-gboolean
+static gboolean
 mk_dev(struct r_entry *e, gboolean exists) {
 	/* XXX check dir write perms */
 	if (opt_dry)
@@ -39,7 +39,7 @@ mk_dev(struct r_entry *e, gboolean exists) {
 	return TRUE;
 }
 
-gboolean
+static gboolean
 mk_sock(struct r_entry *e, gboolean exists) {
 	/* XXX check dir write perms */
 	if (opt_dry)
@@ -59,8 +59,7 @@ mk_sock(struct r_entry *e, gboolean exists) {
 	return TRUE;
 }
 
-
-gboolean
+static gboolean
 mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 {
 	/* dir write perms XXX */
@@ -94,7 +93,7 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 	return TRUE;
 }
 
-gboolean
+static gboolean
 mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 {
 	FILE *out = NULL;
@@ -155,7 +154,7 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	return TRUE;
 }
 
-gboolean
+static gboolean
 mk_dir(struct r_entry *e, struct stat *st, gboolean exists) 
 {
 	struct stat *s;

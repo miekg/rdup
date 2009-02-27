@@ -114,7 +114,7 @@ decrypt_entry(struct r_entry *e, GHashTable *tr)
  * the childeren, collect the output from the last
  * child and create the archive on stdout
  */
-void 
+static void  
 stdin2archive(GSList *child)
 {
 	char		*buf, *readbuf, *n, *out;

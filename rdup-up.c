@@ -18,7 +18,7 @@ gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 /* update the directory with the archive */
-gboolean
+static gboolean
 update(char *path, guint strip)
 {
 	struct r_entry *rdup_entry;
