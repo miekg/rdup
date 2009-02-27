@@ -3,7 +3,8 @@
 [[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
 # this should work otherwise
 cd $RDUP_SOURCE
-# needs to be redone
+
+# completely does not work anymore
 exit 1
 
 # cleanup
@@ -15,9 +16,8 @@ touch A/b/1 A/b/2 A/b/3
 
 # only interested in the names
 # awk foo!
-./rdup -N $$.timestamp $$.lijst A | \
- awk 'FS="/" { print substr($0,length($1 $2 $3 $4 $5 $6) ) } ' | \
- tail -n +4  > $$.diff
+./rdup -N $$.timestamp -F '%n\n' $$.lijst A | rev 
+#tail -n +4  > $$.diff
 
 # this should be the diff
 echo "/a

@@ -4,7 +4,7 @@
 # this should work otherwise
 cd $RDUP_SOURCE
 
-NUM=$(./rdup -r HERE . | wc -l)
+NUM=$(./rdup -r /dev/null . | wc -l)
 echo "FILES FOUND $NUM"
 [[ $NUM -eq 0 ]] && exit 0
 exit 1

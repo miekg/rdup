@@ -309,6 +309,7 @@ write_plain_file:
 			 * reset the file as some child might
 			 * have read from it */
 			if (lseek(f, 0, SEEK_SET)  == -1) {
+				/* XXX errno */
 				msg("Failure to rewind...");
 				exit(EXIT_FAILURE);
 			}
