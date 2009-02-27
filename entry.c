@@ -245,7 +245,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
  * for instance. TODO: integrate the two functions?
  * entry_print_data()
  */
-void
+gint
 rdup_write_header(struct r_entry *e)
 {
 	char *out;
@@ -291,16 +291,17 @@ rdup_write_header(struct r_entry *e)
 			(size_t)e->f_size,
 			e->f_name);
 	}
-	/* XXX bail out? see below too */
-	if (write(1, out, strlen(out)) == -1) 
+	if (write(1, out, strlen(out)) == -1) {
 		msg(_("Failed to write to stdout: %s"), strerror(errno));
-	return;
+		return -1;
+	}
+	return 0;
 }
 
-void
+gint
 rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
-	block_out_header(NULL, len, 1);
-	block_out(NULL, len, buf, 1);
-/* XXX TODO errors		*/
-	return;
+	if (block_out_header(NULL, len, 1) == -1 ||
+		block_out(NULL, len, buf, 1) == -1)
+		return -1;
+	return 0;
 }

@@ -26,6 +26,9 @@ RDUP DESIGN DOC
 
 3/ C FILES
 
+This section is reasonable correct for rdup, rdup-tr and rdup-up 
+are not mentioned at all.
+
 crawler.c
         The crawler recursively descends into directories.
 

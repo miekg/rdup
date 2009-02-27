@@ -207,7 +207,7 @@ stdin2archive(GSList *child)
 
 		if (rdup_entry->plusmin == MINUS) {
 			if (opt_output == O_RDUP) {
-				rdup_write_header(rdup_entry_c);
+				(void)rdup_write_header(rdup_entry_c);
 				goto not_s_isreg;
 			}
 			/* all other outputs cannot handle this, but this
@@ -244,7 +244,7 @@ stdin2archive(GSList *child)
 		if (opt_output != O_RDUP) {
 			archive_write_header(archive, entry);
 		} else {
-			rdup_write_header(rdup_entry_c);
+			(void)rdup_write_header(rdup_entry_c);
 		}
 
 		/* bail out for non regular files */
@@ -287,7 +287,7 @@ stdin2archive(GSList *child)
 				}
 				 
 				if (opt_output == O_RDUP) 
-					rdup_write_data(rdup_entry, readbuf, len);
+					(void)rdup_write_data(rdup_entry, readbuf, len);
 				else
 					archive_write_data(archive, readbuf, len);
 				
@@ -325,7 +325,7 @@ write_plain_file:
 				}
 
 				if (opt_output == O_RDUP) {
-					rdup_write_data(rdup_entry, readbuf, len);
+					(void)rdup_write_data(rdup_entry, readbuf, len);
 				} else {
 					archive_write_data(archive, readbuf, len);
 				}
