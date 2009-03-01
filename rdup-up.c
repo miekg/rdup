@@ -17,6 +17,10 @@ gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
+extern int opterr;
+int opterr		   = 0;
+
+
 /* update the directory with the archive */
 static gboolean
 update(char *path, guint strip)
@@ -143,7 +147,7 @@ main(int argc, char **argv)
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
 				exit(EXIT_SUCCESS);
 			default:
-				msg(_("Unknown option seen"));
+				msg(_("Unknown option seen `%c\'"), optopt);
 				exit(EXIT_FAILURE);
 		}
 	}
