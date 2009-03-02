@@ -29,6 +29,9 @@ gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
+extern int opterr;
+
+int opterr = 0;
 
 #ifdef HAVE_LIBNETTLE
 /* same as in crawler.c XXX  */
@@ -476,7 +479,7 @@ main(int argc, char **argv)
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
 				exit(EXIT_SUCCESS);
 			default:
-				msg(_("Unknown option seen"));
+				msg(_("Unknown option seen `%c\'"), optopt);
 				exit(EXIT_FAILURE);
 		}
 	}

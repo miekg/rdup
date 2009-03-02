@@ -19,6 +19,8 @@ size_t opt_size            = 0;                       /* only output files small
 time_t opt_timestamp       = 0;                       /* timestamp file c|m time */
 
 sig_atomic_t sig           = 0;
+extern int opterr;
+int opterr		   = 0;
 
 #define CORRUPT(x)	{ \
 			msg((x), l); \
@@ -337,7 +339,7 @@ main(int argc, char **argv)
 				}
 				break;
 			default:
-				msg(_("Unknown option seen"));
+				msg(_("Unknown option seen '%c\'"), optopt);
 				exit(EXIT_FAILURE);
 		}
 	}

@@ -1,5 +1,9 @@
-29 Feb 2009: 0.9.0 Miek <miek@miek.nl>
-  - major feature enhancements - 
+xx Mar 2009: 0.9.1 Miek <miek@miek.nl>
+  - bugfixes only -
+
+
+01 Mar 2009: 0.9.0 Miek <miek@miek.nl>
+  - major (lowlevel) feature enhancements - 
   - again: internal file list change -
   * internal filelist: add uid/gid here. Why? See 
     http://www.miek.nl/blog/archives/2009/02/21/backing_up_remotely_as_a_normal_user/index.html
@@ -21,6 +25,7 @@
     can you encrypt the files' contents but also
     the actual file names. See options -X and -Y.
   * rdup*: shaved off 1 byte from the r_entry struct
+  * rdup*: nicer unknown argument handling
 
 
 14 Feb 2009: 0.7.1 Miek <miek@miek.nl>
