@@ -62,7 +62,9 @@ mk_sock(struct r_entry *e, gboolean exists) {
 static gboolean
 mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 {
-	/* dir write perms XXX */
+	struct stat *st;
+	gchar *parent;
+
 	if (opt_dry)
 		return TRUE;
 
@@ -77,8 +79,22 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
 		if (symlink(t, s) == -1) {
-			msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
-			return FALSE;
+			if (errno == EACCES) {
+				parent = dir_parent(e->f_name);
+				st = dir_write(parent);
+				if (symlink(t, s) == -1) {
+					msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
+					dir_restore(parent, st);
+					g_free(parent);
+					return FALSE;
+				} 
+				dir_restore(parent, st);
+				g_free(parent);
+				return TRUE;
+			} else {
+				msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
+				return FALSE;
+			}
 		}
 		return TRUE;
 	}
