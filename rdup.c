@@ -339,7 +339,7 @@ main(int argc, char **argv)
 				}
 				break;
 			default:
-				msg(_("Unknown option seen '%c\'"), optopt);
+				msg(_("Unknown option seen `%c\'"), optopt);
 				exit(EXIT_FAILURE);
 		}
 	}

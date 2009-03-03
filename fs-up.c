@@ -191,7 +191,7 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 			parent = dir_parent(e->f_name);
 			s = dir_write(parent);
 			if (mkdir(e->f_name, e->f_mode) == -1) {
-				msg(_("Failed to created directory `%s\': %s"), e->f_name, strerror(errno));
+				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, s);
 				g_free(parent);
 				return FALSE;
@@ -200,7 +200,7 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 			g_free(parent);
 			return TRUE;
 		} else {
-			msg(_("Failed to created directory `%s\': %s"), e->f_name, strerror(errno));
+			msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}

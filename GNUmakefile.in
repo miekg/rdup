@@ -58,7 +58,7 @@ strip:	rdup-up rdup-tr rdup
 po:	rdup.pot 
 	( cd po ; $(MAKE) -f GNUmakefile all )
 
-rdup.pot:
+rdup.pot: ${OBJ} ${OBJ_TR} ${OBJ_UP}
 	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 
 
 clean:

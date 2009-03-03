@@ -155,7 +155,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (argc != 1) {
-		msg(_("Single destination directory is required"));
+		msg(_("Destination directory is required"));
 		exit(EXIT_FAILURE);
 	}
 	if (!g_path_is_absolute(argv[0])) 

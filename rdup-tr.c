@@ -132,7 +132,7 @@ stdin2archive(GSList *child)
 		archive = NULL;
 	} else {
 		if ( (archive = archive_write_new()) == NULL) {
-			msg(_("Failed to create new archive"));
+			msg(_("Failed to create archive"));
 			exit(EXIT_FAILURE);
 		}
 
@@ -469,7 +469,7 @@ main(int argc, char **argv)
 	argv += optind;
 
 	if (!opt_tty && isatty(1) == 1) {
-		msg(_("Will not print to a tty"));
+		msg(_("Will not write to a tty"));
 		exit(EXIT_FAILURE);
 	}
 

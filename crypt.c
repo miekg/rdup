@@ -144,7 +144,7 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	 */
 	if (!is_plain((char*) dest)) {
 		if (opt_verbose > 2)
-			msg(_("Returning original string '%s\'"), b64);
+			msg(_("Returning original string `%s\'"), b64);
 
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);

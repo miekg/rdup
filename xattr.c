@@ -85,7 +85,7 @@ read_attr_gid(__attribute__((unused))
 		return x;
 	} else {
 		if (opt_verbose > 0) {
-			msg(_("No gid xattr for `%s\'\n"), path);
+			msg(_("No gid xattr for `%s\'"), path);
 		}
 		return g;
 	}
