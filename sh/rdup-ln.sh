@@ -11,10 +11,13 @@
 # By default a new directory
 # BACKUPDIR/YYYYMM/DD wil be created
 
-# Three returns code
+# 3 return codes
 # 0: BACKUPDIR/YYYYMM/DD is created (now make a inc dump)
 # 1: BACKUPDIR/YYYYMM/DD is created (now make a full dump)
 # 2: an error occured
+
+# When using this to do remote backup please be sure
+# to update the PATH setting so that it can be found
 
 if [[ "$1" == "-l" ]]; then
     LOOKBACK=$2

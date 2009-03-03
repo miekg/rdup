@@ -62,7 +62,9 @@ mk_sock(struct r_entry *e, gboolean exists) {
 static gboolean
 mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 {
-	/* dir write perms XXX */
+	struct stat *st;
+	gchar *parent;
+
 	if (opt_dry)
 		return TRUE;
 
@@ -77,8 +79,22 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
 		if (symlink(t, s) == -1) {
-			msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
-			return FALSE;
+			if (errno == EACCES) {
+				parent = dir_parent(e->f_name);
+				st = dir_write(parent);
+				if (symlink(t, s) == -1) {
+					msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
+					dir_restore(parent, st);
+					g_free(parent);
+					return FALSE;
+				} 
+				dir_restore(parent, st);
+				g_free(parent);
+				return TRUE;
+			} else {
+				msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
+				return FALSE;
+			}
 		}
 		return TRUE;
 	}
@@ -200,7 +216,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 	gboolean exists;
 	struct stat st;
 
-	/* XXX*/
+	/* XXX not yet implemented, not sure if ever */
 	strip = strip;
 
 	if (lstat(e->f_name, &st) == -1) 
@@ -266,6 +282,12 @@ mk_hlink(GSList *h)
 	struct r_entry *e;
 	GSList *p;
 	char *s, *t;
+	struct stat *st;
+	gchar *parent;
+
+	if (opt_dry)
+		return TRUE;
+
 	for (p = g_slist_nth(h, 0); p; p = p->next) { 
 		e = (struct r_entry *)p->data;
 
@@ -273,9 +295,24 @@ mk_hlink(GSList *h)
 		s[e->f_size] = '\0';
 		t = s + e->f_size + 4; /* ' -> ' */
 		if (link(t, s) == -1) {
-			msg(_("Failed to create hardlink `%s -> %s\': %s"),
-					s, t, strerror(errno));
-			return FALSE;
+			if (errno == EACCES) {
+				parent = dir_parent(e->f_name);
+				st = dir_write(parent);
+				if (link(t, s) == -1) {
+					msg(_("Failed to create hardlink `%s -> %s\': %s"),
+							s, t, strerror(errno));
+					dir_restore(parent, st);
+					g_free(parent);
+					return FALSE;
+				}
+				dir_restore(parent, st);
+				g_free(parent);
+				return TRUE;
+			} else {
+				msg(_("Failed to create hardlink `%s -> %s\': %s"),
+						s, t, strerror(errno));
+				return FALSE;
+			}
 		}
 	}
 	return TRUE;

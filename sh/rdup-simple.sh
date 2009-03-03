@@ -4,7 +4,6 @@
 # licensed under the GPL version 3
 # Copyright Miek Gieben, 2007 - 2009
 # rewritten for rdup-up and rdup-tr
-#{exec_prefix} XXX todo?
 
 echo2() {
     echo "** $PROGNAME: $@" >&2
