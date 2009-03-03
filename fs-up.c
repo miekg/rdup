@@ -21,7 +21,7 @@ void got_sig(int signal);
 
 static gboolean
 mk_dev(struct r_entry *e, gboolean exists) {
-	/* XXX check dir write perms */
+	/* XXX dir write perms */
 	if (opt_dry)
 		return TRUE;
 
@@ -41,7 +41,7 @@ mk_dev(struct r_entry *e, gboolean exists) {
 
 static gboolean
 mk_sock(struct r_entry *e, gboolean exists) {
-	/* XXX check dir write perms */
+	/* XXX dir write perms */
 	if (opt_dry)
 		return TRUE;
 
