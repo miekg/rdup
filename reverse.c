@@ -20,7 +20,7 @@ reverse(GTree *g)
 }
 
 /**
- * wrappers that call gfunc_xxx for GTree's
+ * wrappers that call gfunc_xxx for GLists
  * In the conversion function (gfunc_tree2list) we
  * skip all NO_PRINT entries, hence to harcoded
  * used of VALUE here.

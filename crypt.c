@@ -119,7 +119,8 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
 	hashed = g_hash_table_lookup(tr, b64);
 	if (hashed)
 		return hashed;
-	crypt = g_malloc(len); /* is this large enough? XXX */
+	/* be safe and alloc 2 times what we need */
+	crypt = g_malloc(len * 2);
 
 	crypt_size = decode_base64((guchar*)crypt, b64);
 	if (!crypt_size)
