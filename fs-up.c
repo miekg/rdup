@@ -278,7 +278,6 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 gboolean
 mk_hlink(GSList *h)
 {
-	/* XXX dir write perm */
 	struct r_entry *e;
 	GSList *p;
 	char *s, *t;
