@@ -95,7 +95,9 @@ main(int argc, char **argv)
 	guint		 strip = 0;
 	
 #ifdef ENABLE_NLS
-	setlocale(LC_MESSAGES, "");
+	if (!setlocale(LC_MESSAGES, ""))
+		msg(_("Locale could not be set"));
+
 	bindtextdomain(PACKAGE_NAME, LOCALEROOTDIR);
 	(void)textdomain(PACKAGE_NAME);
 #endif /* ENABLE_NLS */

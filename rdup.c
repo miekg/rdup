@@ -241,7 +241,9 @@ main(int argc, char **argv)
 	
 	/* i18n, set domain to rdup */
 #ifdef ENABLE_NLS
-	setlocale(LC_MESSAGES, "");
+	/* should this be translated? :-) */
+	if (!setlocale(LC_MESSAGES, ""))
+		 msg(_("Locale could not be set"));
 	bindtextdomain(PACKAGE_NAME, LOCALEROOTDIR);
 	(void)textdomain(PACKAGE_NAME);
 #endif /* ENABLE_NLS */
