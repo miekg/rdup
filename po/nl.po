@@ -1,0 +1,598 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: rdup 0.9.1\n"
+"PO-Revision-Date: 2009-03-05 16:50+0100\n"
+"Last-Translator: Miek Gieben <miek@miek.nl>\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: usage.c:32
+msgid ""
+"        -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n"
+"        -m\t\tonly print new/modified files (unsets -r)\n"
+"        -n\t\tignore .nobackup files\n"
+"        -r\t\tonly print removed files (unsets -m)\n"
+"        -s SIZE\t\tonly output files smaller then SIZE bytes\n"
+"        -x\t\tstay in local file system\n"
+"        -v\t\tbe more verbose\n"
+"        -h\t\tthis help\n"
+"\n"
+"    FORMAT:\n"
+"        The following escape sequences are recognized:\n"
+"        '%p': '+' if new, '-' if removed\n"
+"        '%b': permission bits\n"
+"        '%m': file mode bits\n"
+"        '%u': uid\n"
+"        '%g': gid\n"
+"        '%l': path length (for links: length of 'path -> target')\n"
+"        '%s': file size\n"
+"        '%n': path (for links: 'path -> target')\n"
+"        '%N': path (for links: 'path')\n"
+"        '%t': time of modification (epoch)\n"
+"        '%H': the sha1 hash of the file's contents\n"
+"        '%T': 'type' (d, l, h, -, c, b, p or s: dir, symlink, hardlink, "
+"file, \n"
+"\t      character device, block device, named pipe or socket)\n"
+"        '%C': file contents\n"
+"\n"
+"Report bugs to <miek@miek.nl>\n"
+"Licensed under the GPL version 3.\n"
+"See the file LICENSE in the source distribution of rdup.\n"
+msgstr ""
+"        -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n"
+"        -m\t\tonly print new/modified files (unsets -r)\n"
+"        -n\t\tignore .nobackup files\n"
+"        -r\t\tonly print removed files (unsets -m)\n"
+"        -s SIZE\t\tonly output files smaller then SIZE bytes\n"
+"        -x\t\tstay in local file system\n"
+"        -v\t\tbe more verbose\n"
+"        -h\t\tthis help\n"
+"\n"
+"    FORMAT:\n"
+"        The following escape sequences are recognized:\n"
+"        '%p': '+' if new, '-' if removed\n"
+"        '%b': permission bits\n"
+"        '%m': file mode bits\n"
+"        '%u': uid\n"
+"        '%g': gid\n"
+"        '%l': path length (for links: length of 'path -> target')\n"
+"        '%s': file size\n"
+"        '%n': path (for links: 'path -> target')\n"
+"        '%N': path (for links: 'path')\n"
+"        '%t': time of modification (epoch)\n"
+"        '%H': the sha1 hash of the file's contents\n"
+"        '%T': 'type' (d, l, h, -, c, b, p or s: dir, symlink, hardlink, "
+"file, \n"
+"\t      character device, block device, named pipe or socket)\n"
+"        '%C': file contents\n"
+"\n"
+"Report bugs to <miek@miek.nl>\n"
+"Licensed under the GPL version 3.\n"
+"See the file LICENSE in the source distribution of rdup.\n"
+
+#: crawler.c:166
+#, c-format
+msgid "%s found in '%s'"
+msgstr "%s gevonden in '%s'"
+
+#: rdup.c:336
+msgid "-s requires a numerical value"
+msgstr "-s moet een numerieke waarde hebben"
+
+#: crypt.c:278
+msgid "AES key must be 16, 24 or 32 bytes"
+msgstr "AES sleutel moet 16, 24 of 32 bytes lang zijn"
+
+#: entry.c:205 entry.c:227
+#, c-format
+msgid "Actual pathname length is not equal to pathname length at line: %zd"
+msgstr "Actual pathname length is not equal to pathname length at line: %zd"
+
+#: rdup-tr.c:376 rdup-up.c:123 rdup.c:276
+msgid "Argument length overrun"
+msgstr "Argument length overrun"
+
+#: protocol.c:109
+#, c-format
+msgid "BLOCK protocol seperator not found: `%c%c%c%c%c'"
+msgstr "BLOCK protocol scheider niet gevonden: `%c%c%c%c%c'"
+
+#: protocol.c:135
+#, c-format
+msgid "Block seen, start read of %d bytes"
+msgstr "Block gezien, start met lezen van %d bytes"
+
+#: protocol.c:131
+msgid "Block size larger then BUFSIZE"
+msgstr "Block grootte groter dan BUFSIZE"
+
+#: rdup-tr.c:450
+msgid "Can not do both encryption and decryption"
+msgstr "Can not do both encryption and decryption"
+
+#: crawler.c:109
+#, c-format
+msgid "Cannot determine holding device of the directory `%s': %s"
+msgstr "Cannot determine holding device of the directory `%s': %s"
+
+#: crawler.c:98
+#, c-format
+msgid "Cannot enter directory `%s': %s"
+msgstr "Kan directorie niet in `%s': %s"
+
+#: rdup-tr.c:260
+msgid "Child exit, giving you the original file"
+msgstr "Kind einde, geef de originele file"
+
+#: entry.c:86
+#, c-format
+msgid "Corrupt entry `%s' in input at line: %zd"
+msgstr "Corrupte entry `%s' in input at line: %zd"
+
+#: rdup.c:180
+#, c-format
+msgid ""
+"Corrupt entry in filelist at line: %zd, length `%zd' does not match `%zd'"
+msgstr ""
+"Corrupt entry in filelist at line: %zd, length `%zd' does not match `%zd'"
+
+#: regexp.c:56
+#, c-format
+msgid "Corrupt regular expression line: %zd, column %d: %s"
+msgstr "Corrupt regular expression line: %zd, column %d: %s"
+
+#: rdup.c:427
+#, c-format
+msgid "Could not create timestamp file `%s': %s"
+msgstr "Kan geen timestamp bestand creëren `%s': %s"
+
+#: rdup-tr.c:370 rdup-up.c:117 rdup.c:270
+msgid "Could not get current working directory"
+msgstr "Kan de huidige werk directorie nit verkrijgen"
+
+#: gfunc.c:37 gfunc.c:63 rdup-tr.c:241 regexp.c:33
+#, c-format
+msgid "Could not open '%s': %s"
+msgstr "Kan niet openenen '%s': %s"
+
+#: crawler.c:45 crawler.c:131 entry.c:62 entry.c:218
+#, c-format
+msgid "Could not stat path `%s': %s"
+msgstr "Could not stat path `%s': %s"
+
+#: rdup.c:415
+#, c-format
+msgid "Could not write filelist `%s': %s"
+msgstr "Could not write filelist `%s': %s"
+
+#: rdup-up.c:158
+msgid "Destination directory is required"
+msgstr "Destination directory is required"
+
+#: link.c:47
+#, c-format
+msgid "Error reading link `%s': %s"
+msgstr "Error reading link `%s': %s"
+
+#: gfunc.c:41
+#, c-format
+msgid "Failed to calculate sha1 digest: `%s'"
+msgstr "Failed to calculate sha1 digest: `%s'"
+
+#: rdup-tr.c:135
+msgid "Failed to create archive"
+msgstr "Failed to create archive"
+
+#: fs-up.c:194 fs-up.c:203 rdup-up.c:169
+#, c-format
+msgid "Failed to create directory `%s': %s"
+msgstr "Failed to create directory `%s': %s"
+
+#: fs-up.c:301 fs-up.c:311
+#, c-format
+msgid "Failed to create hardlink `%s -> %s': %s"
+msgstr "Failed to create hardlink `%s -> %s': %s"
+
+#: fs-up.c:36
+#, c-format
+msgid "Failed to make device: `%s': %s"
+msgstr "Failed to make device: `%s': %s"
+
+#: fs-up.c:56
+#, c-format
+msgid "Failed to make socket: `%s': %s"
+msgstr "Failed to make socket: `%s': %s"
+
+#: fs-up.c:86 fs-up.c:95
+#, c-format
+msgid "Failed to make symlink: `%s -> %s': %s"
+msgstr "Failed to make symlink: `%s -> %s': %s"
+
+#: crypt.c:257
+#, c-format
+msgid "Failed to open `%s': %s"
+msgstr "Failed to open `%s': %s"
+
+#: rm.c:37
+#, c-format
+msgid "Failed to open directory `%s': %s"
+msgstr "Failed to open directory `%s': %s"
+
+#: fs-up.c:133 fs-up.c:140
+#, c-format
+msgid "Failed to open file `%s': %s"
+msgstr "Failed to open file `%s': %s"
+
+#: crypt.c:264
+#, c-format
+msgid "Failed to read AES key from `%s': %s"
+msgstr "Failed to read AES key from `%s': %s"
+
+#: rm.c:53 rm.c:78 rm.c:90 rm.c:98
+#, c-format
+msgid "Failed to remove `%s': %s"
+msgstr "Failed to remove `%s': %s"
+
+#: rm.c:65
+#, c-format
+msgid "Failed to remove directory `%s': %s"
+msgstr "Failed to remove directory `%s': %s"
+
+#: fs-up.c:30 fs-up.c:50 fs-up.c:74 fs-up.c:124
+#, c-format
+msgid "Failed to remove existing entry: '%s'"
+msgstr "Failed to remove existing entry: '%s'"
+
+#: rdup-tr.c:156
+#, c-format
+msgid "Failed to set archive type to %s"
+msgstr "Failed to set archive type to %s"
+
+#: entry.c:295
+#, c-format
+msgid "Failed to write to stdout: %s"
+msgstr "Failed to write to stdout: %s"
+
+#: child.c:88
+msgid "Failure creating pipes"
+msgstr "Failure creating pipes"
+
+#: rdup-tr.c:302
+#, c-format
+msgid "Failure to read from file: %s"
+msgstr "Failure to read from file: %s"
+
+#: rdup-tr.c:254
+#, c-format
+msgid "Failure to read from pipe: %s"
+msgstr "Failure to read from pipe: %s"
+
+#: rdup-tr.c:297
+#, c-format
+msgid "Failure to rewind: %s"
+msgstr "Failure to rewind: %s"
+
+#: entry.c:98
+#, c-format
+msgid "First character should '-' or '+', `%s' at line: %zd"
+msgstr "First character should '-' or '+', `%s' at line: %zd"
+
+#: child.c:104
+msgid "Fork error"
+msgstr "Fork error"
+
+#: usage.c:14
+msgid ""
+"Generate a full or incremental file list. This list can be used to\n"
+"implement a (incremental) backup scheme.\n"
+"\n"
+"\tFILELIST\tfile to store filenames\n"
+"        DIR\t\tdirectory or directories to dump\n"
+"\n"
+"\n"
+"    OPTIONS:\n"
+"        -N FILE\t\tuse the (c_time) timestamp of FILE for incremental dumps\n"
+"        \t\tif FILE does not exist, a full dump is performed\n"
+"\t-M FILE\t\tas -N, but use the m_time\n"
+"        -F FORMAT\tuse specified format string\n"
+"        \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n"
+"\t-R\t\treverse the output (depth first, first the dirs then the files)\n"
+"\t-E FILE\t\tuse FILE as an exclude list\n"
+"        -0\t\tdelimit internal filelist with NULLs\n"
+"        -V\t\tprint version\n"
+msgstr ""
+"Generate a full or incremental file list. This list can be used to\n"
+"implement a (incremental) backup scheme.\n"
+"\n"
+"\tFILELIST\tfile to store filenames\n"
+"        DIR\t\tdirectory or directories to dump\n"
+"\n"
+"\n"
+"    OPTIONS:\n"
+"        -N FILE\t\tuse the (c_time) timestamp of FILE for incremental dumps\n"
+"        \t\tif FILE does not exist, a full dump is performed\n"
+"\t-M FILE\t\tas -N, but use the m_time\n"
+"        -F FORMAT\tuse specified format string\n"
+"        \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n"
+"\t-R\t\treverse the output (depth first, first the dirs then the files)\n"
+"\t-E FILE\t\tuse FILE as an exclude list\n"
+"        -0\t\tdelimit internal filelist with NULLs\n"
+"        -V\t\tprint version\n"
+
+#: protocol.c:123
+msgid "Illegal block size"
+msgstr "Illegal block size"
+
+#: gfunc.c:394
+msgid "Internal error: NO_PRINT in remove tree!"
+msgstr "Internal error: NO_PRINT in remove tree!"
+
+#: rdup-tr.c:432
+#, c-format
+msgid "Invalid output format: `%s'"
+msgstr "Invalid output format: `%s'"
+
+#: entry.c:129
+#, c-format
+msgid "Invalid permissions at line: %zd"
+msgstr "Invalid permissions at line: %zd"
+
+#: getdelim.c:30
+#, c-format
+msgid "Line longer than %d characters"
+msgstr "Line longer than %d characters"
+
+#: rdup-tr.c:351
+msgid "Locale could not be set"
+msgstr "Locale could not be set"
+
+#: entry.c:191
+#, c-format
+msgid "Malformed input for file size at line: %zd"
+msgstr "Malformed input for file size at line: %zd"
+
+#: entry.c:148
+#, c-format
+msgid "Malformed input for gid at line: %zd"
+msgstr "Malformed input for gid at line: %zd"
+
+#: entry.c:159
+#, c-format
+msgid "Malformed input for path length at line: %zd"
+msgstr "Malformed input for path length at line: %zd"
+
+#: entry.c:137
+#, c-format
+msgid "Malformed input for uid at line: %zd"
+msgstr "Malformed input for uid at line: %zd"
+
+#: crypt.c:273
+msgid "Maximum AES key size is 32 bytes, truncating!"
+msgstr "Maximum AES key size is 32 bytes, truncating!"
+
+#: crawler.c:228
+#, c-format
+msgid "Neither file nor directory `%s'"
+msgstr "Neither file nor directory `%s'"
+
+#: crawler.c:137
+#, c-format
+msgid "Newline (\\n) found in path `%s', skipping"
+msgstr "Newline (\\n) found in path `%s', skipping"
+
+#: xattr.c:88 xattr.c:100
+#, c-format
+msgid "No gid xattr for `%s'"
+msgstr "No gid xattr for `%s'"
+
+#: rdup-up.c:174
+#, c-format
+msgid "No such directory: `%s'"
+msgstr "No such directory: `%s'"
+
+#: xattr.c:36 xattr.c:48
+#, c-format
+msgid "No uid xattr for `%s'"
+msgstr "No uid xattr for `%s'"
+
+#: rdup-up.c:144
+msgid "Not implemented (yet)"
+msgstr "Not implemented (yet)"
+
+#: rdup-tr.c:406
+#, c-format
+msgid "Only %d extra args per child allowed"
+msgstr "Only %d extra args per child allowed"
+
+#: rdup-up.c:65
+#, c-format
+msgid "Pathname does not start with /: `%s'"
+msgstr "Pathname does not start with /: `%s'"
+
+#: entry.c:107
+msgid "Removing files is not supported for any output except rdup"
+msgstr "Removing files is not supported for any output except rdup"
+
+#: rdup-up.c:59
+#, c-format
+msgid "Reported name size (%zd) does not match actual name size (%zd)"
+msgstr "Reported name size (%zd) does not match actual name size (%zd)"
+
+#: crypt.c:147
+#, c-format
+msgid "Returning original string `%s'"
+msgstr "Returning original string `%s'"
+
+#: signal.c:27
+msgid "SIGINT received, exiting"
+msgstr "SIGINT received, exiting"
+
+#: signal.c:24
+msgid "SIGPIPE received, exiting"
+msgstr "SIGPIPE received, exiting"
+
+#: rdup.c:370 rdup.c:376
+#, c-format
+msgid "Skipping `%s'"
+msgstr "Skipping `%s'"
+
+#: xattr.c:59 xattr.c:81 xattr.c:111
+#, c-format
+msgid "Too large gid `%zd' for `%s', truncating"
+msgstr "Too large gid `%zd' for `%s', truncating"
+
+#: xattr.c:29
+#, c-format
+msgid "Too large uid `%zd' for `%s', truncating"
+msgstr "Too large uid `%zd' for `%s', truncating"
+
+#: usage-tr.c:14
+msgid ""
+"Translate rdup output to something else\tand optionally filter it\n"
+"through other processes. The input must be rdup's default ouput\n"
+"format: '%p%T %b %u %g %l %s %n\\n'.\n"
+"The output is equal to rdup -c ouput.\n"
+"\n"
+"\n"
+"    OPTIONS:\n"
+"        -c\t\tforce output to tty\n"
+"        -P CMD,opt0,...,opt6\n"
+"\t    \t\tfilter through CMD\n"
+"\t\t\tthis may be repeated, output will be filtered\n"
+"\t\t\tthrough all commands\n"
+"\t-X FILE\t\tencrypt all paths with AES and the key from FILE\n"
+"\t-Y FILE\t\tdecrypt all paths with AES and the key from FILE\n"
+"\t-h\t\tthis help\n"
+"\t-V\t\tprint version\n"
+"        -O FMT\t\toutput format: pax, cpio, tar or rdup\n"
+"\t\t\trdup uses format: \"%p%T %b %u %g %l %s\\n%n%C\"\n"
+"\t-L\t\tset input format to a list of pathnames\n"
+"\t-v\t\tbe more verbose and print processed files to stderr\n"
+"\n"
+"Report bugs to <miek@miek.nl>\n"
+"Licensed under the GPL version 3.\n"
+"See the file LICENSE in the source distribution of rdup.\n"
+msgstr ""
+"Translate rdup output to something else\tand optionally filter it\n"
+"through other processes. The input must be rdup's default ouput\n"
+"format: '%p%T %b %u %g %l %s %n\\n'.\n"
+"The output is equal to rdup -c ouput.\n"
+"\n"
+"\n"
+"    OPTIONS:\n"
+"        -c\t\tforce output to tty\n"
+"        -P CMD,opt0,...,opt6\n"
+"\t    \t\tfilter through CMD\n"
+"\t\t\tthis may be repeated, output will be filtered\n"
+"\t\t\tthrough all commands\n"
+"\t-X FILE\t\tencrypt all paths with AES and the key from FILE\n"
+"\t-Y FILE\t\tdecrypt all paths with AES and the key from FILE\n"
+"\t-h\t\tthis help\n"
+"\t-V\t\tprint version\n"
+"        -O FMT\t\toutput format: pax, cpio, tar or rdup\n"
+"\t\t\trdup uses format: \"%p%T %b %u %g %l %s\\n%n%C\"\n"
+"\t-L\t\tset input format to a list of pathnames\n"
+"\t-v\t\tbe more verbose and print processed files to stderr\n"
+"\n"
+"Report bugs to <miek@miek.nl>\n"
+"Licensed under the GPL version 3.\n"
+"See the file LICENSE in the source distribution of rdup.\n"
+
+#: entry.c:122
+msgid "Type must be one of d, l, h, -, c, b, p or s"
+msgstr "Type must be one of d, l, h, -, c, b, p or s"
+
+#: usage-tr.c:13
+#, c-format
+msgid "USAGE: %s [OPTION]... \n"
+msgstr "USAGE: %s [OPTION]... \n"
+
+#: usage-up.c:13
+#, c-format
+msgid "USAGE: %s [OPTION]... DIRECTORY\n"
+msgstr "USAGE: %s [OPTION]... DIRECTORY\n"
+
+#: usage.c:13
+#, c-format
+msgid "USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"
+msgstr "USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"
+
+#: signal.c:30
+msgid "Unhandled signal reveived, exiting"
+msgstr "Unhandled signal reveived, exiting"
+
+#: rdup-tr.c:465 rdup-up.c:150 rdup.c:341
+#, c-format
+msgid "Unknown option seen `%c'"
+msgstr "Unknown option seen `%c'"
+
+#: usage-up.c:14
+msgid ""
+"Update a directory tree with an rdup archive.\n"
+"The input must be rdup -c output\n"
+"\n"
+"        DIRECTORY\twhere to unpack the archive\n"
+"\n"
+"\n"
+"    OPTIONS:\n"
+"\t-t\t\tcreate DIRECTORY if is does not exist\n"
+"\t-s N\t\tstrip N leading path components from each path\n"
+"\t-n\t\tdry run, do not touch the filesystem\n"
+"\t-V\t\tprint version\n"
+"\t-h\t\tthis help\n"
+"\t-v\t\tbe more verbose and print processed files to stderr\n"
+"\n"
+"Report bugs to <miek@miek.nl>\n"
+"Licensed under the GPL version 3.\n"
+"See the file LICENSE in the source distribution of rdup.\n"
+msgstr ""
+"Update a directory tree with an rdup archive.\n"
+"The input must be rdup -c output\n"
+"\n"
+"        DIRECTORY\twhere to unpack the archive\n"
+"\n"
+"\n"
+"    OPTIONS:\n"
+"\t-t\t\tcreate DIRECTORY if is does not exist\n"
+"\t-s N\t\tstrip N leading path components from each path\n"
+"\t-n\t\tdry run, do not touch the filesystem\n"
+"\t-V\t\tprint version\n"
+"\t-h\t\tthis help\n"
+"\t-v\t\tbe more verbose and print processed files to stderr\n"
+"\n"
+"Report bugs to <miek@miek.nl>\n"
+"Licensed under the GPL version 3.\n"
+"See the file LICENSE in the source distribution of rdup.\n"
+
+#: crawler.c:196
+msgid "Walking into different filesystem"
+msgstr "Walking into different filesystem"
+
+#: rdup-tr.c:439
+msgid "Will not do both encryption and decryption"
+msgstr "Will not do both encryption and decryption"
+
+#: rdup-tr.c:365 rdup-up.c:112 rdup.c:265
+msgid "Will not run suid/sgid for safety reasons"
+msgstr "Will not run suid/sgid for safety reasons"
+
+#: rdup-tr.c:473
+msgid "Will not write to a tty"
+msgstr "Zal niet naar het scherm schrijven"
+
+#: fs-up.c:160 gfunc.c:75 gfunc.c:90 gfunc.c:167
+#, c-format
+msgid "Write failure `%s': %s"
+msgstr "Write failure `%s': %s"
+
+#: rdup-tr.c:176
+msgid "Writing to stderr failed"
+msgstr "Writing to stderr failed"
+
+#: protocol.c:93
+#, c-format
+msgid "Wrong protocol version `%c%c': want `%c%c'"
+msgstr "Wrong protocol version `%c%c': want `%c%c'"
