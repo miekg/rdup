@@ -95,9 +95,9 @@ main(int argc, char **argv)
 	guint		 strip = 0;
 	
 #ifdef ENABLE_NLS
-	setlocale(LC_ALL, "");
-	bindtextdomain(PROGNAME, LOCALEROOTDIR);
-	(void)textdomain(PROGNAME);
+	setlocale(LC_MESSAGES, "");
+	bindtextdomain(PACKAGE_NAME, LOCALEROOTDIR);
+	(void)textdomain(PACKAGE_NAME);
 #endif /* ENABLE_NLS */
 	
 	/* setup our signal handling */

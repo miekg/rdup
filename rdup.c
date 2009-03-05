@@ -240,11 +240,10 @@ main(int argc, char **argv)
 	struct sigaction sa;
 	
 	/* i18n, set domain to rdup */
-	/* really need LC_ALL? */
 #ifdef ENABLE_NLS
-	setlocale(LC_ALL, "");
-	bindtextdomain("rdup", LOCALEROOTDIR);
-	(void)textdomain("rdup");
+	setlocale(LC_MESSAGES, "");
+	bindtextdomain(PACKAGE_NAME, LOCALEROOTDIR);
+	(void)textdomain(PACKAGE_NAME);
 #endif /* ENABLE_NLS */
 	
 	/* setup our signal handling */
