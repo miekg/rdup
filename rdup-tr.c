@@ -342,16 +342,17 @@ main(int argc, char **argv)
 	char		 pwd[BUFSIZE + 1];
 	int		 c, i;
 	char		 *q, *r;
-	GSList		 *child    = NULL;		/* forked childs args: -P option */
+	GSList		 *child    = NULL;		/* forked child args: -P option */
 	char		 **args;
-	int		 childs    = 0;			/* number of childs */
+	int		 childs    = 0;			/* number of childeren */
 	
 #ifdef ENABLE_NLS
-	setlocale(LC_ALL, "");
-	bindtextdomain(PROGNAME, LOCALEROOTDIR);
-	(void)textdomain(PROGNAME);
+	if (!setlocale(LC_MESSAGES, ""))
+		msg(_("Locale could not be set"));
+	bindtextdomain(PACKAGE_NAME, LOCALEROOTDIR);
+	(void)textdomain(PACKAGE_NAME);
 #endif /* ENABLE_NLS */
-	
+
 	/* setup our signal handling */
 	sa.sa_flags   = 0;
 	sigfillset(&sa.sa_mask);

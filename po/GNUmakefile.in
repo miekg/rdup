@@ -8,6 +8,10 @@ mandir=@mandir@
 sysconfdir=@sysconfdir@
 datadir=@datadir@/rdup
 
+# copy rdup.pot to here
+# msginit OR copy rdup.pot to nl.po
+# and nl to LINGUAS and translate
+
 .SUFFIXES: .po .gmo .mo
 
 

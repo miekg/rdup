@@ -12,8 +12,6 @@ AC_PROG_CC
 AC_PROG_MAKE_SET
 
 AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No libglib2-dev found.]))
-#AM_GNU_GETTEXT([external])
-#AM_GNU_GETTEXT_VERSION
 AC_CHECK_FUNCS([dirfd])
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h sys/sysmacros.h archive.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
@@ -24,6 +22,9 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
    #endif
   ]
 ])
+
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION
 
 AC_MSG_CHECKING([whether to enable nettle])
 AC_ARG_WITH(nettle,
