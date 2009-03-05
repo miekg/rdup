@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: rdup 0.9.1\n"
-"PO-Revision-Date: 2009-03-05 16:50+0100\n"
-"Last-Translator: Miek Gieben <miek@miek.nl>\n"
-"Language-Team: Dutch\n"
+"PO-Revision-Date: 2009-03-05 17:56+0100\n"
+"Last-Translator: sven.grounsell <sven.grounsell@please_add_your_address.com>\n"
+"Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -76,38 +76,38 @@ msgstr ""
 #: crawler.c:166
 #, c-format
 msgid "%s found in '%s'"
-msgstr "%s gevonden in '%s'"
+msgstr "%s found in '%s'"
 
-#: rdup.c:336
+#: rdup.c:338
 msgid "-s requires a numerical value"
-msgstr "-s moet een numerieke waarde hebben"
+msgstr "-s requires a numerical value"
 
 #: crypt.c:278
 msgid "AES key must be 16, 24 or 32 bytes"
-msgstr "AES sleutel moet 16, 24 of 32 bytes lang zijn"
+msgstr "AES key must be 16, 24 or 32 bytes"
 
 #: entry.c:205 entry.c:227
 #, c-format
 msgid "Actual pathname length is not equal to pathname length at line: %zd"
 msgstr "Actual pathname length is not equal to pathname length at line: %zd"
 
-#: rdup-tr.c:376 rdup-up.c:123 rdup.c:276
+#: rdup-tr.c:376 rdup-up.c:125 rdup.c:278
 msgid "Argument length overrun"
 msgstr "Argument length overrun"
 
 #: protocol.c:109
 #, c-format
 msgid "BLOCK protocol seperator not found: `%c%c%c%c%c'"
-msgstr "BLOCK protocol scheider niet gevonden: `%c%c%c%c%c'"
+msgstr "BLOCK protocol seperator not found: `%c%c%c%c%c'"
 
 #: protocol.c:135
 #, c-format
 msgid "Block seen, start read of %d bytes"
-msgstr "Block gezien, start met lezen van %d bytes"
+msgstr "Block seen, start read of %d bytes"
 
 #: protocol.c:131
 msgid "Block size larger then BUFSIZE"
-msgstr "Block grootte groter dan BUFSIZE"
+msgstr "Block size larger then BUFSIZE"
 
 #: rdup-tr.c:450
 msgid "Can not do both encryption and decryption"
@@ -121,16 +121,16 @@ msgstr "Cannot determine holding device of the directory `%s': %s"
 #: crawler.c:98
 #, c-format
 msgid "Cannot enter directory `%s': %s"
-msgstr "Kan directorie niet in `%s': %s"
+msgstr "Cannot enter directory `%s': %s"
 
 #: rdup-tr.c:260
 msgid "Child exit, giving you the original file"
-msgstr "Kind einde, geef de originele file"
+msgstr "Child exit, giving you the original file"
 
 #: entry.c:86
 #, c-format
 msgid "Corrupt entry `%s' in input at line: %zd"
-msgstr "Corrupte entry `%s' in input at line: %zd"
+msgstr "Corrupt entry `%s' in input at line: %zd"
 
 #: rdup.c:180
 #, c-format
@@ -144,31 +144,31 @@ msgstr ""
 msgid "Corrupt regular expression line: %zd, column %d: %s"
 msgstr "Corrupt regular expression line: %zd, column %d: %s"
 
-#: rdup.c:427
+#: rdup.c:429
 #, c-format
 msgid "Could not create timestamp file `%s': %s"
-msgstr "Kan geen timestamp bestand creëren `%s': %s"
+msgstr "Could not create timestamp file `%s': %s"
 
-#: rdup-tr.c:370 rdup-up.c:117 rdup.c:270
+#: rdup-tr.c:370 rdup-up.c:119 rdup.c:272
 msgid "Could not get current working directory"
-msgstr "Kan de huidige werk directorie nit verkrijgen"
+msgstr "Could not get current working directory"
 
 #: gfunc.c:37 gfunc.c:63 rdup-tr.c:241 regexp.c:33
 #, c-format
 msgid "Could not open '%s': %s"
-msgstr "Kan niet openenen '%s': %s"
+msgstr "Could not open '%s': %s"
 
 #: crawler.c:45 crawler.c:131 entry.c:62 entry.c:218
 #, c-format
 msgid "Could not stat path `%s': %s"
 msgstr "Could not stat path `%s': %s"
 
-#: rdup.c:415
+#: rdup.c:417
 #, c-format
 msgid "Could not write filelist `%s': %s"
 msgstr "Could not write filelist `%s': %s"
 
-#: rdup-up.c:158
+#: rdup-up.c:160
 msgid "Destination directory is required"
 msgstr "Destination directory is required"
 
@@ -186,7 +186,7 @@ msgstr "Failed to calculate sha1 digest: `%s'"
 msgid "Failed to create archive"
 msgstr "Failed to create archive"
 
-#: fs-up.c:194 fs-up.c:203 rdup-up.c:169
+#: fs-up.c:194 fs-up.c:203 rdup-up.c:171
 #, c-format
 msgid "Failed to create directory `%s': %s"
 msgstr "Failed to create directory `%s': %s"
@@ -345,7 +345,7 @@ msgstr "Invalid permissions at line: %zd"
 msgid "Line longer than %d characters"
 msgstr "Line longer than %d characters"
 
-#: rdup-tr.c:351
+#: rdup-tr.c:351 rdup-up.c:99 rdup.c:246
 msgid "Locale could not be set"
 msgstr "Locale could not be set"
 
@@ -388,7 +388,7 @@ msgstr "Newline (\\n) found in path `%s', skipping"
 msgid "No gid xattr for `%s'"
 msgstr "No gid xattr for `%s'"
 
-#: rdup-up.c:174
+#: rdup-up.c:176
 #, c-format
 msgid "No such directory: `%s'"
 msgstr "No such directory: `%s'"
@@ -398,7 +398,7 @@ msgstr "No such directory: `%s'"
 msgid "No uid xattr for `%s'"
 msgstr "No uid xattr for `%s'"
 
-#: rdup-up.c:144
+#: rdup-up.c:146
 msgid "Not implemented (yet)"
 msgstr "Not implemented (yet)"
 
@@ -434,7 +434,7 @@ msgstr "SIGINT received, exiting"
 msgid "SIGPIPE received, exiting"
 msgstr "SIGPIPE received, exiting"
 
-#: rdup.c:370 rdup.c:376
+#: rdup.c:372 rdup.c:378
 #, c-format
 msgid "Skipping `%s'"
 msgstr "Skipping `%s'"
@@ -524,7 +524,7 @@ msgstr "USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"
 msgid "Unhandled signal reveived, exiting"
 msgstr "Unhandled signal reveived, exiting"
 
-#: rdup-tr.c:465 rdup-up.c:150 rdup.c:341
+#: rdup-tr.c:465 rdup-up.c:152 rdup.c:343
 #, c-format
 msgid "Unknown option seen `%c'"
 msgstr "Unknown option seen `%c'"
@@ -575,13 +575,13 @@ msgstr "Walking into different filesystem"
 msgid "Will not do both encryption and decryption"
 msgstr "Will not do both encryption and decryption"
 
-#: rdup-tr.c:365 rdup-up.c:112 rdup.c:265
+#: rdup-tr.c:365 rdup-up.c:114 rdup.c:267
 msgid "Will not run suid/sgid for safety reasons"
 msgstr "Will not run suid/sgid for safety reasons"
 
 #: rdup-tr.c:473
 msgid "Will not write to a tty"
-msgstr "Zal niet naar het scherm schrijven"
+msgstr "Will not write to a tty"
 
 #: fs-up.c:160 gfunc.c:75 gfunc.c:90 gfunc.c:167
 #, c-format
