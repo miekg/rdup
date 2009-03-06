@@ -23,8 +23,10 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION
+# post 1.0, this can be turned on
+# --disable-nls if you do not need it
+#AM_GNU_GETTEXT([external])
+#AM_GNU_GETTEXT_VERSION
 
 AC_MSG_CHECKING([whether to enable nettle])
 AC_ARG_WITH(nettle,
