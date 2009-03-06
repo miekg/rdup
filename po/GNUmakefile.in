@@ -43,6 +43,7 @@ install: all
 		cp $$i/rdup.mo ${localedir}/$$i/LC_MESSAGES/rdup.mo; \
 	done
 
-# mkdir nl, mv nl.mo to/nl/rdup.mo then install
 uninstall:
-	for i in $$(cat LINGUAS); do echo $$i; done
+	for i in $$(cat LINGUAS); do \
+		rm ${localedir}/$$i/LC_MESSAGES/rdup.mo; \
+	done
