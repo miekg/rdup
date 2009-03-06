@@ -12,8 +12,6 @@ AC_PROG_CC
 AC_PROG_MAKE_SET
 
 AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No libglib2-dev found.]))
-#AM_GNU_GETTEXT([external])
-#AM_GNU_GETTEXT_VERSION
 AC_CHECK_FUNCS([dirfd])
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h sys/sysmacros.h archive.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
@@ -37,14 +35,14 @@ AC_MSG_RESULT($with_nettle)
 
 if test "$with_nettle" != "no"; then
 	AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
-	if test "$NETTLE_L" == "no"; then
+	if test "$NETTLE_L" = "no"; then
 	    AC_MSG_WARN([** libnettle not found; not using crypto in rdup-tr.])
 	fi
 	AC_SUBST(NETTLE_L)
 fi
 
 AC_CHECK_LIB(archive, archive_entry_copy_symlink, ,ARCHIVE_L="no")
-if test "$ARCHIVE_L" == "no"; then
+if test "$ARCHIVE_L" = "no"; then
     AC_MSG_WARN([** libarchive not found; not building rdup-tr.])
 fi
 AC_SUBST(ARCHIVE_L)
