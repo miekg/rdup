@@ -160,5 +160,9 @@ rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | rdup-up $BACKUP/$HOSTNAME/$TODAY
 .fi
 .RE
 
+.SH RESTORES
+todo: restore stuff XXX
+ ./rdup-tr -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret           
+
 .SH ALSO SEE
 rdup(1), rdup-tr(1), rdup-up(1) or http://www.miek.nl/projects/rdup/
