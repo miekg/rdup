@@ -1,6 +1,7 @@
-xx Mar 2009: 0.9.1 Miek <miek@miek.nl>
+30 Mar 2009: 0.9.1 Miek <miek@miek.nl>
   - bugfixes only -
   * rdup*: code cleanups
+  * documentation tweaks
 
 
 01 Mar 2009: 0.9.0 Miek <miek@miek.nl>
