@@ -89,34 +89,34 @@ msgstr "AES sleutel moet 16, 24 of 32 bytes lang zijn"
 #: entry.c:205 entry.c:227
 #, c-format
 msgid "Actual pathname length is not equal to pathname length at line: %zd"
-msgstr "Actual pathname length is not equal to pathname length at line: %zd"
+msgstr "Gerapporteerde padnaam lengte is niet gelijk aan de echte op regel: %zd"
 
 #: rdup-tr.c:376 rdup-up.c:123 rdup.c:276
 msgid "Argument length overrun"
-msgstr "Argument length overrun"
+msgstr "Argument te lang"
 
 #: protocol.c:109
 #, c-format
 msgid "BLOCK protocol seperator not found: `%c%c%c%c%c'"
-msgstr "BLOCK protocol scheider niet gevonden: `%c%c%c%c%c'"
+msgstr "BLOK protocol scheider niet gevonden: `%c%c%c%c%c'"
 
 #: protocol.c:135
 #, c-format
 msgid "Block seen, start read of %d bytes"
-msgstr "Block gezien, start met lezen van %d bytes"
+msgstr "Blok gezien, start met lezen van %d bytes"
 
 #: protocol.c:131
 msgid "Block size larger then BUFSIZE"
-msgstr "Block grootte groter dan BUFSIZE"
+msgstr "Blok grootte groter dan BUFSIZE"
 
 #: rdup-tr.c:450
 msgid "Can not do both encryption and decryption"
-msgstr "Can not do both encryption and decryption"
+msgstr "Ga niet tegelijk coderen en decoderen"
 
 #: crawler.c:109
 #, c-format
 msgid "Cannot determine holding device of the directory `%s': %s"
-msgstr "Cannot determine holding device of the directory `%s': %s"
+msgstr "Kan niet vast stellen bij welk apparaat de directorie hoort `%s': %s"
 
 #: crawler.c:98
 #, c-format
@@ -125,12 +125,12 @@ msgstr "Kan directorie niet in `%s': %s"
 
 #: rdup-tr.c:260
 msgid "Child exit, giving you the original file"
-msgstr "Kind einde, geef de originele file"
+msgstr "Einde van kind, stuur de originele file"
 
 #: entry.c:86
 #, c-format
 msgid "Corrupt entry `%s' in input at line: %zd"
-msgstr "Corrupte entry `%s' in input at line: %zd"
+msgstr "Entrie corrupt `%s' in input at line: %zd"
 
 #: rdup.c:180
 #, c-format
@@ -151,7 +151,7 @@ msgstr "Kan geen timestamp bestand creëren `%s': %s"
 
 #: rdup-tr.c:370 rdup-up.c:117 rdup.c:270
 msgid "Could not get current working directory"
-msgstr "Kan de huidige werk directorie nit verkrijgen"
+msgstr "Kan de huidige werkdirectorie niet verkrijgen"
 
 #: gfunc.c:37 gfunc.c:63 rdup-tr.c:241 regexp.c:33
 #, c-format
@@ -161,16 +161,16 @@ msgstr "Kan niet openenen '%s': %s"
 #: crawler.c:45 crawler.c:131 entry.c:62 entry.c:218
 #, c-format
 msgid "Could not stat path `%s': %s"
-msgstr "Could not stat path `%s': %s"
+msgstr "Kan pad niet stat-ten `%s': %s"
 
 #: rdup.c:415
 #, c-format
 msgid "Could not write filelist `%s': %s"
-msgstr "Could not write filelist `%s': %s"
+msgstr "Kan de filelist niet schrijven  `%s': %s"
 
 #: rdup-up.c:158
 msgid "Destination directory is required"
-msgstr "Destination directory is required"
+msgstr "Doel directorie is nodig"
 
 #: link.c:47
 #, c-format
@@ -386,68 +386,68 @@ msgstr "Newline (\\n) found in path `%s', skipping"
 #: xattr.c:88 xattr.c:100
 #, c-format
 msgid "No gid xattr for `%s'"
-msgstr "No gid xattr for `%s'"
+msgstr "Geen gid xattr voor `%s'"
 
 #: rdup-up.c:174
 #, c-format
 msgid "No such directory: `%s'"
-msgstr "No such directory: `%s'"
+msgstr "Directory bestaat niet: `%s'"
 
 #: xattr.c:36 xattr.c:48
 #, c-format
 msgid "No uid xattr for `%s'"
-msgstr "No uid xattr for `%s'"
+msgstr "Geen uid xattr voor `%s'"
 
 #: rdup-up.c:144
 msgid "Not implemented (yet)"
-msgstr "Not implemented (yet)"
+msgstr "(Nog) niet geimplementeerd"
 
 #: rdup-tr.c:406
 #, c-format
 msgid "Only %d extra args per child allowed"
-msgstr "Only %d extra args per child allowed"
+msgstr "Maar %d extra argumenten per kind toegestaan"
 
 #: rdup-up.c:65
 #, c-format
 msgid "Pathname does not start with /: `%s'"
-msgstr "Pathname does not start with /: `%s'"
+msgstr "Padnaam begint niet met een  /: `%s'"
 
 #: entry.c:107
 msgid "Removing files is not supported for any output except rdup"
-msgstr "Removing files is not supported for any output except rdup"
+msgstr "Verwijderen van bestanden is alleen mogelijk bij rdup uitvoer"
 
 #: rdup-up.c:59
 #, c-format
 msgid "Reported name size (%zd) does not match actual name size (%zd)"
-msgstr "Reported name size (%zd) does not match actual name size (%zd)"
+msgstr "Gerapporteerde naam lengte (%zd) komt niet overeen met de echte (%zd)"
 
 #: crypt.c:147
 #, c-format
 msgid "Returning original string `%s'"
-msgstr "Returning original string `%s'"
+msgstr "Geef de originele string terug `%s'"
 
 #: signal.c:27
 msgid "SIGINT received, exiting"
-msgstr "SIGINT received, exiting"
+msgstr "SIGINT ontvangen, dag"
 
 #: signal.c:24
 msgid "SIGPIPE received, exiting"
-msgstr "SIGPIPE received, exiting"
+msgstr "SIGPIPE ontvangen, dag"
 
 #: rdup.c:370 rdup.c:376
 #, c-format
 msgid "Skipping `%s'"
-msgstr "Skipping `%s'"
+msgstr "Sla over `%s'"
 
 #: xattr.c:59 xattr.c:81 xattr.c:111
 #, c-format
 msgid "Too large gid `%zd' for `%s', truncating"
-msgstr "Too large gid `%zd' for `%s', truncating"
+msgstr "Te grote gid `%zd' voor `%s', truncating"
 
 #: xattr.c:29
 #, c-format
 msgid "Too large uid `%zd' for `%s', truncating"
-msgstr "Too large uid `%zd' for `%s', truncating"
+msgstr "Te grote gid `%zd' voor `%s', truncating"
 
 #: usage-tr.c:14
 msgid ""
@@ -507,18 +507,18 @@ msgstr "Type must be one of d, l, h, -, c, b, p or s"
 
 #: usage-tr.c:13
 #, c-format
-msgid "USAGE: %s [OPTION]... \n"
-msgstr "USAGE: %s [OPTION]... \n"
+msgid "GEBRUIK: %s [OPTION]... \n"
+msgstr "GEBRUIK: %s [OPTION]... \n"
 
 #: usage-up.c:13
 #, c-format
-msgid "USAGE: %s [OPTION]... DIRECTORY\n"
-msgstr "USAGE: %s [OPTION]... DIRECTORY\n"
+msgid "GEBRUIK: %s [OPTION]... DIRECTORY\n"
+msgstr "GEBRUIK: %s [OPTION]... DIRECTORY\n"
 
 #: usage.c:13
 #, c-format
-msgid "USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"
-msgstr "USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"
+msgid "GEBRUIK: %s [OPTION]... FILELIST DIR|FILE...\n"
+msgstr "GEBRUIK: %s [OPTION]... FILELIST DIR|FILE...\n"
 
 #: signal.c:30
 msgid "Unhandled signal reveived, exiting"
@@ -527,7 +527,7 @@ msgstr "Unhandled signal reveived, exiting"
 #: rdup-tr.c:465 rdup-up.c:150 rdup.c:341
 #, c-format
 msgid "Unknown option seen `%c'"
-msgstr "Unknown option seen `%c'"
+msgstr "Onbekende optie gezien `%c'"
 
 #: usage-up.c:14
 msgid ""
