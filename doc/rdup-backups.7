@@ -6,7 +6,7 @@ rdup-backups \- introduction into making backups with rdup
 
 .SH INTRODUCTION
 \fBrdup\fR is a simple program that prints out a list of files and
-directories that are changed changed on a filesystem. It is much
+directories that are changed changed on a filesystem. It is 
 more sophisticated than for instance \fIfind\fR, because \fBrdup\fR
 will find files that are removed or directories that are renamed.
 
@@ -32,7 +32,7 @@ output. See rdup-tr(1) for more information.
 .TP 
 .B rdup-up
 With \fBrdup-up\fR you can update an existing directory structure with the
-updates as describe by rdup. 
+updates as described by rdup. 
 
 \fBrdup-up\fR reads \fBrdup -c\fR input and will create the files,
 symlinks, hardlinks and directories (and sockets, pipes and devices)
@@ -45,7 +45,11 @@ this:
     create filelist  |  transform file content  |  update filesystem
     ( rdup           |  rdup-tr                 |  rdup-up )
 
-There is also a little shell script that can be used to create a hard
+Note that the same sequence is used for restoring. In both
+cases you want to move files from location A to B. The only difference
+is that the transformation is reversed when you restore.
+
+There is a little shell script that can be used to create a hard
 linked directory structure, this script \fBrdup-ln.sh\fR is installed
 in '/usr/lib/rdup/'. The script looks back for previous backup and
 then creates a hardlinked directory structure. By using this script
@@ -105,6 +109,13 @@ will need encryption. This is where you go beyond \fBrsync\fR and
 can encrypt the network traffic with ssh, but at the remote side
 your files are kept in plain view.
 	 
+If you implement remote backups, the easy route is to allow root
+access on the backup medium. If the backup runs without root
+access the created files will not have their original ownership.
+For NFS this can be achieved by using \fBno_root_squash\fR, for
+\fBssh\fR you could enable \fIPermitRootLogin\fR. Note that this
+may be a security risk.
+
 .SH SNAPSHOT BACKUPS
 We need a little help here in the form of the \fBrdup-ln.sh\fR script.
 Keep in mind that the following scripts can also be run remotely with

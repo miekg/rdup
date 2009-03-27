@@ -1,5 +1,7 @@
 TODO:
 
+-X/-Y filelength larger than 255?
+
 post 1.0
 - rdup internal filelist is fast becoming identical to its
   output. So any special reading of this list can go
