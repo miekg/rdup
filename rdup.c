@@ -15,6 +15,7 @@ gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
 gint opt_verbose 	   = 0;                       /* be more verbose */
+gboolean opt_atime	   = 0;			      /* reset access time */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file c|m time */
 
@@ -280,7 +281,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "crlmhVRnd:N:M:s:vqx0F:E:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:s:vqx0F:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -288,6 +289,9 @@ main(int argc, char **argv)
 			case 'E':
 				if (!regexp_init(optarg)) 
 					exit(EXIT_FAILURE);
+				break;
+			case 'a':
+				opt_atime = TRUE;
 				break;
 			case 'c':
 				opt_format = "%p%T %b %u %g %l %s\n%n%C";
