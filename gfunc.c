@@ -85,7 +85,6 @@ cat(FILE *fp, char *filename)
 
 	fclose(file);
 	if (!nullblock) {
-		block_out_header(fp, 0, -1); /* tell the other side, this was the last one */
 		if (block_out_header(fp, 0, -1) == -1) {
 			msg(_("Write failure `%s\': %s"), filename, strerror(errno));
 			fclose(file);
