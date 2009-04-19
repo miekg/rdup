@@ -1,6 +1,12 @@
-30 Mar 2009: 0.9.1 Miek <miek@miek.nl>
+xx May 2009: 1.0.0 Miek <miek@miek.nl>
+  - 1.0.0 release! -
+  * 
+
+
+16 Apr 2009: 0.9.1 Miek <miek@miek.nl>
   - bugfixes only -
   * rdup*: code cleanups
+  * rdup -c: fix the block based output (Reported by Jared Henley)
   * documentation tweaks
 
 

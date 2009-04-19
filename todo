@@ -13,6 +13,12 @@ post 1.0
 - drop pcre3 and use regexp from glib
 - i18n - it's ALL C now - so much more easy, than the 
   C/Perl/sh kludge we had
+- use libarchive to make zip and/or iso 9660 files? why not?
+  if the impact is low...
+- -a or --atime-preserve in rdup (when used with -c) and
+  also in rdup-tr
+- -m for fs-up
+- -a and -m exactly as in cpio - same semantics
 
 :general:
 - glib test unit framework also?
