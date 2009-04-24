@@ -141,9 +141,9 @@ if [[ ${dest:0:6} == "ssh://" ]]; then
 
 	c="-c"
 	if [[ -z $u ]]; then
-		ssh=" ssh -x $h"
+		ssh=" ssh -c blowfish -x $h"
 	else
-		ssh=" ssh -x $u@$h"
+		ssh=" ssh -c blowfish -x $u@$h"
 	fi
 fi
 if [[ ${dest:0:7} == "file://" ]]; then
