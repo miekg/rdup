@@ -36,6 +36,8 @@ mk_dev(struct r_entry *e, gboolean exists) {
 		msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
 	}
 	chmod(e->f_name, e->f_mode);
+	if (getuid() == 0)
+		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { }
 	return TRUE;
 }
 
@@ -56,6 +58,8 @@ mk_sock(struct r_entry *e, gboolean exists) {
 		msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
 	}
 	chmod(e->f_name, e->f_mode);
+	if (getuid() == 0)
+		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { }
 	return TRUE;
 }
 
@@ -96,6 +100,8 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 				return FALSE;
 			}
 		}
+		if (getuid() == 0)
+			if (lchown(e->f_name, e->f_uid, e->f_gid) == -1) { }
 		return TRUE;
 	}
 
@@ -144,6 +150,10 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 
 	if (ok && !opt_dry)
 		chmod(e->f_name, e->f_mode);
+
+	/* only root my chown files */
+	if (ok && !opt_dry && getuid() == 0)
+		if (fchown(fileno(out), e->f_uid, e->f_gid) == -1) { } /* todo */
 
 	/* we need to read the input to not upset
 	 * the flow into rdup-up, but we are not
@@ -204,6 +214,10 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 			return FALSE;
 		}
 	}
+	/* only root my chown files */
+	if (getuid() == 0)
+		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { }
+			
 	return TRUE;
 }
 
