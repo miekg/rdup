@@ -95,3 +95,7 @@ uninstall:
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	for i in ${MAN7}; do rm -f  ${DESTDIR}${mandir}/man7/`basename $$i` ; done
 	$(MAKE) -C po uninstall
+
+check:	all
+	[ -d testlogs ] || mkdir testlogs
+	runtest 
