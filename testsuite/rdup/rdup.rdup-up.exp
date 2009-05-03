@@ -1,0 +1,6 @@
+set test "cat data | rdup-up -t /tmp/test  must not yield any output"
+spawn ./testsuite/rdup/rdup.rdup-up.helper
+expect {
+    -re "" { pass "$test" }
+	default { fail "$test" }
+}

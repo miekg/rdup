@@ -1,149 +1,8 @@
 +d 0755 0 0 5 0
 /home+d 0755 1000 1000 11 0
-/home/miekg+d 0775 1000 1000 16 0
-/home/mi/ekg/bin+- 0775 1000 1000 19 9138
-/home/mi/ekg/bin/VI01BLOCK02138
-#!/bin/sh
-EDITOR=${EDITOR-vi}
-
-if test "$1" = "-g"
-then
-	GROUP="TRUE"
-	shift
-fi
-
-for feil
-do
-user=`whoami`
-
-if test -z "$feil"
-then
-	case $user in
-	*)
-		echo "Usage: $0 [-g] <RCS filename>"
-		echo "	-g checks on group access rather than user access."
-		exit 1
-	;;
-	esac
-fi
-
-if test ! -f "$feil"
-then
-	echo "File $feil does not exist."
-	echo "Do you want me to create the file and bring it under RCS?"
-	read ack
-	if test "$ack" = "y"
-	then
-		touch $feil
-		chmod 444 $feil
-		rcs -i -q $feil
-	else
-		echo "No changes made."
-		continue
-	fi
-fi
-
-owner=`ls -l $feil | awk '{print $3}'`
-group=`ls -lg $feil | awk '{print $3}'`
-usergroup=`groups | grep $group`
-
-if test ! -f "`dirname $feil`/RCS/`basename $feil`,v" -a ! -f "$feil,v"
-then
-	echo "File not yet under RCS. Do you want me to put it under RCS?"
-	read ack
-	if test "$ack" != "y"
-	then
-		echo "No changes made."
-		continue
-	else
-		ci -q $feil
-	fi
-fi
-
-if test "$GROUP" != "TRUE"
-then
-	if test "$owner" != "$user" 
-	then
-		echo "You should su $owner first or use the -g option."
-		exit 1
-	fi
-else
-	if test -z "$usergroup"
-	then
-		echo "No group permission."
-		exit 1
-	fi
-fi
-
-# Check to see if any changes have been made by an unsuspecting user
-if `rcsdiff $feil > /dev/null 2> /dev/null`
-then
-	:
-else
-	echo
-	echo 'These undocumented changes have been made:'
-	echo
-	rcsdiff -q $feil
-	echo
-	echo 'Do you want these changes to be discarded?'
-	read ack
-	if test "$ack" = "y"
-	then
-		co -f -l -q $feil
-		ci -u $feil
-	else
-		rcs -l -q $feil
-		ci -u -q $feil
-	fi
-	echo
-fi
-
-if `co -l -q $feil`
-then
-	echo
-	ack="X"
-	while `test "$ack" != "y"`
-	do
-		${EDITOR} $feil
-		if `rcsdiff -q $feil >/dev/null`
-		then
-			echo 'No changes made'
-			ack="y"
-		else
-			rcsdiff -q $feil
-			echo
-			echo "Are these changes correct? (y/n/p/q)"
-			echo "        (yes/no/pause/quit, no changes)"
-			read ack
-			if test "$ack" = "p"
-			then
-				echo "Use exit to return."
-				echo "Please note $feil may be changed."
-				echo
-				sh
-			fi
-			if test "$ack" = "q"
-			then
-				co -f -l -q $feil
-				echo
-				ack="y"
-			fi
-		fi
-	done
-	ci -u -q $feil
-	echo
-	continue
-else	
-	echo
-	echo "No changes made."
-	continue
-fi
-
-done
-01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 39 902
-/home/miekg/bin/apache2-ssl-certificate01BLOCK00902
+/home/miekg+d 0755 1000 1000 15 0
+/home/miekg/bin+- 0755 1000 1000 39 889
+/home/miekg/bin/apache2-ssl-certificate01BLOCK00889
 #!/bin/sh -e
 
 if [ "$1" != "--force" -a -f /etc/apache2/ssl/apache.pem ]; then
@@ -161,14 +20,14 @@ echo "replace it with one signed by a certification authority (CA)"
 echo
 echo enter your ServerName at the Common Name prompt
 echo
-echo If you want your certificate to expire after x days call this programm 
-echo with "-days x" 
+echo If you want your certificate to expire after x days call this programm
+echo with "-days x"
 
 # use special .cnf, because with normal one no valid selfsigned
 # certificate is created
 
 export RANDFILE=/dev/random
-openssl req $@ -config /etc/apache-ssl/ssleay.cnf \
+openssl req $@ -config /etc/ssleay.cnf \
   -new -x509 -nodes -out /etc/apache2/ssl/apache.pem \
   -keyout /etc/apache2/ssl/apache.pem
 chmod 600 /etc/apache2/ssl/apache.pem
@@ -176,13 +35,11 @@ ln -sf /etc/apache2/ssl/apache.pem \
   /etc/apache2/ssl/`/usr/bin/openssl \
   x509 -noout -hash < /etc/apache2/ssl/apache.pem`.0
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 18 14
++- 0755 1000 1000 18 14
 /home/miekg/bin/cx01BLOCK00014
 chmod +x "$@"
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 21 1651
++- 0755 1000 1000 21 1651
 /home/miekg/bin/diary01BLOCK01651
 #!/bin/bash
 
@@ -276,8 +133,7 @@ case $1 in
     ;;
 esac
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 24 152
++- 0755 1000 1000 24 152
 /home/miekg/bin/docpurge01BLOCK00152
 #!/bin/bash
 # delete stuff in /usr/share/doc
@@ -288,8 +144,7 @@ for i in $DOCDIR/*; do
 done
 echo $0: Removed docs from /usr/share/doc
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 19 207
++- 0755 1000 1000 19 207
 /home/miekg/bin/eee01BLOCK00207
 #!/bin/zsh
 
@@ -306,8 +161,7 @@ case $1 in
 		;;
 esac
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 21 4543
++- 0755 1000 1000 21 4543
 /home/miekg/bin/gb.pl01BLOCK04543
 #!/usr/bin/perl
 
@@ -511,8 +365,7 @@ while(<>) {
     }
 }
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 21 1556
++- 0755 1000 1000 21 1556
 /home/miekg/bin/gconf01BLOCK01556
 #!/bin/zsh
 
@@ -544,129 +397,7 @@ do
     gconftool-2 -t $type -s $keyname $value
 done
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 21 1432
-/home/miekg/bin/gitvi01BLOCK01432
-#!/bin/zsh
-# a wrapper around git and vi
-# (c) Copyright Miek Gieben, 2009
-# Licensed under GPL v3
-# expands $[H]ash$ to $[H]ash: file short_hash date committer $
-# block quotes are there to fool gitvi
-# $Hash$
-
-[[ ! -x =git ]] && exit 1
-
-who=${SUDO_USER:-$LOGNAME}
-full=$(getent passwd $who | awk -F: '{ gsub(/,*/, ""); print $5 }')
-author="$full <$who@atoom.net>"
-
-function usage {
-    cat <<-EOF
- gitvi [-h] [-m MSG] FILE [FILE]...
-
- use git and vi together
-
-     -m MSG    use MSG as commit message
-     -h        this help
-EOF
-    exit
-}
-
-zparseopts -D -K -- m:=o_msg h=o_help
-[[ $? != 0 || "$o_help" != "" ]] && usage
-o_msg=$o_msg[2]
-
-for file in "$@"; do
-    dir=$(dirname "$file")
-    cd "$dir"
-    base=$(basename "$file")
-
-    if [[ x"$(git rev-parse --git-dir 2>/dev/null)" = x"" ]]; then
-	# make a new one in $PWD
-	git init || exit 1
-    fi
-    chmod +w "$base" 2> /dev/null
-
-    if ${EDITOR:-/usr/bin/vi} "$base"; then
-	[[ ! -e $base ]] && exit 0
-	git add $base
-	# collapse $Hash$ line
-	sed -i -e 's/\$[H]ash:.*\$/$H''ash$/' "$base"
-	if [[ -z "$o_msg" ]]; then
-	    git commit --author "$author" "$base"
-	else
-	    git commit -m "$o_msg" --author "$author" "$base"
-	fi
-    fi
-
-    id=$(git-show -s --pretty=format:$base\ %h\ %ci\ $who%n -- "$base") 
-    [[ -z $id ]] && exit 1
-
-    # re-add $Hash$ line
-    sed -i -e 's/\$[H]ash\$'/\$H''ash:\ $id\ \$/ "$base"
-
-    chmod a-w $base 2> /dev/null
-    cd - >/dev/null
-done
-01BLOCK00000
-01BLOCK00000
-+- 0664 1000 1000 23 1243
-/home/miekg/bin/gitvi.101BLOCK01243
-'\" t
-.TH GITVI 1 "27 Dec 2008" "0.1.0" "gitvi"
-
-.SH NAME
-gitvi \- a wrapper around git and vi(m)
-
-.SH SYNOPSIS
-gitvi [-m MSG] [-h] [\fIFILE\fR]
-
-.SH DESCRIPTION
-Edit files and commit them to a git repository. If FILE is not
-given nothing is done.
-
-All the directories from the current one up to the root are
-search for a .git directory. If no directory is found
-a new git repository is created in the directory where
-FILE is located. A new repository will never be created in the root directory.
-.PP
-The special sequence $Hash$ is expanded by \fBgit-vi\fR to 
-
-.RS
-$Hash: sha1hash filename date committer $
-.RE
-.PP
-This expanded $Hash$ syntax is \fInot\fR commited to git, this
-is done after the commit has taken place. This means there will
-also be a diff between the file on disk and the one committed in
-git.
-
-Note, due to the expansion of $Hash$ it is impossible to edit
-\fBgit-vi\fR with \fBgit-vi\fR.
-
-.SH OPTIONS
-.TP
-.B o
-\-h
-a short unhelpfull help message.
-.TP
-.B o
-\-m MSG
-use MSG as a commit message, when editing multiple files \fIall\fR
-edits will get this a their commit message.
-
-.SH AUTHOR
-Miek Gieben <miek@miek.nl>
-
-.SH LICENSE
-Licensed under the GPL version 3. Copyright (c) Miek Gieben, 2009
-
-.SH SEE ALSO
-vim(1), git(1).
-01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 25 504
++- 0755 1000 1000 25 504
 /home/miekg/bin/htmlwdiff01BLOCK00504
 #!/bin/sh
 #
@@ -685,9 +416,15 @@ echo "</pre>"
 rm -f $a1
 rm -f $a2
 01BLOCK00000
++- 0775 1000 1000 24 300
+/home/miekg/bin/mencoder01BLOCK00300
+mencoder -oac lavc -ovc lavc -of mpeg -mpegopts format=dvd:tsaf \
+-vf scale=presize=pal,harddup -srate 48000 -af lavcresample=48000 -lavcopts \
+vcodec=mpeg2video:vrc_buf_size=1835:vrc_maxrate=9800:vbitrate=5000:keyint=15:vstrict=0:acodec=mp2:abitrate=256:aspect=16/9 \
+-ofps 25 -o "$1".mpeg "$1".avi
 01BLOCK00000
-+- 0775 1000 1000 23 1169
-/home/miekg/bin/nbadmin01BLOCK01169
++- 0755 1000 1000 23 2633
+/home/miekg/bin/nbadmin01BLOCK02633
 #!/bin/bash
 
 COM_BASE="/home/miekg/miek.nl/blog/comments"
@@ -695,13 +432,63 @@ NB_BASE="/home/miekg/miek.nl/blog"
 
 # a clone of listadmin, but then for acking comments in my site
 
+# get a list of all mail subscribers to these thread
+# give the current comment dir as arg
+function subscribers {
+    SUB=
+    for i in $@; do
+	if [ "$(basename $i)" = "*" ]; then shift; continue; fi
+	mailline=$(sed -n '2p' < $i)
+	mailyesno=${mailline:0:2}
+	mailaddr=${mailline:2}
+	if [[ $mailaddr == "nobody@example.net" ]]; then
+	    mailyesno="N "
+	fi
+	case $mailyesno in
+	    "Y ")
+		uniq=yes
+		for j in $SUB; do
+		    if [[ $j = $mailaddr ]]; then
+			uniq=no
+		    fi
+		done
+		[[ $uniq == "yes" ]] && SUB="$SUB $mailaddr"
+		;;
+	esac
+    done
+    echo $SUB
+}
+
+# send mail to the subscribers
+# args: comment file and subscriber list
+function mail {
+    comfile=$1; shift
+    comtitle=$1; shift
+    for addr in $@; do
+	( echo -e "Hello,\n\nThis is an email to inform you of a new comment\nat http://miek.nl ."
+	echo -e "It is posted under the blog entry titled \`${comtitle:0:20}'\n"
+	sed -n '1p' < $comfile | sed -e 's/^/    /'
+	# newline between url and body
+	echo
+	# clean the message up somewhat
+	sed -n '3,10p' < $comfile | sed 's///' | sed 's/<br \/>//' | \
+	fmt -u -w 60 | sed -e 's/^/    /'
+	echo -e "\n\n--\nComment notify sent by http://miek.nl - $(date)"
+	echo -e "Notifies will be sent until commenting is closed"
+	) | /usr/bin/mail -s "Comment notify miek.nl: \`${comtitle:0:20}'" $addr
+	echo "Sending notify to $addr"
+    done
+}
+
 for art in $COM_BASE/*.txt; do
     com=$art/new/*
     bart=$(basename $art)
     title=$(grep '^TITLE' $NB_BASE/data/${bart//e/} | head -1)
+    sub=$(subscribers $com)
+
     set -- $com     # turn $com in $@
     while (($# > 0)); do
-	if [ "$(basename $1)" = "*" ]; then
+	if [[ "$(basename $1)" = "*" ]]; then
 	    # empty dir
 	    shift
 	    continue
@@ -717,6 +504,8 @@ for art in $COM_BASE/*.txt; do
 	[[ -z $reply ]] && reply="N"
 	case $reply in
 	    A*|a*)
+	    # send notifies, do this before the mv!
+	    mail $1 "${title//TITLE: /}" "$sub"
 	    echo "new/$(basename $1) -> ok/$(basename $1)"
 	    if ! mv $1 $art/ok ; then
 		echo "$0: mv failed!" >&2
@@ -746,8 +535,7 @@ for art in $COM_BASE/*.txt; do
     done
 done
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 23 279
++- 0755 1000 1000 23 279
 /home/miekg/bin/nbemail01BLOCK00279
 #!/bin/bash
 
@@ -762,9 +550,8 @@ while (($# > 0)); do
     shift
 done | sort -u
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 24 655
-/home/miekg/bin/nbnotify01BLOCK00655
++- 0775 1000 1000 24 777
+/home/miekg/bin/nbnotify01BLOCK00777
 #!/bin/bash
 # send email for the comments that are found in my website
 COM_BASE="/home/miekg/miek.nl/blog/comments"
@@ -776,10 +563,16 @@ let i=0
 for art in $COM_BASE/*.txt; do
     bart=$(basename $art)
     title=$(grep '^TITLE' $NB_BASE/data/${bart//e/} | head -1)
+    j=0
     for com in $art/new/*; do
-	if [[ "$com" = "$art/new/*" ]]; then continue; fi
+	[[ "$com" = "$art/new/*" ]] && continue
+	[[ $j -eq 0 ]] && BODY="$BODY\n$art"
+	firstline=$(sed -n 3p < $com)
+
 	BODY="$BODY\n o \"${title//TITLE: /}\"    ${com//$art\/}"
+	BODY="$BODY\n\t\"${firstline:0:65}\" ..."
 	let i=i+1
+	let j=j+1
     done
 done
 
@@ -792,8 +585,7 @@ if [[ ! -z "$BODY" ]]; then
     echo -e ${BODY}
 fi
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 27 1655
++- 0755 1000 1000 27 1655
 /home/miekg/bin/post-commit01BLOCK01655
 #!/bin/bash
 
@@ -857,18 +649,15 @@ cat $MAIL_FILE | \
 mail -s "[svn: rdup/$BRANCH] r$REV status" miek@atoom.net
 rm -f $MAIL_FILE
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 22 33
++- 0755 1000 1000 22 33
 /home/miekg/bin/svnexe01BLOCK00033
 svn propset svn:executable on $@
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 21 31
++- 0755 1000 1000 21 31
 /home/miekg/bin/svnid01BLOCK00031
 svn propset svn:keywords Id $@
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 22 528
++- 0755 1000 1000 22 528
 /home/miekg/bin/svnlog01BLOCK00528
 #!/bin/sh
 
@@ -898,8 +687,7 @@ for file in $@; do
 	fi
 done
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 21 163
++- 0755 1000 1000 21 163
 /home/miekg/bin/svnrm01BLOCK00163
 #!/bin/zsh
 
@@ -910,8 +698,7 @@ fi
 svn st --no-ignore | grep '^[I\?]' | sed 's/^[I\?] *//' | \
 tr '\n' '\0' | xargs -i -0  rm  "{}"
 01BLOCK00000
-01BLOCK00000
-+- 0775 1000 1000 17 2947
++- 0755 1000 1000 17 2947
 /home/miekg/bin/t01BLOCK02947
 #!/usr/bin/perl
 #
@@ -1023,8 +810,28 @@ if ($SOURCE eq "NOS") {
 
 display @Output;
 01BLOCK00000
++- 0775 1000 1000 20 190
+/home/miekg/bin/term01BLOCK00190
+#!/bin/zsh
+
+EXE=/usr/bin/xfce4-terminal
+
+# xterm wrapper
+case $HOST in
+    foton)
+	geom="100x40"
+	;;
+    elektron)
+	geom="80x25"
+	;;
+    charm)
+	geom="80x25"
+	;;
+esac
+
+$EXE --geometry $geom
 01BLOCK00000
-+- 0775 1000 1000 20 28303
++- 0755 1000 1000 20 28303
 /home/miekg/bin/tpkg01BLOCK08192
 #!/bin/bash
 
@@ -1912,7 +1719,261 @@ else
 fi
 exit $failed
 01BLOCK00000
-01BLOCK00000
 +l 0777 1000 1000 23 18
-/home/miekg/bin/tt -> t+l 0777 1000 1000 46 19
-/home/miekg/bin/ztf -> /home/miekg/git/ztf/ztf
+/home/miekg/bin/tt -> t+- 0775 1000 1000 21 961
+/home/miekg/bin/visit01BLOCK00961
+#!/bin/zsh
+
+# make a nice visitors page for use on miek.nl
+
+( cat <<HEADER
+_head(miek.nl - visitors)
+
+_rednav
+_greynav
+_start(visitors)
+
+_content
+<div id="columns">
+<div id="content">
+HEADER
+
+# create the content
+visitors -T -A -P http://www.miek.nl /var/log/apache2/miek.nl-access.log \
+--exclude 'robots.txt' | sed -e 's/^<html>//' -e 's/^<head>//' \
+-e 's/^<body>//' -e 's|^</head>||' -e 's|</body>||' -e 's|</html>||' -e 's/\[//'
+
+cat <<FOOTER
+</div> <!-- content -->
+</div> <!-- columns -->
+<div id="footer" style="clear:both;">
+</div>
+
+_footer
+FOOTER
+) | perl -we '
+# now fix the css style in the m5 file
+# remove it completely and replace it with my own
+my $printed = 0;
+while (<>) {
+    if (m|<style>| .. m|</style>|) {
+	system("cat /home/miekg/bin/visit.style") if ! $printed;
+	$printed = 1;
+    } else {
+	print
+    }
+}' > /home/miekg/miek.nl/server/visit.m5
+# build the html, finally!
+( cd /home/miekg/miek.nl; make -f m5.Makefile server/visit.html )
+01BLOCK00000
++- 0664 1000 1000 27 1977
+/home/miekg/bin/visit.style01BLOCK01977
+<style>
+td {
+	font-size: 10px;
+        padding: 0;
+}
+.barfill {
+        background-color: #96ef94;
+        border-left: 1px;
+        border-right: 1px;
+        border-top: 1px;
+        border-bottom: 1px;
+        border-color: #4c934a;
+        border-style: solid;
+        font-size: 10px;
+        height: 3px;
+        line-height: 4px;
+}
+.barempty {
+        font-size: 10px;
+        line-height: 4px;
+}
+.barleft {
+        background-color: #ff9696;
+        border-left: 1px;
+        border-right: 1px;
+        border-top: 1px;
+        border-bottom: 1px;
+        border-color: #4c934a;
+        border-style: solid;
+        font-size: 10px;
+        height: 3px;
+        line-height: 4px;
+}
+.barright {
+        background-color: #f8f8f8;
+        border-left: 0px;
+        border-right: 1px;
+        border-top: 1px;
+        border-bottom: 1px;
+        border-color: #4c934a;
+        border-style: solid;
+        font-size: 10px;
+        height: 3px;
+        line-height: 4px;
+}
+.reportlink {
+        background-color: #ffffff;
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
+        padding-left: 3px;
+}
+.subtitle {
+        background-color: #007f9e;
+        font-size: 12px;
+        font-weight: normal;
+        padding: 3px;
+        color: #ffffff;
+}
+.info {
+        background-color: #badfee;
+        font-size: 12px;
+        padding-left: 3px;
+        padding-right: 3px;
+}
+.keyentry {
+        font-size: 10px;
+        padding-left: 2px;
+        border-bottom: 1px dashed #bcbcbc;
+}
+.keyentrywe {
+        background-color: #f0f090;
+        font-size: 10px;
+        padding-left: 2px;
+        border-bottom: 1px dashed #bcbcbc;
+}
+.valueentry {
+        font-size: 10px;
+        padding-left: 2px;
+        color: #905d14;
+        border-bottom: 1px dashed #f6c074;
+}
+.credits {
+        font-size: 12px;
+        font-weight: bold;
+}
+.maintable {
+        /* border-style: solid; */
+        border-color: #0b4b5b;
+        border-width: 1px;
+}
+</style>
+01BLOCK00000
++- 0775 1000 1000 19 1605
+/home/miekg/bin/vit01BLOCK01605
+#!/bin/zsh
+# a wrapper around git and vi
+# (c) Copyright Miek Gieben, 2009
+# Licensed under GPL v3
+# expands $[H]ash$ to $[H]ash: file short_hash date committer $
+# block quotes are there to fool gitvi
+# $Hash: gitvi d0a11c5 2009-02-11 12:17:32 +0100 miekg $
+
+[[ ! -x =git ]] && exit 1
+
+who=${SUDO_USER:-$LOGNAME}
+full=$(getent passwd $who | awk -F: '{ gsub(/,*/, ""); print $5 }')
+author="$full <$who@atoom.net>"
+
+function usage {
+    cat <<-EOF
+ gitvi [-h] [-m MSG] FILE [FILE]...
+
+ use git and vi together
+
+     -m MSG    use MSG as commit message
+     -h        this help
+EOF
+    exit
+}
+
+zparseopts -D -K -- m:=o_msg h=o_help
+[[ $? != 0 || "$o_help" != "" ]] && usage
+o_msg=$o_msg[2]
+
+for file in "$@"; do
+    dir=$(dirname "$file")
+    if ! cd "$dir"; then
+	continue;
+    fi
+    base=$(basename "$file")
+
+    if [[ x"$(git rev-parse --git-dir 2>/dev/null)" = x"" ]]; then
+	# make a new one in $PWD
+	git init || exit 1
+    fi
+    chmod +w "$base" 2> /dev/null
+
+    if ${EDITOR:-/usr/bin/vi} "$base"; then
+	[[ ! -e $base ]] && exit 0
+	git add $base
+	# collapse $Hash: gitvi d0a11c5 2009-02-11 12:17:32 +0100 miekg $ line
+	sed -i -e 's/\$[H]ash:.*\$/$H''ash$/' "$base"
+	if [[ -z "$o_msg" ]]; then
+	    git commit --author "$author" "$base"
+	else
+	    git commit -m "$o_msg" --author "$author" "$base"
+	fi
+    fi
+
+    id=$(git show -s --pretty=format:$base\ %h\ %ci\ $who%n -- "$base") 
+    [[ -z $id ]] && exit 1
+
+    # re-add $Hash: gitvi d0a11c5 2009-02-11 12:17:32 +0100 miekg $ line
+    sed -i -e 's/\$[H]ash\$'/\$H''ash:\ $id\ \$/ "$base"
+
+    chmod a-w $base 2> /dev/null
+    cd - >/dev/null
+done
+01BLOCK00000
++- 0664 1000 1000 21 1133
+/home/miekg/bin/vit.101BLOCK01133
+'\" t
+.TH VIT 1 "27 Dec 2008" "0.1.0" "vit"
+
+.SH NAME
+vit \- a wrapper around git and vi(m)
+
+.SH SYNOPSIS
+vit [-m MSG] [-h] [\fIFILE\fR]
+
+.SH DESCRIPTION
+Edit files and commit them to a git repository. If FILE is not
+given nothing is done.
+
+All the directories from the current one up to the root are
+search for a .git directory. If no directory is found
+a new git repository is created in the directory where
+FILE is located. A new repository will never be created in the root directory.
+.PP
+The special sequence $Hash$ is expanded by \fBvit\fR to 
+
+.RS
+$Hash: sha1hash filename date committer $
+.RE
+.PP
+This expanded $Hash$ syntax is \fInot\fR commited to git, this
+is done after the commit has taken place. This means there will
+also be a diff between the file on disk and the one committed in
+git.
+
+.SH OPTIONS
+.TP
+.B \-h
+a short unhelpfull help message.
+.TP
+.B \-m MSG
+use MSG as a commit message, when editing multiple files \fIall\fR
+edits will get this a their commit message.
+
+.SH AUTHOR
+Miek Gieben <miek@miek.nl>
+
+.SH LICENSE
+Licensed under the GPL version 3. Copyright (c) Miek Gieben, 2009
+
+.SH SEE ALSO
+vim(1), git(1).
+01BLOCK00000
