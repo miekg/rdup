@@ -1,6 +1,6 @@
 #
 set test "rdup -m /dev/null . must NOT be empty"
-spawn rdup -r /dev/null .
+spawn ./rdup -r /dev/null .
 expect {
     -re "" { pass "$test" }
 	default { fail "$test" }

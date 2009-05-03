@@ -1,0 +1,8 @@
+# probably depends on GNU tar - fine for now
+set test "Run rdup-simple with symlink"
+# spawn can not do shell pipelining or other fancy stuff
+if { [catch { exec testsuite/rdup/rdup.ln-up.helper } msg] } {
+    fail "$test"
+} else {
+    pass "$test"
+}

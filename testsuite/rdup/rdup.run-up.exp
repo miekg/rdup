@@ -1,6 +1,5 @@
-# run rdup-up
 set test "Run rdup-up -V"
-spawn rdup-up -V
+spawn ./rdup-up -V
 expect {
     -re "^rdup-up" { pass "$test" }
 	default { fail "$test" }
