@@ -1,9 +1,10 @@
-02 May 2009: 0.9.9 Miek <miek@miek.nl>
+03 May 2009: 0.9.9 Miek <miek@miek.nl>
   - bugfix release -
   * rdup-simple: use blowfish for ssh
   * rdup-up: set the owner and group for everything you create
   * tests: added dejagnu based tests; 'make check' performs the
     testing. You'll need dejagnu for it to work.
+
 
 16 Apr 2009: 0.9.1 Miek <miek@miek.nl>
   - bugfixes only -
