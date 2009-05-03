@@ -1,0 +1,6 @@
+set tool rdup
+set srcdir ./testsuite
+set outdir ./testlogs
+set tool_exec [pwd]
+#puts $tool_exec
+set all 1

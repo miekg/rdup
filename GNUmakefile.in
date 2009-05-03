@@ -98,4 +98,5 @@ uninstall:
 
 check:	all
 	[ -d testlogs ] || mkdir testlogs
+	chmod +x testsuite/rdup/rdup*helper
 	runtest 
