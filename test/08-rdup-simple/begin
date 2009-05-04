@@ -1,9 +1,0 @@
-#!/bin/bash
-
-[[ $ZTF_TEST_00_COMPILE -ne 0 ]] && { echo "no succesful compile"; exit 1; }
-
-# this should work otherwise
-cd $RDUP_SOURCE
-PATH=$PATH:$RDUP_SOURCE
-# still uses stuff from $PATH
-./sh/rdup-simple.sh -f test /tmp/rdup-test$$
