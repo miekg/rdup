@@ -1,3 +1,8 @@
+xx May 2009: 1.0.0 Miek <miek@miek.nl>
+  - 1.0.0 release! -
+  * 
+
+
 03 May 2009: 0.9.9 Miek <miek@miek.nl>
   - bugfix release -
   * rdup-simple: use blowfish for ssh
