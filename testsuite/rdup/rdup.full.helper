@@ -1,0 +1,44 @@
+#!/bin/bash
+
+rm -rf A
+# some some bogus dirs
+mkdir -p A/a A/b A/d
+touch A/a/1 A/a/2 A/a/3
+touch A/b/1 A/b/2 A/b/3
+touch A/d/1 A/d/2 A/d/3
+for i in e f g h i k l m n; do touch A/$i ; done
+
+# full dump
+diff -u <(\
+./rdup -F '%p%n\n' -N $$.timestamp $$.lijst A |\
+sed -n '3,$p' | sed -re 's|(^.).*(/[a-z].*)|\1\2|'
+) \
+<(cat <<EOF
++/a
++/a/1
++/a/2
++/a/3
++/b
++/b/1
++/b/2
++/b/3
++/d
++/d/1
++/d/2
++/d/3
++/e
++/f
++/g
++/h
++/i
++/k
++/l
++/m
++/n
+EOF
+)
+EXIT=$?
+rm $$.timestamp
+rm $$.lijst
+rm -rf A
+exit $EXIT
