@@ -1,5 +1,6 @@
 #!/bin/bash
 
 # should be identical
-diff -u <(./rdup -c /dev/null testsuite) \
-<(./rdup /dev/null testsuite | ./rdup-tr -Pcat)
+echo HALLL
+diff -u <(./rdup -c /dev/null po) \
+<(./rdup /dev/null po | ./rdup-tr -c -Pcat)

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo `pwd`
-
 # this takes place in the rdup source tree
 # make sure the executables used are also
 # these

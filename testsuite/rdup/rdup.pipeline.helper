@@ -1,1 +1,1 @@
-rdup /dev/null . | rdup-tr -Pcat -Pgzip -Pcat -Otar | tar tvf -
+./rdup /dev/null . | ./rdup-tr -Pcat -Pgzip -Pcat -Otar | tar tvf -
