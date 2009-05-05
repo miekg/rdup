@@ -9,34 +9,30 @@ post 1.0
   extending this list also has other interesting applications
 - with libnettle we have sha1 there too, so sha1.c can go
 - remove a lot of parsing code - entry.c rdup.c have some
-  incommon - check this. Less code -> less maintenance
+  in common - check this. Less code -> less maintenance
 - drop pcre3 and use regexp from glib
 - i18n - it's ALL C now - so much more easy, than the 
   C/Perl/sh kludge we had
 - use libarchive to make zip and/or iso 9660 files? why not?
   if the impact is low...
-- -a or --atime-preserve in rdup (when used with -c) and
-  also in rdup-tr
-- -m for fs-up
-- -a and -m exactly as in cpio - same semantics
-
 :general:
-- glib test unit framework also?
-- test -0 for rdup-*
 - paths in rdup-simple.sh for rdup-ln.sh
 - add extended attributes? man 5 tar explains how to do it, but it
   is A LOT of work AND it is not portable over unixes...?
 
-:doc:
-
-:misc:
-
-:install:
-
-:rdup:
+:tests:
+- test -0 for rdup-*
 
 :rdup-tr:
 - opt_null ala rdup
 
 :rdup-up:
 - opt_null
+
+:WONTFIX:
+- -a or --atime-preserve in rdup (when used with -c) and
+  also in rdup-tr, if you change the atime and mtime
+  you modify the ctime ---
+- -m for fs-up, can't be done - I don't store the time in 
+  the archive format...
+- -a and -m exactly as in cpio - same semantics
