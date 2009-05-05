@@ -1,0 +1,6 @@
+set test "rdup -c and rdup | rdup-tr must be identical"
+if { [catch { exec ./testsuite/rdup/rdup.match.helper } msg] } {
+    pass "$test"
+} else {
+    fail "$test"
+}

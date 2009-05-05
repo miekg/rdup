@@ -1,2 +1,0 @@
-compare rdup -c and rdup | ./rdup-tr -P cat
-output  - should be identical
