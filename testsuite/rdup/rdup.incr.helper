@@ -13,7 +13,7 @@ for i in e f g h i k l m n; do touch A/$i ; done
 # incr dump, expect only the dirs
 diff -u <(\
 ./rdup -F '%p%n\n' -N $$.timestamp $$.lijst A |\
-sed -n '3,$p' | sed -re 's|(^.).*(/[a-z].*)|\1\2|'
+sed -n -e '\m/A/mp' | sed -re 's|(^.).*(/[a-z].*)|\1\2|'
 ) \
 <(cat <<EOF
 +/a
