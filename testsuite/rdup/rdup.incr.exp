@@ -1,6 +1,6 @@
 set test "Do a incr rdup dump"
 if { [catch { exec ./testsuite/rdup/rdup.incr.helper } msg] } {
-    pass "$test"
-} else {
     fail "$test"
+} else {
+    pass "$test"
 }
