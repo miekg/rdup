@@ -9,3 +9,5 @@ chmod a-w A/a
 
 ./rdup -c /dev/null A | ./rdup-up -t /tmp/rdup.test$$
 chmod a+w A/a && rm -rf A
+chmod -R a+w /tmp/rdup.test$$/
+rm -rf /tmp/rdup.test$$
