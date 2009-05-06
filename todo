@@ -22,6 +22,7 @@ post 1.0
 
 :tests:
 - test -0 for rdup-*
+- test rdup-up with an input which holds unwritable directories
 
 :rdup-tr:
 - opt_null ala rdup
