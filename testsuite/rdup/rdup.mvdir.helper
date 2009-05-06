@@ -16,10 +16,10 @@ mv c b )
 
 # we expect a b to be included in the backup
 # dont you love shell scripting
-diff <(\
+diff -u <(\
 ./rdup -F '%p%n\n' -N $$.timestamp $$.lijst A |\
-sed  -re 's/(^.).*([ab].*)/\1\2/' | sed -n -e '1,8p' -e '11,$p'
-) \
+sed -n -e '\m/A/mp' |\
+sed  -re 's/(^.).*([ab].*)/\1\2/') \
 <(cat <<EOF
 -a
 -a/1
