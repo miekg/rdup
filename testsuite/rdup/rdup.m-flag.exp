@@ -1,4 +1,3 @@
-#
 set test "rdup -m /dev/null . must NOT be empty"
 spawn ./rdup -r /dev/null .
 expect {
