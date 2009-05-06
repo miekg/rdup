@@ -134,14 +134,14 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 
 	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
-			st = dir_write(dirname(e->f_name));
+			st = dir_write(dir_parent(e->f_name));
 			if (!(out = fopen(e->f_name, "w"))) {
 				msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 				ok = FALSE;
 			} else {
 				ok = TRUE;
 			}
-			dir_restore(dirname(e->f_name), st);
+			dir_restore(dir_parent(e->f_name), st);
 		} else {
 			msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;
@@ -199,6 +199,7 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 		if (errno == EACCES) {
 			/* make parent dir writable, and try again */
 			parent = dir_parent(e->f_name);
+			fprintf(stderr, "debug %s\n", parent);
 			s = dir_write(parent);
 			if (mkdir(e->f_name, e->f_mode) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));

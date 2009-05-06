@@ -1,0 +1,9 @@
+set test "Run rdup on a dir with a symlink"
+file delete testsuite/rdup/b
+file link -symbolic testsuite/rdup/b testsuite/rdup/rdup.ln.exp
+
+spawn ./rdup /dev/null testsuite/rdup
+expect { 
+    -re "\\\+l 0777" { pass "$test" }
+}
+file delete testsuite/rdup/b

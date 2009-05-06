@@ -8,6 +8,12 @@ make install
 
 as root, to get rdup installed.
 
+Optionally you can also do a:
+make check
+
+to run the test suite, note that you will need DejaGNU installed 
+for this to work.
+
 rdup depends on:
 o Gmake for compilation
 o Glib to build. Glib is the low level C library of the

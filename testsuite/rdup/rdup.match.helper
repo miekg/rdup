@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# should be identical
+echo HALLL
+diff -u <(./rdup -c /dev/null po) \
+<(./rdup /dev/null po | ./rdup-tr -c -Pcat)

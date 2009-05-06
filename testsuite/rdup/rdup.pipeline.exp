@@ -1,0 +1,9 @@
+# run rdup in a complete pipeline
+# probably depends on GNU tar - fine for now
+set test "Run rdup | rdup-tr -Otar | tar"
+# spawn can not do shell pipelining
+spawn ./testsuite/rdup/rdup.pipeline.helper
+expect {
+    -re "^tar: Removing leading" { pass "$test" }
+	default { fail "$test" }
+}

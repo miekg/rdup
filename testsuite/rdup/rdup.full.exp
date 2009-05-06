@@ -1,0 +1,6 @@
+set test "Do a full rdup dump"
+if { [catch { exec ./testsuite/rdup/rdup.full.helper } msg] } {
+    pass "$test"
+} else {
+    fail "$test"
+}

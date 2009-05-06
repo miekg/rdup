@@ -1,0 +1,6 @@
+set test "Run rdup-tr -V"
+spawn ./rdup-tr -V
+expect {
+    -re "^rdup-tr" { pass "$test" }
+	default { fail "$test" }
+}

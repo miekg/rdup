@@ -52,8 +52,13 @@ rdup-tr: $(OBJ_TR) $(HDR)
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ} -o rdup
 
-strip:	rdup-up rdup-tr rdup
+ifeq (${ARCHIVE_L},no)
+strip:	rdup rdup-up
 	strip ${CMD}
+else
+strip:	rdup rdup-up rdup-tr 
+	strip ${CMD}
+endif
 
 po:	rdup.pot 
 	( cd po ; $(MAKE) -f GNUmakefile all )
@@ -95,3 +100,8 @@ uninstall:
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	for i in ${MAN7}; do rm -f  ${DESTDIR}${mandir}/man7/`basename $$i` ; done
 	$(MAKE) -C po uninstall
+
+check:	all
+	[ -d testlogs ] || mkdir testlogs
+	chmod +x testsuite/rdup/rdup*helper
+	runtest 

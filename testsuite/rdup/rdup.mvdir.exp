@@ -1,0 +1,6 @@
+set test "Swap two dirs and test output"
+if { [catch { exec ./testsuite/rdup/rdup.mvdir.helper } msg] } {
+    pass "$test"
+} else {
+    fail "$test"
+}

@@ -12,7 +12,6 @@ dir_write(gchar *p)
 {
 	 /* chmod +w . && rm $file && chmod -w #and hope for the best */
 	struct stat *s = g_malloc(sizeof(struct stat));
-
 	if (!p)
 		return NULL;
 
@@ -30,7 +29,7 @@ dir_restore(gchar *p, struct stat *s)
 	if (!s || !p)
 		return;
 	/* restore perms - assumes *s has not be f*cked up */
-	chmod(p, s->st_mode);
+	chmod(p, s->st_mode & ~S_IFMT);
 }
 
 /**
@@ -40,6 +39,13 @@ gchar *
 dir_parent(gchar *p)
 {
 	gchar *p2;
-	p2 = g_strdup_printf("%s/%s", p, "..");
-	return p2;
+	gchar *n;
+	n = strrchr(p, '/'); 
+	if (n) {
+		*n = '\0';
+		p2 = g_strdup(p);
+		*n= '/';
+		return p2;
+	}
+	return NULL;
 }

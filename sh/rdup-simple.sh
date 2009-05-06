@@ -5,6 +5,8 @@
 # Copyright Miek Gieben, 2007 - 2009
 # rewritten for rdup-up and rdup-tr
 
+PATH=$PATH:/usr/lib/rdup
+
 echo2() {
     echo "** $PROGNAME: $@" >&2
 }
@@ -26,8 +28,8 @@ DEST - where to store the backup. This can be:
 
 OPTIONS:
  -k KEYFILE encrypt all files: rdup-tr -Pmcrypt,-fKEYFILE,-c
- -g	    encrypt all files: rdup-tr -Pgpg,??
- -z         compress all files: rdup-tr -Pgzip,-c,-f
+ -g	    encrypt all files: rdup-tr -Pgpg,--default-recipient-self
+ -z         compress all files: rdup-tr -Pgzip
  -E FILE    use FILE as an exclude list
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
@@ -79,7 +81,7 @@ while getopts "E:k:vfgzxhVX:Y:" o; do
 		enc=true
 		c=""   # rdup-tr expects a list of filenames, so reset -c
                 ;;
-                z) trans="$trans -Pgzip,-f,-c"
+                z) trans="$trans -Pgzip"
 		if $enc; then
 			echo2 "Select compression first, then encryption"
 			exit 1
@@ -170,11 +172,12 @@ fi
 cmd="rdup$E$x -N $STAMP $LIST $DIRS | $pipe"
 
 if ! $force; then
+	# path is set at the top
         if [[ -z $ssh ]]; then
-		/usr/lib/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR
+		rdup-ln.sh -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-                $ssh "/usr/lib/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR"
+                $ssh "rdup-ln.sh -l $DAYS $BACKUPDIR"
                 purpose=$?
         fi
 else

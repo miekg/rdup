@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir A
+mkdir A/a
+touch A/a/1
+touch A/a/2
+# tada
+chmod a-w A/a
+
+./rdup -c /dev/null A | ./rdup-up -t /tmp/rdup.test$$
+chmod a+w A/a && rm -rf A

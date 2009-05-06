@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# this takes place in the rdup source tree
+# make sure the executables used are also
+# these
+PATH=`pwd`:$PATH
+
+rm -rf t tmp
+mkdir t tmp
+touch t/foo
+(cd t; ln -s foo bar)
+
+./sh/rdup-simple.sh t tmp
+DAY_BEFORE=$(( $(date +%d) - 1 )) # may be 0
+DATE=$(date +%Y%m)
+NOW=$(date +%d)
+mv tmp/$DATE/$NOW tmp/$DATE/$DAY_BEFORE
+
+rm t/bar
+./sh/rdup-simple.sh t tmp
+EXIT=$?
+rm -rf t tmp # cleanup
+exit $EXIT
