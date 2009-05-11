@@ -1,0 +1,4 @@
+#!/bin/bash
+cat testsuite/rdup/rdup.fuzzing1.data |\
+./rdup-tr -Pcat 2>/dev/null
+exit 1 # so strange... dejagnu does not pick up the exit $?
