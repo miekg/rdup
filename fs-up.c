@@ -134,14 +134,14 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 
 	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
-			st = dir_write(dirname(e->f_name));
+			st = dir_write(dir_parent(e->f_name));
 			if (!(out = fopen(e->f_name, "w"))) {
-				msg(_("Failed to XXX open file `%s\': %s"), e->f_name, strerror(errno));
+				msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 				ok = FALSE;
 			} else {
 				ok = TRUE;
 			}
-			dir_restore(dirname(e->f_name), st);
+			dir_restore(dir_parent(e->f_name), st);
 		} else {
 			msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;

@@ -12,7 +12,6 @@ dir_write(gchar *p)
 {
 	 /* chmod +w . && rm $file && chmod -w #and hope for the best */
 	struct stat *s = g_malloc(sizeof(struct stat));
-
 	if (!p)
 		return NULL;
 
@@ -20,7 +19,6 @@ dir_write(gchar *p)
 		return NULL;
 
 	/* make it writable, assume we are the OWNER */
-	fprintf(stderr, "Make writable %s\n", p);
 	chmod(p, s->st_mode | S_IWUSR);
 	return s;
 }
@@ -31,7 +29,6 @@ dir_restore(gchar *p, struct stat *s)
 	if (!s || !p)
 		return;
 	/* restore perms - assumes *s has not be f*cked up */
-	fprintf(stderr, "Restoring %s\n", p);
 	chmod(p, s->st_mode & ~S_IFMT);
 }
 

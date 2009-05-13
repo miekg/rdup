@@ -1,7 +1,6 @@
-# run rdup -X which should fail 
-set test "Run rdup -X which should fail"
+set test "Do a full rdup dump"
 if { [catch { exec ./testsuite/rdup/rdup.full.helper } msg] } {
-    pass "$test"
-} else {
     fail "$test"
+} else {
+    pass "$test"
 }

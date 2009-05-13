@@ -18,8 +18,7 @@ mkdir j )
 # files to expect to be included in the backup
 diff -u <(\
 ./rdup -F '%p%n\n' -N $$.timestamp $$.lijst A |\
-sed -re 's/.*(\/.)$/\1/' | sed -n '3,$p'
-) \
+sed -n -e '\m/A/mp' | sed -re 's/.*(\/.)$/\1/') \
 <(cat <<EOF
 /a
 /b
