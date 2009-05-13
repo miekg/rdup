@@ -351,9 +351,15 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc < 2) {
+	if (argc < 1) {
 		usage(stdout);
 		exit(EXIT_FAILURE);
+	}
+
+	if (argc == 1) {
+		/* default to . as the dir to dump */
+		argv[1] = g_strdup(".");
+		argc++;
 	}
 
 	if (strcmp(argv[0], "/dev/null") == 0)

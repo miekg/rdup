@@ -27,7 +27,11 @@ Do a dry-run and do not create anything on disk.
 Create PATH (ala mkdir -p) if it does not exist.
 .TP
 .B \-v
-Be more verbose and echo the processed files.
+Be more verbose and echo the processed files to standard output.
+.TP
+.B \-vv
+Be even more verbose and echo processed file \fIand\fR the uid and
+gid information to standard output.
 .TP
 .B \-h
 A short help message.
