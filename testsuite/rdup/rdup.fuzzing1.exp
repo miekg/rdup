@@ -1,8 +1,6 @@
 set test "Fuzzing test with rdup-tr. Should fail without output"
 if { [catch { exec ./testsuite/rdup/rdup.fuzzing1.helper } msg] } {
-    puts "GAAT IETS MIS"
     pass "$test"
 } else {
-    puts "GAAT IETS GOED"
     fail "$test"
 }

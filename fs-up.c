@@ -162,20 +162,22 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	buf   = g_malloc(BUFSIZE + 1);
 	while ((bytes = block_in_header(in)) > 0) {
 		if (block_in(in, bytes, buf) == -1) {
-			fclose(out);
+			if (out)
+				fclose(out);
 			return FALSE;
 		}
 		if (ok && !opt_dry) {
 			if (fwrite(buf, sizeof(char), bytes, out) != bytes) {
 				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-				fclose(out);
+				if (out)
+					fclose(out);
 				return FALSE;
 			}
 		}
 	}
 	
 	g_free(buf);
-	if (ok)
+	if (ok && out)
 		fclose(out); 
 	return TRUE;
 }

@@ -166,15 +166,17 @@ main(int argc, char **argv)
 		path = abspath(argv[0]);
 
 
-	if (opt_top) {
-		if (mkpath(path, 00777) == -1) {
-			msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-	} else {
-		if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-			msg(_("No such directory: `%s\'"), path);
-			exit(EXIT_FAILURE);
+	if (!opt_dry) {
+		if (opt_top) {
+			if (mkpath(path, 00777) == -1) {
+				msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+		} else {
+			if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
+				msg(_("No such directory: `%s\'"), path);
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 
