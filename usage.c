@@ -10,13 +10,13 @@ extern char *PROGNAME;
 void
 usage(FILE *f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... FILELIST DIR|FILE...\n"), PROGNAME);
+        fprintf(f, _("USAGE: %s [OPTION]... FILELIST [ DIR|FILE ]...\n"), PROGNAME);
 	fputs( _("\
 Generate a full or incremental file list. This list can be used to\n\
 implement a (incremental) backup scheme.\n\
 \n\
 	FILELIST\tfile to store filenames\n\
-        DIR\t\tdirectory or directories to dump\n\
+        DIR\t\tdirectory or directories to dump, defaults to .\n\
 \n\
 \n\
     OPTIONS:\n\

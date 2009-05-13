@@ -241,8 +241,14 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 	else
 		exists = TRUE;
 
-	if (opt_verbose > 0)
-		printf("%s\n", e->f_name);
+	/* -v */
+	if (opt_verbose == 0)
+		fprintf(stdout, "%s\n", e->f_name);
+
+	/* -vv */
+	if (opt_verbose == 2)
+		fprintf(stdout, "%d %d %s\n", e->f_uid, e->f_gid, e->f_name);
+
 
 	switch(e->plusmin) {
 		case MINUS:
