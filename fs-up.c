@@ -247,8 +247,9 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 
 	/* -vv */
 	if (opt_verbose == 2)
-		fprintf(stdout, "%d %d %s\n", e->f_uid, e->f_gid, e->f_name);
-
+		fprintf(stdout, "%c %d %d %s\n", 
+				e->plusmin == PLUS ? '+' : '-',
+				e->f_uid, e->f_gid, e->f_name);
 
 	switch(e->plusmin) {
 		case MINUS:

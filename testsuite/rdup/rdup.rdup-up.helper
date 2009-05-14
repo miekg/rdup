@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cat testsuite/rdup/rdup.rdup-up.data | rdup-up -t /tmp/test.$$
+cat testsuite/rdup/rdup.rdup-up.data | ./rdup-up -t /tmp/test.$$
 rm -rf /tmp/test.$$
