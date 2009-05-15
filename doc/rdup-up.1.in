@@ -15,16 +15,15 @@ structure with a rdup archive.
 
 .SH OPTIONS
 .TP
-.B \-s N
-Strip N path components from a pathname. If the resulting pathname is
-empty after this operation the entire entry is skipped. Not yet
-implemented.
-.TP
 .B \-n
 Do a dry-run and do not create anything on disk.
 .TP
 .B \-t PATH
 Create PATH (ala mkdir -p) if it does not exist.
+.TP
+.B \-s N
+Strip N path components from a pathname. If the resulting pathname is
+empty after this operation the entry is skipped.
 .TP
 .B \-v
 Be more verbose and echo the processed files to standard output.

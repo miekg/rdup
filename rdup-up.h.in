@@ -73,10 +73,10 @@ gboolean rm(gchar *p);
 
 /* fs-up.c */
 gboolean mk_hlink(GSList *h);
-gboolean mk_obj(FILE *in, char *p, struct r_entry *e, guint strip);
+gboolean mk_obj(FILE *in, char *p, struct r_entry *e);
 
 /* strippath.c */
-char * strippath(char *path, guint n);
+struct r_entry *strippath(struct r_entry *e, guint strip);
 
 /* mkpath.c */
 int mkpath(const char *path, mode_t mode);

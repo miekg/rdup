@@ -15,6 +15,7 @@ gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
+guint opt_strip		   = 0;				/* strippath */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 extern int opterr;
@@ -23,7 +24,7 @@ int opterr		   = 0;
 
 /* update the directory with the archive */
 static gboolean
-update(char *path, guint strip)
+update(char *path)
 {
 	struct r_entry *rdup_entry;
 	size_t         line, i, pathsize;
@@ -72,7 +73,7 @@ update(char *path, guint strip)
 
 		rdup_entry->f_name = p;
 
-		if (mk_obj(stdin, path, rdup_entry, strip) == FALSE)
+		if (mk_obj(stdin, path, rdup_entry) == FALSE)
 			ok = FALSE;
 	}
 
@@ -92,7 +93,6 @@ main(int argc, char **argv)
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
 	char		 *path;
-	guint		 strip = 0;
 	
 #ifdef ENABLE_NLS
 	if (!setlocale(LC_MESSAGES, ""))
@@ -138,12 +138,15 @@ main(int argc, char **argv)
 			case 'n':
 				opt_dry = TRUE;
 				break;
+			case 's':
+                                opt_strip = atoi(optarg);
+                                if (opt_strip == 0) {
+                                        msg(_("Need a numeric strip value"));
+                                        exit(EXIT_FAILURE);
+                                }   
+                                break;
 			case 't':
 				opt_top = TRUE;
-				break;
-			case 's':
-				strip = atoi(optarg);
-				msg(_("Not implemented (yet)"));
 				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
@@ -180,7 +183,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	if (update(path, strip) == FALSE)
+	if (update(path) == FALSE)
 		exit(EXIT_FAILURE);
 
 	exit(EXIT_SUCCESS);

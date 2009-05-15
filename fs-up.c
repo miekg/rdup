@@ -201,7 +201,6 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 		if (errno == EACCES) {
 			/* make parent dir writable, and try again */
 			parent = dir_parent(e->f_name);
-			fprintf(stderr, "debug %s\n", parent);
 			s = dir_write(parent);
 			if (mkdir(e->f_name, e->f_mode) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
@@ -227,14 +226,11 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 
 /* make an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct r_entry *e, guint strip) 
+mk_obj(FILE *in, char *p, struct r_entry *e) 
 {
 	char     *s, *t;
 	gboolean exists;
 	struct stat st;
-
-	/* XXX not yet implemented, not sure if ever */
-	strip = strip;
 
 	if (lstat(e->f_name, &st) == -1) 
 		exists = FALSE;
@@ -268,7 +264,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 		case PLUS:
 			/* opt_dry handled within the subfunctions */
 			if (S_ISDIR(e->f_mode))
-				return  mk_dir(e, &st, exists);	
+				return mk_dir(e, &st, exists);	
 
 			/* First sym and hardlinks and then regular files */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
