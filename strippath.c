@@ -19,9 +19,6 @@ strippath(struct r_entry *e)
 	char *p;
 	guint i;
 
-	fprintf(stderr, "%zd %zd %s\n", 
-			e->f_name_size, (guint) e->f_size, e->f_name);
-
 	/* links */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) 
 		e->f_name[e->f_size] = '\0';
@@ -47,8 +44,5 @@ strippath(struct r_entry *e)
 	/* for links also shorten the start of the '->' */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 		e->f_size -= i;
-
-	fprintf(stderr, "%zd %zd %s\n", 
-			e->f_name_size, (guint) e->f_size, e->f_name);
 	return;
 }
