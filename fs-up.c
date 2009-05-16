@@ -225,7 +225,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 {
 	char *s, *t;
 	/* -v */
-	if (opt_verbose == 0)
+	if (opt_verbose == 1)
 		fprintf(stdout, "%s\n", e->f_name);
 
 	/* -vv */
