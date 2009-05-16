@@ -76,7 +76,7 @@ gboolean mk_hlink(GSList *h);
 gboolean mk_obj(FILE *in, char *p, struct r_entry *e);
 
 /* strippath.c */
-struct r_entry *strippath(struct r_entry *e, guint strip);
+void strippath(struct r_entry *e);
 
 /* mkpath.c */
 int mkpath(const char *path, mode_t mode);

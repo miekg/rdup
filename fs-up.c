@@ -228,6 +228,7 @@ gboolean
 mk_obj(FILE *in, char *p, struct r_entry *e) 
 {
 	char *s, *t;
+
 	/* -v */
 	if (opt_verbose == 1)
 		fprintf(stdout, "%s\n", e->f_name);
@@ -237,6 +238,13 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 		fprintf(stdout, "%c %d %d %s\n", 
 				e->plusmin == PLUS ? '+' : '-',
 				e->f_uid, e->f_gid, e->f_name);
+
+	/* split here - or above - return when path is zero lenght
+	 * for links check the f_size is that is zero */
+
+	/* XXX for now */
+	if (e->f_name == NULL)
+		return TRUE;
 
 	switch(e->plusmin) {
 		case MINUS:

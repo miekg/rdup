@@ -1,10 +1,9 @@
 #include "rdup-up.h"
 
 /* strip n components from pathname
- * and return the name
- * returns NULL when the path didn't contain enough
- * components to begin with otherwise a modified entry
- * is returned!
+ * sets path to  NULL when the path didn't contain enough
+ * components to begin with 
+ *
  * sym- and hardlinks are handled as follows:
  * with path1 -> path2, only path1 is modified (shortened)
  * the pathlen is adjusted accordingly and the
@@ -14,34 +13,42 @@
 
 extern guint opt_strip;
 
-struct r_entry *
-strippath(struct r_entry *e, guint strip)
+void
+strippath(struct r_entry *e)
 {
 	char *p;
 	guint i;
 
-	if (strip == 0)
-		strip = opt_strip;	/* default to global one */
-
-	fprintf(stderr, "%zd %zd %s", 
+	fprintf(stderr, "%zd %zd %s\n", 
 			e->f_name_size, (guint) e->f_size, e->f_name);
 
+	/* links */
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) 
+		e->f_name[e->f_size] = '\0';
+
 	for(i = 1, p = strchr(e->f_name, '/'); p; p = strchr(p + 1, '/'), i++) {
-		if (i > strip)
+		if (i > opt_strip)
 			break;
 	}
-	if (!p)
-		return NULL;
+
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) 
+		e->f_name[e->f_size] = ' ';
+
+	if (!p) {
+		e->f_name = NULL;
+		return;
+	} else {
+		e->f_name = p;
+	}
 
 	/* how much shorter are we? */
 	i = e->f_name_size - strlen(p);
-	/* shorten the name */
-	e->f_name_size =- i;
+	e->f_name_size -= i; 
 	/* for links also shorten the start of the '->' */
-	if (S_ISLNK(e->f_mode)|| e->f_lnk == 1)
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 		e->f_size -= i;
 
-	fprintf(stderr, "%zd %zd %s", 
+	fprintf(stderr, "%zd %zd %s\n", 
 			e->f_name_size, (guint) e->f_size, e->f_name);
-	return e;
+	return;
 }
