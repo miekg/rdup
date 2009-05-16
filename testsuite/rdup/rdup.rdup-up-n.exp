@@ -1,0 +1,6 @@
+set test "Run rdup-up -n dryrun test"
+if { [catch { exec ./testsuite/rdup/rdup.rdup-up-n.helper } msg] } {
+    fail "$test"
+} else {
+    pass "$test"
+}

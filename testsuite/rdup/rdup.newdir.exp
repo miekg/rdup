@@ -1,6 +1,6 @@
 set test "Test when a new directory is created"
 if { [catch { exec ./testsuite/rdup/rdup.newdir.helper } msg] } {
-    pass "$test"
-} else {
     fail "$test"
+} else {
+    pass "$test"
 }

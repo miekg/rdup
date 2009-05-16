@@ -13,6 +13,7 @@
 
 extern sig_atomic_t sig;
 extern gboolean opt_dry;
+extern guint opt_strip;
 extern gint opt_verbose;
 extern GSList *hlink;
 
@@ -20,16 +21,14 @@ extern GSList *hlink;
 void got_sig(int signal);
 
 static gboolean
-mk_dev(struct r_entry *e, gboolean exists) {
+mk_dev(struct r_entry *e) {
 	/* XXX dir write perms */
 	if (opt_dry)
 		return TRUE;
 
-	if (exists) {
-		if (!rm(e->f_name)) {
-			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
-			return FALSE;
-		}
+	if (!rm(e->f_name)) {
+		msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+		return FALSE;
 	}
 
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
@@ -42,16 +41,14 @@ mk_dev(struct r_entry *e, gboolean exists) {
 }
 
 static gboolean
-mk_sock(struct r_entry *e, gboolean exists) {
+mk_sock(struct r_entry *e) {
 	/* XXX dir write perms */
 	if (opt_dry)
 		return TRUE;
 
-	if (exists) {
-		if (!rm(e->f_name)) {
-			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
-			return FALSE;
-		}
+	if (!rm(e->f_name)) {
+		msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+		return FALSE;
 	}
 
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
@@ -64,7 +61,7 @@ mk_sock(struct r_entry *e, gboolean exists) {
 }
 
 static gboolean
-mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
+mk_link(struct r_entry *e, char *s, char *t, char *p)
 {
 	struct stat *st;
 	gchar *parent;
@@ -72,12 +69,9 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 	if (opt_dry)
 		return TRUE;
 
-	/* there is something */
-	if (exists) {
-		if (!rm(s)) {
-			msg(_("Failed to remove existing entry: '%s\'"), s);
-			return FALSE;
-		}
+	if (!rm(s)) {
+		msg(_("Failed to remove existing entry: '%s\'"), s);
+		return FALSE;
 	}
 
 	/* symlink */
@@ -116,18 +110,29 @@ mk_link(struct r_entry *e, gboolean exists, char *s, char *t, char *p)
 }
 
 static gboolean
-mk_reg(FILE *in, struct r_entry *e, gboolean exists)
+mk_reg(FILE *in, struct r_entry *e)
 {
 	FILE *out = NULL;
 	char *buf;
 	size_t  bytes;
 	gboolean ok = TRUE;
+	gboolean old_dry;
 	struct stat *st;
 
-	/* there is something */
-	if (exists && !opt_dry)  {
+	/* with opt_dry we can't just return TRUE; as we may 
+	 * need to suck in the file's content - which is thrown
+	 * away in that case */
+
+	if (! e->f_name) {
+		/* fake an opt_dry */
+		old_dry = opt_dry;
+		opt_dry = TRUE;
+	}
+
+	if (!opt_dry)  {
 		if (!rm(e->f_name)) {
 			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+			opt_dry = old_dry;
 			return FALSE;
 		}
 	}
@@ -162,35 +167,42 @@ mk_reg(FILE *in, struct r_entry *e, gboolean exists)
 	buf   = g_malloc(BUFSIZE + 1);
 	while ((bytes = block_in_header(in)) > 0) {
 		if (block_in(in, bytes, buf) == -1) {
-			fclose(out);
+			if (out)
+				fclose(out);
+			opt_dry = old_dry;
 			return FALSE;
 		}
 		if (ok && !opt_dry) {
 			if (fwrite(buf, sizeof(char), bytes, out) != bytes) {
 				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-				fclose(out);
+				if (out)
+					fclose(out);
+				opt_dry = old_dry;
 				return FALSE;
 			}
 		}
 	}
 	
 	g_free(buf);
-	if (ok)
+	if (ok && out)
 		fclose(out); 
+	opt_dry = old_dry;
 	return TRUE;
 }
 
 static gboolean
-mk_dir(struct r_entry *e, struct stat *st, gboolean exists) 
+mk_dir(struct r_entry *e) 
 {
 	struct stat *s;
+	struct stat st;
 	gchar *parent;
 
 	if (opt_dry)
 		return TRUE;
 
-	if (exists && S_ISDIR(st->st_mode)) {
-		/* something is here - update the permissions */
+	lstat(e->f_name, &st);
+	if (S_ISDIR(st.st_mode)) {
+		/* something dir is here - update the permissions */
 		chmod(e->f_name, e->f_mode);
 		return TRUE;
 	}
@@ -199,7 +211,6 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 		if (errno == EACCES) {
 			/* make parent dir writable, and try again */
 			parent = dir_parent(e->f_name);
-			fprintf(stderr, "debug %s\n", parent);
 			s = dir_write(parent);
 			if (mkdir(e->f_name, e->f_mode) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
@@ -225,26 +236,25 @@ mk_dir(struct r_entry *e, struct stat *st, gboolean exists)
 
 /* make an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct r_entry *e, guint strip) 
+mk_obj(FILE *in, char *p, struct r_entry *e) 
 {
-	char     *s, *t;
-	gboolean exists;
-	struct stat st;
+	char *s, *t;
 
-	/* XXX not yet implemented, not sure if ever */
-	strip = strip;
+	/* -v */
+	if (opt_verbose == 1 && e->f_name)
+		fprintf(stdout, "%s\n", e->f_name);
 
-	if (lstat(e->f_name, &st) == -1) 
-		exists = FALSE;
-	else
-		exists = TRUE;
+	/* -vv */
+	if (opt_verbose == 2 && e->f_name)
+		fprintf(stdout, "%c %d %d %s\n", 
+				e->plusmin == PLUS ? '+' : '-',
+				e->f_uid, e->f_gid, e->f_name);
 
-	if (opt_verbose > 0)
-		printf("%s\n", e->f_name);
-
+	/* split here - or above - return when path is zero lenght
+	 * for links check the f_size is that is zero */
 	switch(e->plusmin) {
 		case MINUS:
-			if (opt_dry)
+			if (opt_dry || ! e->f_name)
 				return TRUE;
 
 			/* remove all stuff you can find */
@@ -257,9 +267,18 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 			}
 			return rm(s);
 		case PLUS:
+			if (S_ISREG(e->f_mode))
+				return mk_reg(in, e);
+
+			/* no name, we can exit here - for files this is handled
+			 * in mk_reg, because we may need to suck in data */
+			if (e->f_name == NULL)
+				return TRUE;
+
 			/* opt_dry handled within the subfunctions */
-			if (S_ISDIR(e->f_mode))
-				return  mk_dir(e, &st, exists);	
+			if (S_ISDIR(e->f_mode)) {
+				return mk_dir(e);	
+			}
 
 			/* First sym and hardlinks and then regular files */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
@@ -267,23 +286,14 @@ mk_obj(FILE *in, char *p, struct r_entry *e, guint strip)
 				s = e->f_name;
 				s[e->f_size] = '\0';
 				t = s + e->f_size + 4; /* ' -> ' */
-
-				if (lstat(s, &st) == -1) 
-					exists = FALSE;
-				else
-					exists = TRUE;
-
-				return mk_link(e, exists, s, t, p);
+				return mk_link(e, s, t, p);
 			}
 
-			if (S_ISREG(e->f_mode))
-				return mk_reg(in, e, exists);
-
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
-				return mk_dev(e, exists);
+				return mk_dev(e);
 
 			if (S_ISSOCK(e->f_mode))
-				return mk_sock(e, exists);
+				return mk_sock(e);
 	}
 	/* huh still alive */
 	return TRUE;

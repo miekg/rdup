@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# should not crash
+./rdup -c /dev/null testsuite | ./rdup-up -nt /tmp/test.$$

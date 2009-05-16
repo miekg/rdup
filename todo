@@ -3,6 +3,8 @@ TODO:
 -X/-Y filelength larger than 255?
 
 post 1.0
+- extend format to include mtime - so that it can be
+  set on the remote files
 - rdup internal filelist is fast becoming identical to its
   output. So any special reading of this list can go
   and we can just use stuff for entry.c

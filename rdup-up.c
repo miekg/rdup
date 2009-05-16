@@ -15,6 +15,7 @@ gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
+guint opt_strip		   = 0;				/* strippath */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 extern int opterr;
@@ -23,7 +24,7 @@ int opterr		   = 0;
 
 /* update the directory with the archive */
 static gboolean
-update(char *path, guint strip)
+update(char *path)
 {
 	struct r_entry *rdup_entry;
 	size_t         line, i, pathsize;
@@ -48,7 +49,7 @@ update(char *path, guint strip)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line, &s, NO_STAT_CONTENT))) {
-			/* msg from entry.c */
+			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}
 
@@ -65,14 +66,23 @@ update(char *path, guint strip)
 			msg(_("Pathname does not start with /: `%s\'"), pathbuf);
 			exit(EXIT_FAILURE);
 		}
-		p = g_strdup_printf("%s%s", path, pathbuf);
+
+		/* strippath must be inserted here */
+		rdup_entry->f_name = pathbuf;
+		strippath(rdup_entry);
+
+		if (!rdup_entry->f_name)
+			p = NULL;
+		else
+			p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
+
 		rdup_entry->f_name_size += strlen(path);
 		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk)
 			rdup_entry->f_size += strlen(path);
 
 		rdup_entry->f_name = p;
 
-		if (mk_obj(stdin, path, rdup_entry, strip) == FALSE)
+		if (mk_obj(stdin, path, rdup_entry) == FALSE)
 			ok = FALSE;
 	}
 
@@ -92,7 +102,6 @@ main(int argc, char **argv)
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
 	char		 *path;
-	guint		 strip = 0;
 	
 #ifdef ENABLE_NLS
 	if (!setlocale(LC_MESSAGES, ""))
@@ -138,12 +147,11 @@ main(int argc, char **argv)
 			case 'n':
 				opt_dry = TRUE;
 				break;
+			case 's':
+                                opt_strip = abs(atoi(optarg));
+                                break;
 			case 't':
 				opt_top = TRUE;
-				break;
-			case 's':
-				strip = atoi(optarg);
-				msg(_("Not implemented (yet)"));
 				break;
 			case 'V':
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
@@ -166,19 +174,22 @@ main(int argc, char **argv)
 		path = abspath(argv[0]);
 
 
-	if (opt_top) {
-		if (mkpath(path, 00777) == -1) {
-			msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-	} else {
-		if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-			msg(_("No such directory: `%s\'"), path);
-			exit(EXIT_FAILURE);
+	if (!opt_dry) {
+		if (opt_top) {
+			/* if path is a file this fails... */
+			if (mkpath(path, 00777) == -1) {
+				msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+		} else {
+			if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
+				msg(_("No such directory: `%s\'"), path);
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 
-	if (update(path, strip) == FALSE)
+	if (update(path) == FALSE)
 		exit(EXIT_FAILURE);
 
 	exit(EXIT_SUCCESS);

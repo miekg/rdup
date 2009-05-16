@@ -1,0 +1,6 @@
+set test "rdup-up with non writeable dir must yield no errors"
+spawn ./testsuite/rdup/rdup.nonwritedir.helper
+expect {
+    -re "" { pass "$test" }
+	default { fail "$test" }
+}
