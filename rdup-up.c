@@ -71,7 +71,11 @@ update(char *path)
 		rdup_entry->f_name = pathbuf;
 		strippath(rdup_entry);
 
-		p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
+		if (!rdup_entry->f_name)
+			p = NULL;
+		else
+			p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
+
 		rdup_entry->f_name_size += strlen(path);
 		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk)
 			rdup_entry->f_size += strlen(path);
@@ -172,6 +176,7 @@ main(int argc, char **argv)
 
 	if (!opt_dry) {
 		if (opt_top) {
+			/* if path is a file this fails... */
 			if (mkpath(path, 00777) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
 				exit(EXIT_FAILURE);
