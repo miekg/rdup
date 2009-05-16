@@ -12,11 +12,16 @@
  * the case with links)
  */
 
+extern guint opt_strip;
+
 struct r_entry *
 strippath(struct r_entry *e, guint strip)
 {
 	char *p;
 	guint i;
+
+	if (strip == 0)
+		strip = opt_strip;	/* default to global one */
 
 	fprintf(stderr, "%zd %zd %s", 
 			e->f_name_size, (guint) e->f_size, e->f_name);

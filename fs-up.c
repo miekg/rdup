@@ -13,6 +13,7 @@
 
 extern sig_atomic_t sig;
 extern gboolean opt_dry;
+extern guint opt_strip;
 extern gint opt_verbose;
 extern GSList *hlink;
 
@@ -117,7 +118,10 @@ mk_reg(FILE *in, struct r_entry *e)
 	gboolean ok = TRUE;
 	struct stat *st;
 
-	/* there is something */
+	/* with opt_dry we can't just return TRUE; as we may 
+	 * need to suck in the file's content - which is thrown
+	 * away in that case */
+
 	if (!opt_dry)  {
 		if (!rm(e->f_name)) {
 			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
