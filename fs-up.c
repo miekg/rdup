@@ -116,7 +116,7 @@ mk_reg(FILE *in, struct r_entry *e)
 	char *buf;
 	size_t  bytes;
 	gboolean ok = TRUE;
-	gboolean old_dry;
+	gboolean old_dry = opt_dry;
 	struct stat *st;
 
 	/* with opt_dry we can't just return TRUE; as we may 
@@ -125,7 +125,6 @@ mk_reg(FILE *in, struct r_entry *e)
 
 	if (! e->f_name) {
 		/* fake an opt_dry */
-		old_dry = opt_dry;
 		opt_dry = TRUE;
 	}
 
