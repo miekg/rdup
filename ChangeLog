@@ -6,6 +6,7 @@ xx May 2009: 1.0.0 Miek <miek@miek.nl>
   * rdup-up: added -vv write uid/gid and filename to stdout
   * rdup-up: better handle non-writable directories when restoring
   * rdup-up: implement the -s (strip) option
+  * rdup-simple: add -s here too
 
 
 03 May 2009: 0.9.9 Miek <miek@miek.nl>
