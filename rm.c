@@ -46,7 +46,7 @@ rm(gchar *p)
 					return TRUE;
 				
 				case EACCES:
-					/* no write to dir */
+					/* no write to dir, make writable */
 					parent = dir_parent(p);
 					st2 = dir_write(parent);
 					if (remove(p) == -1) {
@@ -58,7 +58,7 @@ rm(gchar *p)
 					}
 					dir_restore(parent, st2);
 					g_free(parent);
-					return FALSE;
+					return TRUE;
 
 				default:
 					/* not ENOEMPTY */
