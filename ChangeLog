@@ -5,6 +5,8 @@ xx May 2009: 1.0.0 Miek <miek@miek.nl>
   * rdup-tr: exit when -X/-Y used and we are compiled without encryption
   * rdup-up: added -vv write uid/gid and filename to stdout
   * rdup-up: better handle non-writable directories when restoring
+  * rdup-up (fs-up.c): code cleanups and some permissions settings
+    errors fixed.
 
 
 03 May 2009: 0.9.9 Miek <miek@miek.nl>
