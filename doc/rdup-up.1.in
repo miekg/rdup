@@ -26,7 +26,7 @@ Strip N path components from a pathname. If the resulting pathname is
 empty after this it is skipped.
 .TP
 .B \-v
-Be more verbose and echo the processed files to standard output.
+Be more verbose and echo the processed files to \fIstandard output\fR.
 .TP
 .B \-vv
 Be even more verbose and echo processed file \fIand\fR the uid and

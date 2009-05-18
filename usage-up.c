@@ -24,7 +24,7 @@ The input must be rdup -c output\n\
 	-n\t\tdry run, do not touch the filesystem\n\
 	-V\t\tprint version\n\
 	-h\t\tthis help\n\
-	-v\t\tbe more verbose and print processed files to stderr\n\
+	-v\t\tbe more verbose and print processed files to stdout\n\
 \n\
 Report bugs to <miek@miek.nl>\n\
 Licensed under the GPL version 3.\n\

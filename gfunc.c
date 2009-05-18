@@ -368,7 +368,7 @@ gfunc_backup(gpointer data, gpointer value,
 				entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 				return FALSE;
 			default: /* INC_DUMP */
-				if (((struct r_entry*)data)->f_ctime > opt_timestamp) {
+				if (((struct r_entry*)data)->f_ctime >= opt_timestamp) {
 					entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 				}
 				return FALSE;
