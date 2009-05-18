@@ -171,7 +171,6 @@ mk_reg(FILE *in, struct r_entry *e)
 			return FALSE;
 		}
 	}
-
 	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
 			st = dir_write(dir_parent(e->f_name));
@@ -295,7 +294,8 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 			}
 			return rm(s);
 		case PLUS:
-			if (S_ISREG(e->f_mode))
+			/* only files, no hardlinks! */
+			if (S_ISREG(e->f_mode) && ! e->f_lnk )
 				return mk_reg(in, e);
 
 			/* no name, we can exit here - for files this is handled
