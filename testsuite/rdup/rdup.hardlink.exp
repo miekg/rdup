@@ -1,0 +1,6 @@
+set test "Run rdup | rdup-up on a dir with a hardlink"
+spawn ./testsuite/rdup/rdup.hardlink.helper
+expect { 
+    -re "" { pass "$test" }
+}
+file delete testsuite/rdup/b
