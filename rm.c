@@ -21,8 +21,8 @@ rm(gchar *p)
 	struct stat st;
 	struct stat *st2;
 
-	if (opt_dry)
-		return TRUE;	/* the very easy life */
+	if (opt_dry || !p)
+		return TRUE;	/* the very easy life, p might also be NULL */
 
 	if (lstat(p, &st) == -1)
 		return TRUE;    /* the easy life */

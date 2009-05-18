@@ -23,7 +23,7 @@ Create PATH (ala mkdir -p) if it does not exist.
 .TP
 .B \-s N
 Strip N path components from a pathname. If the resulting pathname is
-empty after this operation the entry is skipped.
+empty after this it is skipped.
 .TP
 .B \-v
 Be more verbose and echo the processed files to standard output.

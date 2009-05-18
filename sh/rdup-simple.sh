@@ -34,6 +34,7 @@ OPTIONS:
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
  -x         pass -x to rdup
+ -s NUM	    pass -s NUM to rdup-up (strip NUM leading path components)
  -X FILE    encrypt all paths with AES and key in FILE
  -Y FILE    decrypt all paths with AES and key in FILE
  -h         this help
@@ -52,7 +53,7 @@ etc=~/.rdup
 force=false
 verbose=false
 
-while getopts "E:k:vfgzxhVX:Y:" o; do
+while getopts "E:k:vfgzxhVX:Y:s:" o; do
         case $o in
 		E)
                 if [[ -z "$OPTARG" ]]; then
@@ -98,6 +99,8 @@ while getopts "E:k:vfgzxhVX:Y:" o; do
 		;;
                 f) force=true;;
                 a) ;;
+		s) STRIP="-s $OPTARG"
+		;;
                 v) OPT=" $OPT -v "; verbose=true;;
                 x) x=" -x ";;
                 h) usage && exit;;
@@ -165,9 +168,9 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # create our command line
 if [[ -z $ssh ]]; then
-        pipe="rdup-tr$trans | rdup-up$OPT -t $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
 else
-        pipe="rdup-tr$trans | $ssh rdup-up$OPT -t $BACKUPDIR/$NOW"
+        pipe="rdup-tr$trans | $ssh rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
 fi
 cmd="rdup$E$x -N $STAMP $LIST $DIRS | $pipe"
 

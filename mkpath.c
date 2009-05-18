@@ -10,9 +10,8 @@ int
 mkpath(const char *s, mode_t mode)
 {
         char *q, *r = NULL, *path = NULL, *up = NULL;
-        int rv;
- 
-        rv = -1;
+        int rv = -1;
+
         if (strcmp(s, ".") == 0 || strcmp(s, "/") == 0)
                 return 0;
  
@@ -28,7 +27,7 @@ mkpath(const char *s, mode_t mode)
         if ((up = g_strdup(r)) == NULL)
                 return -1;
  
-        if ((mkpath(up, mode) == -1) && (errno != EEXIST))
+        if ((mkpath(up, mode) == -1) && (errno != EEXIST)) 
                 goto out;
  
         if ((mkdir(path, mode) == -1) && (errno != EEXIST))
@@ -37,7 +36,7 @@ mkpath(const char *s, mode_t mode)
                 rv = 0;
  
 out:
-        if (up != NULL)
+        if (up)
                 free(up);
         free(q);
         free(path);

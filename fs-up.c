@@ -13,6 +13,7 @@
 
 extern sig_atomic_t sig;
 extern gboolean opt_dry;
+extern guint opt_strip;
 extern gint opt_verbose;
 extern GSList *hlink;
 
@@ -151,12 +152,22 @@ mk_reg(FILE *in, struct r_entry *e)
 	char *buf;
 	size_t  bytes;
 	gboolean ok = TRUE;
+	gboolean old_dry = opt_dry;
 	struct stat *st;
 
-	/* there is something */
+	/* with opt_dry we can't just return TRUE; as we may 
+	 * need to suck in the file's content - which is thrown
+	 * away in that case */
+
+	if (! e->f_name) {
+		/* fake an opt_dry */
+		opt_dry = TRUE;
+	}
+
 	if (!opt_dry)  {
 		if (!rm(e->f_name)) {
 			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+			opt_dry = old_dry;
 			return FALSE;
 		}
 	}
@@ -191,6 +202,7 @@ mk_reg(FILE *in, struct r_entry *e)
 		if (block_in(in, bytes, buf) == -1) {
 			if (out)
 				fclose(out);
+			opt_dry = old_dry;
 			return FALSE;
 		}
 		if (ok && !opt_dry) {
@@ -198,6 +210,7 @@ mk_reg(FILE *in, struct r_entry *e)
 				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
 				if (out)
 					fclose(out);
+				opt_dry = old_dry;
 				return FALSE;
 			}
 		}
@@ -205,6 +218,7 @@ mk_reg(FILE *in, struct r_entry *e)
 	g_free(buf);
 	if (ok && out)
 		fclose(out); 
+	opt_dry = old_dry;
 	return TRUE;
 }
 
@@ -253,19 +267,22 @@ gboolean
 mk_obj(FILE *in, char *p, struct r_entry *e) 
 {
 	char *s, *t;
+
 	/* -v */
-	if (opt_verbose == 0)
+	if (opt_verbose == 1 && e->f_name)
 		fprintf(stdout, "%s\n", e->f_name);
 
 	/* -vv */
-	if (opt_verbose == 2)
+	if (opt_verbose == 2 && e->f_name)
 		fprintf(stdout, "%c %d %d %s\n", 
 				e->plusmin == PLUS ? '+' : '-',
 				e->f_uid, e->f_gid, e->f_name);
 
+	/* split here - or above - return when path is zero lenght
+	 * for links check the f_size is that is zero */
 	switch(e->plusmin) {
 		case MINUS:
-			if (opt_dry)
+			if (opt_dry || ! e->f_name)
 				return TRUE;
 
 			/* remove all stuff you can find */
@@ -278,9 +295,18 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 			}
 			return rm(s);
 		case PLUS:
+			if (S_ISREG(e->f_mode))
+				return mk_reg(in, e);
+
+			/* no name, we can exit here - for files this is handled
+			 * in mk_reg, because we may need to suck in data */
+			if (e->f_name == NULL)
+				return TRUE;
+
 			/* opt_dry handled within the subfunctions */
-			if (S_ISDIR(e->f_mode))
+			if (S_ISDIR(e->f_mode)) {
 				return mk_dir(e);	
+			}
 
 			/* First sym and hardlinks and then regular files */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
@@ -288,12 +314,8 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 				s = e->f_name;
 				s[e->f_size] = '\0';
 				t = s + e->f_size + 4; /* ' -> ' */
-
 				return mk_link(e, s, t, p);
 			}
-
-			if (S_ISREG(e->f_mode))
-				return mk_reg(in, e);
 
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
 				return mk_dev(e);

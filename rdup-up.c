@@ -49,7 +49,7 @@ update(char *path)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line, &s, NO_STAT_CONTENT))) {
-			/* msg from entry.c */
+			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}
 
@@ -66,7 +66,16 @@ update(char *path)
 			msg(_("Pathname does not start with /: `%s\'"), pathbuf);
 			exit(EXIT_FAILURE);
 		}
-		p = g_strdup_printf("%s%s", path, pathbuf);
+
+		/* strippath must be inserted here */
+		rdup_entry->f_name = pathbuf;
+		strippath(rdup_entry);
+
+		if (!rdup_entry->f_name)
+			p = NULL;
+		else
+			p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
+
 		rdup_entry->f_name_size += strlen(path);
 		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk)
 			rdup_entry->f_size += strlen(path);
@@ -139,11 +148,7 @@ main(int argc, char **argv)
 				opt_dry = TRUE;
 				break;
 			case 's':
-                                opt_strip = atoi(optarg);
-                                if (opt_strip == 0) {
-                                        msg(_("Need a numeric strip value"));
-                                        exit(EXIT_FAILURE);
-                                }   
+                                opt_strip = abs(atoi(optarg));
                                 break;
 			case 't':
 				opt_top = TRUE;
@@ -171,6 +176,11 @@ main(int argc, char **argv)
 
 	if (!opt_dry) {
 		if (opt_top) {
+			/* this is not 100%, but better than nothing */
+			if (g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
+				msg(_("Failed to create directory `%s\'"), path);
+				exit(EXIT_FAILURE);
+			}
 			if (mkpath(path, 00777) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
 				exit(EXIT_FAILURE);
