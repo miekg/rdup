@@ -25,26 +25,26 @@ strippath(struct r_entry *e)
 	guint i;
 
 	/* links */
-	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-		fprintf(stderr, "h %s\n", e->f_name);
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 		e->f_name[e->f_size] = '\0';
-	}
 
 	if (e->f_lnk == 1) {
 		/* hardlinks... mangle the part after -> also */
-		for(i = 1, p = strchr(e->f_name + e->f_name[e->f_size] + 1 , '/');
+		for(i = 1, p = strchr(e->f_name + e->f_size + 1 , '/');
 				p; p = strchr(p + 1, '/'), i++) {
 			if (i > opt_strip)
 				break;
 		}
-		/* p == NULL - we should get the same below */
+		/* p == NULL - we should get the same below. ie. entry
+		 * is discarded
+		 */
 		if (p) {
-			/* 
-			i = strlen(p);
-			memmove(e->f_name + e->f_size + 4, p, e->f_size - i);
-			*/
+			/* move the shortened name back over the original */
+			i = strlen(p); 
+			memmove(e->f_name + e->f_size + 4, p, i + 1);
+			/* make f_name_size shorter */
+			e->f_name_size -= (e->f_size - i);
 		}
-
 	}
 
 	for(i = 1, p = strchr(e->f_name, '/'); p; p = strchr(p + 1, '/'), i++) {
