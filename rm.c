@@ -43,6 +43,10 @@ rm(gchar *p)
 						g_free(dirp);
 					}
 					g_dir_close(d);
+					/* dir should be empty by now */
+					if ((ret = remove(p)) == -1)
+						msg(_("Failed to remove directory: `%s\': %s"),
+								p, strerror(errno));
 					return TRUE;
 				
 				case EACCES:
