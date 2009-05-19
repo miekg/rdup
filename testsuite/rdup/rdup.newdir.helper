@@ -8,6 +8,7 @@ touch A/b/1 A/b/2 A/b/3
 touch A/d/1 A/d/2 A/d/3
 for i in e f g h i k l m n; do touch A/$i ; done
 
+sleep 1	# otherwise timestamp equal the touched files
 # full dump
 ./rdup -N $$.timestamp $$.lijst A > /dev/null
 

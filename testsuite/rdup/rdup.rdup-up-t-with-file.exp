@@ -1,0 +1,8 @@
+set test "Run rdup-up -t file - should fail"
+file copy /bin/cat testsuite/rdup/b
+if { [catch { exec ./rdup-up -t testsuite/rdup/b } msg] } {
+    pass "$test"
+} else {
+    fail "$test"
+}
+file delete testsuite/rdup/b

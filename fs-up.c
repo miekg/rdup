@@ -21,8 +21,19 @@ extern GSList *hlink;
 void got_sig(int signal);
 
 static gboolean
+mk_mode(struct r_entry *e) {
+	/* todo: error checking */
+	chmod(e->f_name, e->f_mode);
+	if (getuid() == 0)
+		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { } /* todo */
+	return TRUE;
+}
+
+static gboolean
 mk_dev(struct r_entry *e) {
-	/* XXX dir write perms */
+	gchar *parent;
+	struct stat *st;
+
 	if (opt_dry)
 		return TRUE;
 
@@ -32,17 +43,31 @@ mk_dev(struct r_entry *e) {
 	}
 
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
-		msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
+		if (errno == EACCES) {
+			parent = dir_parent(e->f_name);
+			st = dir_write(parent);
+			if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
+				msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
+				dir_restore(parent, st);
+				g_free(parent);
+				return FALSE;
+			}
+			dir_restore(parent, st);
+			g_free(parent);
+		} else {
+			msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
+			return FALSE;
+		}
 	}
-	chmod(e->f_name, e->f_mode);
-	if (getuid() == 0)
-		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { }
+	mk_mode(e);
 	return TRUE;
 }
 
 static gboolean
 mk_sock(struct r_entry *e) {
-	/* XXX dir write perms */
+	gchar *parent;
+	struct stat *st;
+
 	if (opt_dry)
 		return TRUE;
 
@@ -52,11 +77,23 @@ mk_sock(struct r_entry *e) {
 	}
 
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
-		msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
+		if (errno == EACCES) {
+			parent = dir_parent(e->f_name);
+			st = dir_write(parent);
+			if (mkfifo(e->f_name, e->f_mode) == -1) {
+				msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
+				dir_restore(parent, st);
+				g_free(parent);
+				return FALSE;
+			}
+			dir_restore(parent, st);
+			g_free(parent);
+		} else {
+			msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
+			return FALSE;
+		}
 	}
-	chmod(e->f_name, e->f_mode);
-	if (getuid() == 0)
-		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { }
+	mk_mode(e);
 	return TRUE;
 }
 
@@ -88,14 +125,13 @@ mk_link(struct r_entry *e, char *s, char *t, char *p)
 				} 
 				dir_restore(parent, st);
 				g_free(parent);
-				return TRUE;
 			} else {
 				msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
 				return FALSE;
 			}
 		}
 		if (getuid() == 0)
-			if (lchown(e->f_name, e->f_uid, e->f_gid) == -1) { }
+			if (lchown(e->f_name, e->f_uid, e->f_gid) == -1) { /* todo */ }
 		return TRUE;
 	}
 
@@ -116,7 +152,7 @@ mk_reg(FILE *in, struct r_entry *e)
 	char *buf;
 	size_t  bytes;
 	gboolean ok = TRUE;
-	gboolean old_dry;
+	gboolean old_dry = opt_dry;
 	struct stat *st;
 
 	/* with opt_dry we can't just return TRUE; as we may 
@@ -125,7 +161,6 @@ mk_reg(FILE *in, struct r_entry *e)
 
 	if (! e->f_name) {
 		/* fake an opt_dry */
-		old_dry = opt_dry;
 		opt_dry = TRUE;
 	}
 
@@ -136,7 +171,6 @@ mk_reg(FILE *in, struct r_entry *e)
 			return FALSE;
 		}
 	}
-
 	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
 			st = dir_write(dir_parent(e->f_name));
@@ -152,13 +186,11 @@ mk_reg(FILE *in, struct r_entry *e)
 			ok = FALSE;
 		}
 	} 
-
-	if (ok && !opt_dry)
+	if (ok && !opt_dry) {
 		chmod(e->f_name, e->f_mode);
-
-	/* only root my chown files */
-	if (ok && !opt_dry && getuid() == 0)
-		if (fchown(fileno(out), e->f_uid, e->f_gid) == -1) { } /* todo */
+		if (getuid() == 0)
+			if (fchown(fileno(out), e->f_uid, e->f_gid) == -1) { } /* todo */
+	}
 
 	/* we need to read the input to not upset
 	 * the flow into rdup-up, but we are not
@@ -182,7 +214,6 @@ mk_reg(FILE *in, struct r_entry *e)
 			}
 		}
 	}
-	
 	g_free(buf);
 	if (ok && out)
 		fclose(out); 
@@ -202,8 +233,8 @@ mk_dir(struct r_entry *e)
 
 	lstat(e->f_name, &st);
 	if (S_ISDIR(st.st_mode)) {
-		/* something dir is here - update the permissions */
-		chmod(e->f_name, e->f_mode);
+		/* something dir is here - update the perms and ownership */
+		mk_mode(e);
 		return TRUE;
 	}
 
@@ -220,16 +251,12 @@ mk_dir(struct r_entry *e)
 			}
 			dir_restore(parent, s);
 			g_free(parent);
-			return TRUE;
 		} else {
 			msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
-	/* only root my chown files */
-	if (getuid() == 0)
-		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { }
-			
+	mk_mode(e);	/* shorter, but sets mode again */
 	return TRUE;
 }
 
@@ -267,7 +294,8 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 			}
 			return rm(s);
 		case PLUS:
-			if (S_ISREG(e->f_mode))
+			/* only files, no hardlinks! */
+			if (S_ISREG(e->f_mode) && ! e->f_lnk )
 				return mk_reg(in, e);
 
 			/* no name, we can exit here - for files this is handled

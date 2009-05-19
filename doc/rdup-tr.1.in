@@ -32,9 +32,9 @@ When creating output you might also want to 'pipe' the contents
 of \fIeach\fR file through a number of commands, say a compression and 
 encryption utility. Note that this is different than compressing the
 \fIentire\fR archive which can be done (for instance) by using the \-z option of
-GNU tar. So this is where rdup-tr comes in. It allows you to create
+GNU tar. So this is where \fBrdup-tr\fR comes in. It allows you to create
 a normal archive in which \fIeach\fR file is encrypted (or compressed.
-reversed or whatever). \fBrdup-tr\fR does this by creating child
+reversed or whatever). \fBrdup-tr\fR does this by forking child
 processes which transform the contents.
 
 If one of
@@ -44,15 +44,15 @@ original file content is printed as-is.
 
 This command combines all previously written rdup-utils
 (rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
-it much more maintainable. And allowing for cool features, see \-X for
-instance.
+it much more maintainable. And allowing for cool new features, see \-X 
+(path encryption) for instance.
 
 As said \fBrdup-tr\fR works by forking off a number of child processes (those
 commands named with the \-P option(s)), interconnecting these
 with pipes. The current file is connected to the first child.
 The output created by these child processes is
-captured by the parent (rdup-tr).
-The contents is then echoed to stdout in an archive format. As a picture says more
+captured by the parent (\fBrdup-tr\fR).
+The contents is then written to standard output in an archive format. As a picture says more
 than a thousand words here is an ASCII image:
 
 .RS
@@ -104,10 +104,10 @@ every file processed.
 .TP
 .B \-L
 Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
-with this option you can read a list of path names.
+with this option you can give it a list of path names.
 .TP
 .B \-O
-Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'. If
+Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'. It
 defaults to 'rdup'.
 .TP
 .B \-X \fIkey\fR

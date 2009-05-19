@@ -8,6 +8,8 @@ touch A/b/1 A/b/2 A/b/3
 touch A/d/1 A/d/2 A/d/3
 for i in e f g h i k l m n; do touch A/$i ; done
 
+sleep 1	# otherwise timestamp is equal to just created files
+
 ./rdup -F '%p%n\n' -N $$.timestamp $$.lijst A > /dev/null
 
 # incr dump, expect only the dirs

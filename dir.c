@@ -10,7 +10,7 @@
 struct stat *
 dir_write(gchar *p)
 {
-	 /* chmod +w . && rm $file && chmod -w #and hope for the best */
+	 /* chmod +w . && rm $file && chmod -w # and hope for the best */
 	struct stat *s = g_malloc(sizeof(struct stat));
 	if (!p)
 		return NULL;
@@ -33,7 +33,7 @@ dir_restore(gchar *p, struct stat *s)
 }
 
 /**
- * return parent dir string as in p/..
+ * return parent dir string
  */
 gchar *
 dir_parent(gchar *p)

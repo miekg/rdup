@@ -19,6 +19,8 @@ extern guint opt_verbose;
  * with key  *key
  * and length length
  * lenght MUST be 16, 24 or 32
+ * anything short will be zero padded to 
+ * create a correct key
  * return aes context
  */
 struct aes_ctx *
@@ -251,7 +253,7 @@ crypt_key(gchar *file)
 	char *buf;
 	size_t s;
 
-	buf = g_malloc(BUFSIZE);
+	buf = g_malloc0(BUFSIZE);
 	s = BUFSIZE;
 	if (! (f = fopen(file, "r"))) {
 		msg(_("Failed to open `%s\': %s"),

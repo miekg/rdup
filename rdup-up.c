@@ -176,7 +176,11 @@ main(int argc, char **argv)
 
 	if (!opt_dry) {
 		if (opt_top) {
-			/* if path is a file this fails... */
+			/* this is not 100%, but better than nothing */
+			if (g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
+				msg(_("Failed to create directory `%s\'"), path);
+				exit(EXIT_FAILURE);
+			}
 			if (mkpath(path, 00777) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), path, strerror(errno));
 				exit(EXIT_FAILURE);
