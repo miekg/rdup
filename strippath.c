@@ -39,11 +39,13 @@ strippath(struct r_entry *e)
 		 * is discarded
 		 */
 		if (p) {
-			/* move the shortened name back over the original */
+			/* how much shorter are we */
+			guint shorter;
 			i = strlen(p); 
+			shorter = (e->f_name_size - e->f_size - i - 4);
 			memmove(e->f_name + e->f_size + 4, p, i + 1);
-			/* make f_name_size shorter */
-			e->f_name_size -= (e->f_size - i);
+			/* make f_name_size shorter too */
+			e->f_name_size -= shorter;
 		}
 	}
 

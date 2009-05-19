@@ -5,4 +5,3 @@ expect {
     -re "..*" { fail "$test" }
     default { pass "$test" }
 }
-file delete testsuite/rdup/b

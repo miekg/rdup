@@ -69,7 +69,8 @@ update(char *path)
 
 		/* strippath must be inserted here */
 		rdup_entry->f_name = pathbuf;
-		strippath(rdup_entry);
+		if (opt_strip)
+			strippath(rdup_entry);
 
 		if (!rdup_entry->f_name)
 			p = NULL;
