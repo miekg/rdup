@@ -10,7 +10,6 @@ xx May 2009: 1.0.0 Miek <miek@miek.nl>
   * rdup-up (fs-up.c): code cleanups and some permission settings
   * rdup-up: when recursively deleting a directory, delete the directory
     itself too when the recursion ends
-    errors fixed.
   * rdup-simple: add -s (strip) here too
 
 
