@@ -29,7 +29,10 @@ strippath(struct r_entry *e)
 		e->f_name[e->f_size] = '\0';
 
 	if (e->f_lnk == 1) {
+//		e->f_name[e->f_size] = ' ';
 		/* hardlinks... mangle the part after -> also */
+//		fprintf(stderr, "orig %d %d %s\n",
+//				e->f_name_size, (int)e->f_size, e->f_name);
 		for(i = 1, p = strchr(e->f_name + e->f_size + 1 , '/');
 				p; p = strchr(p + 1, '/'), i++) {
 			if (i > opt_strip)
@@ -46,6 +49,8 @@ strippath(struct r_entry *e)
 			memmove(e->f_name + e->f_size + 4, p, i + 1);
 			/* make f_name_size shorter too */
 			e->f_name_size -= shorter;
+//		fprintf(stderr, "orig %d %d %s\n",
+//				e->f_name_size, (int)e->f_size, e->f_name);
 		}
 	}
 
