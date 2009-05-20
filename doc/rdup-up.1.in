@@ -23,7 +23,25 @@ Create PATH (ala mkdir -p) if it does not exist.
 .TP
 .B \-s N
 Strip N path components from a pathname. If the resulting pathname is
-empty after this it is skipped.
+empty after this operation it is skipped. Be careful however with the following
+structure:
+
+    /foo
+    /foo/bar
+    /foo/bar/bla.txt
+    /foo/blork/bla.txt
+
+
+With \fBrdup-up -s \fI2\fR this will leave:
+
+
+    <empty>
+    <empty>
+    /bla.txt
+    /bla.txt
+
+
+So the last 'bla.txt' will \fIoverwrite\fR the previous one.
 .TP
 .B \-v
 Be more verbose and echo the processed files to \fIstandard output\fR.
