@@ -11,6 +11,7 @@
   * rdup-up (fs-up.c): code cleanups and some permission settings
   * rdup-up: when recursively deleting a directory, delete the directory
     itself too when the recursion ends
+  * rdup-up: avoid // when restoring to /
   * rdup-simple: add -s (strip) here too
 
 

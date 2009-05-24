@@ -28,12 +28,13 @@ update(char *path)
 {
 	struct r_entry *rdup_entry;
 	size_t         line, i, pathsize;
+	size_t	       pathlen;
 	char           *buf, *pathbuf, *n, *p;
 	char           delim;
 	FILE           *fp;
 	struct stat    s;
 	gboolean       ok;
-	
+
 	buf	= g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
 	i       = BUFSIZE;
@@ -41,6 +42,7 @@ update(char *path)
 	delim   = '\n';
 	line    = 0;
 	ok      = TRUE;
+	pathlen = strlen(path);
 
 	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
 		line++;
@@ -74,15 +76,18 @@ update(char *path)
 
 		if (!rdup_entry->f_name)
 			p = NULL;
-		else
-			p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
-
-		rdup_entry->f_name_size += strlen(path);
-		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk)
-			rdup_entry->f_size += strlen(path);
-
+		else {
+			/* avoid // at the beginning */
+			if (pathlen == 1 && path[0] == '/') {
+				p = g_strdup(rdup_entry->f_name);
+			} else {
+				p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
+				rdup_entry->f_name_size += pathlen;
+				if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk)
+					rdup_entry->f_size += pathlen;
+			}
+		}
 		rdup_entry->f_name = p;
-
 		if (mk_obj(stdin, path, rdup_entry) == FALSE)
 			ok = FALSE;
 	}

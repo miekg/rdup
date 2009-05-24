@@ -7,6 +7,7 @@
 #include "rdup-up.h"
 
 extern gboolean opt_dry;
+extern gboolean opt_verbose;
 
 /* ENOENT */
 /* errno */
@@ -22,10 +23,13 @@ rm(gchar *p)
 	struct stat *st2;
 
 	if (opt_dry || !p)
-		return TRUE;	/* the very easy life, p might also be NULL */
+		return TRUE;	/* noop */
 
-	if (lstat(p, &st) == -1)
-		return TRUE;    /* the easy life */
+	if (lstat(p, &st) == -1) {
+		if (opt_verbose > 0)
+			msg(_("Failed to remove: `%s\': %s"), p, strerror(errno));
+		return TRUE;    /* noop, still return tree */
+	}
 
 	if (S_ISDIR(st.st_mode)) {
 		ret = remove(p);
@@ -34,7 +38,7 @@ rm(gchar *p)
 				case ENOTEMPTY:
 					/* recursive into this dir and do our bidding */
 					if (!(d = g_dir_open(p, 0, NULL))) {
-						msg(_("Failed to open directory `%s\': %s"), p, "errno");
+						msg(_("Failed to open directory `%s\': %s"), p, strerror(errno));
 						return FALSE;
 					}
 					while ( (dirp = (gchar*)g_dir_read_name(d))) {
