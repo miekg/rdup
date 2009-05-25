@@ -433,9 +433,9 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 
 	e = strcmp(((struct r_entry*)a)->f_name, ((struct r_entry*)b)->f_name);
 	if (e == 0) {
-		if (((struct r_entry*)a)->f_dev != ((struct r_entry*)b)->f_dev)
+		if (ae->f_dev != be->f_dev)
 			return -1;
-		if (((struct r_entry*)a)->f_ino != ((struct r_entry*)b)->f_ino) 
+		if (ae->f_ino != be->f_ino) 
 			return -2;
 
 		/* if we are looking at a directory and only the mode has changed
@@ -444,7 +444,7 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 				((ae->f_mode & ~S_IFMT) != (be->f_mode & ~S_IFMT)) )
 			return 0;
 
-		if (((struct r_entry*)a)->f_mode != ((struct r_entry*)b)->f_mode) 
+		if (ae->f_mode != be->f_mode) 
 			return -3;
 	}
 	return e;
