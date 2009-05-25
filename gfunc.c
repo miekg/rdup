@@ -356,8 +356,8 @@ gfunc_backup(gpointer data, gpointer value,
 		return FALSE;
 	} else {
 		#if 0
-	if (S_ISREG(((struct entry*)data)->f_mode) ||
-			S_ISLNK(((struct entry*)data)->f_mode)) {
+			if (S_ISREG(((struct entry*)data)->f_mode) ||
+					S_ISLNK(((struct entry*)data)->f_mode)) {
 		#endif
 
 		if (opt_size != 0 && ((struct r_entry*)data)->f_size > (ssize_t)opt_size) {
@@ -423,6 +423,10 @@ gint
 gfunc_equal(gconstpointer a, gconstpointer b)
 {
 	gint e;
+	struct r_entry *ae, *be;
+
+	ae = (struct r_entry *)a;
+	be = (struct r_entry *)b;
 
 	if (sig != 0)
 		signal_abort(sig);
@@ -433,6 +437,13 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 			return -1;
 		if (((struct r_entry*)a)->f_ino != ((struct r_entry*)b)->f_ino) 
 			return -2;
+
+		/* if we are looking at a directory and only the mode has changed
+		 * don't let rdup remove the entire directory */
+		if (S_ISDIR(ae->f_mode) && S_ISDIR(be->f_mode) && 
+				((ae->f_mode & ~S_IFMT) != (be->f_mode & ~S_IFMT)) )
+			return 0;
+
 		if (((struct r_entry*)a)->f_mode != ((struct r_entry*)b)->f_mode) 
 			return -3;
 	}

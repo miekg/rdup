@@ -29,7 +29,7 @@ int opterr		   = 0;
 			continue; \
 			}
 /**
- * subtrace tree *b from tree *a, leaving
+ * subtract tree *b from tree *a, leaving
  * the elements that are only in *a. Essentially
  * a double diff: A diff (A diff B)
  */
