@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# script must not yield any output
+
+rm -rf A
+# some some bogus dirs
+mkdir -p A/a A/b A/d
+touch A/a/1 A/a/2 A/a/3
+touch A/b/1 A/b/2 A/b/3
+touch A/d/1 A/d/2 A/d/3
+./rdup -N $$.timestamp $$.lijst A > /dev/null
+chmod +t A/d
+sleep 1	# otherwise timestamp is equal to just created files
+
+# incr dump, after the chmod the directory MUST not
+# show up in the dump
+./rdup -N $$.timestamp $$.lijst A | grep -- '^-'
+
+rm $$.timestamp
+rm $$.lijst
+rm -rf A
