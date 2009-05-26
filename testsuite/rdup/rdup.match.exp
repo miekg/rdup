@@ -1,0 +1,6 @@
+set test "rdup -c and rdup | rdup-tr must be identical"
+spawn ./testsuite/rdup/rdup.match.helper
+expect {
+    -re "..*" { fail "$test" }
+	default { pass "$test" }
+}
