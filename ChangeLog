@@ -1,13 +1,13 @@
 31 May 2009: 1.0.0 Miek <miek@miek.nl>
   - 1.0.0 release! -
-  * tests: more DejaGNU tests added: 25 now
+  * tests: more DejaGNU tests added: 26 in total
   * rdup: default to '.' when no directories/files are provided
   * rdup: make {c|m}-time comparison >= instead of >
   * rdup: when a directory only does a mode change, make sure it
     does not get listed on the deleted list
   * rdup-tr: exit when -X/-Y used and we are compiled without encryption
-  * rdup-up: added -vv write uid/gid and filename to stdout. See:
-    http://www.miek.nl/s/8374af9844
+  * rdup-up: added -vv write uid/gid and filename to stdout, makes non
+    root remote backups possible, see: http://www.miek.nl/s/8374af9844
   * rdup-up: better handle non-writable directories when restoring
   * rdup-up: implemented the -s (strip) option
   * rdup-up (fs-up.c): code cleanups and some permission settings
