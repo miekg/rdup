@@ -1,6 +1,6 @@
 31 May 2009: 1.0.0 Miek <miek@miek.nl>
   - 1.0.0 release! -
-  * tests: more DejaGNU tests added: 26 in total
+  * tests: more DejaGNU tests added: 27 in total
   * rdup: default to '.' when no directories/files are provided
   * rdup: make {c|m}-time comparison >= instead of >
   * rdup: when a directory only does a mode change, make sure it
