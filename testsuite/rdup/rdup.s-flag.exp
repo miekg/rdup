@@ -1,0 +1,6 @@
+set test "rdup -s1; only output files smaller than 1 byte"
+spawn ./testsuite/rdup/rdup.s-flag.helper
+expect {
+    -re "..*" { fail "$test" }
+	default { pass "$test" }
+}
