@@ -32,7 +32,7 @@ structure:
     /foo/blork/bla.txt
 
 
-With \fBrdup-up -s \fI2\fR this will leave:
+With \fBrdup-up -s\fI2\fR this will leave:
 
 
     <empty>
