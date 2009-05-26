@@ -407,6 +407,11 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 	if (value == NO_PRINT) 
 		return FALSE;
 
+	if (opt_size != 0 && S_ISREG(((struct r_entry*)data)->f_mode) &&
+			((struct r_entry*)data)->f_size > (ssize_t)opt_size) {
+		return FALSE;
+	}
+
 	entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 	return FALSE;
 }
