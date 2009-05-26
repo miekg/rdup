@@ -5,6 +5,9 @@
 # these
 PATH=`pwd`:$PATH
 
+rm -f ~/.rdup/list.$(uname -n).tmp
+rm -f ~/.rdup/timestamp.$(uname -n).tmp
+
 rm -rf t tmp
 mkdir t tmp
 touch t/foo
@@ -16,9 +19,11 @@ DATE=$(date +%Y%m)
 NOW=$(date +%d)
 mv tmp/$DATE/$NOW tmp/$DATE/$DAY_BEFORE
 
-## XXX: remove files in ./rdup
 rm t/bar
 ./sh/rdup-simple.sh t tmp
 EXIT=$?
 rm -rf t tmp # cleanup
+## remove files in ./rdup
+rm ~/.rdup/list.$(uname -n).tmp
+rm ~/.rdup/timestamp.$(uname -n).tmp
 exit $EXIT
