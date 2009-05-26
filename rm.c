@@ -26,7 +26,7 @@ rm(gchar *p)
 		return TRUE;	/* noop */
 
 	if (lstat(p, &st) == -1) {
-		if (opt_verbose > 0)
+		if (opt_verbose > 0 && errno != ENOENT)
 			msg(_("Failed to remove: `%s\': %s"), p, strerror(errno));
 		return TRUE;    /* noop, still return tree */
 	}
