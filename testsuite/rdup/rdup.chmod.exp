@@ -1,0 +1,7 @@
+set test "A a chmod a on file with an incr backup"
+# we expect no output
+spawn ./testsuite/rdup/rdup.chmod.helper
+expect {
+    -re "..*" { fail "$test" }
+	default { pass "$test" }
+}

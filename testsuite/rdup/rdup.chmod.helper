@@ -1,0 +1,24 @@
+#!/bin/bash
+
+rm -rf A
+rm -f $$.timestamp $$.lijst
+# some some bogus dirs
+mkdir -p A/a A/b A/d
+touch A/a/1 A/a/2 A/a/3
+touch A/d/1 A/d/2 A/d/3
+
+#sync?? Is this an ext4 bug?
+sync
+
+./rdup -N $$.timestamp $$.lijst A > /dev/null
+chmod 400 A/d/1
+sleep 1	# otherwise timestamp is equal to just created files
+
+# we expect, A/d/1 to be removed and added, this
+# should yield 2 lines out output
+OUT=$(./rdup -N $$.timestamp $$.lijst A | grep 'A/d/1' | wc -l)
+rm $$.timestamp $$.lijst
+rm -rf A
+if [[ $OUT -ne 2 ]]; then
+    echo BOE
+fi
