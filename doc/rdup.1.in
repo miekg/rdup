@@ -201,10 +201,9 @@ backup (\fI\-c\fR) where the normal output is not seen. Using
 tee(1) might even be better...
 .TP
 .B \-s size
-Only output files smaller then \fBsize\fR bytes. This can be used to limit
-the amount of data to be transferred when doing a remote backup.
-This option \fIonly\fR applies to files and symbolic links, \fInot\fR
-to directories.
+Don't output files larger than \fBsize\fR bytes.
+This can be used to limit the amount of data to be transferred when doing a remote backup.
+This option \fIonly\fR applies to files.
 .TP
 .B \-0
 Delimit \fBfilelist\fR with NULL's instead of a newline. Use '\\0' in the

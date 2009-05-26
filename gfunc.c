@@ -355,12 +355,8 @@ gfunc_backup(gpointer data, gpointer value,
 		entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
 		return FALSE;
 	} else {
-		#if 0
-			if (S_ISREG(((struct entry*)data)->f_mode) ||
-					S_ISLNK(((struct entry*)data)->f_mode)) {
-		#endif
-
-		if (opt_size != 0 && ((struct r_entry*)data)->f_size > (ssize_t)opt_size) {
+		if (opt_size != 0 && S_ISREG(((struct r_entry*)data)->f_mode) &&
+			((struct r_entry*)data)->f_size > (ssize_t)opt_size) {
 			return FALSE;
 		}
 		switch (opt_timestamp) {
