@@ -1,6 +1,11 @@
 set test "Do a full rdup dump"
-if { [catch { exec ./testsuite/rdup/rdup.full.helper } msg] } {
-    fail "$test"
-} else {
-    pass "$test"
+#if { [catch { exec ./testsuite/rdup/rdup.full.helper } msg] } {
+#    fail "$test"
+#} else {
+#    pass "$test"
+#}
+spawn ./testsuite/rdup/rdup.full.helper
+expect {
+    -re "..*" { fail "$test" }
+	default { pass "$test" }
 }

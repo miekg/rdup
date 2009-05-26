@@ -1,6 +1,7 @@
 #!/bin/bash
 
 rm -rf A
+rm -f $$.timestamp $$.lijst
 
 mkdir -p A/a A/b
 touch A/a/1 A/a/2 A/a/3

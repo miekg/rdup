@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# should be identical
+# should be identical, i.e. no diff
 diff -u <(./rdup -c /dev/null po) \
 <(./rdup /dev/null po | ./rdup-tr -c -Pcat)

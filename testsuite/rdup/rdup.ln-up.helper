@@ -16,6 +16,7 @@ DATE=$(date +%Y%m)
 NOW=$(date +%d)
 mv tmp/$DATE/$NOW tmp/$DATE/$DAY_BEFORE
 
+## XXX: remove files in ./rdup
 rm t/bar
 ./sh/rdup-simple.sh t tmp
 EXIT=$?
