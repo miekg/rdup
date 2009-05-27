@@ -17,16 +17,14 @@ post 1.0
   C/Perl/sh kludge we had
 - use libarchive to make zip and/or iso 9660 files? why not?
   if the impact is low...
-- make rdup-tr grok rdup -c input
+- make rdup-tr grok rdup -c input, make rdup-up also grok rdup
+  input.
+- fix -0 input everywhere
 
 :general:
 - paths in rdup-simple.sh for rdup-ln.sh
 - add extended attributes? man 5 tar explains how to do it, but it
   is A LOT of work AND it is not portable over unixes...?
-
-:tests:
-- test -0 for rdup-*
-- test rdup-up with an input which holds unwritable directories
 
 :rdup-tr:
 - opt_null ala rdup

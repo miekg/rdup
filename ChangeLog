@@ -6,6 +6,7 @@
   * rdup: when a directory only does a mode change, make sure it
     does not get listed on the deleted list
   * rdup-tr: exit when -X/-Y used and we are compiled without encryption
+  * rdup-tr: check for encrypted path components larger than 255 chars
   * rdup-up: added -vv write uid/gid and filename to stdout, makes non
     root remote backups possible, see: http://www.miek.nl/s/8374af9844
   * rdup-up: better handle non-writable directories when restoring
