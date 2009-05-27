@@ -142,6 +142,16 @@ main(int argc, char **argv)
 		}
 	}
 
+
+#if 0
+	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/miekg/blaa")));
+	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/miekg/")));
+	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/miekg")));
+	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/")));
+	fprintf(stderr, "dir up /home -> %s\n", dir_parent(g_strdup("/home")));
+	fprintf(stderr, "dir up / -> %s\n", dir_parent(g_strdup("/")));
+#endif
+
 	while ((c = getopt (argc, argv, "thnVvs:")) != -1) {
 		switch (c) {
 			case 'v':

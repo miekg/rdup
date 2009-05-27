@@ -11,9 +11,10 @@ struct stat *
 dir_write(gchar *p)
 {
 	 /* chmod +w . && rm $file && chmod -w # and hope for the best */
-	struct stat *s = g_malloc(sizeof(struct stat));
 	if (!p)
 		return NULL;
+
+	struct stat *s = g_malloc(sizeof(struct stat));
 
 	if (stat(p, s) == -1)
 		return NULL;
@@ -34,15 +35,22 @@ dir_restore(gchar *p, struct stat *s)
 
 /**
  * return parent dir string
+ * p MUST not end in a /
  */
 gchar *
 dir_parent(gchar *p)
 {
 	gchar *p2;
 	gchar *n;
+
+	if (!p)
+		return NULL;
+	if (p[0] == '/' && p[1] == '\0')
+		return p;
+
 	n = strrchr(p, '/'); 
 	if (n) {
-		*n = '\0';
+		*(n+1) = '\0';
 		p2 = g_strdup(p);
 		*n= '/';
 		return p2;
