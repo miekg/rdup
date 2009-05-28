@@ -100,6 +100,10 @@ crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr)
 	if (!b64) {
 		/* hash insert? */
 		return elem; /* as if nothing happened */
+	} else if (strlen(b64) > 255) {
+		/* path ele too long. XXX 255 -> symbolic name please */
+		msg(_("Encrypted base64 path length exceeds %d characters"), 255);
+		return elem;
 	} else {
 		g_hash_table_insert(tr, elem, b64);
 		return b64;
