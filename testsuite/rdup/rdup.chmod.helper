@@ -7,7 +7,7 @@ mkdir -p A/a A/b A/d
 touch A/a/1 A/a/2 A/a/3
 touch A/d/1 A/d/2 A/d/3
 
-#sync?? Is this an ext4 bug?
+#sync?? Is this an ext4 bug on my laptop?
 sync
 
 ./rdup -N $$.timestamp $$.lijst A > /dev/null
