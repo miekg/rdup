@@ -18,6 +18,7 @@ post 1.0
 - use libarchive to make zip and/or iso 9660 files? why not?
   if the impact is low...
 - make rdup-tr grok rdup -c input
+- more robust write() in rdup-tr
 
 :general:
 - paths in rdup-simple.sh for rdup-ln.sh
