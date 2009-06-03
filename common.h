@@ -1,6 +1,6 @@
 #ifndef _COMMON_H
 #define _COMMON_H
-#define BUFSIZE		8192
+#define BUFSIZE		4096
 #define LIST_MINSIZE	6
 #define LIST_SPACEPOS   5
 
