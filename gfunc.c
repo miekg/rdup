@@ -21,7 +21,7 @@ extern sig_atomic_t sig;
 extern GList *list;
 
 /* sha1.c */
-int sha1_stream(FILE *stream, void *resblock);
+int sha1_stream(FILE *stream, void *digest);
 
 /*
  * calculates a files sha1 sum
