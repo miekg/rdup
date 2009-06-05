@@ -1,5 +1,5 @@
 xx Jun 2009: 1.0.1 Miek <rdup@miek.nl>
-
+  * libnettle is mandatory
   * use sha1 from libnettle 
 
 31 May 2009: 1.0.0 Miek <miek@miek.nl>
