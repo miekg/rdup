@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # should be identical, i.e. no diff
-diff -u <(./rdup -c /dev/null po) \
-<(./rdup /dev/null po | ./rdup-tr -c -Pcat)
+diff -u <(./rdup -c /dev/null po|sed 's/01BLOCK.....//') \
+<(./rdup /dev/null po|./rdup-tr -c -Pcat|sed 's/01BLOCK.....//')
