@@ -28,20 +28,11 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 #AM_GNU_GETTEXT([external])
 #AM_GNU_GETTEXT_VERSION
 
-AC_MSG_CHECKING([whether to enable nettle])
-AC_ARG_WITH(nettle,
-    [  --with-nettle           enable nettle support],
-    with_nettle=$withval,
-    with_nettle=yes)
-AC_MSG_RESULT($with_nettle)
-
-if test "$with_nettle" != "no"; then
-	AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
-	if test "$NETTLE_L" = "no"; then
-	    AC_MSG_WARN([** libnettle not found; not using crypto in rdup-tr.])
-	fi
-	AC_SUBST(NETTLE_L)
+AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
+if test "$NETTLE_L" = "no"; then
+    AC_MSG_ERROR([** libnettle not found.])
 fi
+AC_SUBST(NETTLE_L)
 
 AC_CHECK_LIB(archive, archive_entry_copy_symlink, ,ARCHIVE_L="no")
 if test "$ARCHIVE_L" = "no"; then
