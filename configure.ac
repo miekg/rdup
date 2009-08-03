@@ -11,7 +11,7 @@ AC_AIX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
-AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No libglib2-dev found.]))
+AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No glib2-dev library found.]))
 AC_CHECK_FUNCS([dirfd])
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h sys/sysmacros.h archive.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
@@ -28,15 +28,9 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 #AM_GNU_GETTEXT([external])
 #AM_GNU_GETTEXT_VERSION
 
-AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
-if test "$NETTLE_L" = "no"; then
-    AC_MSG_ERROR([** libnettle not found.])
-fi
-AC_SUBST(NETTLE_L)
-
 AC_CHECK_LIB(archive, archive_entry_copy_symlink, ,ARCHIVE_L="no")
 if test "$ARCHIVE_L" = "no"; then
-    AC_MSG_WARN([** libarchive not found; not building rdup-tr.])
+    AC_MSG_WARN([** No archive library found; not building rdup-tr.])
 fi
 AC_SUBST(ARCHIVE_L)
 
@@ -74,6 +68,35 @@ AC_CHECK_LIB(pcre, pcre_compile, ,PCRE_L="no")
 if test "$PCRE_L" = "no"; then
 	AC_MSG_ERROR([** No pcre library found.])
 fi
+
+AC_ARG_WITH(libnettle_includes,
+       [  --with-libnettle-includes=DIR  libnettle include directory],
+       [with_libnettle_includes="$withval"],[with_libnettle_includes=no])
+
+AC_ARG_WITH(libnettle_libraries,
+       [  --with-libnettle-libraries=DIR  libnettle library directory],
+       [with_libnettle_libraries="$withval"],[with_libnettle_libraries=no])
+
+if test "$with_libnettle_includes" != "no"; then
+   CFLAGS="${CFLAGS} -I${with_libnettle_includes}"
+fi
+
+if test "$with_libnettle_libraries" != "no"; then
+   LIBS="${LIBS} -L${with_libnettle_libraries}"
+fi
+
+NETTLE_H=""
+AC_CHECK_HEADERS(nettle/aes.h,, NETTLE_H="no")
+if test "$NETTLE_H" = "no"; then
+	AC_MSG_ERROR([** No nettle library found.])
+fi
+
+NETTLE_L=""
+AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
+if test "$NETTLE_L" = "no"; then
+    AC_MSG_ERROR([** No nettle library found.])
+fi
+AC_SUBST(NETTLE_L)
 
 AC_C_BIGENDIAN
 
