@@ -5,6 +5,9 @@
  * Not used anymore - this is a hack that I don't want to
  * support anymore. It stinks
  *
+ * It was used in saving the uid/gid information when doing
+ * a remote dump as a no root user.
+ *
  * All xattr functions are grouped here
  */
 
