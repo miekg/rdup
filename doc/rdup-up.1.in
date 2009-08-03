@@ -41,7 +41,7 @@ With \fBrdup-up -s\fI2\fR this will leave:
     /bla.txt
 
 
-So the last 'bla.txt' will \fIoverwrite\fR the previous one.
+And the last 'bla.txt' will \fIoverwrite\fR the previous one.
 .TP
 .B \-v
 Be more verbose and echo the processed files to \fIstandard output\fR.
