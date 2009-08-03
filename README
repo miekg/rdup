@@ -12,17 +12,19 @@ Optionally you can also do a:
 make check
 
 to run the test suite, note that you will need DejaGNU installed 
-for this to work.
+for this to work. If you find errors in this testrun, please
+look at testlogs/rdup.log and send that to the author.
 
 rdup depends on:
 o Gmake for compilation
 o Glib to build. Glib is the low level C library of the
   GTK project. Configure will check for this.
-o PCRE library
+o PCRE library 
+o LibNettle  - if you want rdup-tr to do path encryption and
+  for sha hashing
 
 optional:
 o Libarchive - if you want to have rdup-tr
-o LibNettle  - if you want rdup-tr to do path encryption
 
 rdup should compile on all unix platforms out there. It is tested on
 the following
