@@ -4,21 +4,20 @@ and tools to make it all work. The dependencies are listed here:
 Mandatory:
 o libglib (core C gtk library)
 o libpcre (Perl regular expressions)
+o libnettle (Small crypto library)
+o libarchive (Create tar/cpio/etc archive - used in rdup-tr)
+
+If libarchive is not found rdup-tr is not built.
 
 To build:
 o automake
 o autoconf
+o make 
 
-Some very small shell scripts are included in the sh/ directory
+To run the testsuite
+o make check
+
+DejaGNU is used for the testsuite.
+
+Some small shell scripts are included in the sh/ directory
 they depend on bash and GNU date and GNU cp.
-
-rdup-tr has an extra dependency on
-o libarchive 
-
-If libarchive is not found rdup-tr is not built.
-
-rdup-up has an extra dependencies on
-o lbnettle
-
-If libnettle is not found rdup-up will not be able to do
-path encryption (-X/-Y options).
