@@ -1,7 +1,7 @@
-xx Jun 2009: 1.0.1 Miek <rdup@miek.nl>
+xx Aug 2009: 1.0.1 Miek <rdup@miek.nl>
   * rdup: libnettle is mandatory
   * rdup: use sha1 from libnettle 
-  * rdup-simple: fix location/PATH of rdup-ln
+  * rdup-simple: fix location/PATH of rdup-ln (Tom Hendrikx)
 
 
 31 May 2009: 1.0.0 Miek <miek@miek.nl>
