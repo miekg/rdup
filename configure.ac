@@ -110,6 +110,7 @@ AC_CONFIG_FILES([GNUmakefile
                  rdup.h
                  rdup-tr.h
                  rdup-up.h
+		 sh/rdup-simple.sh
                  doc/rdup.1
                  doc/rdup-tr.1
                  doc/rdup-up.1

@@ -5,7 +5,8 @@
 # Copyright Miek Gieben, 2007 - 2009
 # rewritten for rdup-up and rdup-tr
 
-PATH=$PATH:/usr/lib/rdup
+prefix=@prefix@
+exec_prefix=@exec_prefix@
 
 echo2() {
     echo "** $PROGNAME: $@" >&2
@@ -177,10 +178,10 @@ cmd="rdup$E$x -N $STAMP $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		rdup-ln.sh -l $DAYS $BACKUPDIR
+		@libdir@/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-                $ssh "rdup-ln.sh -l $DAYS $BACKUPDIR"
+                $ssh "@libdir@/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR"
                 purpose=$?
         fi
 else
