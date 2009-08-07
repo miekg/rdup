@@ -1,3 +1,4 @@
+# somewhat out of date - but usable as a template
 Name: rdup
 Version: @PACKAGE_VERSION@
 Release: 1
@@ -13,7 +14,7 @@ Source: http://www.miek.nl/projects/%name/%name-%version.tar.bz2
 #AutoReq: yes, noperl
 
 # Automatically added by buildreq on Wed Nov 08 2006 (-bi)
-BuildRequires: glib2-devel libattr-devel linux-libc-headers openssh-clients
+BuildRequires: glib2-devel linux-libc-headers openssh-clients
 
 %description
 rdup is a utility inspired by rsync and the plan9 way of doing backups.
