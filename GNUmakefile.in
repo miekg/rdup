@@ -39,10 +39,10 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 ifeq (${ARCHIVE_L},no)
 all:	rdup rdup-up
-	chmod +x sh/rdup-ln.sh sh/rdup-simple.sh
 else
 all:	rdup rdup-up rdup-tr 
 endif
+	chmod +x sh/rdup-ln.sh sh/rdup-simple.sh
 
 rdup-up: $(OBJ_UP) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_UP} -o rdup-up
