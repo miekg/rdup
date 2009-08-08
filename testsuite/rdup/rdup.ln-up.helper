@@ -14,7 +14,8 @@ touch t/foo
 (cd t; ln -s foo bar)
 
 ./sh/rdup-simple.sh t tmp
-DAY_BEFORE=$(( $(date +%d) - 1 )) # may be 0
+DAY_BEFORE=$(( $(date +%_d) - 1 )) # may be 0
+printf -v DAY_BEFORE "%02d" $DAY_BEFORE
 DATE=$(date +%Y%m)
 NOW=$(date +%d)
 mv tmp/$DATE/$NOW tmp/$DATE/$DAY_BEFORE
