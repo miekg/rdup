@@ -39,6 +39,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 ifeq (${ARCHIVE_L},no)
 all:	rdup rdup-up
+	chmod +x sh/rdup-ln.sh sh/rdup-simple.sh
 else
 all:	rdup rdup-up rdup-tr 
 endif
@@ -105,3 +106,4 @@ check:	all
 	[ -d testlogs ] || mkdir testlogs
 	chmod +x testsuite/rdup/rdup*helper
 	runtest 
+	chmod -x testlogs/rdup.log
