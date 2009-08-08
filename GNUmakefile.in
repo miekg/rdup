@@ -78,9 +78,12 @@ realclean: clean
 	rm -f config.status
 	rm -f config.h
 	rm -f rdup.h
+	rm -f rdup-tr.h
+	rm -f rdup-up.h
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${MAN1} ${MAN7}
+	rm -r sh/rdup-simple.sh
 	$(MAKE) -C po realclean
 
 distclean: 
