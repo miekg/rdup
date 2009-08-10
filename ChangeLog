@@ -1,7 +1,8 @@
 09 Aug 2009: 1.0.2 Miek <rdup@miek.nl>
   * rdup: libnettle is mandatory
   * rdup: use sha1 from libnettle 
-  * rdup-simple: fix location/PATH of rdup-ln (Tom Hendrikx)
+  * rdup-simple: fix location/PATH of rdup-ln and rdup-simple
+    They install to /usr/bin now (Tom Hendrikx)
 
 
 31 May 2009: 1.0.0 Miek <miek@miek.nl>
