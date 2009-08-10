@@ -92,14 +92,14 @@ install: all
 	mkdir -p ${DESTDIR}${datadir}
 	mkdir -p ${DESTDIR}${libdir}/rdup
 	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
-	for i in ${SH}; do ${INSTALL} sh/$$i ${DESTDIR}${libdir}/rdup/$$i ; done
+	for i in ${SH}; do ${INSTALL} sh/$$i ${DESTDIR}${bindir}/$$i ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	for i in ${MAN7}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man7/`basename $$i` ; done; exit 0
 	$(MAKE) -C po install
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
-	for i in ${SH}; do rm -f ${DESTDIR}${libdir}/rdup/$$i ; done
+	for i in ${SH}; do rm -f ${DESTDIR}${bindir}/$$i ; done
 	for i in ${MAN1}; do rm -f  ${DESTDIR}${mandir}/man1/`basename $$i` ; done
 	for i in ${MAN7}; do rm -f  ${DESTDIR}${mandir}/man7/`basename $$i` ; done
 	$(MAKE) -C po uninstall
