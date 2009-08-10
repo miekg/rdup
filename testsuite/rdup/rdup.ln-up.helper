@@ -13,7 +13,7 @@ mkdir t tmp
 touch t/foo
 (cd t; ln -s foo bar)
 
-./sh/rdup-simple.sh t tmp
+./sh/rdup-simple t tmp
 DAY_BEFORE=$(( $(date +%_d) - 1 )) # may be 0
 printf -v DAY_BEFORE "%02d" $DAY_BEFORE
 DATE=$(date +%Y%m)
@@ -21,7 +21,7 @@ NOW=$(date +%d)
 mv tmp/$DATE/$NOW tmp/$DATE/$DAY_BEFORE
 
 rm t/bar
-./sh/rdup-simple.sh t tmp
+./sh/rdup-simple t tmp
 EXIT=$?
 rm -rf t tmp # cleanup
 ## remove files in ./rdup
