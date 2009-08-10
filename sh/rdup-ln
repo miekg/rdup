@@ -3,7 +3,7 @@
 # hardlink a previous backup directory
 # to a new directory
 
-# SYNOPSIS: rdup-ln.sh [-l N] BACKUPDIR
+# SYNOPSIS: rdup-ln [-l N] BACKUPDIR
 # -l N: look back N days (default 8)
 # -n  : dry run: don't touch the filesystem
 # BACKUPDIR: top directory of the backups

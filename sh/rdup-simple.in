@@ -5,9 +5,6 @@
 # Copyright Miek Gieben, 2007 - 2009
 # rewritten for rdup-up and rdup-tr
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-
 echo2() {
     echo "** $PROGNAME: $@" >&2
 }
@@ -178,10 +175,10 @@ cmd="rdup$E$x -N $STAMP $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		@libdir@/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR
+		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-                $ssh "@libdir@/rdup/rdup-ln.sh -l $DAYS $BACKUPDIR"
+                $ssh "rdup-ln -l $DAYS $BACKUPDIR"
                 purpose=$?
         fi
 else
@@ -195,7 +192,7 @@ case $purpose in
         rm -f $LIST
         rm -f $STAMP ;;
         *)
-        echo2 "Illegal return code from rdup-ln.sh"
+        echo2 "Illegal return code from rdup-ln"
         exit 1 ;;
 esac
 # execute the backup command
