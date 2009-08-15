@@ -1,6 +1,7 @@
 TODO:
 
--X/-Y filelength larger than 255?
+manual pages for rdup-simple and rdup-ln as they are now
+installed in /usr/bin
 
 post 1.0
 - extend format to include mtime - so that it can be
