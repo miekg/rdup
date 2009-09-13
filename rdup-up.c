@@ -15,7 +15,8 @@ gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
-guint opt_strip		   = 0;				/* strippath */
+gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
+guint opt_strip		   = 0;				/* -s: strippath */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
 extern int opterr;
@@ -73,6 +74,9 @@ update(char *path)
 		rdup_entry->f_name = pathbuf;
 		if (opt_strip)
 			strippath(rdup_entry);
+
+		if (opt_path_strip) 
+			strippathname(rdup_entry);
 
 		if (!rdup_entry->f_name)
 			p = NULL;
@@ -152,7 +156,7 @@ main(int argc, char **argv)
 	fprintf(stderr, "dir up / -> %s\n", dir_parent(g_strdup("/")));
 #endif
 
-	while ((c = getopt (argc, argv, "thnVvs:")) != -1) {
+	while ((c = getopt (argc, argv, "thnVvs:r:")) != -1) {
 		switch (c) {
 			case 'v':
 				opt_verbose++;
@@ -164,8 +168,29 @@ main(int argc, char **argv)
 				opt_dry = TRUE;
 				break;
 			case 's':
+				if (opt_path_strip != NULL) {
+					msg(_("The -r and -s option can not be used together"));
+					exit(EXIT_FAILURE);
+				}
                                 opt_strip = abs(atoi(optarg));
                                 break;
+			case 'r':
+				if (opt_strip != 0) {
+					msg(_("The -r and -s option can not be used together"));
+					exit(EXIT_FAILURE);
+				}
+				if (strlen(optarg) == 0) {		/* does this help? XX */
+					msg(_("-r needs an arugment"));
+					exit(EXIT_FAILURE);
+				}
+
+				/* add trailing slash if its not there */
+				if (optarg[strlen(optarg) - 1] != '/')
+					opt_path_strip = g_strdup_printf("%s/", optarg);
+				else
+					opt_path_strip = optarg;
+
+				break;
 			case 't':
 				opt_top = TRUE;
 				break;
