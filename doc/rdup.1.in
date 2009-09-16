@@ -310,7 +310,7 @@ Where:
 plus or minus, indicating whether PATH should added or removed.
 .TP 
 .B o TYPE
-the type of the see %T in \fBFORMAT\fR.
+the type of the file, see %T in \fBFORMAT\fR.
 .TP
 .B o BITS
 the permission of the file, this is a subset of the st_mode from
@@ -384,9 +384,9 @@ The PATH name is generated from the link's name and its target. A symlink like
 .RE
 
 is printed as '/home/bin/blaat -> /home/bin/bliep'. The PATH_SIZE
-is modified accordingly.
+is modified accordingly, where ' -> ' (4 characters) is also counted.
 The FILE_SIZE is not needed for soft- or hardlinks, so it is set the
-length of the link's name -- the part left of the '->', in this case the 
+length of the link's name -- the part left of the ' ->', in this case the 
 length of '/home/bin/blaat'.
 
 If rdup encounters a hardlink it is handled in the same way, but the
