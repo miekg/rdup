@@ -16,6 +16,7 @@ gint opt_input	           = I_RDUP;
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
+guint opt_path_strip_len   = 0;				/* number of path labels in opt_path_strip */
 guint opt_strip		   = 0;				/* -s: strippath */
 sig_atomic_t sig           = 0;
 GSList *hlink		   = NULL;			/* save hardlink for post processing */		
@@ -146,16 +147,6 @@ main(int argc, char **argv)
 		}
 	}
 
-
-#if 0
-	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/miekg/blaa")));
-	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/miekg/")));
-	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/miekg")));
-	fprintf(stderr, "dir up %s\n", dir_parent(g_strdup("/home/")));
-	fprintf(stderr, "dir up /home -> %s\n", dir_parent(g_strdup("/home")));
-	fprintf(stderr, "dir up / -> %s\n", dir_parent(g_strdup("/")));
-#endif
-
 	while ((c = getopt (argc, argv, "thnVvs:r:")) != -1) {
 		switch (c) {
 			case 'v':
@@ -184,12 +175,27 @@ main(int argc, char **argv)
 					exit(EXIT_FAILURE);
 				}
 
-				/* add trailing slash if its not there */
-				if (optarg[strlen(optarg) - 1] != '/')
-					opt_path_strip = g_strdup_printf("%s/", optarg);
+				/* expand relative paths */
+				if (!g_path_is_absolute(optarg))
+					opt_path_strip = abspath(g_strdup_printf("%s/%s", pwd, optarg));
 				else
-					opt_path_strip = optarg;
+					opt_path_strip = abspath(optarg);
 
+				if (!opt_path_strip) {
+					msg(_("Failed to expand path `%s\'"), optarg);
+					exit(EXIT_FAILURE);
+				}
+
+				if (opt_path_strip[strlen(opt_path_strip) - 1] != '/')
+					opt_path_strip = g_strdup_printf("%s/", opt_path_strip);
+
+				/* count the number of labels */
+				guint i;
+				for(i = 0; i < strlen(opt_path_strip); i++) {
+					if (opt_path_strip[i] == '/')
+						opt_path_strip_len++;
+				}
+				opt_path_strip_len--;	/* we added the closing slash, so need -1 here */
 				break;
 			case 't':
 				opt_top = TRUE;

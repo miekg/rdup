@@ -18,6 +18,18 @@
 
 extern guint opt_strip;
 extern gchar *opt_path_strip;
+extern guint opt_path_strip_len;
+
+/* Count the number of slashes in a string (=path) */
+static guint pathlabel(struct r_entry *e) {
+	gint i, j = 0;
+
+	for(i = 0; i < (S_ISLNK(e->f_mode) || e->f_lnk == 1 ? e->f_size : e->f_name_size); i++) {
+		if (e->f_name[i] == '/')
+			j++;
+	}
+	return j;
+}
 
 /* this implements the -s option */
 void
@@ -87,11 +99,14 @@ strippathname(struct r_entry *e)
 	guint len;
 
 	/* the other way around, if the path is a prefix of the prefix
-	 * we should discard the entry
+	 * we should discard the entry. But only is the path we are looking
+	 * at is LONGER than the prefix
 	 */
-	if (g_str_has_prefix(opt_path_strip, e->f_name)) {
-		e->f_name = NULL;
-		return;
+	if (pathlabel(e) > opt_path_strip_len) {
+		if (g_str_has_prefix(opt_path_strip, e->f_name)) {
+			e->f_name = NULL;
+			return;
+		}
 	}
 
 	if (g_str_has_prefix(e->f_name, opt_path_strip) == FALSE) 
