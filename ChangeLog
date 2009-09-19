@@ -1,5 +1,5 @@
    Sep 2009: 1.0.3 Miek <rdup@miek.nl>
-  * rdup-up: added -r option (suggested by Dave Martin)
+  * rdup-up: added -r PATH option (suggested by Dave Martin)
 
 
 09 Aug 2009: 1.0.2 Miek <rdup@miek.nl>

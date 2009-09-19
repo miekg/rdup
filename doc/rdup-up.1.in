@@ -44,7 +44,7 @@ With \fBrdup-up -s\fI2\fR this will leave:
 And the last 'bla.txt' will \fIoverwrite\fR the previous one.
 .TP
 .B \-r PATH
-This option is related to the \-s option, but works differently. The
+This option is related to the \-s option, but works different. The
 string PATH is removed from (the beginning of) each pathname. With \fI-r
 /home/backup\fR the pathname \fI/home/backup/bin/mycmd\fR becomes
 \fI/bin/mycmd\fR. The same could be done with \fB-s 2\fR, but then you need
