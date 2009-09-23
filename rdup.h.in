@@ -62,12 +62,6 @@
 #define SHA1_LEN       20 /* bytes of digest */
 #define NO_SHA         "0000000000000000000000000000000000000000"
 
-/* common.h */
-#if 0
-#define LIST_MINSIZE   6
-#define LIST_SPACEPOS  5
-#endif
-
 struct subtract {
         GTree *d; /* diff */
         GTree *b;
@@ -103,8 +97,8 @@ char * abspath(char *path);
 void signal_abort(int signal);
 
 /* link.c */
-gchar * hard_link(GHashTable *t, struct r_entry *e);
-struct r_entry *sym_link(struct r_entry *e, char *h_lnk);
+gchar * hlink(GHashTable *t, struct rdup *e);
+gchar * slink(struct rdup *e);
 
 /* reverse.c */
 GList * reverse(GTree *g);

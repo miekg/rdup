@@ -13,8 +13,8 @@ extern gint opt_verbose;
 extern GSList *pregex_list;
 
 /* common.c */
-struct r_entry * entry_dup(struct r_entry *f);
-void entry_free(struct r_entry *f);
+struct rdup * entry_dup(struct rdup *f);
+void entry_free(struct rdup *f);
 
 /**
  * prepend path leading up to backup directory to the tree
@@ -27,7 +27,7 @@ dir_prepend(GTree *t, char *path)
 	char *path2;
 	size_t len;
 	struct stat s;
-	struct r_entry e;
+	struct rdup e;
 
 	path2 = g_strdup(path);
 	len   = strlen(path);
@@ -48,7 +48,9 @@ dir_prepend(GTree *t, char *path)
 		e.f_name      = path2;
 		e.f_name_size = strlen(path2);
 		e.f_uid       = s.st_uid;
+		//e.f_user      = BUG;
 		e.f_gid       = s.st_gid;
+		//e.f_group	= BUG;
 		e.f_ctime     = s.st_ctime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
@@ -57,9 +59,9 @@ dir_prepend(GTree *t, char *path)
 		e.f_ino       = s.st_ino;
 		e.f_lnk	      = 0;
 
-		/* symlinks; also put the -> name in f_name */
+		/* symlinks; also set the target */
 		if (S_ISLNK(s.st_mode))
-			e = *(sym_link(&e, NULL));
+			e.f_target = slink(&e);
 
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = '/';
@@ -74,11 +76,11 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 {
 	DIR 		*dir;
 	struct dirent 	*dent;
-	struct r_entry  *directory;
+	struct rdup     *directory;
 	char 		*curpath;
 	gchar		*lnk;
 	struct stat   	s;
-	struct r_entry  pop;
+	struct rdup     pop;
 	struct remove_path rp;
 	dev_t 		current_dev;
 	size_t 		curpath_len;
@@ -86,8 +88,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 	/* dir stack */
 	gint32 d = 0;
 	gint32 dstack_cnt  = 1;
-	struct r_entry **dirstack =
-		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct r_entry *));
+	struct rdup **dirstack =
+		g_malloc(dstack_cnt * D_STACKSIZE * sizeof(struct rdup *));
 
 	if (!(dir = opendir(path))) {
 		/* non-dirs are also allowed, check for this, if it isn't give the error */
@@ -179,13 +181,13 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 
 			/* hardlinks */
 			if (s.st_nlink > 1) {
-				if ((lnk = hard_link(linkhash, &pop))) {
-					/* we got a match back, modify pop */
-					pop = *(sym_link(&pop, lnk));
+				if ((lnk = hlink(linkhash, &pop))) {
+					pop.target = lnk;
+					pop.f_lnk  = 1;
 				}
 			}
 			if (S_ISLNK(s.st_mode)) 
-				pop = *(sym_link(&pop, NULL));
+				pop = *(slink(&pop, NULL));
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);
@@ -203,7 +205,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 				continue;
 			}
 
-			dirstack[d] = g_malloc(sizeof(struct r_entry));
+			dirstack[d] = g_malloc(sizeof(struct rdup));
 			dirstack[d]->f_name       = g_strdup(curpath); 
 			dirstack[d]->f_name_size  = curpath_len;
 			dirstack[d]->f_uid	  = s.st_uid;
@@ -219,7 +221,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			if (d++ % D_STACKSIZE == 0) {
 				dirstack = g_realloc(dirstack, 
 						++dstack_cnt * D_STACKSIZE * 
-						sizeof(struct r_entry *));
+						sizeof(struct rdup *));
 			}
 			g_free(curpath);
 			continue;
