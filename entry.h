@@ -12,9 +12,9 @@ struct rdup {
 	gchar *f_target;	/* in case of a link this holds the target name */
         size_t f_name_size;	/* size of filename */
         uid_t f_uid;		/* uid */
-	gchar *pw_name;		/* username */
+	gchar *f_user;		/* username */
         gid_t f_gid;		/* gid */
-	gchar *gr_name;		/* groupname */
+	gchar *f_group;		/* groupname */
         mode_t f_mode;		/* mode bits */
         time_t f_ctime;		/* change time of the inode */
         off_t f_size;		/* file size */

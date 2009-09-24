@@ -21,7 +21,7 @@ extern GSList *hlink;
 void got_sig(int signal);
 
 static gboolean
-mk_mode(struct r_entry *e) {
+mk_mode(struct rdup *e) {
 	/* todo: error checking */
 	chmod(e->f_name, e->f_mode);
 	if (getuid() == 0)
@@ -30,7 +30,7 @@ mk_mode(struct r_entry *e) {
 }
 
 static gboolean
-mk_dev(struct r_entry *e) {
+mk_dev(struct rdup *e) {
 	gchar *parent;
 	struct stat *st;
 
@@ -64,7 +64,7 @@ mk_dev(struct r_entry *e) {
 }
 
 static gboolean
-mk_sock(struct r_entry *e) {
+mk_sock(struct rdup *e) {
 	gchar *parent;
 	struct stat *st;
 
@@ -98,7 +98,7 @@ mk_sock(struct r_entry *e) {
 }
 
 static gboolean
-mk_link(struct r_entry *e, char *s, char *t, char *p)
+mk_link(struct rdup *e, char *s, char *t, char *p)
 {
 	struct stat *st;
 	gchar *parent;
@@ -146,7 +146,7 @@ mk_link(struct r_entry *e, char *s, char *t, char *p)
 }
 
 static gboolean
-mk_reg(FILE *in, struct r_entry *e)
+mk_reg(FILE *in, struct rdup *e)
 {
 	FILE *out = NULL;
 	char *buf;
@@ -222,7 +222,7 @@ mk_reg(FILE *in, struct r_entry *e)
 }
 
 static gboolean
-mk_dir(struct r_entry *e) 
+mk_dir(struct rdup *e) 
 {
 	struct stat *s;
 	struct stat st;
@@ -263,7 +263,7 @@ mk_dir(struct r_entry *e)
 
 /* make an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct r_entry *e) 
+mk_obj(FILE *in, char *p, struct rdup *e) 
 {
 	char *s, *t;
 
@@ -331,7 +331,7 @@ mk_obj(FILE *in, char *p, struct r_entry *e)
 gboolean
 mk_hlink(GSList *h)
 {
-	struct r_entry *e;
+	struct rdup *e;
 	GSList *p;
 	char *s, *t;
 	struct stat *st;
@@ -341,7 +341,7 @@ mk_hlink(GSList *h)
 		return TRUE;
 
 	for (p = g_slist_nth(h, 0); p; p = p->next) { 
-		e = (struct r_entry *)p->data;
+		e = (struct rdup *)p->data;
 
 		s = e->f_name;
 		s[e->f_size] = '\0';

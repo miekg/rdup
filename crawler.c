@@ -182,12 +182,12 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			/* hardlinks */
 			if (s.st_nlink > 1) {
 				if ((lnk = hlink(linkhash, &pop))) {
-					pop.target = lnk;
+					pop.f_target = lnk;
 					pop.f_lnk  = 1;
 				}
 			}
 			if (S_ISLNK(s.st_mode)) 
-				pop = *(slink(&pop, NULL));
+				pop.f_target = slink(&pop);
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);
@@ -207,6 +207,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 
 			dirstack[d] = g_malloc(sizeof(struct rdup));
 			dirstack[d]->f_name       = g_strdup(curpath); 
+			dirstack[d]->f_target	  = NULL; /* BUGBUG */
 			dirstack[d]->f_name_size  = curpath_len;
 			dirstack[d]->f_uid	  = s.st_uid;
 			dirstack[d]->f_gid        = s.st_gid;

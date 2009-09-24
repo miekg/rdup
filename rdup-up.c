@@ -28,7 +28,7 @@ int opterr		   = 0;
 static gboolean
 update(char *path)
 {
-	struct r_entry *rdup_entry;
+	struct rdup    *rdup_entry;
 	size_t         line, i, pathsize;
 	size_t	       pathlen;
 	char           *buf, *pathbuf, *n, *p;

@@ -2,7 +2,7 @@
  * Copyright (c) 2009 Miek Gieben
  * parse_entry.c
  * parse an standard rdup entry and return a
- * struct r_entry
+ * struct rdup
  */
 
 #include "rdup-tr.h"
@@ -46,14 +46,14 @@ extern gchar *opt_decrypt_key;
  *
  * XXX could use a cleanup
  */
-struct r_entry *
+struct rdup *
 parse_entry(char *buf, size_t l, struct stat *s, gint stat) 
 {
-	struct r_entry *e;
+	struct rdup *e;
 	gint i;
 	gint j;
 	char *n, *pos;
-	e = g_malloc(sizeof(struct r_entry));
+	e = g_malloc(sizeof(struct rdup));
 	e->f_ctime = 0;		/* not used in rdup-* */
 	
 	switch (opt_input) {
@@ -246,7 +246,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
  * entry_print_data()
  */
 gint
-rdup_write_header(struct r_entry *e)
+rdup_write_header(struct rdup *e)
 {
 	char *out;
 	char t;
@@ -299,7 +299,7 @@ rdup_write_header(struct r_entry *e)
 }
 
 gint
-rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
+rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) {
 	if (block_out_header(NULL, len, 1) == -1 ||
 		block_out(NULL, len, buf, 1) == -1)
 		return -1;

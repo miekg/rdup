@@ -14,7 +14,7 @@
  * the hashtable.
  */
 gchar *
-hlink(GHashTable *t, struct r_entry *e)
+hlink(GHashTable *t, struct rdup *e)
 {
 	gchar *key;
 	gchar *name;
@@ -30,7 +30,7 @@ hlink(GHashTable *t, struct r_entry *e)
 }
 
 gchar *
-slink(struct r_entry *e);
+slink(struct rdup *e)
 {
 	char buf[BUFSIZE + 1]; 
 	ssize_t i;

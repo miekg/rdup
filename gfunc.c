@@ -98,7 +98,7 @@ cat(FILE *fp, char *filename)
  * cat the contents, only when adding and only for files
  */
 static void
-entry_cat_data(FILE *fp, struct r_entry *e)
+entry_cat_data(FILE *fp, struct rdup *e)
 {
 	if (S_ISREG(e->f_mode) && e->f_lnk == 0) {
 		if (!cat(fp, e->f_name)) {
@@ -152,7 +152,7 @@ entry_print_escape(char n, FILE *out)
  * print arbitrary data field
  */
 static void
-entry_print_data(FILE *out, char n, struct r_entry *e)
+entry_print_data(FILE *out, char n, struct rdup *e)
 {
 	switch (n) {
 		case 'n':
@@ -242,7 +242,7 @@ entry_print_data(FILE *out, char n, struct r_entry *e)
  * print function
  */
 void
-entry_print(FILE *out, guint pm, struct r_entry *e, char *fmt)
+entry_print(FILE *out, guint pm, struct rdup *e, char *fmt)
 {
 	char *pos;
 	if ((pm == PLUS) && (opt_modified == FALSE)) {
@@ -309,7 +309,7 @@ entry_print(FILE *out, guint pm, struct r_entry *e, char *fmt)
 gboolean
 gfunc_write(gpointer data, gpointer value, gpointer fp)
 {
-	struct r_entry *e = (struct r_entry*)data;
+	struct rdup *e = (struct rdup*)data;
 	char linktype = '*';
 
 	if (sig != 0)
@@ -351,21 +351,21 @@ gfunc_backup(gpointer data, gpointer value,
 	if (value == NO_PRINT) 
 		return FALSE;
 
-	if (S_ISDIR(((struct r_entry*)data)->f_mode)) {
-		entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
+	if (S_ISDIR(((struct rdup*)data)->f_mode)) {
+		entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 		return FALSE;
 	} else {
-		if (opt_size != 0 && S_ISREG(((struct r_entry*)data)->f_mode) &&
-			((struct r_entry*)data)->f_size > (ssize_t)opt_size) {
+		if (opt_size != 0 && S_ISREG(((struct rdup*)data)->f_mode) &&
+			((struct rdup*)data)->f_size > (ssize_t)opt_size) {
 			return FALSE;
 		}
 		switch (opt_timestamp) {
 			case NULL_DUMP:
-				entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
+				entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 				return FALSE;
 			default: /* INC_DUMP */
-				if (((struct r_entry*)data)->f_ctime >= opt_timestamp) {
-					entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
+				if (((struct rdup*)data)->f_ctime >= opt_timestamp) {
+					entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 				}
 				return FALSE;
 		}
@@ -389,7 +389,7 @@ gfunc_remove(gpointer data, gpointer value,
 		msg(_("Internal error: NO_PRINT in remove tree!"));
 		return FALSE;
 	}
-	entry_print(stdout, MINUS, (struct r_entry*)data, opt_format);
+	entry_print(stdout, MINUS, (struct rdup*)data, opt_format);
 	return FALSE;
 }
 
@@ -407,12 +407,12 @@ gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 	if (value == NO_PRINT) 
 		return FALSE;
 
-	if (opt_size != 0 && S_ISREG(((struct r_entry*)data)->f_mode) &&
-			((struct r_entry*)data)->f_size > (ssize_t)opt_size) {
+	if (opt_size != 0 && S_ISREG(((struct rdup*)data)->f_mode) &&
+			((struct rdup*)data)->f_size > (ssize_t)opt_size) {
 		return FALSE;
 	}
 
-	entry_print(stdout, PLUS, (struct r_entry*)data, opt_format);
+	entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 	return FALSE;
 }
 
@@ -424,15 +424,15 @@ gint
 gfunc_equal(gconstpointer a, gconstpointer b)
 {
 	gint e;
-	struct r_entry *ae, *be;
+	struct rdup *ae, *be;
 
-	ae = (struct r_entry *)a;
-	be = (struct r_entry *)b;
+	ae = (struct rdup *)a;
+	be = (struct rdup *)b;
 
 	if (sig != 0)
 		signal_abort(sig);
 
-	e = strcmp(((struct r_entry*)a)->f_name, ((struct r_entry*)b)->f_name);
+	e = strcmp(((struct rdup*)a)->f_name, ((struct rdup*)b)->f_name);
 	if (e == 0) {
 		if (ae->f_dev != be->f_dev)
 			return -1;
@@ -460,12 +460,12 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
 	if (sig != 0)
 		signal_abort(sig);
 
-	if (strncmp(((struct r_entry*)data)->f_name,
+	if (strncmp(((struct rdup*)data)->f_name,
 				((struct remove_path *)r)->path, 
 				((struct remove_path *)r)->len) == 0) {
 
 		/* don't remove the directory itself */
-		if (S_ISDIR( ((struct r_entry*)data)->f_mode))
+		if (S_ISDIR( ((struct rdup*)data)->f_mode))
 			return FALSE;
 
 		g_tree_insert(

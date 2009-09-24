@@ -63,7 +63,7 @@ g_tree_read_file(FILE *fp)
 	char	      linktype;
 	mode_t        modus;
 	GTree         *tree;
-	struct r_entry *e;
+	struct rdup   *e;
 	size_t        s;
 	size_t 	      l;
 	size_t        f_name_size;
@@ -184,7 +184,7 @@ g_tree_read_file(FILE *fp)
 			continue;
 		}
 
-		e = g_malloc(sizeof(struct r_entry));
+		e = g_malloc(sizeof(struct rdup));
 		e->f_name      = g_strdup(p + 1);
 		e->f_name_size = f_name_size;
 		e->f_size      = f_size;
@@ -262,7 +262,9 @@ main(int argc, char **argv)
 
 	curtree = g_tree_new(gfunc_equal);
 	backup  = g_tree_new(gfunc_equal);
-	linkhash = g_hash_table_new(g_str_hash, g_str_equal);
+	linkhash  = g_hash_table_new(g_str_hash, g_str_equal);
+	groupname = g_hash_table_new(g_int_hash, g_int_equal);
+	username  = g_hash_table_new(g_int_hash, g_int_equal);
 	remove  = NULL;
 	opterr = 0;
 	time = NULL;
