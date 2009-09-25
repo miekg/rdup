@@ -102,13 +102,18 @@ gchar * slink(struct rdup *e);
 
 /* reverse.c */
 GList * reverse(GTree *g);
-void  gfunc_new_list(gpointer data, gpointer userdata);
-void  gfunc_remove_list(gpointer data, gpointer userdata);
-void  gfunc_backup_list(gpointer data, gpointer userdata);
+void  gfunc_new_list(gpointer, gpointer);
+void  gfunc_remove_list(gpointer, gpointer);
+void  gfunc_backup_list(gpointer, gpointer);
 
 /* crawler.c */
-void dir_crawl(GTree *t, GHashTable *linkhash, char *path);
-gboolean dir_prepend(GTree *t, char *path);
+void dir_crawl(GTree *, GHashTable *, GHashTable *, GHashTable *, char *);
+gboolean dir_prepend(GTree *, char *, GHashTable *, GHashTable *);
+
+/* names.c */
+gchar * lookup_user(GHashTable *, uid_t);
+gchar * lookup_group(GHashTable *, gid_t);
+
 
 /* usage.c */
 void usage(FILE *f);

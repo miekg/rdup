@@ -20,7 +20,7 @@ void entry_free(struct rdup *f);
  * prepend path leading up to backup directory to the tree
  */
 gboolean
-dir_prepend(GTree *t, char *path)
+dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 {
 	char *c;
 	char *p;
@@ -48,9 +48,9 @@ dir_prepend(GTree *t, char *path)
 		e.f_name      = path2;
 		e.f_name_size = strlen(path2);
 		e.f_uid       = s.st_uid;
-		//e.f_user      = BUG;
+		e.f_user      = lookup_user(u, e.f_uid);
 		e.f_gid       = s.st_gid;
-		//e.f_group	= BUG;
+		e.f_group     = lookup_group(g, e.f_gid);
 		e.f_ctime     = s.st_ctime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
@@ -58,6 +58,9 @@ dir_prepend(GTree *t, char *path)
 		e.f_rdev      = s.st_rdev;
 		e.f_ino       = s.st_ino;
 		e.f_lnk	      = 0;
+
+		fprintf(stderr, "Group %s\n", e.f_group);
+		fprintf(stderr, "User %s\n", e.f_user);
 
 		/* symlinks; also set the target */
 		if (S_ISLNK(s.st_mode))
@@ -72,7 +75,8 @@ dir_prepend(GTree *t, char *path)
 }
 
 void
-dir_crawl(GTree *t, GHashTable *linkhash, char *path)
+dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
+		GHashTable *grouphash, char *path)
 {
 	DIR 		*dir;
 	struct dirent 	*dent;
@@ -148,7 +152,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			pop.f_name      = curpath;
 			pop.f_name_size = curpath_len;
 			pop.f_uid       = s.st_uid;
+			pop.f_user      = lookup_user(userhash, pop.f_uid);
 			pop.f_gid       = s.st_gid;
+			pop.f_group     = lookup_group(grouphash, pop.f_gid);
 			pop.f_ctime     = s.st_ctime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
@@ -210,7 +216,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 			dirstack[d]->f_target	  = NULL; /* BUGBUG */
 			dirstack[d]->f_name_size  = curpath_len;
 			dirstack[d]->f_uid	  = s.st_uid;
+			dirstack[d]->f_user	  = lookup_user(userhash, s.st_uid);
 			dirstack[d]->f_gid        = s.st_gid;
+			dirstack[d]->f_group      = lookup_group(grouphash, s.st_gid);
 			dirstack[d]->f_ctime      = s.st_ctime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
@@ -241,7 +249,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, char *path)
 		/* recurse */
 		/* potentially expensive operation. Better would be to when we hit
 		 * .nobackup to go up the tree and delete some nodes.... or not */
-		dir_crawl(t, linkhash, directory->f_name);
+		dir_crawl(t, linkhash, userhash, grouphash, directory->f_name);
 		entry_free(directory);
 	}
 	g_free(dirstack);

@@ -157,18 +157,13 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 	switch (n) {
 		case 'n':
 			fputs(e->f_name, out);
+			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+				fputs(" -> ", out);
+				fputs(e->f_target, out);
+			}
 			break;
 		case 'N':
-			/* only the name in case of soft- or hardlinks
-			 * filesize has the length what we should print */
-			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-				if (fwrite(e->f_name, e->f_size, sizeof(char), out) != (size_t)e->f_size) {
-					msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
-				
-				}
-			} else {
-				fputs(e->f_name, out);
-			}
+			fputs(e->f_name, out);
 			break;
 		case 'l':
 			fprintf(out, "%ld", (unsigned long)e->f_name_size);
@@ -176,8 +171,16 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 		case 'u':
 			fprintf(out, "%ld", (unsigned long)e->f_uid);
 			break;
+		case 'U':
+			if (!e->f_user) 
+				fprintf(out, "-");
+			break;
 		case 'g':
 			fprintf(out, "%ld", (unsigned long)e->f_gid);
+			break;
+		case 'G':
+			if (!e->f_group) 
+				fprintf(out, "-");
 			break;
 		case 'm':
 			fprintf(out, "%d", (int)e->f_mode);

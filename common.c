@@ -17,6 +17,7 @@ entry_dup(struct rdup *f)
         g->f_lnk	= f->f_lnk;
         g->f_uid        = f->f_uid;
         g->f_user       = f->f_user;
+        g->f_gid        = f->f_gid;
         g->f_group      = f->f_group;
         g->f_mode       = f->f_mode;
 	g->f_ctime      = f->f_ctime;

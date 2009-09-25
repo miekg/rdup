@@ -13,7 +13,9 @@ gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup 
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
-char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
+//char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
+// testing - > no %C
+char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n"; /* BUGBUG format of rdup output */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 gboolean opt_atime	   = 0;			      /* reset access time */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
@@ -230,8 +232,8 @@ main(int argc, char **argv)
 	GTree	*new;		/* all that is new */
 	GTree	*changed;	/* all that is possibly changed */
 	GHashTable *linkhash;	/* hold dev, inode, name stuff */
-	GHashTable *username;	/* holds uid -> username */
-	GHashTable *groupname;  /* holds gid -> groupname */
+	GHashTable *userhash;	/* holds uid -> username */
+	GHashTable *grouphash;  /* holds gid -> groupname */
 
 	FILE 	*fplist;
 	gint    i;
@@ -263,8 +265,8 @@ main(int argc, char **argv)
 	curtree = g_tree_new(gfunc_equal);
 	backup  = g_tree_new(gfunc_equal);
 	linkhash  = g_hash_table_new(g_str_hash, g_str_equal);
-	groupname = g_hash_table_new(g_int_hash, g_int_equal);
-	username  = g_hash_table_new(g_int_hash, g_int_equal);
+	grouphash = g_hash_table_new(g_int_hash, g_int_equal);
+	userhash  = g_hash_table_new(g_int_hash, g_int_equal);
 	remove  = NULL;
 	opterr = 0;
 	time = NULL;
@@ -299,7 +301,7 @@ main(int argc, char **argv)
 				opt_atime = TRUE;
 				break;
 			case 'c':
-				msg(_("Deprecated; always enabled"));
+				msg(_("-c is deprecated; it is always enabled"));
 				break;
 			case 'h':
 				usage(stdout);
@@ -389,12 +391,12 @@ main(int argc, char **argv)
 		}
 
 		/* add dirs leading up the dir/file */
-		if (!dir_prepend(backup, path)) {
+		if (!dir_prepend(backup, path, userhash, grouphash)) {
 			msg(_("Skipping `%s\'"), path);
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, linkhash, path);
+		dir_crawl(backup, linkhash, userhash, grouphash, path);
 	}
 
 	/* everything that is gone from the filesystem */
