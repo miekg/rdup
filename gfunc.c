@@ -174,6 +174,9 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 		case 'U':
 			if (!e->f_user) 
 				fprintf(out, "-");
+			else
+				
+
 			break;
 		case 'g':
 			fprintf(out, "%ld", (unsigned long)e->f_gid);
