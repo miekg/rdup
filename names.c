@@ -19,6 +19,10 @@ lookup_user(GHashTable *u, uid_t uid)
 	if (!p) /* user only has ID */
 		return NULL;
 
+	/* don't return the string as it might be overwritten in
+	 * subsequent calls to getpwnam. Use the pointer stored
+	 * in the hash. This is also the case for getgrgid()
+	 */
 	n = g_strdup(p->pw_name);
 	g_hash_table_insert(u, (gpointer)&uid, n);
 	return (gchar *)g_hash_table_lookup(u, (gpointer)&uid);

@@ -175,8 +175,7 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			if (!e->f_user) 
 				fprintf(out, "-");
 			else
-				
-
+				fprintf(out, "%s", e->f_user);
 			break;
 		case 'g':
 			fprintf(out, "%ld", (unsigned long)e->f_gid);
@@ -184,6 +183,8 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 		case 'G':
 			if (!e->f_group) 
 				fprintf(out, "-");
+			else
+				fprintf(out, "%s", e->f_group);
 			break;
 		case 'm':
 			fprintf(out, "%d", (int)e->f_mode);
