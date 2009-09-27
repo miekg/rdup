@@ -57,12 +57,8 @@ g_tree_subtract(GTree *a, GTree *b)
 static GTree *
 g_tree_read_file(FILE *fp)
 {
-	char 	      *buf;
-	char          *n;
-	char          *p;
-	char 	      *q;
-	char 	      delim;
-	char	      linktype;
+	gchar 	      *buf, *n, *t, *p, *q;
+	gchar 	      delim, linktype;
 	mode_t        modus;
 	GTree         *tree;
 	struct rdup   *e;
@@ -137,7 +133,7 @@ g_tree_read_file(FILE *fp)
 		if (f_ino == 0)
 			CORRUPT("Corrupt entry in filelist at line: %zd, zero inode");
 
-		/* hardlink or anything else: h or * */
+		/* hardlink/link or anything else: h/l or * */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) 
@@ -189,8 +185,17 @@ g_tree_read_file(FILE *fp)
 		/* need to reparse the -> stuff here */
 		e = g_malloc(sizeof(struct rdup));
 		e->f_name      = g_strdup(p + 1);
-		e->f_name_size = f_name_size;
-		e->f_size      = f_size;
+
+		if (linktype == 'h' || linktype = 'l') {
+			e->f_name[e->f_size] = '\0'; /* set NULL just before the ' -> ' */
+			e->f_name_size = strlen(e->f_name_size);
+			e->f_target    = e->f_name + e->f_size + 4;
+		} else {
+			e->f_name_size = f_name_size;
+			e->f_target    = NULL;
+			e->f_size      = f_size;
+		}
+
 		e->f_mode      = modus;
 		e->f_uid       = 0;	/* keep this 0 for now */
 		e->f_gid       = 0;	/* keep this 0 for now */
