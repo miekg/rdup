@@ -166,7 +166,12 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			fputs(e->f_name, out);
 			break;
 		case 'l':
-			fprintf(out, "%ld", (unsigned long)e->f_name_size);
+			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+				fprintf(out, "%ld", (unsigned long)e->f_name_size + 4 + 
+						(unsigned long)strlen(e->f_target));
+			} else
+				fprintf(out, "%ld", (unsigned long)e->f_name_size);
+
 			break;
 		case 'u':
 			fprintf(out, "%ld", (unsigned long)e->f_uid);
@@ -204,6 +209,11 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			/* hijack size for major,minor number when special */
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode)) {
 				fprintf(out, "%d,%d", (unsigned int) major(e->f_rdev),(unsigned int) minor(e->f_rdev));
+				break;
+			}
+			/* links - size is the size of f_name_size */
+			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+				fprintf(out, "%ld", (unsigned long)e->f_name_size);
 				break;
 			}
 
@@ -318,6 +328,8 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 {
 	struct rdup *e = (struct rdup*)data;
 	char linktype = '*';
+	size_t file_size, name_size;
+	gchar *n;
 
 	if (sig != 0)
 		signal_abort(sig);
@@ -327,19 +339,33 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 
 	if (e->f_lnk == 1)
 		linktype = 'h';
+	if (S_ISLNK(e->f_mode))
+		linktype = 'l';
+
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+		file_size = e->f_name_size;
+		name_size = e->f_name_size + 4 + strlen(e->f_target);
+		n = g_strdup_printf("%s -> %s", e->f_name, e->f_target);
+	} else {
+		file_size = e->f_size;
+		name_size = e->f_name_size;
+		n = strdup(e->f_name);
+	}
+	if (S_ISDIR(e->f_mode)) /* the same as in the normal output */
+		file_size = 0;
 
 	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %ld %ld %s", (long int)e->f_mode, 
 			(long int)e->f_dev, 
 			(long int)e->f_ino, linktype, 
 			(long int)e->f_uid, 
 			(long int)e->f_gid,
-			(long int)strlen(e->f_name), (long int)e->f_size, 
-			e->f_name);
+			(long int)name_size, (long int)file_size, n);
 	if (opt_null) {
 		fputc('\0', (FILE*)fp);
 	} else {
 		fputc('\n', (FILE*)fp);
 	}
+	g_free(n);
 	return FALSE;
 }
 

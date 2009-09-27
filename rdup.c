@@ -144,7 +144,7 @@ g_tree_read_file(FILE *fp)
 			CORRUPT("Corrupt entry in filelist at line: %zd, no link information found");
 
 		linktype = *q;
-		if (linktype != '*' && linktype != 'h')
+		if (linktype != '*' && linktype != 'h' && linktype != 'l')
 			CORRUPT("Illegal link type as line: %zd");
 
 		/* skip these for now - but useful to have */
@@ -186,6 +186,7 @@ g_tree_read_file(FILE *fp)
 			continue;
 		}
 
+		/* need to reparse the -> stuff here */
 		e = g_malloc(sizeof(struct rdup));
 		e->f_name      = g_strdup(p + 1);
 		e->f_name_size = f_name_size;
