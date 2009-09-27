@@ -46,6 +46,7 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 			return FALSE;
 		}
 		e.f_name      = path2;
+		e.f_target    = NULL;
 		e.f_name_size = strlen(path2);
 		e.f_uid       = s.st_uid;
 		e.f_user      = lookup_user(u, e.f_uid);
@@ -58,9 +59,6 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 		e.f_rdev      = s.st_rdev;
 		e.f_ino       = s.st_ino;
 		e.f_lnk	      = 0;
-
-		fprintf(stderr, "Group %s\n", e.f_group);
-		fprintf(stderr, "User %s\n", e.f_user);
 
 		/* symlinks; also set the target */
 		if (S_ISLNK(s.st_mode))
@@ -150,6 +148,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				S_ISFIFO(s.st_mode) || S_ISSOCK(s.st_mode) ) {
 
 			pop.f_name      = curpath;
+			pop.f_target	= NULL;
 			pop.f_name_size = curpath_len;
 			pop.f_uid       = s.st_uid;
 			pop.f_user      = lookup_user(userhash, pop.f_uid);
@@ -210,10 +209,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				g_free(curpath);
 				continue;
 			}
-
 			dirstack[d] = g_malloc(sizeof(struct rdup));
 			dirstack[d]->f_name       = g_strdup(curpath); 
-			dirstack[d]->f_target	  = NULL; /* BUGBUG */
+			dirstack[d]->f_target	  = NULL;
 			dirstack[d]->f_name_size  = curpath_len;
 			dirstack[d]->f_uid	  = s.st_uid;
 			dirstack[d]->f_user	  = lookup_user(userhash, s.st_uid);

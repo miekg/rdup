@@ -38,7 +38,6 @@ lookup_group(GHashTable *g, gid_t gid)
 	if (n) 
 		return n;
 
-	fprintf(stderr, "Slow look up for %d\n", (int) gid);
 	p = getgrgid(gid);
 	if (!p) /* group only has ID */
 		return NULL;

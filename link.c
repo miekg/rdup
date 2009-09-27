@@ -26,7 +26,7 @@ hlink(GHashTable *t, struct rdup *e)
 		g_hash_table_insert(t, g_strdup(key), g_strdup(e->f_name));
 	}
 	g_free(key);
-	return name;
+	return g_strdup(name); /* entry_free will free this */
 }
 
 gchar *

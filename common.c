@@ -9,7 +9,6 @@ entry_dup(struct rdup *f)
 {
         struct rdup *g;
         g = g_malloc(sizeof(struct rdup));
-
 	g->plusmin	= f->plusmin;
         g->f_name       = g_strdup(f->f_name);
         g->f_target     = g_strdup(f->f_target);
