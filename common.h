@@ -5,5 +5,5 @@
 #define LIST_SPACEPOS   5
 
 /* signal.c */
-void got_sig(int signal);
+void got_sig(int);
 #endif /* COMMON_H */
