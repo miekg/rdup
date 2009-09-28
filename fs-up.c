@@ -21,16 +21,32 @@ extern GSList *hlink_list;
 void got_sig(int signal);
 
 static gboolean
-mk_mode(struct rdup *e) {
+mk_time(struct rdup *e)
+{
+	struct utimbuf ut;
+	/* don't carry the actime, how cares anyway with noatime? */
+	ut.actime = ut.modtime = e->f_mtime;
+
+	if (utime(e->f_name, &ut) == -1) {} /* BUGBUG */
+	return TRUE;
+}
+
+/* set time also */
+static gboolean
+mk_mode(struct rdup *e) 
+{
 	/* todo: error checking */
 	chmod(e->f_name, e->f_mode);
 	if (getuid() == 0)
 		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { } /* todo */
+
+	mk_time(e);
 	return TRUE;
 }
 
 static gboolean
-mk_dev(struct rdup *e) {
+mk_dev(struct rdup *e) 
+{
 	gchar *parent;
 	struct stat *st;
 
@@ -64,7 +80,8 @@ mk_dev(struct rdup *e) {
 }
 
 static gboolean
-mk_sock(struct rdup *e) {
+mk_sock(struct rdup *e) 
+{
 	gchar *parent;
 	struct stat *st;
 
@@ -286,6 +303,7 @@ mk_obj(FILE *in, char *p, struct rdup *e)
 
 			/* remove all stuff you can find */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) {
+				/* BUGBUG hoeft niet meer is al normalized */
 				/* get out the source name */
 				s = e->f_name;
 				s[e->f_size] = '\0';
