@@ -198,7 +198,7 @@ entry_print_data(FILE *out, char n, struct rdup *e)
                        fprintf(out, "%.4o", (int)e->f_mode & ~S_IFMT);
                        break;
 		case 't':
-			fprintf(out, "%ld", (unsigned long)e->f_ctime);
+			fprintf(out, "%ld", (unsigned long)e->f_mtime);
 			break;
 		case 's':
 			/* don't report size for directories. */
@@ -327,7 +327,7 @@ gboolean
 gfunc_write(gpointer data, gpointer value, gpointer fp)
 {
 	struct rdup *e = (struct rdup*)data;
-	char linktype = '*';
+	char linktype = '-';
 	size_t file_size, name_size;
 	gchar *n;
 

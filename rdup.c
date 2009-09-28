@@ -140,7 +140,7 @@ g_tree_read_file(FILE *fp)
 			CORRUPT("Corrupt entry in filelist at line: %zd, no link information found");
 
 		linktype = *q;
-		if (linktype != '*' && linktype != 'h' && linktype != 'l')
+		if (linktype != '-' && linktype != 'h' && linktype != 'l')
 			CORRUPT("Illegal link type as line: %zd");
 
 		/* skip these for now - but useful to have */
@@ -170,7 +170,7 @@ g_tree_read_file(FILE *fp)
 		p = strchr(p + 1, ' ');
 		if (!p)
 			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
-		
+
 		*p = '\0';
 		f_size = (size_t)atoi(q);
 
@@ -182,14 +182,14 @@ g_tree_read_file(FILE *fp)
 			continue;
 		}
 
-		/* need to reparse the -> stuff here */
 		e = g_malloc(sizeof(struct rdup));
 		e->f_name      = g_strdup(p + 1);
 
 		if (linktype == 'h' || linktype == 'l') {
-			e->f_name[e->f_size] = '\0'; /* set NULL just before the ' -> ' */
-			e->f_name_size = strlen(e->f_name);
-			e->f_target    = e->f_name + e->f_size + 4;
+			e->f_name_size    = strlen(e->f_name);
+			e->f_name[f_size] = '\0'; /* set NULL just before the ' -> ' */
+			e->f_size         = strlen(e->f_name);
+			e->f_target       = e->f_name + f_size + 4;
 		} else {
 			e->f_name_size = f_name_size;
 			e->f_target    = NULL;
@@ -200,6 +200,7 @@ g_tree_read_file(FILE *fp)
 		e->f_uid       = 0;	/* keep this 0 for now */
 		e->f_gid       = 0;	/* keep this 0 for now */
 		e->f_ctime     = 0;
+		e->f_mtime     = 0;
 		e->f_dev       = f_dev;
 		e->f_ino       = f_ino;
 		if (linktype == 'h')
