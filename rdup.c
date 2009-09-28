@@ -57,7 +57,7 @@ g_tree_subtract(GTree *a, GTree *b)
 static GTree *
 g_tree_read_file(FILE *fp)
 {
-	gchar 	      *buf, *n, *t, *p, *q;
+	gchar 	      *buf, *n, *p, *q;
 	gchar 	      delim, linktype;
 	mode_t        modus;
 	GTree         *tree;
@@ -186,9 +186,9 @@ g_tree_read_file(FILE *fp)
 		e = g_malloc(sizeof(struct rdup));
 		e->f_name      = g_strdup(p + 1);
 
-		if (linktype == 'h' || linktype = 'l') {
+		if (linktype == 'h' || linktype == 'l') {
 			e->f_name[e->f_size] = '\0'; /* set NULL just before the ' -> ' */
-			e->f_name_size = strlen(e->f_name_size);
+			e->f_name_size = strlen(e->f_name);
 			e->f_target    = e->f_name + e->f_size + 4;
 		} else {
 			e->f_name_size = f_name_size;
