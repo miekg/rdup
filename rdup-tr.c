@@ -166,7 +166,7 @@ stdin2archive(GSList *child)
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s, DO_STAT))) {
+		if (!(rdup_entry = parse_entry(buf, line, &s))) {
 			continue;
 		}
 

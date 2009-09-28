@@ -60,31 +60,30 @@ ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 void usage_up(FILE *);
 
 /* entry.c */
-struct rdup * parse_entry(char *buf, size_t l, struct stat *s, gint fmt);
+struct rdup * parse_entry(char *, size_t, struct stat *, gint);
 
 /* link.c */
-gchar * slink(struct rdup *e);
-
+gchar * slink(struct rdup *);
 
 /* abspath.c */
-char * abspath(char *path);
+char * abspath(char *);
 
 /* rm.c */
-gboolean rm(gchar *p);
+gboolean rm(gchar *);
 
 /* fs-up.c */
-gboolean mk_hlink(GSList *h);
-gboolean mk_obj(FILE *in, char *p, struct rdup *e);
+gboolean mk_hlink(GSList *);
+gboolean mk_obj(FILE *, char *, struct rdup *);
 
 /* strippath.c */
-void strippath(struct rdup *e);
-void strippathname(struct rdup *e);
+void strippath(struct rdup *);
+void strippathname(struct rdup *);
 
 /* mkpath.c */
-int mkpath(const char *path, mode_t mode);
+int mkpath(const char *, mode_t);
 
 /* dir.c */
-struct stat * dir_write(gchar *p);
-void dir_restore(gchar *p, struct stat *s);
-gchar *dir_parent(gchar *p);
+struct stat * dir_write(gchar *);
+void dir_restore(gchar *, struct stat *);
+gchar *dir_parent(gchar *);
 #endif  /* _RDUP_UP_H */

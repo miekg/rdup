@@ -23,7 +23,6 @@ GSList *hlink_list		   = NULL;			/* save hardlink for post processing */
 extern int opterr;
 int opterr		   = 0;
 
-
 /* update the directory with the archive */
 static gboolean
 update(char *path)
@@ -52,7 +51,7 @@ update(char *path)
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s, NO_STAT_CONTENT))) {
+		if (!(rdup_entry = parse_entry(buf, line, &s))) {
 			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}

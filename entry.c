@@ -47,7 +47,7 @@ extern gchar *opt_decrypt_key;
  * XXX could use a cleanup
  */
 struct rdup *
-parse_entry(char *buf, size_t l, struct stat *s, gint stat) 
+parse_entry(char *buf, size_t l, struct stat *s) 
 {
 	struct rdup *e;
 	gint i;
@@ -181,6 +181,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				e->f_size = 0;
 				e->f_rdev = makedev(major, minor);
 
+#if 0
 				if (stat != NO_STAT_CONTENT) {
 					/* there are entries left, correctly
 					 * set the pointer 
@@ -188,10 +189,11 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					pos = strchr(n + 1, ' ');
 					pos++;
 				}
+#endif
 			} else {
 				/* XXX check */
-				if (stat == NO_STAT_CONTENT) {
-					e->f_size = atoi(pos);
+				e->f_size = atoi(pos);
+#if 0
 				} else {
 					n = strchr(pos, ' ');
 					if (!n) {
@@ -202,45 +204,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					e->f_size = atoi(pos);
 					pos = n + 1;
 				}
-			}
-			/* all path should begin with / */
-			switch(stat) {
-				case DO_STAT:
-					/* pathname */
-					e->f_name = g_strdup(pos);
-					if (strlen(e->f_name) != e->f_name_size) {
-						msg(_("Actual pathname length is not equal to pathname length at line: %zd"), l);
-						return NULL;
-					}
-
-					if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-						e->f_name[e->f_size] = '\0';
-						j = lstat(e->f_name, s);
-						e->f_name[e->f_size] = ' ';
-					} else {
-						j = lstat(e->f_name, s);
-					}
-
-					if (j == -1 && e->plusmin == PLUS) {
-						msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
-						return NULL;
-					}
-
-					break;
-				case NO_STAT:
-					/* pathname */
-					e->f_name = g_strdup(pos);
-					if (strlen(e->f_name) != e->f_name_size) {
-						msg(_("Actual pathname length is not equal to pathname length at line: %zd"), l);
-						return NULL;
-					}
-
-					break;
-				case NO_STAT_CONTENT:
-					/* pathname will be present but after a newline
-					 * so there isn't much to do here - this must
-					 * be read from within the calling function */
-					break;
+#endif
 			}
 			break;
 	}
