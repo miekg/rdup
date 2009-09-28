@@ -21,7 +21,7 @@ extern gchar *opt_path_strip;
 extern guint opt_path_strip_len;
 
 /* Count the number of slashes in a string (=path) */
-static guint pathlabel(struct r_entry *e) {
+static guint pathlabel(struct rdup *e) {
 	gint i, j = 0;
 
 	for(i = 0; i < (S_ISLNK(e->f_mode) || e->f_lnk == 1 ? e->f_size : e->f_name_size); i++) {
@@ -33,7 +33,7 @@ static guint pathlabel(struct r_entry *e) {
 
 /* this implements the -s option */
 void
-strippath(struct r_entry *e)
+strippath(struct rdup *e)
 {
 	char *p;
 	guint i;
@@ -93,7 +93,7 @@ strippath(struct r_entry *e)
 
 /* this implements the -r options, strip opt_strip_path from each name */
 void
-strippathname(struct r_entry *e)
+strippathname(struct rdup *e)
 {
 	gchar *where;
 	guint len;

@@ -15,7 +15,7 @@ extern sig_atomic_t sig;
 extern gboolean opt_dry;
 extern guint opt_strip;
 extern gint opt_verbose;
-extern GSList *hlink;
+extern GSList *hlink_list;
 
 /* signal.c */
 void got_sig(int signal);
@@ -141,7 +141,7 @@ mk_link(struct rdup *e, char *s, char *t, char *p)
 	e->f_name = g_strdup_printf("%s -> %s", s, t);
 	e->f_size = strlen(s);
 	e->f_name_size = strlen(e->f_name);
-	hlink = g_slist_append(hlink, e);
+	hlink_list = g_slist_append(hlink_list, e);
 	return TRUE;
 }
 

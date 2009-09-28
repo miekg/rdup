@@ -65,6 +65,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->plusmin     = PLUS;
 			e->f_name      = g_strdup(buf);
 			e->f_name_size = strlen(buf);
+			e->f_target    = NULL;
 			e->f_mode      = s->st_mode;
 			e->f_uid       = s->st_uid;
 			e->f_gid       = s->st_gid;
@@ -73,11 +74,13 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_ino       = s->st_ino;
 			e->f_rdev      = s->st_rdev;
 			e->f_lnk       = 0;
+			e->f_ctime     = s->st_ctime;
+			e->f_mtime     = s->st_mtime;
 
 			/* you will loose hardlink information here 
 			 * as 'stat' cannot check this */
 			if (S_ISLNK(e->f_mode)) 	
-				e = sym_link(e, NULL);
+				e->f_target = slink(e);
 
 			break;
 
@@ -142,6 +145,8 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_uid = atoi(buf + 8);
 			pos = n + 1;
 
+			/* username */
+
 			/* gid */
 			n = strchr(pos, ' ');
 			if (!n) {
@@ -153,7 +158,9 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_gid = atoi(pos);
 			pos = n + 1;
 
-			/* pathname size */
+			/* group */
+
+			/* pathname length */
 			n = strchr(pos, ' ');
 			if (!n) {
 				msg(_("Malformed input for path length at line: %zd"), l);

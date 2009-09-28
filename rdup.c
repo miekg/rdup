@@ -13,9 +13,9 @@ gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup 
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
-//char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
+char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
 // testing - > no %C
-char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n"; /* BUGBUG format of rdup output */
+//char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n"; /* BUGBUG format of rdup output */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 gboolean opt_atime	   = 0;			      /* reset access time */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */

@@ -19,7 +19,7 @@ gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
 guint opt_path_strip_len   = 0;				/* number of path labels in opt_path_strip */
 guint opt_strip		   = 0;				/* -s: strippath */
 sig_atomic_t sig           = 0;
-GSList *hlink		   = NULL;			/* save hardlink for post processing */		
+GSList *hlink_list		   = NULL;			/* save hardlink for post processing */		
 extern int opterr;
 int opterr		   = 0;
 
@@ -98,7 +98,7 @@ update(char *path)
 	}
 
 	/* post-process hardlinks */
-	if (mk_hlink(hlink) == FALSE)
+	if (mk_hlink(hlink_list) == FALSE)
 		ok = FALSE;
 
 	g_free(buf);

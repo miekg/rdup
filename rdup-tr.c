@@ -35,15 +35,15 @@ int opterr = 0;
 
 #ifdef HAVE_LIBNETTLE
 /* common.c */
-struct r_entry * entry_dup(struct r_entry *f);
-void entry_free(struct r_entry *f);
+struct rdup * entry_dup(struct rdup *f);
+void entry_free(struct rdup *f);
 
 /* encrypt an rdup_entry (just the path of course) */
-static struct r_entry *
-crypt_entry(struct r_entry *e, GHashTable *tr) 
+static struct rdup *
+crypt_entry(struct rdup *e, GHashTable *tr) 
 {
         gchar *crypt, *dest, p;
-	struct r_entry *d = entry_dup(e);
+	struct rdup *d = entry_dup(e);
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
@@ -67,11 +67,11 @@ crypt_entry(struct r_entry *e, GHashTable *tr)
 }
 
 /* decrypt an rdup_entry */
-static struct r_entry *
-decrypt_entry(struct r_entry *e, GHashTable *tr) 
+static struct rdup *
+decrypt_entry(struct rdup *e, GHashTable *tr) 
 {
         gchar *plain, *dest, p;
-	struct r_entry *d = entry_dup(e);
+	struct rdup *d = entry_dup(e);
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
@@ -114,8 +114,8 @@ stdin2archive(GSList *child)
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     s;
-	struct r_entry  *rdup_entry = NULL;
-	struct r_entry  *rdup_entry_c = NULL;
+	struct rdup  *rdup_entry = NULL;
+	struct rdup  *rdup_entry_c = NULL;
 	GHashTable *trhash;				/* look up for encrypted/decrypted strs */
 
 	fp      = stdin;

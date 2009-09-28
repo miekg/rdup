@@ -1,1 +1,4 @@
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
+    * Format change: add username, groupname and mtime
+      Always output the files' contents
+    * Adapt all utils to this format change
