@@ -60,7 +60,7 @@ ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 void usage_up(FILE *);
 
 /* entry.c */
-struct rdup * parse_entry(char *, size_t, struct stat *, gint);
+struct rdup * parse_entry(char *, size_t, struct stat *);
 
 /* link.c */
 gchar * slink(struct rdup *);

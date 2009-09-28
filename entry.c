@@ -51,7 +51,6 @@ parse_entry(char *buf, size_t l, struct stat *s)
 {
 	struct rdup *e;
 	gint i;
-	gint j;
 	char *n, *pos;
 	e = g_malloc(sizeof(struct rdup));
 	e->f_ctime = 0;		/* not used in rdup-* */
