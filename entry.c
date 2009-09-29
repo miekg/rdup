@@ -145,6 +145,15 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			pos = n + 1;
 
 			/* username */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg(_("Malformed input for user at line: %zd"), l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_user = g_strdup(pos);
+			pos = n + 1;
 
 			/* gid */
 			n = strchr(pos, ' ');
@@ -157,7 +166,17 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_gid = atoi(pos);
 			pos = n + 1;
 
-			/* group */
+			/* groupname */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg(_("Malformed input for group at line: %zd"), l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_group = g_strdup(pos);
+			pos = n + 1;
+
 
 			/* pathname length */
 			n = strchr(pos, ' ');
