@@ -102,12 +102,14 @@ strippathname(struct r_entry *e)
 	 * we should discard the entry. But only is the path we are looking
 	 * at is LONGER than the prefix
 	 */
-	if (pathlabel(e) > opt_path_strip_len) {
+	(void)pathlabel(e);
+/*	fprintf(stderr, "label %d strippath len %d\n", pathlabel(e), opt_path_strip_len); */
+/*	if (pathlabel(e) > opt_path_strip_len) { */
 		if (g_str_has_prefix(opt_path_strip, e->f_name)) {
 			e->f_name = NULL;
 			return;
 		}
-	}
+/*	} */
 
 	if (g_str_has_prefix(e->f_name, opt_path_strip) == FALSE) 
 		return;

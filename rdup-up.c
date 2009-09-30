@@ -220,7 +220,6 @@ main(int argc, char **argv)
 	else
 		path = abspath(argv[0]);
 
-
 	if (!opt_dry) {
 		if (opt_top) {
 			/* this is not 100%, but better than nothing */
