@@ -40,7 +40,7 @@ install: all
 	    cp $$i.gmo $$i/rdup.mo; done
 	for i in $$(cat LINGUAS); do \
 		mkdir -p $(DESTDIR)/${localedir}/$$i/LC_MESSAGES; \
-		cp $$i/rdup.mo ${localedir}/$$i/LC_MESSAGES/rdup.mo; \
+		cp $$i/rdup.mo $(DESTDIR)/${localedir}/$$i/LC_MESSAGES/rdup.mo; \
 	done
 
 uninstall:
