@@ -129,8 +129,7 @@ running as a normal user -- to put files in a directory which could have
 The file named 'file' contains a list of Perl-compatible regular
 expressions (PCRE) , one per line, that \fBrdup\fR will use to 
 \fIexclude\fR names. A '#' at the start of the line can be used to signal a comment.
-Empty lines are discarded. The \fI\-0\fR option also affects the
-format of this file.
+Empty lines are discarded. 
 
 If a directory is excluded, \fBrdup\fR won't descend in that directory,
 so all files in that directory are also excluded.
@@ -204,10 +203,6 @@ tee(1) might even be better...
 Don't output files larger than \fBsize\fR bytes.
 This can be used to limit the amount of data to be transferred when doing a remote backup.
 This option \fIonly\fR applies to files.
-.TP
-.B \-0
-Delimit \fBfilelist\fR with NULL's instead of a newline. Use '\\0' in the
-\fBformat\fR string to change \fBrdup\fR's output.
 .TP
 .B \-x
 Stay on the local filesystem.
