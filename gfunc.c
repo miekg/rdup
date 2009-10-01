@@ -9,7 +9,6 @@
 #include "protocol.h"
 #include <pcre.h>
 
-extern gboolean opt_null;
 extern gboolean opt_removed;
 extern gboolean opt_modified;
 extern gboolean opt_skip;
@@ -360,11 +359,7 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 			(long int)e->f_uid, 
 			(long int)e->f_gid,
 			(long int)name_size, (long int)file_size, n);
-	if (opt_null) {
-		fputc('\0', (FILE*)fp);
-	} else {
-		fputc('\n', (FILE*)fp);
-	}
+	fputc('\n', (FILE*)fp);
 	g_free(n);
 	return FALSE;
 }

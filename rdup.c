@@ -7,7 +7,6 @@
 
 char *PROGNAME="rdup";
 /* options */
-gboolean opt_null 	   = FALSE;                   /* delimit all in/output with \0  */
 gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
@@ -74,14 +73,10 @@ g_tree_read_file(FILE *fp)
 	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 	l    = 1;
+	delim= '\n';
 
 	if (!fp)
 	    return tree;
-
-	if (opt_null)
-		delim = '\0';
-	else
-		delim = '\n';
 
 	while ((rdup_getdelim(&buf, &s, delim, fp)) != -1) {
 		if (sig != 0) {
@@ -96,11 +91,7 @@ g_tree_read_file(FILE *fp)
 		if (s < LIST_MINSIZE) 
 			CORRUPT("Corrupt entry in filelist at line: %zd"); 
 
-		if (!opt_null) {
-			n = strrchr(buf, '\n');
-			if (n)
-				*n = '\0';
-		}
+		n = strrchr(buf, '\n');
 
 		/* get modus */
 		if (buf[LIST_SPACEPOS] != ' ')
@@ -295,7 +286,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:s:vqx0F:E:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:s:vqxF:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -346,9 +337,6 @@ main(int argc, char **argv)
 				break;
 			case 'x':
 				opt_onefilesystem = TRUE;
-				break;
-			case '0':
-				opt_null = TRUE;
 				break;
 			case 's':
 				opt_size = atoi(optarg);
