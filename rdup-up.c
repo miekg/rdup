@@ -70,8 +70,19 @@ update(char *path)
 			exit(EXIT_FAILURE);
 		}
 
-		/* strippath must be inserted here */
 		rdup_entry->f_name = pathbuf;
+
+		/* extract target from rdup_entry */
+		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
+			// filesize is spot where to cut
+			rdup_entry->f_name[rdup_entry->f_size] = '\0';
+			rdup_entry->f_target = rdup_entry->f_name + 
+				rdup_entry->f_size + 4;
+		} else {
+			rdup_entry->f_target = NULL;
+		}
+
+		/* strippath must be inserted here */
 		if (opt_strip)
 			strippath(rdup_entry);
 

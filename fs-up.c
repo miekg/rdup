@@ -131,7 +131,6 @@ mk_link(struct rdup *e, char *p)
 
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
-		fprintf(stderr, "symlink\n");
 		if (symlink(e->f_target, e->f_name) == -1) {
 			if (errno == EACCES) {
 				parent = dir_parent(e->f_name);
@@ -156,7 +155,6 @@ mk_link(struct rdup *e, char *p)
 
 	/* hardlink */
 	/* target must also fall in backup dir */
-	fprintf(stderr, "old target %s\n", e->f_target);
 	t = g_strdup_printf("%s%s", p, e->f_target);
 	e->f_target = t;
 	hlink_list = g_slist_append(hlink_list, e);
@@ -345,7 +343,6 @@ mk_hlink(GSList *h)
 
 	for (p = g_slist_nth(h, 0); p; p = p->next) { 
 		e = (struct rdup *)p->data;
-	fprintf(stderr, "%s]%s]\n", e->f_name, e->f_target);
 		if (link(e->f_target, e->f_name) == -1) {
 			if (errno == EACCES) {
 				parent = dir_parent(e->f_name);
