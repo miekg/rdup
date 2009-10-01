@@ -24,10 +24,10 @@ static gboolean
 mk_time(struct rdup *e)
 {
 	struct utimbuf ut;
-	/* don't carry the actime, how cares anyway with noatime? */
+	/* don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
-	if (utime(e->f_name, &ut) == -1) {} /* BUGBUG */
+	if (utime(e->f_name, &ut) == -1) { /* todo */ }
 	return TRUE;
 }
 
@@ -233,6 +233,9 @@ mk_reg(FILE *in, struct rdup *e)
 	g_free(buf);
 	if (ok && out)
 		fclose(out); 
+	if (!opt_dry)
+		mk_mode(e);
+
 	opt_dry = old_dry;
 	return TRUE;
 }
@@ -272,7 +275,7 @@ mk_dir(struct rdup *e)
 			return FALSE;
 		}
 	}
-	mk_mode(e);	/* shorter, but sets mode again */
+	mk_mode(e);
 	return TRUE;
 }
 
