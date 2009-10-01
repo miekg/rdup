@@ -3,7 +3,10 @@
  * Use hashes to speed things up
  */
 
-#include "rdup.h"
+#include <glib.h>
+#include "config.h"
+#include <pwd.h>
+#include <grp.h>
 
 gchar *
 lookup_user(GHashTable *u, uid_t uid)

@@ -1,6 +1,6 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath.o link.o reverse.o protocol.o msg.o common.o names.o
 OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry.o link.o protocol.o msg.o crypt.o base64.o common.o
-OBJ_UP=rdup-up.o entry.o usage-up.o signal.o link.o getdelim.o abspath.o rm.o fs-up.o mkpath.o protocol.o msg.o dir.o strippath.o
+OBJ_UP=rdup-up.o entry.o usage-up.o signal.o link.o getdelim.o abspath.o rm.o fs-up.o mkpath.o protocol.o msg.o dir.o strippath.o names.o
 HDR=rdup.h rdup-tr.h rdup-up.h io.h common.h entry.h
 CMD=rdup rdup-tr rdup-up
 SH=rdup-ln rdup-simple
