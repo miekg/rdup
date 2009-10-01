@@ -17,7 +17,14 @@
  *
  */
 
-#include "rdup.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
+#include <ctype.h>
+
+#include "common.h"
 #include "protocol.h"
 
 extern gint opt_verbose;
