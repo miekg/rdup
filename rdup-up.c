@@ -19,16 +19,15 @@ gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
 guint opt_path_strip_len   = 0;				/* number of path labels in opt_path_strip */
 guint opt_strip		   = 0;				/* -s: strippath */
 sig_atomic_t sig           = 0;
-GSList *hlink		   = NULL;			/* save hardlink for post processing */		
+GSList *hlink_list		   = NULL;			/* save hardlink for post processing */		
 extern int opterr;
 int opterr		   = 0;
-
 
 /* update the directory with the archive */
 static gboolean
 update(char *path)
 {
-	struct r_entry *rdup_entry;
+	struct rdup    *rdup_entry;
 	size_t         line, i, pathsize;
 	size_t	       pathlen;
 	char           *buf, *pathbuf, *n, *p;
@@ -52,7 +51,7 @@ update(char *path)
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s, NO_STAT_CONTENT))) {
+		if (!(rdup_entry = parse_entry(buf, line, &s))) {
 			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}
@@ -71,8 +70,19 @@ update(char *path)
 			exit(EXIT_FAILURE);
 		}
 
-		/* strippath must be inserted here */
 		rdup_entry->f_name = pathbuf;
+
+		/* extract target from rdup_entry */
+		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
+			// filesize is spot where to cut
+			rdup_entry->f_name[rdup_entry->f_size] = '\0';
+			rdup_entry->f_target = rdup_entry->f_name + 
+				rdup_entry->f_size + 4;
+		} else {
+			rdup_entry->f_target = NULL;
+		}
+
+		/* strippath must be inserted here */
 		if (opt_strip)
 			strippath(rdup_entry);
 
@@ -98,7 +108,7 @@ update(char *path)
 	}
 
 	/* post-process hardlinks */
-	if (mk_hlink(hlink) == FALSE)
+	if (mk_hlink(hlink_list) == FALSE)
 		ok = FALSE;
 
 	g_free(buf);

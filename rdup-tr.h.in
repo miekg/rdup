@@ -65,35 +65,35 @@
 #define I_RDUP      2			/* the input is the standard rdup output */
 
 /* signal.c */
-void signal_abort(int signal);
+void signal_abort(int);
 
 /* rdup-tr.c */
-void msg(const char *fmt, ...);
+void msg(const char *, ...);
 
 /* getdelim.c */
-ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+ssize_t rdup_getdelim(char **, size_t *, int, FILE *);
 
 /* usage-tr.c */
 void usage_tr(FILE *);
 
 /* child.c */
-void close_pipes(GSList *p, int no1, int no2);
-int wait_pids(GSList *pids, int flags);
-GSList *create_childeren(GSList *child, GSList **pipes, int f);
+void close_pipes(GSList *, int, int);
+int wait_pids(GSList *, int);
+GSList *create_childeren(GSList *, GSList **, int);
 
 /* entry.c */
-struct r_entry * parse_entry(char *buf, size_t l, struct stat *s, gint fmt);
-gint rdup_write_header(struct r_entry *e);
-gint rdup_write_data(struct r_entry *e, char *buf, size_t len);
+struct rdup * parse_entry(char *, size_t, struct stat *);
+gint rdup_write_header(struct rdup *);
+gint rdup_write_data(struct rdup *, char *, size_t);
 
 /* link.c */
-struct r_entry *sym_link(struct r_entry *e, char *h_lnk);
+gchar *slink(struct rdup *);
 
 /* crypt.c */
-struct aes_ctx * crypt_init(gchar *key, guint length, gboolean crypt);
-gchar * crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr);
-gchar * decrypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr);
-gchar * crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr);
-gchar * decrypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr);
-gchar * crypt_key(gchar *file);
+struct aes_ctx * crypt_init(gchar *, guint, gboolean);
+gchar * crypt_path_ele(struct aes_ctx *, gchar *, guint, GHashTable *);
+gchar * decrypt_path_ele(struct aes_ctx *, gchar *, guint, GHashTable *);
+gchar * crypt_path(struct aes_ctx *, gchar *, GHashTable *);
+gchar * decrypt_path(struct aes_ctx *, gchar *, GHashTable *);
+gchar * crypt_key(gchar *);
 #endif  /* _RDUP_TR_H */

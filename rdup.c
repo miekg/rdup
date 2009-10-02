@@ -7,13 +7,14 @@
 
 char *PROGNAME="rdup";
 /* options */
-gboolean opt_null 	   = FALSE;                   /* delimit all in/output with \0  */
 gboolean opt_onefilesystem = FALSE;   		      /* stay on one filesystem */
 gboolean opt_nobackup      = TRUE;             	      /* don't ignore .nobackup files */
 gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
-char *opt_format 	   = "%p%T %b %u %g %l %s %n\n"; /* format of rdup output */
+char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
+// testing - > no %C
+//char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n"; /* BUGBUG format of rdup output */
 gint opt_verbose 	   = 0;                       /* be more verbose */
 gboolean opt_atime	   = 0;			      /* reset access time */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
@@ -55,15 +56,11 @@ g_tree_subtract(GTree *a, GTree *b)
 static GTree *
 g_tree_read_file(FILE *fp)
 {
-	char 	      *buf;
-	char          *n;
-	char          *p;
-	char 	      *q;
-	char 	      delim;
-	char	      linktype;
+	gchar 	      *buf, *n, *p, *q;
+	gchar 	      delim, linktype;
 	mode_t        modus;
 	GTree         *tree;
-	struct r_entry *e;
+	struct rdup   *e;
 	size_t        s;
 	size_t 	      l;
 	size_t        f_name_size;
@@ -76,14 +73,10 @@ g_tree_read_file(FILE *fp)
 	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 	l    = 1;
+	delim= '\n';
 
 	if (!fp)
 	    return tree;
-
-	if (opt_null)
-		delim = '\0';
-	else
-		delim = '\n';
 
 	while ((rdup_getdelim(&buf, &s, delim, fp)) != -1) {
 		if (sig != 0) {
@@ -98,11 +91,7 @@ g_tree_read_file(FILE *fp)
 		if (s < LIST_MINSIZE) 
 			CORRUPT("Corrupt entry in filelist at line: %zd"); 
 
-		if (!opt_null) {
-			n = strrchr(buf, '\n');
-			if (n)
-				*n = '\0';
-		}
+		n = strrchr(buf, '\n');
 
 		/* get modus */
 		if (buf[LIST_SPACEPOS] != ' ')
@@ -135,14 +124,14 @@ g_tree_read_file(FILE *fp)
 		if (f_ino == 0)
 			CORRUPT("Corrupt entry in filelist at line: %zd, zero inode");
 
-		/* hardlink or anything else: h or * */
+		/* hardlink/link or anything else: h/l or * */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) 
 			CORRUPT("Corrupt entry in filelist at line: %zd, no link information found");
 
 		linktype = *q;
-		if (linktype != '*' && linktype != 'h')
+		if (linktype != '-' && linktype != 'h' && linktype != 'l')
 			CORRUPT("Illegal link type as line: %zd");
 
 		/* skip these for now - but useful to have */
@@ -172,7 +161,7 @@ g_tree_read_file(FILE *fp)
 		p = strchr(p + 1, ' ');
 		if (!p)
 			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
-		
+
 		*p = '\0';
 		f_size = (size_t)atoi(q);
 
@@ -184,14 +173,25 @@ g_tree_read_file(FILE *fp)
 			continue;
 		}
 
-		e = g_malloc(sizeof(struct r_entry));
+		e = g_malloc(sizeof(struct rdup));
 		e->f_name      = g_strdup(p + 1);
-		e->f_name_size = f_name_size;
-		e->f_size      = f_size;
+
+		if (linktype == 'h' || linktype == 'l') {
+			e->f_name_size    = strlen(e->f_name);
+			e->f_name[f_size] = '\0'; /* set NULL just before the ' -> ' */
+			e->f_size         = strlen(e->f_name);
+			e->f_target       = e->f_name + f_size + 4;
+		} else {
+			e->f_name_size = f_name_size;
+			e->f_target    = NULL;
+			e->f_size      = f_size;
+		}
+
 		e->f_mode      = modus;
 		e->f_uid       = 0;	/* keep this 0 for now */
 		e->f_gid       = 0;	/* keep this 0 for now */
 		e->f_ctime     = 0;
+		e->f_mtime     = 0;
 		e->f_dev       = f_dev;
 		e->f_ino       = f_ino;
 		if (linktype == 'h')
@@ -230,6 +230,9 @@ main(int argc, char **argv)
 	GTree	*new;		/* all that is new */
 	GTree	*changed;	/* all that is possibly changed */
 	GHashTable *linkhash;	/* hold dev, inode, name stuff */
+	GHashTable *userhash;	/* holds uid -> username */
+	GHashTable *grouphash;  /* holds gid -> groupname */
+
 	FILE 	*fplist;
 	gint    i;
 	int 	c;
@@ -259,7 +262,9 @@ main(int argc, char **argv)
 
 	curtree = g_tree_new(gfunc_equal);
 	backup  = g_tree_new(gfunc_equal);
-	linkhash = g_hash_table_new(g_str_hash, g_str_equal);
+	linkhash  = g_hash_table_new(g_str_hash, g_str_equal);
+	grouphash = g_hash_table_new(g_int_hash, g_int_equal);
+	userhash  = g_hash_table_new(g_int_hash, g_int_equal);
 	remove  = NULL;
 	opterr = 0;
 	time = NULL;
@@ -281,7 +286,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:s:vqx0F:E:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:s:vqxF:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -294,7 +299,7 @@ main(int argc, char **argv)
 				opt_atime = TRUE;
 				break;
 			case 'c':
-				opt_format = "%p%T %b %u %g %l %s\n%n%C";
+				msg(_("-c is deprecated; it is always enabled"));
 				break;
 			case 'h':
 				usage(stdout);
@@ -332,9 +337,6 @@ main(int argc, char **argv)
 				break;
 			case 'x':
 				opt_onefilesystem = TRUE;
-				break;
-			case '0':
-				opt_null = TRUE;
 				break;
 			case 's':
 				opt_size = atoi(optarg);
@@ -384,12 +386,12 @@ main(int argc, char **argv)
 		}
 
 		/* add dirs leading up the dir/file */
-		if (!dir_prepend(backup, path)) {
+		if (!dir_prepend(backup, path, userhash, grouphash)) {
 			msg(_("Skipping `%s\'"), path);
 			continue;
 		}
 		/* descend into the dark, misty directory */
-		dir_crawl(backup, linkhash, path);
+		dir_crawl(backup, linkhash, userhash, grouphash, path);
 	}
 
 	/* everything that is gone from the filesystem */

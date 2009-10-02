@@ -62,12 +62,6 @@
 #define SHA1_LEN       20 /* bytes of digest */
 #define NO_SHA         "0000000000000000000000000000000000000000"
 
-/* common.h */
-#if 0
-#define LIST_MINSIZE   6
-#define LIST_SPACEPOS  5
-#endif
-
 struct subtract {
         GTree *d; /* diff */
         GTree *b;
@@ -80,45 +74,49 @@ struct remove_path {
 };
 
 /* gfunc.c */
-gint gfunc_equal(gconstpointer a, gconstpointer b);
-gboolean gfunc_free(gpointer data, gpointer value, gpointer usr);
-gboolean gfunc_write(gpointer data, gpointer value, gpointer fp);
-gboolean gfunc_backup(gpointer data, gpointer value, gpointer usr);
-gboolean gfunc_remove(gpointer data, gpointer value, gpointer usr);
-gboolean gfunc_new(gpointer data, gpointer value, gpointer usr);
-gboolean gfunc_subtract(gpointer data, gpointer value, gpointer diff);
-gboolean gfunc_remove_path(gpointer data, gpointer value, gpointer path);
-gboolean gfunc_regexp(GSList *l, char *n, size_t len);
-gboolean gfunc_tree2list(gpointer data, gpointer value, gpointer l);
+gint gfunc_equal(gconstpointer, gconstpointer);
+gboolean gfunc_free(gpointer, gpointer, gpointer);
+gboolean gfunc_write(gpointer, gpointer, gpointer);
+gboolean gfunc_backup(gpointer, gpointer, gpointer);
+gboolean gfunc_remove(gpointer, gpointer, gpointer);
+gboolean gfunc_new(gpointer, gpointer, gpointer);
+gboolean gfunc_subtract(gpointer, gpointer, gpointer);
+gboolean gfunc_remove_path(gpointer, gpointer, gpointer);
+gboolean gfunc_regexp(GSList *, char *, size_t);
+gboolean gfunc_tree2list(gpointer, gpointer, gpointer);
 
 /* rdup.c */
-void msg(const char *fmt, ...);
+void msg(const char *, ...);
 /* getdelim.c */
 
-ssize_t rdup_getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+ssize_t rdup_getdelim(char **, size_t *, int, FILE *);
 /* abspath.c */
-char * abspath(char *path);
+char * abspath(char *);
 
 /* signal.c */
-void signal_abort(int signal);
+void signal_abort(int);
 
 /* link.c */
-gchar * hard_link(GHashTable *t, struct r_entry *e);
-struct r_entry *sym_link(struct r_entry *e, char *h_lnk);
+gchar * hlink(GHashTable *, struct rdup *);
+gchar * slink(struct rdup *);
 
 /* reverse.c */
-GList * reverse(GTree *g);
-void  gfunc_new_list(gpointer data, gpointer userdata);
-void  gfunc_remove_list(gpointer data, gpointer userdata);
-void  gfunc_backup_list(gpointer data, gpointer userdata);
+GList * reverse(GTree *);
+void  gfunc_new_list(gpointer, gpointer);
+void  gfunc_remove_list(gpointer, gpointer);
+void  gfunc_backup_list(gpointer, gpointer);
 
 /* crawler.c */
-void dir_crawl(GTree *t, GHashTable *linkhash, char *path);
-gboolean dir_prepend(GTree *t, char *path);
+void dir_crawl(GTree *, GHashTable *, GHashTable *, GHashTable *, char *);
+gboolean dir_prepend(GTree *, char *, GHashTable *, GHashTable *);
+
+/* names.c */
+gchar * lookup_user(GHashTable *, uid_t);
+gchar * lookup_group(GHashTable *, gid_t);
 
 /* usage.c */
-void usage(FILE *f);
+void usage(FILE *);
 
 /* regexp.c */
-int regexp_init(char *f);
+int regexp_init(char *);
 #endif  /* _RDUP_H */

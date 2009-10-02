@@ -2,7 +2,7 @@
  * Copyright (c) 2009 Miek Gieben
  * parse_entry.c
  * parse an standard rdup entry and return a
- * struct r_entry
+ * struct rdup
  */
 
 #include "rdup-tr.h"
@@ -46,14 +46,13 @@ extern gchar *opt_decrypt_key;
  *
  * XXX could use a cleanup
  */
-struct r_entry *
-parse_entry(char *buf, size_t l, struct stat *s, gint stat) 
+struct rdup *
+parse_entry(char *buf, size_t l, struct stat *s) 
 {
-	struct r_entry *e;
+	struct rdup *e;
 	gint i;
-	gint j;
 	char *n, *pos;
-	e = g_malloc(sizeof(struct r_entry));
+	e = g_malloc(sizeof(struct rdup));
 	e->f_ctime = 0;		/* not used in rdup-* */
 	
 	switch (opt_input) {
@@ -65,6 +64,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->plusmin     = PLUS;
 			e->f_name      = g_strdup(buf);
 			e->f_name_size = strlen(buf);
+			e->f_target    = NULL;
 			e->f_mode      = s->st_mode;
 			e->f_uid       = s->st_uid;
 			e->f_gid       = s->st_gid;
@@ -73,11 +73,13 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_ino       = s->st_ino;
 			e->f_rdev      = s->st_rdev;
 			e->f_lnk       = 0;
+			e->f_ctime     = s->st_ctime;
+			e->f_mtime     = s->st_mtime;
 
 			/* you will loose hardlink information here 
 			 * as 'stat' cannot check this */
 			if (S_ISLNK(e->f_mode)) 	
-				e = sym_link(e, NULL);
+				e->f_target = slink(e);
 
 			break;
 
@@ -122,6 +124,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 					msg(_("Type must be one of d, l, h, -, c, b, p or s"));
 					return NULL;
 			}
+			
 			/* perm */
 			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 +	/* oct -> dec */
 				(buf[5] - 48) * 8 + (buf[6] - 48);
@@ -130,16 +133,36 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				return NULL;
 			}
 			e->f_mode |= i;
+
+			/* m_time */
+			n = strchr(buf + 8, ' ');
+			if (!n) {
+				msg(_("Malformed input for m_time at line: %zd"), l);
+				return NULL;
+			}
+			e->f_mtime = (time_t)atol(buf + 8);
+			pos = n + 1;
 			
 			/* uid  */
-			n = strchr(buf + 8, ' ');
+			n = strchr(pos, ' ');
 			if (!n) {
 				msg(_("Malformed input for uid at line: %zd"), l);
 				return NULL;
 			} else {
 				*n = '\0';
 			}
-			e->f_uid = atoi(buf + 8);
+			e->f_uid = atoi(pos);
+			pos = n + 1;
+
+			/* username */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg(_("Malformed input for user at line: %zd"), l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_user = g_strdup(pos);
 			pos = n + 1;
 
 			/* gid */
@@ -153,7 +176,18 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_gid = atoi(pos);
 			pos = n + 1;
 
-			/* pathname size */
+			/* groupname */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg(_("Malformed input for group at line: %zd"), l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_group = g_strdup(pos);
+			pos = n + 1;
+
+			/* pathname length */
 			n = strchr(pos, ' ');
 			if (!n) {
 				msg(_("Malformed input for path length at line: %zd"), l);
@@ -162,6 +196,7 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 			e->f_name_size = atoi(pos); /* checks */
 			pos = n + 1;
 
+			/* dev file? */
 			if (S_ISCHR(e->f_mode) || S_ISBLK(e->f_mode)) {
 				int major, minor;
 				n = strchr(pos, ',');
@@ -173,80 +208,24 @@ parse_entry(char *buf, size_t l, struct stat *s, gint stat)
 				major = atoi(pos); minor = atoi(n + 1);
 				e->f_size = 0;
 				e->f_rdev = makedev(major, minor);
-
-				if (stat != NO_STAT_CONTENT) {
-					/* there are entries left, correctly
-					 * set the pointer 
-					 */
-					pos = strchr(n + 1, ' ');
-					pos++;
-				}
-			} else {
-				/* XXX check */
-				if (stat == NO_STAT_CONTENT) {
-					e->f_size = atoi(pos);
-				} else {
-					n = strchr(pos, ' ');
-					if (!n) {
-						msg(_("Malformed input for file size at line: %zd"), l);
-						return NULL;
-					}
-					/* atoi? */
-					e->f_size = atoi(pos);
-					pos = n + 1;
-				}
-			}
-			/* all path should begin with / */
-			switch(stat) {
-				case DO_STAT:
-					/* pathname */
-					e->f_name = g_strdup(pos);
-					if (strlen(e->f_name) != e->f_name_size) {
-						msg(_("Actual pathname length is not equal to pathname length at line: %zd"), l);
-						return NULL;
-					}
-
-					if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-						e->f_name[e->f_size] = '\0';
-						j = lstat(e->f_name, s);
-						e->f_name[e->f_size] = ' ';
-					} else {
-						j = lstat(e->f_name, s);
-					}
-
-					if (j == -1 && e->plusmin == PLUS) {
-						msg(_("Could not stat path `%s\': %s"), e->f_name, strerror(errno));
-						return NULL;
-					}
-
-					break;
-				case NO_STAT:
-					/* pathname */
-					e->f_name = g_strdup(pos);
-					if (strlen(e->f_name) != e->f_name_size) {
-						msg(_("Actual pathname length is not equal to pathname length at line: %zd"), l);
-						return NULL;
-					}
-
-					break;
-				case NO_STAT_CONTENT:
-					/* pathname will be present but after a newline
-					 * so there isn't much to do here - this must
-					 * be read from within the calling function */
-					break;
-			}
+			} else 
+				e->f_size = atoi(pos);
+			
 			break;
 	}
 	return e;
 }
 
+/* NEED TO FIX THIS, the the gfunc equavalent */
+
+#if 0
 /* ALmost the same of entry_print_data in gfunc.c, but
  * not quite as we don't don't use FILE* structs here
  * for instance. TODO: integrate the two functions?
  * entry_print_data()
  */
 gint
-rdup_write_header(struct r_entry *e)
+rdup_write_header(struct rdup *e)
 {
 	char *out;
 	char t;
@@ -299,9 +278,10 @@ rdup_write_header(struct r_entry *e)
 }
 
 gint
-rdup_write_data(__attribute__((unused)) struct r_entry *e, char *buf, size_t len) {
+rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) {
 	if (block_out_header(NULL, len, 1) == -1 ||
 		block_out(NULL, len, buf, 1) == -1)
 		return -1;
 	return 0;
 }
+#endif
