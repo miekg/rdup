@@ -102,9 +102,9 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 static void  
 stdin2archive(GSList *child)
 {
-	char		*buf, *readbuf, *n, *out;
+	char		*buf, *readbuf, *n, *out, *pathbuf;
 	char		delim;
-	size_t		i, line;
+	size_t		i, line, pathsize;
 	ssize_t		len;
 	FILE		*fp;
 	int		f, j;
@@ -123,6 +123,7 @@ stdin2archive(GSList *child)
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
 	readbuf = g_malloc(BUFSIZE + 1);
+	pathbuf = g_malloc(BUFSIZE + 1);
 	j	= ARCHIVE_OK;
 	entry   = NULL;
 	line    = 0;
@@ -167,8 +168,34 @@ stdin2archive(GSList *child)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line, &s))) {
-			continue;
+			/* mesgs from entry.c */
+			exit(EXIT_FAILURE);
 		}
+
+		/* we have a valid entry, read the filename */
+                pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, fp);
+
+                if (pathsize != rdup_entry->f_name_size) {
+                        msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
+                                        rdup_entry->f_name_size, pathsize);
+                        exit(EXIT_FAILURE);
+                }   
+                pathbuf[pathsize] = '\0';
+                if (pathbuf[0] != '/') {
+                        msg(_("Pathname does not start with /: `%s\'"), pathbuf);
+                        exit(EXIT_FAILURE);
+                }   
+                rdup_entry->f_name = pathbuf;
+
+                /* extract target from rdup_entry */
+                if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
+                        // filesize is spot where to cut
+                        rdup_entry->f_name[rdup_entry->f_size] = '\0';
+                        rdup_entry->f_target = rdup_entry->f_name + 
+                                rdup_entry->f_size + 4;
+                } else {
+                        rdup_entry->f_target = NULL;
+                }
 
 		if (opt_verbose > 0) {
 			out = g_strdup_printf("%s\n", rdup_entry->f_name);

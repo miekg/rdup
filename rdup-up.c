@@ -57,7 +57,7 @@ update(char *path)
 		}
 
 		/* we have a valid entry, read the filename */
-		pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, stdin);
+		pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, fp);
 
 		if (pathsize != rdup_entry->f_name_size) {
 			msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
