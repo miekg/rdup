@@ -124,6 +124,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 					msg(_("Type must be one of d, l, h, -, c, b, p or s"));
 					return NULL;
 			}
+			
 			/* perm */
 			i = (buf[3] - 48) * 512 + (buf[4] - 48) * 64 +	/* oct -> dec */
 				(buf[5] - 48) * 8 + (buf[6] - 48);
@@ -132,19 +133,37 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				return NULL;
 			}
 			e->f_mode |= i;
+
+			/* m_time */
+			n = strchr(buf + 8, ' ');
+			if (!n) {
+				msg(_("Malformed input for m_time at line: %zd"), l);
+				return NULL;
+			}
+			e->f_mtime = (time_t)atol(buf + 8);
+			pos = n + 1;
 			
 			/* uid  */
-			n = strchr(buf + 8, ' ');
+			n = strchr(pos, ' ');
 			if (!n) {
 				msg(_("Malformed input for uid at line: %zd"), l);
 				return NULL;
 			} else {
 				*n = '\0';
 			}
-			e->f_uid = atoi(buf + 8);
+			e->f_uid = atoi(pos);
 			pos = n + 1;
 
 			/* username */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg(_("Malformed input for user at line: %zd"), l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_user = g_strdup(pos);
+			pos = n + 1;
 
 			/* gid */
 			n = strchr(pos, ' ');
@@ -157,7 +176,16 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_gid = atoi(pos);
 			pos = n + 1;
 
-			/* group */
+			/* groupname */
+			n = strchr(pos, ' ');
+			if (!n) {
+				msg(_("Malformed input for group at line: %zd"), l);
+				return NULL;
+			} else {
+				*n = '\0';
+			}
+			e->f_group = g_strdup(pos);
+			pos = n + 1;
 
 			/* pathname length */
 			n = strchr(pos, ' ');
@@ -168,6 +196,7 @@ parse_entry(char *buf, size_t l, struct stat *s)
 			e->f_name_size = atoi(pos); /* checks */
 			pos = n + 1;
 
+			/* dev file? */
 			if (S_ISCHR(e->f_mode) || S_ISBLK(e->f_mode)) {
 				int major, minor;
 				n = strchr(pos, ',');
@@ -179,37 +208,17 @@ parse_entry(char *buf, size_t l, struct stat *s)
 				major = atoi(pos); minor = atoi(n + 1);
 				e->f_size = 0;
 				e->f_rdev = makedev(major, minor);
-
-#if 0
-				if (stat != NO_STAT_CONTENT) {
-					/* there are entries left, correctly
-					 * set the pointer 
-					 */
-					pos = strchr(n + 1, ' ');
-					pos++;
-				}
-#endif
-			} else {
-				/* XXX check */
+			} else 
 				e->f_size = atoi(pos);
-#if 0
-				} else {
-					n = strchr(pos, ' ');
-					if (!n) {
-						msg(_("Malformed input for file size at line: %zd"), l);
-						return NULL;
-					}
-					/* atoi? */
-					e->f_size = atoi(pos);
-					pos = n + 1;
-				}
-#endif
-			}
+			
 			break;
 	}
 	return e;
 }
 
+/* NEED TO FIX THIS, the the gfunc equavalent */
+
+#if 0
 /* ALmost the same of entry_print_data in gfunc.c, but
  * not quite as we don't don't use FILE* structs here
  * for instance. TODO: integrate the two functions?
@@ -298,3 +307,4 @@ rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) {
 		return -1;
 	return 0;
 }
+#endif

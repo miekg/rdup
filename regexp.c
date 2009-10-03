@@ -8,7 +8,6 @@
 #include "rdup.h"
 #include <pcre.h>
 
-extern gboolean opt_null;
 GSList *pregex_list = NULL;
 
 /**
@@ -36,11 +35,7 @@ regexp_init(char *file) {
 	/* read the regexp */
 	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
-
-	if (opt_null)
-                delim = '\0';
-        else 
-                delim = '\n';
+        delim = '\n';
 
 	l = 1;
 	while ((j = rdup_getdelim(&buf, &s, delim, fp)) != -1) {

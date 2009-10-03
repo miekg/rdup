@@ -4,13 +4,10 @@ Fix the r_entry struct. New name and better
 (and more sane support of the symlink), store
 the link target separately.
 
-1.1.0-dev
-Default output to include: 
-    -%t (mod. time in epoch).
-    -%U  completely new: username, - when undefined
-    -%G  completely new: groupname, - when undefined
 
 the rdup-up code can be converted to be used in rdup-tr
+- remove \0 delim stuff - no consistently uses
+- actual use user and group
 
 Output always is in %c mode, no more filelist
 more. Write 1 parser for this input for rdup-tr

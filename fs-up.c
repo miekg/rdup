@@ -24,10 +24,10 @@ static gboolean
 mk_time(struct rdup *e)
 {
 	struct utimbuf ut;
-	/* don't carry the actime, how cares anyway with noatime? */
+	/* don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
-	if (utime(e->f_name, &ut) == -1) {} /* BUGBUG */
+	if (utime(e->f_name, &ut) == -1) { /* todo */ }
 	return TRUE;
 }
 
@@ -115,27 +115,28 @@ mk_sock(struct rdup *e)
 }
 
 static gboolean
-mk_link(struct rdup *e, char *s, char *t, char *p)
+mk_link(struct rdup *e, char *p)
 {
 	struct stat *st;
+	gchar *t;
 	gchar *parent;
 
 	if (opt_dry)
 		return TRUE;
 
-	if (!rm(s)) {
-		msg(_("Failed to remove existing entry: '%s\'"), s);
+	if (!rm(e->f_name)) {
+		msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
 		return FALSE;
 	}
 
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
-		if (symlink(t, s) == -1) {
+		if (symlink(e->f_target, e->f_name) == -1) {
 			if (errno == EACCES) {
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
-				if (symlink(t, s) == -1) {
-					msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
+				if (symlink(e->f_target, e->f_name) == -1) {
+					msg(_("Failed to make symlink: `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
@@ -143,7 +144,7 @@ mk_link(struct rdup *e, char *s, char *t, char *p)
 				dir_restore(parent, st);
 				g_free(parent);
 			} else {
-				msg(_("Failed to make symlink: `%s -> %s\': %s"), s, t, strerror(errno));
+				msg(_("Failed to make symlink: `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
 		}
@@ -153,11 +154,9 @@ mk_link(struct rdup *e, char *s, char *t, char *p)
 	}
 
 	/* hardlink */
-	/* make target also fall in the backup dir */
-	t = g_strdup_printf("%s%s", p, s + e->f_size + 4);
-	e->f_name = g_strdup_printf("%s -> %s", s, t);
-	e->f_size = strlen(s);
-	e->f_name_size = strlen(e->f_name);
+	/* target must also fall in backup dir */
+	t = g_strdup_printf("%s%s", p, e->f_target);
+	e->f_target = t;
 	hlink_list = g_slist_append(hlink_list, e);
 	return TRUE;
 }
@@ -234,6 +233,9 @@ mk_reg(FILE *in, struct rdup *e)
 	g_free(buf);
 	if (ok && out)
 		fclose(out); 
+	if (!opt_dry)
+		mk_mode(e);
+
 	opt_dry = old_dry;
 	return TRUE;
 }
@@ -273,7 +275,7 @@ mk_dir(struct rdup *e)
 			return FALSE;
 		}
 	}
-	mk_mode(e);	/* shorter, but sets mode again */
+	mk_mode(e);
 	return TRUE;
 }
 
@@ -282,8 +284,6 @@ mk_dir(struct rdup *e)
 gboolean
 mk_obj(FILE *in, char *p, struct rdup *e) 
 {
-	char *s, *t;
-
 	/* -v */
 	if (opt_verbose == 1 && e->f_name)
 		fprintf(stdout, "%s\n", e->f_name);
@@ -295,23 +295,16 @@ mk_obj(FILE *in, char *p, struct rdup *e)
 				e->f_uid, e->f_gid, e->f_name);
 
 	/* split here - or above - return when path is zero lenght
-	 * for links check the f_size is that is zero */
+	 * for links check that the f_size is zero */
 	switch(e->plusmin) {
 		case MINUS:
 			if (opt_dry || ! e->f_name)
 				return TRUE;
 
-			/* remove all stuff you can find */
-			if (S_ISLNK(e->f_mode) || e->f_lnk) {
-				/* BUGBUG hoeft niet meer is al normalized */
-				/* get out the source name */
-				s = e->f_name;
-				s[e->f_size] = '\0';
-			} else {
-				s = e->f_name;
-			}
-			return rm(s);
+			return rm(e->f_name);
 		case PLUS:
+			/* opt_dry handled within the subfunctions */
+
 			/* only files, no hardlinks! */
 			if (S_ISREG(e->f_mode) && ! e->f_lnk )
 				return mk_reg(in, e);
@@ -321,19 +314,12 @@ mk_obj(FILE *in, char *p, struct rdup *e)
 			if (e->f_name == NULL)
 				return TRUE;
 
-			/* opt_dry handled within the subfunctions */
-			if (S_ISDIR(e->f_mode)) {
+			if (S_ISDIR(e->f_mode))
 				return mk_dir(e);	
-			}
 
 			/* First sym and hardlinks and then regular files */
-			if (S_ISLNK(e->f_mode) || e->f_lnk) {
-				/* get out the source name and re-stat it */
-				s = e->f_name;
-				s[e->f_size] = '\0';
-				t = s + e->f_size + 4; /* ' -> ' */
-				return mk_link(e, s, t, p);
-			}
+			if (S_ISLNK(e->f_mode) || e->f_lnk) 
+				return mk_link(e, p);
 
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
 				return mk_dev(e);
@@ -341,7 +327,7 @@ mk_obj(FILE *in, char *p, struct rdup *e)
 			if (S_ISSOCK(e->f_mode))
 				return mk_sock(e);
 	}
-	/* huh still alive */
+	/* huh still alive? */
 	return TRUE;
 }
 
@@ -351,26 +337,22 @@ mk_hlink(GSList *h)
 {
 	struct rdup *e;
 	GSList *p;
-	char *s, *t;
 	struct stat *st;
 	gchar *parent;
+
 
 	if (opt_dry)
 		return TRUE;
 
 	for (p = g_slist_nth(h, 0); p; p = p->next) { 
 		e = (struct rdup *)p->data;
-
-		s = e->f_name;
-		s[e->f_size] = '\0';
-		t = s + e->f_size + 4; /* ' -> ' */
-		if (link(t, s) == -1) {
+		if (link(e->f_target, e->f_name) == -1) {
 			if (errno == EACCES) {
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
-				if (link(t, s) == -1) {
+				if (link(e->f_target, e->f_name) == -1) {
 					msg(_("Failed to create hardlink `%s -> %s\': %s"),
-							s, t, strerror(errno));
+							e->f_name, e->f_target, strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
@@ -380,7 +362,7 @@ mk_hlink(GSList *h)
 				return TRUE;
 			} else {
 				msg(_("Failed to create hardlink `%s -> %s\': %s"),
-						s, t, strerror(errno));
+						e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
 		}
