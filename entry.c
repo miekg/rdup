@@ -218,7 +218,6 @@ parse_entry(char *buf, size_t l, struct stat *s)
 
 /* NEED TO FIX THIS, the the gfunc equavalent */
 
-#if 0
 /* ALmost the same of entry_print_data in gfunc.c, but
  * not quite as we don't don't use FILE* structs here
  * for instance. TODO: integrate the two functions?
@@ -307,4 +306,3 @@ rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) {
 		return -1;
 	return 0;
 }
-#endif
