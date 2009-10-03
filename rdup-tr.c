@@ -168,7 +168,7 @@ stdin2archive(GSList *child)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line, &s))) {
-			/* mesgs from entry.c */
+			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}
 
@@ -185,6 +185,7 @@ stdin2archive(GSList *child)
                         msg(_("Pathname does not start with /: `%s\'"), pathbuf);
                         exit(EXIT_FAILURE);
                 }   
+
                 rdup_entry->f_name = pathbuf;
 
                 /* extract target from rdup_entry */
@@ -238,17 +239,12 @@ stdin2archive(GSList *child)
 			 */
 			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
 				/* source */
-				rdup_entry_c->f_name[rdup_entry_c->f_size] = '\0';
 				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
-				rdup_entry_c->f_name[rdup_entry_c->f_size] = ' ';
 
-				/* target, +4 == ' -> ' */
 				if (S_ISLNK(rdup_entry->f_mode))
-					archive_entry_copy_symlink(entry, 
-						rdup_entry_c->f_name + rdup_entry_c->f_size + 4);
+					archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
 				else 
-					archive_entry_copy_hardlink(entry, 
-						rdup_entry_c->f_name + rdup_entry_c->f_size + 4);
+					archive_entry_copy_hardlink(entry, rdup_entry_c->f_target);
 			}
 		}
 
@@ -263,11 +259,16 @@ stdin2archive(GSList *child)
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
 			goto not_s_isreg; 
 
+		/* hoeft niet, komt binnen via stdin */
 		/* regular files */
+#if 0
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
 			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
 			continue;
 		}
+#endif
+
+			/* todo use stdin here */
 		if (child != NULL) {
 			pids = create_childeren(child, &pipes, f);
 			parent = (g_slist_last(pipes))->data;

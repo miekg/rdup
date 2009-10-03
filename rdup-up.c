@@ -103,7 +103,7 @@ update(char *path)
 			}
 		}
 		rdup_entry->f_name = p;
-		if (mk_obj(stdin, path, rdup_entry) == FALSE)
+		if (mk_obj(fp, path, rdup_entry) == FALSE)
 			ok = FALSE;
 	}
 
