@@ -306,13 +306,16 @@ write_plain_file:
 			 * so this is ok */
 				
 			/* if we had child trouble we need to 
+			 * DOES NOT WORK */
 			 * reset the file as some child might
 			 * have read from it */
 			if (lseek(f, 0, SEEK_SET)  == -1) {
 				msg(_("Failure to rewind: %s"), strerror(errno));
 				exit(EXIT_FAILURE);
 			}
-			len = read(f, readbuf, BUFSIZE);
+			block_in_header / see rdup-up
+
+			len = block_in(stdin, readbuf, BUFSIZE);
 			if (len == -1) {
 				msg(_("Failure to read from file: %s"), strerror(errno));
 				exit(EXIT_FAILURE); 
