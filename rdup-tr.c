@@ -42,26 +42,20 @@ void entry_free(struct rdup *f);
 static struct rdup *
 crypt_entry(struct rdup *e, GHashTable *tr) 
 {
-        gchar *crypt, *dest, p;
+        gchar *crypt, *dest;
 	struct rdup *d = entry_dup(e);
+	/* entry dup hier BUGBUG */
+
+	crypt = crypt_path(aes_ctx, d->f_name, tr);
+	d->f_name = crypt;
+	d->f_name_size = strlen(crypt);
+		/* g_free(d->f_name); hier wel */
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		p = *(d->f_name + d->f_size);
-		d->f_name[d->f_size] = '\0';
-		crypt = crypt_path(aes_ctx, d->f_name, tr);
-		dest = crypt_path(aes_ctx, d->f_name + d->f_size + 4, tr);
-
-		d->f_name = g_strdup_printf("%s -> %s", crypt, dest);
-		d->f_name_size = strlen(d->f_name);
-		d->f_size = strlen(crypt);
-
-		/* free ? XXX */
-	} else {
-		g_free(d->f_name);
-		crypt = crypt_path(aes_ctx, e->f_name, tr);
-		d->f_name = crypt;
-		d->f_name_size = strlen(crypt);
+		dest = crypt_path(aes_ctx, d->f_target, tr);
+		d->f_target = dest;
+		d->f_size = strlen(crypt); /* ook hier crypt */
 	}
 	return d;
 }
@@ -70,27 +64,19 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 static struct rdup *
 decrypt_entry(struct rdup *e, GHashTable *tr) 
 {
-        gchar *plain, *dest, p;
+        gchar *plain, *dest;
 	struct rdup *d = entry_dup(e);
+
+	plain = decrypt_path(aes_ctx, d->f_name, tr);
+	d->f_name = plain;
+	d->f_name_size = strlen(plain);
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		p = *(d->f_name + d->f_size);
-		d->f_name[d->f_size] = '\0';
-		plain = decrypt_path(aes_ctx, d->f_name, tr);
-		dest = decrypt_path(aes_ctx, d->f_name + d->f_size + 4, tr);
-
-		d->f_name = g_strdup_printf("%s -> %s", plain, dest);
-		d->f_name_size = strlen(d->f_name);
+		dest = decrypt_path(aes_ctx, d->f_target, tr);
+		d->f_target = dest;
 		d->f_size = strlen(plain);
-		/* free ? XXX */
-	} else {
-		g_free(d->f_name);
-		plain = decrypt_path(aes_ctx, e->f_name, tr);
-		d->f_name = plain;
-		d->f_name_size = strlen(plain);
 	}
-
         return d;
 }
 #endif /* HAVE_LIBNETTLE */
