@@ -247,6 +247,7 @@ stdin2archive(GSList *child)
 
 		/* hoeft niet, komt binnen via stdin */
 		/* regular files */
+		f = fileno(stdin);
 #if 0
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
 			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
@@ -278,7 +279,7 @@ stdin2archive(GSList *child)
 			 * 'goto write_plain_file'
 			 * where we happily read from that descriptor
 			 */
-			close(f); 
+			/* close(f); */
 			while (len > 0) {
 				/* write archive */
 				if (sig != 0) {
