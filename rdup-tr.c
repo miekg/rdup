@@ -91,7 +91,7 @@ stdin2archive(GSList *child)
 	char		*buf, *readbuf, *n, *out, *pathbuf;
 	char		delim;
 	size_t		i, line, pathsize;
-	ssize_t		len;
+	ssize_t		len, bytes;
 	FILE		*fp;
 	int		f, j;
 	GSList		*pipes;
@@ -108,6 +108,7 @@ stdin2archive(GSList *child)
 	delim   = '\n';
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
+	fbuf	= g_malloc(BUFSIZE + 1);
 	readbuf = g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
 	j	= ARCHIVE_OK;
@@ -267,6 +268,7 @@ stdin2archive(GSList *child)
 			len = read(parent[0], readbuf, BUFSIZE);
 			if (len == -1) {
 				msg(_("Failure to read from pipe: %s"), strerror(errno));
+				exit(EXIT_FAILURE);
 				goto write_plain_file;
 			}
 
@@ -302,26 +304,12 @@ stdin2archive(GSList *child)
 		} else {
 
 write_plain_file:
-			/* header already sent, don't care about file size
-			 * so this is ok */
-				
-			/* if we had child trouble we need to 
-			 * DOES NOT WORK */
-			 * reset the file as some child might
-			 * have read from it */
-			if (lseek(f, 0, SEEK_SET)  == -1) {
-				msg(_("Failure to rewind: %s"), strerror(errno));
-				exit(EXIT_FAILURE);
-			}
-			block_in_header / see rdup-up
+			while ((bytes = block_in_header(f)) > 0) {
+				if (block_in(in, bytes, fbuf) == -1) {
+					msg(_("Failure to read from stdin: %s"), strerror(errno));
+					exit(EXIT_FAILURE); 
+				}   
 
-			len = block_in(stdin, readbuf, BUFSIZE);
-			if (len == -1) {
-				msg(_("Failure to read from file: %s"), strerror(errno));
-				exit(EXIT_FAILURE); 
-			}
-
-			while (len > 0) {
 				if (sig != 0) {
 					close(f);
 					signal_abort(sig);
@@ -332,9 +320,8 @@ write_plain_file:
 				} else {
 					archive_write_data(archive, readbuf, len);
 				}
-				len = read(f, readbuf, BUFSIZE);
 			}
-			close(f);
+			close(f); /* can we close stdin ??? BUGBUG */
 		}
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
