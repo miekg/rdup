@@ -247,22 +247,45 @@ rdup_write_header(struct rdup *e)
 	}
 	
 	if (t == 'b' || t == 'c') {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %d,%d\n%s", 
+		/* device */
+		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %d,%d\n%s", 
 			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
+			(unsigned long)e->f_mtime,
 			(unsigned long)e->f_uid,
+			e->f_user,
 			(unsigned long)e->f_gid,
+			e->f_group,
 			(unsigned long)e->f_name_size,
 			(unsigned int)major(e->f_rdev), (unsigned int)minor(e->f_rdev),
 			e->f_name);
-	} else {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %ld %zd\n%s", 
+	} else if (t == 'l' || t == 'h') {
+		/* link */
+		gchar *n;
+		n = g_strdup_printf("%s -> %s", e->f_name, e->f_target);
+		e->f_name_size = strlen(n);
+		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s", 
 			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
+			(unsigned long)e->f_mtime,
 			(unsigned long)e->f_uid,
+			e->f_user,
 			(unsigned long)e->f_gid,
+			e->f_group,
+			(unsigned long)e->f_name_size,
+			(size_t)e->f_size, n);
+	} else {
+		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s", 
+			e->plusmin == PLUS ? '+':'-',
+			t,
+			(int)e->f_mode & ~S_IFMT,
+			(unsigned long)e->f_mtime,
+			(unsigned long)e->f_uid,
+			e->f_user,
+			(unsigned long)e->f_gid,
+			e->f_group,
 			(unsigned long)e->f_name_size,
 			(size_t)e->f_size,
 			e->f_name);

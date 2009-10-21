@@ -42,26 +42,20 @@ void entry_free(struct rdup *f);
 static struct rdup *
 crypt_entry(struct rdup *e, GHashTable *tr) 
 {
-        gchar *crypt, *dest, p;
+        gchar *crypt, *dest;
 	struct rdup *d = entry_dup(e);
+	/* entry dup hier BUGBUG */
+
+	crypt = crypt_path(aes_ctx, d->f_name, tr);
+	d->f_name = crypt;
+	d->f_name_size = strlen(crypt);
+		/* g_free(d->f_name); hier wel */
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		p = *(d->f_name + d->f_size);
-		d->f_name[d->f_size] = '\0';
-		crypt = crypt_path(aes_ctx, d->f_name, tr);
-		dest = crypt_path(aes_ctx, d->f_name + d->f_size + 4, tr);
-
-		d->f_name = g_strdup_printf("%s -> %s", crypt, dest);
-		d->f_name_size = strlen(d->f_name);
-		d->f_size = strlen(crypt);
-
-		/* free ? XXX */
-	} else {
-		g_free(d->f_name);
-		crypt = crypt_path(aes_ctx, e->f_name, tr);
-		d->f_name = crypt;
-		d->f_name_size = strlen(crypt);
+		dest = crypt_path(aes_ctx, d->f_target, tr);
+		d->f_target = dest;
+		d->f_size = strlen(crypt); /* ook hier crypt */
 	}
 	return d;
 }
@@ -70,27 +64,19 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 static struct rdup *
 decrypt_entry(struct rdup *e, GHashTable *tr) 
 {
-        gchar *plain, *dest, p;
+        gchar *plain, *dest;
 	struct rdup *d = entry_dup(e);
+
+	plain = decrypt_path(aes_ctx, d->f_name, tr);
+	d->f_name = plain;
+	d->f_name_size = strlen(plain);
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		p = *(d->f_name + d->f_size);
-		d->f_name[d->f_size] = '\0';
-		plain = decrypt_path(aes_ctx, d->f_name, tr);
-		dest = decrypt_path(aes_ctx, d->f_name + d->f_size + 4, tr);
-
-		d->f_name = g_strdup_printf("%s -> %s", plain, dest);
-		d->f_name_size = strlen(d->f_name);
+		dest = decrypt_path(aes_ctx, d->f_target, tr);
+		d->f_target = dest;
 		d->f_size = strlen(plain);
-		/* free ? XXX */
-	} else {
-		g_free(d->f_name);
-		plain = decrypt_path(aes_ctx, e->f_name, tr);
-		d->f_name = plain;
-		d->f_name_size = strlen(plain);
 	}
-
         return d;
 }
 #endif /* HAVE_LIBNETTLE */
@@ -102,10 +88,10 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 static void  
 stdin2archive(GSList *child)
 {
-	char		*buf, *readbuf, *n, *out;
+	char		*buf, *readbuf, *n, *out, *pathbuf;
 	char		delim;
-	size_t		i, line;
-	ssize_t		len;
+	size_t		i, line, pathsize;
+	ssize_t		len, bytes;
 	FILE		*fp;
 	int		f, j;
 	GSList		*pipes;
@@ -122,7 +108,9 @@ stdin2archive(GSList *child)
 	delim   = '\n';
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
+	fbuf	= g_malloc(BUFSIZE + 1);
 	readbuf = g_malloc(BUFSIZE + 1);
+	pathbuf = g_malloc(BUFSIZE + 1);
 	j	= ARCHIVE_OK;
 	entry   = NULL;
 	line    = 0;
@@ -167,8 +155,35 @@ stdin2archive(GSList *child)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line, &s))) {
-			continue;
+			/* msgs from entry.c */
+			exit(EXIT_FAILURE);
 		}
+
+		/* we have a valid entry, read the filename */
+                pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, fp);
+
+                if (pathsize != rdup_entry->f_name_size) {
+                        msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
+                                        rdup_entry->f_name_size, pathsize);
+                        exit(EXIT_FAILURE);
+                }   
+                pathbuf[pathsize] = '\0';
+                if (pathbuf[0] != '/') {
+                        msg(_("Pathname does not start with /: `%s\'"), pathbuf);
+                        exit(EXIT_FAILURE);
+                }   
+
+                rdup_entry->f_name = pathbuf;
+
+                /* extract target from rdup_entry */
+                if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
+                        // filesize is spot where to cut
+                        rdup_entry->f_name[rdup_entry->f_size] = '\0';
+                        rdup_entry->f_target = rdup_entry->f_name + 
+                                rdup_entry->f_size + 4;
+                } else {
+                        rdup_entry->f_target = NULL;
+                }
 
 		if (opt_verbose > 0) {
 			out = g_strdup_printf("%s\n", rdup_entry->f_name);
@@ -211,17 +226,12 @@ stdin2archive(GSList *child)
 			 */
 			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
 				/* source */
-				rdup_entry_c->f_name[rdup_entry_c->f_size] = '\0';
 				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
-				rdup_entry_c->f_name[rdup_entry_c->f_size] = ' ';
 
-				/* target, +4 == ' -> ' */
 				if (S_ISLNK(rdup_entry->f_mode))
-					archive_entry_copy_symlink(entry, 
-						rdup_entry_c->f_name + rdup_entry_c->f_size + 4);
+					archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
 				else 
-					archive_entry_copy_hardlink(entry, 
-						rdup_entry_c->f_name + rdup_entry_c->f_size + 4);
+					archive_entry_copy_hardlink(entry, rdup_entry_c->f_target);
 			}
 		}
 
@@ -236,11 +246,17 @@ stdin2archive(GSList *child)
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
 			goto not_s_isreg; 
 
+		/* hoeft niet, komt binnen via stdin */
 		/* regular files */
+		f = fileno(stdin);
+#if 0
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
 			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
 			continue;
 		}
+#endif
+
+			/* todo use stdin here */
 		if (child != NULL) {
 			pids = create_childeren(child, &pipes, f);
 			parent = (g_slist_last(pipes))->data;
@@ -252,6 +268,7 @@ stdin2archive(GSList *child)
 			len = read(parent[0], readbuf, BUFSIZE);
 			if (len == -1) {
 				msg(_("Failure to read from pipe: %s"), strerror(errno));
+				exit(EXIT_FAILURE);
 				goto write_plain_file;
 			}
 
@@ -264,7 +281,7 @@ stdin2archive(GSList *child)
 			 * 'goto write_plain_file'
 			 * where we happily read from that descriptor
 			 */
-			close(f); 
+			/* close(f); */
 			while (len > 0) {
 				/* write archive */
 				if (sig != 0) {
@@ -287,23 +304,12 @@ stdin2archive(GSList *child)
 		} else {
 
 write_plain_file:
-			/* header already sent, don't care about file size
-			 * so this is ok */
-				
-			/* if we had child trouble we need to 
-			 * reset the file as some child might
-			 * have read from it */
-			if (lseek(f, 0, SEEK_SET)  == -1) {
-				msg(_("Failure to rewind: %s"), strerror(errno));
-				exit(EXIT_FAILURE);
-			}
-			len = read(f, readbuf, BUFSIZE);
-			if (len == -1) {
-				msg(_("Failure to read from file: %s"), strerror(errno));
-				exit(EXIT_FAILURE); 
-			}
+			while ((bytes = block_in_header(f)) > 0) {
+				if (block_in(in, bytes, fbuf) == -1) {
+					msg(_("Failure to read from stdin: %s"), strerror(errno));
+					exit(EXIT_FAILURE); 
+				}   
 
-			while (len > 0) {
 				if (sig != 0) {
 					close(f);
 					signal_abort(sig);
@@ -314,9 +320,8 @@ write_plain_file:
 				} else {
 					archive_write_data(archive, readbuf, len);
 				}
-				len = read(f, readbuf, BUFSIZE);
 			}
-			close(f);
+			close(f); /* can we close stdin ??? BUGBUG */
 		}
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
