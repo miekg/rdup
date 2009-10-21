@@ -4,16 +4,14 @@
 int
 sha1_stream(FILE *f, unsigned char *digest)
 {
+	guint buffer[BUFSIZE], guint
 	SHA_CTX *c = NULL;
-	guint buffer[BUFSIZE];
-/*	SHA_DIGEST_LENGTH  */
 
 	SHA1_Init(c);
 	for (;;)
 	{
-		guint done = fread(buffer, 1, sizeof(buffer), f);
+		done = fread(buffer, 1, sizeof(buffer), f);
 		SHA1_Update(c, buffer, done);
-/*		sha1_update(&ctx, done, buffer);*/
 		if (done < sizeof(buffer))
 			break;
 	}
