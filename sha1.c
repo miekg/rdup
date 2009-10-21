@@ -3,7 +3,7 @@
    */
 
 #include "rdup.h"
-#include <nettle/sha.h>
+#include <openssl/sha.h>
 
 int
 sha1_stream(FILE *f, unsigned char *digest)
