@@ -4,7 +4,7 @@
 int
 sha1_stream(FILE *f, unsigned char *digest)
 {
-	guint buffer[BUFSIZE], guint
+	guint buffer[BUFSIZE], done;
 	SHA_CTX *c = NULL;
 
 	SHA1_Init(c);

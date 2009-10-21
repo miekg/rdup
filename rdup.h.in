@@ -47,6 +47,10 @@
 #include <attr/xattr.h>
 #endif /* HAVE_ATTR_XATTR_H */
 
+#ifdef HAVE_OPENSSL_SSL_H
+#include <openssl/ssl.h>
+#endif /* HAVE_OPENSSL_SSL_H */
+
 #include "entry.h"
 #include "common.h"
 
@@ -59,7 +63,6 @@
 #define NO_PRINT       (void*)2 /* don't print values with this flag */
 #define D_STACKSIZE    100
 
-#define SHA1_LEN       20 /* bytes of digest */
 #define NO_SHA         "0000000000000000000000000000000000000000"
 
 struct subtract {

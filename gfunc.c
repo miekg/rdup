@@ -28,7 +28,7 @@ int sha1_stream(FILE *stream, void *digest);
 static gboolean
 sha1(FILE *fp, char *filename) 
 {
-	unsigned char digest[SHA1_LEN];
+	unsigned char digest[SHA_DIGEST_LENGTH];
 	gint i;
 	FILE *file;
 
@@ -42,7 +42,7 @@ sha1(FILE *fp, char *filename)
 		return FALSE;
 	}
 	fclose(file);
-	for(i = 0; i < SHA1_LEN; i++) {
+	for(i = 0; i < SHA_DIGEST_LENGTH; i++) {
 		fprintf(fp, "%02x", digest[i]);
 	}
 	return TRUE;
