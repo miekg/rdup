@@ -13,29 +13,32 @@
 
 extern guint opt_verbose;
 
-
-/** 
- * init the cryto
- * with key  *key
- * and length length
- * lenght MUST be 16, 24 or 32
- * anything short will be zero padded to 
- * create a correct key
- * return aes context
- */
-struct aes_ctx *
-crypt_init(gchar *key, guint length, gboolean crypt)
+EVP_CIPHER_CTX *
+crypt_init(gchar *key_data, guint length, gboolean crypt)
 {
-	struct aes_ctx *ctx = g_malloc(sizeof(struct aes_ctx));
+	/* copied from
+	 * Saju Pillai (saju.pillai@gmail.com)
+	 */
+	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
+	int i, j = 5;
+	guchar key[32], iv[32];
+	i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key_data, 
+			length, j, key, iv);
+	if (i != 32)
+		return NULL;
+
+	EVP_CIPHER_CTX_init(ctx);
 	if (crypt)
-		aes_set_encrypt_key(ctx, length, (uint8_t*)key);
+		EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
 	else 
-		aes_set_decrypt_key(ctx, length, (uint8_t*)key);
+		EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+
 	return ctx;
 }
 
 static gboolean
-is_plain(gchar *s) {
+is_plain(gchar *s) 
+{
 	char *p;
 	for (p = s; *p; p++)
 		if (!isascii(*p))
@@ -74,7 +77,7 @@ dot_dotdot(gchar *q, gchar *p, gboolean abs)
  * return the result
  */
 gchar *
-crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr)
+crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
 {
 	guint aes_size;
 	guchar *source;
@@ -114,7 +117,7 @@ crypt_path_ele(struct aes_ctx *ctx, gchar *elem, guint len, GHashTable *tr)
  * return the result
  */
 gchar *
-decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
+decrypt_path_ele(EVP_CIPHER_CTX *ctx, char *b64, guint len, GHashTable *tr)
 {
 	guint aes_size;
 	guchar *source;
@@ -163,7 +166,7 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, guint len, GHashTable *tr)
  * encrypt an entire path
  */
 gchar *
-crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
+crypt_path( *ctx, gchar *p, GHashTable *tr) {
 	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
 

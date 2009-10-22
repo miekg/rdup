@@ -26,7 +26,6 @@ static int is_base64(char c);
 static char encode(unsigned char u);
 static unsigned char decode(char c);
 
-
 /**
  *  Implementation of base64 encoding/decoding. 
  *  @author Jan-Henrik Haukeland, <hauk@tildeslash.com>
@@ -41,7 +40,8 @@ static unsigned char decode(char c);
  * @param src The data to be base64 encode
  * @return encoded string otherwise NULL
  */
-char *encode_base64(int size, unsigned char *src) 
+char 
+*encode_base64(int size, unsigned char *src) 
 {
   int i;
   char *out, *p;
@@ -100,7 +100,8 @@ char *encode_base64(int size, unsigned char *src)
  * @return TRUE (the length of the decoded string) if decode
  * succeeded otherwise FALSE.
  */
-int decode_base64(unsigned char *dest, const char *src) 
+int 
+decode_base64(unsigned char *dest, const char *src) 
 {
   if(src && *src) {
   
@@ -130,7 +131,6 @@ int decode_base64(unsigned char *dest, const char *src)
       
       if(k+3<l) {
 	c4= buf[k+3];
-	
       }
       
       b1= decode(c1);
@@ -157,7 +157,8 @@ int decode_base64(unsigned char *dest, const char *src)
 /**
  * Base64 encode one byte
  */
-static char encode(unsigned char u) 
+static char 
+encode(unsigned char u) 
 {
   if(u < 26)  return 'A'+u;
   if(u < 52)  return 'a'+(u-26);
@@ -171,7 +172,8 @@ static char encode(unsigned char u)
 /**
  * Decode a base64 character
  */
-static unsigned char decode(char c) 
+static unsigned char 
+decode(char c) 
 {
   if(c >= 'A' && c <= 'Z') return(c - 'A');
   if(c >= 'a' && c <= 'z') return(c - 'a' + 26);
@@ -183,7 +185,8 @@ static unsigned char decode(char c)
 /**
  * Return TRUE if 'c' is a valid base64 character, otherwise FALSE
  */
-static int is_base64(char c) 
+static int 
+is_base64(char c) 
 {
   if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
      (c >= '0' && c <= '9') || (c == '-')             ||
