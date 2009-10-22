@@ -51,6 +51,14 @@ etc=~/.rdup
 force=false
 verbose=false
 
+# preflight checks
+if which rdup-tr >/dev/null 2>&1; then 
+    :
+else
+    echo2 "Cannot find rdup-tr"
+    exit 1;
+fi
+
 while getopts "E:k:vfgzxhVX:Y:s:" o; do
         case $o in
 		E)

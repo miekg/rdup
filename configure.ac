@@ -4,7 +4,7 @@
 AC_PREREQ(2.57)
 AC_INIT(rdup, 1.1.0-dev0, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
-AC_PREFIX_DEFAULT(/usr)
+AC_PREFIX_DEFAULT(/usr/local)
 
 sinclude(glib-2.0.m4)
 AC_AIX
