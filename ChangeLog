@@ -7,4 +7,5 @@
     * Adapt all utils to this format change
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
+    * Change default install path /usr/local (Sebastian Kügler)
 
