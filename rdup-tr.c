@@ -246,9 +246,8 @@ stdin2archive(GSList *child)
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
 			goto not_s_isreg; 
 
-		/* hoeft niet, komt binnen via stdin */
 		/* regular files */
-		f = fileno(stdin);
+		f = fileno(stdin); /* we use this relation later on */
 #if 0
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
 			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
@@ -304,14 +303,14 @@ stdin2archive(GSList *child)
 		} else {
 
 write_plain_file:
-			while ((bytes = block_in_header(f)) > 0) {
-				if (block_in(in, bytes, fbuf) == -1) {
+			while ((bytes = block_in_header(stdin)) > 0) {
+				if (block_in(stdin, bytes, fbuf) == -1) {
 					msg(_("Failure to read from stdin: %s"), strerror(errno));
 					exit(EXIT_FAILURE); 
 				}   
 
 				if (sig != 0) {
-					close(f);
+					/* close(f); */
 					signal_abort(sig);
 				}
 

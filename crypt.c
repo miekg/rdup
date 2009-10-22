@@ -9,6 +9,7 @@
 #include "base64.h"
 
 #ifdef HAVE_LIBSSL
+#include <openssl/aes.h>
 
 extern guint opt_verbose;
 
@@ -21,8 +22,8 @@ crypt_init(gchar *key_data, guint length, gboolean crypt)
 	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
 	int i, j = 5;
 	guchar key[32], iv[32];
-	i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, key_data, 
-			length, j, key, iv);
+	i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, 
+			(const unsigned char*)key_data, length, j, key, iv);
 	if (i != 32)
 		return NULL;
 
@@ -49,7 +50,7 @@ is_plain(gchar *s)
 /*
  * don't do anything with the strings .. and .
  */
-gchar *
+static gchar *
 dot_dotdot(gchar *q, gchar *p, gboolean abs) 
 {
 	gchar *r = NULL;
@@ -70,6 +71,22 @@ dot_dotdot(gchar *q, gchar *p, gboolean abs)
 				(r = g_strdup("."));
 	}
 	return r;
+}
+
+static void 
+aes_encrypt(EVP_CIPHER_CTX *ctx, guint aes_size, guchar *dest, guchar *source)
+{
+	int len;
+	EVP_EncryptUpdate(ctx, dest, &len, source, aes_size);
+	EVP_EncryptFinal_ex(ctx, dest + len, NULL);
+}
+
+static void
+aes_decrypt(EVP_CIPHER_CTX *ctx, guint aes_size, guchar *dest, guchar *source)
+{
+	int len;
+	EVP_DecryptUpdate(ctx, dest, &len, source, aes_size);
+	EVP_DecryptFinal_ex(ctx, dest + len, NULL);
 }
 
 /* encrypt and base64 encode path element
@@ -165,7 +182,7 @@ decrypt_path_ele(EVP_CIPHER_CTX *ctx, char *b64, guint len, GHashTable *tr)
  * encrypt an entire path
  */
 gchar *
-crypt_path( *ctx, gchar *p, GHashTable *tr) {
+crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
 
@@ -208,7 +225,7 @@ crypt_path( *ctx, gchar *p, GHashTable *tr) {
  * decrypt an entire path
  */
 gchar *
-decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
+decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 
 	gchar *path, *q, *c, *t, *plain, d;
 	gboolean abs;
