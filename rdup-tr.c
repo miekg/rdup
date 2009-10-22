@@ -18,11 +18,11 @@ char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
-#ifdef HAVE_LIBNETTLE
+#ifdef HAVE_LIBSSL
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* encryption key */
 struct aes_ctx * aes_ctx   = NULL;
-#endif
+#endif /* HAVE_LIBSSL */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -33,7 +33,7 @@ extern int opterr;
 
 int opterr = 0;
 
-#ifdef HAVE_LIBNETTLE
+#ifdef HAVE_LIBSSL
 /* common.c */
 struct rdup * entry_dup(struct rdup *f);
 void entry_free(struct rdup *f);
@@ -79,7 +79,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 	}
         return d;
 }
-#endif /* HAVE_LIBNETTLE */
+#endif /* HAVE_LIBSSL */
 
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last
@@ -198,12 +198,12 @@ stdin2archive(GSList *child)
 		}
 
 		rdup_entry_c = rdup_entry;
-#ifdef HAVE_LIBNETTLE
+#ifdef HAVE_LIBSSL
 		if (opt_crypt_key) 
 			rdup_entry_c = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
 			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
-#endif
+#endif /* HAVE_LIBSSL */
 
 		if (rdup_entry->plusmin == MINUS) {
 			if (opt_output == O_RDUP) {
@@ -439,7 +439,7 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'X':
-#ifdef HAVE_LIBNETTLE
+#ifdef HAVE_LIBSSL
 				if (opt_decrypt_key) {
 					msg(_("Will not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
@@ -450,10 +450,10 @@ main(int argc, char **argv)
 #else
 				msg(_("Compiled without encryption, can not encrypt"));
 				exit(EXIT_FAILURE);
-#endif
+#endif /* HAVE_LIBSSL */
 				break;
 			case 'Y':
-#ifdef HAVE_LIBNETTLE
+#ifdef HAVE_LIBSSL
 				if (opt_crypt_key) {
 					msg(_("Can not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
@@ -464,7 +464,7 @@ main(int argc, char **argv)
 #else
 				msg(_("Compiled without encryption, can not decrypt"));
 				exit(EXIT_FAILURE);
-#endif
+#endif /* HAVE_LIBSL */
 				break;
 			case 'h':
 				usage_tr(stdout);

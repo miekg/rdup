@@ -8,8 +8,8 @@
 #include "rdup-tr.h"
 #include "base64.h"
 
-#ifdef HAVE_LIBNETTLE
-#include <nettle/aes.h>
+#ifdef HAVE_LIBSSL
+#include <openssl/ssl.h>
 
 extern guint opt_verbose;
 
@@ -287,4 +287,4 @@ crypt_key(gchar *file)
 	}
 	return buf;
 }
-#endif /* HAVE_LIBNETTLE */
+#endif /* HAVE_LIBSSL */
