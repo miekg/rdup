@@ -9,9 +9,9 @@
 
 /* Modifications for rdup by Miek Gieben (miek@miek.nl) */
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "rdup-tr.h"
+#include "base64.h"
+
 #include <openssl/evp.h>
 
 /**
