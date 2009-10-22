@@ -9,7 +9,6 @@
 #include "base64.h"
 
 #ifdef HAVE_LIBSSL
-#include <openssl/ssl.h>
 
 extern guint opt_verbose;
 

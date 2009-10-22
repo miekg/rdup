@@ -41,6 +41,7 @@
 
 #ifdef HAVE_LIBSSL
 #include <openssl/ssl.h>
+#include <openssl/evp.h>
 #endif /* HAVE_LIBSSL */
 
 #ifdef HAVE_GETTEXT

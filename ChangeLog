@@ -6,4 +6,5 @@
       %t is mtime of the fs object
     * Adapt all utils to this format change
     * Loads of code cleanups
+    * Use OpenSSL in favor of libnettle
 

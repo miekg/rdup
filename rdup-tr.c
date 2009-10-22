@@ -21,7 +21,7 @@ gboolean opt_tty           = FALSE;			/* force write to tty */
 #ifdef HAVE_LIBSSL
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* encryption key */
-struct aes_ctx * aes_ctx   = NULL;
+EVP_CIPHER_CTX *aes_ctx	   = NULL;
 #endif /* HAVE_LIBSSL */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
