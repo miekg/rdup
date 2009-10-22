@@ -88,7 +88,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 static void  
 stdin2archive(GSList *child)
 {
-	char		*buf, *readbuf, *n, *out, *pathbuf;
+	char		*buf, *fbuf, *readbuf, *n, *out, *pathbuf;
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		len, bytes;
