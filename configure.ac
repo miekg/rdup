@@ -87,7 +87,7 @@ fi
 
 SSL_H=""
 AC_CHECK_HEADERS(openssl/ssl.h,, SSL_H="no")
-if test "$NETTLE_H" = "no"; then
+if test "$SSL_H" = "no"; then
 	AC_MSG_ERROR([** No OpenSSL library found.])
 fi
 
