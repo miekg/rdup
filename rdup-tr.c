@@ -304,7 +304,6 @@ stdin2archive(GSList *child)
 
 write_plain_file:
 			while ((bytes = block_in_header(stdin)) > 0) {
-				fprintf(stderr, "Bytes to read %d\n", bytes);
 				if (block_in(stdin, bytes, fbuf) == -1) {
 					msg(_("Failure to read from stdin: %s"), strerror(errno));
 					exit(EXIT_FAILURE); 
