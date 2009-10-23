@@ -4,6 +4,8 @@ Fix the r_entry struct. New name and better
 (and more sane support of the symlink), store
 the link target separately.
 
+more hardlink stuff
+
 
 the rdup-up code can be converted to be used in rdup-tr
 - remove \0 delim stuff - no consistently uses

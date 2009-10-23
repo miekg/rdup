@@ -27,7 +27,6 @@ implement a (incremental) backup scheme.\n\
         \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
 	-R\t\treverse the output (depth first, first the dirs then the files)\n\
 	-E FILE\t\tuse FILE as an exclude list\n\
-        -0\t\tdelimit internal filelist with NULLs\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
         -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n\
