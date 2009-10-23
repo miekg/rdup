@@ -107,8 +107,10 @@ Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
 with this option you can give it a list of path names.
 .TP
 .B \-O
-Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'. It
-defaults to 'rdup'.
+Output format. This can be 'tar', 'cpio', 'pax', 'raw' or 'rdup'. It
+defaults to 'rdup'. 'RAW' todo BUGBUG Raw is special as it only output
+the raw file contents. This is used internally by rdup-tr itself when
+called with filters. The first filter will always be rdup-tr -Oraw.
 .TP
 .B \-X \fIkey\fR
 Read the encryption key from the file key and encrypt all paths
