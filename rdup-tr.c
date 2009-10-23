@@ -92,8 +92,7 @@ stdin2archive(GSList *child)
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		len, bytes;
-	FILE		*fp;
-	int		f, j;
+	int		j;
 	GSList		*pipes;
 	GSList		*pids;				/* child pids */
 	int		*parent;			/* parent pipe */
@@ -104,7 +103,6 @@ stdin2archive(GSList *child)
 	struct rdup  *rdup_entry_c = NULL;
 	GHashTable *trhash;				/* look up for encrypted/decrypted strs */
 
-	fp      = stdin;
 	delim   = '\n';
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
@@ -148,7 +146,7 @@ stdin2archive(GSList *child)
 		}
 	}
 
-	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
+	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
 		n = strrchr(buf, '\n');
 		if (n) 
@@ -160,7 +158,7 @@ stdin2archive(GSList *child)
 		}
 
 		/* we have a valid entry, read the filename */
-                pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, fp);
+                pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, stdin);
 
                 if (pathsize != rdup_entry->f_name_size) {
                         msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
@@ -248,7 +246,6 @@ stdin2archive(GSList *child)
 			goto not_s_isreg; 
 
 		/* regular files */
-		f = fileno(stdin); /* we use this relation later on */
 #if 0
 		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
 			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
@@ -272,7 +269,7 @@ stdin2archive(GSList *child)
 			args[2] = NULL;
 			child = g_slist_prepend(child, args);
 
-			pids = create_childeren(child, &pipes, f);
+			pids = create_childeren(child, &pipes, 0);
 			parent = (g_slist_last(pipes))->data;
 			/* everything is closed in create_children */
 						
@@ -297,7 +294,7 @@ stdin2archive(GSList *child)
 			 * 'goto write_plain_file'
 			 * where we happily read from that descriptor
 			 */
-			close(f); /* BUGBUG ? */
+			/* close(f); BUGBUG ? */
 			while (len > 0) {
 				/* write archive */
 				if (sig != 0) {
@@ -340,8 +337,7 @@ write_plain_file:
 					archive_write_data(archive, fbuf, bytes);
 				}
 			}
-
-			//close(f); /* can we close stdin ??? BUGBUG */
+			/* close(f); */
 		}
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
@@ -350,6 +346,8 @@ write_plain_file:
 not_s_isreg: 
 		if (opt_output != O_RDUP && opt_output != O_RAW)
 			archive_entry_free(entry);
+
+		fprintf(stderr, "new file\n");
 	}
 	if (opt_output != O_RDUP && opt_output != O_RAW) {
 		archive_write_close(archive);
