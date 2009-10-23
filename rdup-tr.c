@@ -99,7 +99,7 @@ stdin2archive(GSList *child)
 	int		*parent;			/* parent pipe */
 	struct archive  *archive;
 	struct archive_entry *entry;
-	struct stat     s;
+	struct stat     *s;
 	struct rdup  *rdup_entry = NULL;
 	struct rdup  *rdup_entry_c = NULL;
 	GHashTable *trhash;				/* look up for encrypted/decrypted strs */
@@ -154,7 +154,7 @@ stdin2archive(GSList *child)
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s))) {
+		if (!(rdup_entry = parse_entry(buf, line))) {
 			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}
@@ -177,8 +177,9 @@ stdin2archive(GSList *child)
 
                 /* extract target from rdup_entry */
                 if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
-                        // filesize is spot where to cut
+                        // filesize is spot where to cut and set new size
                         rdup_entry->f_name[rdup_entry->f_size] = '\0';
+			rdup_entry->f_name_size = strlen(rdup_entry->f_name);
                         rdup_entry->f_target = rdup_entry->f_name + 
                                 rdup_entry->f_size + 4;
                 } else {
@@ -193,9 +194,8 @@ stdin2archive(GSList *child)
 			}
 		}
 
-		if (sig != 0) {
+		if (sig != 0)
 			signal_abort(sig);
-		}
 
 		rdup_entry_c = rdup_entry;
 #ifdef HAVE_LIBSSL
@@ -210,14 +210,14 @@ stdin2archive(GSList *child)
 				(void)rdup_write_header(rdup_entry_c);
 				goto not_s_isreg;
 			}
-			/* all other outputs cannot handle this, but this
-			 * is ALSO checked in parse_entry() TODO XXX make more obvious*/
 			continue;
 		}
 
 		if (opt_output != O_RDUP) {
+			s = stat_from_rdup(rdup_entry);
+
 			entry = archive_entry_new();
-			archive_entry_copy_stat(entry, &s);
+			archive_entry_copy_stat(entry, s);
 			archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
 			/* with list input rdup-tr cannot possibly see
@@ -255,7 +255,7 @@ stdin2archive(GSList *child)
 		}
 #endif
 
-			/* todo use stdin here */
+		/* todo use stdin here */
 		if (child != NULL) {
 			pids = create_childeren(child, &pipes, f);
 			parent = (g_slist_last(pipes))->data;
@@ -315,9 +315,9 @@ write_plain_file:
 				}
 
 				if (opt_output == O_RDUP) {
-					(void)rdup_write_data(rdup_entry, readbuf, len);
+					(void)rdup_write_data(rdup_entry, fbuf, bytes);
 				} else {
-					archive_write_data(archive, readbuf, len);
+					archive_write_data(archive, fbuf, bytes);
 				}
 			}
 

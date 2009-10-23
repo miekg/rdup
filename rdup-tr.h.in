@@ -87,9 +87,10 @@ int wait_pids(GSList *, int);
 GSList *create_childeren(GSList *, GSList **, int);
 
 /* entry.c */
-struct rdup * parse_entry(char *, size_t, struct stat *);
+struct rdup * parse_entry(char *, size_t);
 gint rdup_write_header(struct rdup *);
 gint rdup_write_data(struct rdup *, char *, size_t);
+struct stat * stat_from_rdup(struct rdup *);
 
 /* link.c */
 gchar *slink(struct rdup *);

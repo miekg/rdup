@@ -97,7 +97,7 @@ if test "$SSL_L" = "no"; then
     AC_MSG_ERROR([** No OpenSSL library found.])
 fi
 AC_SUBST(SSL_L)
-AC_C_BIGENDIAN
+#AC_C_BIGENDIAN
 
 # sysconfdir
 if test ${sysconfdir} = '${prefix}/etc'; then

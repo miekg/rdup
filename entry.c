@@ -15,14 +15,6 @@ extern gchar *opt_crypt_key;
 extern gchar *opt_decrypt_key;
 
 /*
- * parse a standard rdup output entry
- * +- 0775 1000 1000 18 2947 /home/miekg/bin/tt
- *
- * or parse a standard rdup -c output entry
- * +- 0775 1000 1000 18 2947\n
- * /home/miekg/bin/tt
- * <contents>
- *
  * or parse a new style rdup -c output entry
  * +- 0775 1000 1000 18 2947\n
  * /home/miekg/bin/tt
@@ -35,24 +27,16 @@ extern gchar *opt_decrypt_key;
  * 15 bytes of data
  * 1BLOCK0
  * the-end
- *
- *
- * buf is NULL delimited 
- *
- * stat is extra and is used by rdup-up to say that it
- * wants to parse rdup -c ouput. This cannot be handled
- * with opt_input because rdup-tr cannot handle this
- * so opt_input is for normal rdup inupt and
- *
- * XXX could use a cleanup
  */
 struct rdup *
-parse_entry(char *buf, size_t l, struct stat *s) 
+parse_entry(char *buf, size_t l) 
 {
 	struct rdup *e;
+	struct stat *s;
 	gint i;
 	char *n, *pos;
 	e = g_malloc(sizeof(struct rdup));
+	s = g_malloc(sizeof(struct stat));
 	e->f_ctime = 0;		/* not used in rdup-* */
 	
 	switch (opt_input) {
@@ -298,9 +282,49 @@ rdup_write_header(struct rdup *e)
 }
 
 gint
-rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) {
+rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) 
+{
 	if (block_out_header(NULL, len, 1) == -1 ||
 		block_out(NULL, len, buf, 1) == -1)
 		return -1;
 	return 0;
+}
+
+/* fill a stat structure from an rdup entry */
+struct stat *
+stat_from_rdup(struct rdup *e)
+{
+	struct stat *s;
+	s = g_malloc(sizeof(struct stat));
+
+	s->st_mode     = e->f_mode;
+	s->st_uid      = e->f_uid;
+	s->st_gid      = e->f_gid;
+	s->st_size     = e->f_size;
+	s->st_dev      = e->f_dev;
+	s->st_ino      = e->f_ino;
+	s->st_rdev     = e->f_rdev;
+	s->st_ctime    = e->f_ctime;
+	s->st_mtime    = e->f_mtime;
+	s->st_atime    = 0;
+
+	/*
+	struct stat {
+               dev_t     st_dev;     
+               ino_t     st_ino;     
+               mode_t    st_mode;    
+               nlink_t   st_nlink;   
+               uid_t     st_uid;     
+               gid_t     st_gid;     
+               dev_t     st_rdev;    
+               off_t     st_size;    
+               blksize_t st_blksize; 
+               blkcnt_t  st_blocks;  
+               time_t    st_atime;   
+               time_t    st_mtime; 
+               time_t    st_ctime;
+	}
+	*/
+
+	return s;
 }
