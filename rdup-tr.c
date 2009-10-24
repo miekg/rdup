@@ -113,8 +113,6 @@ stdin2archive(GSList *child)
 	entry   = NULL;
 	line    = 0;
 	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
-	/* (void)setvbuf(stdin, NULL, _IONBF, 0);
-	(void)setvbuf(stdsut, NULL, _IONBF, 0); */
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
@@ -266,7 +264,6 @@ stdin2archive(GSList *child)
 			 * child that gets run - this will translate the
 			 * block based rdup protocol into normal files
 			 */
-			/* childs++; */
 			args[0] = "rdup-tr";
 			args[1] = "-Oraw";
 			args[2] = NULL;
@@ -375,7 +372,9 @@ main(int argc, char **argv)
 	char		 *q, *r;
 	GSList		 *child    = NULL;		/* forked child args: -P option */
 	char		 **args;
-/*	int		 childs    = 0;			*/
+
+	(void)setvbuf(stdin, NULL, _IONBF, 0);
+	(void)setvbuf(stdout, NULL, _IONBF, 0);
 	
 #ifdef ENABLE_NLS
 	if (!setlocale(LC_MESSAGES, ""))
@@ -445,7 +444,6 @@ main(int argc, char **argv)
 					args[i + 1] = NULL;
 				}
 				child = g_slist_append(child, args);
-				/* childs++; */
 				break;
 			case 'O':
 				opt_output = O_NONE;
