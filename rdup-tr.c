@@ -331,8 +331,11 @@ write_plain_file:
 				if (opt_output == O_RDUP) {
 					(void)rdup_write_data(rdup_entry, fbuf, bytes);
 				} else if (opt_output == O_RAW) {
-					write(1, fbuf, bytes); /* BUGBUG, check check */
-					/* raw output */
+					if (write(1, fbuf, bytes) != bytes) {
+						msg(_("Failure to write to stdout: %s"),
+								strerror(errno));
+						exit(EXIT_FAILURE);
+					}
 				} else {
 					archive_write_data(archive, fbuf, bytes);
 				}
