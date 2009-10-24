@@ -32,32 +32,29 @@ update(char *path)
 	size_t	       pathlen;
 	char           *buf, *pathbuf, *n, *p;
 	char           delim;
-	FILE           *fp;
-	struct stat    s;
 	gboolean       ok;
 
 	buf	= g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
 	i       = BUFSIZE;
-	fp  	= stdin;
 	delim   = '\n';
 	line    = 0;
 	ok      = TRUE;
 	pathlen = strlen(path);
 
-	while ((rdup_getdelim(&buf, &i, delim, fp)) != -1) {
+	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
 		n = strrchr(buf, '\n');
 		if (n) 
 			*n = '\0';
 
-		if (!(rdup_entry = parse_entry(buf, line, &s))) {
+		if (!(rdup_entry = parse_entry(buf, line))) {
 			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
 		}
 
 		/* we have a valid entry, read the filename */
-		pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, fp);
+		pathsize = fread(pathbuf, sizeof(char), rdup_entry->f_name_size, stdin);
 
 		if (pathsize != rdup_entry->f_name_size) {
 			msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
@@ -103,7 +100,7 @@ update(char *path)
 			}
 		}
 		rdup_entry->f_name = p;
-		if (mk_obj(fp, path, rdup_entry) == FALSE)
+		if (mk_obj(stdin, path, rdup_entry) == FALSE)
 			ok = FALSE;
 	}
 

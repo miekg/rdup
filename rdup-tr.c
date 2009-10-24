@@ -101,7 +101,7 @@ stdin2archive(GSList *child)
 	struct stat     *s;
 	struct rdup  *rdup_entry = NULL;
 	struct rdup  *rdup_entry_c = NULL;
-	GHashTable *trhash;				/* look up for encrypted/decrypted strs */
+	GHashTable *trhash;		/* look up for encrypted/decrypted strs */
 
 	delim   = '\n';
 	i       = BUFSIZE;
@@ -113,6 +113,8 @@ stdin2archive(GSList *child)
 	entry   = NULL;
 	line    = 0;
 	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
+	/* (void)setvbuf(stdin, NULL, _IONBF, 0);
+	(void)setvbuf(stdsut, NULL, _IONBF, 0); */
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
@@ -257,6 +259,7 @@ stdin2archive(GSList *child)
 		/* if we have childeren the first child we create if and
 		 * rdup converter - read blocks and pumps out raw data */
 		if (child != NULL) {
+#if 0
 			char *args[3];
 			
 			/* prepend 'rdup-tr -Oraw' as this must be the first
@@ -268,6 +271,7 @@ stdin2archive(GSList *child)
 			args[1] = "-Oraw";
 			args[2] = NULL;
 			child = g_slist_prepend(child, args);
+#endif
 
 			pids = create_childeren(child, &pipes, 0);
 			parent = (g_slist_last(pipes))->data;
@@ -286,9 +290,6 @@ stdin2archive(GSList *child)
 			if (wait_pids(pids, WNOHANG) == -1) {
 				/* weird child exit */
 				exit(EXIT_FAILURE);
-				/* BUGBUG doen we niet meer */
-				msg(_("Child exit, giving you the original file"));
-				/* goto write_plain_file; */
 			}
 			/* close f here as we might need if the 
 			 * 'goto write_plain_file'
@@ -297,14 +298,18 @@ stdin2archive(GSList *child)
 			/* close(f); BUGBUG ? */
 			while (len > 0) {
 				/* write archive */
-				if (sig != 0) {
+				if (sig != 0) 
 					signal_abort(sig);
-				}
 				 
-				if (opt_output == O_RDUP) 
+				if (opt_output == O_RDUP) {
 					(void)rdup_write_data(rdup_entry, readbuf, len);
-				else
+				} else if (opt_output == O_RAW) {
+					if (write(1, readbuf, len) != len) {
+						exit(EXIT_FAILURE);
+					}
+				} else {
 					archive_write_data(archive, readbuf, len);
+				}
 				
 				len = read(parent[0], readbuf, BUFSIZE);
 			}
@@ -350,7 +355,7 @@ not_s_isreg:
 		if (opt_output != O_RDUP && opt_output != O_RAW)
 			archive_entry_free(entry);
 
-		fprintf(stderr, "new file\n");
+		/* close something ? */
 	}
 	if (opt_output != O_RDUP && opt_output != O_RAW) {
 		archive_write_close(archive);
