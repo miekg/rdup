@@ -250,17 +250,16 @@ stdin2archive(GSList *child)
 		}
 #endif
 
-		if ((f = shm_open("/rdup", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1) {
-			msg(_("Could not setup shared memory segment: %s"), strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-			
-
 		/* todo use stdin here */
 		/* must read blocks from stdin and give them to the first child?? */
 		/* if we have childeren the first child we create if and
 		 * rdup converter - read blocks and pumps out raw data */
 		if (child != NULL) {
+			if ((f = shm_open("/rdup", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1) {
+				msg(_("Could not setup shared memory segment: %s"), strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+
 #if 0
 			char *args[2];
 			
@@ -277,13 +276,16 @@ stdin2archive(GSList *child)
 			parent = (g_slist_last(pipes))->data;
 			/* everything is closed in create_children */
 			
+#if 0
 			bytes = block_in_header(stdin);
 			if (block_in(stdin, bytes, fbuf) == -1) {
 				msg(_("Failure to read from stdin: %s"), strerror(errno));
 				exit(EXIT_FAILURE); 
 			}   
 			if (write(f, fbuf, bytes) == -1) { /* BUGBUG */ }
+#endif
 						
+#if 0
 			/* now we must read from from the last pipe 
 			 * read end, here, parent[0]
 			 */
@@ -292,35 +294,83 @@ stdin2archive(GSList *child)
 				msg(_("Failure to read from pipe: %s"), strerror(errno));
 				exit(EXIT_FAILURE);
 			}
+			fprintf(stderr, "Read %d BYTES\n", bytes);
+#endif
 
 			if (wait_pids(pids, WNOHANG) == -1) {
 				/* weird child exit */
 				exit(EXIT_FAILURE);
 			}
-			while (len > 0) {
 
-				bytes = block_in_header(stdin);
-				if (bytes == -1) {
+			while ((bytes = block_in_header(stdin)) > 0) {
+				if (block_in(stdin, bytes, fbuf) == -1) {
+
 					close(f);
+					len = read(parent[0], readbuf, bytes);
+					fprintf(stderr, "GELEZEN %d\n", len);
+#if 0
+					len = read(parent[0], readbuf, bytes);
+					fprintf(stderr, "GELEZEN2 %d\n", len);
+
+					if (len <= 0) {
+						fprintf(stderr, "empty read -> quit\n");
+					}
+
+					/* write archive */
+					if (sig != 0) 
+						signal_abort(sig);
+
+					if (opt_output == O_RDUP)
+						(void)rdup_write_data(rdup_entry, readbuf, len);
+					else 
+						archive_write_data(archive, readbuf, len);
+
+#endif
+
 				} else {
-					block_in(stdin, bytes, fbuf);
-					if (write(f, fbuf, bytes) == -1) { /* BUGBUG */ }
+					if (write(f, fbuf, bytes) == -1) { 
+						fprintf(stderr, "Schrijf vout\n");
+					} 
+					len = read(parent[0], readbuf, bytes);
+					fprintf(stderr, "GELEZEN %d\n", len);
+
+					if (len <= 0) {
+						fprintf(stderr, "empty read -> quit\n");
+					}
+
+					/* write archive */
+					if (sig != 0) 
+						signal_abort(sig);
+
+					if (opt_output == O_RDUP)
+						(void)rdup_write_data(rdup_entry, readbuf, len);
+					else 
+						archive_write_data(archive, readbuf, len);
 				}
-
-
-				/* write archive */
-				if (sig != 0) 
-					signal_abort(sig);
-				 
-				if (opt_output == O_RDUP)
-					(void)rdup_write_data(rdup_entry, readbuf, len);
-				else 
-					archive_write_data(archive, readbuf, len);
-				
-				len = read(parent[0], readbuf, BUFSIZE);
 			}
-			close(parent[0]);  /* we're done */
 			shm_unlink("/rdup");
+
+					len = read(parent[0], readbuf, bytes);
+					fprintf(stderr, "GELEZEN 3 %d\n", len);
+
+					if (len <= 0) {
+						fprintf(stderr, "empty read -> quit\n");
+					} else {
+
+						/* write archive */
+						if (sig != 0) 
+							signal_abort(sig);
+
+						if (opt_output == O_RDUP)
+							(void)rdup_write_data(rdup_entry, readbuf, len);
+						else 
+							archive_write_data(archive, readbuf, len);
+					}
+
+			close(parent[0]);  /* we're done */
+
+
+
 			if (wait_pids(pids, 0) == -1) {
 				/* weird child exit */
 				msg(_("Weird child exit!"));
@@ -336,7 +386,6 @@ stdin2archive(GSList *child)
 				}   
 
 				if (sig != 0) {
-					close(f);
 					signal_abort(sig);
 				}
 
@@ -425,6 +474,7 @@ main(int argc, char **argv)
 				/* allocate new for each child */
 				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
 				q = g_strdup(optarg);
+
 				/* this should be a comma seprated list
 				 * arg0,arg1,arg2,...,argN */
 				r = strchr(q, ',');
