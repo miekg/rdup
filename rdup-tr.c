@@ -249,7 +249,12 @@ stdin2archive(GSList *child)
 			continue;
 		}
 #endif
-		f = dup(1);
+
+		if ((f = shm_open("/rdup", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1) {
+			msg(_("Could not setup shared memory segment: %s"), strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+			
 
 		/* todo use stdin here */
 		/* must read blocks from stdin and give them to the first child?? */
@@ -271,7 +276,6 @@ stdin2archive(GSList *child)
 			pids = create_childeren(child, &pipes, f);
 			parent = (g_slist_last(pipes))->data;
 			/* everything is closed in create_children */
-
 			
 			bytes = block_in_header(stdin);
 			if (block_in(stdin, bytes, fbuf) == -1) {
@@ -316,12 +320,12 @@ stdin2archive(GSList *child)
 				len = read(parent[0], readbuf, BUFSIZE);
 			}
 			close(parent[0]);  /* we're done */
+			shm_unlink("/rdup");
 			if (wait_pids(pids, 0) == -1) {
 				/* weird child exit */
 				msg(_("Weird child exit!"));
 				/* Huh and now?   */
 			}
-			fprintf(stderr, "Everything done\n");
 
 		} else {
 

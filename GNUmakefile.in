@@ -49,7 +49,7 @@ rdup-up: $(OBJ_UP) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_UP} -o rdup-up
 
 rdup-tr: $(OBJ_TR) $(HDR)
-	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_TR} -o rdup-tr
+	${GCC} ${GLIB_LIBS} ${LIBS} -lrt ${OBJ_TR} -o rdup-tr
 
 rdup-raw: $(OBJ_RAW) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_RAW} -o rdup-raw
