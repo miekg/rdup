@@ -28,6 +28,11 @@
 #include "protocol.h"
 
 extern gint opt_verbose;
+extern sig_atomic_t sig;
+
+/* signal.c */
+void got_sig(int);
+void signal_abort(int);
 
 /**
  * output a block header
@@ -94,7 +99,10 @@ block_in_header(FILE *f) {
 	/* I cannot think of anything smarter */
 	/* version check */
 	c[0] = fgetc(f);
+	if (sig != 0) signal_abort(sig);
 	c[1] = fgetc(f);
+	if (sig != 0) signal_abort(sig);
+
 	if (c[0] != PROTO_VERSION_MAJOR ||
 			c[1] != PROTO_VERSION_MINOR) {
 		msg(_("Wrong protocol version `%c%c\': want `%c%c'"),
@@ -106,10 +114,15 @@ block_in_header(FILE *f) {
 
 	/* 'block' */
 	c[0] = fgetc(f); /* B */
+	if (sig != 0) signal_abort(sig);
 	c[1] = fgetc(f); /* L */
+	if (sig != 0) signal_abort(sig);
 	c[2] = fgetc(f); /* O */
+	if (sig != 0) signal_abort(sig);
 	c[3] = fgetc(f); /* C */
+	if (sig != 0) signal_abort(sig);
 	c[4] = fgetc(f); /* K */
+	if (sig != 0) signal_abort(sig);
 
 	if (c[0] != 'B' || c[1] != 'L' || c[2] != 'O' ||
 			c[3] != 'C' || c[4] != 'K') {
@@ -120,11 +133,18 @@ block_in_header(FILE *f) {
 
 	/* the bytes */
 	c[0] = fgetc(f); 
+	if (sig != 0) signal_abort(sig);
 	c[1] = fgetc(f); 
+	if (sig != 0) signal_abort(sig);
 	c[2] = fgetc(f); 
+	if (sig != 0) signal_abort(sig);
 	c[3] = fgetc(f); 
+	if (sig != 0) signal_abort(sig);
 	c[4] = fgetc(f); 
+	if (sig != 0) signal_abort(sig);
 	c[5] = fgetc(f); /* \n */
+	if (sig != 0) signal_abort(sig);
+
 	if (!isdigit(c[0]) || !isdigit(c[1]) || !isdigit(c[2]) ||
 			!isdigit(c[3]) || !isdigit(c[4])) {
 		msg(_("Illegal block size"));

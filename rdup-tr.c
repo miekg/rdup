@@ -28,7 +28,7 @@ gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
-char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup", "raw"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP, O_RAW */
+char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 extern int opterr;
 
 int opterr = 0;
@@ -92,7 +92,7 @@ stdin2archive(GSList *child)
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		len, bytes;
-	int		j;
+	int		j, f;
 	GSList		*pipes;
 	GSList		*pids;				/* child pids */
 	int		*parent;			/* parent pipe */
@@ -132,7 +132,6 @@ stdin2archive(GSList *child)
 			case O_PAX:
 				j = archive_write_set_format_pax(archive);
 				break;
-			case O_RAW:
 			case O_RDUP:
 				j = ARCHIVE_OK;
 				break;
@@ -211,7 +210,7 @@ stdin2archive(GSList *child)
 			continue;
 		}
 
-		if (opt_output != O_RDUP && opt_output != O_RAW) {
+		if (opt_output != O_RDUP) {
 			s = stat_from_rdup(rdup_entry);
 
 			entry = archive_entry_new();
@@ -234,12 +233,10 @@ stdin2archive(GSList *child)
 		}
 
 		/* size may be changed - we don't care anymore */
-		if (opt_output != O_RDUP && opt_output != O_RAW) {
+		if (opt_output != O_RDUP) 
 			archive_write_header(archive, entry);
-		} else {
-			if (opt_output != O_RAW)
-				(void)rdup_write_header(rdup_entry_c);
-		}
+		else
+			(void)rdup_write_header(rdup_entry_c);
 
 		/* bail out for non regular files */
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
@@ -252,27 +249,36 @@ stdin2archive(GSList *child)
 			continue;
 		}
 #endif
+		f = dup(1);
+
 		/* todo use stdin here */
 		/* must read blocks from stdin and give them to the first child?? */
 		/* if we have childeren the first child we create if and
 		 * rdup converter - read blocks and pumps out raw data */
 		if (child != NULL) {
 #if 0
-			char *args[3];
+			char *args[2];
 			
-			/* prepend 'rdup-tr -Oraw' as this must be the first
-			 * child that gets run - this will translate the
+			/* prepend 'rdup-raw' as this must be the first
+			 * child that gets run - it will translate the
 			 * block based rdup protocol into normal files
 			 */
-			args[0] = "rdup-tr";
-			args[1] = "-Oraw";
+			args[0] = "./rdup-raw";
 			args[2] = NULL;
 			child = g_slist_prepend(child, args);
 #endif
 
-			pids = create_childeren(child, &pipes, 0);
+			pids = create_childeren(child, &pipes, f);
 			parent = (g_slist_last(pipes))->data;
 			/* everything is closed in create_children */
+
+			
+			bytes = block_in_header(stdin);
+			if (block_in(stdin, bytes, fbuf) == -1) {
+				msg(_("Failure to read from stdin: %s"), strerror(errno));
+				exit(EXIT_FAILURE); 
+			}   
+			if (write(f, fbuf, bytes) == -1) { /* BUGBUG */ }
 						
 			/* now we must read from from the last pipe 
 			 * read end, here, parent[0]
@@ -281,44 +287,44 @@ stdin2archive(GSList *child)
 			if (len == -1) {
 				msg(_("Failure to read from pipe: %s"), strerror(errno));
 				exit(EXIT_FAILURE);
-				goto write_plain_file;
 			}
 
 			if (wait_pids(pids, WNOHANG) == -1) {
 				/* weird child exit */
 				exit(EXIT_FAILURE);
 			}
-			/* close f here as we might need if the 
-			 * 'goto write_plain_file'
-			 * where we happily read from that descriptor
-			 */
-			/* close(f); BUGBUG ? */
 			while (len > 0) {
+
+				bytes = block_in_header(stdin);
+				if (bytes == -1) {
+					close(f);
+				} else {
+					block_in(stdin, bytes, fbuf);
+					if (write(f, fbuf, bytes) == -1) { /* BUGBUG */ }
+				}
+
+
 				/* write archive */
 				if (sig != 0) 
 					signal_abort(sig);
 				 
-				if (opt_output == O_RDUP) {
+				if (opt_output == O_RDUP)
 					(void)rdup_write_data(rdup_entry, readbuf, len);
-				} else if (opt_output == O_RAW) {
-					if (write(1, readbuf, len) != len) {
-						exit(EXIT_FAILURE);
-					}
-				} else {
+				else 
 					archive_write_data(archive, readbuf, len);
-				}
 				
 				len = read(parent[0], readbuf, BUFSIZE);
 			}
 			close(parent[0]);  /* we're done */
 			if (wait_pids(pids, 0) == -1) {
 				/* weird child exit */
+				msg(_("Weird child exit!"));
 				/* Huh and now?   */
 			}
+			fprintf(stderr, "Everything done\n");
 
 		} else {
 
-write_plain_file:
 			while ((bytes = block_in_header(stdin)) > 0) {
 				if (block_in(stdin, bytes, fbuf) == -1) {
 					msg(_("Failure to read from stdin: %s"), strerror(errno));
@@ -326,35 +332,27 @@ write_plain_file:
 				}   
 
 				if (sig != 0) {
-					/* close(f); */
+					close(f);
 					signal_abort(sig);
 				}
 
-				if (opt_output == O_RDUP) {
+				if (opt_output == O_RDUP) 
 					(void)rdup_write_data(rdup_entry, fbuf, bytes);
-				} else if (opt_output == O_RAW) {
-					if (write(1, fbuf, bytes) != bytes) {
-						msg(_("Failure to write to stdout: %s"),
-								strerror(errno));
-						exit(EXIT_FAILURE);
-					}
-				} else {
+				 else 
 					archive_write_data(archive, fbuf, bytes);
-				}
+				
 			}
-			/* close(f); */
 		}
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
 			block_out_header(NULL, 0, 1);
 
 not_s_isreg: 
-		if (opt_output != O_RDUP && opt_output != O_RAW)
+		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
 
-		/* close something ? */
 	}
-	if (opt_output != O_RDUP && opt_output != O_RAW) {
+	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
 	}
@@ -456,8 +454,6 @@ main(int argc, char **argv)
 					opt_output = O_PAX;
 				if (strcmp(optarg, o_fmt[O_RDUP]) == 0)
 					opt_output = O_RDUP;
-				if (strcmp(optarg, o_fmt[O_RAW]) == 0)
-					opt_output = O_RAW;
 
 				if (opt_output == O_NONE) {
 					msg(_("Invalid output format: `%s\'"), optarg);

@@ -1,6 +1,7 @@
 OBJ=crawler.o rdup.o gfunc.o getdelim.o signal.o usage.o sha1.o regexp.o abspath.o link.o reverse.o protocol.o msg.o common.o names.o
 OBJ_TR=rdup-tr.o signal.o getdelim.o usage-tr.o child.o entry.o link.o protocol.o msg.o crypt.o base64.o common.o
 OBJ_UP=rdup-up.o entry.o usage-up.o signal.o link.o getdelim.o abspath.o rm.o fs-up.o mkpath.o protocol.o msg.o dir.o strippath.o names.o
+OBJ_RAW=rdup-raw.o protocol.o signal.o msg.o usage-raw.o
 HDR=rdup.h rdup-tr.h rdup-up.h io.h common.h entry.h
 CMD=rdup rdup-tr rdup-up
 SH=rdup-ln rdup-simple
@@ -38,9 +39,9 @@ INSTALL_DATA=$(INSTALL) -m 644
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 ifeq (${ARCHIVE_L},no)
-all:	rdup rdup-up
+all:	rdup rdup-up rdup-raw
 else
-all:	rdup rdup-up rdup-tr 
+all:	rdup rdup-up rdup-tr rdup-raw
 endif
 	chmod +x sh/rdup-ln sh/rdup-simple
 
@@ -49,6 +50,9 @@ rdup-up: $(OBJ_UP) $(HDR)
 
 rdup-tr: $(OBJ_TR) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_TR} -o rdup-tr
+
+rdup-raw: $(OBJ_RAW) $(HDR)
+	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_RAW} -o rdup-raw
 
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ} -o rdup
