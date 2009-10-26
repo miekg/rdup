@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # should give no output
-./rdup -c /dev/null testsuite | ./rdup-up -s 2 -t /tmp/test.$$
+./rdup /dev/null testsuite | ./rdup-up -s 2 -t /tmp/test.$$
 rm -rf /tmp/test.$$

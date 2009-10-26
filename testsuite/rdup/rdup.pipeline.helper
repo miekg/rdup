@@ -1,1 +1,1 @@
-./rdup /dev/null testsuite | ./rdup-tr -Pcat -Pgzip -Pcat -Otar | tar tvf -
+./rdup -Pcat -Pgzip -Pcat /dev/null testsuite | ./rdup-tr -Otar | tar tvf -
