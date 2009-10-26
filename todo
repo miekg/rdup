@@ -11,6 +11,9 @@ rdup-up:
     actual use user and group
     update manpage
 
+rdup-simple:
+    adapt to new commands
+
 general:
     add extended attributes? man 5 tar explains how to do it, but it
     is A LOT of work AND it is not portable over unixes...?

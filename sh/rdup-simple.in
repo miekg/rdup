@@ -25,9 +25,9 @@ DEST - where to store the backup. This can be:
 	directory
 
 OPTIONS:
- -k KEYFILE encrypt all files: rdup-tr -Pmcrypt,-fKEYFILE,-c
- -g	    encrypt all files: rdup-tr -Pgpg,--default-recipient-self
- -z         compress all files: rdup-tr -Pgzip
+ -k KEYFILE encrypt all files: rdup -Pmcrypt,-fKEYFILE,-c
+ -g	    encrypt all files: rdup -Pgpg,--default-recipient-self
+ -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
@@ -45,19 +45,11 @@ NOW=`date +%Y%m/%d`
 DAYS=8
 ssh=
 trans=
-c=" -c"
+pathtrans=
 enc=false
 etc=~/.rdup
 force=false
 verbose=false
-
-# preflight checks
-if which rdup-tr >/dev/null 2>&1; then 
-    :
-else
-    echo2 "Cannot find rdup-tr"
-    exit 1;
-fi
 
 while getopts "E:k:vfgzxhVX:Y:s:" o; do
         case $o in
@@ -69,7 +61,8 @@ while getopts "E:k:vfgzxhVX:Y:s:" o; do
                 E=" -E $OPTARG "
                 ;;
 		Y|X)
-		trans="$trans -$o $OPTARG";
+		# check for rdup-tr
+		pathtrans="-$o $OPTARG";
 		;;
                 k)
                 if [[ -z "$OPTARG" ]]; then
@@ -86,14 +79,12 @@ while getopts "E:k:vfgzxhVX:Y:s:" o; do
 			exit 1
 		fi
 		enc=true
-		c=""   # rdup-tr expects a list of filenames, so reset -c
                 ;;
                 z) trans="$trans -Pgzip"
 		if $enc; then
 			echo2 "Select compression first, then encryption"
 			exit 1
 		fi
-		c=""
                 ;;
 		g) trans="$trans -Pgpg,--default-recipient-self"
 		if $enc; then
@@ -101,12 +92,9 @@ while getopts "E:k:vfgzxhVX:Y:s:" o; do
 			exit 1
 		fi
 		enc=true
-		c=""
 		;;
                 f) force=true;;
-                a) ;;
-		s) STRIP="-s $OPTARG"
-		;;
+		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
                 x) x=" -x ";;
                 h) usage && exit;;
@@ -150,7 +138,6 @@ if [[ ${dest:0:6} == "ssh://" ]]; then
 	h=`echo $rest | cut -s -f1 -d/`
 	BACKUPDIR=${rest/$h/}
 
-	c="-c"
 	if [[ -z $u ]]; then
 		ssh=" ssh -c blowfish -x $h"
 	else
@@ -172,13 +159,18 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 [[ ! -d $etc ]] && mkdir $etc
 
-# create our command line
+# remote or not
 if [[ -z $ssh ]]; then
-        pipe="rdup-tr$trans | rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
+        pipe="rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
 else
-        pipe="rdup-tr$trans | $ssh rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
+        pipe="$ssh rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
 fi
-cmd="rdup$E$x -N $STAMP $LIST $DIRS | $pipe"
+# path encryption
+if [[ -n $pathtrans ]]; then
+	pipe="rdup-tr $pathtrans | $pipe"
+fi
+
+cmd="rdup$E$x -N $STAMP $trans $LIST $DIRS | $pipe"
 
 if ! $force; then
 	# path is set at the top

@@ -18,23 +18,26 @@ Currently \fBrdup\fR consists out of three basic utilities:
 .TP
 .B rdup
 With \fBrdup\fR you create the filelist on which later programs in the
-pipeline can work. With \fBrdup \fI\-c\fR the file's contents
-is also echo-ed to stdout. See rdup(1) for more infomation.
+pipeline can work. The default output format also includes the files'
+content. \fBrdup\fR can be seen as a tar replacement in this respect,
+but \fBrdup\fR also allows for all kinds of transformations of
+te content (encrypt, compress, reverse), see the -P switch in rdup(1)
+for more information.
 
 .TP
 .B rdup-tr
-With \fBrdup-tr\fR you can transform (encrypt, compress, whatever...) the
-files rdup delivers to you.
-
-\fBrdup-tr\fR reads \fBrdup\fR input and will create \fBrdup \fI\-c\fR
-output. See rdup-tr(1) for more information.
+With \fBrdup-tr\fR you can transform the files rdup delivers to you,
+with \fBrdup-tr\fR you can further tweaks the output. You can 
+create tar or pax files or encrypt paths. \fBrdup-tr\fR is a real
+filter is reads from standard input and writes to standard output.
+See rdup-tr(1) for more information.
 
 .TP 
 .B rdup-up
 With \fBrdup-up\fR you can update an existing directory structure with the
 updates as described by rdup. 
 
-\fBrdup-up\fR reads \fBrdup -c\fR input and will create the files,
+\fBrdup-up\fR reads \fBrdup\fR input and will create the files,
 symlinks, hardlinks and directories (and sockets, pipes and devices)
 in the file system. See rdup-up(1) for more information.
 
@@ -45,13 +48,21 @@ this:
     create filelist  |  transform file content  |  update filesystem
     ( rdup           |  rdup-tr                 |  rdup-up )
 
-Note that the same sequence is used for restoring. In both
+.TP
+.B Note 1:
+The same sequence is used for restoring. In both
 cases you want to move files from location A to B. The only difference
 is that the transformation is reversed when you restore.
 
+.TP
+.B Note 2: 
+The use of \fBrdup-tr\fR is optional.
+
+.TP
+.B Note 3: 
 There is a little shell script that can be used to create a hard
 linked directory structure, this script \fBrdup-ln.sh\fR is installed
-in '/usr/lib/rdup/'. The script looks back for previous backup and
+in '/usr/local/lib/rdup/'. The script looks back for previous backup and
 then creates a hardlinked directory structure. By using this script
 you create a YYYYMM/DD backup structure, where each YYYYMM/DD directory
 contains a full view of your filesystem \fIat that date\fR. This script
@@ -62,30 +73,9 @@ is 0 an incremental backup needs to be made. If the exit code is 1 a
 full backup is in order. An exit code of 2 means there was some kind of
 error.
 
+.PP
 With these three (four) tools you can create your own backup solution, see
-SNAPSHOT BACKUPS later in this document.
-
-.SH TYPES OF OUTPUT     
-\fBrdup\fR can create two types of output:
-.PP
-.TP
-.B 1.
-a list of pathnames and path attributes
-.TP 
-.B 2.
-a list of pathnames and path attributes \fIand\fR the
-files' contents
-.PP
-
-The latter is often called 'rdup \-c' output after the switch
-(\-c) which enables this ouput. 'rdup \-c' output is
-comparable to archive formats like tar or pax.
-
-The first one is just called the normal or list output.
-
-In rdup(1), rdup-tr(1) and rdup-up(1) it says what output
-a command can create and what input it expects.
-
+\fBSNAPSHOT BACKUPS\fR later in this document.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
@@ -158,14 +148,10 @@ esac
 #
 # right now, nothing is translated we just use 'cat'
 
-rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | rdup-up $BACKUP/$HOSTNAME/$TODAY
-
-# Note that rdup-up expects rdup-c output, so if you leave out
-# rdup-tr, you must tell rdup to generate the correct output
-# rdup -c -N $STAMP $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
+rdup -N $STAMP -Pcat $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
 
 # or do a remote backup
-#rdup -N $STAMP $LIST $DIR | rdup-tr -Pcat | ssh root@remotehost \\
+#rdup -N $STAMP -Pcat $LIST $DIR | ssh root@remotehost \\
 #	rdup-up $BACKUP/$HOSTNAME/$TODAY
 
 .fi
