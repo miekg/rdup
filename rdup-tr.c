@@ -28,7 +28,7 @@ gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
 
 sig_atomic_t sig           = 0;
-char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup", "raw"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP, O_RAW */
+char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup"};	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 extern int opterr;
 
 int opterr = 0;
@@ -129,7 +129,6 @@ stdin2archive(void)
 			case O_PAX:
 				j = archive_write_set_format_pax(archive);
 				break;
-			case O_RAW:
 			case O_RDUP:
 				j = ARCHIVE_OK;
 				break;
@@ -208,7 +207,7 @@ stdin2archive(void)
 			continue;
 		}
 
-		if (opt_output != O_RDUP && opt_output != O_RAW) {
+		if (opt_output != O_RDUP) {
 			s = stat_from_rdup(rdup_entry);
 
 			entry = archive_entry_new();
@@ -234,12 +233,10 @@ stdin2archive(void)
 		}
 
 		/* size may be changed - we don't care anymore */
-		if (opt_output != O_RDUP && opt_output != O_RAW) {
+		if (opt_output != O_RDUP) 
 			archive_write_header(archive, entry);
-		} else {
-			if (opt_output != O_RAW)
-				(void)rdup_write_header(rdup_entry_c);
-		}
+		else
+			(void)rdup_write_header(rdup_entry_c);
 
 		/* bail out for non regular files */
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
@@ -252,22 +249,13 @@ stdin2archive(void)
 				exit(EXIT_FAILURE); 
 			}   
 
-			if (sig != 0) {
-				/* close(f); */
+			if (sig != 0) 
 				signal_abort(sig);
-			}
 
-			if (opt_output == O_RDUP) {
+			if (opt_output == O_RDUP) 
 				(void)rdup_write_data(rdup_entry, fbuf, bytes);
-			} else if (opt_output == O_RAW) {
-				if (write(1, fbuf, bytes) != bytes) {
-					msg(_("Failure to write to stdout: %s"),
-							strerror(errno));
-					exit(EXIT_FAILURE);
-				}
-			} else {
+			else
 				archive_write_data(archive, fbuf, bytes);
-			}
 		}
 
 		/* final block for rdup output */
@@ -275,11 +263,11 @@ stdin2archive(void)
 			block_out_header(NULL, 0, 1);
 
 not_s_isreg: 
-		if (opt_output != O_RDUP && opt_output != O_RAW)
+		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
 
 	}
-	if (opt_output != O_RDUP && opt_output != O_RAW) {
+	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
 	}
@@ -352,8 +340,6 @@ main(int argc, char **argv)
 					opt_output = O_PAX;
 				if (strcmp(optarg, o_fmt[O_RDUP]) == 0)
 					opt_output = O_RDUP;
-				if (strcmp(optarg, o_fmt[O_RAW]) == 0)
-					opt_output = O_RAW;
 
 				if (opt_output == O_NONE) {
 					msg(_("Invalid output format: `%s\'"), optarg);

@@ -40,7 +40,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 ifeq (${ARCHIVE_L},no)
 all:	rdup rdup-up
 else
-all:	rdup rdup-up rdup-tr 
+all:	rdup rdup-up rdup-tr
 endif
 	chmod +x sh/rdup-ln sh/rdup-simple
 
