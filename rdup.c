@@ -13,8 +13,9 @@ gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
-// testing - > no %C
-//char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n"; /* BUGBUG format of rdup output */
+#if 0
+char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n";
+#endif
 gint opt_verbose 	   = 0;                       /* be more verbose */
 gboolean opt_atime	   = 0;			      /* reset access time */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
@@ -90,85 +91,92 @@ g_tree_read_file(FILE *fp)
 			continue;
 
 		if (s < LIST_MINSIZE) 
-			CORRUPT("Corrupt entry in filelist at line: %zd"); 
+			CORRUPT("Corrupt entry at line: %zd, line to short"); 
 
 		n = strrchr(buf, '\n');
 
 		/* get modus */
 		if (buf[LIST_SPACEPOS] != ' ')
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 
 		buf[LIST_SPACEPOS] = '\0';
 		modus = (mode_t)atoi(buf);
 		if (modus == 0)
-			CORRUPT("Corrupt entry in filelist at line: %zd, mode should be numerical");
+			CORRUPT("Corrupt entry at line: %zd, mode should be numerical");
 
 		/* the dev */
 		q = buf + LIST_SPACEPOS + 1;
 		p = strchr(buf + LIST_SPACEPOS + 1, ' ');
 		if (!p)
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 		
 		*p = '\0';
 		f_dev = (dev_t)atoi(q);
 		if (f_dev == 0)
-			CORRUPT("Corrupt entry in filelist at line: %zd, zero device");
+			CORRUPT("Corrupt entry at line: %zd, zero device");
 
 		/* the inode */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) 
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 		
 		*p = '\0';
 		f_ino = (ino_t)atoi(q);
 		if (f_ino == 0)
-			CORRUPT("Corrupt entry in filelist at line: %zd, zero inode");
+			CORRUPT("Corrupt entry at line: %zd, zero inode");
 
 		/* hardlink/link or anything else: h/l or * */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) 
-			CORRUPT("Corrupt entry in filelist at line: %zd, no link information found");
+			CORRUPT("Corrupt entry at line: %zd, no link information found");
 
 		linktype = *q;
 		if (linktype != '-' && linktype != 'h' && linktype != 'l')
-			CORRUPT("Illegal link type as line: %zd");
+			CORRUPT("Illegal link type at line: %zd");
 
 		/* skip these for now - but useful to have */
 		/* uid */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p)
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 		
 		/* gid */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p)
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 
 		/* the path size */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p) {
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 		}
 		*p = '\0';
 		f_name_size = (size_t)atoi(q);
+		if (f_name_size == 0) 
+			CORRUPT("Pathname lenght can not be zero at line: %zd");
 
 		/* filesize */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
 		if (!p)
-			CORRUPT("Corrupt entry in filelist at line: %zd, no space found");
+			CORRUPT("Corrupt entry at line: %zd, no space found");
 
 		*p = '\0';
 		f_size = (size_t)atoi(q);
-
+ 
+		/* with getdelim we read the delimeter too kill it here */
 		str_len = strlen(p + 1);
+		if (str_len == 1)
+			CORRUPT("Actual pathname length can not be zero at line: %zd");
+
+		p[str_len] = '\0'; str_len--;
 		if (str_len != f_name_size) {
-			msg(_("Corrupt entry in filelist at line: %zd, length `%zd\' does not match `%zd\'"), l,
+			msg(_("Corrupt entry at line: %zd, length `%zd\' does not match `%zd\'"), l,
 					str_len, f_name_size);
 			l++; 
 			continue;
