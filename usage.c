@@ -28,7 +28,7 @@ implement a (incremental) backup scheme.\n\
 	-R\t\treverse the output (depth first, first the dirs then the files)\n\
 	-E FILE\t\tuse FILE as an exclude list\n\
 	-P CMD,opt0,...,opt6\n\
-	\t\tfilter through CMD\n\
+	\t\tfilter file contents through CMD\n\
 	\t\tthis may be repeated, output will be filtered\n\
 	\t\tthrough all commands\n\
         -V\t\tprint version\n"), f);

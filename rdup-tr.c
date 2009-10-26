@@ -223,6 +223,9 @@ stdin2archive(void)
 				/* source */
 				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
+				/* if a hardlink is seen before the file exists
+				 * tar fails
+				 */
 				if (S_ISLNK(rdup_entry->f_mode))
 					archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
 				else 
@@ -243,12 +246,6 @@ stdin2archive(void)
 			goto not_s_isreg; 
 
 		/* regular files */
-#if 0
-		if ((f = open(rdup_entry->f_name, O_RDONLY)) == -1) {
-			msg(_("Could not open '%s\': %s"), rdup_entry->f_name, strerror(errno));
-			continue;
-		}
-#endif
 		while ((bytes = block_in_header(stdin)) > 0) {
 			if (block_in(stdin, bytes, fbuf) == -1) {
 				msg(_("Failure to read from stdin: %s"), strerror(errno));
@@ -272,7 +269,6 @@ stdin2archive(void)
 				archive_write_data(archive, fbuf, bytes);
 			}
 		}
-		/* close(f); */
 
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
@@ -282,7 +278,6 @@ not_s_isreg:
 		if (opt_output != O_RDUP && opt_output != O_RAW)
 			archive_entry_free(entry);
 
-		/* close something ? */
 	}
 	if (opt_output != O_RDUP && opt_output != O_RAW) {
 		archive_write_close(archive);
@@ -299,10 +294,6 @@ main(int argc, char **argv)
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
-#if 0
-	(void)setvbuf(stdin, NULL, _IONBF, 0);
-	(void)setvbuf(stdout, NULL, _IONBF, 0);
-#endif
 	
 #ifdef ENABLE_NLS
 	if (!setlocale(LC_MESSAGES, ""))

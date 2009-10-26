@@ -287,7 +287,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:s:vqxF:E:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;

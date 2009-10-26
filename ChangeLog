@@ -5,6 +5,8 @@
       %G groupname
       %t is mtime of the fs object
     * Adapt all utils to this format change
+	- rdup now handles -P itself
+	- rdup-tr does not do -P anymore
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
     * Change default install path /usr/local (Sebastian Kügler)
