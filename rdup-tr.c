@@ -86,7 +86,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
  * child and create the archive on stdout
  */
 static void  
-stdin2archive()
+stdin2archive(void)
 {
 	char		*buf, *fbuf, *readbuf, *n, *out, *pathbuf;
 	char		delim;
@@ -298,7 +298,7 @@ main(int argc, char **argv)
 {
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
-	int		 c, i;
+	int		 c;
 #if 0
 	(void)setvbuf(stdin, NULL, _IONBF, 0);
 	(void)setvbuf(stdout, NULL, _IONBF, 0);
