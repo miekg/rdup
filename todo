@@ -20,3 +20,7 @@ internal filelist is needs also to be optimized
 
 - add extended attributes? man 5 tar explains how to do it, but it
   is A LOT of work AND it is not portable over unixes...?
+
+rdup-tr -> simple transform software
+    other formats, etc
+rdup -> pipe to childeren

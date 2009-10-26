@@ -49,7 +49,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 	crypt = crypt_path(aes_ctx, d->f_name, tr);
 	d->f_name = crypt;
 	d->f_name_size = strlen(crypt);
-		/* g_free(d->f_name); hier wel */
+		/* g_free(d->f_name); hier wel  BUGBUG? */
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
@@ -86,16 +86,13 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
  * child and create the archive on stdout
  */
 static void  
-stdin2archive(GSList *child)
+stdin2archive()
 {
 	char		*buf, *fbuf, *readbuf, *n, *out, *pathbuf;
 	char		delim;
 	size_t		i, line, pathsize;
-	ssize_t		len, bytes;
+	ssize_t		bytes;
 	int		j;
-	GSList		*pipes;
-	GSList		*pids;				/* child pids */
-	int		*parent;			/* parent pipe */
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     *s;
@@ -252,98 +249,31 @@ stdin2archive(GSList *child)
 			continue;
 		}
 #endif
-		/* todo use stdin here */
-		/* must read blocks from stdin and give them to the first child?? */
-		/* if we have childeren the first child we create if and
-		 * rdup converter - read blocks and pumps out raw data */
-		if (child != NULL) {
-#if 0
-			char *args[3];
-			
-			/* prepend 'rdup-tr -Oraw' as this must be the first
-			 * child that gets run - this will translate the
-			 * block based rdup protocol into normal files
-			 */
-			args[0] = "rdup-tr";
-			args[1] = "-Oraw";
-			args[2] = NULL;
-			child = g_slist_prepend(child, args);
-#endif
+		while ((bytes = block_in_header(stdin)) > 0) {
+			if (block_in(stdin, bytes, fbuf) == -1) {
+				msg(_("Failure to read from stdin: %s"), strerror(errno));
+				exit(EXIT_FAILURE); 
+			}   
 
-			pids = create_childeren(child, &pipes, 0);
-			parent = (g_slist_last(pipes))->data;
-			/* everything is closed in create_children */
-						
-			/* now we must read from from the last pipe 
-			 * read end, here, parent[0]
-			 */
-			len = read(parent[0], readbuf, BUFSIZE);
-			if (len == -1) {
-				msg(_("Failure to read from pipe: %s"), strerror(errno));
-				exit(EXIT_FAILURE);
-				goto write_plain_file;
+			if (sig != 0) {
+				/* close(f); */
+				signal_abort(sig);
 			}
 
-			if (wait_pids(pids, WNOHANG) == -1) {
-				/* weird child exit */
-				exit(EXIT_FAILURE);
-			}
-			/* close f here as we might need if the 
-			 * 'goto write_plain_file'
-			 * where we happily read from that descriptor
-			 */
-			/* close(f); BUGBUG ? */
-			while (len > 0) {
-				/* write archive */
-				if (sig != 0) 
-					signal_abort(sig);
-				 
-				if (opt_output == O_RDUP) {
-					(void)rdup_write_data(rdup_entry, readbuf, len);
-				} else if (opt_output == O_RAW) {
-					if (write(1, readbuf, len) != len) {
-						exit(EXIT_FAILURE);
-					}
-				} else {
-					archive_write_data(archive, readbuf, len);
+			if (opt_output == O_RDUP) {
+				(void)rdup_write_data(rdup_entry, fbuf, bytes);
+			} else if (opt_output == O_RAW) {
+				if (write(1, fbuf, bytes) != bytes) {
+					msg(_("Failure to write to stdout: %s"),
+							strerror(errno));
+					exit(EXIT_FAILURE);
 				}
-				
-				len = read(parent[0], readbuf, BUFSIZE);
+			} else {
+				archive_write_data(archive, fbuf, bytes);
 			}
-			close(parent[0]);  /* we're done */
-			if (wait_pids(pids, 0) == -1) {
-				/* weird child exit */
-				/* Huh and now?   */
-			}
-
-		} else {
-
-write_plain_file:
-			while ((bytes = block_in_header(stdin)) > 0) {
-				if (block_in(stdin, bytes, fbuf) == -1) {
-					msg(_("Failure to read from stdin: %s"), strerror(errno));
-					exit(EXIT_FAILURE); 
-				}   
-
-				if (sig != 0) {
-					/* close(f); */
-					signal_abort(sig);
-				}
-
-				if (opt_output == O_RDUP) {
-					(void)rdup_write_data(rdup_entry, fbuf, bytes);
-				} else if (opt_output == O_RAW) {
-					if (write(1, fbuf, bytes) != bytes) {
-						msg(_("Failure to write to stdout: %s"),
-								strerror(errno));
-						exit(EXIT_FAILURE);
-					}
-				} else {
-					archive_write_data(archive, fbuf, bytes);
-				}
-			}
-			/* close(f); */
 		}
+		/* close(f); */
+
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
 			block_out_header(NULL, 0, 1);
@@ -369,12 +299,10 @@ main(int argc, char **argv)
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
 	int		 c, i;
-	char		 *q, *r;
-	GSList		 *child    = NULL;		/* forked child args: -P option */
-	char		 **args;
-
+#if 0
 	(void)setvbuf(stdin, NULL, _IONBF, 0);
 	(void)setvbuf(stdout, NULL, _IONBF, 0);
+#endif
 	
 #ifdef ENABLE_NLS
 	if (!setlocale(LC_MESSAGES, ""))
@@ -420,30 +348,7 @@ main(int argc, char **argv)
 				opt_input = I_LIST;
 				break;
 			case 'P':
-				/* allocate new for each child */
-				args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
-				q = g_strdup(optarg);
-				/* this should be a comma seprated list
-				 * arg0,arg1,arg2,...,argN */
-				r = strchr(q, ',');
-				if (!r) {
-					args[0] = g_strdup(q);
-					args[1] = NULL;
-				} else {
-					*r = '\0';
-					for(i = 0; r; r = strchr(r + 1, ','), i++) {
-						if (i > MAX_CHILD_OPT) {
-							msg(_("Only %d extra args per child allowed"), MAX_CHILD_OPT);
-							exit(EXIT_FAILURE);
-						}
-						*r = '\0';
-						args[i] = g_strdup(q);
-						q = r + 1;
-					}
-					args[i] = g_strdup(q);
-					args[i + 1] = NULL;
-				}
-				child = g_slist_append(child, args);
+				msg(_("Functionality moved to rdup"));
 				break;
 			case 'O':
 				opt_output = O_NONE;
@@ -511,7 +416,7 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	/* read stdin, create childeren and make an archive */
-	stdin2archive(child);
+	/* read stdin and (re)make an archive */
+	stdin2archive();
 	exit(EXIT_SUCCESS);
 }

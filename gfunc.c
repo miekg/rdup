@@ -18,6 +18,7 @@ extern time_t opt_timestamp;
 extern size_t opt_size;
 extern sig_atomic_t sig;
 extern GList *list;
+extern GSList *child;
 
 /* sha1.c */
 int sha1_stream(FILE *stream, void *digest);
@@ -55,34 +56,75 @@ cat(FILE *fp, char *filename)
 {
 	char buf[BUFSIZE + 1];
 	FILE *file;
-	size_t i;
+	ssize_t i;
 	gboolean nullblock = FALSE;
+	GSList *pipes, *pids;
+	int *parent;
 
 	if ((file = fopen(filename, "r")) == NULL) {
 		msg(_("Could not open '%s\': %s"), filename, strerror(errno));
 		return FALSE;
 	}
 
-	while (!feof(file) && (!ferror(file))) {
-		if (sig != 0) {
-			fclose(file);
-			signal_abort(sig);
+	if (child == NULL) {
+		while (!feof(file) && (!ferror(file))) {
+			if (sig != 0) {
+				fclose(file);
+				signal_abort(sig);
+			}
+			i = fread(buf, sizeof(char), BUFSIZE, file);
+			if (block_out_header(fp, i, -1) == -1 ||
+					block_out(fp, i, buf, -1)) {
+				msg(_("Write failure `%s\': %s"), filename, strerror(errno));
+				fclose(file);
+				return FALSE;
+			}
+
+			/* there is no diff between 0 bytes block and a ending block */
+			if (i == 0)
+				nullblock = TRUE;
 		}
-		i = fread(buf, sizeof(char), BUFSIZE, file);
-		if (block_out_header(fp, i, -1) == -1 ||
-				block_out(fp, i, buf, -1)) {
-			msg(_("Write failure `%s\': %s"), filename, strerror(errno));
+		fclose(file);
+		
+	} else {
+		pids = create_childeren(child, &pipes, fileno(file));
+		parent = (g_slist_last(pipes))->data;
+		i = read(parent[0], buf, BUFSIZE);
+		if (i == -1) {
+			msg(_("Failure to read from pipe: %s"), strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
+		if (wait_pids(pids, WNOHANG) == -1) {
+			fclose(file);
+			return FALSE;
+		}
+		while (i > 0) {
+			if (sig != 0)
+				signal_abort(sig);
 
-		/* there is no diff between 0 bytes block and a ending block */
-		if (i == 0)
-			nullblock = TRUE;
+			if (block_out_header(fp, i, -1) == -1 ||
+					block_out(fp, i, buf, -1)) {
+				msg(_("Write failure `%s\': %s"), filename, strerror(errno));
+				fclose(file);
+				close(parent[0]);
+				return FALSE;
+			}
 
+			/* there is no diff between 0 bytes block and a ending block */
+			if (i == 0)
+				nullblock = TRUE;
+
+			i = read(parent[0], buf, BUFSIZE);
+		}
+		close(parent[0]);
+		fclose(file);
+		if (wait_pids(pids, 0) == -1) {
+			/* weird child exit */
+			return FALSE;
+		}
 	}
-
-	fclose(file);
+	
 	if (!nullblock) {
 		if (block_out_header(fp, 0, -1) == -1) {
 			msg(_("Write failure `%s\': %s"), filename, strerror(errno));

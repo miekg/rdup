@@ -27,6 +27,10 @@ implement a (incremental) backup scheme.\n\
         \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
 	-R\t\treverse the output (depth first, first the dirs then the files)\n\
 	-E FILE\t\tuse FILE as an exclude list\n\
+	-P CMD,opt0,...,opt6\n\
+	\t\tfilter through CMD\n\
+	\t\tthis may be repeated, output will be filtered\n\
+	\t\tthrough all commands\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
         -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n\

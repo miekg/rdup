@@ -12,18 +12,14 @@ usage_tr(FILE *f)
 {
         fprintf(f, _("USAGE: %s [OPTION]... \n"), PROGNAME);
 	fputs( _("\
-Translate rdup output to something else	and optionally filter it\n\
-through other processes. The input must be rdup's default ouput\n\
+Translate rdup output into something else.\n\
+The input must be rdup's default ouput\n\
 format: \'%p%T %b %u %g %l %s %n\\n\'.\n\
 The output is equal to rdup -c ouput.\n\
 \n\
 \n\
     OPTIONS:\n\
         -c\t\tforce output to tty\n\
-        -P CMD,opt0,...,opt6\n\
-	    \t\tfilter through CMD\n\
-	\t\tthis may be repeated, output will be filtered\n\
-	\t\tthrough all commands\n\
 	-X FILE\t\tencrypt all paths with AES and the key from FILE\n\
 	-Y FILE\t\tdecrypt all paths with AES and the key from FILE\n\
 	-h\t\tthis help\n\

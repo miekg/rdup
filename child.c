@@ -1,9 +1,9 @@
 /* 
  * Copyright (c) 2009 Miek Gieben
- * child-tr.c handle child stuff
+ * child.c handle child stuff
  */
 
-#include "rdup-tr.h"
+#include "rdup.h"
 
 extern sig_atomic_t sig;
 extern gint opt_verbose;
