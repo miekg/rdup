@@ -1,10 +1,19 @@
-TODO:
+TODO
+
+rdup:
+    update manpage
 
 rdup-tr:
     with tar output hardlinks must come last
+    update manpage
 
 rdup-up:
     actual use user and group
+    update manpage
 
-- add extended attributes? man 5 tar explains how to do it, but it
-  is A LOT of work AND it is not portable over unixes...?
+general:
+    add extended attributes? man 5 tar explains how to do it, but it
+    is A LOT of work AND it is not portable over unixes...?
+
+test:
+    sha1 test
