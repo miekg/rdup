@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # should give no output
-./rdup -s1 /dev/null testsuite | grep -v '^+d'
+./rdup -F '%p%T %n\n' -s1 /dev/null testsuite | grep -v '^+d'

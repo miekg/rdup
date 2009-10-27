@@ -8,7 +8,7 @@ rdup-tr:
     update manpage
 
 rdup-up:
-    actual use user and group
+    actual use user and group, now they are discarded
     update manpage
 
 rdup-simple:
@@ -18,5 +18,7 @@ general:
     add extended attributes? man 5 tar explains how to do it, but it
     is A LOT of work AND it is not portable over unixes...?
 
-test:
+tests:
     sha1 test
+    crypto tests
+    encrypt path test
