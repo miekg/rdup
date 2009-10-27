@@ -10,6 +10,8 @@ rdup-tr:
 rdup-up:
     actual use user and group, now they are discarded
     update manpage
+    fix -r 
+    make -s and -r work together
 
 rdup-simple:
     adapt to new commands
