@@ -38,56 +38,30 @@ strippath(struct rdup *e)
 	char *p;
 	guint i;
 
-	/* links */
-	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
-		e->f_name[e->f_size] = '\0';
-
-	if (e->f_lnk == 1) {
-		/* hardlinks... mangle the part after -> also */
-#if 0
-		fprintf(stderr, "orig %d %d %s\n",
-				e->f_name_size, (int)e->f_size, e->f_name);
-#endif
-		for(i = 1, p = strchr(e->f_name + e->f_size + 1 , '/');
-				p; p = strchr(p + 1, '/'), i++) {
-			if (i > opt_strip)
-				break;
-		}
-		/* p == NULL - we should get the same below. ie. entry
-		 * is discarded
-		 */
-		if (p) {
-			/* how much shorter are we */
-			guint shorter;
-			i = strlen(p); 
-			shorter = (e->f_name_size - e->f_size - i - 4);
-			memmove(e->f_name + e->f_size + 4, p, i + 1);
-			/* make f_name_size shorter too */
-			e->f_name_size -= shorter;
-		}
-	}
-
 	for(i = 1, p = strchr(e->f_name, '/'); p; p = strchr(p + 1, '/'), i++) {
 		if (i > opt_strip)
 			break;
 	}
 
-	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) 
-		e->f_name[e->f_size] = ' ';
-
+	/* BUGBUG here strcopy, is this why -s and -r both make it segfault */
 	if (!p) {
-		e->f_name = NULL;
+		e->f_name = NULL; /* f_name_size to 0?? BUGBUG */
 		return;
 	} else {
 		e->f_name = p;
 	}
+	e->f_name_size = strlen(p);
 
-	/* how much shorter are we? */
-	i = e->f_name_size - strlen(p);
-	e->f_name_size -= i; 
-	/* for links also shorten the start of the '->' */
-	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
-		e->f_size -= i;
+	if (e->f_lnk == 1) {
+		for(i = 1, p = strchr(e->f_target, '/'); p; p = strchr(p + 1, '/'), i++) {
+			if (i > opt_strip)
+				break;
+		}
+		e->f_target = p;
+		e->f_size = strlen(e->f_target);
+		/* if the orig file was not truncated to null - will the target have
+		 * that problem? I think not BUGBUG */
+	}
 	return;
 }
 
@@ -133,6 +107,7 @@ strippathname(struct rdup *e)
 	/* everything is ok - except for hardlinks where the part after the ->
 	 * needs to get the same treatment */
 	if (e->f_lnk == 1) {
+		/* has prefix and f_target BUGBUG broken */
 		where = e->f_name + e->f_size + 4 + len;
 		memmove(e->f_name + e->f_size + 4, where, strlen(where));
 		e->f_name_size -= len;
