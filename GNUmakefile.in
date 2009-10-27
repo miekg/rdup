@@ -42,7 +42,7 @@ all:	rdup rdup-up
 else
 all:	rdup rdup-up rdup-tr
 endif
-	chmod +x sh/rdup-ln sh/rdup-simple
+	@chmod +x sh/rdup-ln sh/rdup-simple
 
 rdup-up: $(OBJ_UP) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_UP} -o rdup-up
