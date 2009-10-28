@@ -11,7 +11,11 @@
 With \fBrdup-up\fR you can update an (possibly) existing directory
 structure with a rdup archive.
 
-\fRrdup-up\fR reads \fBrdup \fI\-c\fR input.
+.SS Username and uids
+In rdup's output both the username and uid 
+BUGBUG
+in rdup-up if the username and uid don't match the uid is used
+on the file.
 
 .SH OPTIONS
 .TP

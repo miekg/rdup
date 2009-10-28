@@ -79,6 +79,10 @@ gboolean mk_obj(FILE *, char *, struct rdup *);
 void strippath(struct rdup *);
 void strippathname(struct rdup *);
 
+/* names.c */
+git_t lookup_gid(GHashTable *, gchar *, gid_t);
+uid_t lookup_uid(GHashTable *, gchar *, uid_t);
+
 /* mkpath.c */
 int mkpath(const char *, mode_t);
 

@@ -8,6 +8,48 @@
 #include <pwd.h>
 #include <grp.h>
 
+/* lookup the uid belonging to username
+ * if the uid is not equal to uid_given
+ * return uid_given
+ */
+uid_t
+lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
+{
+	uid_t *uid;
+	struct passwd *p;
+
+	uid = (uid_t*)g_hash_table_lookup(u, user);
+	if (uid) 
+		return *uid;
+
+	p = getpwnam(user);
+	if (!p) /* user does not exist on this system */
+		return uid_given;
+
+	*uid = p->pw_uid;
+	g_hash_table_insert(u, user, (gpointer)uid);
+	return *((uid_t *)g_hash_table_lookup(u, user));
+}
+
+gid_t
+lookup_gid(GHashTable *g, gchar *group, gid_t gid_given)
+{
+	gid_t *gid;
+	struct group *p;
+
+	gid = (gid_t*)g_hash_table_lookup(g, group);
+	if (gid)
+		return *gid;
+
+	p = getgrnam(group);
+	if (!p) /* grp does not exist on this system */
+		return gid_given;
+
+	*gid = p->gr_gid;
+	g_hash_table_insert(g, group, (gpointer)gid);
+	return *((gid_t *)g_hash_table_lookup(g, group));
+}
+
 gchar *
 lookup_user(GHashTable *u, uid_t uid)
 {
@@ -18,6 +60,7 @@ lookup_user(GHashTable *u, uid_t uid)
 	if (n) 
 		return n;
 
+	/* if nothing found also add to hash? */
 	p = getpwuid(uid);
 	if (!p) /* user only has ID */
 		return NULL;

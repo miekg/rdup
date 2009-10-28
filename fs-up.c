@@ -27,19 +27,30 @@ mk_time(struct rdup *e)
 	/* don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
-	if (utime(e->f_name, &ut) == -1) { /* todo */ }
+	if (utime(e->f_name, &ut) == -1) { /*BUGUB  todo */ }
 	return TRUE;
 }
 
-/* set time also */
+static gboolean
+mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+{
+	/* set the ownership */
+	if (getuid() == 0)
+		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { } /* todo BUGBUG */
+	return TRUE;
+}
+
 static gboolean
 mk_mode(struct rdup *e) 
 {
-	/* todo: error checking */
 	chmod(e->f_name, e->f_mode);
-	if (getuid() == 0)
-		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { } /* todo */
+	return TRUE;
+}
 
+static gboolean
+mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) {
+	mk_mode(e);
+	mk_chown(e, uidhash, gidhash);
 	mk_time(e);
 	return TRUE;
 }
@@ -75,7 +86,7 @@ mk_dev(struct rdup *e)
 			return FALSE;
 		}
 	}
-	mk_mode(e);
+	mk_meta(e, uidhash, gidhash);
 	return TRUE;
 }
 
@@ -110,7 +121,7 @@ mk_sock(struct rdup *e)
 			return FALSE;
 		}
 	}
-	mk_mode(e);
+	mk_meta(e, uidhash, gidhash);
 	return TRUE;
 }
 
@@ -202,11 +213,8 @@ mk_reg(FILE *in, struct rdup *e)
 			ok = FALSE;
 		}
 	} 
-	if (ok && !opt_dry) {
-		chmod(e->f_name, e->f_mode);
-		if (getuid() == 0)
-			if (fchown(fileno(out), e->f_uid, e->f_gid) == -1) { } /* todo */
-	}
+	if (ok && !opt_dry)
+		mk_meta(e, uidhash, gidhash);
 
 	/* we need to read the input to not upset
 	 * the flow into rdup-up, but we are not
@@ -233,8 +241,8 @@ mk_reg(FILE *in, struct rdup *e)
 	g_free(buf);
 	if (ok && out)
 		fclose(out); 
-	if (!opt_dry)
-		mk_mode(e);
+	if (!opt_dry) 
+		mk_meta(e, uidhash, gidhash);
 
 	opt_dry = old_dry;
 	return TRUE;
@@ -252,8 +260,8 @@ mk_dir(struct rdup *e)
 
 	lstat(e->f_name, &st);
 	if (S_ISDIR(st.st_mode)) {
-		/* something dir is here - update the perms and ownership */
-		mk_mode(e);
+		/* some dir is here - update the perms and ownership */
+		mk_meta(e, uidhash, gidhash);
 		return TRUE;
 	}
 
@@ -275,14 +283,14 @@ mk_dir(struct rdup *e)
 			return FALSE;
 		}
 	}
-	mk_mode(e);
+	mk_meta(e, uidhash, gidhash);
 	return TRUE;
 }
 
 
 /* make an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct rdup *e) 
+mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
 {
 	/* -v */
 	if (opt_verbose == 1 && e->f_name)
