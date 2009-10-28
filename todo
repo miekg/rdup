@@ -2,19 +2,20 @@ TODO
 
 rdup:
     update manpage
+    error handling
 
 rdup-tr:
-    with tar output hardlinks must come last
+    with tar/pax output hardlinks must come last
     update manpage
+    error handling
 
 rdup-up:
-    actual use user and group, now they are discarded
     update manpage
-    fix -r 
-    make -s and -r work together
+    error handling
 
 rdup-simple:
     adapt to new commands
+    error handling?
 
 general:
     add extended attributes? man 5 tar explains how to do it, but it

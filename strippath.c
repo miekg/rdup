@@ -38,6 +38,9 @@ strippath(struct rdup *e)
 	char *p;
 	guint i;
 
+	if (! e->f_name)
+		return;
+
 	for(i = 1, p = strchr(e->f_name, '/'); p; p = strchr(p + 1, '/'), i++) {
 		if (i > opt_strip)
 			break;
@@ -72,6 +75,9 @@ strippathname(struct rdup *e)
 	gchar *where;
 	guint len;
 
+	if (! e->f_name)
+		return;
+
 	/* the other way around, if the path is a prefix of the prefix
 	 * we should discard the entry. But only is the path we are looking
 	 * at is LONGER than the prefix
@@ -88,8 +94,6 @@ strippathname(struct rdup *e)
 	if (g_str_has_prefix(e->f_name, opt_path_strip) == FALSE) 
 		return;
 
-//fprintf(stderr, "orig: %s\n", e->f_name);
-
 	len = strlen(opt_path_strip) - 1; /* -1: discard the trailing slash */
 	where = e->f_name + len;
 
@@ -104,17 +108,14 @@ strippathname(struct rdup *e)
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 		e->f_size -= len;
 
-	/* everything is ok - except for hardlinks where the part after the ->
-	 * needs to get the same treatment */
+	/* hardlinks need to get the same treatment */
 	if (e->f_lnk == 1) {
-		/* has prefix and f_target BUGBUG broken */
-		where = e->f_name + e->f_size + 4 + len;
-		memmove(e->f_name + e->f_size + 4, where, strlen(where));
-		e->f_name_size -= len;
-		e->f_name[e->f_name_size] = '\0';
-		//fprintf(stderr, "%s hard stripped: %s %d %d\n", where, e->f_name, (int)e->f_name_size, (int)e->f_size);
-
+		if (g_str_has_prefix(e->f_target, opt_path_strip) == TRUE) {
+			where = e->f_target + len;
+			memmove(e->f_target, where, strlen(e->f_target) - len);
+			e->f_size -= len;
+			e->f_target[e->f_size] = '\0';
+		}
 	}
-//fprintf(stderr, "stripped: %s %d %d\n", e->f_name, (int)e->f_name_size, (int)e->f_size);
 	return;
 }

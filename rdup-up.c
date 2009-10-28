@@ -33,6 +33,8 @@ update(char *path)
 	char           *buf, *pathbuf, *n, *p;
 	char           delim;
 	gboolean       ok;
+	GHashTable     *uidhash; /* holds username -> uid */
+	GHashTable     *gidhash; /* holds groupname -> gid */
 
 	buf	= g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
@@ -41,6 +43,8 @@ update(char *path)
 	line    = 0;
 	ok      = TRUE;
 	pathlen = strlen(path);
+	uidhash = g_hash_table_new(g_str_hash, g_str_equal);
+	gidhash = g_hash_table_new(g_str_hash, g_str_equal);
 
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
@@ -100,7 +104,7 @@ update(char *path)
 			}
 		}
 		rdup_entry->f_name = p;
-		if (mk_obj(stdin, path, rdup_entry) == FALSE)
+		if (mk_obj(stdin, path, rdup_entry, uidhash, gidhash) == FALSE)
 			ok = FALSE;
 	}
 
@@ -166,22 +170,9 @@ main(int argc, char **argv)
 				opt_dry = TRUE;
 				break;
 			case 's':
-				if (opt_path_strip != NULL) {
-					msg(_("The -r and -s option can not be used together"));
-					exit(EXIT_FAILURE);
-				}
                                 opt_strip = abs(atoi(optarg));
                                 break;
 			case 'r':
-				if (opt_strip != 0) {
-					msg(_("The -r and -s option can not be used together"));
-					exit(EXIT_FAILURE);
-				}
-				if (strlen(optarg) == 0) {		/* does this help? XX */
-					msg(_("-r needs an arugment"));
-					exit(EXIT_FAILURE);
-				}
-
 				/* expand relative paths */
 				if (!g_path_is_absolute(optarg))
 					opt_path_strip = abspath(g_strdup_printf("%s/%s", pwd, optarg));
