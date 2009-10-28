@@ -5,14 +5,12 @@ rdup:
     error handling
 
 rdup-tr:
-    with tar output hardlinks must come last
+    with tar/pax output hardlinks must come last
     update manpage
     error handling
 
 rdup-up:
     update manpage
-    fix -r 
-    make -s and -r work together
     error handling
 
 rdup-simple:
