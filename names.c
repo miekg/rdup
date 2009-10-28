@@ -16,19 +16,19 @@
 uid_t
 lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
 {
-	uid_t *uid;
+	uid_t uid, *uid_tmp;
 	struct passwd *p;
 
-	uid = (uid_t*)g_hash_table_lookup(u, user);
-	if (uid) 
-		return *uid;
+	uid_tmp = (uid_t*)g_hash_table_lookup(u, user);
+	if (uid_tmp) 
+		return *uid_tmp;
 
 	p = getpwnam(user);
 	if (!p) /* user does not exist on this system */
 		return uid_given;
 
-	*uid = p->pw_uid;
-	g_hash_table_insert(u, user, (gpointer)uid);
+	uid = p->pw_uid;
+	g_hash_table_insert(u, user, (gpointer)&uid);
 	return *((uid_t *)g_hash_table_lookup(u, user));
 }
 
@@ -36,19 +36,19 @@ lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
 gid_t
 lookup_gid(GHashTable *g, gchar *group, gid_t gid_given)
 {
-	gid_t *gid;
+	gid_t gid, *gid_tmp;
 	struct group *p;
 
-	gid = (gid_t*)g_hash_table_lookup(g, group);
-	if (gid)
-		return *gid;
+	gid_tmp = (gid_t*)g_hash_table_lookup(g, group);
+	if (gid_tmp)
+		return *gid_tmp;
 
 	p = getgrnam(group);
 	if (!p) /* grp does not exist on this system */
 		return gid_given;
 
-	*gid = p->gr_gid;
-	g_hash_table_insert(g, group, (gpointer)gid);
+	gid = p->gr_gid;
+	g_hash_table_insert(g, group, (gpointer)&gid);
 	return *((gid_t *)g_hash_table_lookup(g, group));
 }
 
