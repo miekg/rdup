@@ -52,7 +52,7 @@ This option is related to the \-s option, but works different. The
 string PATH is removed from (the beginning of) each pathname. With \fI-r
 /home/backup\fR the pathname \fI/home/backup/bin/mycmd\fR becomes
 \fI/bin/mycmd\fR. The same could be done with \fB-s 2\fR, but then you need
-to count the slashes.
+to count the slashes. Note \-s is always performed before \-r.
 .TP
 .B \-v
 Be more verbose and echo the processed files to \fIstandard output\fR.

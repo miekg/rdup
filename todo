@@ -10,7 +10,6 @@ rdup-tr:
     error handling
 
 rdup-up:
-    actual use user and group, now they are discarded
     update manpage
     fix -r 
     make -s and -r work together

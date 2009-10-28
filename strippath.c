@@ -38,6 +38,9 @@ strippath(struct rdup *e)
 	char *p;
 	guint i;
 
+	if (! e->f_name)
+		return;
+
 	for(i = 1, p = strchr(e->f_name, '/'); p; p = strchr(p + 1, '/'), i++) {
 		if (i > opt_strip)
 			break;
@@ -71,6 +74,9 @@ strippathname(struct rdup *e)
 {
 	gchar *where;
 	guint len;
+
+	if (! e->f_name)
+		return;
 
 	/* the other way around, if the path is a prefix of the prefix
 	 * we should discard the entry. But only is the path we are looking

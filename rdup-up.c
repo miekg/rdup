@@ -170,22 +170,21 @@ main(int argc, char **argv)
 				opt_dry = TRUE;
 				break;
 			case 's':
+#if 0
 				if (opt_path_strip != NULL) {
 					msg(_("The -r and -s option can not be used together"));
-					exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE); 
 				}
+#endif
                                 opt_strip = abs(atoi(optarg));
                                 break;
 			case 'r':
+#if 0
 				if (opt_strip != 0) {
 					msg(_("The -r and -s option can not be used together"));
-					exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE); 
 				}
-				if (strlen(optarg) == 0) {		/* does this help? XX */
-					msg(_("-r needs an arugment"));
-					exit(EXIT_FAILURE);
-				}
-
+#endif
 				/* expand relative paths */
 				if (!g_path_is_absolute(optarg))
 					opt_path_strip = abspath(g_strdup_printf("%s/%s", pwd, optarg));
