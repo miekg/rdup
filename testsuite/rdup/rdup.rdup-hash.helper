@@ -1,0 +1,2 @@
+#!/bin/sh
+./rdup -F '%n %H\n' /dev/null testsuite
