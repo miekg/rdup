@@ -3,7 +3,7 @@
 # this takes place in the rdup source tree
 # make sure the executables used are also
 # these
-PATH=`pwd`:`pwd`/sh:$PATH
+PATH=`pwd`:`pwd`/sh:.:$PATH
 
 rm -f ~/.rdup/list.$(uname -n).tmp
 rm -f ~/.rdup/timestamp.$(uname -n).tmp

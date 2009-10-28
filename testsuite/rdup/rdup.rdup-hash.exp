@@ -1,4 +1,4 @@
-set test "Run rdup with file hashin"
+set test "Run rdup with file hashing"
 if { [catch { exec ./testsuite/rdup/rdup.rdup-hash.helper } msg] } {
     fail "$test"
 } else {
