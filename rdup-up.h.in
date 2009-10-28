@@ -11,8 +11,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-#include <pwd.h>
-#include <grp.h>
 #include <time.h>
 #include <glob.h>
 #include <fcntl.h>
@@ -22,6 +20,8 @@
 #include <syslog.h>
 #include <errno.h>
 #include <utime.h>
+#include <pwd.h>
+#include <grp.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -73,15 +73,15 @@ gboolean rm(gchar *);
 
 /* fs-up.c */
 gboolean mk_hlink(GSList *);
-gboolean mk_obj(FILE *, char *, struct rdup *);
+gboolean mk_obj(FILE *, char *, struct rdup *, GHashTable *, GHashTable *);
 
 /* strippath.c */
 void strippath(struct rdup *);
 void strippathname(struct rdup *);
 
 /* names.c */
-git_t lookup_gid(GHashTable *, gchar *, gid_t);
 uid_t lookup_uid(GHashTable *, gchar *, uid_t);
+gid_t lookup_gid(GHashTable *, gchar *, gid_t);
 
 /* mkpath.c */
 int mkpath(const char *, mode_t);

@@ -9,8 +9,9 @@
 #include <grp.h>
 
 /* lookup the uid belonging to username
- * if the uid is not equal to uid_given
- * return uid_given
+ * if the uid is not found, return uid_given
+ * otherwise return the uid belonging to the username
+ * ON THIS SYSTEM
  */
 uid_t
 lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
@@ -31,6 +32,7 @@ lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
 	return *((uid_t *)g_hash_table_lookup(u, user));
 }
 
+/* see lookup_uid, but now for groups */
 gid_t
 lookup_gid(GHashTable *g, gchar *group, gid_t gid_given)
 {

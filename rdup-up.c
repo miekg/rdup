@@ -33,6 +33,8 @@ update(char *path)
 	char           *buf, *pathbuf, *n, *p;
 	char           delim;
 	gboolean       ok;
+	GHashTable     *uidhash; /* holds username -> uid */
+	GHashTable     *gidhash; /* holds groupname -> gid */
 
 	buf	= g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
@@ -41,6 +43,8 @@ update(char *path)
 	line    = 0;
 	ok      = TRUE;
 	pathlen = strlen(path);
+	uidhash = g_hash_table_new(g_str_hash, g_str_equal);
+	gidhash = g_hash_table_new(g_str_hash, g_str_equal);
 
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
@@ -100,7 +104,7 @@ update(char *path)
 			}
 		}
 		rdup_entry->f_name = p;
-		if (mk_obj(stdin, path, rdup_entry) == FALSE)
+		if (mk_obj(stdin, path, rdup_entry, uidhash, gidhash) == FALSE)
 			ok = FALSE;
 	}
 

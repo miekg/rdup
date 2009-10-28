@@ -34,9 +34,13 @@ mk_time(struct rdup *e)
 static gboolean
 mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
-	/* set the ownership */
+	uid_t u; gid_t g;
+	u = lookup_uid(uidhash, e->f_user, e->f_uid);
+	g = lookup_gid(gidhash, e->f_group, e->f_gid);
+	
+	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
-		if (chown(e->f_name, e->f_uid, e->f_gid) == -1) { } /* todo BUGBUG */
+		if (lchown(e->f_name, u, g) == -1) { } /* todo BUGBUG */
 	return TRUE;
 }
 
@@ -56,7 +60,7 @@ mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) {
 }
 
 static gboolean
-mk_dev(struct rdup *e) 
+mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
 {
 	gchar *parent;
 	struct stat *st;
@@ -91,7 +95,7 @@ mk_dev(struct rdup *e)
 }
 
 static gboolean
-mk_sock(struct rdup *e) 
+mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
 {
 	gchar *parent;
 	struct stat *st;
@@ -126,7 +130,7 @@ mk_sock(struct rdup *e)
 }
 
 static gboolean
-mk_link(struct rdup *e, char *p)
+mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 {
 	struct stat *st;
 	gchar *t;
@@ -159,8 +163,7 @@ mk_link(struct rdup *e, char *p)
 				return FALSE;
 			}
 		}
-		if (getuid() == 0)
-			if (lchown(e->f_name, e->f_uid, e->f_gid) == -1) { /* todo */ }
+		mk_chown(e, uidhash, gidhash);
 		return TRUE;
 	}
 
@@ -173,7 +176,7 @@ mk_link(struct rdup *e, char *p)
 }
 
 static gboolean
-mk_reg(FILE *in, struct rdup *e)
+mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	FILE *out = NULL;
 	char *buf;
@@ -249,7 +252,7 @@ mk_reg(FILE *in, struct rdup *e)
 }
 
 static gboolean
-mk_dir(struct rdup *e) 
+mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
 {
 	struct stat *s;
 	struct stat st;
@@ -315,7 +318,7 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 
 			/* only files, no hardlinks! */
 			if (S_ISREG(e->f_mode) && ! e->f_lnk )
-				return mk_reg(in, e);
+				return mk_reg(in, e, uidhash, gidhash);
 
 			/* no name, we can exit here - for files this is handled
 			 * in mk_reg, because we may need to suck in data */
@@ -323,19 +326,19 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 				return TRUE;
 
 			if (S_ISDIR(e->f_mode))
-				return mk_dir(e);	
+				return mk_dir(e, uidhash, gidhash);	
 
 			/* First sym and hardlinks and then regular files */
 			if (S_ISLNK(e->f_mode) || e->f_lnk) 
-				return mk_link(e, p);
+				return mk_link(e, p, uidhash, gidhash);
 
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
-				return mk_dev(e);
+				return mk_dev(e, uidhash, gidhash);
 
 			if (S_ISSOCK(e->f_mode))
-				return mk_sock(e);
+				return mk_sock(e, uidhash, gidhash);
 	}
-	/* huh still alive? */
+	/* only reached during the heat death of the universe */
 	return TRUE;
 }
 
@@ -347,7 +350,6 @@ mk_hlink(GSList *h)
 	GSList *p;
 	struct stat *st;
 	gchar *parent;
-
 
 	if (opt_dry)
 		return TRUE;
