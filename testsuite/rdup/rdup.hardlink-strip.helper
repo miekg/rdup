@@ -1,4 +1,5 @@
-( cd testsuite/rdup ; ln rdup.hardlink.helper rdup.hardlink.link )
+( cd testsuite/rdup ; rm rdup.hardlink.link 2>/dev/null; 
+ln rdup.hardlink.helper rdup.hardlink.link )
 ./rdup /dev/null testsuite | ./rdup-up -s 1 -t /tmp/test.$$
-rm -f testsuite/rdup/rdup.hardlink.link
+rm testsuite/rdup/rdup.hardlink.link 2>/dev/null
 rm -rf /tmp/test.$$
