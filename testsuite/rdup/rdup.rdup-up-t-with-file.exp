@@ -3,6 +3,7 @@ file copy /bin/cat testsuite/rdup/b
 if { [catch { exec ./rdup-up -t testsuite/rdup/b } msg] } {
     pass "$test"
 } else {
+    puts stderr "$msg"
     fail "$test"
 }
 file delete testsuite/rdup/b
