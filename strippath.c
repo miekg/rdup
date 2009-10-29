@@ -46,9 +46,9 @@ strippath(struct rdup *e)
 			break;
 	}
 
-	/* BUGBUG here strcopy, is this why -s and -r both make it segfault */
 	if (!p) {
-		e->f_name = NULL; /* f_name_size to 0?? BUGBUG */
+		e->f_name = NULL;
+		e->f_name_size = 0;
 		return;
 	} else {
 		e->f_name = p;
@@ -87,6 +87,7 @@ strippathname(struct rdup *e)
 /*	if (pathlabel(e) > opt_path_strip_len) { */
 		if (g_str_has_prefix(opt_path_strip, e->f_name)) {
 			e->f_name = NULL;
+			e->f_name_size = 0;
 			return;
 		}
 /*	} */

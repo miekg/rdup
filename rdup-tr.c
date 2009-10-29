@@ -44,7 +44,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 {
         gchar *crypt, *dest;
 	struct rdup *d = entry_dup(e);
-	/* entry dup hier BUGBUG */
+	/* entry dup hier??? BUGBUG */
 
 	crypt = crypt_path(aes_ctx, d->f_name, tr);
 	d->f_name = crypt;
