@@ -196,6 +196,14 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			if (S_ISLNK(s.st_mode)) 
 				pop.f_target = slink(&pop);
 
+
+			if (S_ISLNK(s.st_mode) || pop.f_lnk) {
+				/* fix the name and the sizes */
+				pop.f_size = pop.f_name_size;
+				pop.f_name_size += 4 + strlen(pop.f_target);
+			}
+
+
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 			g_free(curpath);
 			continue;

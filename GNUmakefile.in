@@ -67,6 +67,9 @@ po:	rdup.pot
 rdup.pot: ${OBJ} ${OBJ_TR} ${OBJ_UP}
 	xgettext --omit-header -k_ -d rdup -s -o rdup.pot *.c 
 
+tags:   *.[ch]
+	ctags *.[ch]
+
 clean:
 	rm -f *.o
 	rm -f rdup.mo ${CMD}

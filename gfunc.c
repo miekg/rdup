@@ -207,10 +207,14 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			fputs(e->f_name, out);
 			break;
 		case 'l':
+#if 0
 			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+				fprintf(stderr, "[%s] [%s]\n", e->f_name, e->f_target);
+				fprintf(stderr, "%d %d\n", (int)e->f_name_size, strlen(e->f_target));
 				fprintf(out, "%ld", (unsigned long)e->f_name_size + 4 + 
 						(unsigned long)strlen(e->f_target));
 			} else
+#endif
 				fprintf(out, "%ld", (unsigned long)e->f_name_size);
 
 			break;
@@ -254,7 +258,8 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			}
 			/* links - size is the size of f_name_size */
 			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-				fprintf(out, "%ld", (unsigned long)e->f_name_size);
+				/* -5 ' -> ' here... */
+				fprintf(out, "%ld", (unsigned long)e->f_name_size - 5);
 				break;
 			}
 
@@ -387,9 +392,13 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (S_ISLNK(e->f_mode))
 		linktype = 'l';
 
+	/* Can go BUGBUG */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+		/* BUG BUG */
 		file_size = e->f_name_size;
 		name_size = e->f_name_size + 4 + strlen(e->f_target);
+		file_size = e->f_size;
+		name_size = e->f_name_size;
 		n = g_strdup_printf("%s -> %s", e->f_name, e->f_target);
 	} else {
 		file_size = e->f_size;

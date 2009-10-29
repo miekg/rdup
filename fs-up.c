@@ -291,7 +291,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 
-/* make an object in the filesystem */
+/* make (or delete) an object in the filesystem */
 gboolean
 mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
 {
@@ -305,7 +305,7 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 				e->plusmin == PLUS ? '+' : '-',
 				e->f_uid, e->f_gid, e->f_name);
 
-	/* split here - or above - return when path is zero lenght
+	/* split here - or above - return when path is zero length
 	 * for links check that the f_size is zero */
 	switch(e->plusmin) {
 		case MINUS:

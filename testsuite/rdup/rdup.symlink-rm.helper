@@ -2,7 +2,7 @@
 
 (
 cat << EOF
--l 0777 0 0 - 0 - 42 37
+-l 0777 0 0 - 0 - 37 32
 /home/miekg/git/rdup/bin.orig/tt -> t+d 0755 1238317000 0 root 0 root 5 0
 /home+d 0755 1256843909 1000 miekg 1000 miekg 11 0
 /home/miekg+d 0775 1256669030 1000 miekg 1000 miekg 15 0
