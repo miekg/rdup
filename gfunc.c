@@ -314,7 +314,11 @@ entry_print(FILE *out, guint pm, struct rdup *e, char *fmt)
 	if (opt_verbose > 1) {
 		fputs("** ", stderr);
 		fputc(pm == PLUS ? '+' : '-', stderr);
-		fprintf(stderr, " %s\n", e->f_name);
+		fprintf(stderr, " %s", e->f_name);
+		if (S_ISLNK(e->f_mode) || e->f_lnk == 1) 
+			fprintf(stderr, " -> %s\n", e->f_target);
+		else
+			fputs("\n", stderr);
 	}
 
 	/* next check if we can read the file, if not - skip it and don't emit
