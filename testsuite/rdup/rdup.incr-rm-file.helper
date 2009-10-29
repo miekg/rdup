@@ -1,0 +1,13 @@
+#!/bin/bash
+
+rm LIJST TIMESTAMP 2>/dev/null
+cp -rap doc doc-test
+./rdup -N TIMESTAMP LIJST doc | ./rdup-up -t doc-backup
+# deleting a file and redo the backup
+rm doc-test/rdup-backups.7
+./rdup -N TIMESTAMP LIJST doc | ./rdup-up -t doc-backup
+EXIT=$?
+rm LIJST TIMESTAMP 2>/dev/null
+rm -rf doc-test doc-backup 2>/dev/null
+exit $EXIT
+

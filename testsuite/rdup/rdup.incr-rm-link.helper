@@ -1,0 +1,13 @@
+#!/bin/bash
+
+rm LIJST TIMESTAMP 2>/dev/null
+cp -rap doc doc-test
+( cd doc-test; ln -s rdup-backups.7 symlink )
+./rdup -N TIMESTAMP LIJST doc | ./rdup-up -t doc-backup
+# deleting the link and redo the backup
+rm doc-test/symlink
+./rdup -N TIMESTAMP LIJST doc | ./rdup-up -t doc-backup
+EXIT=$?
+rm LIJST TIMESTAMP 2>/dev/null
+rm -rf doc-test doc-backup 2>/dev/null
+exit $EXIT
