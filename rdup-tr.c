@@ -88,7 +88,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 static void  
 stdin2archive(void)
 {
-	char		*buf, *fbuf, *readbuf, *n, *out, *pathbuf;
+	char		*buf, *fbuf, *readbuf, *n, *pathbuf;
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		bytes;
@@ -181,10 +181,10 @@ stdin2archive(void)
                 }
 
 		if (opt_verbose > 0) {
-			out = g_strdup_printf("%s\n", rdup_entry->f_name);
-			if (write(2, out, rdup_entry->f_name_size + 1) == -1) {
-				msg(_("Writing to stderr failed"));
-				exit(EXIT_FAILURE);
+			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
+				fprintf(stderr, "%s ->%s\n", rdup_entry->f_name, rdup_entry->f_target);
+			} else {
+				fprintf(stderr, "%s\n", rdup_entry->f_name);
 			}
 		}
 

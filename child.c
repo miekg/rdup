@@ -6,7 +6,6 @@
 #include "rdup.h"
 
 extern sig_atomic_t sig;
-extern gint opt_verbose;
 
 /* signal.c */
 void got_sig(int signal);
@@ -24,10 +23,6 @@ close_pipes(GSList *pipes, int n1, int n2)
 /*		msg("Pipe set %d fds %d %d", j, q[0], q[1]); */
 		if (j == n1 || j == n2)
 			continue;
-#if 0
-		if (opt_verbose > 0) 
-			msg("Closing pipe set %d", j);
-#endif
 		close(q[0]);
 		close(q[1]);
 	}
