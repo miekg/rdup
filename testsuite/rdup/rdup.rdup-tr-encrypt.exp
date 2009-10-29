@@ -1,5 +1,6 @@
 set test "Run rdup -X test (if encryption is available)"
 if { [catch { exec ./testsuite/rdup/rdup.rdup-tr-encrypt.helper } msg] } {
+    puts stderr "$msg"
     fail "$test"
 } else {
     pass "$test"

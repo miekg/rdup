@@ -2,4 +2,4 @@
 
 # should give no output
 ./rdup /dev/null testsuite | ./rdup-up -s 2 -t /tmp/test.$$
-rm -rf /tmp/test.$$
+#rm -rf /tmp/test.$$

@@ -1,5 +1,6 @@
 set test "Run rdup with file hashing"
 if { [catch { exec ./testsuite/rdup/rdup.rdup-hash.helper } msg] } {
+    puts stderr "$msg"
     fail "$test"
 } else {
     pass "$test"
