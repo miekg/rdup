@@ -1,7 +1,0 @@
-set test "Run rdup-up with input which removes a symlink"
-if { [catch { exec ./testsuite/rdup/rdup.symlink-rm.helper } msg] } {
-    puts stderr "$msg"
-    fail "$test"
-} else {
-    pass "$test"
-}
