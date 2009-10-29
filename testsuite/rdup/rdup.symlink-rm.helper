@@ -1,0 +1,13 @@
+#!/bin/bash
+
+(
+cat << EOF
+-l 0777 0 0 - 0 - 42 37
+/home/miekg/git/rdup/bin.orig/tt -> t+d 0755 1238317000 0 root 0 root 5 0
+/home+d 0755 1256843909 1000 miekg 1000 miekg 11 0
+/home/miekg+d 0775 1256669030 1000 miekg 1000 miekg 15 0
+/home/miekg/git+d 0755 1256843911 1000 miekg 1000 miekg 20 0
+/home/miekg/git/rdup+d 0755 1256843913 1000 miekg 1000 miekg 29 0
+/home/miekg/git/rdup/bin.orig
+EOF
+) | ./rdup-up -n -t /tmp/x
