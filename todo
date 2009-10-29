@@ -18,6 +18,8 @@ rdup-simple:
     error handling?
 
 general:
+    re-test incremental backups
+
     add extended attributes? man 5 tar explains how to do it, but it
     is A LOT of work AND it is not portable over unixes...?
 
