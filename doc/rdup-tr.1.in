@@ -9,63 +9,14 @@
 
 .SH DESCRIPTION
 Transform rdup output into something else. Where something else can
-be a tar, cpio, pax archive or another rdup stream (An rdup stream
-is rdup \fI\-c\fR output).
+be a tar, cpio, pax archive or another rdup stream.
 
-The default is reading a normal rdup file list and writing rdup streams.
-Thus the input
-expected is the normal rdup output, i.e. the list of pathnames
-and some extra information, but \fIno\fR file content.
-
-The output of \fBrdup-tr\fR is a \fBrdup \fI\-c\fR stream, i.e. the list
-of pathnames \fIwith\fR the file content (which is possibly 
-transformed by \fBrdup-tr\fR).
-
-You can select other types of output (\-O flag), but you must be aware
-that you may loose some information in formats other than rdup's own, see 
+You can select multiple types of output (\-O flag), but you must be aware
+that you may loose some information in formats other than \fBrdup\fR's own, see 
 the table below.
 
 You may also supply \fBrdup-tr\fR with only a list of pathnames, this can 
 be selected with the \-L flag. 
-
-When creating output you might also want to 'pipe' the contents
-of \fIeach\fR file through a number of commands, say a compression and 
-encryption utility. Note that this is different than compressing the
-\fIentire\fR archive which can be done (for instance) by using the \-z option of
-GNU tar. So this is where \fBrdup-tr\fR comes in. It allows you to create
-a normal archive in which \fIeach\fR file is encrypted (or compressed.
-reversed or whatever). \fBrdup-tr\fR does this by forking child
-processes which transform the contents.
-
-If one of
-the forked children returns an exit code other than zero (0), it
-is assumed the whole conversion process failed. In that case the
-original file content is printed as-is.
-
-This command combines all previously written rdup-utils
-(rdup-gzip, rdup-crypt, rdup-gpg, etc) into a single executable, making
-it much more maintainable. And allowing for cool new features, see \-X 
-(path encryption) for instance.
-
-As said \fBrdup-tr\fR works by forking off a number of child processes (those
-commands named with the \-P option(s)), interconnecting these
-with pipes. The current file is connected to the first child.
-The output created by these child processes is
-captured by the parent (\fBrdup-tr\fR).
-The contents is then written to standard output in an archive format. As a picture says more
-than a thousand words here is an ASCII image:
-
-.RS
-                    
-            +--- ...   (stdout)    ... ----> archive
-           /  
-    rdup-tr  <--- ...   ... <----+
-                                 |
-   loop #files                   |
-                                 |
-  file ---> cmd1 | cmd2 | ...| cmdN
-
-.RE
 
 The following table shows what happens with the output
 depending on the input. 
@@ -93,24 +44,14 @@ filelist	    DH	H
 
 .SH OPTIONS
 .TP
-.B \-P\fIcommand\fR,\fIopt0\fR,...,\fIopt6\fR
-Filter all output through command, \fIopt0\fR through \fIopt6\fR are
-given as options to the command. Multiple \-P's can be used, there is
-however a maximum of seven options for each command. The options
-are separated with commas, there must be \fIno\fR space in between.
-
-Due to the nature of pipes in Unix, this pipeline is recreated for
-every file processed.
-.TP
 .B \-L
 Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
 with this option you can give it a list of path names.
+Note: with list input \fBrdup-tr\fR will `stat()` the file.
 .TP
 .B \-O
 Output format. This can be 'tar', 'cpio', 'pax', 'raw' or 'rdup'. It
-defaults to 'rdup'. 'RAW' todo BUGBUG Raw is special as it only output
-the raw file contents. This is used internally by rdup-tr itself when
-called with filters. The first filter will always be rdup-tr -Oraw.
+defaults to 'rdup'. 
 .TP
 .B \-X \fIkey\fR
 Read the encryption key from the file key and encrypt all paths
@@ -140,46 +81,42 @@ Print rdup-tr's version.
 A short help.
 
 .SH EXAMPLES
-I have a new favorite pipeline since rdup release 0.9.0
+The following is possible
 
-    rdup /dev/null /home | \\
-    rdup-tr -Pgzip -Pmcrypt,-fKEY,-c -O tar -Xboe | \\
-    gzip > my-home-zipped-crypted-pathcrypted-tar.gz
+    rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | \\
+    rdup-tr -O tar -Xboe | gzip > \\
+    my-home-zipped-crypted-pathcrypted-tar.gz
 
 That is: all files under /home are gzipped and encrypted
-on a per file basis. Further more, all pathnames are
-AES encrypted. This is put in a tar file, which is then
-compressed, resulting in the final output.
+on a \fIper\fR file basis (first line). Further more, all pathnames are
+AES encrypted (second line). This is put in a tar file, which is then
+compressed, resulting in the final output (final line).
 
 Creating a compressed and encrypted tar archive out of a full
 rdup dump might be done as follows
 
-    rdup /dev/null /home | rdup-tr -Pgzip\\
-    -Pmcrypt,-fKEY,-c -O tar > my-home-zipped-and-crypted.tar
+    rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | \\
+    rdup-tr -O tar > my-home-zipped-and-crypted.tar
 
 Or even pack and unpack it on the fly
 
-    rdup /dev/null /home | rdup-tr -Pgzip\\
-    -Pmcrypt,-fKEY,-c -O tar | ssh user@remotehost tar xvCf /tmp -
+    rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | rdup-tr -Otar | \\
+    ssh user@remotehost tar xvCf /tmp -
 
-When unzipping an "archive", gzip will do the right thing wrt to files
-that are not compressed and will just print them as-is. So the following
-will work
+Or encryption with openssl
 
-    rdup /dev/null /home | ./rdup-tr -c -Pgunzip 
-
-Encryption with openssl
-
-    rdup /dev/null /home | ./rdup-tr -c -Popenssl,enc,-e,-des-cbc,-k,secret 
+    ./rdup -c -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
 
 Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again
 
-    rdup /dev/null /home | ./rdup-tr -Pgzip\\
-    -Popenssl,enc,-e,-des-cbc,-k,secret | gzip >\\
-    my_compressed_encrypted_rdup_archive.gz
+    rdup -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home | \\
+    gzip > my_compressed_encrypted_rdup_archive.gz
 
-Recreating the original rdup (-c) output, which can be fed to rdup-up.
+Recreating the original \fBrdup\fR (-c) output, which can be fed to
+\fBrdup-up\fR.
+
+# DIT kan dus niet meer, maar heeft nooit echt gewerk BUGBUGBUG
 
     gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
     rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d >\\

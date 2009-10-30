@@ -97,15 +97,23 @@ which each do a their specific thing very well. With \fBrdup\fR and a
 small shell script (50 lines) one can implement encrypted and compressed
 backups.
 
-.SH BACKUP POLICY
 As \fBrdup\fR doesn't backup anything, the backup policy; what you
 backup, how you backup, how often and how you restore; is all left
-to the scripts. 
+to the scripts and your imagination. 
 
 .SH OPTIONS
 .TP
+.B \-P\fIcommand\fR,\fIopt0\fR,...,\fIopt6\fR
+Filter all output through command, \fIopt0\fR through \fIopt6\fR are
+given as options to the command. Multiple \-P's can be used, there is
+however a maximum of seven options for each command. The options
+are separated with commas, there must be \fIno\fR space in between.
+
+Due to the nature of pipes in Unix, this pipeline is recreated for
+every file processed. Also see 'Child Processes'.
+.TP
 .B \-F format
-Specify a printf-style format to use. See \fBFORMAT\fR below.
+Specify a printf-style format to use. See \fBFORMAT\fR below. 
 .TP
 .B \-N timestamp
 use the c_time of file \fBtimestamp\fR as the timestamp to decide what to
@@ -212,6 +220,43 @@ Print rdup's version.
 .TP
 .B \-h
 Give an overview of the options.
+
+.SS Child Processes (-P flag)
+When creating output you might also want to 'pipe' the contents
+of \fIeach\fR file through a number of commands, say a compression and
+encryption utility. Note that this is different than compressing the
+\fIentire\fR archive as GNU tar allows by using the \-z option.
+So this is where \fBrdup\fR comes in. It allows you to create
+a normal archive in which \fIeach\fR file is encrypted (or compressed.
+reversed or whatever). \fBrdup\fR does this by forking child
+processes which transform the content.
+
+If one of
+the forked children returns an exit code other than zero (0), it
+is assumed the whole conversion process failed. In that case \fBrdup\fR
+terminates.
+
+As said \fBrdup\fR works by forking off a number of child processes (those
+commands named with the \-P option(s)), interconnecting these
+with pipes. The current file is connected to the first child.
+The output created by these child processes is
+captured by the parent (\fBrdup\fR).
+The contents is then written to standard output in an archive format. 
+As a picture says more
+than a thousand words here is an ASCII image of the process:
+
+RS
+
+            +--- ...   (stdout)    ... ----> archive
+           /
+       rdup  <--- ...   ... <----+
+                                 |
+   loop #files                   |
+                                 |
+  file ---> cmd1 | cmd2 | ...| cmdN
+
+.RE
+
 
 .SH BACKUPS
 With:

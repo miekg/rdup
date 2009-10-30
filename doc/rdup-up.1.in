@@ -12,10 +12,10 @@ With \fBrdup-up\fR you can update an (possibly) existing directory
 structure with a rdup archive.
 
 .SS Username and uids
-In rdup's output both the username and uid 
-BUGBUG
-in rdup-up if the username and uid don't match the uid is used
-on the file.
+Rdup outputs both the username and uid, the receiving system (which
+may be a totally different system) checks if the username and uid
+match. If the username and uid don't match the (numeric) uid is
+used on the file. The same holds true for the groupname and gid.
 
 .SH OPTIONS
 .TP
@@ -60,6 +60,11 @@ Be more verbose and echo the processed files to \fIstandard output\fR.
 .B \-vv
 Be even more verbose and echo processed file \fIand\fR the uid and
 gid information to standard output.
+.TP
+.B \-T
+Show a table of contents of the rdup stream received (ala tar \-tf \-).
+With \-T the directory argument is optional, because it is not used.
+\-T unset any verbose (\-v) options.
 .TP
 .B \-h
 A short help message.
