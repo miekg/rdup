@@ -96,7 +96,7 @@ cat(FILE *fp, char *filename)
 			return FALSE;
 		}
 		/* use 0 for the flags field */
-		if (wait_pids(pids, 0) == -1) {
+		if (wait_pids(pids, WNOHANG) == -1) {
 			msg(_("Wait pid failure"));
 			fclose(file);
 			return FALSE;

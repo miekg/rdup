@@ -32,27 +32,32 @@ close_pipes(GSList *pipes, int n1, int n2)
 int
 wait_pids(GSList *pids, int flags)
 {
-	GSList *p;
+	/* GSList *p; */
 	int status;
-	int ret = 0;
+	/* int ret = 0; */
 
 	if (!pids)
 		return 0;
 
+	if (waitpid(-1, &status, flags) == -1)
+		return -1;
+
+	return 0;
+
+#if 0
 	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
                 if (sig != 0)
                         signal_abort(sig);
 
 		waitpid(*(pid_t* )(p->data), &status, flags);
 		if (WIFEXITED(status)) {
-#if 0
 			msg("Child exit %d", WEXITSTATUS(status)); 
-#endif
 			if (WEXITSTATUS(status) != 0)
 				ret = -1;
 		}
 	}
 	return ret;
+#endif
 }
 
 /* create pipes and childs, return pids */
