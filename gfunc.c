@@ -258,8 +258,9 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			}
 			/* links - size is the size of f_name_size */
 			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+/* BUGBUG				fprintf(stderr, "%ld\n", (unsigned long)e->f_size); */
 				/* -5 ' -> ' here... */
-				fprintf(out, "%ld", (unsigned long)e->f_name_size - 5);
+				fprintf(out, "%ld", (unsigned long)e->f_size);
 				break;
 			}
 

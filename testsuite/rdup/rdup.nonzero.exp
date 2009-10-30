@@ -1,6 +1,6 @@
 set test "Run rdup -X which should fail"
 if { [catch { exec ./rdup -X } msg] } {
-    puts stderr "$msg"
+    #puts stderr "$msg"
     pass "$test"
 } else {
     fail "$test"

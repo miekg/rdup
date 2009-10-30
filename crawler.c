@@ -201,6 +201,11 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				/* fix the name and the sizes */
 				pop.f_size = pop.f_name_size;
 				pop.f_name_size += 4 + strlen(pop.f_target);
+#if 0 
+				BUGBUG
+				fprintf(stderr, "size name %d size total %d\n",
+						(int)pop.f_name_size, (int)pop.f_size);
+#endif
 			}
 
 

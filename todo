@@ -12,6 +12,7 @@ rdup-tr:
 rdup-up:
     update manpage
     error handling
+    add table of contents, -T options
 
 rdup-simple:
     adapt to new commands
@@ -27,3 +28,4 @@ tests:
     sha1 test
     crypto tests
     encrypt path test
+    tweak almost correct input and let rdup crash

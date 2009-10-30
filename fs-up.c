@@ -295,11 +295,14 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 gboolean
 mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
 {
-	/* -v */
-	if (opt_verbose == 1 && e->f_name)
-		fprintf(stdout, "%s\n", e->f_name);
-
-	/* -vv */
+	if (opt_verbose == 1  && e->f_name) {
+		if (S_ISLNK(e->f_mode) || e->f_lnk) 
+			fprintf(stdout, "%s -> %s\n", e->f_name, e->f_target);
+		else 
+			fprintf(stdout, "%s\n", e->f_name);
+	
+	}
+ 
 	if (opt_verbose == 2 && e->f_name)
 		fprintf(stdout, "%c %d %d %s\n", 
 				e->plusmin == PLUS ? '+' : '-',

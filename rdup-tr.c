@@ -182,7 +182,7 @@ stdin2archive(void)
 
 		if (opt_verbose > 0) {
 			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
-				fprintf(stderr, "%s ->%s\n", rdup_entry->f_name, rdup_entry->f_target);
+				fprintf(stderr, "%s -> %s\n", rdup_entry->f_name, rdup_entry->f_target);
 			} else {
 				fprintf(stderr, "%s\n", rdup_entry->f_name);
 			}

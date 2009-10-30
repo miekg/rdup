@@ -10,7 +10,6 @@ touch A/b/1 A/b/2 A/b/3
 touch A/d/1 A/d/2 A/d/3
 ./rdup -N $$.timestamp $$.lijst A > /dev/null
 chmod +t A/d
-sleep 1	# otherwise timestamp is equal to just created files
 
 # incr dump, after the chmod the directory MUST not
 # show up in the dump
