@@ -24,7 +24,7 @@ The input must be rdup -c output\n\
 	-r PATH\t\tstrip PATH from each pathname\n\
 	-n\t\tdry run, do not touch the filesystem\n\
 	-V\t\tprint version\n\
-	-T\t\tshow table of contents. DIRECTORY is now optional\n\
+	-T\t\tshow table of contents. DIRECTORY is optional\n\
 	-h\t\tthis help\n\
 	-v\t\tbe more verbose and print processed files to stdout\n\
 \n\
