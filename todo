@@ -8,12 +8,10 @@ rdup-tr:
     with tar/pax output hardlinks must come last
     update manpage
     error handling
-	    table of contents ouput
 
 rdup-up:
     update manpage
     error handling
-    table output here too?
 
 rdup-simple:
     adapt to new commands
