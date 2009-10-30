@@ -61,6 +61,7 @@ void usage_up(FILE *);
 
 /* entry.c */
 struct rdup * parse_entry(char *, size_t);
+gint rdup_write_table(struct rdup *);
 
 /* link.c */
 gchar * slink(struct rdup *);

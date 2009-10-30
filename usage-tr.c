@@ -14,8 +14,6 @@ usage_tr(FILE *f)
 	fputs( _("\
 Translate rdup output into something else.\n\
 The input must be rdup's default ouput\n\
-format: \'%p%T %b %u %g %l %s %n\\n\'.\n\
-The output is equal to rdup -c ouput.\n\
 \n\
 \n\
     OPTIONS:\n\

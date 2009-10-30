@@ -18,6 +18,7 @@ char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
+gboolean opt_table	   = FALSE;			/* give table of contents */
 #ifdef HAVE_LIBSSL
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* encryption key */
@@ -223,7 +224,7 @@ stdin2archive(void)
 				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
 				/* if a hardlink is seen before the file exists
-				 * tar fails
+				 * tar fails. BUGBUG, need to process these at the end of the run
 				 */
 				if (S_ISLNK(rdup_entry->f_mode))
 					archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
@@ -315,7 +316,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "cP:O:t:LhVvX:Y:")) != -1) {
+	while ((c = getopt (argc, argv, "cP:O:t:LhVvX:Y:T")) != -1) {
 		switch (c) {
 			case 'c':
 				opt_tty = TRUE;
@@ -328,6 +329,9 @@ main(int argc, char **argv)
 				break;
 			case 'P':
 				msg(_("Functionality moved to rdup"));
+				break;
+			case 'T':
+				opt_table = TRUE;
 				break;
 			case 'O':
 				opt_output = O_NONE;

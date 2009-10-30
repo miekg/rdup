@@ -325,6 +325,47 @@ stat_from_rdup(struct rdup *e)
                time_t    st_ctime;
 	}
 	*/
-
 	return s;
+}
+
+/* 
+ * write a table of contents (ala gnu tar) entry to stdout 
+ * -/+drwxr-xr-x miekg/miekg       0 2009-10-30 08:37 home/miekg/bin2/
+ */
+
+gint
+rdup_write_table(struct rdup *e)
+{
+	e->plusmin == PLUS ? fputc('+', stdout) : fputs('-', stdout);
+	/* type */
+	if (S_ISDIR(e->f_mode)) {
+		fputc('d', stdout);
+	} else if (S_ISCHR(e->f_mode)) {
+		fputc('c', stdout);
+	} else if (S_ISBLK(e->f_mode)) {
+		fputc('b', stdout);
+	} else if (S_ISFIFO(e->f_mode)) {
+		fputc('p', stdout);
+	} else if (S_ISSOCK(e->f_mode)) {
+		fputc('s', stdout);
+	} else if (S_ISLNK(e->f_mode)) {
+		fputc('l', stdout);
+	} else {
+		if (e->f_lnk == 1)
+			fputc('h', stdout);
+		else
+			fputc('-', stdout);
+	}
+	/* perm symbolic */
+	
+	/* user/group */
+
+	/* size 6 pos right justified */
+
+	/* mtime in 2009-10-30 08:37 */
+
+	/* path */
+
+
+	return 0;
 }
