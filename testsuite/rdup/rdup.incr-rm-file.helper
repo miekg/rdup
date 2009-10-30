@@ -4,6 +4,7 @@ rm LIJST TIMESTAMP 2>/dev/null
 cp -rap doc doc-test
 ./rdup -N TIMESTAMP LIJST doc | ./rdup-up -t doc-backup
 # deleting a file and redo the backup
+sleep 1
 rm doc-test/rdup-backups.7
 ./rdup -N TIMESTAMP LIJST doc | ./rdup-up -t doc-backup
 EXIT=$?
