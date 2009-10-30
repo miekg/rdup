@@ -328,44 +328,92 @@ stat_from_rdup(struct rdup *e)
 	return s;
 }
 
+/* convert time_t to string: 2009-10-30 08:37 */
+static void
+strtime(time_t time, gchar *str)
+{
+	struct tm *t;
+	t = localtime(&time);
+	strftime(str, BUFSIZE, "%Y-%m-%d %H:%M", t);
+}
+
+/* stolen from coreutils */
+static void
+strmode(mode_t mode, gchar *str) 
+{
+	str[0] = mode & S_IRUSR ? 'r' : '-';
+	str[1] = mode & S_IWUSR ? 'w' : '-';
+	str[2] = (mode & S_ISUID
+			? (mode & S_IXUSR ? 's' : 'S')
+			: (mode & S_IXUSR ? 'x' : '-'));
+	str[3] = mode & S_IRGRP ? 'r' : '-';
+	str[4] = mode & S_IWGRP ? 'w' : '-';
+	str[5] = (mode & S_ISGID
+			? (mode & S_IXGRP ? 's' : 'S')
+			: (mode & S_IXGRP ? 'x' : '-'));
+	str[6] = mode & S_IROTH ? 'r' : '-';
+	str[7] = mode & S_IWOTH ? 'w' : '-';
+	str[8] = (mode & S_ISVTX
+			? (mode & S_IXOTH ? 't' : 'T')
+			: (mode & S_IXOTH ? 'x' : '-'));
+	str[9] = ' ';
+	str[10] = '\0';
+}
+
 /* 
  * write a table of contents (ala gnu tar) entry to stdout 
  * -/+drwxr-xr-x miekg/miekg       0 2009-10-30 08:37 home/miekg/bin2/
  */
 
 gint
-rdup_write_table(struct rdup *e)
+rdup_write_table(struct rdup *e, FILE *f)
 {
-	e->plusmin == PLUS ? fputc('+', stdout) : fputc('-', stdout);
+	gchar *tmp = g_malloc(BUFSIZE);
+	e->plusmin == PLUS ? fputc('+', f) : fputc('-', f);
 	/* type */
 	if (S_ISDIR(e->f_mode)) {
-		fputc('d', stdout);
+		fputc('d', f);
 	} else if (S_ISCHR(e->f_mode)) {
-		fputc('c', stdout);
+		fputc('c', f);
 	} else if (S_ISBLK(e->f_mode)) {
-		fputc('b', stdout);
+		fputc('b', f);
 	} else if (S_ISFIFO(e->f_mode)) {
-		fputc('p', stdout);
+		fputc('p', f);
 	} else if (S_ISSOCK(e->f_mode)) {
-		fputc('s', stdout);
+		fputc('s', f);
 	} else if (S_ISLNK(e->f_mode)) {
-		fputc('l', stdout);
+		fputc('l', f);
 	} else {
-		if (e->f_lnk == 1)
-			fputc('h', stdout);
+		if (e->f_lnk == 1)			
+			fputc('h', f);
 		else
-			fputc('-', stdout);
+			fputc('-', f);
 	}
 	/* perm symbolic */
+	strmode(e->f_mode, tmp);
+	fputs(tmp, f);
 	
 	/* user/group */
+	if (e->f_user) 
+		fprintf(f, " %s/", e->f_user);
+	else
+		fprintf(f, " %ld/", (unsigned long)e->f_uid);
+
+	if (e->f_group) 
+		fprintf(f, "%s ", e->f_group);
+	else
+		fprintf(f, "%ld ", (unsigned long)e->f_gid);
 
 	/* size 6 pos right justified */
+	fprintf(f, "% .6ld ", (unsigned long)e->f_size); /* check output for links and devices */
 
 	/* mtime in 2009-10-30 08:37 */
+	strtime(e->f_mtime, tmp);
+	fputs(tmp, f);
 
 	/* path */
+	fputs(e->f_name, f);
 
-
+	g_free(tmp);
 	return 0;
 }

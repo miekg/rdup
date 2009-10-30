@@ -86,7 +86,7 @@ struct rdup * parse_entry(char *, size_t);
 gint rdup_write_header(struct rdup *);
 gint rdup_write_data(struct rdup *, char *, size_t);
 struct stat * stat_from_rdup(struct rdup *);
-gint rdup_write_table(struct rdup *);
+gint rdup_write_table(struct rdup *, FILE *);
 
 /* link.c */
 gchar *slink(struct rdup *);
