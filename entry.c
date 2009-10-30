@@ -413,9 +413,7 @@ rdup_write_table(struct rdup *e, FILE *f)
 
 	/* path */
 	fputs(e->f_name, f);
-
 	fputc('\n',f );
-
 	g_free(tmp);
 	return 0;
 }
