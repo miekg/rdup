@@ -13,6 +13,7 @@
 
 extern sig_atomic_t sig;
 extern gboolean opt_dry;
+extern gboolean opt_table;
 extern guint opt_strip;
 extern gint opt_verbose;
 extern GSList *hlink_list;
@@ -302,6 +303,8 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 			fprintf(stdout, "%s\n", e->f_name);
 	
 	}
+	if (opt_table) 
+		rdup_write_table(e, stdout);
  
 	if (opt_verbose == 2 && e->f_name)
 		fprintf(stdout, "%c %d %d %s\n", 

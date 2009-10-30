@@ -405,14 +405,16 @@ rdup_write_table(struct rdup *e, FILE *f)
 		fprintf(f, "%ld ", (unsigned long)e->f_gid);
 
 	/* size 6 pos right justified */
-	fprintf(f, "% .6ld ", (unsigned long)e->f_size); /* check output for links and devices */
+	fprintf(f, "% 9ld ", (unsigned long)e->f_size); /* check output for links and devices */
 
 	/* mtime in 2009-10-30 08:37 */
 	strtime(e->f_mtime, tmp);
-	fputs(tmp, f);
+	fputs(tmp, f); fputc(' ', f);
 
 	/* path */
 	fputs(e->f_name, f);
+
+	fputc('\n',f );
 
 	g_free(tmp);
 	return 0;

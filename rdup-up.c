@@ -14,6 +14,7 @@ gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
+gboolean opt_table	   = FALSE;			/* table of contents */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
 guint opt_path_strip_len   = 0;				/* number of path labels in opt_path_strip */
@@ -42,9 +43,12 @@ update(char *path)
 	delim   = '\n';
 	line    = 0;
 	ok      = TRUE;
-	pathlen = strlen(path);
 	uidhash = g_hash_table_new(g_str_hash, g_str_equal);
 	gidhash = g_hash_table_new(g_str_hash, g_str_equal);
+	if (path)
+		pathlen = strlen(path);
+	else
+		pathlen = 0;
 
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
@@ -94,7 +98,7 @@ update(char *path)
 			p = NULL;
 		else {
 			/* avoid // at the beginning */
-			if (pathlen == 1 && path[0] == '/') {
+			if ( (pathlen == 1 && path[0] == '/') || pathlen == 0 ) {
 				p = g_strdup(rdup_entry->f_name);
 			} else {
 				p = g_strdup_printf("%s%s", path, rdup_entry->f_name);
@@ -158,7 +162,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "thnVvs:r:")) != -1) {
+	while ((c = getopt (argc, argv, "thnVvs:r:T")) != -1) {
 		switch (c) {
 			case 'v':
 				opt_verbose++;
@@ -167,6 +171,10 @@ main(int argc, char **argv)
 				usage_up(stdout);
 				exit(EXIT_SUCCESS);
 			case 'n':
+				opt_dry = TRUE;
+				break;
+			case 'T':
+				opt_table = TRUE;
 				opt_dry = TRUE;
 				break;
 			case 's':
@@ -209,14 +217,18 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (argc != 1) {
-		msg(_("Destination directory is required"));
-		exit(EXIT_FAILURE);
+	if (opt_table) {
+		path = NULL;
+	} else {
+		if (argc != 1) {
+			msg(_("Destination directory is required"));
+			exit(EXIT_FAILURE);
+		}
+		if (!g_path_is_absolute(argv[0])) 
+			path = abspath(g_strdup_printf("%s/%s", pwd, argv[0]));
+		else
+			path = abspath(argv[0]);
 	}
-	if (!g_path_is_absolute(argv[0])) 
-		path = abspath(g_strdup_printf("%s/%s", pwd, argv[0]));
-	else
-		path = abspath(argv[0]);
 
 	if (!opt_dry) {
 		if (opt_top) {
