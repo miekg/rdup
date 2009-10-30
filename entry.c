@@ -336,7 +336,7 @@ stat_from_rdup(struct rdup *e)
 gint
 rdup_write_table(struct rdup *e)
 {
-	e->plusmin == PLUS ? fputc('+', stdout) : fputs('-', stdout);
+	e->plusmin == PLUS ? fputc('+', stdout) : fputc('-', stdout);
 	/* type */
 	if (S_ISDIR(e->f_mode)) {
 		fputc('d', stdout);
