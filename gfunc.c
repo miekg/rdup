@@ -97,7 +97,7 @@ cat(FILE *fp, char *filename)
 		}
 		/* use 0 for the flags field */
 		if (wait_pids(pids, 0) == -1) {
-			msg(_("Waid pid failure: %s"), strerror(errno));
+			msg(_("Wait pid failure"));
 			fclose(file);
 			return FALSE;
 		}
@@ -145,11 +145,9 @@ static void
 entry_cat_data(FILE *fp, struct rdup *e)
 {
 	if (S_ISREG(e->f_mode) && e->f_lnk == 0) {
-		if (!cat(fp, e->f_name)) {
-			/* BUGBUG */
-			fprintf(stderr, "Error from cat\n");
+		if (!cat(fp, e->f_name))
 			exit(EXIT_FAILURE);
-		}
+		
 		return;
 	}
 }

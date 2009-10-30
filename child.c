@@ -46,7 +46,7 @@ wait_pids(GSList *pids, int flags)
 		waitpid(*(pid_t* )(p->data), &status, flags);
 		if (WIFEXITED(status)) {
 #if 0
-			msg("Child exit %d\n", WEXITSTATUS(status)); 
+			msg("Child exit %d", WEXITSTATUS(status)); 
 #endif
 			if (WEXITSTATUS(status) != 0)
 				ret = -1;
