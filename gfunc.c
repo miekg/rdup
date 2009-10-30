@@ -121,7 +121,7 @@ cat(FILE *fp, char *filename)
 		}
 		close(parent[0]);
 		fclose(file);
-		if (wait_pids(pids, 0) == -1) {
+		if (wait_pids(pids, WNOHANG) == -1) {
 			msg(_("Weird child exit `%s\': %s"), filename, strerror(errno));
 			/* weird child exit */
 			return FALSE;
