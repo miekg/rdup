@@ -95,7 +95,9 @@ cat(FILE *fp, char *filename)
 			fclose(file);
 			return FALSE;
 		}
-		if (wait_pids(pids, WNOHANG) == -1) {
+		/* use 0 for the flags field */
+		if (wait_pids(pids, 0) == -1) {
+			msg(_("Waid pid failure: %s"), strerror(errno));
 			fclose(file);
 			return FALSE;
 		}
@@ -120,6 +122,7 @@ cat(FILE *fp, char *filename)
 		close(parent[0]);
 		fclose(file);
 		if (wait_pids(pids, 0) == -1) {
+			msg(_("Weird child exit `%s\': %s"), filename, strerror(errno));
 			/* weird child exit */
 			return FALSE;
 		}
@@ -143,6 +146,8 @@ entry_cat_data(FILE *fp, struct rdup *e)
 {
 	if (S_ISREG(e->f_mode) && e->f_lnk == 0) {
 		if (!cat(fp, e->f_name)) {
+			/* BUGBUG */
+			fprintf(stderr, "Error from cat\n");
 			exit(EXIT_FAILURE);
 		}
 		return;
@@ -309,15 +314,13 @@ void
 entry_print(FILE *out, guint pm, struct rdup *e, char *fmt)
 {
 	char *pos;
-	if ((pm == PLUS) && (opt_modified == FALSE)) {
+	if ((pm == PLUS) && (opt_modified == FALSE))
 		return;
-	}
 
-	if ((pm == MINUS) && (opt_removed == FALSE)) {
+	if ((pm == MINUS) && (opt_removed == FALSE))
 		return;
-	}
 
-	if (opt_verbose > 1) {
+	if (opt_verbose >= 1) {
 		fputs("** ", stderr);
 		fputc(pm == PLUS ? '+' : '-', stderr);
 		fprintf(stderr, " %s", e->f_name);

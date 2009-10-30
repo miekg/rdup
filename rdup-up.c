@@ -165,7 +165,10 @@ main(int argc, char **argv)
 	while ((c = getopt (argc, argv, "thnVvs:r:T")) != -1) {
 		switch (c) {
 			case 'v':
-				opt_verbose++;
+				if (!opt_verbose)
+					opt_verbose++;
+				else
+					opt_verbose = 0;
 				break;
 			case 'h':
 				usage_up(stdout);
@@ -176,6 +179,7 @@ main(int argc, char **argv)
 			case 'T':
 				opt_table = TRUE;
 				opt_dry = TRUE;
+				opt_verbose = 0;
 				break;
 			case 's':
                                 opt_strip = abs(atoi(optarg));

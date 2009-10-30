@@ -333,6 +333,9 @@ main(int argc, char **argv)
 				opt_reverse = TRUE;
 				break;
 			case 'P':
+				/* (void)setvbuf(stdout, NULL, _IONBF, 0);
+				(void)setvbuf(stdin, NULL, _IONBF, 0); */
+
                                 /* allocate new for each child */
                                 args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
                                 q = g_strdup(optarg);

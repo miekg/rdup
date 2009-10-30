@@ -13,8 +13,6 @@
  *
  * 01BLOCK00004
  * <4 bytes of the file>01BLOCK00000
- *
- *
  */
 
 #include <stdio.h>
