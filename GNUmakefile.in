@@ -109,7 +109,7 @@ uninstall:
 	$(MAKE) -C po uninstall
 
 check:	all
-	[ -d testlogs ] || mkdir testlogs
-	chmod +x testsuite/rdup/rdup*helper
+	@[ -d testlogs ] || mkdir testlogs
+	@chmod +x testsuite/rdup/rdup*helper
 	runtest 
-	chmod -x testlogs/rdup.log
+	@chmod -x testlogs/rdup.log
