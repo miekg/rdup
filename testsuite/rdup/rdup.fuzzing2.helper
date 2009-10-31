@@ -1,0 +1,2 @@
+#!/bin/bash
+cat testsuite/rdup/rdup.fuzzing1.data | ./rdup-up -T >/dev/null
