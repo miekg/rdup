@@ -7,5 +7,5 @@
 exit 0
 
 # should be identical, i.e. no diff
-diff -u <(./rdup -c /dev/null po|sed 's/01BLOCK.....//') \
-<(./rdup /dev/null po|./rdup-tr -c -Pcat|sed 's/01BLOCK.....//')
+diff -u <(./rdup /dev/null po|sed 's/01BLOCK.....//') \
+<(./rdup -Pcat /dev/null po|sed 's/01BLOCK.....//')
