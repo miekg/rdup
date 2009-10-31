@@ -21,16 +21,18 @@ With \fBrdup\fR you create the filelist on which later programs in the
 pipeline can work. The default output format also includes the files'
 content. \fBrdup\fR can be seen as a tar replacement in this respect,
 but \fBrdup\fR also allows for all kinds of transformations of
-te content (encrypt, compress, reverse), see the -P switch in rdup(1)
+the content (encryption, compression, reversal), see the -P switch in rdup(1)
 for more information.
 
 .TP
 .B rdup-tr
-With \fBrdup-tr\fR you can transform the files rdup delivers to you,
-with \fBrdup-tr\fR you can further tweaks the output. You can 
-create tar or pax files or encrypt paths. \fBrdup-tr\fR is a real
-filter is reads from standard input and writes to standard output.
-See rdup-tr(1) for more information.
+With \fBrdup-tr\fR you can transform the files rdup delivers to you.
+You can 
+create tar, cpio or pax files. You can encrypt pathnames. \fBrdup-tr\fR is 
+filter that reads from standard input and writes to standard output.
+See rdup-tr(1) for more information. With \fBrdup\fR and \fBrdup-tr\fR
+you can create an encrypted archive which is put in a directory
+structure that is also encrypted.
 
 .TP 
 .B rdup-up
@@ -117,7 +119,7 @@ The following script implements the algorithm of \fBrdup-simple\fR.
 .nf
 #!/bin/bash
 
-# some tmp. file are saved in ~/.rdup. This directory must exist
+# some tmp files are saved in ~/.rdup. This directory must exist
 
 DIR=/home	    # what to backup
 BACKUP=/vol/backup
@@ -157,9 +159,5 @@ rdup -N $STAMP -Pcat $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
 .fi
 .RE
 
-.SH RESTORES
-todo: restore stuff XXX
- ./rdup-tr -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret           
-
 .SH ALSO SEE
-rdup(1), rdup-tr(1), rdup-up(1) or http://www.miek.nl/projects/rdup/
+rdup(1), rdup-tr(1), rdup-up(1) and http://www.miek.nl/projects/rdup/
