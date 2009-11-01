@@ -29,9 +29,15 @@ crypt_init(gchar *key_data, guint length, gboolean crypt)
 
 	EVP_CIPHER_CTX_init(ctx);
 	if (crypt)
-		EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+		i = EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
 	else 
-		EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+		i = EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+
+	if (i == 0) {
+		msg(_("Failed to setup encryption"));
+		return NULL;
+	}
+
 
 	return ctx;
 }
@@ -299,11 +305,14 @@ crypt_key(gchar *file)
 		buf[32] = '\0';
 		return buf;
 	}
+#if 0
 	if (s != 16 && s != 24 && s != 32) {
 		msg(_("AES key must be 16, 24 or 32 bytes"));
 		g_free(buf);
 		return NULL;
 	}
+	/* is this still needed with OpenSSL? */
+#endif
 	return buf;
 }
 #endif /* HAVE_LIBSSL */
