@@ -1,7 +1,8 @@
 #!/bin/bash
 
-#if ./rdup-tr -X &> /dev/null; then : ; else exit 0; fi
+# do we have encryption
+if cat /dev/null | ./rdup-tr -X<(echo Boe) -c; then : else exit 0; fi
 
 # shoud give zero exit code
 ./rdup /dev/null testsuite | ./rdup-tr -X<(echo Boe) | \
-./rdup-tr -Y<(echo Boe) | grep testsuite
+./rdup-tr -Y<(echo Boe) | ./rdup-up -T | grep testsuite
