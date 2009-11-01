@@ -405,7 +405,15 @@ rdup_write_table(struct rdup *e, FILE *f)
 		fprintf(f, "%ld ", (unsigned long)e->f_gid);
 
 	/* size 6 pos right justified */
-	fprintf(f, "% 9ld ", (unsigned long)e->f_size); /* check output for links and devices */
+	if ((S_ISLNK(e->f_mode) || e->f_lnk == 1)) {
+		/* correctly recover original filesize for the link */
+		fprintf(f, "% 9ld ", (unsigned long)(e->f_name_size - e->f_size - 4));
+	} else if (S_ISCHR(e->f_mode) || S_ISBLK(e->f_mode)) {
+		fprintf(f, "% 6d,%d ", (unsigned int)major(e->f_rdev), 
+				(unsigned int)minor(e->f_rdev));
+	} else {
+		fprintf(f, "% 9ld ", (unsigned long)e->f_size); 
+	}
 
 	/* mtime in 2009-10-30 08:37 */
 	strtime(e->f_mtime, tmp);
@@ -413,7 +421,11 @@ rdup_write_table(struct rdup *e, FILE *f)
 
 	/* path */
 	fputs(e->f_name, f);
-	fputc('\n',f );
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+		fputs(" -> ", f); fputs(e->f_target, f);
+	}
+
+	fputc('\n', f);
 	g_free(tmp);
 	return 0;
 }

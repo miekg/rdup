@@ -354,7 +354,10 @@ main(int argc, char **argv)
 				}
 				if (! (opt_crypt_key = crypt_key(optarg)))
 					exit(EXIT_FAILURE);
-				aes_ctx = crypt_init(opt_crypt_key, strlen(opt_crypt_key), TRUE);
+
+				aes_ctx = crypt_init(opt_crypt_key, TRUE);
+				if (!aes_ctx)
+					exit(EXIT_FAILURE);
 #else
 				msg(_("Compiled without encryption, can not encrypt"));
 				exit(EXIT_FAILURE);
@@ -368,7 +371,10 @@ main(int argc, char **argv)
 				}
 				if (! (opt_decrypt_key = crypt_key(optarg)))
 					exit(EXIT_FAILURE);
-				aes_ctx = crypt_init(opt_decrypt_key, strlen(opt_decrypt_key), FALSE);
+
+				aes_ctx = crypt_init(opt_crypt_key, FALSE);
+				if (!aes_ctx)
+					exit(EXIT_FAILURE);
 #else
 				msg(_("Compiled without encryption, can not decrypt"));
 				exit(EXIT_FAILURE);
