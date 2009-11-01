@@ -19,6 +19,7 @@ got_sig(int signal)
 void
 signal_abort(int signal)
 {
+	int status;
         switch(signal) {
                 case SIGPIPE:
                         msg(_("SIGPIPE received, exiting"));
@@ -26,6 +27,10 @@ signal_abort(int signal)
                 case SIGINT:
                         msg(_("SIGINT received, exiting"));
                         break;
+		case SIGCHLD:
+			(void)wait(&status);
+			fprintf(stderr, "Stat: %d\n", status);
+			return;
                 default:
                         msg(_("Unhandled signal reveived, exiting"));
                         break;
