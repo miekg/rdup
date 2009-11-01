@@ -33,23 +33,23 @@ And for incremental dumps
 Read in the filelist that was written when doing a full dump.
 .TP
 .B 2.
-Crawl all the directories again.
+Touch the time stamp file.
 .TP
 .B 3.
+Crawl all the directories again.
+.TP
+.B 4.
 Diff 1. and 2. to get two lists; one of removed items and one
 of added/modified items.
 .TP
-.B 4.
+.B 5.
 Write the removed items to standard output
 .TP
-.B 5.
+.B 6.
 Write the modified/new items to standard output.
 .TP
-.B 6.
-Write a new filelist.
-.TP
 .B 7.
-Touch the time stamp file.
+Write a new filelist.
 
 .PP
 The
@@ -57,13 +57,12 @@ The
 is a internal list \fBrdup\fR writes to, to keep track of which files
 are in a backup. If you don't want this (i.e. make a full
 backup), use \fI/dev/null\fR here. The file \fI/dev/null\fR is handled
-specially by \fBrdup\fR: if detected no new file list is written. This
-is useful when only doing full backups and you want all files to be printed.
+specially by \fBrdup\fR: if detected no new file list is written. 
 .PP
 The
 .IR DIRS/FILES
 can be specified multiple times. These are the directories and files
-you want to backup. If omitted it defaults to the current directory (.).
+you want to backup. If omitted it defaults to the current directory . .
 .PP
 If the \fI\-N timestamp\fR option is not given, all paths found are
 printed. Only when a \fI\-N timestamp\fR file is given, times can be
@@ -71,8 +70,8 @@ compared and an incremental output can be generated.
 .PP
 \fBrdup\fR prints a filelist to standard output. 
 Subsequent programs in a pipe line can be used to actually
-implement to backup scheme. If FILELIST is empty or non existent all
-files in DIR are dumped. This is the same as a null dump. After a run
+implement to backup scheme. 
+After a run
 a new FILELIST is written. No warning is given when FILELIST is an
 existing file, it just gets overwritten by \fBrdup\fR. New runs will
 print out only those files that have actually changed or are removed
@@ -83,7 +82,7 @@ if this time is NEWER than the c\-time of timestamp file the pathname is printed
 to standard output. When files are removed they are also printed to 
 standard output, but they are prefixed with a '-'. See 
 .B FORMAT
-below. The default format \fBrdup\fR uses is: "%p%T %b %m %u %g %l %s %n\\n"
+below. The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\n%n%C"
 
 Note, that \fBrdup\fR also supports hashing of files, this makes it
 possible to check the local hash with the hash of the backed up file.
@@ -99,12 +98,13 @@ backups.
 
 As \fBrdup\fR doesn't backup anything, the backup policy; what you
 backup, how you backup, how often and how you restore; is all left
-to the scripts and your imagination. 
+to the scripts and your imagination. To kickstart your imagenation
+see \fIrdup-tr(1)\fR and \fIrdup-up(1)\fR.
 
 .SH OPTIONS
 .TP
 .B \-P\fIcommand\fR,\fIopt0\fR,...,\fIopt6\fR
-Filter all output through command, \fIopt0\fR through \fIopt6\fR are
+Filter all output through \fIcommand\fR. \fIopt0\fR through \fIopt6\fR are
 given as options to the command. Multiple \-P's can be used, there is
 however a maximum of seven options for each command. The options
 are separated with commas, there must be \fIno\fR space in between.
@@ -137,7 +137,7 @@ running as a normal user -- to put files in a directory which could have
 The file named 'file' contains a list of Perl-compatible regular
 expressions (PCRE) , one per line, that \fBrdup\fR will use to 
 \fIexclude\fR names. A '#' at the start of the line can be used to signal a comment.
-Empty lines are discarded. 
+Empty lines are ignored. 
 
 If a directory is excluded, \fBrdup\fR won't descend in that directory,
 so all files in that directory are also excluded.
@@ -170,26 +170,6 @@ trailing slash.
 Don't honor .nobackup files. Normally if such a file is found the
 directory and all files containing it, are not 
 printed to standard output. Now they are.
-.TP
-.B \-c
-Print the files' contents to standard output. This sets
-the FORMAT string to: "%p%T %b %u %g %l %s\\n%n%C"
-
-Any file content is written in a block/chunk based manner. The
-last block is signaled with a null block. A block start entry is 
-ascii and is formatted as follows: VVBLOCKBBBBB\\n
-
-Where 'VV' is the version, now '01', then the literal string 'BLOCK'
-and then the amount of bytes, typical '08192'. And then a newline.
-
-An example:
-
-    01BLOCK08192
-    <START OF THE FIRST 8192 BYTES>01BLOCK00015
-    <ANOTHER 15 BYTES>01BLOCK00000
-
-
-This option is used when streaming your backup to a remote machine.
 .TP
 .B \-r
 Only print removed files; entries that start with a `\-'. This 
@@ -276,7 +256,7 @@ used to calculate the correct incremental dump list, this is needed
 for files that are removed, or have a different type.
 
 .SH FORMAT
-The default format \fBrdup\fR uses is: "%p%T %b %u %g %l %s %n\\n"
+The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\n%n%C"
 .PP
 The following escape sequences are understood by \fBrdup\fR:
 
@@ -289,12 +269,18 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         'u': uid
 .BR
+	'U': username
+.BR
         'g': gid
+.BR
+	'G': groupname
 .BR
         'l': path name length
 .BR
         's': file size, zero if directory, major,minor for devices and
-see CAVEATS for soft- and hardlinks.
+see 
+.B CAVEATS 
+for soft- and hardlinks.
 .BR
         'n': path name
 .BR
@@ -316,20 +302,31 @@ the link name.
 To delimit the output of \fBrdup\fR with NULLs you can use '\\0' in the
 format string.
 
+.SS Output files' contents
+Any file content is written in a block/chunk based manner. The
+last block is signaled with a null block. A block start entry is 
+ascii and is formatted as follows: VVBLOCKBBBBB\\n
+
+Where 'VV' is the version, currently at '01', then the literal string 'BLOCK'
+and then the amount of bytes, typical '08192'. And then a newline.
+
+An example:
+
+    01BLOCK08192
+    <START OF THE FIRST 8192 BYTES>01BLOCK00015
+    <ANOTHER 15 BYTES>01BLOCK00000
+
 .SH FILELIST
 \fBrdup\fR writes the FILELIST in the following format:
 .RS
-MODE DEV INODE LINk UID GID PATH_SIZE FILE_SIZE PATH
-
-33204 2050 31970 * 1000 1000 42 887
-      /home/miekg/git/rdup/.git/hooks/commit-msg
-
+MODE DEV INODE LINK UID GID PATH_SIZE FILE_SIZE PATH
 .RE
 .PP
 Where MODE is the st_mode from stat(2), DEV is the dev id as returned by
 the stat call and INODE is the inode number - \fBrdup\fR needs this info
 to decide if a directory is renamed. LINK is equal to 'h' for hardlinks,
-other wise it is '*'. UID and GID are the numeric user and group id of
+ 'l' for symlinks and otherwise it is '*'. 
+ UID and GID are the numeric user and group id of
 the file. PATH_SIZE is the length of PATH. FILE_SIZE the file size.
 And finally PATH is the path of the file. 
 
@@ -339,70 +336,18 @@ A typical example is:
 .RE
 
 .SH OUTPUT FORMAT 
-The default output generated by \fBrdup\fR is formatted like:
+The output generated by \fBrdup\fR is formatted like:
 .RS
-+|-TYPE BITS UID GID PATH_SIZE FILE_SIZE PATH
-.RE
-.PP
-Where:
-.TP
-.B o +|-
-plus or minus, indicating whether PATH should added or removed.
-.TP 
-.B o TYPE
-the type of the file, see %T in \fBFORMAT\fR.
-.TP
-.B o BITS
-the permission of the file, this is a subset of the st_mode from
-lstat(2). These are four octal digits.
-.TP
-.B o UID
-the numerical user id of PATH. Note that if the first character of the
-line is '-' (i.e. remove) the UID will be zero.
-.TP
-.B o GID
-the numerical group id of PATH. Note that if the first character of the
-line is '-' (i.e. remove) the GID will be zero.
-.TP
-.B o PATH_SIZE
-the size of PATH. 
-.TP
-.B o FILE_SIZE
-the size of file pointed to by PATH. Note that if the first character of the line is '-'
-(i.e. remove) the SIZE will be zero. For directories this size will
-always be zero. Symbolic and hard links are handled differently, see
-CAVEATS.
-.TP
-.B o PATH
-the pathname
-.PP
-A typical example might look like this:
-        +- 0755 1000 1000 8 11288 bin/rdup
-.PP
-This example show that the file should be backed up, has a user
-and group id of 1000, the length of the path is 8 bytes, the size
-of the file it 11288 and it has "bin/rdup" as a path.
-.PP
-Directories are always printed by \fBrdup\fR.
-
-.SH OUTPUT FORMAT WITH \-c
-The output generated by \fBrdup -c\fR is formatted like:
-.RS
-        +|-TYPE BITS UID GID PATH_SIZE FILE_SIZE\\n
+        +|-TYPE BITS MTIME UID USER GID GROUP PATH_SIZE FILE_SIZE\\n
         PATH FILE_CONTENTS
 .RE
 .PP
 This makes it possible possible for a remote shell script to receive the
-actual file and make a backup.
+actual file contetns and make a backup.
 .PP
-All field are identical as described in \fBOUTPUT FORMAT\fR, but
-there is one extra field and also see CAVEATS.
-The extra field is the FILE_CONTENTS, which concatenates the entire file
-to standard output.
-
-The output when using the \-c is changed as follows, for
-directories: the FILE_SIZE is zero and no content is printed. Thus:
+For directories: the FILE_SIZE is zero and no content is printed. Thus:
 .RS
+    BUGBUG fix
         +d 0755 1000 1000 11 0\\n
         \fB/home/miekg\fR
 .RE
@@ -412,7 +357,6 @@ For regular files the following is a sample output:
         \fB/home/miekg/svn/rdup/trunk/aaa/a\fR\fIhello\fR
 .RE
 Where \fBaaa/a\fR is a regular file containing the word 'hello\\n'
-
 
 .SS CAVEATS
 Soft- and hardlinks are handled differently when using %n, if you don't
@@ -476,13 +420,10 @@ Written by Miek Gieben.
 .SH REPORTING BUGS
 Report bugs to <miek@miek.nl>. 
 
-.SH BUGS/LIMITATIONS
-See the \-c flag for explanation about a small race condition when doing
-remote dumps. 
 
 .SH SEE ALSO
 http:/www.miek.nl/projects/rdup is the main site of rdup. Also see
-rdup-tr(1), rdup-up(1) or rdup-backups(7).
+rdup-tr(1), rdup-up(1) and rdup-backups(7).
 
 .SH COPYRIGHT
 Copyright (C) 2005-2009 Miek Gieben. This is free software. There is NO

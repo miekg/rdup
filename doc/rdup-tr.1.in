@@ -105,7 +105,7 @@ Or even pack and unpack it on the fly
 
 Or encryption with openssl
 
-    ./rdup -c -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
+    ./rdup -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
 
 Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again

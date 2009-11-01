@@ -63,8 +63,7 @@ gid information to standard output.
 .TP
 .B \-T
 Show a table of contents of the rdup stream received (ala tar \-tf \-).
-With \-T the directory argument is optional, because it is not used.
-\-T unset any verbose (\-v) options.
+With \-T the directory argument is optional. \-T unset any verbose (\-v) options.
 .TP
 .B \-h
 A short help message.
@@ -83,7 +82,7 @@ Report bugs to <miek@miek.nl>.
 
 .SH SEE ALSO
 http:/www.miek.nl/projects/rdup/ is the main site of rdup. Also see rdup(1),
-rdup-tr(1) or rdup-backups(7).
+rdup-tr(1) and rdup-backups(7).
 
 .SH COPYRIGHT
 Copyright (C) 2005-2009 Miek Gieben. This is free software. There is NO
