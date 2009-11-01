@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if rdup -X &> /dev/null; then : ; else exit 0; fi
+#if ./rdup-tr -X &> /dev/null; then : ; else exit 0; fi
 
 # shoud give zero exit code
 ./rdup /dev/null testsuite | ./rdup-tr -X<(echo Boe) | \
