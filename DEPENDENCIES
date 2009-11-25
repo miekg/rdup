@@ -4,7 +4,7 @@ and tools to make it all work. The dependencies are listed here:
 Mandatory:
 o libglib (core C gtk library)
 o libpcre (Perl regular expressions)
-o libnettle (Small crypto library)
+o libssl  (OpenSSL)
 o libarchive (Create tar/cpio/etc archive - used in rdup-tr)
 
 If libarchive is not found rdup-tr is not built.
