@@ -311,7 +311,8 @@ main(int argc, char **argv)
 				opt_atime = TRUE;
 				break;
 			case 'c':
-				msg(_("-c is deprecated; it is always enabled"));
+				msg(_("-c now means force tty output"));
+				opt_tty = TRUE;
 				break;
 			case 'h':
 				usage(stdout);
@@ -399,8 +400,15 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+	/* be as irritating as rdup-tr */
+	if (!opt_tty && isatty(1) == 1) {
+		msg(_("Will not write to a tty"));
+		exit(EXIT_FAILURE);
+	}
+
 	if (argc == 1) {
 		/* default to . as the dir to dump */
+		msg(_("No directory given, dumping ."));
 		argv[1] = g_strdup(".");
 		argc++;
 	}

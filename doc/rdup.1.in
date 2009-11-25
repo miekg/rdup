@@ -110,7 +110,7 @@ however a maximum of seven options for each command. The options
 are separated with commas, there must be \fIno\fR space in between.
 
 Due to the nature of pipes in Unix, this pipeline is recreated for
-every file processed. Also see 'Child Processes'.
+every file processed. Also see 'Child Processes' below.
 .TP
 .B \-F format
 Specify a printf-style format to use. See \fBFORMAT\fR below. 
@@ -165,6 +165,10 @@ Also note that \fBrdup\fR does not print directories with a
 trailing slash.
 .RE
 
+.TP
+.B \-c
+Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
+output redirected.
 .TP
 .B \-n
 Don't honor .nobackup files. Normally if such a file is found the

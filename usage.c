@@ -33,7 +33,7 @@ implement a (incremental) backup scheme.\n\
 	\t\tthrough all commands\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
-        -c\t\tcat the contents (FORMAT=\"%p%T %b %u %g %l %s\\n%n%C\")\n\
+        -c\t\tforce output to tty\n\
         -m\t\tonly print new/modified files (unsets -r)\n\
         -n\t\tignore .nobackup files\n\
         -r\t\tonly print removed files (unsets -m)\n\
