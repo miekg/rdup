@@ -38,7 +38,7 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	uid_t u; gid_t g;
 	u = lookup_uid(uidhash, e->f_user, e->f_uid);
 	g = lookup_gid(gidhash, e->f_group, e->f_gid);
-	
+
 	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
 		if (lchown(e->f_name, u, g) == -1) { } /* todo BUGBUG */
