@@ -28,7 +28,8 @@ mk_time(struct rdup *e)
 	/* don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
-	if (utime(e->f_name, &ut) == -1) { /*BUGUB  todo */ }
+	if (utime(e->f_name, &ut) == -1) 
+		msg(_("Failed to set mtime: '%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
@@ -41,7 +42,8 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
-		if (lchown(e->f_name, u, g) == -1) { } /* todo BUGBUG */
+		if (lchown(e->f_name, u, g) == -1) 
+			msg(_("Failed to chown: `%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
