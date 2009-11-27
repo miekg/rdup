@@ -10,6 +10,10 @@
 	- rdup is the only tool that accesses the files
 	- rdup-tr only processes from stdin to stdout
 	- rdup-up only processes stdin
+    * rdup added:
+	-a: reset atime
+    * rdup-up:
+	- set mtime of everything it creates
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
     * Change default install path /usr/local (Sebastian Kügler)
