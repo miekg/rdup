@@ -17,6 +17,20 @@ extern GSList *pregex_list;
 struct rdup * entry_dup(struct rdup *f);
 void entry_free(struct rdup *f);
 
+/* reset atime */
+static void
+reset_atime(struct rdup *d)
+{
+	struct utimbuf ut;
+	if (!opt_atime)
+		return;
+
+	ut.actime  = d->f_atime;
+	ut.modtime = d->f_mtime;
+	if (utime(d->f_name, &ut) == -1) 
+		msg(_("Failed to reset atime: '%s\': %s"), d->f_name, strerror(errno));
+}
+
 /**
  * prepend path leading up to backup directory to the tree
  */
@@ -122,16 +136,6 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
-		if (opt_atime) {
-			struct utimbuf ut;
-			ut.actime  = s.st_atime;
-			ut.modtime = s.st_mtime;
-			/* BUGBUG */
-			fprintf(stderr, "Resetting access\n");
-                        if (utime(path, &ut) == -1) 
-                                msg(_("Failed to reset atime: '%s\': %s"), path, strerror(errno));
-		}
-
 		if (!strcmp(dent->d_name, ".") || 
 				!strcmp(dent->d_name, ".."))
 			continue;
@@ -192,6 +196,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				rp.len  = strlen(path);
 				rp.path = path;
 				g_tree_foreach(t, gfunc_remove_path, (gpointer)&rp);
+				reset_atime(dirstack[d]);
 				/* add .nobackup back in */
 				g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 				g_free(dirstack);
@@ -269,6 +274,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			g_free(curpath);
 		}
 	}
+	reset_atime(dirstack[d]);
 	closedir(dir);
 
 	while (d > 0) {
