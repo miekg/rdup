@@ -13,6 +13,7 @@ gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 gboolean opt_tty	   = FALSE;		      /* force write to tty */
+gboolean opt_areset	   = FALSE;                   /* reset atime when reading stuff */
 char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
 #if 0
 char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n";
