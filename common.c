@@ -21,6 +21,7 @@ entry_dup(struct rdup *f)
         g->f_mode       = f->f_mode;
 	g->f_ctime      = f->f_ctime;
 	g->f_mtime      = f->f_mtime;
+	g->f_atime      = f->f_atime;
 	g->f_size       = f->f_size;
 	g->f_dev        = f->f_dev;
 	g->f_rdev       = f->f_rdev;

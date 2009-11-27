@@ -25,7 +25,7 @@ static gboolean
 mk_time(struct rdup *e)
 {
 	struct utimbuf ut;
-	/* don't carry the a_time, how cares anyway with noatime? */
+	/* we don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
 	if (utime(e->f_name, &ut) == -1) 

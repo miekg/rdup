@@ -1,12 +1,15 @@
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
     * Format change: add username, groupname and mtime
-      Always output the files' contents
+      _Always_ output the files' contents
       %U username
       %G groupname
       %t is mtime of the fs object
     * Adapt all utils to this format change
 	- rdup now handles -P itself
 	- rdup-tr does not do -P anymore
+	- rdup is the only tool that accesses the files
+	- rdup-tr only processes from stdin to stdout
+	- rdup-up only processes stdin
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
     * Change default install path /usr/local (Sebastian Kügler)

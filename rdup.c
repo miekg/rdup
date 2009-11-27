@@ -203,6 +203,7 @@ g_tree_read_file(FILE *fp)
 		e->f_gid       = 0;	/* keep this 0 for now */
 		e->f_ctime     = 0;
 		e->f_mtime     = 0;
+		e->f_atime     = 0;
 		e->f_user      = NULL;
 		e->f_group     = NULL;
 		e->f_dev       = f_dev;

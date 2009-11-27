@@ -59,6 +59,7 @@ parse_entry(char *buf, size_t l)
 			e->f_lnk       = 0;
 			e->f_ctime     = s->st_ctime;
 			e->f_mtime     = s->st_mtime;
+			e->f_atime     = s->st_atime;
 
 			/* you will loose hardlink information here 
 			 * as 'stat' cannot check this */
@@ -306,7 +307,7 @@ stat_from_rdup(struct rdup *e)
 	s->st_rdev     = e->f_rdev;
 	s->st_ctime    = e->f_ctime;
 	s->st_mtime    = e->f_mtime;
-	s->st_atime    = 0;
+	s->st_atime    = e->f_atime;
 
 	/*
 	struct stat {

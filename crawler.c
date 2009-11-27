@@ -8,6 +8,7 @@
 
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
+extern gboolean opt_atime;
 extern time_t opt_timestamp;
 extern gint opt_verbose;
 extern GSList *pregex_list;
@@ -54,6 +55,7 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 		e.f_group     = lookup_group(g, e.f_gid);
 		e.f_ctime     = s.st_ctime;
 		e.f_mtime     = s.st_mtime;
+		e.f_atime     = s.st_atime;
 		e.f_mode      = s.st_mode;
 		e.f_size      = s.st_size;
 		e.f_dev       = s.st_dev;
@@ -120,6 +122,16 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
+		if (opt_atime) {
+			struct utimbuf ut;
+			ut.actime  = s.st_atime;
+			ut.modtime = s.st_mtime;
+			/* BUGBUG */
+			fprintf(stderr, "Resetting access\n");
+                        if (utime(path, &ut) == -1) 
+                                msg(_("Failed to reset atime: '%s\': %s"), path, strerror(errno));
+		}
+
 		if (!strcmp(dent->d_name, ".") || 
 				!strcmp(dent->d_name, ".."))
 			continue;
@@ -157,6 +169,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			pop.f_group     = lookup_group(grouphash, pop.f_gid);
 			pop.f_ctime     = s.st_ctime;
 			pop.f_mtime     = s.st_mtime;
+			pop.f_atime     = s.st_atime;
 			pop.f_mode      = s.st_mode;
 			pop.f_size      = s.st_size;
 			pop.f_dev       = s.st_dev;
@@ -234,6 +247,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			dirstack[d]->f_group      = lookup_group(grouphash, s.st_gid);
 			dirstack[d]->f_ctime      = s.st_ctime;
 			dirstack[d]->f_mtime      = s.st_mtime;
+			dirstack[d]->f_atime      = s.st_atime;
 			dirstack[d]->f_mode       = s.st_mode;
 			dirstack[d]->f_size       = s.st_size;
 			dirstack[d]->f_dev        = s.st_dev;

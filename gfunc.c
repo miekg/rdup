@@ -12,6 +12,7 @@
 extern gboolean opt_removed;
 extern gboolean opt_modified;
 extern gboolean opt_skip;
+extern gboolean opt_atime;
 extern gint opt_verbose;
 extern char *opt_format;
 extern time_t opt_timestamp;
@@ -150,10 +151,17 @@ cat(FILE *fp, char *filename)
 static void
 entry_cat_data(FILE *fp, struct rdup *e)
 {
+        struct utimbuf ut;
+	ut.actime  = e->f_atime;
+	ut.modtime = e->f_mtime;
+
 	if (S_ISREG(e->f_mode) && e->f_lnk == 0) {
 		if (!cat(fp, e->f_name))
 			exit(EXIT_FAILURE);
 		
+		if (opt_atime) 
+			if (utime(e->f_name, &ut) == -1)
+				msg(_("Failed to reset atime: '%s\': %s"), e->f_name, strerror(errno));
 		return;
 	}
 }
