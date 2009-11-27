@@ -6,14 +6,14 @@
       %t is mtime of the fs object
     * Adapt all utils to this format change
 	- rdup now handles -P itself
-	- rdup-tr does not do -P anymore
 	- rdup is the only tool that accesses the files
+	- rdup-tr does not do -P anymore
 	- rdup-tr only processes from stdin to stdout
 	- rdup-up only processes stdin
     * rdup added:
 	-a: reset atime
     * rdup-up:
-	- set mtime of everything it creates
+	- set mtime
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
     * Change default install path /usr/local (Sebastian Kügler)
