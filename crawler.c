@@ -22,7 +22,7 @@ static void
 reset_atime(struct rdup *d)
 {
 	struct utimbuf ut;
-	if (!opt_atime)
+	if (!opt_atime || !d)
 		return;
 
 	ut.actime  = d->f_atime;
@@ -196,7 +196,6 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				rp.len  = strlen(path);
 				rp.path = path;
 				g_tree_foreach(t, gfunc_remove_path, (gpointer)&rp);
-				reset_atime(dirstack[d]);
 				/* add .nobackup back in */
 				g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 				g_free(dirstack);
