@@ -18,7 +18,7 @@ This is a wrapper around rdup, rdup-tr and rdup-up
 DIR  - directories to back up
 +N   - Look N days back for previous backups, defaults to 8
 DEST - where to store the backup. This can be:
-	ssh://user@host/directory (note: no colon after the hostname
+	ssh://user@host/directory (note: no colon after the hostname)
 	ssh://host/directory
 	file:///directory (note: 3 slashes)
 	/directory
