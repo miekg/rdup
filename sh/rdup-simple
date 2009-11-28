@@ -18,7 +18,7 @@ This is a wrapper around rdup, rdup-tr and rdup-up
 DIR  - directories to back up
 +N   - Look N days back for previous backups, defaults to 8
 DEST - where to store the backup. This can be:
-	ssh://user@host/directory (note: no colon after the hostname)
+	ssh://user@host/directory (note: no colon after the hostname
 	ssh://host/directory
 	file:///directory (note: 3 slashes)
 	/directory
@@ -39,8 +39,6 @@ OPTIONS:
  -V         print version
 HELP
 }
-
-RDUP_LN=$(which rdup-ln 2>/dev/null 1>&2)
 
 PROGNAME=$0
 NOW=`date +%Y%m/%d`
@@ -177,7 +175,7 @@ cmd="rdup$E$x -N $STAMP $trans $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		${rdup-ln:-/usr/local/bin/rdup-ln} -l $DAYS $BACKUPDIR
+		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
                 $ssh "rdup-ln -l $DAYS $BACKUPDIR"
