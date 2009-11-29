@@ -9,6 +9,45 @@ echo2() {
     echo "** $PROGNAME: $@" >&2
 }
 
+copy_and_link() {
+    echo "$@"; exit 0
+    # hardlink a previous backup directory to a new directory
+    # SYNOPSIS: copy_and_link N BACKUPDIR
+    # N: look back N days 
+    # BACKUPDIR: top directory of the backups
+    # By default a new directory BACKUPDIR/YYYYMM/DD wil be created
+
+    # 3 return codes
+    # 0: BACKUPDIR/YYYYMM/DD is created (now make a inc dump)
+    # 1: BACKUPDIR/YYYYMM/DD is created (now make a full dump)
+    # 2: an error occured
+
+    LOOKBACK=$1; shift
+    DATESTR='+%Y%m/%d'
+    TODAY=$(date $DATESTR)
+    TOPDIR="$1"
+
+    [[ -z $TOPDIR ]] && exit 2
+    [[ -d $TOPDIR/$TODAY ]] && exit 0
+
+    if ! mkdir -p $TOPDIR/$TODAY; then
+	exit 2
+    fi
+
+    let i=1
+    while [[ $i -le $LOOKBACK ]]; do
+	    D=$(date $DATESTR --date "$i days ago")
+	    if [[ -d $TOPDIR/$D ]]; then
+		if ! cp -plr $TOPDIR/$D/* $TOPDIR/$TODAY; then
+		    exit 2
+		fi
+		exit 0
+	    fi
+	    let i=i+1
+    done
+    exit 1
+}
+
 usage() {
         cat << HELP
 $PROGNAME [+N] DIR [DIR ...] DEST
@@ -18,7 +57,7 @@ This is a wrapper around rdup, rdup-tr and rdup-up
 DIR  - directories to back up
 +N   - Look N days back for previous backups, defaults to 8
 DEST - where to store the backup. This can be:
-	ssh://user@host/directory (note: no colon after the hostname
+	ssh://user@host/directory (note: no colon after the hostname)
 	ssh://host/directory
 	file:///directory (note: 3 slashes)
 	/directory
@@ -29,6 +68,7 @@ OPTIONS:
  -g	    encrypt all files: rdup -Pgpg,--default-recipient-self
  -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
+ -L	    link previous backup directory (note: this is used internally)
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
  -x         pass -x to rdup
@@ -50,8 +90,9 @@ enc=false
 etc=~/.rdup
 force=false
 verbose=false
+link=false
 
-while getopts "E:k:vfgzxhVX:Y:s:" o; do
+while getopts "E:k:vfgzxhVX:Y:s:L" o; do
         case $o in
 		E)
                 if [[ -z "$OPTARG" ]]; then
@@ -97,6 +138,7 @@ while getopts "E:k:vfgzxhVX:Y:s:" o; do
 		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
                 x) x=" -x ";;
+		L) link=true;;
                 h) usage && exit;;
                 V) version && exit;;
                 \?) echo2 "Invalid option: $OPTARG"; exit 1;;
@@ -153,6 +195,10 @@ fi
 # no hits above, assume relative filename
 [[ -z $BACKUPDIR ]] && BACKUPDIR=$PWD/$dest
 
+if [[ $link ]]; then
+    copy_and_link $DAYS $BACKUPDIR
+fi
+
 # change all / to _ to make a valid filename
 STAMP=$etc/timestamp.${HOSTNAME}.${dest//\//_}
 LIST=$etc/list.${HOSTNAME}.${dest//\//_}
@@ -175,10 +221,11 @@ cmd="rdup$E$x -N $STAMP $trans $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		rdup-ln -l $DAYS $BACKUPDIR
+		rdup-simple -L +$DAYS /dev/null $BACKUPDIR
+#		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-                $ssh "rdup-ln -l $DAYS $BACKUPDIR"
+                $ssh "rdup-simple -L +$DAYS /dev/null $BACKUPDIR"
                 purpose=$?
         fi
 else
@@ -192,9 +239,10 @@ case $purpose in
         rm -f $LIST
         rm -f $STAMP ;;
         *)
-        echo2 "Illegal return code from rdup-ln"
+        echo2 "Illegal return code from rdup-simple -L"
         exit 1 ;;
 esac
 # execute the backup command
 ##echo "Executing: ${cmd}"
 eval ${cmd}
+

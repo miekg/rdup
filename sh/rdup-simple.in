@@ -9,6 +9,45 @@ echo2() {
     echo "** $PROGNAME: $@" >&2
 }
 
+copy_and_link() {
+    echo "$@"; exit 0
+    # hardlink a previous backup directory to a new directory
+    # SYNOPSIS: copy_and_link N BACKUPDIR
+    # N: look back N days 
+    # BACKUPDIR: top directory of the backups
+    # By default a new directory BACKUPDIR/YYYYMM/DD wil be created
+
+    # 3 return codes
+    # 0: BACKUPDIR/YYYYMM/DD is created (now make a inc dump)
+    # 1: BACKUPDIR/YYYYMM/DD is created (now make a full dump)
+    # 2: an error occured
+
+    LOOKBACK=$1; shift
+    DATESTR='+%Y%m/%d'
+    TODAY=$(date $DATESTR)
+    TOPDIR="$1"
+
+    [[ -z $TOPDIR ]] && exit 2
+    [[ -d $TOPDIR/$TODAY ]] && exit 0
+
+    if ! mkdir -p $TOPDIR/$TODAY; then
+	exit 2
+    fi
+
+    let i=1
+    while [[ $i -le $LOOKBACK ]]; do
+	    D=$(date $DATESTR --date "$i days ago")
+	    if [[ -d $TOPDIR/$D ]]; then
+		if ! cp -plr $TOPDIR/$D/* $TOPDIR/$TODAY; then
+		    exit 2
+		fi
+		exit 0
+	    fi
+	    let i=i+1
+    done
+    exit 1
+}
+
 usage() {
         cat << HELP
 $PROGNAME [+N] DIR [DIR ...] DEST
@@ -156,6 +195,10 @@ fi
 # no hits above, assume relative filename
 [[ -z $BACKUPDIR ]] && BACKUPDIR=$PWD/$dest
 
+if [[ $link ]]; then
+    copy_and_link $DAYS $BACKUPDIR
+fi
+
 # change all / to _ to make a valid filename
 STAMP=$etc/timestamp.${HOSTNAME}.${dest//\//_}
 LIST=$etc/list.${HOSTNAME}.${dest//\//_}
@@ -178,7 +221,6 @@ cmd="rdup$E$x -N $STAMP $trans $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-	    [[ "$1" == "LINK" ]] && copy_and_link
 		rdup-simple -L +$DAYS /dev/null $BACKUPDIR
 #		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
@@ -204,42 +246,3 @@ esac
 ##echo "Executing: ${cmd}"
 eval ${cmd}
 
-function copy_and_link()
-{
-    echo "$@"; exit 0
-    # hardlink a previous backup directory to a new directory
-    # SYNOPSIS: copy_and_link N BACKUPDIR
-    # N: look back N days 
-    # BACKUPDIR: top directory of the backups
-    # By default a new directory BACKUPDIR/YYYYMM/DD wil be created
-
-    # 3 return codes
-    # 0: BACKUPDIR/YYYYMM/DD is created (now make a inc dump)
-    # 1: BACKUPDIR/YYYYMM/DD is created (now make a full dump)
-    # 2: an error occured
-
-    LOOKBACK=$1; shift
-    DATESTR='+%Y%m/%d'
-    TODAY=$(date $DATESTR)
-    TOPDIR="$1"
-
-    [[ -z $TOPDIR ]] && exit 2
-    [[ -d $TOPDIR/$TODAY ]] && exit 0
-
-    if ! mkdir -p $TOPDIR/$TODAY; then
-	exit 2
-    fi
-
-    let i=1
-    while [[ $i -le $LOOKBACK ]]; do
-	    D=$(date $DATESTR --date "$i days ago")
-	    if [[ -d $TOPDIR/$D ]]; then
-		if ! cp -plr $TOPDIR/$D/* $TOPDIR/$TODAY; then
-		    exit 2
-		fi
-		exit 0
-	    fi
-	    let i=i+1
-    done
-    exit 1
-}
