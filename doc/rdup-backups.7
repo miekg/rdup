@@ -60,23 +60,8 @@ is that the transformation is reversed when you restore.
 .B Note 2: 
 The use of \fBrdup-tr\fR is optional.
 
-.TP
-.B Note 3: 
-There is a little shell script that can be used to create a hard
-linked directory structure, this script \fBrdup-ln.sh\fR is installed
-in '/usr/local/lib/rdup/'. The script looks back for previous backup and
-then creates a hardlinked directory structure. By using this script
-you create a YYYYMM/DD backup structure, where each YYYYMM/DD directory
-contains a full view of your filesystem \fIat that date\fR. This script
-very much depends on being able to use GNU date and GNU cp.
-
-From the return code of this script you know what to do, if the exit code
-is 0 an incremental backup needs to be made. If the exit code is 1 a
-full backup is in order. An exit code of 2 means there was some kind of
-error.
-
 .PP
-With these three (four) tools you can create your own backup solution, see
+With these three tools you can create your own backup solution, see
 \fBSNAPSHOT BACKUPS\fR later in this document.
 
 .SH BACKUPS AND RESTORES
@@ -109,7 +94,7 @@ For NFS this can be achieved by using \fBno_root_squash\fR, for
 may be a security risk.
 
 .SH SNAPSHOT BACKUPS
-We need a little help here in the form of the \fBrdup-ln.sh\fR script.
+We need a little help here in the form of the \fBrdup-simple\fR script.
 Keep in mind that the following scripts can also be run remotely with
 the help of \fBssh\fR.
 
@@ -123,12 +108,12 @@ The following script implements the algorithm of \fBrdup-simple\fR.
 
 DIR=/home	    # what to backup
 BACKUP=/vol/backup
-TODAY=$(date +%Y%m/%d)	# same as in rdup-ln.sh
+TODAY=$(date +%Y%m/%d)
 LIST=~/.rdup/list-$HOSTNAME
 STAMP=~/.rdup/timestamp-$HOSTNAME
 
 # for remote backup, this has to run on the remote host!
-/usr/lib/rdup/rdup-ln.sh $BACKUP/$HOSTNAME
+BUGBUG
 RET=$?
 
 case $RET in

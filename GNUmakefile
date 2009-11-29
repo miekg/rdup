@@ -10,25 +10,25 @@ MAN7_IN=rdup-backups.7
 MAN1=$(addprefix doc/, $(MAN1_IN))
 MAN7=$(addprefix doc/, $(MAN7_IN))
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-datarootdir=@datarootdir@
-localedir=@localedir@
-bindir=@bindir@
-libdir=@libdir@
-sbindir=@sbindir@
-mandir=@mandir@
-sysconfdir=@sysconfdir@
-datadir=@datadir@/rdup
+prefix=/usr/local
+exec_prefix=${prefix}
+datarootdir=${prefix}/share
+localedir=${datarootdir}/locale
+bindir=${exec_prefix}/bin
+libdir=${exec_prefix}/lib
+sbindir=${exec_prefix}/sbin
+mandir=${datarootdir}/man
+sysconfdir=/etc
+datadir=${datarootdir}/rdup
 
-ARCHIVE_L=@ARCHIVE_L@
-SSL_L=@SSL_L@
-GCC=@CC@
-GLIB_CFLAGS=@GLIB_CFLAGS@
-GLIB_LIBS=@GLIB_LIBS@
-LIBS=@LIBS@
-#CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@localedir@\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Os -Wpointer-arith -Wstrict-prototypes 
-CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@localedir@\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -g -Wpointer-arith -Wstrict-prototypes 
+ARCHIVE_L=
+SSL_L=
+GCC=gcc
+GLIB_CFLAGS=-I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
+GLIB_LIBS=-lglib-2.0  
+LIBS=-lssl -lpcre -larchive  -lpcre
+#CFLAGS=-Wall -W -Werror -g -O2  -DHAVE_CONFIG_H -DLOCALEROOTDIR=\"${datarootdir}/locale\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Os -Wpointer-arith -Wstrict-prototypes 
+CFLAGS=-Wall -W -Werror -g -O2  -DHAVE_CONFIG_H -DLOCALEROOTDIR=\"${datarootdir}/locale\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -g -Wpointer-arith -Wstrict-prototypes 
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644
 
