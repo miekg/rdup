@@ -10,10 +10,9 @@ echo2() {
 }
 
 copy_and_link() {
-    echo "$@"; exit 0
     # hardlink a previous backup directory to a new directory
     # SYNOPSIS: copy_and_link N BACKUPDIR
-    # N: look back N days 
+    # N: look back N days
     # BACKUPDIR: top directory of the backups
     # By default a new directory BACKUPDIR/YYYYMM/DD wil be created
 
@@ -195,9 +194,7 @@ fi
 # no hits above, assume relative filename
 [[ -z $BACKUPDIR ]] && BACKUPDIR=$PWD/$dest
 
-if [[ $link ]]; then
-    copy_and_link $DAYS $BACKUPDIR
-fi
+$link && copy_and_link $DAYS $BACKUPDIR
 
 # change all / to _ to make a valid filename
 STAMP=$etc/timestamp.${HOSTNAME}.${dest//\//_}
