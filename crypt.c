@@ -289,15 +289,18 @@ crypt_key(gchar *file, gchar *key, gchar *iv)
 				file, strerror(errno));
 		return NULL;
 	}
-	if ( fread(k, 16, sizeof(gchar), f) != 16) 
+	if ( fread(k, sizeof(gchar), 16, f) != 16) {
 		msg(_("Key needs to be 16 characters"));
 		return NULL;
+	}
 
-	if ( fread(i, 8, sizeof(gchar), f) != 8) 
+	if ( fread(i, sizeof(gchar), 8, f) != 8) {
 		msg(_("IV needs to be 8 characters"));
-		return NULL;
+		return NULL; 
+	}
 	
 	key = k;
 	iv  = i;
+	return key;
 }
 #endif /* HAVE_LIBSSL */
