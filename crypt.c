@@ -9,33 +9,28 @@
 #include "base64.h"
 
 #ifdef HAVE_LIBSSL
-#include <openssl/aes.h>
+#include <openssl/blowfish.h>
 
-extern guint opt_verbose;
+extern gint opt_verbose;
+extern sig_atomic_t sig;
+
+/* signal.c */
+void got_sig(int);
+void signal_abort(int);
 
 EVP_CIPHER_CTX *
-crypt_init(gchar *key_data, gboolean crypt)
+crypt_init(gchar *key, gboolean crypt)
 {
-	/* copied from
-	 * Saju Pillai (saju.pillai@gmail.com)
-	 */
-	guint length = strlen(key_data);
+	/* see blowfish(3) */
+	/* guint length = strlen(key); */
 	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
-	int i, j = 5;
-	guchar key[32], iv[32];
-	i = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL,
-			(const unsigned char*)key_data, length, j, key, iv);
-		
-	if (i != 32) {
-		msg(_("Failed to setup encryption"));
-		return NULL;
-	}
-
+	gint i;
+	guchar iv[] = {1,2,3,4,5,6,7,8};
 	EVP_CIPHER_CTX_init(ctx);
 	if (crypt)
-		i = EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+		i = EVP_EncryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, iv);
 	else 
-		i = EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+		i = EVP_DecryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, iv);
 
 	if (i == 0) {
 		msg(_("Failed to setup encryption"));
@@ -48,9 +43,11 @@ static gboolean
 is_plain(gchar *s) 
 {
 	char *p;
-	for (p = s; *p; p++)
+	for (p = s; *p; p++) {
+		if (sig != 0) signal_abort(sig);
 		if (!isascii(*p))
 			return FALSE;
+	}
 		
 	return TRUE;
 }
@@ -82,24 +79,24 @@ dot_dotdot(gchar *q, gchar *p, gboolean abs)
 }
 
 static void 
-aes_encrypt(EVP_CIPHER_CTX *ctx, guint aes_size, guchar *dest, guchar *source)
+bf_encrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
 {
-	int len, outlen;
-	EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, NULL);
-	EVP_EncryptUpdate(ctx, dest, &len, source, aes_size);
-	/* fprintf(stderr, "%p dest %d len\n", dest, len); */
-	/* EVP_EncryptFinal_ex(ctx, dest + len, &outlen); */
-	EVP_EncryptFinal_ex(ctx, dest, &outlen);
-	/* fprintf(stderr, "OUtlen %d\n", outlen); */
+	int outlen, tmplen;
+	EVP_EncryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen);
+	EVP_EncryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen);
+	/* 0 is niet goed */
+	outlen += tmplen;
+
 }
 
 static void
-aes_decrypt(EVP_CIPHER_CTX *ctx, guint aes_size, guchar *dest, guchar *source)
+bf_decrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
 {
-	int len, outlen;
-	EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, NULL);
-	EVP_DecryptUpdate(ctx, dest, &len, source, aes_size);
-	EVP_DecryptFinal_ex(ctx, dest, &outlen);
+	int outlen, tmplen;
+	EVP_DecryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen);
+	EVP_DecryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen);
+	// 0 is niet goed
+	outlen += tmplen;
 }
 
 /* encrypt and base64 encode path element
@@ -108,26 +105,17 @@ aes_decrypt(EVP_CIPHER_CTX *ctx, guint aes_size, guchar *dest, guchar *source)
 gchar *
 crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
 {
-	guint aes_size;
-	guchar *source;
-	guchar *dest;
+	gchar *dest;
 	gchar *b64, *hashed;
 
 	hashed = g_hash_table_lookup(tr, elem);
 	if (hashed) 
 		return hashed;
-
-	aes_size = ( (len / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
-
-	/* pad the string to be crypted */
-	source = g_malloc0(aes_size);
-	dest   = g_malloc0(aes_size);
+	/* BUGBUF the size here */
+	dest = g_malloc0(BUFSIZE);
+	bf_encrypt(ctx, dest, elem, len);
 	
-	g_memmove(source, elem, len);
-	aes_encrypt(ctx, aes_size, dest, source);
-	
-	b64 = encode_base64(aes_size, dest);
-	g_free(source);
+	b64 = encode_base64(len * 2, (guchar*)dest);
 	g_free(dest);
 	if (!b64) {
 		/* hash insert? */
@@ -146,49 +134,41 @@ crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
  * return the result
  */
 gchar *
-decrypt_path_ele(EVP_CIPHER_CTX *ctx, char *b64, guint len, GHashTable *tr)
+decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, guint len, GHashTable *tr)
 {
-	guint aes_size;
-	guchar *source;
-	guchar *dest;
+	gchar *dest;
 	gchar *crypt, *hashed;
 	guint crypt_size;
 
 	hashed = g_hash_table_lookup(tr, b64);
 	if (hashed)
 		return hashed;
-	/* be safe and alloc 2 times what we need */
-	crypt = g_malloc(len * 2);
 
-	crypt_size = decode_base64((guchar*)crypt, b64);
+	/* BUGBUG sizes here */
+	crypt = g_malloc0(BUFSIZE);
+
+	crypt_size = decode_base64((unsigned char*)crypt, (char*)b64);
 	if (!crypt_size)
 		return b64;
-
-	aes_size = ( (crypt_size / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
-
-	/* pad the string to be crypted */
-	source = g_malloc0(aes_size);
-	dest   = g_malloc0(aes_size);
-
-	g_memmove(source, crypt, crypt_size);
-	aes_decrypt(ctx, aes_size, dest, source);
 	
-	g_free(source);
+	dest  = g_malloc0(crypt_size);
+	bf_decrypt(ctx, dest, b64, len);
+	
 	g_free(crypt);
 
 	/* we could have gotten valid string to begin with
 	 * if the result is now garbled instead of nice plain
 	 * text assume this was the case. 
 	 */
-	if (!is_plain((char*) dest)) {
+	if (!is_plain(dest)) {
 		if (opt_verbose > 2)
 			msg(_("Returning original string `%s\'"), b64);
 
 		g_free(dest);
-		dest = (guchar*) g_strdup(b64);
+		dest = g_strdup(b64);
 	} 
 	g_hash_table_insert(tr, b64, dest);
-	return (gchar*) dest;
+	return dest;
 }
 
 /** 
@@ -206,6 +186,8 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 	for (q = (p + abs); (c = strchr(q, '/')); q++) {
 		d = *c;
 		*c = '\0';	
+
+		if (sig != 0) signal_abort(sig);
 
 		/* don't decrypt '..' and '.' */
 		if ( (t = dot_dotdot(q, xpath, abs)) ) {
@@ -251,6 +233,8 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 		d = *c;
 		*c = '\0';	
 
+		if (sig != 0) signal_abort(sig);
+
 		/* don't decrypt '..' and '.' */
 		if ( (t = dot_dotdot(q, path, abs)) ) {
 			path = t;
@@ -279,14 +263,12 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 
 /**
  * Read the key from a file
- * Key must be 16, 24 or 32 octets
- * Check for this - if larger than 32 cut it off
  */
 gchar *
 crypt_key(gchar *file) 
 {
 	FILE *f;
-	char *buf;
+	gchar *buf;
 	size_t s;
 
 	buf = g_malloc0(BUFSIZE);
@@ -299,27 +281,16 @@ crypt_key(gchar *file)
 	}
 	
 	if (rdup_getdelim(&buf, &s, '\n', f) == -1) {
-		msg(_("Failed to read AES key from `%s\': %s"),
+
+		if (sig != 0) signal_abort(sig);
+
+		msg(_("Failed to read key from `%s\': %s"),
 				file, strerror(errno));
 		g_free(buf);
 		return NULL;
 	}
 
 	buf[strlen(buf) - 1] = '\0';		/* kill \n */
-	s = strlen(buf);
-	if (s > 32) {
-		msg(_("Maximum AES key size is 32 bytes, truncating!"));
-		buf[32] = '\0';
-		return buf;
-	}
-#if 0
-	if (s != 16 && s != 24 && s != 32) {
-		msg(_("AES key must be 16, 24 or 32 bytes"));
-		g_free(buf);
-		return NULL;
-	}
-	/* is this still needed with OpenSSL? */
-#endif
 	return buf;
 }
 #endif /* HAVE_LIBSSL */

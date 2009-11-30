@@ -9,6 +9,11 @@
 #include "protocol.h"
 #include "io.h"
 
+/* signal.c */
+void got_sig(int);
+void signal_abort(int);
+
+extern sig_atomic_t sig;
 extern gint opt_input;
 extern gint opt_output;
 extern gchar *opt_crypt_key;
@@ -393,6 +398,7 @@ rdup_write_table(struct rdup *e, FILE *f)
 	/* perm symbolic */
 	strmode(e->f_mode, tmp);
 	fputs(tmp, f);
+	if (sig != 0) signal_abort(sig);
 	
 	/* user/group */
 	if (e->f_user) 
@@ -405,6 +411,8 @@ rdup_write_table(struct rdup *e, FILE *f)
 	else
 		fprintf(f, "%ld ", (unsigned long)e->f_gid);
 
+	if (sig != 0) signal_abort(sig);
+
 	/* size 6 pos right justified */
 	if ((S_ISLNK(e->f_mode) || e->f_lnk == 1)) {
 		/* correctly recover original filesize for the link */
@@ -416,6 +424,8 @@ rdup_write_table(struct rdup *e, FILE *f)
 		fprintf(f, "% 9ld ", (unsigned long)e->f_size); 
 	}
 
+	if (sig != 0) signal_abort(sig);
+
 	/* mtime in 2009-10-30 08:37 */
 	strtime(e->f_mtime, tmp);
 	fputs(tmp, f); fputc(' ', f);
@@ -425,6 +435,8 @@ rdup_write_table(struct rdup *e, FILE *f)
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		fputs(" -> ", f); fputs(e->f_target, f);
 	}
+
+	if (sig != 0) signal_abort(sig);
 
 	fputc('\n', f);
 	g_free(tmp);

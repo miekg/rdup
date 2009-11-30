@@ -1,6 +1,6 @@
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
     * Format change: add username, groupname and mtime
-      _Always_ output the files' contents
+      Always output the files' contents
       %U username
       %G groupname
       %t is mtime of the fs object
@@ -11,10 +11,11 @@
 	- rdup-tr only processes from stdin to stdout
 	- rdup-up only processes stdin
     * rdup added:
-	-a: reset atime
+	- -a: reset atime
     * rdup-up:
 	- set mtime
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
+	- aes encryption is replaced by blowfish
     * Change default install path /usr/local (Sebastian Kügler)
 

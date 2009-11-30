@@ -21,7 +21,7 @@ gboolean opt_tty           = FALSE;			/* force write to tty */
 #ifdef HAVE_LIBSSL
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* encryption key */
-EVP_CIPHER_CTX *aes_ctx	   = NULL;
+EVP_CIPHER_CTX *bf_ctx	   = NULL;
 #endif /* HAVE_LIBSSL */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
@@ -46,14 +46,14 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 	struct rdup *d = entry_dup(e);
 	/* entry dup hier??? BUGBUG */
 
-	crypt = crypt_path(aes_ctx, d->f_name, tr);
+	crypt = crypt_path(bf_ctx,d->f_name, tr);
 	d->f_name = crypt;
 	d->f_name_size = strlen(crypt);
 		/* g_free(d->f_name); hier wel  BUGBUG? */
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		dest = crypt_path(aes_ctx, d->f_target, tr);
+		dest = crypt_path(bf_ctx, d->f_target, tr);
 		d->f_target = dest;
 		d->f_size = strlen(crypt); /* ook hier crypt */
 	}
@@ -67,13 +67,13 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
         gchar *plain, *dest;
 	struct rdup *d = entry_dup(e);
 
-	plain = decrypt_path(aes_ctx, d->f_name, tr);
+	plain = decrypt_path(bf_ctx, d->f_name, tr);
 	d->f_name = plain;
 	d->f_name_size = strlen(plain);
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		dest = decrypt_path(aes_ctx, d->f_target, tr);
+		dest = decrypt_path(bf_ctx, d->f_target, tr);
 		d->f_target = dest;
 		d->f_size = strlen(plain);
 	}
@@ -355,8 +355,8 @@ main(int argc, char **argv)
 				if (! (opt_crypt_key = crypt_key(optarg)))
 					exit(EXIT_FAILURE);
 
-				aes_ctx = crypt_init(opt_crypt_key, TRUE);
-				if (!aes_ctx)
+				bf_ctx = crypt_init(opt_crypt_key, TRUE);
+				if (!bf_ctx)
 					exit(EXIT_FAILURE);
 #else
 				msg(_("Compiled without encryption, can not encrypt"));
@@ -372,8 +372,8 @@ main(int argc, char **argv)
 				if (! (opt_decrypt_key = crypt_key(optarg)))
 					exit(EXIT_FAILURE);
 
-				aes_ctx = crypt_init(opt_crypt_key, FALSE);
-				if (!aes_ctx)
+				bf_ctx = crypt_init(opt_crypt_key, FALSE);
+				if (!bf_ctx)
 					exit(EXIT_FAILURE);
 #else
 				msg(_("Compiled without encryption, can not decrypt"));
