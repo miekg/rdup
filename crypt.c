@@ -78,25 +78,32 @@ dot_dotdot(gchar *q, gchar *p, gboolean abs)
 	return r;
 }
 
-static void 
+static gint
 bf_encrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
 {
 	int outlen, tmplen;
-	EVP_EncryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen);
-	EVP_EncryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen);
-	/* 0 is niet goed */
-	outlen += tmplen;
+	if (! EVP_EncryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen))
+		return -1;
 
+	if (! EVP_EncryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen))
+		return -1;
+
+	outlen += tmplen;
+	return outlen;
 }
 
-static void
+static gint
 bf_decrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
 {
 	int outlen, tmplen;
-	EVP_DecryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen);
-	EVP_DecryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen);
-	// 0 is niet goed
+	if (! EVP_DecryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen))
+		return -1;
+
+	if (! EVP_DecryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen))
+		return -1;
+
 	outlen += tmplen;
+	return outlen;
 }
 
 /* encrypt and base64 encode path element
@@ -113,10 +120,14 @@ crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
 		return hashed;
 	/* BUGBUF the size here */
 	dest = g_malloc0(BUFSIZE);
-	bf_encrypt(ctx, dest, elem, len);
+
+	if (bf_encrypt(ctx, dest, elem, len) == -1)
+		return NULL;
 	
 	b64 = encode_base64(len * 2, (guchar*)dest);
+
 	g_free(dest);
+
 	if (!b64) {
 		/* hash insert? */
 		return elem; /* as if nothing happened */
@@ -138,7 +149,6 @@ decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, guint len, GHashTable *tr)
 {
 	gchar *dest;
 	gchar *crypt, *hashed;
-	guint crypt_size;
 
 	hashed = g_hash_table_lookup(tr, b64);
 	if (hashed)
@@ -146,13 +156,13 @@ decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, guint len, GHashTable *tr)
 
 	/* BUGBUG sizes here */
 	crypt = g_malloc0(BUFSIZE);
+	dest  = g_malloc0(BUFSIZE);
 
-	crypt_size = decode_base64((unsigned char*)crypt, (char*)b64);
-	if (!crypt_size)
+	if (!decode_base64((unsigned char*)crypt, (char*)b64))
 		return b64;
 	
-	dest  = g_malloc0(crypt_size);
-	bf_decrypt(ctx, dest, b64, len);
+	if (bf_decrypt(ctx, dest, crypt, len) == -1)
+		return NULL;
 	
 	g_free(crypt);
 
@@ -196,7 +206,8 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 			*c = d;
 			continue;
 		}
-		crypt = crypt_path_ele(ctx, q, strlen(q), tr);
+		if (! (crypt = crypt_path_ele(ctx, q, strlen(q), tr)))
+			return NULL;
 
 		if (xpath)
 			xpath = g_strdup_printf("%s/%s", xpath, crypt);
@@ -206,7 +217,9 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 		q = c;
 		*c = d;
 	}
-	crypt = crypt_path_ele(ctx, q, strlen(q), tr);
+	if (! (crypt = crypt_path_ele(ctx, q, strlen(q), tr)))
+		return NULL;
+
 	if (xpath)
 		xpath = g_strdup_printf("%s/%s", xpath, crypt);
 	else 
@@ -242,7 +255,8 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 			*c = d;
 			continue;
 		}
-		plain = decrypt_path_ele(ctx, q, strlen(q), tr);
+		if (! (plain = decrypt_path_ele(ctx, q, strlen(q), tr)))
+			return NULL;
 
 		if (path) 
 			path = g_strdup_printf("%s/%s", path, plain);
@@ -252,7 +266,9 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 		q = c;
 		*c = d;
 	}
-	plain = decrypt_path_ele(ctx, q, strlen(q), tr);
+	if (! (plain = decrypt_path_ele(ctx, q, strlen(q), tr)))
+		return NULL;
+
 	if (path) 
 		path = g_strdup_printf("%s/%s", path, plain);
 	else

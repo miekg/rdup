@@ -280,6 +280,10 @@ rdup_write_header(struct rdup *e)
 			(size_t)e->f_size,
 			e->f_name);
 	}
+
+	if (sig != 0) 
+		signal_abort(sig);
+
 	if (write(1, out, strlen(out)) == -1) {
 		msg(_("Failed to write to stdout: %s"), strerror(errno));
 		return -1;

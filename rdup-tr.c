@@ -46,7 +46,11 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 	struct rdup *d = entry_dup(e);
 	/* entry dup hier??? BUGBUG */
 
-	crypt = crypt_path(bf_ctx,d->f_name, tr);
+	if (! (crypt = crypt_path(bf_ctx,d->f_name, tr))) {
+		msg(_("Failed to encrypt path `%s\'"), d->f_name);
+		return NULL;
+	}
+
 	d->f_name = crypt;
 	d->f_name_size = strlen(crypt);
 		/* g_free(d->f_name); hier wel  BUGBUG? */
@@ -66,8 +70,13 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 {
         gchar *plain, *dest;
 	struct rdup *d = entry_dup(e);
+	/* ENTRY DUP BUGBUG */
 
-	plain = decrypt_path(bf_ctx, d->f_name, tr);
+	if (! (plain = decrypt_path(bf_ctx, d->f_name, tr))) {
+		msg(_("Failed to decrypt path `%s\'"), d->f_name);
+		return NULL;
+	}
+
 	d->f_name = plain;
 	d->f_name_size = strlen(plain);
 
@@ -148,6 +157,9 @@ stdin2archive(void)
 		if (n) 
 			*n = '\0';
 
+		if (sig != 0) 
+			signal_abort(sig);
+
 		if (!(rdup_entry = parse_entry(buf, line))) {
 			/* msgs from entry.c */
 			exit(EXIT_FAILURE);
@@ -199,7 +211,7 @@ stdin2archive(void)
 			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
 #endif /* HAVE_LIBSSL */
 
-		if (rdup_entry->plusmin == MINUS) {
+		if (rdup_entry_c->plusmin == MINUS) {
 			if (opt_output == O_RDUP) {
 				(void)rdup_write_header(rdup_entry_c);
 				goto not_s_isreg;
@@ -208,7 +220,7 @@ stdin2archive(void)
 		}
 
 		if (opt_output != O_RDUP) {
-			s = stat_from_rdup(rdup_entry);
+			s = stat_from_rdup(rdup_entry_c);
 
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, s);
@@ -218,14 +230,14 @@ stdin2archive(void)
 			 * that a file is hardlinked - but the '||'
 			 * to handle that case is here anyway
 			 */
-			if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
+			if (S_ISLNK(rdup_entry_c->f_mode) || rdup_entry_c->f_lnk == 1) {
 				/* source */
 				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
 				/* if a hardlink is seen before the file exists
 				 * tar fails. BUGBUG, need to process these at the end of the run
 				 */
-				if (S_ISLNK(rdup_entry->f_mode))
+				if (S_ISLNK(rdup_entry_c->f_mode))
 					archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
 				else 
 					archive_entry_copy_hardlink(entry, rdup_entry_c->f_target);

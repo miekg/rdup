@@ -40,6 +40,8 @@ block_out_header(FILE *f, size_t size, int fp) {
 	char *p;
 	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR, 
 			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
+	if (sig != 0) 
+		signal_abort(sig);
 	if (f) {
 		if (fwrite(p, sizeof(char), strlen(p), f) != strlen(p))
 			return -1;
@@ -57,6 +59,8 @@ block_out_header(FILE *f, size_t size, int fp) {
  */
 gint
 block_out(FILE *f, size_t size, char *buf, int fp) {
+	if (sig != 0) 
+		signal_abort(sig);
 	if (f) {
 		if (fwrite(buf, sizeof(char), size, f) != size)
 			return -1;
