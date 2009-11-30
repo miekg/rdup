@@ -218,10 +218,11 @@ cmd="rdup$E$x -N $STAMP $trans $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		rdup-simple -L +$DAYS /dev/null $BACKUPDIR
+		$PROGNAME -L +$DAYS /dev/null $BACKUPDIR
 #		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
+		# You need to set your path
                 $ssh "rdup-simple -L +$DAYS /dev/null $BACKUPDIR"
                 purpose=$?
         fi
@@ -242,4 +243,3 @@ esac
 # execute the backup command
 ##echo "Executing: ${cmd}"
 eval ${cmd}
-
