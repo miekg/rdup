@@ -210,6 +210,10 @@ stdin2archive(void)
 			rdup_entry_c = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
 			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
+
+		if (!rdup_entry_c) 
+			exit(EXIT_FAILURE); /* encryption problem */
+
 #endif /* HAVE_LIBSSL */
 
 		if (rdup_entry_c->plusmin == MINUS) {
@@ -365,10 +369,10 @@ main(int argc, char **argv)
 					msg(_("Will not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
-				if (! crypt_key(optarg, opt_decrypt_key, iv))
+				if (crypt_key(optarg, &opt_crypt_key, &iv) == -1)
 					exit(EXIT_FAILURE);
 
-				bf_ctx = crypt_init(opt_decrypt_key, iv, TRUE);
+				bf_ctx = crypt_init(opt_crypt_key, iv, TRUE);
 				if (!bf_ctx)
 					exit(EXIT_FAILURE);
 #else
@@ -382,10 +386,10 @@ main(int argc, char **argv)
 					msg(_("Can not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
-				if (! crypt_key(optarg, opt_decrypt_key, iv))
+				if (crypt_key(optarg, &opt_decrypt_key, &iv) == -1)
 					exit(EXIT_FAILURE);
 
-				bf_ctx = crypt_init(opt_crypt_key, iv, FALSE);
+				bf_ctx = crypt_init(opt_decrypt_key, iv, FALSE);
 				if (!bf_ctx)
 					exit(EXIT_FAILURE);
 #else

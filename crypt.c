@@ -278,8 +278,8 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 /**
  * Read the key from a file
  */
-gchar *
-crypt_key(gchar *file, gchar *key, gchar *iv) 
+gint
+crypt_key(gchar *file, gchar **key, gchar **iv) 
 {
 	FILE *f;
 	gchar k[16], i[8];
@@ -287,20 +287,20 @@ crypt_key(gchar *file, gchar *key, gchar *iv)
 	if (! (f = fopen(file, "r"))) {
 		msg(_("Failed to open `%s\': %s"),
 				file, strerror(errno));
-		return NULL;
+		return -1;
 	}
 	if ( fread(k, sizeof(gchar), 16, f) != 16) {
 		msg(_("Key needs to be 16 characters"));
-		return NULL;
+		return -1;
 	}
 
 	if ( fread(i, sizeof(gchar), 8, f) != 8) {
 		msg(_("IV needs to be 8 characters"));
-		return NULL; 
+		return -1; 
 	}
 	
-	key = k;
-	iv  = i;
-	return key;
+	*key = k;
+	*iv  = i;
+	return 0;
 }
 #endif /* HAVE_LIBSSL */

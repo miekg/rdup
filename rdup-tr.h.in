@@ -98,6 +98,6 @@ gchar * crypt_path_ele(EVP_CIPHER_CTX *, gchar *, guint, GHashTable *);
 gchar * decrypt_path_ele(EVP_CIPHER_CTX *, gchar *, guint, GHashTable *);
 gchar * crypt_path(EVP_CIPHER_CTX *, gchar *, GHashTable *);
 gchar * decrypt_path(EVP_CIPHER_CTX *, gchar *, GHashTable *);
-gchar * crypt_key(gchar *, gchar *, gchar *);
+gint    crypt_key(gchar *, gchar **, gchar **);
 #endif /* HAVE_LIBSSL */
 #endif  /* _RDUP_TR_H */
