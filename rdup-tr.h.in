@@ -93,11 +93,11 @@ gchar *slink(struct rdup *);
 
 #ifdef HAVE_LIBSSL
 /* crypt.c */
-EVP_CIPHER_CTX * crypt_init(gchar *, gboolean);
+EVP_CIPHER_CTX * crypt_init(gchar *, gchar *, gboolean);
 gchar * crypt_path_ele(EVP_CIPHER_CTX *, gchar *, guint, GHashTable *);
 gchar * decrypt_path_ele(EVP_CIPHER_CTX *, gchar *, guint, GHashTable *);
 gchar * crypt_path(EVP_CIPHER_CTX *, gchar *, GHashTable *);
 gchar * decrypt_path(EVP_CIPHER_CTX *, gchar *, GHashTable *);
-gchar * crypt_key(gchar *);
+gchar * crypt_key(gchar *, gchar *, gchar *);
 #endif /* HAVE_LIBSSL */
 #endif  /* _RDUP_TR_H */

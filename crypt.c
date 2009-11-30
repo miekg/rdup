@@ -19,18 +19,16 @@ void got_sig(int);
 void signal_abort(int);
 
 EVP_CIPHER_CTX *
-crypt_init(gchar *key, gboolean crypt)
+crypt_init(gchar *key, gchar *iv, gboolean crypt)
 {
-	/* see blowfish(3) */
-	/* guint length = strlen(key); */
-	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
 	gint i;
-	guchar iv[] = {1,2,3,4,5,6,7,8};
+	/* see blowfish(3) */
+	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
 	EVP_CIPHER_CTX_init(ctx);
 	if (crypt)
-		i = EVP_EncryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, iv);
+		i = EVP_EncryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, (guchar*)iv);
 	else 
-		i = EVP_DecryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, iv);
+		i = EVP_DecryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, (guchar*)iv);
 
 	if (i == 0) {
 		msg(_("Failed to setup encryption"));
@@ -281,32 +279,25 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
  * Read the key from a file
  */
 gchar *
-crypt_key(gchar *file) 
+crypt_key(gchar *file, gchar *key, gchar *iv) 
 {
 	FILE *f;
-	gchar *buf;
-	size_t s;
+	gchar k[16], i[8];
 
-	buf = g_malloc0(BUFSIZE);
-	s = BUFSIZE;
 	if (! (f = fopen(file, "r"))) {
 		msg(_("Failed to open `%s\': %s"),
 				file, strerror(errno));
-		g_free(buf);
 		return NULL;
 	}
+	if ( fread(k, 16, sizeof(gchar), f) != 16) 
+		msg(_("Key needs to be 16 characters"));
+		return NULL;
+
+	if ( fread(i, 8, sizeof(gchar), f) != 8) 
+		msg(_("IV needs to be 8 characters"));
+		return NULL;
 	
-	if (rdup_getdelim(&buf, &s, '\n', f) == -1) {
-
-		if (sig != 0) signal_abort(sig);
-
-		msg(_("Failed to read key from `%s\': %s"),
-				file, strerror(errno));
-		g_free(buf);
-		return NULL;
-	}
-
-	buf[strlen(buf) - 1] = '\0';		/* kill \n */
-	return buf;
+	key = k;
+	iv  = i;
 }
 #endif /* HAVE_LIBSSL */

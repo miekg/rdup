@@ -20,7 +20,8 @@ char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
 #ifdef HAVE_LIBSSL
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
-gchar *opt_decrypt_key	   = NULL;			/* encryption key */
+gchar *opt_decrypt_key	   = NULL;			/* decryption key */
+gchar *iv		   = NULL;			/* iv */
 EVP_CIPHER_CTX *bf_ctx	   = NULL;
 #endif /* HAVE_LIBSSL */
 gint opt_verbose 	   = 0;                         /* be more verbose */
@@ -364,10 +365,10 @@ main(int argc, char **argv)
 					msg(_("Will not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
-				if (! (opt_crypt_key = crypt_key(optarg)))
+				if (! crypt_key(optarg, opt_decrypt_key, iv))
 					exit(EXIT_FAILURE);
 
-				bf_ctx = crypt_init(opt_crypt_key, TRUE);
+				bf_ctx = crypt_init(opt_decrypt_key, iv, TRUE);
 				if (!bf_ctx)
 					exit(EXIT_FAILURE);
 #else
@@ -381,10 +382,10 @@ main(int argc, char **argv)
 					msg(_("Can not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
-				if (! (opt_decrypt_key = crypt_key(optarg)))
+				if (! crypt_key(optarg, opt_decrypt_key, iv))
 					exit(EXIT_FAILURE);
 
-				bf_ctx = crypt_init(opt_crypt_key, FALSE);
+				bf_ctx = crypt_init(opt_crypt_key, iv, FALSE);
 				if (!bf_ctx)
 					exit(EXIT_FAILURE);
 #else
