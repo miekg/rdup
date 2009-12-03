@@ -18,8 +18,7 @@ the table below.
 You may also supply \fBrdup-tr\fR with only a list of pathnames, this can 
 be selected with the \-L flag. 
 
-The following table shows what happens with the output
-depending on the input. 
+The following table shows what happens with the output depending on the input. 
 .BR
 .TP 
 .B 0
@@ -55,16 +54,16 @@ defaults to 'rdup'.
 .TP
 .B \-X \fIkey\fR
 Read the encryption key from the file key and encrypt all paths
-with AES and this key. After the encryption the binary data is
+with Blowfish and this key and iv. After the encryption the binary data is
 converted into ascii using an URL safe (Section 4 of RFC 3548)
 version of base64 encode.
 
 The encryption key must be on the first line and the key size
-must be 16, 24 or 32 bytes. Anything above 32 will be truncated.
+must be 16 and 8 bytes for the iv, so 24 in total.
 .TP
 .B \-Y \fIkey\fR
 Read the decryption key from the file key and decrypt all paths
-with AES and this key. Before the encryption the paths
+with Blowfish and this key. Before the encryption the paths
 are converted to binary by using an URL safe version of base64 decode.
 .TP
 .B \-c
@@ -89,7 +88,7 @@ The following is possible
 
 That is: all files under /home are gzipped and encrypted
 on a \fIper\fR file basis (first line). Further more, all pathnames are
-AES encrypted (second line). This is put in a tar file, which is then
+Blowfish encrypted (second line). This is put in a tar file, which is then
 compressed, resulting in the final output (final line).
 
 Creating a compressed and encrypted tar archive out of a full
