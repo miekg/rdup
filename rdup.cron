@@ -1,0 +1,6 @@
+# cron.d/rdup -- schedules periodic backup
+#
+# Copyright © Miek Gieben <miek@miek.nl>
+# By default, run at 03:57 every day
+PATH=/bin:/usr/bin:/usr/local/bin
+57 3 * * * root [ -f /shared/backup/.mounted ] && /usr/local/bin/rdup-simple /etc /shared/backup/elektron
