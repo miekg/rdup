@@ -18,6 +18,7 @@ extern sig_atomic_t sig;
 void got_sig(int);
 void signal_abort(int);
 
+
 EVP_CIPHER_CTX *
 crypt_init(gchar *key, gchar *iv, gboolean crypt)
 {
@@ -25,6 +26,7 @@ crypt_init(gchar *key, gchar *iv, gboolean crypt)
 	/* see blowfish(3) */
 	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
 	EVP_CIPHER_CTX_init(ctx);
+	EVP_CIPHER_CTX_set_padding(ctx, 0); /* houden?? */
 	if (crypt)
 		i = EVP_EncryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, (guchar*)iv);
 	else 
@@ -46,7 +48,6 @@ is_plain(gchar *s)
 		if (!isascii(*p))
 			return FALSE;
 	}
-		
 	return TRUE;
 }
 
@@ -76,39 +77,40 @@ dot_dotdot(gchar *q, gchar *p, gboolean abs)
 	return r;
 }
 
-static gint
+static gboolean
 bf_encrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
 {
 	int outlen, tmplen;
 	if (! EVP_EncryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen))
-		return -1;
+		return FALSE;
 
 	if (! EVP_EncryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen))
-		return -1;
+		return FALSE;
 
-	outlen += tmplen;
-	return outlen;
+	dest[tmplen] = '\0';
+	return TRUE;
 }
 
-static gint
+static gboolean
 bf_decrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
 {
 	int outlen, tmplen;
 	if (! EVP_DecryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen))
-		return -1;
+		return FALSE;
 
+	/* Padding ?? */
 	if (! EVP_DecryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen))
-		return -1;
+		return FALSE;
 
-	outlen += tmplen;
-	return outlen;
+	dest[tmplen] = '\0';
+	return TRUE;
 }
 
 /* encrypt and base64 encode path element
  * return the result
  */
 gchar *
-crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
+crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem,  GHashTable *tr)
 {
 	gchar *dest;
 	gchar *b64, *hashed;
@@ -116,13 +118,15 @@ crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
 	hashed = g_hash_table_lookup(tr, elem);
 	if (hashed) 
 		return hashed;
+
 	/* BUGBUF the size here */
 	dest = g_malloc0(BUFSIZE);
 
-	if (bf_encrypt(ctx, dest, elem, len) == -1)
+	if (bf_encrypt(ctx, dest, elem, strlen(elem)) == FALSE) 
 		return NULL;
 	
-	b64 = encode_base64(len * 2, (guchar*)dest);
+	/* BUGBUG embeded nulls */
+	b64 = encode_base64(strlen(elem) * 2, (guchar*)dest);
 
 	g_free(dest);
 
@@ -143,10 +147,10 @@ crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem, guint len, GHashTable *tr)
  * return the result
  */
 gchar *
-decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, guint len, GHashTable *tr)
+decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, GHashTable *tr)
 {
-	gchar *dest;
-	gchar *crypt, *hashed;
+	gchar *dest, *crypt, *hashed;
+	gint len;
 
 	hashed = g_hash_table_lookup(tr, b64);
 	if (hashed)
@@ -156,12 +160,13 @@ decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, guint len, GHashTable *tr)
 	crypt = g_malloc0(BUFSIZE);
 	dest  = g_malloc0(BUFSIZE);
 
-	if (!decode_base64((unsigned char*)crypt, (char*)b64))
+	if (! (len = decode_base64((unsigned char*)crypt, (char*)b64)))
 		return b64;
-	
-	if (bf_decrypt(ctx, dest, crypt, len) == -1)
+
+	/* BUGBUG sizes and strlen */
+	if (bf_decrypt(ctx, dest, crypt, len) == FALSE)
 		return NULL;
-	
+
 	g_free(crypt);
 
 	/* we could have gotten valid string to begin with
@@ -204,7 +209,7 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 			*c = d;
 			continue;
 		}
-		if (! (crypt = crypt_path_ele(ctx, q, strlen(q), tr)))
+		if (! (crypt = crypt_path_ele(ctx, q, tr)))
 			return NULL;
 
 		if (xpath)
@@ -215,7 +220,7 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 		q = c;
 		*c = d;
 	}
-	if (! (crypt = crypt_path_ele(ctx, q, strlen(q), tr)))
+	if (! (crypt = crypt_path_ele(ctx, q, tr)))
 		return NULL;
 
 	if (xpath)
@@ -253,7 +258,7 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 			*c = d;
 			continue;
 		}
-		if (! (plain = decrypt_path_ele(ctx, q, strlen(q), tr)))
+		if (! (plain = decrypt_path_ele(ctx, q, tr)))
 			return NULL;
 
 		if (path) 
@@ -264,7 +269,7 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 		q = c;
 		*c = d;
 	}
-	if (! (plain = decrypt_path_ele(ctx, q, strlen(q), tr)))
+	if (! (plain = decrypt_path_ele(ctx, q, tr)))
 		return NULL;
 
 	if (path) 

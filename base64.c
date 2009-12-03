@@ -97,7 +97,7 @@ char
  * @param dest Pointer to memory for holding the decoded string.
  * Must be large enough to recieve the decoded string.
  * @param src A base64 encoded string.
- * @return TRUE (the length of the decoded string) if decode
+ * @return (the length of the decoded string) if decode
  * succeeded otherwise FALSE.
  */
 int 
