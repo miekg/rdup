@@ -167,7 +167,7 @@ trailing slash.
 
 .TP
 .B \-a
-Restore the original access times on the files and directories.
+Restore the original access times on files and directories.
 .B \-c
 Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
 output redirected.
