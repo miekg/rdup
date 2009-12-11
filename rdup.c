@@ -313,7 +313,6 @@ main(int argc, char **argv)
 				opt_atime = TRUE;
 				break;
 			case 'c':
-				msg(_("-c now means force tty output"));
 				opt_tty = TRUE;
 				break;
 			case 'h':
