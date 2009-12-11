@@ -1,3 +1,11 @@
+09 Aug 2009: 1.1.0-dev1 Miek <rdup@miek.nl>
+    * rdup added:
+	- -a: reset atime
+    * rdup-up:
+	- set mtime
+    * rdup-tr -X/-Y is now working (yet)
+
+
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
     * Format change: add username, groupname and mtime
       Always output the files' contents
@@ -10,12 +18,7 @@
 	- rdup-tr does not do -P anymore
 	- rdup-tr only processes from stdin to stdout
 	- rdup-up only processes stdin
-    * rdup added:
-	- -a: reset atime
-    * rdup-up:
-	- set mtime
     * Loads of code cleanups
     * Use OpenSSL in favor of libnettle
-	- aes encryption is replaced by blowfish
+	- AES encryption is replaced by blowfish
     * Change default install path /usr/local (Sebastian Kügler)
-
