@@ -28,3 +28,7 @@ tests:
     crypto tests
     encrypt path test
     tweak almost correct input and let rdup crash
+
+    backup
+    add nobkacup
+    baclup zijn de files weg

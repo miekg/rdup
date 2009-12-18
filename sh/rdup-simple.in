@@ -64,7 +64,7 @@ DEST - where to store the backup. This can be:
 
 OPTIONS:
  -k KEYFILE encrypt all files: rdup -Pmcrypt,-fKEYFILE,-c
- -g	    encrypt all files: rdup -Pgpg,--default-recipient-self
+ -g	    encrypt all files: rdup -Pgpg,--default-recipient-self,--encrypt
  -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
  -L	    link previous backup directory (note: this is used internally)
@@ -126,7 +126,7 @@ while getopts "E:k:vfgzxhVX:Y:s:L" o; do
 			exit 1
 		fi
                 ;;
-		g) trans="$trans -Pgpg,--default-recipient-self"
+		g) trans="$trans -Pgpg,--encrypt,--default-recipient-self"
 		if $enc; then
 			echo2 "Encryption already set"
 			exit 1
