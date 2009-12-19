@@ -72,7 +72,7 @@ while getopts "E:k:vfgzxhVX:Y:s:" o; do
                         echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                trans="$trans -Pmcrypt,-f$OPTARG,-c"
+                trans="$trans -Pmcrypt,-f,$OPTARG,-q"
 		if $enc; then
 			echo2 "Encryption already set"
 			exit 1
