@@ -26,6 +26,7 @@ copy_and_link() {
     TODAY=$(date $DATESTR)
     TOPDIR="$1"
 
+    if $dry; then return 1; fi
     [[ -z $TOPDIR ]] && exit 2
     [[ -d $TOPDIR/$TODAY ]] && exit 0
 
@@ -63,13 +64,14 @@ DEST - where to store the backup. This can be:
 	directory
 
 OPTIONS:
- -k KEYFILE encrypt all files: rdup -Pmcrypt,-fKEYFILE,-c
+ -k KEYFILE encrypt all files: rdup -Pmcrypt,-fKEYFILE
  -g	    encrypt all files: rdup -Pgpg,--default-recipient-self,--encrypt
  -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
  -L	    link previous backup directory (note: this is used internally)
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
+ -n	    dry run; show the acutally rdup commands, without executing them
  -x         pass -x to rdup
  -s NUM	    pass -s NUM to rdup-up (strip NUM leading path components)
  -X FILE    encrypt all paths with AES and key in FILE
@@ -90,8 +92,9 @@ etc=~/.rdup
 force=false
 verbose=false
 link=false
+dry=false
 
-while getopts "E:k:vfgzxhVX:Y:s:L" o; do
+while getopts "E:k:vfgzxhVX:Y:s:Ln" o; do
         case $o in
 		E)
                 if [[ -z "$OPTARG" ]]; then
@@ -113,7 +116,7 @@ while getopts "E:k:vfgzxhVX:Y:s:L" o; do
                         echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                trans="$trans -Pmcrypt,-f$OPTARG,-c"
+                trans="$trans -Pmcrypt,-q,-f,$OPTARG"
 		if $enc; then
 			echo2 "Encryption already set"
 			exit 1
@@ -136,6 +139,7 @@ while getopts "E:k:vfgzxhVX:Y:s:L" o; do
                 f) force=true;;
 		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
+		n) dry=true;;
                 x) x=" -x ";;
 		L) link=true;;
                 h) usage && exit;;
@@ -241,5 +245,8 @@ case $purpose in
         exit 1 ;;
 esac
 # execute the backup command
-##echo "Executing: ${cmd}"
-eval ${cmd}
+if $dry; then
+    echo "${cmd}"
+else
+    eval ${cmd}
+fi
