@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# this takes place in the rdup source tree
+# make sure the executables used are also
+# these
+PATH=`pwd`:`pwd`/sh:.:$PATH
+
+# test rdup-simple with mcrypt enryption
