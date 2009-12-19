@@ -32,3 +32,5 @@ tests:
     backup
     add nobkacup
     baclup zijn de files weg
+    rdup-simple encrypt test
+    rdup-simple test
