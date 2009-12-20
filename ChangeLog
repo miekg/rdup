@@ -3,7 +3,7 @@
 	- -a: reset atime
     * rdup-up:
 	- set mtime
-    * rdup-tr -X/-Y is now working (yet)
+    * revert back to libnettle
 
 
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
