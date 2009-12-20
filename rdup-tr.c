@@ -18,12 +18,11 @@ char *PROGNAME = "rdup-tr";
 /* options */
 char *template;
 gboolean opt_tty           = FALSE;			/* force write to tty */
-#ifdef HAVE_LIBSSL
+#ifdef HAVE_LIBNETTLE
 gchar *opt_crypt_key	   = NULL;			/* encryption key */
 gchar *opt_decrypt_key	   = NULL;			/* decryption key */
-gchar *iv		   = NULL;			/* iv */
-EVP_CIPHER_CTX *bf_ctx	   = NULL;
-#endif /* HAVE_LIBSSL */
+struct aes_ctx * aes_ctx   = NULL;
+#endif /* HAVE_LIBNETTLE */
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output	           = O_RDUP;			/* default output */
 gint opt_input		   = I_RDUP;			/* default intput */
@@ -34,7 +33,7 @@ extern int opterr;
 
 int opterr = 0;
 
-#ifdef HAVE_LIBSSL
+#ifdef HAVE_LIBNETTLE
 /* common.c */
 struct rdup * entry_dup(struct rdup *f);
 void entry_free(struct rdup *f);
@@ -47,7 +46,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 	struct rdup *d = entry_dup(e);
 	/* entry dup hier??? BUGBUG */
 
-	if (! (crypt = crypt_path(bf_ctx,d->f_name, tr))) {
+	if (! (crypt = crypt_path(aes_ctx,d->f_name, tr))) {
 		msg(_("Failed to encrypt path `%s\'"), d->f_name);
 		return NULL;
 	}
@@ -58,7 +57,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		dest = crypt_path(bf_ctx, d->f_target, tr);
+		dest = crypt_path(aes_ctx, d->f_target, tr);
 		d->f_target = dest;
 		d->f_size = strlen(crypt); /* ook hier crypt */
 	}
@@ -73,7 +72,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 	struct rdup *d = entry_dup(e);
 	/* ENTRY DUP BUGBUG */
 
-	if (! (plain = decrypt_path(bf_ctx, d->f_name, tr))) {
+	if (! (plain = decrypt_path(aes_ctx, d->f_name, tr))) {
 		msg(_("Failed to decrypt path `%s\'"), d->f_name);
 		return NULL;
 	}
@@ -83,13 +82,13 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 
 	/* links are special */
 	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		dest = decrypt_path(bf_ctx, d->f_target, tr);
+		dest = decrypt_path(aes_ctx, d->f_target, tr);
 		d->f_target = dest;
 		d->f_size = strlen(plain);
 	}
         return d;
 }
-#endif /* HAVE_LIBSSL */
+#endif /* HAVE_LIBNETTLE */
 
 /* read filenames from stdin, put them through
  * the childeren, collect the output from the last
@@ -205,7 +204,7 @@ stdin2archive(void)
 			signal_abort(sig);
 
 		rdup_entry_c = rdup_entry;
-#ifdef HAVE_LIBSSL
+#ifdef HAVE_LIBNETTLE 
 		if (opt_crypt_key) 
 			rdup_entry_c = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
@@ -214,7 +213,7 @@ stdin2archive(void)
 		if (!rdup_entry_c) 
 			exit(EXIT_FAILURE); /* encryption problem */
 
-#endif /* HAVE_LIBSSL */
+#endif /* HAVE_LIBNETTLE */
 
 		if (rdup_entry_c->plusmin == MINUS) {
 			if (opt_output == O_RDUP) {
@@ -364,38 +363,38 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'X':
-#ifdef HAVE_LIBSSL
+#ifdef HAVE_LIBNETTLE
 				if (opt_decrypt_key) {
 					msg(_("Will not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
-				if (crypt_key(optarg, &opt_crypt_key, &iv) == -1)
+				if (! (opt_crypt_key = crypt_key(optarg)) )
 					exit(EXIT_FAILURE);
 
-				bf_ctx = crypt_init(opt_crypt_key, iv, TRUE);
-				if (!bf_ctx)
+				aes_ctx = crypt_init(opt_crypt_key, TRUE);
+				if (!aes_ctx)
 					exit(EXIT_FAILURE);
 #else
 				msg(_("Compiled without encryption, can not encrypt"));
 				exit(EXIT_FAILURE);
-#endif /* HAVE_LIBSSL */
+#endif /* HAVE_LIBNETTLE */
 				break;
 			case 'Y':
-#ifdef HAVE_LIBSSL
+#ifdef HAVE_LIBNETTLE
 				if (opt_crypt_key) {
 					msg(_("Can not do both encryption and decryption"));
 					exit(EXIT_FAILURE);
 				}
-				if (crypt_key(optarg, &opt_decrypt_key, &iv) == -1)
+				if (! (opt_decrypt_key = crypt_key(optarg)) )
 					exit(EXIT_FAILURE);
 
-				bf_ctx = crypt_init(opt_decrypt_key, iv, FALSE);
-				if (!bf_ctx)
+				aes_ctx = crypt_init(opt_decrypt_key, FALSE);
+				if (!aes_ctx)
 					exit(EXIT_FAILURE);
 #else
 				msg(_("Compiled without encryption, can not decrypt"));
 				exit(EXIT_FAILURE);
-#endif /* HAVE_LIBSL */
+#endif /* HAVE_LIBNETTLE */
 				break;
 			case 'h':
 				usage_tr(stdout);
