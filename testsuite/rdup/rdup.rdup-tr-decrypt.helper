@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # do we have encryption
-if cat /dev/null | ./rdup-tr -X<(echo Key4567890123456Iv2345678) -c; then : else exit 0; fi
+if cat /dev/null | ./rdup-tr -X<(echo Boe1234567890123) -c; then : else exit 0; fi
 
 # shoud give zero exit code
-./rdup /dev/null testsuite | ./rdup-tr -X<(echo Key4567890123456Iv2345678) | \
-./rdup-tr -Y<(echo Key4567890123456Iv2345678) | ./rdup-up -T > /dev/null
+./rdup /dev/null testsuite | ./rdup-tr -X<(echo Boe1234567890123) | \
+./rdup-tr -Y<(echo Boe1234567890123) | ./rdup-up -T > /dev/null

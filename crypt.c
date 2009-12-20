@@ -8,53 +8,47 @@
 #include "rdup-tr.h"
 #include "base64.h"
 
-#ifdef HAVE_LIBSSL
-#include <openssl/blowfish.h>
+#ifdef HAVE_LIBNETTLE
+#include <nettle/aes.h>
 
-extern gint opt_verbose;
-extern sig_atomic_t sig;
-
-/* signal.c */
-void got_sig(int);
-void signal_abort(int);
+extern guint opt_verbose;
 
 
-EVP_CIPHER_CTX *
-crypt_init(gchar *key, gchar *iv, gboolean crypt)
+/** 
+ * init the cryto
+ * with key  *key
+ * and length length
+ * lenght MUST be 16, 24 or 32
+ * anything short will be zero padded to 
+ * create a correct key
+ * return aes context
+ */
+struct aes_ctx *
+crypt_init(gchar *key, gboolean crypt)
 {
-	gint i;
-	/* see blowfish(3) */
-	EVP_CIPHER_CTX *ctx = g_malloc(sizeof(EVP_CIPHER_CTX));
-	EVP_CIPHER_CTX_init(ctx);
-	EVP_CIPHER_CTX_set_padding(ctx, 0); /* houden?? */
+	guint length = strlen(key);
+	struct aes_ctx *ctx = g_malloc(sizeof(struct aes_ctx));
 	if (crypt)
-		i = EVP_EncryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, (guchar*)iv);
+		aes_set_encrypt_key(ctx, length, (uint8_t*)key);
 	else 
-		i = EVP_DecryptInit_ex(ctx, EVP_bf_cbc(), NULL, (guchar*)key, (guchar*)iv);
-
-	if (i == 0) {
-		msg(_("Failed to setup encryption"));
-		return NULL;
-	}
+		aes_set_decrypt_key(ctx, length, (uint8_t*)key);
 	return ctx;
 }
 
 static gboolean
-is_plain(gchar *s) 
-{
+is_plain(gchar *s) {
 	char *p;
-	for (p = s; *p; p++) {
-		if (sig != 0) signal_abort(sig);
+	for (p = s; *p; p++)
 		if (!isascii(*p))
 			return FALSE;
-	}
+		
 	return TRUE;
 }
 
 /*
  * don't do anything with the strings .. and .
  */
-static gchar *
+gchar *
 dot_dotdot(gchar *q, gchar *p, gboolean abs) 
 {
 	gchar *r = NULL;
@@ -77,59 +71,34 @@ dot_dotdot(gchar *q, gchar *p, gboolean abs)
 	return r;
 }
 
-static gboolean
-bf_encrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
-{
-	int outlen, tmplen;
-	if (! EVP_EncryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen))
-		return FALSE;
-
-	if (! EVP_EncryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen))
-		return FALSE;
-
-	dest[tmplen] = '\0';
-	return TRUE;
-}
-
-static gboolean
-bf_decrypt(EVP_CIPHER_CTX *ctx, gchar *dest, gchar *source, guint slen)
-{
-	int outlen, tmplen;
-	if (! EVP_DecryptUpdate(ctx, (guchar*)dest, &outlen, (guchar*)source, slen))
-		return FALSE;
-
-	/* Padding ?? */
-	if (! EVP_DecryptFinal_ex(ctx, (guchar*)dest + outlen, &tmplen))
-		return FALSE;
-
-	dest[tmplen] = '\0';
-	return TRUE;
-}
-
 /* encrypt and base64 encode path element
  * return the result
  */
 gchar *
-crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem,  GHashTable *tr)
+crypt_path_ele(struct aes_ctx *ctx, gchar *elem, GHashTable *tr)
 {
-	gchar *dest;
+	guint aes_size, len;
+	guchar *source;
+	guchar *dest;
 	gchar *b64, *hashed;
 
+	len    = strlen(elem);
 	hashed = g_hash_table_lookup(tr, elem);
 	if (hashed) 
 		return hashed;
 
-	/* BUGBUF the size here */
-	dest = g_malloc0(BUFSIZE);
+	aes_size = ( (len / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
 
-	if (bf_encrypt(ctx, dest, elem, strlen(elem)) == FALSE) 
-		return NULL;
+	/* pad the string to be crypted */
+	source = g_malloc0(aes_size);
+	dest   = g_malloc0(aes_size);
 	
-	/* BUGBUG embeded nulls */
-	b64 = encode_base64(strlen(elem) * 2, (guchar*)dest);
-
+	g_memmove(source, elem, len);
+	aes_encrypt(ctx, aes_size, dest, source);
+	
+	b64 = encode_base64(aes_size, dest);
+	g_free(source);
 	g_free(dest);
-
 	if (!b64) {
 		/* hash insert? */
 		return elem; /* as if nothing happened */
@@ -147,48 +116,57 @@ crypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *elem,  GHashTable *tr)
  * return the result
  */
 gchar *
-decrypt_path_ele(EVP_CIPHER_CTX *ctx, gchar *b64, GHashTable *tr)
+decrypt_path_ele(struct aes_ctx *ctx, char *b64, GHashTable *tr)
 {
-	gchar *dest, *crypt, *hashed;
-	gint len;
+	guint aes_size, len;
+	guchar *source;
+	guchar *dest;
+	gchar *crypt, *hashed;
+	guint crypt_size;
 
+	len    = strlen(b64);
 	hashed = g_hash_table_lookup(tr, b64);
 	if (hashed)
 		return hashed;
+	/* be safe and alloc 2 times what we need */
+	crypt = g_malloc(len * 2);
 
-	/* BUGBUG sizes here */
-	crypt = g_malloc0(BUFSIZE);
-	dest  = g_malloc0(BUFSIZE);
-
-	if (! (len = decode_base64((unsigned char*)crypt, (char*)b64)))
+	crypt_size = decode_base64((guchar*)crypt, b64);
+	if (!crypt_size)
 		return b64;
 
-	/* BUGBUG sizes and strlen */
-	if (bf_decrypt(ctx, dest, crypt, len) == FALSE)
-		return NULL;
+	aes_size = ( (crypt_size / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
 
+	/* pad the string to be crypted */
+	source = g_malloc0(aes_size);
+	dest   = g_malloc0(aes_size);
+
+	g_memmove(source, crypt, crypt_size);
+	aes_decrypt(ctx, aes_size, dest, source);
+	
+	g_free(source);
 	g_free(crypt);
 
 	/* we could have gotten valid string to begin with
 	 * if the result is now garbled instead of nice plain
 	 * text assume this was the case. 
 	 */
-	if (!is_plain(dest)) {
+	if (!is_plain((char*) dest)) {
 		if (opt_verbose > 2)
 			msg(_("Returning original string `%s\'"), b64);
 
 		g_free(dest);
-		dest = g_strdup(b64);
+		dest = (guchar*) g_strdup(b64);
 	} 
 	g_hash_table_insert(tr, b64, dest);
-	return dest;
+	return (gchar*) dest;
 }
 
 /** 
  * encrypt an entire path
  */
 gchar *
-crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
+crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
 	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
 
@@ -200,8 +178,6 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 		d = *c;
 		*c = '\0';	
 
-		if (sig != 0) signal_abort(sig);
-
 		/* don't decrypt '..' and '.' */
 		if ( (t = dot_dotdot(q, xpath, abs)) ) {
 			xpath = t;
@@ -209,8 +185,7 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 			*c = d;
 			continue;
 		}
-		if (! (crypt = crypt_path_ele(ctx, q, tr)))
-			return NULL;
+		crypt = crypt_path_ele(ctx, q, tr);
 
 		if (xpath)
 			xpath = g_strdup_printf("%s/%s", xpath, crypt);
@@ -220,9 +195,7 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
 		q = c;
 		*c = d;
 	}
-	if (! (crypt = crypt_path_ele(ctx, q, tr)))
-		return NULL;
-
+	crypt = crypt_path_ele(ctx, q, tr);
 	if (xpath)
 		xpath = g_strdup_printf("%s/%s", xpath, crypt);
 	else 
@@ -236,7 +209,7 @@ crypt_path(EVP_CIPHER_CTX *ctx, gchar *p, GHashTable *tr) {
  * decrypt an entire path
  */
 gchar *
-decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
+decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
 
 	gchar *path, *q, *c, *t, *plain, d;
 	gboolean abs;
@@ -249,8 +222,6 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 		d = *c;
 		*c = '\0';	
 
-		if (sig != 0) signal_abort(sig);
-
 		/* don't decrypt '..' and '.' */
 		if ( (t = dot_dotdot(q, path, abs)) ) {
 			path = t;
@@ -258,8 +229,7 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 			*c = d;
 			continue;
 		}
-		if (! (plain = decrypt_path_ele(ctx, q, tr)))
-			return NULL;
+		plain = decrypt_path_ele(ctx, q, tr);
 
 		if (path) 
 			path = g_strdup_printf("%s/%s", path, plain);
@@ -269,9 +239,7 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 		q = c;
 		*c = d;
 	}
-	if (! (plain = decrypt_path_ele(ctx, q, tr)))
-		return NULL;
-
+	plain = decrypt_path_ele(ctx, q, tr);
 	if (path) 
 		path = g_strdup_printf("%s/%s", path, plain);
 	else
@@ -282,30 +250,47 @@ decrypt_path(EVP_CIPHER_CTX *ctx, gchar *x, GHashTable *tr) {
 
 /**
  * Read the key from a file
+ * Key must be 16, 24 or 32 octets
+ * Check for this - if larger than 32 cut it off
  */
-gint
-crypt_key(gchar *file, gchar **key, gchar **iv) 
+gchar *
+crypt_key(gchar *file) 
 {
 	FILE *f;
-	gchar k[16], i[8];
+	char *buf;
+	size_t s;
 
+	buf = g_malloc0(BUFSIZE);
+	s = BUFSIZE;
 	if (! (f = fopen(file, "r"))) {
 		msg(_("Failed to open `%s\': %s"),
 				file, strerror(errno));
-		return -1;
-	}
-	if ( fread(k, sizeof(gchar), 16, f) != 16) {
-		msg(_("Key needs to be 16 characters"));
-		return -1;
-	}
-
-	if ( fread(i, sizeof(gchar), 8, f) != 8) {
-		msg(_("IV needs to be 8 characters"));
-		return -1; 
+		g_free(buf);
+		return NULL;
 	}
 	
-	*key = k;
-	*iv  = i;
-	return 0;
+	if (rdup_getdelim(&buf, &s, '\n', f) == -1) {
+		msg(_("Failed to read AES key from `%s\': %s"),
+				file, strerror(errno));
+		g_free(buf);
+		return NULL;
+	}
+
+	/* BUGBUG hmm */
+	if ( buf[strlen(buf) - 1] == '\n' ) {
+		buf[strlen(buf) - 1] = '\0';		/* kill \n */
+	}
+	s = strlen(buf);
+	if (s > 32) {
+		msg(_("Maximum AES key size is 32 bytes, truncating!"));
+		buf[32] = '\0';
+		return buf;
+	}
+	if (s != 16 && s != 24 && s != 32) {
+		msg(_("AES key must be 16, 24 or 32 bytes"));
+		g_free(buf);
+		return NULL;
+	}
+	return buf;
 }
-#endif /* HAVE_LIBSSL */
+#endif /* HAVE_LIBNETTLE */

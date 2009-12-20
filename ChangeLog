@@ -3,8 +3,7 @@
 	- -a: reset atime
     * rdup-up:
 	- set mtime
-    * rdup-tr: kill OpenSSL in favor of libnettle (which is nice and simple)
-
+    * revert back to libnettle
 
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
     * Format change: add username, groupname and mtime

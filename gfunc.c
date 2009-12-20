@@ -8,6 +8,11 @@
 #include "rdup.h"
 #include "protocol.h"
 #include <pcre.h>
+#ifdef HAVE_LIBNETTLE
+#include <nettle/sha.h>
+#else
+#define SHA1_DIGEST_SIZE 20
+#endif /* HAVE_LIBNETTLE */
 
 extern gboolean opt_removed;
 extern gboolean opt_modified;
@@ -30,7 +35,7 @@ int sha1_stream(FILE *stream, void *digest);
 static gboolean
 sha1(FILE *fp, char *filename) 
 {
-	unsigned char digest[SHA_DIGEST_LENGTH];
+	unsigned char digest[SHA1_DIGEST_SIZE];
 	gint i;
 	FILE *file;
 
@@ -44,7 +49,7 @@ sha1(FILE *fp, char *filename)
 		return FALSE;
 	}
 	fclose(file);
-	for(i = 0; i < SHA_DIGEST_LENGTH; i++) {
+	for(i = 0; i < SHA1_DIGEST_SIZE; i++) {
 		fprintf(fp, "%02x", digest[i]);
 	}
 	return TRUE;
