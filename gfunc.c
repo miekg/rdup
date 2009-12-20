@@ -35,7 +35,7 @@ int sha1_stream(FILE *stream, void *digest);
 static gboolean
 sha1(FILE *fp, char *filename) 
 {
-	unsigned char digest[SHA1_DIGEST_SIZE + 1];
+	unsigned char digest[SHA1_DIGEST_SIZE];
 	gint i;
 	FILE *file;
 

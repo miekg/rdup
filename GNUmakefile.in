@@ -22,7 +22,7 @@ sysconfdir=@sysconfdir@
 datadir=@datadir@/rdup
 
 ARCHIVE_L=@ARCHIVE_L@
-SSL_L=@SSL_L@
+NETTLE_L=@NETTLE_L@
 GCC=@CC@
 GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
@@ -43,6 +43,7 @@ else
 all:	rdup rdup-up rdup-tr
 endif
 	@chmod +x sh/rdup-simple
+	@echo ${NETTLE_L}
 
 rdup-up: $(OBJ_UP) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_UP} -o rdup-up

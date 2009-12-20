@@ -3,14 +3,24 @@
    */
 
 #include "rdup.h"
-#include <nettle/sha.h>
 
+#ifdef HAVE_LIBNETTLE
+#include <nettle/sha.h>
+#endif /* HAVE_LIBNETTLE */
+
+#ifndef HAVE_LIBNETTLE
+int
+sha1_stream( __attribute__((unused)) FILE *f, __attribute__((unused)) unsigned char *digest)
+#else
 int
 sha1_stream(FILE *f, unsigned char *digest)
+#endif
+
 {
+
+#ifdef HAVE_LIBNETTLE
 	struct sha1_ctx ctx;
-	uint8_t buffer[BUFSIZE];
-	/*  uint8_t digest[SHA1_DIGEST_SIZE]; */
+	uint8_t buffer[SHA1_DIGEST_SIZE];
 
 	sha1_init(&ctx);
 	for (;;)
@@ -24,5 +34,6 @@ sha1_stream(FILE *f, unsigned char *digest)
 		return -1;
 
 	sha1_digest(&ctx, SHA1_DIGEST_SIZE, digest);
+#endif /* HAVE_LIBNETTLE */
 	return 0;  
 }
