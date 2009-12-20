@@ -93,6 +93,7 @@ force=false
 verbose=false
 link=false
 dry=false
+mcrypt=false
 
 while getopts "E:k:vfgzxhVX:Y:s:Ln" o; do
         case $o in
@@ -122,6 +123,7 @@ while getopts "E:k:vfgzxhVX:Y:s:Ln" o; do
 			exit 1
 		fi
 		enc=true
+		mcrypt=true
                 ;;
                 z) trans="$trans -Pgzip"
 		if $enc; then
@@ -162,7 +164,7 @@ fi
 
 [[ $# -lt 2 ]] && usage && exit
 
-if $enc; then
+if $mcrypt; then
     if ! which mcrypt 2>/dev/null 1>&2; then
 	echo2 "Mcrypt not found, can not continue"
 	exit 1
