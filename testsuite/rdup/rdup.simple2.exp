@@ -1,0 +1,10 @@
+# probably depends on GNU tar - fine for now
+# if { [ catch { exec true } msg ] } { puts "OK" } else { puts "NOK" }
+# prints NOK
+set test "Run rdup-simple with symlink"
+if { [catch { exec ./testsuite/rdup/rdup.ln-up.helper } msg] } {
+    puts stderr "$msg"
+    fail "$test"
+} else {
+    pass "$test"
+}

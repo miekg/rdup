@@ -162,6 +162,7 @@ fi
 
 [[ $# -lt 2 ]] && usage && exit
 
+
 if $enc; then
     if ! which mcrypt 2>/dev/null 1>&2; then
 	echo2 "Mcrypt not found, can not continue"

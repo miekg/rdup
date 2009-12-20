@@ -5,4 +5,19 @@
 # these
 PATH=`pwd`:`pwd`/sh:.:$PATH
 
+if ! which mcrypt 2>/dev/null 1>&2; then
+    exit 0
+fi
+
 # test rdup-simple with mcrypt and path enryption
+rm -f ~/.rdup/list.$(uname -n).tmp
+rm -f ~/.rdup/timestamp.$(uname -n).tmp
+
+rm -rf tmp
+mkdir tmp
+./sh/rdup-simple -z -f -k <(echo 01234567890abcdef) testsuite tmp
+EXIT=$?
+rm -rf tmp
+rm -f ~/.rdup/list.$(uname -n).tmp
+rm -f ~/.rdup/timestamp.$(uname -n).tmp
+exit $EXIT
