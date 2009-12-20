@@ -276,7 +276,10 @@ crypt_key(gchar *file)
 		return NULL;
 	}
 
-	buf[strlen(buf) - 1] = '\0';		/* kill \n */
+	/* BUGBUG hmm */
+	if ( buf[strlen(buf) - 1] == '\n' ) {
+		buf[strlen(buf) - 1] = '\0';		/* kill \n */
+	}
 	s = strlen(buf);
 	if (s > 32) {
 		msg(_("Maximum AES key size is 32 bytes, truncating!"));
