@@ -47,10 +47,6 @@
 #include <attr/xattr.h>
 #endif /* HAVE_ATTR_XATTR_H */
 
-#ifdef HAVE_OPENSSL_SSL_H
-#include <openssl/ssl.h>
-#endif /* HAVE_OPENSSL_SSL_H */
-
 #include "entry.h"
 #include "common.h"
 

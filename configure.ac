@@ -69,35 +69,34 @@ if test "$PCRE_L" = "no"; then
 	AC_MSG_ERROR([** No pcre library found.])
 fi
 
-AC_ARG_WITH(openssl_includes,
-       [  --with-openssl-includes=DIR  openssl include directory],
-       [with_openssl_includes="$withval"],[with_openssl_includes=no])
+AC_ARG_WITH(libnettle_includes,
+       [  --with-libnettle-includes=DIR  libnettle include directory],
+       [with_libnettle_includes="$withval"],[with_libnettle_includes=no])
 
-AC_ARG_WITH(openssl_libraries,
-       [  --with-openssl-libraries=DIR  openssl library directory],
-       [with_openssl_libraries="$withval"],[with_openssl_libraries=no])
+AC_ARG_WITH(libnettle_libraries,
+       [  --with-libnettle-libraries=DIR  libnettle library directory],
+       [with_libnettle_libraries="$withval"],[with_libnettle_libraries=no])
 
-if test "$with_openssl_includes" != "no"; then
-   CFLAGS="${CFLAGS} -I${with_openssl_includes}"
+if test "$with_libnettle_includes" != "no"; then
+   CFLAGS="${CFLAGS} -I${with_libnettle_includes}"
 fi
 
-if test "$with_openssl_libraries" != "no"; then
-   LIBS="${LIBS} -L${with_openssl_libraries}"
+if test "$with_libnettle_libraries" != "no"; then
+   LIBS="${LIBS} -L${with_libnettle_libraries}"
 fi
 
-SSL_H=""
-AC_CHECK_HEADERS(openssl/ssl.h,, SSL_H="no")
-if test "$SSL_H" = "no"; then
-	AC_MSG_ERROR([** No OpenSSL library found.])
+NETTLE_H=""
+AC_CHECK_HEADERS(nettle/aes.h,, NETTLE_H="no")
+if test "$NETTLE_H" = "no"; then
+        AC_MSG_ERROR([** No nettle library found.])
 fi
 
-SSL_L=""
-AC_CHECK_LIB(ssl, SHA1_Init, ,SSL_L="no")
-if test "$SSL_L" = "no"; then
-    AC_MSG_ERROR([** No OpenSSL library found.])
+NETTLE_L=""
+AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
+if test "$NETTLE_L" = "no"; then
+    AC_MSG_ERROR([** No nettle library found.])
 fi
-AC_SUBST(SSL_L)
-#AC_C_BIGENDIAN
+AC_SUBST(NETTLE_L)
 
 # sysconfdir
 if test ${sysconfdir} = '${prefix}/etc'; then
