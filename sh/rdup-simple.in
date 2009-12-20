@@ -129,7 +129,7 @@ while getopts "E:k:vfgzxhVX:Y:s:Ln" o; do
 			exit 1
 		fi
                 ;;
-		g) trans="$trans -Pgpg,--encrypt,--default-recipient-self"
+		g) trans="$trans -Pgpg,-e,--default-recipient-self"
 		if $enc; then
 			echo2 "Encryption already set"
 			exit 1

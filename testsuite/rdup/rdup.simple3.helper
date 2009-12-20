@@ -5,7 +5,7 @@
 # these
 PATH=`pwd`:`pwd`/sh:.:$PATH
 
-if ! which mcrypt 2>/dev/null 1>&2; then
+if ! which gpg 2>/dev/null 1>&2; then
     exit 0
 fi
 
@@ -15,7 +15,7 @@ rm -f ~/.rdup/timestamp.$(uname -n).tmp
 
 rm -rf tmp
 mkdir tmp
-./sh/rdup-simple -z -f -k <(echo 01234567890abcdef) doc tmp
+./sh/rdup-simple -f -z -g doc tmp
 EXIT=$?
 rm -rf tmp
 rm -f ~/.rdup/list.$(uname -n).tmp
