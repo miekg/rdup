@@ -1,9 +1,9 @@
-09 Aug 2009: 1.1.0-dev1 Miek <rdup@miek.nl>
+14 Dec 2009: 1.1.0-dev1 Miek <rdup@miek.nl>
     * rdup added:
 	- -a: reset atime
     * rdup-up:
 	- set mtime
-    * rdup-tr -X/-Y is now working (yet)
+    * rdup-tr: kill OpenSSL in favor of libnettle (which is nice and simple)
 
 
 09 Aug 2009: 1.1.0-dev0 Miek <rdup@miek.nl>
