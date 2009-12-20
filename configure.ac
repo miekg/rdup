@@ -93,12 +93,11 @@ fi
 
 # This fails on my Fedora 11 machine - just assume we
 # can do aes...
-#NETTLE_L=""
-#AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
-#if test "$NETTLE_L" = "no"; then
-#    AC_MSG_WARN([** No nettle library found.])
-#fi
-AC_SUBST(NETTLE_L)
+NETTLE_L=""
+AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
+if test "$NETTLE_L" = "no"; then
+    AC_MSG_WARN([** No nettle library found.])
+fi
 
 # sysconfdir
 if test ${sysconfdir} = '${prefix}/etc'; then

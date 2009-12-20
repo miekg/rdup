@@ -25,12 +25,10 @@ general:
     is A LOT of work AND it is not portable over unixes...?
 
 tests:
-    crypto tests
+    eas_encrypt fails on Fedora-11?
     encrypt path test
     tweak almost correct input and let rdup crash
 
     backup
     add nobkacup
     baclup zijn de files weg
-    rdup-simple encrypt test
-    rdup-simple test
