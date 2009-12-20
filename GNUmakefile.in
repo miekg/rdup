@@ -43,7 +43,7 @@ else
 all:	rdup rdup-up rdup-tr
 endif
 	@chmod +x sh/rdup-simple
-	@if [ ${NETTLE_L} = "no" ]; then echo "WARNING: ** No nettle library found; rdup-tr has no encryption"; fi
+	@if [ "${NETTLE_L}" = "no" ]; then echo "WARNING: ** No nettle library found; rdup-tr has no encryption"; fi
 
 rdup-up: $(OBJ_UP) $(HDR)
 	${GCC} ${GLIB_LIBS} ${LIBS} ${OBJ_UP} -o rdup-up
