@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(rdup, 1.1.0-dev1, miek@miek.nl, rdup)
+AC_INIT(rdup, 1.1.0-rc1, miek@miek.nl, rdup)
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr/local)
 
@@ -98,6 +98,7 @@ AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
 if test "$NETTLE_L" = "no"; then
     AC_MSG_WARN([** No nettle library found.])
 fi
+AC_SUBST(NETTLE_L)
 
 # sysconfdir
 if test ${sysconfdir} = '${prefix}/etc'; then

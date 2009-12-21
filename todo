@@ -16,7 +16,7 @@ rdup-up:
 rdup-simple:
     adapt to new commands
     error handling?
-    manual page back
+    manual page back?
 
 general:
     re-test incremental backups
@@ -31,4 +31,4 @@ tests:
 
     backup
     add nobkacup
-    baclup zijn de files weg
+    backup gone in that directory?
