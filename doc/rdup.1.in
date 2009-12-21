@@ -168,9 +168,6 @@ trailing slash.
 .TP
 .B \-a
 Restore the original access times on files and directories.
-.B \-c
-Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
-output redirected.
 .TP
 .B \-n
 Don't honor .nobackup files. Normally if such a file is found the
@@ -189,9 +186,7 @@ option unsets \-r.
 Be more verbose. 
 When used once, processed .nobackup files will be
 printed to standard error. When used twice each path will also be
-printed to standard error. This is usefull in case of a remote
-backup (\fI\-c\fR) where the normal output is not seen. Using
-tee(1) might even be better...
+printed to standard error. 
 .TP
 .B \-s size
 Don't output files larger than \fBsize\fR bytes.
