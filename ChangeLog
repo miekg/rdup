@@ -1,4 +1,4 @@
-   Sep 2009: 1.0.3 Miek <rdup@miek.nl>
+22 Dec 2009: 1.0.3 Miek <rdup@miek.nl>
   * rdup-up: added -r PATH option (suggested by Dave Martin)
   * rdup-simple: fix gpg encryption (Clayton Holloway)
   * rdup-simple: fix mcrypt encryption (Clayton Holloway)
