@@ -4,6 +4,9 @@
     * default install path: /usr/local/
     * rdup: -a restore atime when reading files
     * rdup: -P is moved from rdup-tr 
+    Todo:
+    * documentation
+    * more testing
 
 
 14 Dec 2009: 1.1.0-dev1 Miek <rdup@miek.nl>
