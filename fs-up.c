@@ -247,8 +247,6 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	g_free(buf);
 	if (ok && out)
 		fclose(out); 
-	if (!opt_dry) 
-		mk_meta(e, uidhash, gidhash);
 
 	opt_dry = old_dry;
 	return TRUE;
