@@ -24,7 +24,7 @@ extern guint opt_path_strip_len;
 static guint pathlabel(struct r_entry *e) {
 	gint i, j = 0;
 
-	for(i = 0; i < (S_ISLNK(e->f_mode) || e->f_lnk == 1 ? e->f_size : e->f_name_size); i++) {
+	for(i = 0; i < (S_ISLNK(e->f_mode) || (size_t)e->f_lnk == 1 ? e->f_size : e->f_name_size); i++) {
 		if (e->f_name[i] == '/')
 			j++;
 	}

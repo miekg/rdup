@@ -6,11 +6,11 @@
 #include <nettle/sha.h>
 
 int
-sha1_stream(FILE *f, unsigned char *digest)
+sha1_stream(__attribute__((unused)) FILE *f, unsigned char *digest)
 {
+#ifdef HAVE_LIBNETTLE
+	uint8_t buffer[SHA1_DIGEST_SIZE + 1];
 	struct sha1_ctx ctx;
-	uint8_t buffer[BUFSIZE];
-	/*  uint8_t digest[SHA1_DIGEST_SIZE]; */
 
 	sha1_init(&ctx);
 	for (;;)
@@ -24,5 +24,11 @@ sha1_stream(FILE *f, unsigned char *digest)
 		return -1;
 
 	sha1_digest(&ctx, SHA1_DIGEST_SIZE, digest);
+#else
+	int i;
+	for(i = 0; i < SHA1_DIGEST_SIZE; i++) {
+		digest[i] = '\0';
+	}
+#endif /* HAVE_LIBNETTLE */
 	return 0;  
 }
