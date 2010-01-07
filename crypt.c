@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2009 Miek Gieben
+ * Copyright (c) 2009,2010 Miek Gieben
  * crypt.c
  * encrypt/decrypt paths
  * struct r_entry

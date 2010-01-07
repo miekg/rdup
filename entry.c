@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2009 Miek Gieben
+ * Copyright (c) 2009,2010 Miek Gieben
  * parse_entry.c
  * parse an standard rdup entry and return a
  * struct rdup

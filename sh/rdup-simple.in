@@ -2,7 +2,7 @@
 
 # updates a hardlinked backup
 # licensed under the GPL version 3
-# Copyright Miek Gieben, 2007 - 2009
+# Copyright Miek Gieben, 2007 - 2010
 # rewritten for rdup-up and rdup-tr
 
 echo2() {

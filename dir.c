@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2009 Miek Gieben
+ * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
  * make a dir writable and later remove that
  * right again

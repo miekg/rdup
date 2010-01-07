@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2009 Miek Gieben
+ * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
  * rdup-tr -- rdup translate, transform an
  * rdup filelist to an tar/cpio archive with 
