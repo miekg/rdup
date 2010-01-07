@@ -11,6 +11,8 @@
 With \fBrdup-up\fR you can update an (possibly) existing directory
 structure with a rdup archive.
 
+The rdup archive has to be given to \fBrdup-up\fR's standard input.
+
 .SS Username and uids
 Rdup outputs both the username and uid, the receiving system (which
 may be a totally different system) checks if the username and uid

@@ -11,6 +11,8 @@
 Transform rdup output into something else. Where something else can
 be a tar, cpio, pax archive or another rdup stream.
 
+The rdup archive must be given on \fBrdup-tr\fR's standard input.
+
 You can select multiple types of output (\-O flag), but you must be aware
 that you may loose some information in formats other than \fBrdup\fR's own, see 
 the table below.

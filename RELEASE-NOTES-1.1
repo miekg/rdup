@@ -1,0 +1,31 @@
+RELEASE NOTES
+
+This is the first release of the new rdup branch version 1.1.x.
+
+Why this new branch?
+
+I wanted to implement some extra features which needed
+some (extensive) code modifications. I did not want
+to mess with the current stable release, hence a 1.1.x
+branch.
+
+What is the difference with 1.0.x?  (aka new features)
+* there is now only one output format which always includes
+  the files' contents;
+* the new output includes: user- and groupnames and the modification
+  timestamp of the file.
+
+With this change the following new features were added:
+* rdup now has a  -a  swith: restore atime when reading files;
+* rdup-up now sets the mtime on files it creates;
+* rdup-up sets the user- and groupname more correct.
+
+This work led to the following changes:
+* rdup has gotten the -P feature from rdup-up;
+* loads of code cleanups.
+* rdup-tr only processes from stdin to stdout
+* rdup-up only processes stdin
+
+Future work:
+* make it possible for rdup to also read archives 
+  (maybe from stdin, otherwise from file)
