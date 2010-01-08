@@ -226,7 +226,7 @@ The contents is then written to standard output in an archive format.
 As a picture says more
 than a thousand words here is an ASCII image of the process:
 
-RS
+.RS
 
             +--- ...   (stdout)    ... ----> archive
            /
