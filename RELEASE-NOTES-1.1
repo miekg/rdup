@@ -1,31 +1,44 @@
-RELEASE NOTES
+# RELEASE NOTES
 
 This is the first release of the new rdup branch version 1.1.x.
 
 Why this new branch?
 
-I wanted to implement some extra features which needed
-some (extensive) code modifications. I did not want
-to mess with the current stable release, hence a 1.1.x
-branch.
+I (and some user requested some) wanted to implement some extra features
+which needed (extensive) code modifications. I did not want to mess
+with the current stable release, hence a 1.1.x branch. However 1.1.x
+will obsolete 1.0.x soonish.
 
-What is the difference with 1.0.x?  (aka new features)
-* there is now only one output format which always includes
-  the files' contents;
-* the new output includes: user- and groupnames and the modification
-  timestamp of the file.
+> What is the difference with 1.0.x?  (aka new features)
+
+1. there is now only one output format which always includes
+   the files' contents;
+2. the rdup output is now comparable with the tar archive format, with
+   the big difference being able to *delete* files.
+3. the new output includes: user- and groupnames and the modification
+   timestamp of the file. They can now be correctly set on remote 
+   systems. (I.e the uid 'bert' stays 'bert' even if the remote side
+   using a different uid *numbers* for 'bert');
+4. more efficient, files are only read once. In rdup 1.0.x both rdup
+   and rdup-tr read files, in 1.1.x only rdup reads files.
 
 With this change the following new features were added:
-* rdup now has a  -a  swith: restore atime when reading files;
-* rdup-up now sets the mtime on files it creates;
-* rdup-up sets the user- and groupname more correct.
+
+* rdup now has a `-a` switch: restore a-time when reading files;
+* rdup-up now sets the m-time on files it creates, this is the default;
+* rdup-up sets the user- and groupname more correct, see point 3. above.
 
 This work led to the following changes:
-* rdup has gotten the -P feature from rdup-up;
-* loads of code cleanups.
-* rdup-tr only processes from stdin to stdout
-* rdup-up only processes stdin
+
+* rdup has gotten the `-P` flag from rdup-up. This also makes the `-a`
+  flag work even *if* you pipe the files' through external programs:
+  they are only read once from disk;
+* `rdup-tr` only processes from stdin to stdout;
+* `rdup-up` only processes stdin;
+* much more tests are added to the testsuite (`make check`);
+* code cleanups.
 
 Future work:
-* make it possible for rdup to also read archives 
-  (maybe from stdin, otherwise from file)
+
+* make it possible that everything that you *can* create can 
+  be read by rdup without the need for FUSE or other tools.
