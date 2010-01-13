@@ -1,8 +1,12 @@
 #ifndef _ENTRY_H
 #define _ENTRY_H
 
+#include <fcntl.h>
+#include <sys/stat.h>
+
 #define PLUS	    1
 #define MINUS	    0
+
 
 /* almost the whole stat structure... */
 struct r_entry {
