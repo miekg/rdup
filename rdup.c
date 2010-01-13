@@ -448,7 +448,7 @@ main(int argc, char **argv)
 
 		/* add dirs leading up the dir/file */
 		if (!dir_prepend(backup, path, userhash, grouphash)) {
-			msg(_("Skipping `%s\'"), path);
+			/* msg(_("Skipping `%s\'"), path); */
 			continue;
 		}
 		/* descend into the dark, misty directory */
