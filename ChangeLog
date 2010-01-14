@@ -1,3 +1,7 @@
+15 Jan 2010: 1.0.5 Miek <rdup@miek.nl>
+  * fix compile on older distros 
+
+
 05 Jan 2010: 1.0.4 Miek <rdup@miek.nl>
   * fix compile on amd64 (Tom Hendrikx)
   * fix compile *without* libnettle (Miek Gieben)
