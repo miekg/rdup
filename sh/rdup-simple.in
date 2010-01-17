@@ -9,6 +9,10 @@ echo2() {
     echo "** $PROGNAME: $@" >&2
 }
 
+version() {
+    echo "rdup @PACKAGE_VERSION@"
+}
+
 copy_and_link() {
     # hardlink a previous backup directory to a new directory
     # SYNOPSIS: copy_and_link N BACKUPDIR
@@ -71,7 +75,7 @@ OPTIONS:
  -L	    link previous backup directory (note: this is used internally)
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
- -n	    dry run; show the acutally rdup commands, without executing them
+ -n	    dry run; show the actually rdup commands, without executing them
  -x         pass -x to rdup
  -s NUM	    pass -s NUM to rdup-up (strip NUM leading path components)
  -X FILE    encrypt all paths with AES and key in FILE
