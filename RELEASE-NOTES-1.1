@@ -1,20 +1,20 @@
-# RELEASE NOTES
+# RELEASE NOTES for RDUP 1.1.0
 
-This is the first release of the new rdup branch version 1.1.x.
+This is the first release of the new rdup branch, version 1.1.x.
 
 Why this new branch?
 
-I (and some user requested some) wanted to implement some extra features
+I (and because of user requests) wanted to implement some extra features
 which needed (extensive) code modifications. I did not want to mess
 with the current stable release, hence a 1.1.x branch. However 1.1.x
 will obsolete 1.0.x soonish.
 
 > What is the difference with 1.0.x?  (aka new features)
 
-1. there is now only one output format which always includes
+1. there is now only one default output format which always includes
    the files' contents;
-2. the rdup output is now comparable with the tar archive format, with
-   the big difference being able to *delete* files.
+2. the rdup output is now more comparable with the tar archive format, with
+   the big difference of being able to *delete* files.
 3. the new output includes: user- and groupnames and the modification
    timestamp of the file. They can now be correctly set on remote 
    systems. (I.e the uid 'bert' stays 'bert' even if the remote side
@@ -24,9 +24,11 @@ will obsolete 1.0.x soonish.
 
 With this change the following new features were added:
 
-* rdup now has a `-a` switch: restore a-time when reading files;
-* rdup-up now sets the m-time on files it creates, this is the default;
-* rdup-up sets the user- and groupname more correct, see point 3. above.
+* `rdup` now has a `-a` switch: restore a-time when reading files;
+* `rdup-up` now sets the m-time on files it creates, this is the default;
+* `rdup-up` sets the user- and groupname more correct, see point 3. above.
+* `rdup-tr` can now be run on remote systems, because it receives the 
+   files' content on standard input.
 
 This work led to the following changes:
 
@@ -38,7 +40,5 @@ This work led to the following changes:
 * much more tests are added to the testsuite (`make check`);
 * code cleanups.
 
-Future work:
-
-* make it possible that everything that you *can* create can 
-  be read by rdup without the need for FUSE or other tools.
+Some future work will of course remain, but I'm happy with how
+things turned out.
