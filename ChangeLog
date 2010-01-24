@@ -1,6 +1,7 @@
 24 Jan 2010: 1.1.0 Miek Gieben <rdup@miek.nl>
     * Release!
     * Tweaks and merges from the master branch
+    * Remembers: installs in /usr/local
 
 
 22 Dec 2009: 1.1.0-rc1 Miek Gieben <rdup@miek.nl>
