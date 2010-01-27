@@ -1,3 +1,7 @@
+xx Feb 2010: 1.1.1 Miek Gieben <rdup@miek>
+    * Skip gpg test when gpg is not found
+
+
 24 Jan 2010: 1.1.0 Miek Gieben <rdup@miek.nl>
     * Release!
     * Tweaks and merges from the master branch
