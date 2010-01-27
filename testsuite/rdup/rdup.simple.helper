@@ -9,6 +9,10 @@ if ! which gpg 2>/dev/null 1>&2; then
     exit 0
 fi
 
+if [ ! -d ~/.gnupg ]; then
+    exit 0
+fi
+
 # test rdup-simple with mcrypt and path enryption
 rm -f ~/.rdup/list.$(uname -n).tmp
 rm -f ~/.rdup/timestamp.$(uname -n).tmp
