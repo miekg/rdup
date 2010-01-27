@@ -349,7 +349,7 @@ strtime(time_t time, gchar *str)
 
 /* stolen from coreutils */
 static void
-strmode(mode_t mode, gchar *str) 
+rdup_strmode(mode_t mode, gchar *str) 
 {
 	str[0] = mode & S_IRUSR ? 'r' : '-';
 	str[1] = mode & S_IWUSR ? 'w' : '-';
@@ -400,7 +400,7 @@ rdup_write_table(struct rdup *e, FILE *f)
 			fputc('-', f);
 	}
 	/* perm symbolic */
-	strmode(e->f_mode, tmp);
+	rdup_strmode(e->f_mode, tmp);
 	fputs(tmp, f);
 	if (sig != 0) signal_abort(sig);
 	
