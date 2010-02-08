@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ln -s doc doc2
+./rdup /dev/null doc2 | rdup-up -Otar | tar tvf -
+EXIT=$?
+rm -f doc2
+exit $EXIT
