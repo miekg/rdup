@@ -1,7 +1,8 @@
 #!/bin/bash
 
 ln -s doc doc2
-./rdup /dev/null doc2 | ./rdup-up -Otar | tar tvf -
+./rdup /dev/null doc2 | ./rdup-tr -Otar | tar tvf - >/dev/null
 EXIT=$?
 rm -f doc2
+echo $EXIT
 exit $EXIT
