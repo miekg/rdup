@@ -78,8 +78,11 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 		e.f_lnk	      = 0;
 
 		/* symlinks; also set the target */
-		if (S_ISLNK(s.st_mode))
+		if (S_ISLNK(s.st_mode)) {
 			e.f_target = slink(&e);
+			e.f_size = e.f_name_size;
+			e.f_name_size += 4 + strlen(e.f_target);
+		}
 
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 		*c = '/';
