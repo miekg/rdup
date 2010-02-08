@@ -1,7 +1,7 @@
 set test "Run rdup /dev/null | rdup-tr -Otar | tar vtf -"
 if { [catch { exec ./testsuite/rdup/rdup.root-symlink.helper } msg] } {
+    pass "$test"
+} else {
     puts stderr "$msg"
     fail "$test"
-} else {
-    pass "$test"
 }
