@@ -3,6 +3,7 @@ xx Feb 2010: 1.1.1 Miek Gieben <rdup@miek>
     * Rename strmode() to rdup_strmode for FreeBSD (Charlie Kester)
     * Dont descend when toplevel directory is a symlink (same behavoir
       as Gnu tar)
+    * Building fix on rpm distro (SuSE/Fedora) (Sven Hartrumpf)
 
 
 24 Jan 2010: 1.1.0 Miek Gieben <rdup@miek.nl>
