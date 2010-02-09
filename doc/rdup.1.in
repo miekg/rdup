@@ -388,6 +388,13 @@ the device. So if a major number is 8 and the minor number is 0 (under
 Linux this is /dev/sda), its size will be \fB8,0\fR. The numbers are
 only separated with a comma `,'.
 
+.PP
+Backing up symlinks that point to directories will do what you expect.
+You will probably think \fBrdup\fR will descend into the directory the
+symlink points to. This is not what actually happens, \fBrdup\fR will
+print any directories leading up to the symlink and will \fInot\fR
+descend into the directory. GNU tar works the same.
+
 .SH EXIT CODE
 \fBrdup\fR return a zero exit code on success, otherwise 1 is returned.
 \fRrdup\fR will abort if a file can not be concatenated, if a regular
