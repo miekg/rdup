@@ -80,6 +80,8 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 		/* symlinks; also set the target */
 		if (S_ISLNK(s.st_mode)) {
 			e.f_target = slink(&e);
+			/* fprintf(stderr, "target %s\n", e.f_target); rdup-up create non-existant
+			 * dirs */
 			e.f_size = e.f_name_size;
 			e.f_name_size += 4 + strlen(e.f_target);
 			/* When we encounter a symlink on this level, it is very hard to make this
