@@ -82,6 +82,13 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 			e.f_target = slink(&e);
 			e.f_size = e.f_name_size;
 			e.f_name_size += 4 + strlen(e.f_target);
+			/* When we encounter a symlink on this level, it is very hard to make this
+			 * backup work, because the target may fall out of the backup. If this
+			 * is the case the entire backup fails. Gnu tar only show the symlink
+			 * and then stops. We do now the same, heance the return FALSE
+			 */
+			g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
+			return FALSE;
 		}
 
 		g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
