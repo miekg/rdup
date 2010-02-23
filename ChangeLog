@@ -1,4 +1,4 @@
-xx Feb 2010: 1.1.1 Miek Gieben <rdup@miek>
+23 Feb 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
     * tests: Skip gpg test when gpg is not found (Tom)
     * rdup: Rename strmode() to rdup_strmode for FreeBSD (Charlie Kester)
     * rdup: Dont descend when toplevel directory is a symlink (same behavoir
