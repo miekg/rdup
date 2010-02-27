@@ -94,6 +94,12 @@ cat(FILE *fp, char *filename)
 		
 	} else {
 		pids = create_childeren(child, &pipes, fileno(file));
+
+		if (!pids) {
+			fclose(file);
+			return FALSE;
+		}
+
 		parent = (g_slist_last(pipes))->data;
 		i = read(parent[0], buf, BUFSIZE);
 		if (i == -1) {
