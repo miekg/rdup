@@ -28,7 +28,6 @@ GLIB_CFLAGS=@GLIB_CFLAGS@
 GLIB_LIBS=@GLIB_LIBS@
 LIBS=@LIBS@
 CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@localedir@\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Os -Wpointer-arith -Wstrict-prototypes 
-#CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@localedir@\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -g -Wpointer-arith -Wstrict-prototypes 
 INSTALL=./install-sh -c
 INSTALL_DATA=$(INSTALL) -m 644
 
