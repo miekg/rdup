@@ -300,7 +300,7 @@ main(int argc, char **argv)
 		}
 	}
 #ifdef DEBUG
-	msg(_("Debugging is enabled!"));
+	msg(_("DEBUG is enabled!"));
 #endif
 
 	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
@@ -471,8 +471,18 @@ main(int argc, char **argv)
 	 * removed, kill those here */
 	changed = g_tree_subtract(changed, remove);
 
-	/* first what to remove, then what to backup */
+#ifdef DEBUG
+	/* we first crawled the disk to see what is changed
+	 * then we output. If we wait here a few seconds
+	 * we can remove files that should have been
+	 * added. This way we can make a race condition
+	 * happen
+	 */
+	msg(_("DEBUG: sleeping for a while"));
+	sleep(10);
+#endif
 
+	/* first what to remove, then what to backup */
 	if (opt_reverse) {
 		GList *list_remove, *list_changed, *list_new = NULL;
 		list_remove = reverse(remove);
