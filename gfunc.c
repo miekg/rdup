@@ -107,8 +107,12 @@ cat(FILE *fp, char *filename)
 			fclose(file);
 			return FALSE;
 		}
-		/* use 0 for the flags field */
+
+#ifdef DEBUG
+		sleep(5);
+#endif
 #if 0
+		/* use 0 for the flags field */
 		if (wait_pids(pids, WNOHANG) == -1) {
 			msg(_("Wait pid failure"));
 			fclose(file);
