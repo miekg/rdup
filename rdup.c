@@ -484,7 +484,7 @@ main(int argc, char **argv)
 		g_tree_foreach(new, gfunc_new, NULL);
 	}
 
-	/* write new filelist */
+	/* write new list */
 	if (!devnull) {
 	    if (!(fplist = fopen(argv[0], "w"))) {
 		    msg(_("Could not write filelist `%s\': %s"), argv[0], strerror(errno));
@@ -497,12 +497,13 @@ main(int argc, char **argv)
 	    }
 	}
 /*	
+	why free it - we going to exit soon
 	g_tree_foreach(curtree, gfunc_free, NULL);
 	g_tree_foreach(backup, gfunc_free, NULL);
-*/
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
 	g_hash_table_destroy(linkhash);
+*/
 	exit(EXIT_SUCCESS);
 }
