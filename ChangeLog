@@ -4,6 +4,7 @@
     * rdup: Dont descend when toplevel directory is a symlink (same behavoir
       as Gnu tar) (Reported by Charlie Kester)
     * build: Building fix on rpm distros (SuSE/Fedora) (Sven Hartrumpf)
+    * build: add --enable-debug to debug hard to trigger race conditions
 
 
 24 Jan 2010: 1.1.0 Miek Gieben <rdup@miek.nl>

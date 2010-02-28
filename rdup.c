@@ -299,6 +299,9 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
+#ifdef DEBUG
+	msg(_("Debugging is enabled!"));
+#endif
 
 	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
 		switch (c) {
