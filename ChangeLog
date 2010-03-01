@@ -3,7 +3,7 @@
     * rdup: Rename strmode() to rdup_strmode for FreeBSD (Charlie Kester)
     * rdup: Dont descend when toplevel directory is a symlink (same behavoir
       as Gnu tar) (Reported by Charlie Kester)
-    * rdup: reap our childeren (Don ...)
+    * rdup: reap our childeren (Oliver Dain)
     * build: Building fix on rpm distros (SuSE/Fedora) (Sven Hartrumpf)
     * build: add --enable-debug to debug hard to trigger race conditions
 
