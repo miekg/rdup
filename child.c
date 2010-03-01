@@ -32,32 +32,31 @@ close_pipes(GSList *pipes, int n1, int n2)
 int
 wait_pids(GSList *pids, int flags)
 {
-	/* GSList *p; */
+	GSList *p; 
 	int status;
-	/* int ret = 0; */
 
-	if (!pids)
-		return 0;
-
-	if (waitpid(-1, &status, flags) == -1)
-		return -1;
-
-	return 0;
-
-#if 0
 	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
                 if (sig != 0)
                         signal_abort(sig);
 
-		waitpid(*(pid_t* )(p->data), &status, flags);
+		fprintf(stderr, "Waiting for pid %d\n",(int) *(pid_t*)(p->data));
+
+		/* -1 on error */
+		waitpid(*(pid_t* )(p->data), &status, flags); /* errno ECHILD is ok */
+#if 0
 		if (WIFEXITED(status)) {
-			msg("Child exit %d", WEXITSTATUS(status)); 
+			/* msg("Child exit %d", WEXITSTATUS(status)); 
 			if (WEXITSTATUS(status) != 0)
 				ret = -1;
+			*/
+			/* assume ok */
+			ret = 0;
+		} else {
+			ret = -1;
 		}
-	}
-	return ret;
 #endif
+	}
+	return 0;
 }
 
 /* create pipes and childs, return pids */

@@ -101,7 +101,6 @@ cat(FILE *fp, char *filename)
 			fclose(file);
 			return FALSE;
 		}
-		/* use 0 for the flags field */
 #if 0
 		if (wait_pids(pids, WNOHANG) == -1) {
 			msg(_("Wait pid failure"));
@@ -131,13 +130,13 @@ cat(FILE *fp, char *filename)
 		fclose(file);
 		if (sig != 0)
 			signal_abort(sig);
-#if 0
-		if (wait_pids(pids, WNOHANG) == -1) {
+		
+		/* wait for our children */
+		if (wait_pids(pids, 0) == -1) {
 			msg(_("Weird child exit `%s\': %s"), filename, strerror(errno));
 			/* weird child exit */
 			return FALSE;
 		}
-#endif
 	}
 	
 	if (!nullblock) {
