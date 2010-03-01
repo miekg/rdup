@@ -299,6 +299,9 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
+#ifdef DEBUG
+	msg(_("DEBUG is enabled!"));
+#endif
 
 	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
 		switch (c) {
@@ -468,8 +471,18 @@ main(int argc, char **argv)
 	 * removed, kill those here */
 	changed = g_tree_subtract(changed, remove);
 
-	/* first what to remove, then what to backup */
+#ifdef DEBUG
+	/* we first crawled the disk to see what is changed
+	 * then we output. If we wait here a few seconds
+	 * we can remove files that should have been
+	 * added. This way we can make a race condition
+	 * happen
+	 */
+	msg(_("DEBUG: sleeping for a while"));
+	sleep(10);
+#endif
 
+	/* first what to remove, then what to backup */
 	if (opt_reverse) {
 		GList *list_remove, *list_changed, *list_new = NULL;
 		list_remove = reverse(remove);
@@ -484,7 +497,7 @@ main(int argc, char **argv)
 		g_tree_foreach(new, gfunc_new, NULL);
 	}
 
-	/* write new filelist */
+	/* write new list */
 	if (!devnull) {
 	    if (!(fplist = fopen(argv[0], "w"))) {
 		    msg(_("Could not write filelist `%s\': %s"), argv[0], strerror(errno));
@@ -497,12 +510,13 @@ main(int argc, char **argv)
 	    }
 	}
 /*	
+	why free it - we going to exit soon
 	g_tree_foreach(curtree, gfunc_free, NULL);
 	g_tree_foreach(backup, gfunc_free, NULL);
-*/
 	g_tree_destroy(curtree);
 	g_tree_destroy(backup);
 	g_tree_destroy(remove);
 	g_hash_table_destroy(linkhash);
+*/
 	exit(EXIT_SUCCESS);
 }

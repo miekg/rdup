@@ -23,6 +23,13 @@ AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
   ]
 ])
 
+AC_ARG_ENABLE([debug],
+    AS_HELP_STRING([--enable-debug], [Turn on debugging]))
+
+if test "x$enable_debug" = "xyes"; then
+    CFLAGS="${CFLAGS} -g -DDEBUG"
+fi
+
 # post 1.0, this can be turned on
 # --disable-nls if you do not need it
 #AM_GNU_GETTEXT([external])
@@ -97,6 +104,8 @@ NETTLE_L=""
 AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
 if test "$NETTLE_L" = "no"; then
     AC_MSG_WARN([** No nettle library found.])
+else
+    LIBS="${LIBS} -lgmp"
 fi
 AC_SUBST(NETTLE_L)
 

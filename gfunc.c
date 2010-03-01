@@ -94,6 +94,12 @@ cat(FILE *fp, char *filename)
 		
 	} else {
 		pids = create_childeren(child, &pipes, fileno(file));
+
+		if (!pids) {
+			fclose(file);
+			return FALSE;
+		}
+
 		parent = (g_slist_last(pipes))->data;
 		i = read(parent[0], buf, BUFSIZE);
 		if (i == -1) {
@@ -101,7 +107,11 @@ cat(FILE *fp, char *filename)
 			fclose(file);
 			return FALSE;
 		}
+#ifdef DEBUG
+		sleep(5);
+#endif
 #if 0
+		/* use 0 for the flags field */
 		if (wait_pids(pids, WNOHANG) == -1) {
 			msg(_("Wait pid failure"));
 			fclose(file);

@@ -101,7 +101,8 @@ create_childeren(GSList *child, GSList **pipes, int file)
 
 		if ( (*cpid = fork()) == -1) {
 			msg(_("Fork error"));
-			exit(EXIT_FAILURE);
+			return NULL; /* more gracefull then exit */
+			/* exit(EXIT_FAILURE); */
 		}
 
 		if (*cpid != 0) {			/* parent */
