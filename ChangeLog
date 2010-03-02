@@ -1,11 +1,11 @@
-23 Feb 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
+2 Mar 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
     * tests: Skip gpg test when gpg is not found (Tom)
     * rdup: Rename strmode() to rdup_strmode for FreeBSD (Charlie Kester)
     * rdup: Dont descend when toplevel directory is a symlink (same behavoir
       as Gnu tar) (Reported by Charlie Kester)
-    * rdup: reap our childeren (Oliver Dain)
+    * rdup: reap our childeren with waitpid() (Oliver Dain)
     * build: Building fix on rpm distros (SuSE/Fedora) (Sven Hartrumpf)
-    * build: add --enable-debug to debug hard to trigger race conditions
+    * build: add --enable-debug to built debug build
 
 
 24 Jan 2010: 1.1.0 Miek Gieben <rdup@miek.nl>
