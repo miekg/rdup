@@ -1,3 +1,7 @@
+xx Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
+    * 
+
+
 2 Mar 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
     * tests: Skip gpg test when gpg is not found (Tom)
     * rdup: Rename strmode() to rdup_strmode for FreeBSD (Charlie Kester)
