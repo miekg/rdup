@@ -55,7 +55,7 @@ rdup:	${OBJ} ${HDR}
 	${GCC} ${OBJ} ${GLIB_LIBS} ${LIBS} -o rdup
 
 strip:	
-	[ "${DEBUG}" = "yes" ] && strip ${CMD} || exit 0
+	@ [ "${DEBUG}" = "yes" ] && strip ${CMD} || exit 0
 
 po:	rdup.pot 
 	( cd po ; $(MAKE) -f GNUmakefile all )
