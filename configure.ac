@@ -28,6 +28,8 @@ AC_ARG_ENABLE([debug],
 
 if test "x$enable_debug" = "xyes"; then
     CFLAGS="${CFLAGS} -g -DDEBUG"
+    DEBUG=yes
+    AC_SUBST(DEBUG)
 fi
 
 # post 1.0, this can be turned on
