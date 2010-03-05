@@ -22,7 +22,7 @@ extern gint opt_verbose;
 extern char *opt_format;
 extern time_t opt_timestamp;
 extern size_t opt_size;
-extern sig_atomic_t sig;
+extern int sig;
 extern GList *list;
 extern GSList *child;
 

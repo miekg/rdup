@@ -19,7 +19,7 @@ gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
 gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
 guint opt_path_strip_len   = 0;				/* number of path labels in opt_path_strip */
 guint opt_strip		   = 0;				/* -s: strippath */
-sig_atomic_t sig           = 0;
+int sig           = 0;
 GSList *hlink_list		   = NULL;			/* save hardlink for post processing */		
 extern int opterr;
 int opterr		   = 0;

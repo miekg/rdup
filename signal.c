@@ -5,7 +5,7 @@
 
 #include "rdup.h"
 
-extern sig_atomic_t sig;
+extern int sig;
 
 void
 got_sig(int signal)

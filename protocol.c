@@ -26,7 +26,7 @@
 #include "protocol.h"
 
 extern gint opt_verbose;
-extern sig_atomic_t sig;
+extern int sig;
 
 /* signal.c */
 void got_sig(int);

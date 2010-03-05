@@ -11,7 +11,7 @@
 #include "rdup-up.h"
 #include "protocol.h"
 
-extern sig_atomic_t sig;
+extern int sig;
 extern gboolean opt_dry;
 extern gboolean opt_table;
 extern guint opt_strip;

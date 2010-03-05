@@ -23,7 +23,7 @@ gboolean opt_atime	   = 0;			      /* reset access time */
 size_t opt_size            = 0;                       /* only output files smaller then <size> */
 time_t opt_timestamp       = 0;                       /* timestamp file c|m time */
 
-sig_atomic_t sig           = 0;
+int sig		           = 0;
 extern int opterr;
 int opterr		   = 0;
 GSList *child		   = NULL;

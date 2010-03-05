@@ -13,7 +13,7 @@
 void got_sig(int);
 void signal_abort(int);
 
-extern sig_atomic_t sig;
+extern int sig;
 extern gint opt_input;
 extern gint opt_output;
 extern gchar *opt_crypt_key;

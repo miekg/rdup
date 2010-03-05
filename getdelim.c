@@ -2,7 +2,7 @@
 
 #define GETDELIM_BUFFER 128
 
-extern sig_atomic_t sig;
+extern int sig;
 
 /* copied from xine-devel, same license applies 
  * slightly modified to fit my needs
