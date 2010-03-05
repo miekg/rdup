@@ -140,6 +140,11 @@ while getopts "E:k:vfgzxhVX:Y:s:Ln" o; do
 			echo2 "Encryption already set"
 			exit 1
 		fi
+		# if there a no key, this will fail
+		if [[ $(gpg --list-keys | wc -l) -eq "0" ]]; then
+			echo2 "No gpg keys found"
+			exit 1
+		fi
 		enc=true
 		;;
                 f) force=true;;
