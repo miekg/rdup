@@ -1,5 +1,5 @@
 xx Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
-    * 
+    * rdup: remove sig_atomic_t (build fix for ubuntu 8.04)
 
 
 2 Mar 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
