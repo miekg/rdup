@@ -1,7 +1,7 @@
 # probably depends on GNU tar - fine for now
 # if { [ catch { exec true } msg ] } { puts "OK" } else { puts "NOK" }
 # prints NOK
-set test "Run rdup-simple with gpg encryption"
+set test "Run rdup-simple with encryption"
 if { [catch { exec ./testsuite/rdup/rdup.simple2.helper } msg] } {
     puts stderr "$msg"
     fail "$test"
