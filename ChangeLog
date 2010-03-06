@@ -1,7 +1,7 @@
 xx Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
     * rdup: remove sig_atomic_t (build fix for ubuntu 8.04)
       (reported by Andrew Ittner)
-    * tests: a 'fail'ing gpg tests is now 'unresolved'
+    * tests: a 'fail'ing gpg test is now 'unresolved'
 
 
 2 Mar 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
@@ -22,7 +22,7 @@ xx Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
 
 22 Dec 2009: 1.1.0-rc1 Miek Gieben <rdup@miek.nl>
     * First release of the 1.1.0 branch
-    * format change: %U, %G, %c and %t  added
+    * format change: %U, %G and %t added
     * default install path: /usr/local/
     * rdup: -a restore atime when reading files
     * rdup: -P is moved from rdup-tr 
