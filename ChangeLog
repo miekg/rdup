@@ -2,6 +2,8 @@ xx Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
     * rdup: remove sig_atomic_t (build fix for ubuntu 8.04)
       (reported by Andrew Ittner)
     * tests: a 'fail'ing gpg test is now 'unresolved'
+    * Added contrib/ directory and added prune.rb script
+      (prune.rb provided by Matthias-Christian Ott)
 
 
 2 Mar 2010: 1.1.1 Miek Gieben <rdup@miek.nl>
