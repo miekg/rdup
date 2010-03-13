@@ -17,12 +17,6 @@ rdup-simple:
     error handling?
     manual page back?
 
-general:
-    re-test incremental backups
-
-    add extended attributes? man 5 tar explains how to do it, but it
-    is A LOT of work AND it is not portable over unixes...?
-
 tests:
     eas_encrypt fails on Fedora-11?
     encrypt path test

@@ -5,7 +5,12 @@ extern char *PROGNAME;
 void
 msg_va_list(const char *fmt, va_list args)
 {
+#ifdef DEBUG
+	/* put calling function in here */
         fprintf(stderr, "** %s: ", PROGNAME);
+#else
+        fprintf(stderr, "** %s: ", PROGNAME);
+#endif
         vfprintf(stderr, fmt, args);
         fprintf(stderr, "\n");
 }
