@@ -273,7 +273,13 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 		if (errno == EACCES) {
 			/* make parent dir writable, and try again */
 			parent = dir_parent(e->f_name);
+#ifdef DEBUG
+			fprintf(stderr, "Doing %s and hoping", parent);
+#endif
 			s = dir_write(parent);
+			if (!s) 
+				msg(_("Failed to make parent writable"))
+			
 			if (mkdir(e->f_name, e->f_mode) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, s);
