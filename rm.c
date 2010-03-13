@@ -27,7 +27,7 @@ rm(gchar *p)
 
 	if (lstat(p, &st) == -1) {
 		if (opt_verbose > 0 && errno != ENOENT)
-			msg(_("y: Failed to remove `%s\': %s"), p, strerror(errno));
+			msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
 		return TRUE;    /* noop */
 	}
 
@@ -58,7 +58,7 @@ rm(gchar *p)
 					parent = dir_parent(p);
 					st2 = dir_write(parent);
 					if (remove(p) == -1) {
-						msg(_("a: Failed to remove `%s\': %s"),
+						msg(_("Failed to remove `%s\': %s"),
 								p, strerror(errno));
 						dir_restore(parent, st2);
 						g_free(parent);
@@ -84,7 +84,7 @@ rm(gchar *p)
 				parent = dir_parent(p);
 				st2 = dir_write(parent);
 				if (remove(p) == -1) {
-					msg(_("b: Failed to remove `%s\': %s"), p, strerror(errno));
+					msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
 					dir_restore(parent, st2);
 					g_free(parent);
 					return FALSE;
@@ -98,7 +98,7 @@ rm(gchar *p)
 				stat(p, &st);
 				chmod(p, st.st_mode | S_IWUSR);
 				if (remove(p) == -1) {
-					msg(_("c: Failed to remove `%s\': %s"),
+					msg(_("Failed to remove `%s\': %s"),
 							p, strerror(errno));
 					chmod(p, st.st_mode); /* is this usefull then? */
 					return FALSE;
@@ -106,7 +106,7 @@ rm(gchar *p)
 				return TRUE;	
 		}
 		
-		msg(_("d: Failed to remove `%s\': %s"), p, strerror(errno));
+		msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
 		return FALSE;
 	}
 	return TRUE;
