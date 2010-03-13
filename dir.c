@@ -42,16 +42,21 @@ dir_parent(gchar *p)
 {
 	gchar *p2;
 	gchar *n;
+	gchar *copy;
 
 	if (!p)
 		return NULL;
-	if (p[0] == '/' && p[1] == '\0')
+
+	copy = g_strdup(p);
+
+	if (copy[0] == '/' && copy[1] == '\0')
 		return p;
 
-	n = strrchr(p, '/'); 
+	n = strrchr(copy, '/'); 
 	if (n) {
 		*(n+1) = '\0';
-		p2 = g_strdup(p);
+		p2 = g_strdup(copy);
+		g_free(copy);
 		*n= '/';
 		return p2;
 	}

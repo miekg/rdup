@@ -5,6 +5,8 @@ xx Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
     * Added contrib/ directory and added prune.rb script
       (prune.rb provided by Matthias-Christian Ott)
     * rdup-up: only give warnings with -v flag
+    * rdup-up: fixed nasty bug in dir.c dir_parent():
+	leave caller's string alone!
 
 
 2 Mar 2010: 1.1.1 Miek Gieben <rdup@miek.nl>

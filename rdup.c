@@ -479,7 +479,7 @@ main(int argc, char **argv)
 	 * happen
 	 */
 	msg(_("DEBUG: sleeping for a while"));
-	sleep(10);
+	/* sleep(10); */
 #endif
 
 	/* first what to remove, then what to backup */
