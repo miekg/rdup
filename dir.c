@@ -47,11 +47,10 @@ dir_parent(gchar *p)
 	if (!p)
 		return NULL;
 
-	copy = g_strdup(p);
-
-	if (copy[0] == '/' && copy[1] == '\0')
+	if (p[0] == '/' && p[1] == '\0')
 		return p;
 
+	copy = g_strdup(p);
 	n = strrchr(copy, '/'); 
 	if (n) {
 		*(n+1) = '\0';
