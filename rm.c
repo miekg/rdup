@@ -27,7 +27,7 @@ rm(gchar *p)
 
 	if (lstat(p, &st) == -1) {
 		if (opt_verbose > 0 && errno != ENOENT)
-			msg(_("Failed to remove: `%s\': %s"), p, strerror(errno));
+			msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
 		return TRUE;    /* noop, still return tree */
 	}
 
@@ -49,7 +49,7 @@ rm(gchar *p)
 					g_dir_close(d);
 					/* dir should be empty by now */
 					if ((ret = remove(p)) == -1)
-						msg(_("Failed to remove directory: `%s\': %s"),
+						msg(_("Failed to remove directory `%s\': %s"),
 								p, strerror(errno));
 					return TRUE;
 				

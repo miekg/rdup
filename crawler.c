@@ -28,7 +28,7 @@ reset_atime(struct rdup *d)
 	ut.actime  = d->f_atime;
 	ut.modtime = d->f_mtime;
 	if (utime(d->f_name, &ut) == -1) 
-		msg(_("Failed to reset atime: '%s\': %s"), d->f_name, strerror(errno));
+		msg(_("Failed to reset atime '%s\': %s"), d->f_name, strerror(errno));
 }
 
 /**

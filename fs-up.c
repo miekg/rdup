@@ -28,8 +28,8 @@ mk_time(struct rdup *e)
 	/* we don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
-	if (utime(e->f_name, &ut) == -1) 
-		msg(_("Failed to set mtime: '%s\': %s"), e->f_name, strerror(errno));
+	if (utime(e->f_name, &ut) == -1 && opt_verbose > 0) 
+		msg(_("Failed to set mtime '%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
@@ -42,8 +42,8 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
-		if (lchown(e->f_name, u, g) == -1) 
-			msg(_("Failed to chown: `%s\': %s"), e->f_name, strerror(errno));
+		if (lchown(e->f_name, u, g) == -1 && opt_verbose > 0) 
+			msg(_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
@@ -81,7 +81,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
-				msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
+				msg(_("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, st);
 				g_free(parent);
 				return FALSE;
@@ -89,7 +89,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, st);
 			g_free(parent);
 		} else {
-			msg(_("Failed to make device: `%s\': %s"), e->f_name, strerror(errno));
+			msg(_("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -116,7 +116,7 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mkfifo(e->f_name, e->f_mode) == -1) {
-				msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
+				msg(_("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, st);
 				g_free(parent);
 				return FALSE;
@@ -124,7 +124,7 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, st);
 			g_free(parent);
 		} else {
-			msg(_("Failed to make socket: `%s\': %s"), e->f_name, strerror(errno));
+			msg(_("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -154,7 +154,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (symlink(e->f_target, e->f_name) == -1) {
-					msg(_("Failed to make symlink: `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
+					msg(_("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
@@ -162,7 +162,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 				dir_restore(parent, st);
 				g_free(parent);
 			} else {
-				msg(_("Failed to make symlink: `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
+				msg(_("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
 		}
