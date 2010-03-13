@@ -1,8 +1,9 @@
 13 Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
     * rdup: remove sig_atomic_t (build fix for ubuntu 8.04)
-      (reported by Andrew Ittner)
-    * rdup-up: fixed nasty bug in dir.c dir_parent():
-	leave caller's string alone
+     (reported by Andrew Ittner)
+    * rdup-up: fixed nasty bug in dir.c dir_parent()
+      leave caller's string alone
+    * rdup-up: rm.c: also use dir_parent()
     * tests: a 'fail'ing gpg test is now 'unresolved'
     * Added contrib/ directory and added prune.rb script
       (prune.rb provided by Matthias-Christian Ott)
