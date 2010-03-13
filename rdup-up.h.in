@@ -50,8 +50,9 @@
 /* signal.c */
 void signal_abort(int);
 
-/* rdup-up.c */
+/* msg.c */
 void msg(const char *, ...);
+void msgd(const char *, int, const char *, ...);
 
 /* getdelim.c */
 ssize_t rdup_getdelim(char **, size_t *, int, FILE *);

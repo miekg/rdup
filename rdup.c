@@ -300,9 +300,8 @@ main(int argc, char **argv)
 		}
 	}
 #ifdef DEBUG
-	msg(_("DEBUG is enabled!"));
+	msgd(__func__, __LINE__, _("DEBUG is enabled!"));
 #endif
-
 	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
 		switch (c) {
 			case 'F':

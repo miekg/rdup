@@ -62,6 +62,12 @@
 
 #define NO_SHA         "0000000000000000000000000000000000000000"
 
+#ifdef DEBUG
+    #define _DEBUG "%s():%d", __func__, __LINE__,
+#else
+    #define _DEBUG
+#endif
+
 struct subtract {
         GTree *d; /* diff */
         GTree *b;
@@ -92,9 +98,11 @@ gboolean gfunc_tree2list(gpointer, gpointer, gpointer);
 
 /* rdup.c */
 void msg(const char *, ...);
-/* getdelim.c */
+void msgd(const char *, int, const char *, ...);
 
+/* getdelim.c */
 ssize_t rdup_getdelim(char **, size_t *, int, FILE *);
+
 /* abspath.c */
 char * abspath(char *);
 

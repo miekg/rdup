@@ -72,7 +72,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 		return TRUE;
 
 	if (!rm(e->f_name)) {
-		msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+		msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
 		return FALSE;
 	}
 
@@ -81,7 +81,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
-				msg(_("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__, _("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, st);
 				g_free(parent);
 				return FALSE;
@@ -89,7 +89,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, st);
 			g_free(parent);
 		} else {
-			msg(_("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__, _("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -107,7 +107,7 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 		return TRUE;
 
 	if (!rm(e->f_name)) {
-		msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+		msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
 		return FALSE;
 	}
 
@@ -116,7 +116,7 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mkfifo(e->f_name, e->f_mode) == -1) {
-				msg(_("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__, _("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, st);
 				g_free(parent);
 				return FALSE;
@@ -124,7 +124,7 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, st);
 			g_free(parent);
 		} else {
-			msg(_("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__, _("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -143,7 +143,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 		return TRUE;
 
 	if (!rm(e->f_name)) {
-		msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+		msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
 		return FALSE;
 	}
 
@@ -154,7 +154,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (symlink(e->f_target, e->f_name) == -1) {
-					msg(_("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
+					msgd(__func__, __LINE__, _("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
@@ -162,7 +162,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 				dir_restore(parent, st);
 				g_free(parent);
 			} else {
-				msg(_("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
+				msgd(__func__, __LINE__, _("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
 		}
@@ -199,7 +199,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	if (!opt_dry)  {
 		if (!rm(e->f_name)) {
-			msg(_("Failed to remove existing entry: '%s\'"), e->f_name);
+			msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
 			opt_dry = old_dry;
 			return FALSE;
 		}
@@ -208,14 +208,14 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 		if (errno == EACCES) {
 			st = dir_write(dir_parent(e->f_name));
 			if (!(out = fopen(e->f_name, "w"))) {
-				msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 				ok = FALSE;
 			} else {
 				ok = TRUE;
 			}
 			dir_restore(dir_parent(e->f_name), st);
 		} else {
-			msg(_("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;
 		}
 	} 
@@ -236,7 +236,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 		}
 		if (ok && !opt_dry) {
 			if (fwrite(buf, sizeof(char), bytes, out) != bytes) {
-				msg(_("Write failure `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__, _("Write failure `%s\': %s"), e->f_name, strerror(errno));
 				if (out)
 					fclose(out);
 				opt_dry = old_dry;
@@ -278,10 +278,10 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 #endif
 			s = dir_write(parent);
 			if (!s) 
-				msg(_("Failed to make parent writable"));
+				msgd(__func__, __LINE__, _("Failed to make parent writable"));
 			
 			if (mkdir(e->f_name, e->f_mode) == -1) {
-				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__, _("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
 				dir_restore(parent, s);
 				g_free(parent);
 				return FALSE;
@@ -289,7 +289,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, s);
 			g_free(parent);
 		} else {
-			msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__, _("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -373,7 +373,7 @@ mk_hlink(GSList *h)
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (link(e->f_target, e->f_name) == -1) {
-					msg(_("Failed to create hardlink `%s -> %s\': %s"),
+					msgd(__func__, __LINE__, _("Failed to create hardlink `%s -> %s\': %s"),
 							e->f_name, e->f_target, strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
@@ -383,7 +383,7 @@ mk_hlink(GSList *h)
 				g_free(parent);
 				return TRUE;
 			} else {
-				msg(_("Failed to create hardlink `%s -> %s\': %s"),
+				msgd(__func__, __LINE__, _("Failed to create hardlink `%s -> %s\': %s"),
 						e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
