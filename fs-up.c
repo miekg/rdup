@@ -278,7 +278,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 #endif
 			s = dir_write(parent);
 			if (!s) 
-				msg(_("Failed to make parent writable"))
+				msg(_("Failed to make parent writable"));
 			
 			if (mkdir(e->f_name, e->f_mode) == -1) {
 				msg(_("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
