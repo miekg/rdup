@@ -77,11 +77,13 @@ rm(gchar *p)
 		return TRUE;
 	}
 
+	/* dirs are now handled */
+
 	if (remove(p) == -1) {
 		switch(errno) {
 			case EACCES:
 				/* we have no access, ok ... */
-				parent = dir_parent(p);
+				parent = dirname(p);
 				st2 = dir_write(parent);
 				if (remove(p) == -1) {
 					msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
