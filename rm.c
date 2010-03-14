@@ -88,15 +88,13 @@ rm(gchar *p)
 				if (remove(p) == -1) {
 					msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
 					dir_restore(parent, st2);
-					g_free(parent);
 					return FALSE;
 				}
 				dir_restore(parent, st2);
-				g_free(parent);
 				return TRUE;
 
 			case EPERM:
-				/* no write on file, reuse st */
+				/* no write on file, reuse st - and why is this needed again? */
 				stat(p, &st);
 				chmod(p, st.st_mode | S_IWUSR);
 				if (remove(p) == -1) {
