@@ -321,7 +321,12 @@ main(int argc, char **argv)
 				usage(stdout);
 				exit(EXIT_SUCCESS);
 			case 'V':
+#ifdef DEBUG
+				fprintf(stdout, "%s %s (with --enable-debug)\n", PROGNAME, VERSION);
+#else
 				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
+#endif /* DEBUG */
+
 				exit(EXIT_SUCCESS);
 			case 'n':
 				opt_nobackup = FALSE;

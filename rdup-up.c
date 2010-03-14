@@ -211,7 +211,11 @@ main(int argc, char **argv)
 				opt_top = TRUE;
 				break;
 			case 'V':
-				fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
+#ifdef DEBUG
+                                fprintf(stdout, "%s %s (with --enable-debug)\n", PROGNAME, VERSION);
+#else
+                                fprintf(stdout, "%s %s\n", PROGNAME, VERSION);
+#endif /* DEBUG */
 				exit(EXIT_SUCCESS);
 			default:
 				msg(_("Unknown option seen `%c\'"), optopt);
