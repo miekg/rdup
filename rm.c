@@ -16,7 +16,7 @@ gboolean
 rm(gchar *p)
 {
 	int ret;
-	gchar *dirp;
+	gchar *dirp, *q;
 	gchar *parent;
 	GDir *d;
 	struct stat st;
@@ -27,7 +27,7 @@ rm(gchar *p)
 
 	if (lstat(p, &st) == -1) {
 		if (opt_verbose > 0 && errno != ENOENT)
-			msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
+			msgd(__func__, __LINE__,_("Failed to remove `%s\': %s"), p, strerror(errno));
 		return TRUE;    /* noop */
 	}
 
@@ -38,7 +38,7 @@ rm(gchar *p)
 				case ENOTEMPTY:
 					/* recursive into this dir and do our bidding */
 					if (!(d = g_dir_open(p, 0, NULL))) {
-						msg(_("Failed to open directory `%s\': %s"), p, strerror(errno));
+						msgd(__func__, __LINE__,_("Failed to open directory `%s\': %s"), p, strerror(errno));
 						return FALSE;
 					}
 					while ( (dirp = (gchar*)g_dir_read_name(d))) {
@@ -49,7 +49,7 @@ rm(gchar *p)
 					g_dir_close(d);
 					/* dir should be empty by now */
 					if ((ret = remove(p)) == -1)
-						msg(_("Failed to remove directory `%s\': %s"),
+						msgd(__func__, __LINE__,_("Failed to remove directory `%s\': %s"),
 								p, strerror(errno));
 					return TRUE;
 				
@@ -58,7 +58,7 @@ rm(gchar *p)
 					parent = dir_parent(p);
 					st2 = dir_write(parent);
 					if (remove(p) == -1) {
-						msg(_("Failed to remove `%s\': %s"),
+						msgd(__func__, __LINE__,_("Failed to remove `%s\': %s"),
 								p, strerror(errno));
 						dir_restore(parent, st2);
 						g_free(parent);
@@ -70,7 +70,7 @@ rm(gchar *p)
 
 				default:
 					/* not ENOEMPTY */
-					msg(_("Failed to remove directory `%s\': %s"), p, strerror(errno));
+					msgd(__func__, __LINE__,_("Failed to remove directory `%s\': %s"), p, strerror(errno));
 					return FALSE;
 			}
 		}
@@ -83,13 +83,16 @@ rm(gchar *p)
 		switch(errno) {
 			case EACCES:
 				/* we have no access, ok ... */
-				parent = dirname(p);
+				q = g_strdup(p);
+				parent = dirname(q);
 				st2 = dir_write(parent);
 				if (remove(p) == -1) {
-					msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
+					msgd(__func__, __LINE__,_("Failed to remove `%s\': %s"), p, strerror(errno));
 					dir_restore(parent, st2);
+					g_free(q);
 					return FALSE;
 				}
+				g_free(q);
 				dir_restore(parent, st2);
 				return TRUE;
 
@@ -98,7 +101,7 @@ rm(gchar *p)
 				stat(p, &st);
 				chmod(p, st.st_mode | S_IWUSR);
 				if (remove(p) == -1) {
-					msg(_("Failed to remove `%s\': %s"),
+					msgd(__func__, __LINE__,_("Failed to remove `%s\': %s"),
 							p, strerror(errno));
 					chmod(p, st.st_mode); /* is this usefull then? */
 					return FALSE;
@@ -106,7 +109,7 @@ rm(gchar *p)
 				return TRUE;	
 		}
 		
-		msg(_("Failed to remove `%s\': %s"), p, strerror(errno));
+		msgd(__func__, __LINE__,_("Failed to remove `%s\': %s"), p, strerror(errno));
 		return FALSE;
 	}
 	return TRUE;

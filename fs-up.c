@@ -71,10 +71,8 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	if (opt_dry)
 		return TRUE;
 
-	if (!rm(e->f_name)) {
-		msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
+	if (!rm(e->f_name))
 		return FALSE;
-	}
 
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
 		if (errno == EACCES) {
@@ -106,10 +104,8 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	if (opt_dry)
 		return TRUE;
 
-	if (!rm(e->f_name)) {
-		msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
+	if (!rm(e->f_name))
 		return FALSE;
-	}
 
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
 		if (errno == EACCES) {
@@ -142,10 +138,8 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 	if (opt_dry)
 		return TRUE;
 
-	if (!rm(e->f_name)) {
-		msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
+	if (!rm(e->f_name))
 		return FALSE;
-	}
 
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
@@ -199,7 +193,6 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	if (!opt_dry)  {
 		if (!rm(e->f_name)) {
-			msgd(__func__, __LINE__, _("Failed to remove existing entry: '%s\'"), e->f_name);
 			opt_dry = old_dry;
 			return FALSE;
 		}
@@ -274,7 +267,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			/* make parent dir writable, and try again */
 			parent = dir_parent(e->f_name);
 #ifdef DEBUG
-			fprintf(stderr, "Doing %s and hoping", parent);
+			msgd(__func__, __LINE__, _("EACCES for `%s\'"), parent);
 #endif
 			s = dir_write(parent);
 			if (!s) 

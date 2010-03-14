@@ -15,6 +15,9 @@ dir_write(gchar *p)
 		return NULL;
 
 	struct stat *s = g_malloc(sizeof(struct stat));
+#ifdef DEBUG
+	msgd(__func__, __LINE__,_("Making directory writable `%s\'"), p);
+#endif
 
 	if (stat(p, s) == -1)
 		return NULL;
