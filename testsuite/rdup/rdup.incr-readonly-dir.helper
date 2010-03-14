@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# this takes place in the rdup source tree
+# make sure the executables used are also
+# these
+PATH=`pwd`:`pwd`/sh:.:$PATH
+
+# test rdup-simple with mcrypt and path enryption
+rm -f ~/.rdup/list.$(uname -n).tmp
+rm -f ~/.rdup/timestamp.$(uname -n).tmp
+
+# create doc2 dir, which is readonly
+
+if [ -d doc2 ]; then
+    echo "Dir exists"; # makes test fail
+    exit
+fi
+
+cp -rap doc doc2
+chmod a-w doc2
+
+# setup rdup-simple with doc2
+./sh/rdup-simple doc doc2 tmp
+
+# fails on the first
+( cd tmp; cd *; mv [0-9][0-9] 01 )
+
+# without doc2
+./sh/rdup-simple doc doc2 tmp
+
+sleep 1
+
+chmod -R a+w tmp
+rm -rf tmp
+rm -f ~/.rdup/list.$(uname -n).tmp
+rm -f ~/.rdup/timestamp.$(uname -n).tmp
+chmod a+w doc2
+rm -rf doc2
