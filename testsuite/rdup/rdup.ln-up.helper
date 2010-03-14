@@ -23,7 +23,10 @@ mv tmp/$DATE/$NOW tmp/$DATE/$DAY_BEFORE
 rm t/bar
 ./sh/rdup-simple t tmp
 EXIT=$?
-rm -rf t tmp # cleanup
+chmod -R a+w t
+rm -rf t # cleanup
+chmod -R a+w tmp
+rm -rf tmp # cleanup
 ## remove files in ./rdup
 rm ~/.rdup/list.$(uname -n).tmp
 rm ~/.rdup/timestamp.$(uname -n).tmp

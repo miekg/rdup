@@ -11,11 +11,6 @@ rdup-tr:
 
 rdup-up:
     update manpage
-    error handling
-
-rdup-simple:
-    error handling?
-    manual page back?
 
 tests:
     eas_encrypt fails on Fedora-11?
@@ -25,3 +20,4 @@ tests:
     backup
     add nobkacup
     backup gone in that directory?
+    for i in $(seq 0 100); do make check 2>/dev/null | grep '^# of expected'; sleep 1; done
