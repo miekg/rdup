@@ -23,7 +23,9 @@ dir_write(gchar *p)
 		return NULL;
 
 	/* make it writable, assume we are the OWNER */
-	chmod(p, s->st_mode | S_IWUSR);
+	if (chmod(p, s->st_mode | S_IWUSR) == -1) {
+		msgd(__func__, __LINE__,_("Failed to restore permissions `%s\': %s"), p, strerror(errno));
+	}
 	return s;
 }
 
@@ -33,7 +35,9 @@ dir_restore(gchar *p, struct stat *s)
 	if (!s || !p)
 		return;
 	/* restore perms - assumes *s has not be f*cked up */
-	chmod(p, s->st_mode & ~S_IFMT);
+	if (chmod(p, s->st_mode & ~S_IFMT) == -1) {
+		msgd(__func__, __LINE__,_("Failed to restore permissions `%s\': %s"), p, strerror(errno));
+	}
 }
 
 /**

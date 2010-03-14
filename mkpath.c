@@ -19,30 +19,29 @@ mkpath(const char *s, mode_t mode)
 	msgd(__func__, __LINE__, _("Path ele '%s\'"), s);
 #endif /* DEBUG */
  
-        if ((path = g_strdup(s)) == NULL)
-                return -1;
- 
-        if ((q = g_strdup(s)) == NULL)
-                return -1;
+        path = g_strdup(s);
+        q = g_strdup(s);
  
         if ((r = dirname(q)) == NULL)
                 goto out;
  
-        if ((up = g_strdup(r)) == NULL)
-                return -1;
+	up = g_strdup(q);
  
-        if ((mkpath(up, mode) == -1) && (errno != EEXIST)) 
-                goto out;
+	if ((mkpath(up, mode) == -1) && (errno != EEXIST)) {
+		msgd(__func__, __LINE__, _("Failed or exists '%s\': %s"), up, strerror(errno));
+		goto out;
+	}
  
-        if ((mkdir(path, mode) == -1) && (errno != EEXIST))
+        if ((mkdir(path, mode) == -1) && (errno != EEXIST)) {
+		msgd(__func__, __LINE__, _("Failed to create directory '%s\': %s"), path, strerror(errno));
                 rv = -1;
-        else
+	} else {
                 rv = 0;
+	}
  
 out:
-        if (up)
-                free(up);
-        free(q);
-        free(path);
+        if (up) g_free(up);
+        if (q) g_free(q);
+        if (path) g_free(path);
         return (rv);
 }

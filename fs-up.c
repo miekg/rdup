@@ -29,7 +29,7 @@ mk_time(struct rdup *e)
 	ut.actime = ut.modtime = e->f_mtime;
 
 	if (utime(e->f_name, &ut) == -1) 
-		msg(_("Failed to set mtime '%s\': %s"), e->f_name, strerror(errno));
+		msgd(__func__, __LINE__,_("Failed to set mtime '%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
@@ -43,7 +43,7 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
 		if (lchown(e->f_name, u, g) == -1) 
-			msg(_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__,_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
@@ -176,7 +176,7 @@ static gboolean
 mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	FILE *out = NULL;
-	char *buf;
+	char *buf; 
 	size_t  bytes;
 	gboolean ok = TRUE;
 	gboolean old_dry = opt_dry;
@@ -203,8 +203,6 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			if (!(out = fopen(e->f_name, "w"))) {
 				msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 				ok = FALSE;
-			} else {
-				ok = TRUE;
 			}
 			dir_restore(dir_parent(e->f_name), st);
 		} else {
@@ -212,8 +210,6 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			ok = FALSE;
 		}
 	} 
-	if (ok && !opt_dry)
-		mk_meta(e, uidhash, gidhash);
 
 	/* we need to read the input to not upset
 	 * the flow into rdup-up, but we are not
@@ -241,6 +237,9 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	if (ok && out)
 		fclose(out); 
 
+	if (ok && !opt_dry)
+		mk_meta(e, uidhash, gidhash);
+
 	opt_dry = old_dry;
 	return TRUE;
 }
@@ -255,12 +254,17 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	if (opt_dry)
 		return TRUE;
 
-	lstat(e->f_name, &st);
-	if (S_ISDIR(st.st_mode)) {
-		/* some dir is here - update the perms and ownership */
-		mk_meta(e, uidhash, gidhash);
-		return TRUE;
+	if (lstat(e->f_name, &st) == 0) {
+		if (S_ISDIR(st.st_mode)) {
+#ifdef DEBUG
+			msgd(__func__, __LINE__, _("Updating current dir `%s\'"), e->f_name);
+#endif /* DEBUG */
+			/* some dir is here - update the perms and ownership */
+			mk_meta(e, uidhash, gidhash);
+			return TRUE;
+		}
 	}
+	/* nothing there */
 
 	if (mkdir(e->f_name, e->f_mode) == -1) {
 		if (errno == EACCES) {
