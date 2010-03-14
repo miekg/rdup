@@ -1,4 +1,4 @@
-13 Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
+14 Apr 2010: 1.1.2 Miek Gieben <rdup@miek.nl>
     * rdup: remove sig_atomic_t (build fix for ubuntu 8.04)
      (reported by Andrew Ittner)
     * rdup-up: fixed nasty bug in dir.c dir_parent()
