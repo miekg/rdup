@@ -19,7 +19,7 @@ msgd_va_list(__attribute__((unused)) const char *func,
         fprintf(stderr, "** %s: %s():%d  ", PROGNAME, func, line);
 #else
         fprintf(stderr, "** %s: ", PROGNAME);
-#endif
+#endif /* DEBUG */
         vfprintf(stderr, fmt, args);
         fprintf(stderr, "\n");
 }

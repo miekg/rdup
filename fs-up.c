@@ -268,7 +268,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 #ifdef DEBUG
 			msgd(__func__, __LINE__, _("EACCES for `%s\'"), parent);
-#endif
+#endif /* DEBUG */
 			s = dir_write(parent);
 			if (!s) 
 				msgd(__func__, __LINE__, _("Failed to make parent writable"));

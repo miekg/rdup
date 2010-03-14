@@ -40,8 +40,8 @@ wait_pids(GSList *pids, int flags)
                         signal_abort(sig);
 
 #ifdef DEBUG
-		fprintf(stderr, "Waiting for pid %d\n",(int) *(pid_t*)(p->data));
-#endif
+		msgd(__func__, __LINE__,"Waiting for pid %d", (int) *(pid_t*)(p->data));
+#endif /* DEBUG */
 
 		/* -1 on error */
 		waitpid(*(pid_t* )(p->data), &status, flags); /* errno ECHILD is ok */

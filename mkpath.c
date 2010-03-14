@@ -15,7 +15,9 @@ mkpath(const char *s, mode_t mode)
         if (strcmp(s, ".") == 0 || strcmp(s, "/") == 0)
                 return 0;
 
+#ifdef DEBUG
 	msgd(__func__, __LINE__, _("Path ele '%s\'"), s);
+#endif /* DEBUG */
  
         if ((path = g_strdup(s)) == NULL)
                 return -1;

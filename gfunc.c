@@ -108,8 +108,8 @@ cat(FILE *fp, char *filename)
 			return FALSE;
 		}
 #ifdef DEBUG
-		sleep(5);
-#endif
+		/* sleep(5); */
+#endif /* DEBUG */
 #if 0
 		/* use 0 for the flags field */
 		if (wait_pids(pids, WNOHANG) == -1) {

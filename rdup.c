@@ -301,7 +301,7 @@ main(int argc, char **argv)
 	}
 #ifdef DEBUG
 	msgd(__func__, __LINE__, _("DEBUG is enabled!"));
-#endif
+#endif /* DEBUG */
 	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
 		switch (c) {
 			case 'F':
@@ -477,9 +477,9 @@ main(int argc, char **argv)
 	 * added. This way we can make a race condition
 	 * happen
 	 */
-	msg(_("DEBUG: sleeping for a while"));
+	msg(_("DEBUG: sleeping for a while, but not now"));
 	/* sleep(10); */
-#endif
+#endif /* DEBUG */
 
 	/* first what to remove, then what to backup */
 	if (opt_reverse) {
