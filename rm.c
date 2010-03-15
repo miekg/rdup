@@ -98,6 +98,7 @@ rm(gchar *p)
 
 			case EPERM:
 				/* no write on file, reuse st - and why is this needed again? */
+				/* this is dead code ... */
 				stat(p, &st);
 				chmod(p, st.st_mode | S_IWUSR);
 				if (remove(p) == -1) {

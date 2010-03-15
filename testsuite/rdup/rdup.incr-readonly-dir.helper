@@ -5,6 +5,13 @@
 # these
 PATH=`pwd`:`pwd`/sh:.:$PATH
 
+#this test fails on the first, because we move
+#the current backup to 01
+if [ $(date +%d) -eq "01" ]; then
+    echo fail on the first
+    exit
+fi
+
 # test rdup-simple with mcrypt and path enryption
 rm -f ~/.rdup/list.$(uname -n).tmp
 rm -f ~/.rdup/timestamp.$(uname -n).tmp

@@ -2,6 +2,7 @@ set test "Incremental backup with readonly directory"
 # should not yield any output
 spawn ./testsuite/rdup/rdup.incr-readonly-dir.helper
 expect {
+    -re "fail on the first" { xfail "$test" }
     -re "..*" { fail "$test" }
 	default { pass "$test" }
 }
