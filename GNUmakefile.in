@@ -38,9 +38,9 @@ INSTALL_DATA=$(INSTALL) -m 644
 	${GCC} ${CFLAGS} ${GLIB_CFLAGS} -c $<
 
 ifeq (${ARCHIVE_L},no)
-all:	rdup rdup-up strip
+all:	rdup rdup-up
 else
-all:	rdup rdup-up rdup-tr strip
+all:	rdup rdup-up rdup-tr
 endif
 	@chmod +x sh/rdup-simple
 	@if [ "${NETTLE_L}" = "no" ]; then echo "WARNING: ** No nettle library found; rdup-tr has no encryption"; fi
@@ -55,7 +55,7 @@ rdup:	${OBJ} ${HDR}
 	${GCC} ${OBJ} ${GLIB_LIBS} ${LIBS} -o rdup
 
 strip:	
-	@ [ "${DEBUG}" != "yes" ] && strip ${CMD} || exit 0
+	strip ${CMD}
 
 po:	rdup.pot 
 	( cd po ; $(MAKE) -f GNUmakefile all )
@@ -95,6 +95,8 @@ install: all
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	for i in ${MAN7}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man7/`basename $$i` ; done; exit 0
 	$(MAKE) -C po install
+
+install-strip: all strip install
 
 uninstall:
 	for i in ${CMD}; do rm -f ${DESTDIR}${bindir}/$$i ; done
