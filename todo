@@ -13,7 +13,5 @@ rdup-up:
 tests:
     tweak almost correct input and let rdup crash
 
-    backup
-    add nobackup
-    backup gone in that directory?
+    autom. tests...?
     for i in $(seq 0 100); do make check 2>/dev/null | grep '^# of expected'; sleep 1; done
