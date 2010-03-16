@@ -76,6 +76,7 @@ OPTIONS:
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
  -n	    dry run; show the actually rdup commands, without executing them
+ -a	    reset atime
  -x         pass -x to rdup
  -s NUM	    pass -s NUM to rdup-up (strip NUM leading path components)
  -X FILE    encrypt all paths with AES and key in FILE
@@ -91,6 +92,7 @@ DAYS=8
 ssh=
 trans=
 pathtrans=
+atime=
 enc=false
 etc=~/.rdup
 force=false
@@ -99,8 +101,9 @@ link=false
 dry=false
 mcrypt=false
 
-while getopts "E:k:vfgzxhVX:Y:s:Ln" o; do
+while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
         case $o in
+		a) atime=" -a " ;;
 		E)
                 if [[ -z "$OPTARG" ]]; then
                         echo2 "-E needs an argument"
@@ -235,7 +238,7 @@ if [[ -n $pathtrans ]]; then
 	pipe="rdup-tr $pathtrans | $pipe"
 fi
 
-cmd="rdup$E$x -N $STAMP $trans $LIST $DIRS | $pipe"
+cmd="rdup$E$x$atime -N $STAMP $trans $LIST $DIRS | $pipe"
 
 if ! $force; then
 	# path is set at the top
