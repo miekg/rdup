@@ -16,7 +16,6 @@ extern GSList *pregex_list;
 /* common.c */
 struct rdup * entry_dup(struct rdup *);
 void entry_free(struct rdup *);
-void reset_atime(struct rdup *);
 
 /**
  * prepend path leading up to backup directory to the tree
@@ -271,6 +270,20 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 		}
 	}
 	closedir(dir);
+	if (opt_atime) {
+		/* reset dirs atime */
+		if (d > 0 && opt_atime) {
+			struct utimbuf ut;
+			ut.actime  = dirstack[d - 1]->f_atime;
+			ut.modtime = dirstack[d - 1]->f_mtime;
+
+			if (utime(dirstack[d - 1]->f_name, &ut) == -1)
+				msg(_("Failed to reset atime: '%s\': %s"), dirstack[d - 1]->f_name, strerror(errno));
+		return;
+	}
+
+
+	}
 
 	while (d > 0) {
 		directory = dirstack[--d]; 
