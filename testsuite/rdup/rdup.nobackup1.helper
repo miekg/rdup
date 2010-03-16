@@ -1,0 +1,9 @@
+#!/bin/bash
+
+touch sh/.nobackup
+total=$(./rdup -v /dev/null sh 2> /dev/null | grep 'sh/' | wc -l)
+# total should be 1 sh/.nobackup + zero content
+if [ $total -ne 1 ];then
+    echo FOUT
+fi
+rm sh/.nobackup

@@ -2,22 +2,18 @@ TODO
 
 rdup:
     update manpage
-    error handling
 
 rdup-tr:
     with tar/pax output hardlinks must come last
     update manpage
-    error handling
 
 rdup-up:
     update manpage
 
 tests:
-    eas_encrypt fails on Fedora-11?
-    encrypt path test
     tweak almost correct input and let rdup crash
 
     backup
-    add nobkacup
+    add nobackup
     backup gone in that directory?
     for i in $(seq 0 100); do make check 2>/dev/null | grep '^# of expected'; sleep 1; done
