@@ -4,11 +4,11 @@
 @PACKAGE_NAME@-tr \- transform rdup output
 .SH SYNOPSIS
 .B @PACKAGE_NAME@-tr
-[\fI\-Pcmd,opt1,...,opt7\fR]...
 [\fIOPTION\fR]...
 
 .SH DESCRIPTION
-Transform rdup output into something else. Where something else can
+Transform rdup output into \fIsomething else\fR. Where \fIsomething
+else\fR can
 be a tar, cpio, pax archive or another rdup stream.
 
 The rdup archive must be given on \fBrdup-tr\fR's standard input.
@@ -106,7 +106,7 @@ Or even pack and unpack it on the fly
 
 Or encryption with openssl
 
-    ./rdup -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
+    rdup -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
 
 Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again
@@ -114,14 +114,14 @@ the entire archive yet again
     rdup -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home | \\
     gzip > my_compressed_encrypted_rdup_archive.gz
 
-Recreating the original \fBrdup\fR (-c) output, which can be fed to
+Recreating the original \fBrdup\fR output, which can be fed to
 \fBrdup-up\fR.
-
-# DIT kan dus niet meer, maar heeft nooit echt gewerk BUGBUGBUG
 
     gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
     rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d >\\
     my_rdup_archive
+
+    rdup-up < my_rdup_archive -t /tmp/restore
 
 Notice the reversal of the \-P options.
 

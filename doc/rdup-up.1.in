@@ -14,7 +14,7 @@ structure with a rdup archive.
 The rdup archive has to be given to \fBrdup-up\fR's standard input.
 
 .SS Username and uids
-Rdup outputs both the username and uid, the receiving system (which
+\fBrdup\fR outputs both the username and uid, the receiving system (which
 may be a totally different system) checks if the username and uid
 match. If the username and uid don't match the (numeric) uid is
 used on the file. The same holds true for the groupname and gid.
@@ -47,7 +47,8 @@ With \fBrdup-up -s\fI2\fR this will leave:
     /bla.txt
 
 
-And the last 'bla.txt' will \fIoverwrite\fR the previous one.
+And the last 'bla.txt' will \fIoverwrite\fR the previous one, this will
+happen without warnings.
 .TP
 .B \-r PATH
 This option is related to the \-s option, but works different. The
