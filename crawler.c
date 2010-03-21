@@ -276,13 +276,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			struct utimbuf ut;
 			ut.actime  = dirstack[d - 1]->f_atime;
 			ut.modtime = dirstack[d - 1]->f_mtime;
-
 			if (utime(dirstack[d - 1]->f_name, &ut) == -1)
 				msg(_("Failed to reset atime: '%s\': %s"), dirstack[d - 1]->f_name, strerror(errno));
-		return;
-	}
-
-
+		}
 	}
 
 	while (d > 0) {
