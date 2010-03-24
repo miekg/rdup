@@ -200,6 +200,12 @@ dest=$1
 if [[ ${dest:0:6} == "ssh://" ]]; then
 	rest=${dest/ssh:\/\//}
 	u=${rest%%@*}
+
+	if [[ "$u" == "$rest" ]]; then
+            # no @ used, nullify $u
+            u=
+        fi
+
 	rest=${rest/$u@/}
 	h=`echo $rest | cut -s -f1 -d/`
 	BACKUPDIR=${rest/$h/}
