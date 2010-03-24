@@ -72,7 +72,6 @@ OPTIONS:
  -g	    encrypt all files: rdup -Pgpg,--default-recipient-self,--encrypt
  -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
- -L	    link previous backup directory (note: this is used internally)
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
  -n	    dry run; show the actually rdup commands, without executing them
