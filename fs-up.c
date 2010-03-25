@@ -240,6 +240,9 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	if (ok && !opt_dry)
 		mk_meta(e, uidhash, gidhash);
 
+#ifdef DEBUG
+	msgd(__func__, __LINE__, "Wrote file `%s\'", e->f_name);
+#endif
 	opt_dry = old_dry;
 	return TRUE;
 }
@@ -256,7 +259,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	if (lstat(e->f_name, &st) == 0) {
 		if (S_ISDIR(st.st_mode)) {
-#ifdef DEBUG
+#if 0
 			msgd(__func__, __LINE__, _("Updating current dir `%s\'"), e->f_name);
 #endif /* DEBUG */
 			/* some dir is here - update the perms and ownership */
