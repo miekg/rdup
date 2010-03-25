@@ -467,7 +467,7 @@ main(int argc, char **argv)
 	/* everything that is really new on the filesystem */
 	new     = g_tree_subtract(backup, curtree);
 
-	/* all stuff that should be ctime checked, to see if it has 
+	/* all stuff that should be mtime checked, to see if it has 
 	 * changed */
 	changed = g_tree_subtract(backup, new);
 	/* some dirs might still linger in changed, while they are in fact
