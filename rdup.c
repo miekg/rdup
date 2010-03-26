@@ -245,6 +245,7 @@ main(int argc, char **argv)
 	GHashTable *linkhash;	/* hold dev, inode, name stuff */
 	GHashTable *userhash;	/* holds uid -> username */
 	GHashTable *grouphash;  /* holds gid -> groupname */
+	struct utimbuf ut;	/* time to set on timestamp file */
 
 	FILE 	*fplist;
 	gint    i;
@@ -253,8 +254,10 @@ main(int argc, char **argv)
 	char	*path, *time, *q, *r;
 	gchar   **args;
 	gboolean devnull = FALSE;	/* hack: remember if we open /dev/null */
-
 	struct sigaction sa;
+
+	ut.atime = time();
+	ut.modtime = ut.atime;
 	
 	/* i18n, set domain to rdup */
 #ifdef ENABLE_NLS
@@ -499,9 +502,16 @@ main(int argc, char **argv)
 	    }
 	}
 	/* re-touch the timestamp file */
-	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
-		msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
-		exit(EXIT_FAILURE);
+	if (time) {
+		if (creat(time, S_IRUSR | S_IWUSR) == -1) {
+			msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+		/* and set the time when rdup was started */
+		if (utime(time, &ut) == -1) {
+			msg(_("Failed to reset atime: '%s\': %s"), time, strerror(errno));
+			exit(EXIT_FAILURE);
+		}
 	}
 	exit(EXIT_SUCCESS);
 }
