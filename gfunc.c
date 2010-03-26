@@ -422,9 +422,9 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 		n = g_strdup_printf("%s -> %s", e->f_name, e->f_target);
-	else 
+	else
 		n = strdup(e->f_name);
-	
+
 	if (S_ISDIR(e->f_mode)) /* the same as in the normal output */
 		file_size = 0;
 

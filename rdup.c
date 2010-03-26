@@ -345,9 +345,6 @@ main(int argc, char **argv)
 				opt_reverse = TRUE;
 				break;
 			case 'P':
-				/* (void)setvbuf(stdout, NULL, _IONBF, 0);
-				(void)setvbuf(stdin, NULL, _IONBF, 0); */
-
                                 /* allocate new for each child */
                                 args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
                                 q = g_strdup(optarg);
@@ -446,7 +443,7 @@ main(int argc, char **argv)
 
 		/* add dirs leading up the dir/file */
 		if (!dir_prepend(backup, path, userhash, grouphash)) continue;
-		
+
 		/* descend into the dark, misty directory */
 		dir_crawl(backup, linkhash, userhash, grouphash, path);
 	}
@@ -457,7 +454,7 @@ main(int argc, char **argv)
 	/* everything that is really new on the filesystem */
 	new     = g_tree_subtract(backup, curtree);
 
-	/* all stuff that should be mtime checked, to see if it has changed */
+	/* all stuff that should be ctime checked, to see if it has changed */
 	changed = g_tree_subtract(backup, new);
 	/* some dirs might still linger in changed, while they are in fact
 	 * removed, kill those here */
