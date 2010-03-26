@@ -477,15 +477,15 @@ gfunc_backup(gpointer data, gpointer value,
 				entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 				return FALSE;
 			default: /* INC_DUMP */
-				if (((struct rdup*)data)->f_mtime >= opt_timestamp) {
+				if (((struct rdup*)data)->f_ctime >= opt_timestamp) {
 					entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 #if DEBUG
 				msgd(__func__, __LINE__,"%s %ld >= %ld diff %ld\n", 
 						((struct rdup*)data)->f_name,
-						(long int)((struct rdup*)data)->f_mtime, 
+						(long int)((struct rdup*)data)->f_ctime, 
 						(long int)opt_timestamp,
 						(long int)opt_timestamp -
-						(long int)((struct rdup*)data)->f_mtime);
+						(long int)((struct rdup*)data)->f_ctime);
 #endif
 				}
 				return FALSE;

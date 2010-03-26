@@ -1,6 +1,4 @@
 xx Yyy 2010: 1.1.4 Miek Gieben <rdup@miek.nl>
-    * rdup: use m_time again for file time comparison
-      (using c_time clashes with -a)
 
 
 22 Mar 2010: 1.1.3 Miek Gieben <rdup@miek.nl>
