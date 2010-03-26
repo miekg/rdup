@@ -415,7 +415,7 @@ main(int argc, char **argv)
 
 	if (argc == 1) {
 		/* default to . as the dir to dump */
-		msg(_("No directory given, dumping ."));
+		msg(_("No directory given, dumping `.\'"));
 		argv[1] = g_strdup(".");
 		argc++;
 	}
@@ -442,10 +442,8 @@ main(int argc, char **argv)
 		}
 
 		/* add dirs leading up the dir/file */
-		if (!dir_prepend(backup, path, userhash, grouphash)) {
-			/* msg(_("Skipping `%s\'"), path); */
-			continue;
-		}
+		if (!dir_prepend(backup, path, userhash, grouphash)) continue;
+		
 		/* descend into the dark, misty directory */
 		dir_crawl(backup, linkhash, userhash, grouphash, path);
 	}
@@ -456,8 +454,7 @@ main(int argc, char **argv)
 	/* everything that is really new on the filesystem */
 	new     = g_tree_subtract(backup, curtree);
 
-	/* all stuff that should be mtime checked, to see if it has 
-	 * changed */
+	/* all stuff that should be mtime checked, to see if it has changed */
 	changed = g_tree_subtract(backup, new);
 	/* some dirs might still linger in changed, while they are in fact
 	 * removed, kill those here */
@@ -467,11 +464,11 @@ main(int argc, char **argv)
 	/* we first crawled the disk to see what is changed
 	 * then we output. If we wait here a few seconds
 	 * we can remove files that should have been
-	 * added. This way we can make a race condition
-	 * happen
+	 * added. This way we can make a race condition(s)
+	 * happen - if they are there in code 
 	 */
 	msg(_("DEBUG: sleeping for a while"));
-	sleep(10);
+	sleep(5);
 #endif /* DEBUG */
 
 	/* first what to remove, then what to backup */
@@ -501,20 +498,10 @@ main(int argc, char **argv)
 		fclose(fplist);
 	    }
 	}
-/*	
-	why free it - we going to exit soon
-	g_tree_foreach(curtree, gfunc_free, NULL);
-	g_tree_foreach(backup, gfunc_free, NULL);
-	g_tree_destroy(curtree);
-	g_tree_destroy(backup);
-	g_tree_destroy(remove);
-	g_hash_table_destroy(linkhash);
-*/
 	/* re-touch the timestamp file */
 	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
 		msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-	
 	exit(EXIT_SUCCESS);
 }
