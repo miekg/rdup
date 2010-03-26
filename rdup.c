@@ -251,13 +251,13 @@ main(int argc, char **argv)
 	gint    i;
 	int 	c;
 	char    pwd[BUFSIZE + 1];
-	char	*path, *time, *q, *r;
+	char	*path, *stamp, *q, *r;
 	gchar   **args;
 	gboolean devnull = FALSE;	/* hack: remember if we open /dev/null */
 	struct sigaction sa;
 
-	ut.atime = time();
-	ut.modtime = ut.atime;
+	ut.actime = time(NULL);
+	ut.modtime = ut.actime;
 	
 	/* i18n, set domain to rdup */
 #ifdef ENABLE_NLS
@@ -283,7 +283,7 @@ main(int argc, char **argv)
 	userhash  = g_hash_table_new(g_int_hash, g_int_equal);
 	remove  = NULL;
 	opterr = 0;
-	time = NULL;
+	stamp = NULL;
 
 	if (((getuid() != geteuid()) || (getgid() != getegid()))) {
 		msg(_("Will not run suid/sgid for safety reasons"));
@@ -335,11 +335,11 @@ main(int argc, char **argv)
 				break;
 			case 'N': 
 				opt_timestamp = timestamp(optarg, TRUE);
-				time = optarg;
+				stamp = optarg;
 				break;
 			case 'M':
 				opt_timestamp = timestamp(optarg, FALSE);
-				time = optarg;
+				stamp = optarg;
 				break;
 			case 'R':
 				opt_reverse = TRUE;
@@ -502,14 +502,14 @@ main(int argc, char **argv)
 	    }
 	}
 	/* re-touch the timestamp file */
-	if (time) {
-		if (creat(time, S_IRUSR | S_IWUSR) == -1) {
-			msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
+	if (stamp) {
+		if (creat(stamp, S_IRUSR | S_IWUSR) == -1) {
+			msg(_("Could not create timestamp file `%s\': %s"), stamp, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		/* and set the time when rdup was started */
-		if (utime(time, &ut) == -1) {
-			msg(_("Failed to reset atime: '%s\': %s"), time, strerror(errno));
+		if (utime(stamp, &ut) == -1) {
+			msg(_("Failed to reset atime: '%s\': %s"), stamp, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}
