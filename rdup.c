@@ -430,17 +430,6 @@ main(int argc, char **argv)
 		fclose(fplist);
 	}
 
-	/* Do this BEFORE that backup is made, if this is done _after_ the backup we have
-	 * windows (= the time it takes to make the backup). If in that window we create
-	 * NEW files, we will MISS those in the next backup 
-	 */
-
-	/* re-touch the timestamp file */
-	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
-		msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
-		exit(EXIT_FAILURE);
-	}
-	
 	for (i = 1; i < argc; i++) {
 		if (!g_path_is_absolute(argv[i])) 
 		    path = abspath(g_strdup_printf("%s/%s", pwd, argv[i]));
@@ -521,5 +510,11 @@ main(int argc, char **argv)
 	g_tree_destroy(remove);
 	g_hash_table_destroy(linkhash);
 */
+	/* re-touch the timestamp file */
+	if (time && (creat(time, S_IRUSR | S_IWUSR) == -1)) {
+		msg(_("Could not create timestamp file `%s\': %s"), time, strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+	
 	exit(EXIT_SUCCESS);
 }
