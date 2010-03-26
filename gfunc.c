@@ -107,9 +107,6 @@ cat(FILE *fp, char *filename)
 			fclose(file);
 			return FALSE;
 		}
-#ifdef DEBUG
-		/* sleep(5); */
-#endif /* DEBUG */
 #if 0
 		/* use 0 for the flags field */
 		if (wait_pids(pids, WNOHANG) == -1) {
@@ -287,10 +284,8 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 				fprintf(out, "%d,%d", (unsigned int) major(e->f_rdev),(unsigned int) minor(e->f_rdev));
 				break;
 			}
-			/* links - size is the size of f_name_size */
+			/* links */
 			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-/* BUGBUG				fprintf(stderr, "%ld\n", (unsigned long)e->f_size); */
-				/* -5 ' -> ' here... */
 				fprintf(out, "%ld", (unsigned long)e->f_size);
 				break;
 			}
@@ -422,19 +417,14 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (S_ISLNK(e->f_mode))
 		linktype = 'l';
 
-	/* Can go BUGBUG */
-	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-		/* BUG BUG */
-		file_size = e->f_name_size;
-		name_size = e->f_name_size + 4 + strlen(e->f_target);
-		file_size = e->f_size;
-		name_size = e->f_name_size;
+	file_size = e->f_size;
+	name_size = e->f_name_size;
+
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 		n = g_strdup_printf("%s -> %s", e->f_name, e->f_target);
-	} else {
-		file_size = e->f_size;
-		name_size = e->f_name_size;
+	else 
 		n = strdup(e->f_name);
-	}
+	
 	if (S_ISDIR(e->f_mode)) /* the same as in the normal output */
 		file_size = 0;
 
@@ -486,7 +476,7 @@ gfunc_backup(gpointer data, gpointer value,
 						(long int)opt_timestamp,
 						(long int)opt_timestamp -
 						(long int)((struct rdup*)data)->f_ctime);
-#endif
+#endif /* DEBUG */
 				}
 				return FALSE;
 		}

@@ -242,7 +242,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 #ifdef DEBUG
 	msgd(__func__, __LINE__, "Wrote file `%s\'", e->f_name);
-#endif
+#endif /* DEBUG */
 	opt_dry = old_dry;
 	return TRUE;
 }
