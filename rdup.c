@@ -481,8 +481,8 @@ main(int argc, char **argv)
 	 * added. This way we can make a race condition
 	 * happen
 	 */
-	msg(_("DEBUG: sleeping for a while, but not now"));
-	/* sleep(10); */
+	msg(_("DEBUG: sleeping for a while"));
+	sleep(10);
 #endif /* DEBUG */
 
 	/* first what to remove, then what to backup */
