@@ -47,8 +47,8 @@ in the file system. See rdup-up(1) for more information.
 So the general backup pipeline for \fBrdup\fR will look something like
 this:
 
-    create filelist  |  transform file content  |  update filesystem
-    ( rdup           |  rdup-tr                 |  rdup-up )
+    create filelist  |  transform |  update filesystem
+    ( rdup           |  rdup-tr   |  rdup-up )
 
 .TP
 .B Note 1:
@@ -71,13 +71,14 @@ restores. If you think about this for a minute you understand why.
 Making a backup means copying a list of files somewhere else. Restoring
 files is copying a list of files back to the place they came from. Same
 difference. So \fBrdup\fR can be used for both, if you did any
-transformation with \fBrdup-tr\fR during the backup you just need to
+transformation with \fBrdup\fR during the backup you just need to
 reverse those operations during the restore.
 
 .SH BACKUPS
 It is always best to backup to \fIanother\fR medium, be it a different
-local harddisk or a NFS/CIFS mounted filesystem or use \-c switch
-of rdup to copy the files and direcories to a remote server, ala rsync.
+local harddisk or a NFS/CIFS mounted filesystem.
+You can also use \fIssh\fR to store file on a remote server, ala
+rsync (although not a network efficient).
 
 If you backup to a local disk you can just as well use \fBrsync\fR or
 plain old tar, but if you store your files at somebody else's disk you
@@ -103,9 +104,7 @@ The following script implements the algorithm of \fBrdup-simple\fR.
 .RS
 .nf
 #!/bin/bash
-
 # some tmp files are saved in ~/.rdup. This directory must exist
-
 DIR=/home	    # what to backup
 BACKUP=/vol/backup
 TODAY=$(date +%Y%m/%d)
@@ -130,17 +129,13 @@ case $RET in
 	# do nothing here
 	;;
 esac
-
 # this is the place where you want to modify the commandline
-#
 # right now, nothing is translated we just use 'cat'
-
 rdup -N $STAMP -Pcat $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
 
 # or do a remote backup
 #rdup -N $STAMP -Pcat $LIST $DIR | ssh root@remotehost \\
 #	rdup-up $BACKUP/$HOSTNAME/$TODAY
-
 .fi
 .RE
 
