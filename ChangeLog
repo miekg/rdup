@@ -1,6 +1,7 @@
 xx Yyy 2010: 1.1.4 Miek Gieben <rdup@miek.nl>
     * re-touch timestamp after the backup is made
-      (otherwise this clashes with -a flag)
+      when -a is used. Otherwise it is before the
+      the backup
     * spring cleaning, remove/clean BUGBUGs and
       deadcode
 
