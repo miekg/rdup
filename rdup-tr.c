@@ -43,25 +43,21 @@ static struct rdup *
 crypt_entry(struct rdup *e, GHashTable *tr) 
 {
         gchar *crypt, *dest;
-	struct rdup *d = entry_dup(e);
-	/* entry dup hier??? BUGBUG */
-
-	if (! (crypt = crypt_path(aes_ctx,d->f_name, tr))) {
-		msg(_("Failed to encrypt path `%s\'"), d->f_name);
+	if (! (crypt = crypt_path(aes_ctx,e->f_name, tr))) {
+		msg(_("Failed to encrypt path `%s\'"), e->f_name);
 		return NULL;
 	}
 
-	d->f_name = crypt;
-	d->f_name_size = strlen(crypt);
-		/* g_free(d->f_name); hier wel  BUGBUG? */
+	e->f_name = crypt;
+	e->f_name_size = strlen(crypt);
 
 	/* links are special */
-	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		dest = crypt_path(aes_ctx, d->f_target, tr);
-		d->f_target = dest;
-		d->f_size = strlen(crypt); /* ook hier crypt */
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+		dest = crypt_path(aes_ctx, e->f_target, tr);
+		e->f_target = dest;
+		e->f_size = strlen(crypt); /* ook hier crypt */
 	}
-	return d;
+	return e;
 }
 
 /* decrypt an rdup_entry */
@@ -69,24 +65,22 @@ static struct rdup *
 decrypt_entry(struct rdup *e, GHashTable *tr) 
 {
         gchar *plain, *dest;
-	struct rdup *d = entry_dup(e);
-	/* ENTRY DUP BUGBUG */
 
-	if (! (plain = decrypt_path(aes_ctx, d->f_name, tr))) {
-		msg(_("Failed to decrypt path `%s\'"), d->f_name);
+	if (! (plain = decrypt_path(aes_ctx, e->f_name, tr))) {
+		msg(_("Failed to decrypt path `%s\'"), e->f_name);
 		return NULL;
 	}
 
-	d->f_name = plain;
-	d->f_name_size = strlen(plain);
+	e->f_name = plain;
+	e->f_name_size = strlen(plain);
 
 	/* links are special */
-	if (S_ISLNK(d->f_mode) || d->f_lnk == 1) {
-		dest = decrypt_path(aes_ctx, d->f_target, tr);
-		d->f_target = dest;
-		d->f_size = strlen(plain);
+	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
+		dest = decrypt_path(aes_ctx, e->f_target, tr);
+		e->f_target = dest;
+		e->f_size = strlen(plain);
 	}
-        return d;
+        return e;
 }
 #endif /* HAVE_LIBNETTLE */
 

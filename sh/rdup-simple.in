@@ -10,7 +10,7 @@ echo2() {
 }
 
 version() {
-    echo "rdup @PACKAGE_VERSION@"
+    echo "$PROGNAME @PACKAGE_VERSION@"
 }
 
 copy_and_link() {
@@ -30,7 +30,7 @@ copy_and_link() {
     TODAY=$(date $DATESTR)
     TOPDIR="$1"
 
-    if $dry; then return 1; fi
+    if $dry; then exit 1; fi
     [[ -z $TOPDIR ]] && exit 2
     [[ -d $TOPDIR/$TODAY ]] && exit 0
 
@@ -72,7 +72,6 @@ OPTIONS:
  -g	    encrypt all files: rdup -Pgpg,--default-recipient-self,--encrypt
  -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
- -L	    link previous backup directory (note: this is used internally)
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
  -n	    dry run; show the actually rdup commands, without executing them
@@ -89,6 +88,7 @@ HELP
 PROGNAME=$0
 NOW=`date +%Y%m/%d`
 DAYS=8
+OPT_DRY=
 ssh=
 trans=
 pathtrans=
@@ -153,7 +153,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
                 f) force=true;;
 		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
-		n) dry=true;;
+		n) dry=true; OPT_DRY=" -n ";;
                 x) x=" -x ";;
 		L) link=true;;
                 h) usage && exit;;
@@ -235,9 +235,9 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # remote or not
 if [[ -z $ssh ]]; then
-        pipe="rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
+        pipe="rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 else
-        pipe="$ssh rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
+        pipe="$ssh rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 fi
 # path encryption
 if [[ -n $pathtrans ]]; then
@@ -249,12 +249,12 @@ cmd="rdup$E$x$atime -N $STAMP $trans $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		$PROGNAME -L +$DAYS /dev/null $BACKUPDIR
+		$PROGNAME $OPT_DRY -L +$DAYS /dev/null $BACKUPDIR
 #		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-		# You need to set your path
-                $ssh "rdup-simple -L +$DAYS /dev/null $BACKUPDIR"
+		# You need to set your path so rdup-simple can be found
+                $ssh "rdup-simple $OPT_DRY -L +$DAYS /dev/null $BACKUPDIR"
                 purpose=$?
         fi
 else
@@ -274,6 +274,5 @@ esac
 # execute the backup command
 if $dry; then
     echo "${cmd}"
-else
-    eval ${cmd}
 fi
+eval ${cmd}
