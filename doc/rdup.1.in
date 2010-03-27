@@ -83,7 +83,7 @@ if this time is NEWER than the c\-time of timestamp file the pathname is printed
 to standard output. When files are removed they are also printed to 
 standard output, but they are prefixed with a '-'. See 
 .B FORMAT
-below. The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\n%n%C"
+below. The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\\n%n%C"
 
 Note, that \fBrdup\fR also supports hashing of files, this makes it
 possible to check the local hash with the hash of the backed up file.
@@ -99,7 +99,7 @@ backups.
 
 As \fBrdup\fR doesn't backup anything, the backup policy; what you
 backup, how you backup, how often and how you restore; is all left
-to the scripts and your imagination. To kickstart your imagenation
+to the scripts and your imagination. To kick start your imagination
 see \fIrdup-tr(1)\fR and \fIrdup-up(1)\fR.
 
 .SH OPTIONS
@@ -120,10 +120,6 @@ Specify a printf-style format to use. See \fBFORMAT\fR below.
 use the c_time of file \fBtimestamp\fR as the timestamp to decide what to
 include in the incremental backup list. If \fBtimestamp\fR does not exist
 a full dump is performed. 
-.B rdup
-will create/touch \fBtimestamp\fR after it has printed the file list.
-This means if something goes wrong, you still have the original
-timestamp.
 .TP
 .B \-M timestamp
 As \-N, but look at the m_time of timestamp.
@@ -136,7 +132,7 @@ running as a normal user -- to put files in a directory which could have
 .TP
 .B \-E file
 The file named 'file' contains a list of Perl-compatible regular
-expressions (PCRE) , one per line, that \fBrdup\fR will use to 
+expressions (PCRE), one per line, that \fBrdup\fR will use to 
 \fIexclude\fR names. A '#' at the start of the line can be used to signal a comment.
 Empty lines are ignored. 
 
@@ -184,9 +180,7 @@ Only print modified/new files; entries that start with a `+'. This
 option unsets \-r.
 .TP
 .B \-v
-Be more verbose. 
-When used once, processed .nobackup files will be
-printed to standard error. When used twice each path will also be
+Be more verbose. When used each path will also be
 printed to standard error. 
 .TP
 .B \-s size
@@ -258,7 +252,7 @@ used to calculate the correct incremental dump list, this is needed
 for files that are removed, or have a different type.
 
 .SH FORMAT
-The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\n%n%C"
+The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\\n%n%C"
 .PP
 The following escape sequences are understood by \fBrdup\fR:
 
@@ -271,18 +265,16 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         'u': uid
 .BR
-	'U': username
+        'U': username
 .BR
         'g': gid
 .BR
-	'G': groupname
+        'G': groupname
 .BR
         'l': path name length
 .BR
-        's': file size, zero if directory, major,minor for devices and
-see 
+        's': file size, but see 
 .B CAVEATS 
-for soft- and hardlinks.
 .BR
         'n': path name
 .BR
@@ -416,15 +408,17 @@ The next set of examples will all make a full dump -- because of the use
 of /dev/null. See rdup-tr(1) for much more advanced examples.
 
 .SS cpio
+Backup:
 .RS
  rdup -R -F '%N\\n' /dev/null ~/bin | cpio -o -Hcrc > my-archive.cpio          
 .RE
-Restore with:
+Restore:
 .RS
  cpio -i -d -Hcrc < my-archive.cpio          
 .RE
 
 .SS tar
+Backup:
 .RS
  rdup -F '%N\\n' /dev/null ~/bin | tar c -f my-archive.tar -T - --no-recursion
 .RE
@@ -438,7 +432,6 @@ Written by Miek Gieben.
 
 .SH REPORTING BUGS
 Report bugs to <miek@miek.nl>. 
-
 
 .SH SEE ALSO
 http:/www.miek.nl/projects/rdup is the main site of rdup. Also see

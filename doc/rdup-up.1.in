@@ -24,8 +24,8 @@ used on the file. The same holds true for the groupname and gid.
 .B \-n
 Do a dry-run and do not create anything on disk.
 .TP
-.B \-t PATH
-Create PATH (ala mkdir -p) if it does not exist.
+.B \-t 
+Create DIRECTORY (ala mkdir -p) if it does not exist.
 .TP
 .B \-s N
 Strip N path components from a pathname. If the resulting pathname is
@@ -66,7 +66,7 @@ gid information to standard output.
 .TP
 .B \-T
 Show a table of contents of the rdup stream received (ala tar \-tf \-).
-With \-T the directory argument is optional. \-T unset any verbose (\-v) options.
+With \-T the directory argument is optional. \-T unsets any verbose (\-v) options.
 .TP
 .B \-h
 A short help message.
