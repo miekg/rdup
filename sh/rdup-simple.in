@@ -10,7 +10,7 @@ echo2() {
 }
 
 version() {
-    echo "rdup @PACKAGE_VERSION@"
+    echo "$PROGNAME @PACKAGE_VERSION@"
 }
 
 copy_and_link() {
