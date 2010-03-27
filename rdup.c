@@ -315,6 +315,13 @@ main(int argc, char **argv)
 				break;
 			case 'a':
 				opt_atime = TRUE;
+				/* when atime is true, every fill is touched during the
+				 * backup. To make rdup not see these files as new in
+				 * the backup, we must set the timestamp file with a
+				 * timestamp AFTER the backup.
+				 * If we do this we will not see file the are changed 
+				 * DURING the backup...
+				 */
 				break;
 			case 'c':
 				opt_tty = TRUE;
@@ -504,8 +511,8 @@ main(int argc, char **argv)
 			msg(_("Could not create timestamp file `%s\': %s"), stamp, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
-		/* and set the time when rdup was started */
-		if (utime(stamp, &ut) == -1) {
+		/* and set the time when rdup was started, only when -a was not given */
+		if (! opt_atime && utime(stamp, &ut) == -1) {
 			msg(_("Failed to reset atime: '%s\': %s"), stamp, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
