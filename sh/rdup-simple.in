@@ -88,6 +88,7 @@ HELP
 PROGNAME=$0
 NOW=`date +%Y%m/%d`
 DAYS=8
+OPT_DRY=
 ssh=
 trans=
 pathtrans=
@@ -152,7 +153,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
                 f) force=true;;
 		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
-		n) dry=true;;
+		n) dry=true; OPT_DRY=" -n ";;
                 x) x=" -x ";;
 		L) link=true;;
                 h) usage && exit;;
@@ -248,12 +249,12 @@ cmd="rdup$E$x$atime -N $STAMP $trans $LIST $DIRS | $pipe"
 if ! $force; then
 	# path is set at the top
         if [[ -z $ssh ]]; then
-		$PROGNAME -L +$DAYS /dev/null $BACKUPDIR
+		$PROGNAME $OPT_DRY -L +$DAYS /dev/null $BACKUPDIR
 #		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
-		# You need to set your path
-                $ssh "rdup-simple -L +$DAYS /dev/null $BACKUPDIR"
+		# You need to set your path so rdup-simple can be found
+                $ssh "rdup-simple $OPT_DRY -L +$DAYS /dev/null $BACKUPDIR"
                 purpose=$?
         fi
 else
