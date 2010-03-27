@@ -30,7 +30,7 @@ copy_and_link() {
     TODAY=$(date $DATESTR)
     TOPDIR="$1"
 
-    if $dry; then return 1; fi
+    if $dry; then exit 1; fi
     [[ -z $TOPDIR ]] && exit 2
     [[ -d $TOPDIR/$TODAY ]] && exit 0
 
@@ -235,9 +235,9 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # remote or not
 if [[ -z $ssh ]]; then
-        pipe="rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
+        pipe="rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 else
-        pipe="$ssh rdup-up$OPT $STRIP -t $BACKUPDIR/$NOW"
+        pipe="$ssh rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 fi
 # path encryption
 if [[ -n $pathtrans ]]; then
@@ -274,6 +274,5 @@ esac
 # execute the backup command
 if $dry; then
     echo "${cmd}"
-else
-    eval ${cmd}
 fi
+eval ${cmd}
