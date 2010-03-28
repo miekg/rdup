@@ -48,16 +48,16 @@ filelist	    DH	H
 .B \-L
 Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
 with this option you can give it a list of path names.
-Note: with list input \fBrdup-tr\fR will `stat()` the file.
+Note: with list input \fBrdup-tr\fR will `stat()` each file.
 .TP
 .B \-O
-Output format. This can be 'tar', 'cpio', 'pax', 'raw' or 'rdup'. It
+Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'. It
 defaults to 'rdup'. 
 .TP
 .B \-X \fIkey\fR
 Read the encryption key from the file key and encrypt all paths
 with Blowfish and this key and iv. After the encryption the binary data is
-converted into ascii using an URL safe (Section 4 of RFC 3548)
+converted into ASCII using an URL safe (Section 4 of RFC 3548)
 version of base64 encode.
 
 The encryption key must be on the first line and the key size
@@ -84,44 +84,57 @@ A short help.
 .SH EXAMPLES
 The following is possible
 
-    rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | \\
-    rdup-tr -O tar -Xboe | gzip > \\
-    my-home-zipped-crypted-pathcrypted-tar.gz
+.RS
+ rdup -Pgzip -Pmcrypt,-f,KEY,-c /dev/null /home | \\
+ rdup-tr -O tar -X<(echo secret) | gzip > \\
+ my-home-zipped-crypted-pathcrypted-tar.gz
+.RE
 
 That is: all files under /home are gzipped and encrypted
 on a \fIper\fR file basis (first line). Further more, all pathnames are
-Blowfish encrypted (second line). This is put in a tar file, which is then
+Blowfish encrypted (second line) with the key 'secret'.
+This is put in a tar file, which is then
 compressed, resulting in the final output (final line).
 
 Creating a compressed and encrypted tar archive out of a full
 rdup dump might be done as follows
 
-    rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | \\
-    rdup-tr -O tar > my-home-zipped-and-crypted.tar
+.RS
+ rdup -Pgzip -Pmcrypt,-f,KEY,-c /dev/null /home | \\
+ rdup-tr -O tar > my-home-zipped-and-crypted.tar
+.RE
 
 Or even pack and unpack it on the fly
 
-    rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | rdup-tr -Otar | \\
-    ssh user@remotehost tar xvCf /tmp -
+.RS
+ rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | rdup-tr -Otar | \\
+ ssh user@remotehost tar xvCf /tmp -
+.RE
 
 Or encryption with openssl
 
-    rdup -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
+.RS
+rdup -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
+.RE
 
 Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again
 
-    rdup -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home | \\
-    gzip > my_compressed_encrypted_rdup_archive.gz
+.RS
+ rdup -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home | \\
+ gzip > my_compressed_encrypted_rdup_archive.gz
+.RE
 
 Recreating the original \fBrdup\fR output, which can be fed to
 \fBrdup-up\fR.
 
-    gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
-    rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d >\\
-    my_rdup_archive
+.RS
+ gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
+ rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d >\\
+ my_rdup_archive
 
-    rdup-up < my_rdup_archive -t /tmp/restore
+ rdup-up < my_rdup_archive -t /tmp/restore
+.RE
 
 Notice the reversal of the \-P options.
 

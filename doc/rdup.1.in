@@ -373,7 +373,7 @@ The PATH name is generated from the link's name and its target. A symlink like
 .RE
 
 is printed as '/home/bin/blaat -> /home/bin/bliep'. The PATH_SIZE
-is modified accordingly, where ' -> ' (4 characters) is also counted.
+is modified accordingly, where '\fB -> \fR' (4 characters) is also counted.
 The FILE_SIZE is not needed for soft- or hardlinks, so it is set the
 length of the link's name -- the part left of the ' ->', in this case the 
 length of '/home/bin/blaat'.
@@ -405,26 +405,50 @@ expression can not be compiled or if a signal is received.
 
 .SH EXAMPLES
 The next set of examples will all make a full dump -- because of the use
-of /dev/null. See rdup-tr(1) for much more advanced examples.
+of /dev/null. See rdup-tr(1) for more advanced examples.
+
+.SS rdup (mirroring)
+Backup:
+.RS
+ rdup /dev/null ~/bin | rdup-up -t /shared/backup          
+.RE
+Restore:
+.RS
+rdup /dev/null /shared/backup | rdup-up -t /tmp/restore
+.RE
+or
+.RS
+cp -rap /shared/backup /tmp/restore
+.RE
+
+.SS rdup (archiving)
+Backup:
+.RS
+rdup /dev/null ~/bin > my-archive.rdup
+.RE
+Restore:
+.RS
+rdup-up -t /tmp/restore < my-archive.rdup
+.RE
 
 .SS cpio
 Backup:
 .RS
- rdup -R -F '%N\\n' /dev/null ~/bin | cpio -o -Hcrc > my-archive.cpio          
+rdup -R -F '%N\\n' /dev/null ~/bin | cpio -o -Hcrc > my-archive.cpio          
 .RE
 Restore:
 .RS
- cpio -i -d -Hcrc < my-archive.cpio          
+cpio -i -d -Hcrc < my-archive.cpio          
 .RE
 
 .SS tar
 Backup:
 .RS
- rdup -F '%N\\n' /dev/null ~/bin | tar c -f my-archive.tar -T - --no-recursion
+rdup -F '%N\\n' /dev/null ~/bin | tar c -f my-archive.tar -T - --no-recursion
 .RE
 Restore:
 .RS
- tar x -f my-archive.tar
+tar x -f my-archive.tar
 .RE
 
 .SH AUTHOR
