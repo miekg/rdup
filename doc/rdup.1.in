@@ -298,7 +298,7 @@ format string.
 
 Any file content is written in a block/chunk based manner. The
 last block is signaled with a null block. A block start entry is 
-ascii and is formatted as follows: VVBLOCKBBBBB\\n .
+ASCII and is formatted as follows: VVBLOCKBBBBB\\n .
 Where 'VV' is the version, currently at '01', then the literal string 'BLOCK'
 and then the amount of bytes (BBBBB), typical '08192'. And then a newline.
 This look like this:
@@ -321,8 +321,8 @@ MODE DEV INODE LINK UID GID PATH_SIZE FILE_SIZE PATH
 .PP
 Where MODE is the st_mode from stat(2), DEV is the dev id as returned by
 the stat call and INODE is the inode number - \fBrdup\fR needs this info
-to decide if a directory is renamed. LINK is equal to 'h' for hardlinks,
- 'l' for symlinks and otherwise it is '*'. 
+to decide if a directory is renamed. LINK is equal 
+to 'h' for hardlinks, 'l' for symlinks and otherwise it is '*'. 
 UID and GID are the numeric user and group id of
 the file. PATH_SIZE is the length of PATH. FILE_SIZE the file size.
 And finally PATH is the path of the file. 
