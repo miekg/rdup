@@ -1,9 +1,8 @@
 xx Yyy 2010: 1.1.4 Miek Gieben <rdup@miek.nl>
-    * re-touch timestamp after the backup is made
-      when -a is used. Otherwise it is before the
-      the backup
-    * spring cleaning, remove/clean BUGBUGs and
-      deadcode
+    * re-touch timestamp after the backup is made when -a is used. 
+      Otherwise it is done before the the backup
+    * spring cleaning, remove/clean BUGBUGs and some dead code and
+      polish the documentation a bit
 
 
 22 Mar 2010: 1.1.3 Miek Gieben <rdup@miek.nl>
