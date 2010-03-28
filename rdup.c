@@ -315,11 +315,11 @@ main(int argc, char **argv)
 				break;
 			case 'a':
 				opt_atime = TRUE;
-				/* when atime is true, every fill is touched during the
-				 * backup. To make rdup not see these files as new in
-				 * the backup, we must set the timestamp file with a
-				 * timestamp AFTER the backup.
-				 * If we do this we will not see file the are changed 
+				/* when atime is true, every file is touched during the
+				 * backup (the c_time changes). To make rdup not see these 
+				 * files as new in the backup, we must set the timestamp 
+				 * file with a timestamp AFTER the backup.
+				 * If we do this we will not see file the are changed
 				 * DURING the backup...
 				 */
 				break;
