@@ -6,11 +6,11 @@
 # rewritten for rdup-up and rdup-tr
 
 echo2() {
-    echo "** $PROGNAME: $@" >&2
+    echo "** $(basename $PROGNAME): $@" >&2
 }
 
 version() {
-    echo "$PROGNAME @PACKAGE_VERSION@"
+    echo "$(basename $PROGNAME) @PACKAGE_VERSION@"
 }
 
 copy_and_link() {
@@ -158,7 +158,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
 		L) link=true;;
                 h) usage && exit;;
                 V) version && exit;;
-                \?) echo2 "Invalid option: $OPTARG"; exit 1;;
+                \?) echo2 "Invalid option seen"; exit 1;;
         esac
 done
 shift $((OPTIND - 1))
