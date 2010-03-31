@@ -11,7 +11,7 @@
 [\fIDIR/FILE]...\fR
 
 .SH DESCRIPTION
-\fBrdup\fR is a utility inspired by rsync and the plan9 way of doing
+\fBrdup\fR is a utility inspired by rsync and the Plan9 way of doing
 backups. \fBrdup\fR itself does not backup anything. It only prints
 a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
@@ -167,7 +167,7 @@ trailing slash.
 Restore the original access times on files and directories.
 .TP
 .B \-n
-Don't honor .nobackup files. Normally if such a file is found the
+Don't honor \fI.nobackup\fR files. Normally if such a file is found the
 directory and all files containing it, are not 
 printed to standard output. Now they are.
 .TP
@@ -394,7 +394,7 @@ only separated with a comma `,'.
 
 .SS Symlinks
 You will probably think \fBrdup\fR will descend into the directory the
-symlink points to. This is not what actually happens, \fBrdup\fR will
+symbolic link points to. This is not what actually happens, \fBrdup\fR will
 print any directories leading up to the symlink and will \fInot\fR
 descend into the directory. GNU tar works the same.
 

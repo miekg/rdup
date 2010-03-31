@@ -17,7 +17,7 @@ to perform a backup.
 Currently \fBrdup\fR consists out of three basic utilities:
 .TP
 .B rdup
-With \fBrdup\fR you create the filelist on which later programs in the
+With \fBrdup\fR you create the file list on which later programs in the
 pipeline can work. The default output format also includes the files'
 content. \fBrdup\fR can be seen as a tar replacement in this respect,
 but \fBrdup\fR also allows for all kinds of transformations of
@@ -40,7 +40,7 @@ With \fBrdup-up\fR you can update an existing directory structure with the
 updates as described by rdup. 
 
 \fBrdup-up\fR reads \fBrdup\fR input and will create the files,
-symlinks, hardlinks and directories (and sockets, pipes and devices)
+symbolic links, hard links and directories (and sockets, pipes and devices)
 in the file system. See rdup-up(1) for more information.
 
 .PP
@@ -59,10 +59,6 @@ is that the transformation is reversed when you restore.
 .TP
 .B Note 2: 
 The use of \fBrdup-tr\fR is optional.
-
-.PP
-With these three tools you can create your own backup solution, see
-\fBSNAPSHOT BACKUPS\fR later in this document.
 
 .SH BACKUPS AND RESTORES
 For \fBrdup\fR there is \fIno\fR difference between backups and
@@ -121,7 +117,7 @@ case $RET in
 	exit 1
 	;;
     1)
-	# full dump, remove filelist and timestamp file
+	# full dump, remove file-list and time-stamp file
 	rm $LIST $STAMP
 	;;
     0)
@@ -129,7 +125,7 @@ case $RET in
 	# do nothing here
 	;;
 esac
-# this is the place where you want to modify the commandline
+# this is the place where you want to modify the command line
 # right now, nothing is translated we just use 'cat'
 rdup -N $STAMP -Pcat $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
 
@@ -138,6 +134,53 @@ rdup -N $STAMP -Pcat $LIST $DIR | rdup-up $BACKUP/$HOSTNAME/$TODAY
 #	rdup-up $BACKUP/$HOSTNAME/$TODAY
 .fi
 .RE
+
+.SH LOCAL BACKUPS
+With \fBrdup-simple\fR you can easily create backups.
+Backing up my home directory to a backup directory:
+
+.RS
+rdup-simple ~ /vol/backup/$HOSTNAME
+.RE
+
+This will create a backup in /vol/backup/$HOSTNAME/200705/15. So
+each day will have its own directory. Multiple sources are allowed, so:
+
+.RS
+rdup-simple ~ /etc/ /var/lib /vol/backup/$HOSTNAME
+.RE
+
+Will backup your home directory, /etc and /var/lib to the backup
+location. Also if you need to compress your backup, simple add
+a '-z' switch:
+
+.RS
+rdup-simple -z ~ /etc/ /var/lib /vol/backup/$HOSTNAME
+.RE
+
+.SH REMOTE BACKUPS
+For a remote backup to work, both the sending machine and the receiving
+machine must have \fBrdup\fR installed. The currently implemented
+protocol is \fIssh\fR.
+
+Dumping my homedir to the remote server:
+
+.RS
+rdup-simple ~ ssh://miekg@remote/vol/backup/$HOSTNAME
+.RE
+
+The syntax is almost identical, only the destination starts with
+the magic string 'ssh://'. Compression and encryption are just
+as easily enabled as with a local backup, just add '-z' and/or
+a '-k keyfile' argument:
+
+.RS
+rdup-simple -z -k 'secret-file' ~ ssh://miekg@remote/vol/backup/$HOSTNAME
+.RE
+
+Remember though, that because of these advanced features (compression,
+encryption, etc, ...) the network transfer can never be as efficient as
+\fBrsync\fR.
 
 .SH ALSO SEE
 rdup(1), rdup-tr(1), rdup-up(1) and http://www.miek.nl/projects/rdup/

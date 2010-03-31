@@ -7,8 +7,7 @@
 [\fIOPTION\fR]...
 
 .SH DESCRIPTION
-Transform rdup output into \fIsomething else\fR. Where \fIsomething
-else\fR can
+Transform rdup output into \fIsomething else\fR. Where \fIsomething else\fR can
 be a tar, cpio, pax archive or another rdup stream.
 
 The rdup archive must be given on \fBrdup-tr\fR's standard input.
