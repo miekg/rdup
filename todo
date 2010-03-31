@@ -2,6 +2,9 @@ TODO
 
 rdup:
     update manpage
+    make metachanges more efficient - now it sends the entire file again
+    (this needs a %P change + - and a m - for meta, only send the new
+    meta data - rdup-{up,tr} need to grok this too)
 
 rdup-tr:
     with tar/pax output hardlinks must come last
