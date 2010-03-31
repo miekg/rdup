@@ -19,13 +19,14 @@ mkpath(const char *s, mode_t mode)
 	msgd(__func__, __LINE__, _("Path ele '%s\'"), s);
 #endif /* DEBUG */
  
-        path = g_strdup(s);
-        q = g_strdup(s);
+        if ((path = g_strdup(s)) == NULL) return -1;
+        if ((q = g_strdup(s)) == NULL) return -1;
  
         if ((r = dirname(q)) == NULL)
                 goto out;
  
-	up = g_strdup(q);
+	if ( (up = g_strdup(q)) == NULL) return -1;
+
  
 	if ((mkpath(up, mode) == -1) && (errno != EEXIST)) {
 		msgd(__func__, __LINE__, _("Failed or exists '%s\': %s"), up, strerror(errno));
