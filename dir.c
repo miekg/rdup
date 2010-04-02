@@ -24,7 +24,7 @@ dir_write(gchar *p)
 
 	/* make it writable, assume we are the OWNER */
 	if (chmod(p, s->st_mode | S_IWUSR) == -1) {
-		msgd(__func__, __LINE__,_("Failed to restore permissions `%s\': %s"), p, strerror(errno));
+		msgd(__func__, __LINE__,_("Failed to make directory writeable `%s\': %s"), p, strerror(errno));
 	}
 	return s;
 }

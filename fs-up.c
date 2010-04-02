@@ -177,6 +177,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	FILE *out = NULL;
 	char *buf; 
+	gchar *parent;
 	size_t  bytes;
 	gboolean ok = TRUE;
 	gboolean old_dry = opt_dry;
@@ -199,12 +200,13 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	}
 	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
 		if (errno == EACCES) {
-			st = dir_write(dir_parent(e->f_name));
+			parent = dir_parent(e->f_name);
+			st = dir_write(parent);
 			if (!(out = fopen(e->f_name, "w"))) {
 				msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 				ok = FALSE;
 			}
-			dir_restore(dir_parent(e->f_name), st);
+			dir_restore(parent, st);
 		} else {
 			msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;

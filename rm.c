@@ -92,8 +92,8 @@ rm(gchar *p)
 					g_free(q);
 					return FALSE;
 				}
-				g_free(q);
 				dir_restore(parent, st2);
+				g_free(q);
 				return TRUE;
 
 			case EPERM:
