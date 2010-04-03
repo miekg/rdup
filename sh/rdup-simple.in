@@ -68,13 +68,13 @@ DEST - where to store the backup. This can be:
 	directory
 
 OPTIONS:
- -k KEYFILE encrypt all files: rdup -Pmcrypt,-fKEYFILE
+ -k KEYFILE encrypt all files: rdup -Pmcrypt,-f,KEYFILE
  -g	    encrypt all files: rdup -Pgpg,--default-recipient-self,--encrypt
  -z         compress all files: rdup -Pgzip
  -E FILE    use FILE as an exclude list
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
- -n	    dry run; show the actually rdup commands, without executing them
+ -n	    dry run; show the actually rdup command and pass -n to rdup
  -a	    reset atime
  -x         pass -x to rdup
  -s NUM	    pass -s NUM to rdup-up (strip NUM leading path components)
