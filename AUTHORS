@@ -3,19 +3,19 @@ Author:
 Miek Gieben
 Tom Hendrikx
 
-Ideas/Patches/Testing:
+Ideas/Patches/Testing 
 
-Charlie Kester (FreeBSD maintainer)
-Boris Goldowsky
-Rado Hrabcak
-Freek Kauffmann
 Aaron Bader
-Ghostcorps (at) gmail.com
-Timur Vafin
-Erland Isaksson
+Boris Goldowsky
 Bram de Kruijff - testing/feedback
-Mark J Hewitt - original perl scripts
-Robert Haskins - Solaris testing/feedback
+Charlie Kester 
+Erland Isaksson
 Fabio Rossi
+Freek Kauffmann
+Ghostcorps (at) gmail.com
 Jan Spakula
 John Goerzen
+Mark J Hewitt - original perl scripts
+Rado Hrabcak
+Robert Haskins - Solaris testing/feedback
+Timur Vafin
