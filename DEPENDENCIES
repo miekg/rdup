@@ -9,15 +9,16 @@ o libarchive (Create tar/cpio/etc archive - used in rdup-tr)
 
 If libarchive is not found rdup-tr is not built.
 
-To build:
-o automake
-o autoconf
-o make 
+To build from git:
+autoconf && ./configure && make && make install
 
-To run the testsuite
-o make check
+from tar.bz2:
+./configure && make && make install
+
+To run the testsuite:
+make check
 
 DejaGNU is used for the testsuite.
 
 Some small shell scripts are included in the sh/ directory
-they depend on bash and GNU date and GNU cp.
+they depend on bash, GNU date and GNU cp.

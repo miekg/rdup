@@ -47,20 +47,18 @@ rdup is a utility inspired by rsync and the plan9 way of doing backups.
 rdup it self does not backup anything, it only print a list of absolute
 filenames to standard output. Auxiliary scripts are needed that act on
 this list and implement the backup strategy.  This way rdup can be kept
-lean and mean. Currently the (stripped) rdup executable measures 31 KB (on
-i386) and I don't expect that to increase much.
+lean and mean. Currently the (stripped) rdup executable measures 26 KB (on
+i386) and I don't expect that to increase much (maybe it will even get
+smaller).
 
 The manual page explains rdup's options and usage, see rdup(1). For an
-introduction into making backups see rdup-backups(1).
+introduction into making backups see rdup-backups(1). Helper tools
+that are included are rdup-tr (see rdup-tr(1)) and rdup-up (see
+rdup-up(1)). All manual pages include examples to get you started.
 
-The file list as printed starts with the root of the file dump and then
-descends into directories. This way all top level directories can be
-created in sequence. If you process the files in the same order no magic
-is needed to create directories that otherwise might be missing. 
-With the -R flag the order is reversed, a script must then create
-intermediate directories - but it can set the permissions of these
-later on. This allows directories with 600 permissions to contain
-files.
+A small script 'rdup-simple' is also included, this makes starting
+with rdup even more easy: rdup-simple ~ /backup. Will create a
+backup of your homedir in /backup.
 
 4/ COPYRIGHT
 
@@ -71,4 +69,4 @@ otherwise in the file itself.
 
 5/ LICENSE
 
-GPL, version 3, See the file LICENSE.
+GPL, version 3, see the file LICENSE.
