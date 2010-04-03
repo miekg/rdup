@@ -11,7 +11,7 @@ require 'fileutils'
 
 options = { :limit => 30 }
 OptionParser.new do |opts|
-  opts.on '-l', '--limit',
+  opts.on '-l', '--limit limit',
     "set archive limit (default: #{options[:limit]})" do |v|
     options[:limit] = v.to_i
   end
