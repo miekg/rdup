@@ -13,7 +13,6 @@ usage_tr(FILE *f)
         fprintf(f, _("USAGE: %s [OPTION]... \n"), PROGNAME);
 	fputs( _("\
 Translate rdup output into something else.\n\
-The input must be rdup's default ouput\n\
 \n\
 \n\
     OPTIONS:\n\
@@ -22,7 +21,7 @@ The input must be rdup's default ouput\n\
 	-Y FILE\t\tdecrypt all paths with AES and the key from FILE\n\
 	-h\t\tthis help\n\
 	-V\t\tprint version\n\
-        -O FMT\t\toutput format: pax, cpio, tar or rdup\n\
+        -O FMT\t\toutput format: pax, cpio, tar or rdup* (* = default)\n\
 	\t\trdup uses format: \"%p%T %b %u %g %l %s\\n%n%C\"\n\
 	-L\t\tset input format to a list of pathnames\n\
 	-v\t\tbe more verbose and print processed files to stderr\n\

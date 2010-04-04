@@ -10,7 +10,7 @@ extern char *PROGNAME;
 void
 usage(FILE *f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... FILELIST [ DIR|FILE ]...\n"), PROGNAME);
+        fprintf(f, _("USAGE: %s [OPTION]... FILELIST  [ DIR | FILE ]...\n"), PROGNAME);
 	fputs( _("\
 Generate a full or incremental file list. This list can be used to\n\
 implement a (incremental) backup scheme.\n\
@@ -29,8 +29,7 @@ implement a (incremental) backup scheme.\n\
 	-E FILE\t\tuse FILE as an exclude list\n\
 	-P CMD,opt0,...,opt6\n\
 	\t\tfilter file contents through CMD\n\
-	\t\tthis may be repeated, output will be filtered\n\
-	\t\tthrough all commands\n\
+	\t\tmay be repeated, output will be filtered through all commands\n\
         -V\t\tprint version\n"), f);
 	fputs( _("\
         -a\t\treset atime\n\
