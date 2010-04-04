@@ -1,4 +1,4 @@
-/* 
+/*
  * lookup the user/group names associated with the uid/gid
  * Use hashes to speed things up
  */
@@ -25,7 +25,7 @@ lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
 		return 0;
 
 	uid_tmp = (uid_t*)g_hash_table_lookup(u, user);
-	if (uid_tmp) 
+	if (uid_tmp)
 		return *uid_tmp;
 
 	p = getpwnam(user);
@@ -78,7 +78,7 @@ lookup_user(GHashTable *u, uid_t uid)
 	struct passwd *p;
 
 	n = (gchar *)g_hash_table_lookup(u, (gpointer)&uid);
-	if (n) 
+	if (n)
 		return n;
 
 	/* if nothing found also add to hash? */
@@ -102,7 +102,7 @@ lookup_group(GHashTable *g, gid_t gid)
 	struct group *p;
 
 	n = (gchar *)g_hash_table_lookup(g, (gpointer)&gid);
-	if (n) 
+	if (n)
 		return n;
 
 	p = getgrgid(gid);

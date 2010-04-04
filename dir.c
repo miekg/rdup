@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
  * make a dir writable and later remove that
@@ -58,7 +58,7 @@ dir_parent(gchar *p)
 		return p;
 
 	copy = g_strdup(p);
-	n = strrchr(copy, '/'); 
+	n = strrchr(copy, '/');
 	if (n) {
 		*(n+1) = '\0';
 		p2 = g_strdup(copy);

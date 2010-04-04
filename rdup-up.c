@@ -1,7 +1,7 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
- * rdup-up -- update an directory tree with 
+ * rdup-up -- update an directory tree with
  * and rdup archive
  */
 
@@ -53,7 +53,7 @@ update(char *path)
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
 		n = strrchr(buf, '\n');
-		if (n) 
+		if (n)
 			*n = '\0';
 
 		if (!(rdup_entry = parse_entry(buf, line))) {
@@ -81,7 +81,7 @@ update(char *path)
 		if (S_ISLNK(rdup_entry->f_mode) || rdup_entry->f_lnk) {
 			// filesize is spot where to cut
 			rdup_entry->f_name[rdup_entry->f_size] = '\0';
-			rdup_entry->f_target = rdup_entry->f_name + 
+			rdup_entry->f_target = rdup_entry->f_name +
 				rdup_entry->f_size + 4;
 		} else {
 			rdup_entry->f_target = NULL;
@@ -91,7 +91,7 @@ update(char *path)
 		if (opt_strip)
 			strippath(rdup_entry);
 
-		if (opt_path_strip) 
+		if (opt_path_strip)
 			strippathname(rdup_entry);
 
 		if (!rdup_entry->f_name)
@@ -232,7 +232,7 @@ main(int argc, char **argv)
 			msg(_("Destination directory is required"));
 			exit(EXIT_FAILURE);
 		}
-		if (!g_path_is_absolute(argv[0])) 
+		if (!g_path_is_absolute(argv[0]))
 			path = abspath(g_strdup_printf("%s/%s", pwd, argv[0]));
 		else
 			path = abspath(argv[0]);

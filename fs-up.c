@@ -1,7 +1,7 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
- * rdup-up -- update an directory tree with 
+ * rdup-up -- update an directory tree with
  * and rdup archive
  *
  * File related functions
@@ -28,7 +28,7 @@ mk_time(struct rdup *e)
 	/* we don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
-	if (utime(e->f_name, &ut) == -1) 
+	if (utime(e->f_name, &ut) == -1)
 		msgd(__func__, __LINE__,_("Failed to set mtime '%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
@@ -42,20 +42,20 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
-		if (lchown(e->f_name, u, g) == -1) 
+		if (lchown(e->f_name, u, g) == -1)
 			msgd(__func__, __LINE__,_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }
 
 static gboolean
-mk_mode(struct rdup *e) 
+mk_mode(struct rdup *e)
 {
 	chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
 
 static gboolean
-mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
+mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	mk_mode(e);
 	mk_chown(e, uidhash, gidhash);
@@ -64,7 +64,7 @@ mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
+mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	gchar *parent;
 	struct stat *st;
@@ -97,7 +97,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
+mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	gchar *parent;
 	struct stat *st;
@@ -153,7 +153,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
-				} 
+				}
 				dir_restore(parent, st);
 				g_free(parent);
 			} else {
@@ -177,14 +177,14 @@ static gboolean
 mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	FILE *out = NULL;
-	char *buf; 
+	char *buf;
 	gchar *parent;
 	size_t  bytes;
 	gboolean ok = TRUE;
 	gboolean old_dry = opt_dry;
 	struct stat *st;
 
-	/* with opt_dry we can't just return TRUE; as we may 
+	/* with opt_dry we can't just return TRUE; as we may
 	 * need to suck in the file's content - which is thrown
 	 * away in that case */
 
@@ -212,7 +212,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;
 		}
-	} 
+	}
 
 	/* we need to read the input to not upset
 	 * the flow into rdup-up, but we are not
@@ -238,7 +238,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	}
 	g_free(buf);
 	if (ok && out)
-		fclose(out); 
+		fclose(out);
 
 	if (ok && !opt_dry)
 		mk_meta(e, uidhash, gidhash);
@@ -251,7 +251,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
+mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	struct stat *s;
 	struct stat st;
@@ -280,7 +280,7 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			msgd(__func__, __LINE__, _("EACCES for `%s\'"), parent);
 #endif /* DEBUG */
 			s = dir_write(parent);
-			if (!s) 
+			if (!s)
 				msgd(__func__, __LINE__, _("Failed to make parent writable"));
 			
 			if (mkdir(e->f_name, e->f_mode) == -1) {
@@ -303,20 +303,20 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 /* make (or delete) an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
+mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
 	if (opt_verbose == 1  && e->f_name) {
-		if (S_ISLNK(e->f_mode) || e->f_lnk) 
+		if (S_ISLNK(e->f_mode) || e->f_lnk)
 			fprintf(stdout, "%s -> %s\n", e->f_name, e->f_target);
-		else 
+		else
 			fprintf(stdout, "%s\n", e->f_name);
 	
 	}
-	if (opt_table) 
+	if (opt_table)
 		rdup_write_table(e, stdout);
- 
+
 	if (opt_verbose == 2 && e->f_name)
-		fprintf(stdout, "%c %d %d %s\n", 
+		fprintf(stdout, "%c %d %d %s\n",
 				e->plusmin == PLUS ? '+' : '-',
 				e->f_uid, e->f_gid, e->f_name);
 
@@ -344,7 +344,7 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 				return mk_dir(e, uidhash, gidhash);	
 
 			/* First sym and hardlinks and then regular files */
-			if (S_ISLNK(e->f_mode) || e->f_lnk) 
+			if (S_ISLNK(e->f_mode) || e->f_lnk)
 				return mk_link(e, p, uidhash, gidhash);
 
 			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
@@ -369,7 +369,7 @@ mk_hlink(GSList *h)
 	if (opt_dry)
 		return TRUE;
 
-	for (p = g_slist_nth(h, 0); p; p = p->next) { 
+	for (p = g_slist_nth(h, 0); p; p = p->next) {
 		e = (struct rdup *)p->data;
 		if (link(e->f_target, e->f_name) == -1) {
 			if (errno == EACCES) {

@@ -33,7 +33,7 @@ int sha1_stream(FILE *stream, void *digest);
  * calculates a files sha1 sum
  */
 static gboolean
-sha1(FILE *fp, char *filename) 
+sha1(FILE *fp, char *filename)
 {
 	unsigned char digest[SHA1_DIGEST_SIZE];
 	gint i;
@@ -170,7 +170,7 @@ entry_cat_data(FILE *fp, struct rdup *e)
 		if (!cat(fp, e->f_name))
 			exit(EXIT_FAILURE);
 		
-		if (opt_atime) 
+		if (opt_atime)
 			if (utime(e->f_name, &ut) == -1)
 				msg(_("Failed to reset atime: '%s\': %s"), e->f_name, strerror(errno));
 		return;
@@ -239,7 +239,7 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 				fprintf(stderr, "[%s] [%s]\n", e->f_name, e->f_target);
 				fprintf(stderr, "%d %d\n", (int)e->f_name_size, strlen(e->f_target));
-				fprintf(out, "%ld", (unsigned long)e->f_name_size + 4 + 
+				fprintf(out, "%ld", (unsigned long)e->f_name_size + 4 +
 						(unsigned long)strlen(e->f_target));
 			} else
 #endif
@@ -250,7 +250,7 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			fprintf(out, "%ld", (unsigned long)e->f_uid);
 			break;
 		case 'U':
-			if (!e->f_user) 
+			if (!e->f_user)
 				fprintf(out, "-");
 			else
 				fprintf(out, "%s", e->f_user);
@@ -259,7 +259,7 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			fprintf(out, "%ld", (unsigned long)e->f_gid);
 			break;
 		case 'G':
-			if (!e->f_group) 
+			if (!e->f_group)
 				fprintf(out, "-");
 			else
 				fprintf(out, "%s", e->f_group);
@@ -345,7 +345,7 @@ entry_print(FILE *out, guint pm, struct rdup *e, char *fmt)
 		fputs("** ", stderr);
 		fputc(pm == PLUS ? '+' : '-', stderr);
 		fprintf(stderr, " %s", e->f_name);
-		if (S_ISLNK(e->f_mode) || e->f_lnk == 1) 
+		if (S_ISLNK(e->f_mode) || e->f_lnk == 1)
 			fprintf(stderr, " -> %s\n", e->f_target);
 		else
 			fputs("\n", stderr);
@@ -428,10 +428,10 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (S_ISDIR(e->f_mode)) /* the same as in the normal output */
 		file_size = 0;
 
-	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %ld %ld %s", (long int)e->f_mode, 
-			(long int)e->f_dev, 
-			(long int)e->f_ino, linktype, 
-			(long int)e->f_uid, 
+	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %ld %ld %s", (long int)e->f_mode,
+			(long int)e->f_dev,
+			(long int)e->f_ino, linktype,
+			(long int)e->f_uid,
 			(long int)e->f_gid,
 			(long int)name_size, (long int)file_size, n);
 	fputc('\n', (FILE*)fp);
@@ -451,7 +451,7 @@ gfunc_backup(gpointer data, gpointer value,
 		signal_abort(sig);
 
 	/* .nobackup seen, don't print it */
-	if (value == NO_PRINT) 
+	if (value == NO_PRINT)
 		return FALSE;
 
 	if (S_ISDIR(((struct rdup*)data)->f_mode)) {
@@ -470,9 +470,9 @@ gfunc_backup(gpointer data, gpointer value,
 				if (((struct rdup*)data)->f_ctime >= opt_timestamp) {
 					entry_print(stdout, PLUS, (struct rdup*)data, opt_format);
 #if DEBUG
-				msgd(__func__, __LINE__,"%s %ld >= %ld diff %ld\n", 
+				msgd(__func__, __LINE__,"%s %ld >= %ld diff %ld\n",
 						((struct rdup*)data)->f_name,
-						(long int)((struct rdup*)data)->f_ctime, 
+						(long int)((struct rdup*)data)->f_ctime,
 						(long int)opt_timestamp,
 						(long int)opt_timestamp -
 						(long int)((struct rdup*)data)->f_ctime);
@@ -488,7 +488,7 @@ gfunc_backup(gpointer data, gpointer value,
  * write out the list of removed items
  */
 gboolean
-gfunc_remove(gpointer data, gpointer value, 
+gfunc_remove(gpointer data, gpointer value,
 		__attribute__((unused)) gpointer usr)
 
 {
@@ -508,14 +508,14 @@ gfunc_remove(gpointer data, gpointer value,
  * Print out the list of new item
  */
 gboolean
-gfunc_new(gpointer data, __attribute__((unused)) gpointer value, 
+gfunc_new(gpointer data, __attribute__((unused)) gpointer value,
 		__attribute__((unused)) gpointer usr)
 {
 	if (sig != 0)
 		signal_abort(sig);
 
 	/* it is perfectly possibly to have these here */
-	if (value == NO_PRINT) 
+	if (value == NO_PRINT)
 		return FALSE;
 
 	if (opt_size != 0 && S_ISREG(((struct rdup*)data)->f_mode) &&
@@ -547,16 +547,16 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 	if (e == 0) {
 		if (ae->f_dev != be->f_dev)
 			return -1;
-		if (ae->f_ino != be->f_ino) 
+		if (ae->f_ino != be->f_ino)
 			return -2;
 
 		/* if we are looking at a directory and only the mode has changed
 		 * don't let rdup remove the entire directory */
-		if (S_ISDIR(ae->f_mode) && S_ISDIR(be->f_mode) && 
+		if (S_ISDIR(ae->f_mode) && S_ISDIR(be->f_mode) &&
 				((ae->f_mode & ~S_IFMT) != (be->f_mode & ~S_IFMT)) )
 			return 0;
 
-		if (ae->f_mode != be->f_mode) 
+		if (ae->f_mode != be->f_mode)
 			return -3;
 	}
 	return e;
@@ -572,7 +572,7 @@ gfunc_remove_path(gpointer data, gpointer __attribute__((unused)) value, gpointe
 		signal_abort(sig);
 
 	if (strncmp(((struct rdup*)data)->f_name,
-				((struct remove_path *)r)->path, 
+				((struct remove_path *)r)->path,
 				((struct remove_path *)r)->len) == 0) {
 
 		/* don't remove the directory itself */
@@ -603,7 +603,7 @@ gfunc_subtract(gpointer data, gpointer value, gpointer diff)
 
 	v = g_tree_lookup((GTree*)((struct subtract*)diff)->b, data);
 
-	if (!v) 
+	if (!v)
 		g_tree_insert(((struct subtract*)diff)->d, data, value);
 
 	return FALSE;
@@ -620,7 +620,7 @@ gfunc_regexp(GSList *l, char *n, size_t len)
         pcre *P;
 	int ovector[REG_VECTOR];
 
-        for (k = g_slist_nth(l, 0); k; k = k->next) { 
+        for (k = g_slist_nth(l, 0); k; k = k->next) {
 		if (sig != 0)
 			signal_abort(sig);
 
@@ -638,8 +638,8 @@ gfunc_regexp(GSList *l, char *n, size_t len)
  * put an element of the tree in a double linked list
  */
 gboolean
-gfunc_tree2list(gpointer data, gpointer value, 
-		__attribute__((unused)) gpointer l)  
+gfunc_tree2list(gpointer data, gpointer value,
+		__attribute__((unused)) gpointer l)
 {
         if (sig != 0)
                 signal_abort(sig);

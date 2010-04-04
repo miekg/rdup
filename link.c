@@ -32,7 +32,7 @@ hlink(GHashTable *t, struct rdup *e)
 gchar *
 slink(struct rdup *e)
 {
-	char buf[BUFSIZE + 1]; 
+	char buf[BUFSIZE + 1];
 	ssize_t i;
 
 	if ((i = readlink(e->f_name, buf, BUFSIZE)) == -1) {

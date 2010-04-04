@@ -2,7 +2,7 @@
 
 /* strip n components from pathname
  * sets path to  NULL when the path didn't contain enough
- * components to begin with 
+ * components to begin with
  *
  * Symlinks are handled as follows:
  * with path1 -> path2, only path1 is modified (shortened)
@@ -19,7 +19,7 @@ extern gchar *opt_path_strip;
 extern guint opt_path_strip_len;
 
 /* Count the number of slashes in a string (=path) */
-static guint pathlabel(struct rdup *e) 
+static guint pathlabel(struct rdup *e)
 {
 	gint i, j = 0;
 
@@ -91,7 +91,7 @@ strippathname(struct rdup *e)
 		}
 /*	} */
 
-	if (g_str_has_prefix(e->f_name, opt_path_strip) == FALSE) 
+	if (g_str_has_prefix(e->f_name, opt_path_strip) == FALSE)
 		return;
 
 	len = strlen(opt_path_strip) - 1; /* -1: discard the trailing slash */

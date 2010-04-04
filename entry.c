@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * parse_entry.c
  * parse an standard rdup entry and return a
@@ -34,7 +34,7 @@ extern gchar *opt_decrypt_key;
  * the-end
  */
 struct rdup *
-parse_entry(char *buf, size_t l) 
+parse_entry(char *buf, size_t l)
 {
 	struct rdup *e;
 	struct stat *s;
@@ -66,7 +66,7 @@ parse_entry(char *buf, size_t l)
 			e->f_mtime     = s->st_mtime;
 			e->f_atime     = s->st_atime;
 
-			/* you will loose hardlink information here 
+			/* you will loose hardlink information here
 			 * as 'stat' cannot check this */
 			if (S_ISLNK(e->f_mode)) 	
 				e->f_target = slink(e);
@@ -198,7 +198,7 @@ parse_entry(char *buf, size_t l)
 				major = atoi(pos); minor = atoi(n + 1);
 				e->f_size = 0;
 				e->f_rdev = makedev(major, minor);
-			} else 
+			} else
 				e->f_size = atoi(pos);
 			
 			break;
@@ -238,7 +238,7 @@ rdup_write_header(struct rdup *e)
 	
 	if (t == 'b' || t == 'c') {
 		/* device */
-		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %d,%d\n%s", 
+		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %d,%d\n%s",
 			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
@@ -255,7 +255,7 @@ rdup_write_header(struct rdup *e)
 		gchar *n;
 		n = g_strdup_printf("%s -> %s", e->f_name, e->f_target);
 		e->f_name_size = strlen(n);
-		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s", 
+		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s",
 			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
@@ -267,7 +267,7 @@ rdup_write_header(struct rdup *e)
 			(unsigned long)e->f_name_size,
 			(size_t)e->f_size, n);
 	} else {
-		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s", 
+		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s",
 			e->plusmin == PLUS ? '+':'-',
 			t,
 			(int)e->f_mode & ~S_IFMT,
@@ -281,7 +281,7 @@ rdup_write_header(struct rdup *e)
 			e->f_name);
 	}
 
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 
 	if (write(1, out, strlen(out)) == -1) {
@@ -292,7 +292,7 @@ rdup_write_header(struct rdup *e)
 }
 
 gint
-rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len) 
+rdup_write_data(__attribute__((unused)) struct rdup *e, char *buf, size_t len)
 {
 	if (block_out_header(NULL, len, 1) == -1 ||
 		block_out(NULL, len, buf, 1) == -1)
@@ -320,18 +320,18 @@ stat_from_rdup(struct rdup *e)
 
 	/*
 	struct stat {
-               dev_t     st_dev;     
-               ino_t     st_ino;     
-               mode_t    st_mode;    
-               nlink_t   st_nlink;   
-               uid_t     st_uid;     
-               gid_t     st_gid;     
-               dev_t     st_rdev;    
-               off_t     st_size;    
-               blksize_t st_blksize; 
-               blkcnt_t  st_blocks;  
-               time_t    st_atime;   
-               time_t    st_mtime; 
+               dev_t     st_dev;
+               ino_t     st_ino;
+               mode_t    st_mode;
+               nlink_t   st_nlink;
+               uid_t     st_uid;
+               gid_t     st_gid;
+               dev_t     st_rdev;
+               off_t     st_size;
+               blksize_t st_blksize;
+               blkcnt_t  st_blocks;
+               time_t    st_atime;
+               time_t    st_mtime;
                time_t    st_ctime;
 	}
 	*/
@@ -349,7 +349,7 @@ strtime(time_t time, gchar *str)
 
 /* stolen from coreutils */
 static void
-rdup_strmode(mode_t mode, gchar *str) 
+rdup_strmode(mode_t mode, gchar *str)
 {
 	str[0] = mode & S_IRUSR ? 'r' : '-';
 	str[1] = mode & S_IWUSR ? 'w' : '-';
@@ -370,8 +370,8 @@ rdup_strmode(mode_t mode, gchar *str)
 	str[10] = '\0';
 }
 
-/* 
- * write a table of contents (ala gnu tar) entry to stdout 
+/*
+ * write a table of contents (ala gnu tar) entry to stdout
  * -/+drwxr-xr-x miekg/miekg       0 2009-10-30 08:37 home/miekg/bin2/
  */
 
@@ -405,12 +405,12 @@ rdup_write_table(struct rdup *e, FILE *f)
 	if (sig != 0) signal_abort(sig);
 	
 	/* user/group */
-	if (e->f_user) 
+	if (e->f_user)
 		fprintf(f, " %s/", e->f_user);
 	else
 		fprintf(f, " %ld/", (unsigned long)e->f_uid);
 
-	if (e->f_group) 
+	if (e->f_group)
 		fprintf(f, "%s ", e->f_group);
 	else
 		fprintf(f, "%ld ", (unsigned long)e->f_gid);
@@ -422,10 +422,10 @@ rdup_write_table(struct rdup *e, FILE *f)
 		/* correctly recover original filesize for the link */
 		fprintf(f, "% 9ld ", (unsigned long)(e->f_name_size - e->f_size - 4));
 	} else if (S_ISCHR(e->f_mode) || S_ISBLK(e->f_mode)) {
-		fprintf(f, "% 6d,%d ", (unsigned int)major(e->f_rdev), 
+		fprintf(f, "% 6d,%d ", (unsigned int)major(e->f_rdev),
 				(unsigned int)minor(e->f_rdev));
 	} else {
-		fprintf(f, "% 9ld ", (unsigned long)e->f_size); 
+		fprintf(f, "% 9ld ", (unsigned long)e->f_size);
 	}
 
 	if (sig != 0) signal_abort(sig);

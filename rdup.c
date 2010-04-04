@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2005 - 2010 Miek Gieben
  * See LICENSE for the license
  */
@@ -46,7 +46,7 @@ g_tree_subtract(GTree *a, GTree *b)
 	diff = g_tree_new(gfunc_equal);
 	s.d = diff;
 	s.b = b;
-	/* everything in a, but NOT in b 
+	/* everything in a, but NOT in b
 	 * diff gets filled inside this function */
 	g_tree_foreach(a, gfunc_subtract, (gpointer)&s);
 	return diff;
@@ -88,11 +88,11 @@ g_tree_read_file(FILE *fp)
 		}
 
 		/* comment */
-		if (buf[0] == '#') 
+		if (buf[0] == '#')
 			continue;
 
-		if (s < LIST_MINSIZE) 
-			CORRUPT("Corrupt entry at line: %zd, line to short"); 
+		if (s < LIST_MINSIZE)
+			CORRUPT("Corrupt entry at line: %zd, line to short");
 
 		n = strrchr(buf, '\n');
 
@@ -119,7 +119,7 @@ g_tree_read_file(FILE *fp)
 		/* the inode */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
-		if (!p) 
+		if (!p)
 			CORRUPT("Corrupt entry at line: %zd, no space found");
 		
 		*p = '\0';
@@ -130,7 +130,7 @@ g_tree_read_file(FILE *fp)
 		/* hardlink/link or anything else: h/l or * */
 		q = p + 1;
 		p = strchr(p + 1, ' ');
-		if (!p) 
+		if (!p)
 			CORRUPT("Corrupt entry at line: %zd, no link information found");
 
 		linktype = *q;
@@ -158,7 +158,7 @@ g_tree_read_file(FILE *fp)
 		}
 		*p = '\0';
 		f_name_size = (size_t)atoi(q);
-		if (f_name_size == 0) 
+		if (f_name_size == 0)
 			CORRUPT("Pathname lenght can not be zero at line: %zd");
 
 		/* filesize */
@@ -169,7 +169,7 @@ g_tree_read_file(FILE *fp)
 
 		*p = '\0';
 		f_size = (size_t)atoi(q);
- 
+
 		/* with getdelim we read the delimeter too kill it here */
 		str_len = strlen(p + 1);
 		if (str_len == 1)
@@ -179,7 +179,7 @@ g_tree_read_file(FILE *fp)
 		if (str_len != f_name_size) {
 			msg(_("Corrupt entry at line: %zd, length `%zd\' does not match `%zd\'"), l,
 					str_len, f_name_size);
-			l++; 
+			l++;
 			continue;
 		}
 
@@ -310,14 +310,14 @@ main(int argc, char **argv)
 				opt_format = optarg;
 				break;
 			case 'E':
-				if (!regexp_init(optarg)) 
+				if (!regexp_init(optarg))
 					exit(EXIT_FAILURE);
 				break;
 			case 'a':
 				opt_atime = TRUE;
 				/* when atime is true, every file is touched during the
-				 * backup (the c_time changes). To make rdup not see these 
-				 * files as new in the backup, we must set the timestamp 
+				 * backup (the c_time changes). To make rdup not see these
+				 * files as new in the backup, we must set the timestamp
 				 * file with a timestamp AFTER the backup.
 				 * If we do this we will not see file the are changed
 				 * DURING the backup...
@@ -340,7 +340,7 @@ main(int argc, char **argv)
 			case 'n':
 				opt_nobackup = FALSE;
 				break;
-			case 'N': 
+			case 'N':
 				opt_timestamp = timestamp(optarg, TRUE);
 				stamp = optarg;
 				break;
@@ -367,18 +367,18 @@ main(int argc, char **argv)
                                                 if (i > MAX_CHILD_OPT) {
                                                         msg(_("Only %d extra args per child allowed"), MAX_CHILD_OPT);
                                                         exit(EXIT_FAILURE);
-                                                }   
+                                                }
                                                 *r = '\0';
                                                 args[i] = g_strdup(q);
                                                 q = r + 1;
-                                        }   
+                                        }
                                         args[i] = g_strdup(q);
                                         args[i + 1] = NULL;
-                                }   
+                                }
                                 child = g_slist_append(child, args);
                                 break;
 			case 'v':
-				opt_verbose++; 
+				opt_verbose++;
 				if (opt_verbose > 2) {
 					opt_verbose = 2;
 				}
@@ -438,7 +438,7 @@ main(int argc, char **argv)
 	}
 
 	for (i = 1; i < argc; i++) {
-		if (!g_path_is_absolute(argv[i])) 
+		if (!g_path_is_absolute(argv[i]))
 		    path = abspath(g_strdup_printf("%s/%s", pwd, argv[i]));
 		else
 		    path = abspath(argv[i]);
@@ -482,9 +482,9 @@ main(int argc, char **argv)
 		list_remove = reverse(remove);
 		list_changed = reverse(changed);
 		list_new = reverse(new);
-		g_list_foreach(list_remove, gfunc_remove_list, NULL); 
-		g_list_foreach(list_changed, gfunc_backup_list, NULL); 
-		g_list_foreach(list_new, gfunc_new_list, NULL); 
+		g_list_foreach(list_remove, gfunc_remove_list, NULL);
+		g_list_foreach(list_changed, gfunc_backup_list, NULL);
+		g_list_foreach(list_new, gfunc_new_list, NULL);
 	} else {
 		g_tree_foreach(remove, gfunc_remove, NULL);
 		g_tree_foreach(changed, gfunc_backup, NULL);
@@ -497,7 +497,7 @@ main(int argc, char **argv)
 		    msg(_("Could not write filelist `%s\': %s"), argv[0], strerror(errno));
 	    } else {
 		/* write temporary file, add little comment */
-		fprintf(fplist, 
+		fprintf(fplist,
 			"# mode dev inode linktype uid gid pathlen filesize path\n");
 		g_tree_foreach(backup, gfunc_write, fplist);
 		fclose(fplist);

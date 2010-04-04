@@ -1,4 +1,4 @@
-/* 
+/*
  * A simple protocol for rdup, if you even want
  * to call it a protocol
  *
@@ -13,7 +13,7 @@
  *
  * 01BLOCK00004
  * <4 bytes of the file>01BLOCK00000
- * 
+ *
  * A stop block is a block with length zero 01BLOCK00000, this
  * comes after each file.
  */
@@ -39,12 +39,12 @@ void signal_abort(int);
  * output a block header
  */
 gint
-block_out_header(FILE *f, size_t size, int fp) 
+block_out_header(FILE *f, size_t size, int fp)
 {
 	char *p;
-	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR, 
+	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR,
 			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 	if (f) {
 		if (fwrite(p, sizeof(char), strlen(p), f) != strlen(p))
@@ -62,9 +62,9 @@ block_out_header(FILE *f, size_t size, int fp)
  * output a block
  */
 gint
-block_out(FILE *f, size_t size, char *buf, int fp) 
+block_out(FILE *f, size_t size, char *buf, int fp)
 {
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 	if (f) {
 		if (fwrite(buf, sizeof(char), size, f) != size)
@@ -81,9 +81,9 @@ block_out(FILE *f, size_t size, char *buf, int fp)
  * read a block from f
  */
 gint
-block_in(FILE *f, size_t size, char *buf) 
+block_in(FILE *f, size_t size, char *buf)
 {
-	if (sig != 0) 
+	if (sig != 0)
 		signal_abort(sig);
 	if (fread(buf, sizeof(char), size, f) != size) {
 		/* read less then expected */
@@ -95,11 +95,11 @@ block_in(FILE *f, size_t size, char *buf)
 /**
  * parse a block header: 01BLOCK08192
  * return the number of bytes to read
- * 00000 signals the end (no more bytes to read 
+ * 00000 signals the end (no more bytes to read
  * -1 for parse errors
  */
 size_t
-block_in_header(FILE *f) 
+block_in_header(FILE *f)
 {
 	/* we are expecting a block header:
 	 * 2 pos version; the word block; 5 digit number; newline
@@ -143,15 +143,15 @@ block_in_header(FILE *f)
 	}
 
 	/* the bytes */
-	c[0] = fgetc(f); 
+	c[0] = fgetc(f);
 	if (sig != 0) signal_abort(sig);
-	c[1] = fgetc(f); 
+	c[1] = fgetc(f);
 	if (sig != 0) signal_abort(sig);
-	c[2] = fgetc(f); 
+	c[2] = fgetc(f);
 	if (sig != 0) signal_abort(sig);
-	c[3] = fgetc(f); 
+	c[3] = fgetc(f);
 	if (sig != 0) signal_abort(sig);
-	c[4] = fgetc(f); 
+	c[4] = fgetc(f);
 	if (sig != 0) signal_abort(sig);
 	c[5] = fgetc(f); /* \n */
 	if (sig != 0) signal_abort(sig);

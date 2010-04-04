@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
  * rm.c remove an fs object (recursively)
@@ -106,7 +106,7 @@ rm(gchar *p)
 							p, strerror(errno));
 					chmod(p, st.st_mode); /* is this usefull then? */
 					return FALSE;
-				} 
+				}
 				return TRUE;	
 		}
 		

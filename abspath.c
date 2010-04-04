@@ -2,7 +2,7 @@
 
 /*
  * Remove /./ and /../ and // from a pathname
- * An absolute pathname argument is required. 
+ * An absolute pathname argument is required.
  * Returns NULL on error, otherwise NULL terminated
  * sanitized pathname.
  *
@@ -21,8 +21,8 @@ char * abspath(char *path)
 	if (!g_path_is_absolute(path))
 		return NULL;
 
-	/* abspath can be NULL or abspath[0] == '\0'. The NULL 
-	 * is initial. the [0] == '\0' is when we got back to 
+	/* abspath can be NULL or abspath[0] == '\0'. The NULL
+	 * is initial. the [0] == '\0' is when we got back to
 	 * the root
 	 */
 	abspath = NULL;

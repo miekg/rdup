@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * crypt.c
  * encrypt/decrypt paths
@@ -13,12 +13,12 @@
 
 extern guint opt_verbose;
 
-/** 
+/**
  * init the cryto
  * with key  *key
  * and length length
  * lenght MUST be 16, 24 or 32
- * anything short will be zero padded to 
+ * anything short will be zero padded to
  * create a correct key
  * return aes context
  */
@@ -29,7 +29,7 @@ crypt_init(gchar *key, gboolean crypt)
 	struct aes_ctx *ctx = g_malloc(sizeof(struct aes_ctx));
 	if (crypt)
 		aes_set_encrypt_key(ctx, length, (uint8_t*)key);
-	else 
+	else
 		aes_set_decrypt_key(ctx, length, (uint8_t*)key);
 	return ctx;
 }
@@ -84,7 +84,7 @@ crypt_path_ele(struct aes_ctx *ctx, gchar *elem, GHashTable *tr)
 
 	len    = strlen(elem);
 	hashed = g_hash_table_lookup(tr, elem);
-	if (hashed) 
+	if (hashed)
 		return hashed;
 
 	aes_size = ( (len / AES_BLOCK_SIZE) + 1) * AES_BLOCK_SIZE;
@@ -149,7 +149,7 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, GHashTable *tr)
 
 	/* we could have gotten valid string to begin with
 	 * if the result is now garbled instead of nice plain
-	 * text assume this was the case. 
+	 * text assume this was the case.
 	 */
 	if (!is_plain((char*) dest)) {
 		if (opt_verbose > 2)
@@ -157,12 +157,12 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, GHashTable *tr)
 
 		g_free(dest);
 		dest = (guchar*) g_strdup(b64);
-	} 
+	}
 	g_hash_table_insert(tr, b64, dest);
 	return (gchar*) dest;
 }
 
-/** 
+/**
  * encrypt an entire path
  */
 gchar *
@@ -190,7 +190,7 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr)
 
 		if (xpath)
 			xpath = g_strdup_printf("%s/%s", xpath, crypt);
-		else 
+		else
 			abs ? (xpath = g_strdup_printf("/%s", crypt)) :
 				(xpath = g_strdup(crypt));
 		q = c;
@@ -199,7 +199,7 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr)
 	crypt = crypt_path_ele(ctx, q, tr);
 	if (xpath)
 		xpath = g_strdup_printf("%s/%s", xpath, crypt);
-	else 
+	else
 		abs ? (xpath = g_strdup_printf("/%s", crypt)) :
 			(xpath = g_strdup(crypt));
 	return xpath;
@@ -232,7 +232,7 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr)
 		}
 		plain = decrypt_path_ele(ctx, q, tr);
 
-		if (path) 
+		if (path)
 			path = g_strdup_printf("%s/%s", path, plain);
 		else
 			abs ? (path = g_strdup_printf("/%s", plain)) :
@@ -241,7 +241,7 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr)
 		*c = d;
 	}
 	plain = decrypt_path_ele(ctx, q, tr);
-	if (path) 
+	if (path)
 		path = g_strdup_printf("%s/%s", path, plain);
 	else
 		abs ? (path = g_strdup_printf("/%s", plain)) :

@@ -1,5 +1,5 @@
 /* Function with behaviour like `mkdir -p'  */
-/* From: http://niallohiggins.com/2009/01/08/mkpath-mkdir-p-alike-in-c-for-unix/ 
+/* From: http://niallohiggins.com/2009/01/08/mkpath-mkdir-p-alike-in-c-for-unix/
  * with some tweaks
  * libglib'i'fied by Miek Gieben
  */
@@ -25,12 +25,12 @@ mkpath(const char *s, mode_t mode)
 		msgd(__func__, __LINE__, _("Failed or exists '%s\': %s"), up, strerror(errno));
 		goto out;
 	}
- 
+
         if ((mkdir(path, mode) == -1) && (errno != EEXIST))
 		msgd(__func__, __LINE__, _("Failed to create directory '%s\': %s"), path, strerror(errno));
 	else
                 rv = 0;
- 
+
 out:
         if (up) g_free(up);
         if (q) g_free(q);

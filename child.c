@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * child.c handle child stuff
  */
@@ -18,7 +18,7 @@ close_pipes(GSList *pipes, int n1, int n2)
 	int *q;
 	int j;
 
-	for (j = 0, p = g_slist_nth(pipes, 0); p; p = p->next, j++) { 
+	for (j = 0, p = g_slist_nth(pipes, 0); p; p = p->next, j++) {
 		q = p->data;
 /*		msg("Pipe set %d fds %d %d", j, q[0], q[1]); */
 		if (j == n1 || j == n2)
@@ -32,10 +32,10 @@ close_pipes(GSList *pipes, int n1, int n2)
 int
 wait_pids(GSList *pids, int flags)
 {
-	GSList *p; 
+	GSList *p;
 	int status;
 
-	for (p = g_slist_nth(pids, 0); p; p = p->next) { 
+	for (p = g_slist_nth(pids, 0); p; p = p->next) {
                 if (sig != 0)
                         signal_abort(sig);
 
@@ -47,7 +47,7 @@ wait_pids(GSList *pids, int flags)
 		waitpid(*(pid_t* )(p->data), &status, flags); /* errno ECHILD is ok */
 #if 0
 		if (WIFEXITED(status)) {
-			/* msg("Child exit %d", WEXITSTATUS(status)); 
+			/* msg("Child exit %d", WEXITSTATUS(status));
 			if (WEXITSTATUS(status) != 0)
 				ret = -1;
 			*/
@@ -63,7 +63,7 @@ wait_pids(GSList *pids, int flags)
 
 /* create pipes and childs, return pids */
 GSList *
-create_childeren(GSList *child, GSList **pipes, int file) 
+create_childeren(GSList *child, GSList **pipes, int file)
 {
 	GSList  *p;
 	GSList	*pids	= NULL;
@@ -77,13 +77,13 @@ create_childeren(GSList *child, GSList **pipes, int file)
 	if (!child)
 		return NULL;
 
-	/* create all pipes before forking 
+	/* create all pipes before forking
 	 * As a parent we read from the last pipe created
 	 * We attach file to the input of the first child
 	 * This eliminates to use of a tmp file
 	 */
 	childs = g_slist_length(child);
-	for (j = 0; j < childs; j++) { 
+	for (j = 0; j < childs; j++) {
 		pips = g_malloc(2 * sizeof(int));
 		if (pipe(pips) == -1) {
 			msg(_("Failure creating pipes"));
@@ -92,7 +92,7 @@ create_childeren(GSList *child, GSList **pipes, int file)
 		cpipe = g_slist_append(cpipe, pips);
 	}	
 
-	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) { 
+	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) {
                 if (sig != 0)
                         signal_abort(sig);
 

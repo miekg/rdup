@@ -4,7 +4,7 @@
 
 extern int sig;
 
-/* copied from xine-devel, same license applies 
+/* copied from xine-devel, same license applies
  * slightly modified to fit my needs
  */
 ssize_t

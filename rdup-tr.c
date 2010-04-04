@@ -1,8 +1,8 @@
-/* 
+/*
  * Copyright (c) 2009,2010 Miek Gieben
  * See LICENSE for the license
  * rdup-tr -- rdup translate, transform an
- * rdup filelist to an tar/cpio archive with 
+ * rdup filelist to an tar/cpio archive with
  * per file compression and/or encryption or whatever
  */
 
@@ -40,7 +40,7 @@ void entry_free(struct rdup *f);
 
 /* encrypt an rdup_entry (just the path of course) */
 static struct rdup *
-crypt_entry(struct rdup *e, GHashTable *tr) 
+crypt_entry(struct rdup *e, GHashTable *tr)
 {
         gchar *crypt, *dest;
 	if (! (crypt = crypt_path(aes_ctx,e->f_name, tr))) {
@@ -62,7 +62,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 
 /* decrypt an rdup_entry */
 static struct rdup *
-decrypt_entry(struct rdup *e, GHashTable *tr) 
+decrypt_entry(struct rdup *e, GHashTable *tr)
 {
         gchar *plain, *dest;
 
@@ -88,7 +88,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
  * the childeren, collect the output from the last
  * child and create the archive on stdout
  */
-static void  
+static void
 stdin2archive(void)
 {
 	char		*buf, *fbuf, *readbuf, *n, *pathbuf;
@@ -148,10 +148,10 @@ stdin2archive(void)
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
 		line++;
 		n = strrchr(buf, '\n');
-		if (n) 
+		if (n)
 			*n = '\0';
 
-		if (sig != 0) 
+		if (sig != 0)
 			signal_abort(sig);
 
 		if (!(rdup_entry = parse_entry(buf, line))) {
@@ -166,12 +166,12 @@ stdin2archive(void)
                         msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
                                         rdup_entry->f_name_size, pathsize);
                         exit(EXIT_FAILURE);
-                }   
+                }
                 pathbuf[pathsize] = '\0';
                 if (pathbuf[0] != '/') {
                         msg(_("Pathname does not start with /: `%s\'"), pathbuf);
                         exit(EXIT_FAILURE);
-                }   
+                }
 
                 rdup_entry->f_name = pathbuf;
 
@@ -180,7 +180,7 @@ stdin2archive(void)
                         // filesize is spot where to cut and set new size
                         rdup_entry->f_name[rdup_entry->f_size] = '\0';
 			rdup_entry->f_name_size = strlen(rdup_entry->f_name);
-                        rdup_entry->f_target = rdup_entry->f_name + 
+                        rdup_entry->f_target = rdup_entry->f_name +
                                 rdup_entry->f_size + 4;
                 } else {
                         rdup_entry->f_target = NULL;
@@ -198,13 +198,13 @@ stdin2archive(void)
 			signal_abort(sig);
 
 		rdup_entry = rdup_entry;
-#ifdef HAVE_LIBNETTLE 
-		if (opt_crypt_key) 
+#ifdef HAVE_LIBNETTLE
+		if (opt_crypt_key)
 			rdup_entry = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
 			rdup_entry = decrypt_entry(rdup_entry, trhash);
 
-		if (!rdup_entry) 
+		if (!rdup_entry)
 			exit(EXIT_FAILURE); /* encryption problem */
 
 #endif /* HAVE_LIBNETTLE */
@@ -221,7 +221,7 @@ stdin2archive(void)
 			if (rdup_entry->f_lnk == 1) {
 				/* hardlinks must come last */
 				hlinks = g_slist_append(hlinks, entry_dup(rdup_entry));
-				continue; 
+				continue;
 			}
 
 			s = stat_from_rdup(rdup_entry);
@@ -234,26 +234,26 @@ stdin2archive(void)
 		}
 
 		/* size may be changed - we don't care anymore */
-		if (opt_output != O_RDUP) 
+		if (opt_output != O_RDUP)
 			archive_write_header(archive, entry);
 		else
 			(void)rdup_write_header(rdup_entry);
 
 		/* bail out for non regular files */
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
-			goto not_s_isreg; 
+			goto not_s_isreg;
 
 		/* regular files */
 		while ((bytes = block_in_header(stdin)) > 0) {
 			if (block_in(stdin, bytes, fbuf) == -1) {
 				msg(_("Failure to read from stdin: %s"), strerror(errno));
-				exit(EXIT_FAILURE); 
-			}   
+				exit(EXIT_FAILURE);
+			}
 
-			if (sig != 0) 
+			if (sig != 0)
 				signal_abort(sig);
 
-			if (opt_output == O_RDUP) 
+			if (opt_output == O_RDUP)
 				(void)rdup_write_data(rdup_entry, fbuf, bytes);
 			else
 				archive_write_data(archive, fbuf, bytes);
@@ -263,7 +263,7 @@ stdin2archive(void)
 		if (opt_output == O_RDUP)
 			block_out_header(NULL, 0, 1);
 
-not_s_isreg: 
+not_s_isreg:
 		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
 

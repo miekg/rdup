@@ -35,5 +35,5 @@ sha1_stream(FILE *f, unsigned char *digest)
 
 	sha1_digest(&ctx, SHA1_DIGEST_SIZE, digest);
 #endif /* HAVE_LIBNETTLE */
-	return 0;  
+	return 0;
 }

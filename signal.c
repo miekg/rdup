@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2005-2010 Miek Gieben
  * See LICENSE for the license
  */

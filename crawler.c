@@ -123,7 +123,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 #else
 	if (fstat(rdup_dirfd(dir), &s) != 0) {
 #endif
-		msg(_("Cannot determine holding device of the directory `%s\': %s"), path, 
+		msg(_("Cannot determine holding device of the directory `%s\': %s"), path,
 				strerror(errno));
 		closedir(dir);
 		g_free(dirstack);
@@ -132,7 +132,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 	current_dev = s.st_dev;
 
 	while((dent = readdir(dir))) {
-		if (!strcmp(dent->d_name, ".") || 
+		if (!strcmp(dent->d_name, ".") ||
 				!strcmp(dent->d_name, ".."))
 			continue;
 
@@ -156,7 +156,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			continue;
 		}
 
-		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode) || 
+		if (S_ISREG(s.st_mode) || S_ISLNK(s.st_mode) ||
 				S_ISBLK(s.st_mode) || S_ISCHR(s.st_mode) ||
 				S_ISFIFO(s.st_mode) || S_ISSOCK(s.st_mode) ) {
 
@@ -206,7 +206,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 					pop.f_lnk  = 1;
 				}
 			}
-			if (S_ISLNK(s.st_mode)) 
+			if (S_ISLNK(s.st_mode))
 				pop.f_target = slink(&pop);
 
 
@@ -233,7 +233,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				continue;
 			}
 			dirstack[d] = g_malloc(sizeof(struct rdup));
-			dirstack[d]->f_name       = g_strdup(curpath); 
+			dirstack[d]->f_name       = g_strdup(curpath);
 			dirstack[d]->f_target	  = NULL;
 			dirstack[d]->f_name_size  = curpath_len;
 			dirstack[d]->f_uid	  = s.st_uid;
@@ -251,8 +251,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			dirstack[d]->f_lnk        = 0;
 
 			if (d++ % D_STACKSIZE == 0) {
-				dirstack = g_realloc(dirstack, 
-						++dstack_cnt * D_STACKSIZE * 
+				dirstack = g_realloc(dirstack,
+						++dstack_cnt * D_STACKSIZE *
 						sizeof(struct rdup *));
 			}
 			g_free(curpath);
@@ -277,7 +277,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 	}
 
 	while (d > 0) {
-		directory = dirstack[--d]; 
+		directory = dirstack[--d];
 		g_tree_insert(t, (gpointer) entry_dup(directory), VALUE);
 		/* recurse */
 		/* potentially expensive operation. Better would be to when we hit

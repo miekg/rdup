@@ -15,7 +15,7 @@ GSList *pregex_list = NULL;
  * in a linked list
  */
 gboolean
-regexp_init(char *file) 
+regexp_init(char *file)
 {
 	FILE 	      	*fp;
 	char 		*buf;
@@ -40,7 +40,7 @@ regexp_init(char *file)
 
 	l = 1;
 	while ((j = rdup_getdelim(&buf, &s, delim, fp)) != -1) {
-		if (buf[0] == '#' || buf[0] == '\n') 
+		if (buf[0] == '#' || buf[0] == '\n')
 			continue;
 
 		/* buf[j - 1] holds the delimeter */
@@ -49,7 +49,7 @@ regexp_init(char *file)
 		if ((P = pcre_compile(buf, 0, &errbuf, &erroff, NULL)) == NULL) {
 			/* error */
 			fclose(fp);
-			msg(_("Corrupt regular expression line: %zd, column %d: %s"), l, erroff, errbuf); 
+			msg(_("Corrupt regular expression line: %zd, column %d: %s"), l, erroff, errbuf);
 			g_free(buf);
 			return FALSE;
 		} else {

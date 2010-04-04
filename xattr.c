@@ -29,7 +29,7 @@ read_attr_uid(__attribute__((unused))
 		x = (uid_t)atoi(buf);
 		buf[r - 1] = '\0';
 		if (x > R_MAX_ID) {
-			msg(_("Too large uid `%zd\' for `%s\', truncating"), (size_t)x, 
+			msg(_("Too large uid `%zd\' for `%s\', truncating"), (size_t)x,
 				path);
 			return R_MAX_ID;
 		}
@@ -81,7 +81,7 @@ read_attr_gid(__attribute__((unused))
 		buf[r - 1] = '\0';
 		x = (gid_t)atoi(buf);
 		if (x > R_MAX_ID) {
-			msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x, 
+			msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x,
 					path);
 			return R_MAX_ID;
 		}
