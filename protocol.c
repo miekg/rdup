@@ -13,6 +13,9 @@
  *
  * 01BLOCK00004
  * <4 bytes of the file>01BLOCK00000
+ * 
+ * A stop block is a block with length zero 01BLOCK00000, this
+ * comes after each file.
  */
 
 #include <stdio.h>
@@ -36,7 +39,8 @@ void signal_abort(int);
  * output a block header
  */
 gint
-block_out_header(FILE *f, size_t size, int fp) {
+block_out_header(FILE *f, size_t size, int fp) 
+{
 	char *p;
 	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR, 
 			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
@@ -58,7 +62,8 @@ block_out_header(FILE *f, size_t size, int fp) {
  * output a block
  */
 gint
-block_out(FILE *f, size_t size, char *buf, int fp) {
+block_out(FILE *f, size_t size, char *buf, int fp) 
+{
 	if (sig != 0) 
 		signal_abort(sig);
 	if (f) {
@@ -76,7 +81,10 @@ block_out(FILE *f, size_t size, char *buf, int fp) {
  * read a block from f
  */
 gint
-block_in(FILE *f, size_t size, char *buf) {
+block_in(FILE *f, size_t size, char *buf) 
+{
+	if (sig != 0) 
+		signal_abort(sig);
 	if (fread(buf, sizeof(char), size, f) != size) {
 		/* read less then expected */
 		return -1;
@@ -91,7 +99,8 @@ block_in(FILE *f, size_t size, char *buf) {
  * -1 for parse errors
  */
 size_t
-block_in_header(FILE *f) {
+block_in_header(FILE *f) 
+{
 	/* we are expecting a block header:
 	 * 2 pos version; the word block; 5 digit number; newline
 	 */

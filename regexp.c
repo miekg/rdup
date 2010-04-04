@@ -15,7 +15,8 @@ GSList *pregex_list = NULL;
  * in a linked list
  */
 gboolean
-regexp_init(char *file) {
+regexp_init(char *file) 
+{
 	FILE 	      	*fp;
 	char 		*buf;
 	const char	*errbuf;

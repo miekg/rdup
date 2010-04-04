@@ -36,7 +36,8 @@ crypt_init(gchar *key, gboolean crypt)
 }
 
 static gboolean
-is_plain(gchar *s) {
+is_plain(gchar *s) 
+{
 	char *p;
 	for (p = s; *p; p++)
 		if (!isascii(*p))
@@ -166,7 +167,8 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, GHashTable *tr)
  * encrypt an entire path
  */
 gchar *
-crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
+crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) 
+{
 	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
 
@@ -209,7 +211,8 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) {
  * decrypt an entire path
  */
 gchar *
-decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) {
+decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) 
+{
 
 	gchar *path, *q, *c, *t, *plain, d;
 	gboolean abs;
