@@ -99,9 +99,10 @@ stdin2archive(void)
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     *s;
-	struct rdup  *rdup_entry = NULL;
+	struct rdup  *rdup_entry   = NULL;
 	struct rdup  *rdup_entry_c = NULL;
 	GHashTable *trhash;		/* look up for encrypted/decrypted strs */
+	GSList      *hlinks, *hl    = NULL;
 
 	delim   = '\n';
 	i       = BUFSIZE;
@@ -218,28 +219,19 @@ stdin2archive(void)
 		}
 
 		if (opt_output != O_RDUP) {
-			s = stat_from_rdup(rdup_entry_c);
+			if (rdup_entry_c->f_lnk == 1) {
+				/* hardlinks must come last */
+				hlinks = g_slist_append(hlinks, entry_dup(rdup_entry_c));
+				continue; 
+			}
 
+			s = stat_from_rdup(rdup_entry_c);
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, s);
 			archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
 
-			/* with list input rdup-tr cannot possibly see
-			 * that a file is hardlinked - but the '||'
-			 * to handle that case is here anyway
-			 */
-			if (S_ISLNK(rdup_entry_c->f_mode) || rdup_entry_c->f_lnk == 1) {
-				/* source */
-				archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
-
-				/* if a hardlink is seen before the file exists
-				 * tar fails. BUGBUG, need to process these at the end of the run
-				 */
-				if (S_ISLNK(rdup_entry_c->f_mode))
-					archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
-				else 
-					archive_entry_copy_hardlink(entry, rdup_entry_c->f_target);
-			}
+			if (S_ISLNK(rdup_entry_c->f_mode))
+				archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
 		}
 
 		/* size may be changed - we don't care anymore */
@@ -277,6 +269,17 @@ not_s_isreg:
 			archive_entry_free(entry);
 
 	}
+	/* output hardlinks -- if any, is zero for O_RDUP */
+	for (hl = g_slist_nth(hlinks, 0); hl; hl = hl->next) {
+		s = stat_from_rdup((struct rdup*)hl->data);
+		entry = archive_entry_new();
+		archive_entry_copy_stat(entry, s);
+		archive_entry_copy_pathname(entry, ((struct rdup *)hl->data)->f_name);
+		archive_entry_copy_hardlink(entry, ((struct rdup *)hl->data)->f_target);
+		archive_write_header(archive, entry);
+		archive_entry_free(entry);
+	}
+
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
