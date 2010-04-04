@@ -55,7 +55,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		dest = crypt_path(aes_ctx, e->f_target, tr);
 		e->f_target = dest;
-		e->f_size = strlen(crypt); /* ook hier crypt */
+		e->f_size = strlen(crypt); /* use crypt here */
 	}
 	return e;
 }
@@ -99,10 +99,9 @@ stdin2archive(void)
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     *s;
-	struct rdup  *rdup_entry   = NULL;
-	struct rdup  *rdup_entry_c = NULL;
+	struct rdup  *rdup_entry = NULL;
+	GSList *hlinks, *hl      = NULL;
 	GHashTable *trhash;		/* look up for encrypted/decrypted strs */
-	GSList      *hlinks, *hl    = NULL;
 
 	delim   = '\n';
 	i       = BUFSIZE;
@@ -198,47 +197,47 @@ stdin2archive(void)
 		if (sig != 0)
 			signal_abort(sig);
 
-		rdup_entry_c = rdup_entry;
+		rdup_entry = rdup_entry;
 #ifdef HAVE_LIBNETTLE 
 		if (opt_crypt_key) 
-			rdup_entry_c = crypt_entry(rdup_entry, trhash);
+			rdup_entry = crypt_entry(rdup_entry, trhash);
 		if (opt_decrypt_key)
-			rdup_entry_c = decrypt_entry(rdup_entry, trhash);
+			rdup_entry = decrypt_entry(rdup_entry, trhash);
 
-		if (!rdup_entry_c) 
+		if (!rdup_entry) 
 			exit(EXIT_FAILURE); /* encryption problem */
 
 #endif /* HAVE_LIBNETTLE */
 
-		if (rdup_entry_c->plusmin == MINUS) {
+		if (rdup_entry->plusmin == MINUS) {
 			if (opt_output == O_RDUP) {
-				(void)rdup_write_header(rdup_entry_c);
+				(void)rdup_write_header(rdup_entry);
 				goto not_s_isreg;
 			}
 			continue;
 		}
 
 		if (opt_output != O_RDUP) {
-			if (rdup_entry_c->f_lnk == 1) {
+			if (rdup_entry->f_lnk == 1) {
 				/* hardlinks must come last */
-				hlinks = g_slist_append(hlinks, entry_dup(rdup_entry_c));
+				hlinks = g_slist_append(hlinks, entry_dup(rdup_entry));
 				continue; 
 			}
 
-			s = stat_from_rdup(rdup_entry_c);
+			s = stat_from_rdup(rdup_entry);
 			entry = archive_entry_new();
 			archive_entry_copy_stat(entry, s);
-			archive_entry_copy_pathname(entry, rdup_entry_c->f_name);
+			archive_entry_copy_pathname(entry, rdup_entry->f_name);
 
-			if (S_ISLNK(rdup_entry_c->f_mode))
-				archive_entry_copy_symlink(entry, rdup_entry_c->f_target);
+			if (S_ISLNK(rdup_entry->f_mode))
+				archive_entry_copy_symlink(entry, rdup_entry->f_target);
 		}
 
 		/* size may be changed - we don't care anymore */
 		if (opt_output != O_RDUP) 
 			archive_write_header(archive, entry);
 		else
-			(void)rdup_write_header(rdup_entry_c);
+			(void)rdup_write_header(rdup_entry);
 
 		/* bail out for non regular files */
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
