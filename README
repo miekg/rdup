@@ -41,8 +41,8 @@ While rsync really works well, I wanted to have the ability to gzip
 and/or encrypt the backed up files. rsync can not do that. That is why I
 wrote rdup, which, with the help of rdup-tr and rdup-up will do that.
 
-Rdup was created to make custom backups, but due to its flexibility is
-can be used for much more
+Rdup was created to make custom backups, but due to its flexibility it
+can be used for much more.
 
 3/ DOCUMENTATION
 
