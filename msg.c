@@ -12,7 +12,7 @@ msg_va_list(const char *fmt, va_list args)
 
 /* only with debugging enabled will this call be different */
 void
-msgd_va_list(__attribute__((unused)) const char *func, 
+msgd_va_list(__attribute__((unused)) const char *func,
 		__attribute__((unused)) int line, const char *fmt, va_list args)
 {
 #ifdef DEBUG

@@ -8,7 +8,7 @@
  *
  * Also see realpath(3)
  */
-char * abspath(char *path) 
+char * abspath(char *path)
 {
 	char *p, *c;
 	char *slash, *abspath2;

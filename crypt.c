@@ -13,7 +13,6 @@
 
 extern guint opt_verbose;
 
-
 /** 
  * init the cryto
  * with key  *key
@@ -36,7 +35,7 @@ crypt_init(gchar *key, gboolean crypt)
 }
 
 static gboolean
-is_plain(gchar *s) 
+is_plain(gchar *s)
 {
 	char *p;
 	for (p = s; *p; p++)
@@ -50,7 +49,7 @@ is_plain(gchar *s)
  * don't do anything with the strings .. and .
  */
 gchar *
-dot_dotdot(gchar *q, gchar *p, gboolean abs) 
+dot_dotdot(gchar *q, gchar *p, gboolean abs)
 {
 	gchar *r = NULL;
 
@@ -167,7 +166,7 @@ decrypt_path_ele(struct aes_ctx *ctx, char *b64, GHashTable *tr)
  * encrypt an entire path
  */
 gchar *
-crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr) 
+crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr)
 {
 	gchar *q, *c, *t, *crypt, *xpath, d;
 	gboolean abs;
@@ -206,12 +205,11 @@ crypt_path(struct aes_ctx *ctx, gchar *p, GHashTable *tr)
 	return xpath;
 }
 
-
 /**
  * decrypt an entire path
  */
 gchar *
-decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr) 
+decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr)
 {
 
 	gchar *path, *q, *c, *t, *plain, d;
@@ -257,7 +255,7 @@ decrypt_path(struct aes_ctx *ctx, gchar *x, GHashTable *tr)
  * Check for this - if larger than 32 cut it off
  */
 gchar *
-crypt_key(gchar *file) 
+crypt_key(gchar *file)
 {
 	FILE *f;
 	char *buf;

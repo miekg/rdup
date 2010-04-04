@@ -471,9 +471,7 @@ main(int argc, char **argv)
 	/* we first crawled the disk to see what is changed
 	 * then we output. If we wait here a few seconds
 	 * we can remove files that should have been
-	 * added. This way we can make a race condition(s)
-	 * happen - if they are there in code 
-	 */
+	 * added.  */
 	msg(_("DEBUG: sleeping for a while"));
 	sleep(5);
 #endif /* DEBUG */
