@@ -4,15 +4,13 @@
  * sets path to  NULL when the path didn't contain enough
  * components to begin with 
  *
- * sym- and hardlinks are handled as follows:
+ * Symlinks are handled as follows:
  * with path1 -> path2, only path1 is modified (shortened)
  * the pathlen is adjusted accordingly and the
  * and the filesize too (if that is overloaded which is
  * the case with links)
- */
-
-/*
- * for hardlinks we must also strip the part after the ->
+ *
+ * For hardlinks we must also strip the part after the ->
  * as all hardlinks fall in the backed up directory part
  */
 
@@ -21,7 +19,8 @@ extern gchar *opt_path_strip;
 extern guint opt_path_strip_len;
 
 /* Count the number of slashes in a string (=path) */
-static guint pathlabel(struct rdup *e) {
+static guint pathlabel(struct rdup *e) 
+{
 	gint i, j = 0;
 
 	for(i = 0; i < (S_ISLNK(e->f_mode) || e->f_lnk == 1 ? e->f_size : (gint)e->f_name_size); i++) {

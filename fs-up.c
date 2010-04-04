@@ -55,7 +55,8 @@ mk_mode(struct rdup *e)
 }
 
 static gboolean
-mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) {
+mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash) 
+{
 	mk_mode(e);
 	mk_chown(e, uidhash, gidhash);
 	mk_time(e);
