@@ -1,6 +1,10 @@
+xx YYY 2010: 1.1.5 Miek Gieben <rdup@miek.nl>
+    *
+
+
 04 Apr 2010: 1.1.4 Miek Gieben <rdup@miek.nl>
     * re-touch timestamp after the backup is made when -a is used,
-      otherwise it is done before the the backup
+      otherwise it is done before the backup
     * spring cleaning, remove/clean BUGBUGs and some dead code and
       polish the documentation a bit
     * revert changes in mkpath.c to make FreeBSD happy

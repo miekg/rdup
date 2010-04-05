@@ -29,7 +29,9 @@ signal_abort(int signal)
                         break;
 		case SIGCHLD:
 			(void)wait(&status);
-			fprintf(stderr, "Stat: %d\n", status);
+#ifdef DEBUG
+			msg("Wait stat: %d\n", status);
+#endif /* DEBUG */
 			return;
                 default:
                         msg(_("Unhandled signal reveived, exiting"));
