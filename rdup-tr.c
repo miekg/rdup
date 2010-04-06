@@ -33,11 +33,11 @@ extern int opterr;
 
 int opterr = 0;
 
-#ifdef HAVE_LIBNETTLE
 /* common.c */
 struct rdup * entry_dup(struct rdup *f);
 void entry_free(struct rdup *f);
 
+#ifdef HAVE_LIBNETTLE
 /* encrypt an rdup_entry (just the path of course) */
 static struct rdup *
 crypt_entry(struct rdup *e, GHashTable *tr)
@@ -100,7 +100,7 @@ stdin2archive(void)
 	struct archive_entry *entry;
 	struct stat     *s;
 	struct rdup  *rdup_entry = NULL;
-	GSList *hlinks, *hl      = NULL;
+	GSList *hlinks = NULL, *hl      = NULL;
 	GHashTable *trhash;		/* look up for encrypted/decrypted strs */
 
 	delim   = '\n';
