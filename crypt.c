@@ -277,7 +277,6 @@ crypt_key(gchar *file)
 		return NULL;
 	}
 
-	/* BUGBUG hmm */
 	if ( buf[strlen(buf) - 1] == '\n' ) {
 		buf[strlen(buf) - 1] = '\0';		/* kill \n */
 	}

@@ -61,8 +61,6 @@ strippath(struct rdup *e)
 		}
 		e->f_target = p;
 		e->f_size = strlen(e->f_target);
-		/* if the orig file was not truncated to null - will the target have
-		 * that problem? I think not BUGBUG */
 	}
 	return;
 }
@@ -82,7 +80,10 @@ strippathname(struct rdup *e)
 	 * at is LONGER than the prefix
 	 */
 	(void)pathlabel(e);
-/*	fprintf(stderr, "label %d strippath len %d\n", pathlabel(e), opt_path_strip_len); */
+#ifdef DEBUG
+	msgd(__func__, __LINE__,_("Label %d, strippathlen %d\n"), pathlabel(e), 
+			opt_path_strip_len);
+#endif /* DEBUG */
 /*	if (pathlabel(e) > opt_path_strip_len) { */
 		if (g_str_has_prefix(opt_path_strip, e->f_name)) {
 			e->f_name = NULL;
