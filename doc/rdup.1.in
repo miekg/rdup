@@ -15,7 +15,8 @@
 backups. \fBrdup\fR itself does not backup anything. It only prints
 a list of files that are changed, or all files in case of a null dump.
 It also handles files that are removed, allowing for correct incremental 
-backups. All paths printed are absolute. 
+backups. All paths printed are absolute. \fBrdup\fR uses the change time
+(ctime) to decide whether a files is altered.
 .PP
 It works as follows, for a full dump
 .TP
