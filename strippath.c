@@ -81,7 +81,7 @@ strippathname(struct rdup *e)
 	 */
 	(void)pathlabel(e);
 #ifdef DEBUG
-	msgd(__func__, __LINE__,_("Label %d, strippathlen %d\n"), pathlabel(e), 
+	msgd(__func__, __LINE__,_("Label %d, strippathlen %d\n"), pathlabel(e),
 			opt_path_strip_len);
 #endif /* DEBUG */
 /*	if (pathlabel(e) > opt_path_strip_len) { */
