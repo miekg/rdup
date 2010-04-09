@@ -1,3 +1,6 @@
 These are third party scripts.
 They are provided AS-IS, the original author and
 license are included in each source file.
+
+prune.rb -- deletes old backups
+convert.pl -- convert internal rdup filelist from version 1.0 to 1.1 format
