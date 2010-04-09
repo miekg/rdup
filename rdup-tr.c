@@ -100,7 +100,8 @@ stdin2archive(void)
 	struct archive_entry *entry;
 	struct stat     *s;
 	struct rdup  *rdup_entry = NULL;
-	GSList *hlinks = NULL, *hl      = NULL;
+	GSList *hlinks = NULL;
+	GSList *hl     = NULL;
 	GHashTable *trhash;		/* look up for encrypted/decrypted strs */
 
 	delim   = '\n';
