@@ -39,6 +39,7 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 ifeq (${ARCHIVE_L},no)
 all:	rdup rdup-up
+	@echo "WARNING: ** No archive library found; not building rdup-tr"
 else
 all:	rdup rdup-up rdup-tr
 endif
