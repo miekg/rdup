@@ -31,17 +31,17 @@ copy_and_link() {
     TOPDIR="$1"
 
     if $dry; then exit 1; fi
-    [[ -z $TOPDIR ]] && exit 2
-    [[ -d $TOPDIR/$TODAY ]] && exit 0
+    [ -z "$TOPDIR" ] && exit 2
+    [ -d $TOPDIR/$TODAY ] && exit 0
 
     if ! mkdir -p $TOPDIR/$TODAY; then
 	exit 2
     fi
 
     let i=1
-    while [[ $i -le $LOOKBACK ]]; do
+    while [ $i -le $LOOKBACK ]; do
 	    D=$(date $DATESTR --date "$i days ago")
-	    if [[ -d $TOPDIR/$D ]]; then
+	    if [ -d $TOPDIR/$D ]; then
 		if ! cp -plr $TOPDIR/$D/* $TOPDIR/$TODAY; then
 		    exit 2
 		fi
@@ -86,7 +86,7 @@ HELP
 }
 
 PROGNAME=$0
-NOW=`date +%Y%m/%d`
+NOW=$(date +%Y%m/%d)
 DAYS=8
 OPT_DRY=
 ssh=
@@ -105,7 +105,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
         case $o in
 		a) atime=" -a " ;;
 		E)
-                if [[ -z "$OPTARG" ]]; then
+                if [ -z "$OPTARG" ]; then
                         echo2 "-E needs an argument"
                         exit 1
                 fi
@@ -116,11 +116,11 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
 		pathtrans="-$o $OPTARG";
 		;;
                 k)
-                if [[ -z "$OPTARG" ]]; then
+                if [ -z "$OPTARG" ]; then
                         echo2 "-k needs an argument"
                         exit 1
                 fi
-                if [[ ! -r "$OPTARG" ]]; then
+                if [ ! -r "$OPTARG" ]; then
                         echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
@@ -144,7 +144,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
 			exit 1
 		fi
 		# if there a no key, this will fail
-		if [[ $(gpg --list-keys | wc -l) -eq "0" ]]; then
+		if [ $(gpg --list-keys | wc -l) -eq "0" ]; then
 			echo2 "No gpg keys found"
 			exit 1
 		fi
@@ -163,9 +163,9 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
 done
 shift $((OPTIND - 1))
 
-if [[ ${1:0:1} == "+" ]]; then
+if [ ${1:0:1} = "+" ]; then
         DAYS=${1:1}
-        if [[ $DAYS -lt 1 || $DAYS -gt 99 ]]; then
+        if [ $DAYS -lt 1 || $DAYS -gt 99 ]; then
                 echo2 "+N needs to be a number [1..99]"
                 exit 1
         fi
@@ -174,7 +174,7 @@ else
         DAYS=8
 fi
 
-[[ $# -lt 2 ]] && usage && exit
+[ $# -lt 2 ] && usage && exit
 
 if $mcrypt; then
     if ! which mcrypt 2>/dev/null 1>&2; then
@@ -184,7 +184,7 @@ if $mcrypt; then
 fi
 
 i=1; last=$#; DIRS=
-while [[ $i -lt $last ]]; do
+while [ $i -lt $last ]; do
 	DIRS="$DIRS $1"
 	shift
 	((i=$i+1))
@@ -197,33 +197,33 @@ done
 #dest="ssh://miekg@elektron.atoom.net/directory"
 
 dest=$1
-if [[ ${dest:0:6} == "ssh://" ]]; then
+if [ ${dest:0:6} = "ssh://" ]; then
 	rest=${dest/ssh:\/\//}
 	u=${rest%%@*}
 
-	if [[ "$u" == "$rest" ]]; then
+	if [ "$u" = "$rest" ]; then
             # no @ used, nullify $u
             u=
         fi
 
 	rest=${rest/$u@/}
-	h=`echo $rest | cut -s -f1 -d/`
+	h=$(echo $rest | cut -s -f1 -d/)
 	BACKUPDIR=${rest/$h/}
 
-	if [[ -z $u ]]; then
+	if [ -z "$u" ]; then
 		ssh=" ssh -c blowfish -x $h"
 	else
 		ssh=" ssh -c blowfish -x $u@$h"
 	fi
 fi
-if [[ ${dest:0:7} == "file://" ]]; then
+if [ ${dest:0:7} = "file://" ]; then
 	rest=${dest/file:\/\//}
 	BACKUPDIR=$rest
 fi
-[[ ${dest:0:1} == "/" ]] && BACKUPDIR=$dest
+[ ${dest:0:1} = "/" ] && BACKUPDIR=$dest
 
 # no hits above, assume relative filename
-[[ -z $BACKUPDIR ]] && BACKUPDIR=$PWD/$dest
+[ -z "$BACKUPDIR" ] && BACKUPDIR=$PWD/$dest
 
 $link && copy_and_link $DAYS $BACKUPDIR
 
@@ -231,16 +231,16 @@ $link && copy_and_link $DAYS $BACKUPDIR
 STAMP=$etc/timestamp.${HOSTNAME}.${dest//\//_}
 LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
-[[ ! -d $etc ]] && mkdir $etc
+[ ! -d $etc ] && mkdir $etc
 
 # remote or not
-if [[ -z $ssh ]]; then
+if [ -z "$ssh" ]; then
         pipe="rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 else
         pipe="$ssh rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 fi
 # path encryption
-if [[ -n $pathtrans ]]; then
+if [ -n "$pathtrans" ]; then
 	pipe="rdup-tr $pathtrans | $pipe"
 fi
 
@@ -248,9 +248,8 @@ cmd="rdup$E$x$atime -N $STAMP $trans $LIST $DIRS | $pipe"
 
 if ! $force; then
 	# path is set at the top
-        if [[ -z $ssh ]]; then
+        if [ -z "$ssh" ]; then
 		$PROGNAME $OPT_DRY -L +$DAYS /dev/null $BACKUPDIR
-#		rdup-ln -l $DAYS $BACKUPDIR
                 purpose=$?
         else
 		# You need to set your path so rdup-simple can be found
