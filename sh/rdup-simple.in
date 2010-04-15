@@ -165,7 +165,7 @@ shift $((OPTIND - 1))
 
 if [ ${1:0:1} = "+" ]; then
         DAYS=${1:1}
-        if [ $DAYS -lt 1 -o $DAYS -gt 99 ]; then
+	if [ $DAYS -lt 1 ] || [ $DAYS -gt 99 ]; then
                 echo2 "+N needs to be a number [1..99]"
                 exit 1
         fi
