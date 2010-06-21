@@ -1,3 +1,7 @@
+21 Jun 2010: 1.1.7 Miek Gieben <rdup@miek.nl>
+    * rdup-up: also create named pipes (fifo)
+
+
 18 May 2010: 1.1.6 Miek Gieben <rdup@miek.nl>
     * rdup-simple: cleanups + portability
 

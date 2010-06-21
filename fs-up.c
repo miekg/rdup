@@ -352,6 +352,9 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 
 			if (S_ISSOCK(e->f_mode))
 				return mk_sock(e, uidhash, gidhash);
+
+			if (S_ISFIFO(e->f_mode))
+				return mk_sock(e, uidhash, gidhash);
 	}
 	/* only reached during the heat death of the universe */
 	return TRUE;
