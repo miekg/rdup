@@ -91,6 +91,9 @@ cat(FILE *fp, char *filename)
 			if (i == 0)
 				nullblock = TRUE;
 		}
+		if (ferror(file)) {
+			/* error which is not handled */
+		}
 		fclose(file);
 		
 	} else {
@@ -133,6 +136,9 @@ cat(FILE *fp, char *filename)
 				nullblock = TRUE;
 
 			i = read(parent[0], buf, BUFSIZE);
+		}
+		if (i < 0) {
+			/* this is an error, which is not handled */
 		}
 		close(parent[0]);
 		fclose(file);
