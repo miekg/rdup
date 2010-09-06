@@ -72,6 +72,7 @@ cat(FILE *fp, char *filename)
 		return FALSE;
 	}
 
+	clearerr(file);
 	if (child == NULL) {
 		while (!feof(file) && (!ferror(file))) {
 			if (sig != 0) {
