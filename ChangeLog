@@ -1,5 +1,5 @@
-xx YYY 2010: 1.1.8 Miek Gieben <rdup@miek.nl>
-    * ...
+xx Sep 2010: 1.1.8 Miek Gieben <rdup@miek.nl>
+   * Check for two more I/O errors when reading files
 
 
 21 Jun 2010: 1.1.7 Miek Gieben <rdup@miek.nl>

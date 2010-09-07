@@ -92,7 +92,9 @@ cat(FILE *fp, char *filename)
 				nullblock = TRUE;
 		}
 		if (ferror(file)) {
-			/* error which is not handled */
+			msg(_("Read failure `%s\'"), filename);
+			fclose(file);
+			return FALSE;
 		}
 		fclose(file);
 		
@@ -109,6 +111,7 @@ cat(FILE *fp, char *filename)
 		if (i == -1) {
 			msg(_("Failure to read from pipe: %s"), strerror(errno));
 			fclose(file);
+			close(parent[0]);
 			return FALSE;
 		}
 #if 0
@@ -138,7 +141,10 @@ cat(FILE *fp, char *filename)
 			i = read(parent[0], buf, BUFSIZE);
 		}
 		if (i < 0) {
-			/* this is an error, which is not handled */
+			msg(_("Read failure `%s\': %s"), filename, strerror(errno));
+			fclose(file);
+			close(parent[0]);
+			return FALSE;
 		}
 		close(parent[0]);
 		fclose(file);
