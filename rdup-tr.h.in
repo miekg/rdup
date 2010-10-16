@@ -31,10 +31,10 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 
-#ifdef HAVE_ARCHIVE_H
+#ifdef HAVE_LIBARCHIVE
 #include <archive.h>
 #include <archive_entry.h>
-#endif /* HAVE_ARCHIVE_H */
+#endif /* HAVE_LIBARCHIVE */
 
 #ifdef HAVE_SELECT_H
 #include <select.h>
