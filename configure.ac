@@ -12,7 +12,12 @@ AC_PROG_CC
 AC_PROG_MAKE_SET
 
 AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No glib2-dev library found.]))
+
+# dirfd stuff
 AC_CHECK_FUNCS([dirfd])
+AC_CHECK_MEMBERS([DIR.d_fd],,,  [[#include <dirent.h>]])
+AC_CHECK_MEMBERS([DIR.dd_fd],,, [[#include <dirent.h>]]) 
+
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h sys/sysmacros.h archive.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 [

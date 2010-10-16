@@ -1,5 +1,7 @@
 xx Sep 2010: 1.1.8 Miek Gieben <rdup@miek.nl>
-   * Check for two more I/O errors when reading files
+   * rdup: Check for two more I/O errors when reading files
+   * rdup: Permission fix for AIX (Crispin Boylan)
+   * autoconf: Fix dirfd detection on mac OS X (hopefully)
 
 
 21 Jun 2010: 1.1.7 Miek Gieben <rdup@miek.nl>

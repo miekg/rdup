@@ -5,8 +5,18 @@
 
 #include "config.h"
 
-#ifndef HAVE_DIRFD
-#define rdup_dirfd(d) ((d)->dd_fd)
+/* copied from: http://www.boxbackup.org/trac/changeset/2054 */
+#ifndef HAVE_DIRFD 
+    #ifndef HAVE_DECL_DIRFD 
+	#define rdup_dirfd(x) (x)->d_fd 
+	#ifdef HAVE_DIR_D_FD 
+	    #define rdup_dirfd(x) (x)->d_fd 
+	#elif defined HAVE_DIR_DD_FD 
+	    #define rdup_dirfd(x) (x)->dd_fd 
+	#else 
+	    #error No way to get file descriptor from DIR structure 
+	#endif 
+    #endif /* HAVE_DECL_DIRFD */
 #endif /* HAVE_DIRFD */
 
 #include <stdio.h>
