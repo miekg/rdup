@@ -35,7 +35,7 @@ dir_restore(gchar *p, struct stat *s)
 	if (!s || !p)
 		return;
 	/* restore perms - assumes *s has not be f*cked up */
-	if (chmod(p, s->st_mode & ~S_IFMT) == -1) {
+	if (chmod(p, s->st_mode & 07777) == -1) {
 		msgd(__func__, __LINE__,_("Failed to restore permissions `%s\': %s"), p, strerror(errno));
 	}
 }

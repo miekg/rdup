@@ -281,7 +281,7 @@ entry_print_data(FILE *out, char n, struct rdup *e)
 			fprintf(out, "%d", (int)e->f_mode);
 			break;
 	        case 'b':
-                       fprintf(out, "%.4o", (int)e->f_mode & ~S_IFMT);
+                       fprintf(out, "%.4o", (int)e->f_mode & 07777);
                        break;
 		case 't':
 			fprintf(out, "%ld", (unsigned long)e->f_mtime);
@@ -566,7 +566,7 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 		/* if we are looking at a directory and only the mode has changed
 		 * don't let rdup remove the entire directory */
 		if (S_ISDIR(ae->f_mode) && S_ISDIR(be->f_mode) &&
-				((ae->f_mode & ~S_IFMT) != (be->f_mode & ~S_IFMT)) )
+				((ae->f_mode & 07777) != (be->f_mode & 07777)) )
 			return 0;
 
 		if (ae->f_mode != be->f_mode)
