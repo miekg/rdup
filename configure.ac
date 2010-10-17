@@ -13,10 +13,19 @@ AC_PROG_MAKE_SET
 
 AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No glib2-dev library found.]))
 
-# dirfd stuff
-AC_CHECK_FUNCS([dirfd])
-AC_CHECK_MEMBERS([DIR.d_fd],,,  [[#include <dirent.h>]])
-AC_CHECK_MEMBERS([DIR.dd_fd],,, [[#include <dirent.h>]]) 
+# on mac OS this keeps failing, but it does have dirfd, although
+# it is an macro
+case "$OSTYPE" in 
+    darwin*)
+	AC_SUBST(HAVE_DIRFD)
+	;;
+    *)
+	# dirfd
+	AC_CHECK_FUNCS([dirfd])
+	AC_CHECK_MEMBERS([DIR.d_fd],,,  [[#include <dirent.h>]])
+	AC_CHECK_MEMBERS([DIR.dd_fd],,, [[#include <dirent.h>]]) 
+	;;
+esac
 
 AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h sys/sysmacros.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
