@@ -15,8 +15,8 @@ AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([** No glib2-dev library found.]))
 
 # on mac OS this keeps failing, but it does have dirfd, although
 # it is an macro
-case "$OSTYPE" in 
-    darwin*)
+case `uname -s` in 
+    Darwin)
 	AC_SUBST(HAVE_DIRFD)
 	;;
     *)
