@@ -27,7 +27,7 @@ case `uname -s` in
 	;;
 esac
 
-AC_CHECK_HEADERS([getopt.h sys/vfs.h sys/statvfs.h sys/sysmacros.h])
+AC_CHECK_HEADERS([getopt.h dirent.h sys/vfs.h sys/statvfs.h sys/sysmacros.h])
 AC_CHECK_HEADERS(sys/param.h sys/mount.h,,,
 [
   [
