@@ -54,6 +54,7 @@ crypt_entry(struct rdup *e, GHashTable *tr)
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		dest = crypt_path(aes_ctx, e->f_target, tr);
+                g_free(e->f_target);
 		e->f_target = dest;
 		e->f_size = strlen(crypt); /* use crypt here */
 	}
@@ -77,6 +78,7 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		dest = decrypt_path(aes_ctx, e->f_target, tr);
+                g_free(e->f_target);
 		e->f_target = dest;
 		e->f_size = strlen(plain);
 	}
@@ -174,6 +176,7 @@ stdin2archive(void)
                         exit(EXIT_FAILURE);
                 }
 
+                g_free(rdup_entry->f_name);
                 rdup_entry->f_name = pathbuf;
 
                 /* extract target from rdup_entry */
@@ -181,6 +184,7 @@ stdin2archive(void)
                         // filesize is spot where to cut and set new size
                         rdup_entry->f_name[rdup_entry->f_size] = '\0';
 			rdup_entry->f_name_size = strlen(rdup_entry->f_name);
+                        g_free(rdup_entry->f_target);
                         rdup_entry->f_target = rdup_entry->f_name +
                                 rdup_entry->f_size + 4;
                 } else {
@@ -215,6 +219,7 @@ stdin2archive(void)
 				(void)rdup_write_header(rdup_entry);
 				goto not_s_isreg;
 			}
+                        g_free(rdup_entry);
 			continue;
 		}
 
@@ -222,6 +227,7 @@ stdin2archive(void)
 			if (rdup_entry->f_lnk == 1) {
 				/* hardlinks must come last */
 				hlinks = g_slist_append(hlinks, entry_dup(rdup_entry));
+                                g_free(rdup_entry);
 				continue;
 			}
 
@@ -232,6 +238,7 @@ stdin2archive(void)
 
 			if (S_ISLNK(rdup_entry->f_mode))
 				archive_entry_copy_symlink(entry, rdup_entry->f_target);
+                        g_free(s);
 		}
 
 		/* size may be changed - we don't care anymore */
@@ -268,6 +275,10 @@ not_s_isreg:
 		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
 
+                g_free(rdup_entry->f_user);
+                g_free(rdup_entry->f_group);
+                g_free(rdup_entry);
+
 	}
 	/* output hardlinks -- if any, is zero for O_RDUP */
 	for (hl = g_slist_nth(hlinks, 0); hl; hl = hl->next) {
@@ -278,6 +289,7 @@ not_s_isreg:
 		archive_entry_copy_hardlink(entry, ((struct rdup *)hl->data)->f_target);
 		archive_write_header(archive, entry);
 		archive_entry_free(entry);
+                g_free(s);
 	}
 
 	if (opt_output != O_RDUP) {
@@ -286,7 +298,6 @@ not_s_isreg:
 	}
 	g_free(readbuf);
 	g_free(buf);
-	g_free(rdup_entry);
 }
 
 int

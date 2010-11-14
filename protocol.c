@@ -161,9 +161,13 @@ block_in_header(FILE *f)
 		msg(_("Illegal block size"));
 		return -1;
 	}
+
+        gchar* out = g_strdup_printf("%c%c%c%c%c",
+			c[0], c[1], c[2], c[3], c[4]);
 	
-	bytes = atoi(g_strdup_printf("%c%c%c%c%c",
-			c[0], c[1], c[2], c[3], c[4]));
+	bytes = atoi(out);
+
+	g_free(out);
 
 	if (bytes > BUFSIZE) {		/* out of bounds...? */
 		msg(_("Block size larger then BUFSIZE"));

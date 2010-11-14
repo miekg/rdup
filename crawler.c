@@ -74,6 +74,7 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 			 * and then stops. We do now the same, heance the return FALSE
 			 */
 			g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
+			g_free(e.f_target);
 			return FALSE;
 		}
 
@@ -218,6 +219,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
+
+			if (S_ISLNK(s.st_mode))
+				g_free(pop.f_target);
 			g_free(curpath);
 			continue;
 		} else if(S_ISDIR(s.st_mode)) {

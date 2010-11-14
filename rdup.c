@@ -73,13 +73,13 @@ g_tree_read_file(FILE *fp)
 	ino_t	      f_ino;
 
 	tree = g_tree_new(gfunc_equal);
+
+	if (!fp)
+	    return tree;
 	buf  = g_malloc(BUFSIZE + 1);
 	s    = BUFSIZE;
 	l    = 1;
 	delim= '\n';
-
-	if (!fp)
-	    return tree;
 
 	while ((rdup_getdelim(&buf, &s, delim, fp)) != -1) {
 		if (sig != 0) {
@@ -439,7 +439,11 @@ main(int argc, char **argv)
 
 	for (i = 1; i < argc; i++) {
 		if (!g_path_is_absolute(argv[i]))
-		    path = abspath(g_strdup_printf("%s/%s", pwd, argv[i]));
+		{
+		    char* path_tmp = g_strdup_printf("%s/%s", pwd, argv[i]);
+		    path = abspath(path_tmp);
+		    g_free(path_tmp);
+		}
 		else
 		    path = abspath(argv[i]);
 
@@ -453,6 +457,7 @@ main(int argc, char **argv)
 
 		/* descend into the dark, misty directory */
 		dir_crawl(backup, linkhash, userhash, grouphash, path);
+		g_free(path);
 	}
 
 	/* everything that is gone from the filesystem */

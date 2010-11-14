@@ -56,9 +56,13 @@ char * abspath(char *path)
 		} else {
 			if (abspath == NULL || abspath[0] == '\0' ||
 				(strcmp(abspath, "/") == 0) )  {
+				g_free(abspath);
 				abspath = g_strconcat("/", p, NULL);
 			} else {
-				abspath = g_strjoin("/", abspath, p, NULL);
+				gchar* tmp = g_strdup(abspath);
+				g_free(abspath);
+				abspath = g_strjoin("/", tmp, p, NULL);
+				g_free(tmp);
 			}
 			*c = '/';
 		}
@@ -67,5 +71,6 @@ char * abspath(char *path)
 	if (abspath == NULL || abspath[0] == '\0')
 		abspath = g_strdup("/");
 
+	g_free(abspath2);
 	return abspath;
 }

@@ -35,7 +35,7 @@ lookup_uid(GHashTable *u, gchar *user, uid_t uid_given)
 	uid = p->pw_uid;
 	uid_tmp = g_malloc(sizeof(uid_t));
 	*uid_tmp = uid;
-	g_hash_table_insert(u, user, (gpointer)uid_tmp);
+	g_hash_table_insert(u, g_strdup(user), (gpointer)uid_tmp);
 
 	uid_tmp = (uid_t *)g_hash_table_lookup(u, user);
 
@@ -64,7 +64,7 @@ lookup_gid(GHashTable *g, gchar *group, gid_t gid_given)
 	gid_tmp = g_malloc(sizeof(gid_t));
 	*gid_tmp = gid;
 
-	g_hash_table_insert(g, group, (gpointer)gid_tmp);
+	g_hash_table_insert(g, g_strdup(group), (gpointer)gid_tmp);
 	
 	gid_tmp = (gid_t *)g_hash_table_lookup(g, group);
 
@@ -91,7 +91,9 @@ lookup_user(GHashTable *u, uid_t uid)
 	 * in the hash. This is also the case for getgrgid()
 	 */
 	n = g_strdup(p->pw_name);
-	g_hash_table_insert(u, (gpointer)&uid, n);
+	uid_t* uid_tmp = g_malloc(sizeof(uid_t));
+        *uid_tmp = uid;
+	g_hash_table_insert(u, (gpointer)uid_tmp, n);
 	return (gchar *)g_hash_table_lookup(u, (gpointer)&uid);
 }
 
@@ -110,6 +112,8 @@ lookup_group(GHashTable *g, gid_t gid)
 		return NULL;
 
 	n = g_strdup(p->gr_name);
-	g_hash_table_insert(g, (gpointer)&gid, n);
+	gid_t* gid_tmp = g_malloc(sizeof(gid_t));
+	*gid_tmp = gid;
+	g_hash_table_insert(g, (gpointer)gid_tmp, n);
 	return (gchar *)g_hash_table_lookup(g, (gpointer)&gid);
 }

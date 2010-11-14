@@ -110,6 +110,10 @@ update(char *path)
 		rdup_entry->f_name = p;
 		if (mk_obj(stdin, path, rdup_entry, uidhash, gidhash) == FALSE)
 			ok = FALSE;
+		g_free(rdup_entry->f_name);
+		g_free(rdup_entry->f_user);
+		g_free(rdup_entry->f_group);
+		g_free(rdup_entry);
 	}
 
 	/* post-process hardlinks */
@@ -233,7 +237,11 @@ main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 		if (!g_path_is_absolute(argv[0]))
-			path = abspath(g_strdup_printf("%s/%s", pwd, argv[0]));
+		{
+			gchar* full_path = g_strdup_printf("%s/%s", pwd, argv[0]);
+			path = abspath(full_path);
+			g_free(full_path);
+		}
 		else
 			path = abspath(argv[0]);
 	}
@@ -259,6 +267,8 @@ main(int argc, char **argv)
 
 	if (update(path) == FALSE)
 		exit(EXIT_FAILURE);
+
+	g_free(path);
 
 	exit(EXIT_SUCCESS);
 }

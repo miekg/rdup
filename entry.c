@@ -84,6 +84,8 @@ parse_entry(char *buf, size_t l)
 			e->f_rdev = 0;
 			e->f_ino  = 0;
 			e->f_lnk  = 0;
+			e->f_target = NULL;
+			e->f_name = NULL;
 
 			/* 1st char should + or - */
 			if (buf[0] != '-' && buf[0] != '+') {
@@ -203,6 +205,7 @@ parse_entry(char *buf, size_t l)
 			
 			break;
 	}
+        g_free(s);
 	return e;
 }
 
@@ -266,6 +269,7 @@ rdup_write_header(struct rdup *e)
 			e->f_group,
 			(unsigned long)e->f_name_size,
 			(size_t)e->f_size, n);
+		g_free(n);
 	} else {
 		out = g_strdup_printf("%c%c %.4o %ld %ld %s %ld %s %ld %zd\n%s",
 			e->plusmin == PLUS ? '+':'-',
@@ -288,6 +292,7 @@ rdup_write_header(struct rdup *e)
 		msg(_("Failed to write to stdout: %s"), strerror(errno));
 		return -1;
 	}
+	g_free(out);
 	return 0;
 }
 
