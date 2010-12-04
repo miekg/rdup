@@ -1,5 +1,5 @@
-xx YYY 2010: 1.1.9 Miek Gieben <rdup@miek.nl>
-   * Fix whooping amount of memleaks (Crispin Boylan)
+04 Dec 2010: 1.1.9 Miek Gieben <rdup@miek.nl>
+   * Fix whooping amount of memleaks (rdup-tr, rdup-up) (Crispin Boylan)
 
 
 24 Oct 2010: 1.1.8 Miek Gieben <rdup@miek.nl>
