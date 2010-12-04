@@ -110,10 +110,10 @@ update(char *path)
 		rdup_entry->f_name = p;
 		if (mk_obj(stdin, path, rdup_entry, uidhash, gidhash) == FALSE)
 			ok = FALSE;
-		g_free(rdup_entry->f_name);
-		g_free(rdup_entry->f_user);
-		g_free(rdup_entry->f_group);
-		g_free(rdup_entry);
+//		g_free(rdup_entry->f_name);
+//		g_free(rdup_entry->f_user);
+//		g_free(rdup_entry->f_group);
+//		g_free(rdup_entry);
 	}
 
 	/* post-process hardlinks */
@@ -236,8 +236,7 @@ main(int argc, char **argv)
 			msg(_("Destination directory is required"));
 			exit(EXIT_FAILURE);
 		}
-		if (!g_path_is_absolute(argv[0]))
-		{
+		if (!g_path_is_absolute(argv[0])) {
 			gchar* full_path = g_strdup_printf("%s/%s", pwd, argv[0]);
 			path = abspath(full_path);
 			g_free(full_path);
