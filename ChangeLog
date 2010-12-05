@@ -1,5 +1,5 @@
 05 Dec 2010: 1.1.10 Miek Gieben <rdup@miek.nl>
-   * One too many memleak fix removed (Tom Hendrikx)
+   * One memleak fix removed (Tom Hendrikx)
 
 
 04 Dec 2010: 1.1.9 Miek Gieben <rdup@miek.nl>
