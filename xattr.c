@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005 - 2010 Miek Gieben
+ * Copyright (c) 2005 - 2011 Miek Gieben
  * See LICENSE for the license
  *
  * Not used anymore - this is a hack that I don't want to

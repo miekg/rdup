@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009,2010 Miek Gieben
+ * Copyright (c) 2009-2011 Miek Gieben
  * child.c handle child stuff
  */
 

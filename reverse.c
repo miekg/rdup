@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Miek Gieben
+ * Copyright (c) 2005 - 2011 Miek Gieben
  * See LICENSE for the license
  * Reverse a GTree by putting all element in a GList
  * and reverse print that. Needed for rdup's -R switch

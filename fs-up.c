@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009,2010 Miek Gieben
+ * Copyright (c) 2009 - 2011 Miek Gieben
  * See LICENSE for the license
  * rdup-up -- update an directory tree with
  * and rdup archive
