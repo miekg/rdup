@@ -227,7 +227,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 		} else if(S_ISDIR(s.st_mode)) {
 			/* one filesystem */
 			if (opt_onefilesystem && s.st_dev != current_dev) {
-				msg(_("Walking into different filesystem"));
+				msg(_("Not walking into different filesystem"));
 				g_free(curpath);
 				continue;
 			}
