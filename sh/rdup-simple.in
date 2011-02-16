@@ -152,7 +152,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Lnq" o; do
 		enc=true
 		;;
                 f) force=true;;
-                q) OPT_QUIET=" -q "
+                q) OPT_QUIET=" -q ";;
 		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
 		n) dry=true; OPT_DRY=" -n ";;
