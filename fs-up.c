@@ -14,6 +14,7 @@
 extern int sig;
 extern gboolean opt_dry;
 extern gboolean opt_table;
+extern gboolean opt_quiet;
 extern guint opt_strip;
 extern gint opt_verbose;
 extern GSList *hlink_list;
@@ -42,7 +43,7 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 	/* Capabilities under Linux?? TODO */
 	if (getuid() == 0)
-		if (lchown(e->f_name, u, g) == -1)
+		if (lchown(e->f_name, u, g) == -1 && ! opt_quiet)
 			msgd(__func__, __LINE__,_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
 	return TRUE;
 }

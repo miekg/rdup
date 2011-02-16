@@ -13,6 +13,7 @@ char *PROGNAME="rdup-up";
 gint opt_verbose 	   = 0;                         /* be more verbose */
 gint opt_output		   = O_RDUP;			/* set these 2 so we can use parse_entry */
 gint opt_input	           = I_RDUP;
+gboolean opt_quiet         = FALSE;                     /* don't complain about chown() errors */
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_table	   = FALSE;			/* table of contents */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
@@ -212,6 +213,9 @@ main(int argc, char **argv)
 				}
 				opt_path_strip_len--;	/* we added the closing slash, so need -1 here */
 				break;
+                        case 'q':
+                                opt_quiet = TRUE;
+                                break;
 			case 't':
 				opt_top = TRUE;
 				break;
