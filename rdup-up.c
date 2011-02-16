@@ -168,7 +168,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "thnVvs:r:T")) != -1) {
+	while ((c = getopt (argc, argv, "thnVvs:r:Tq")) != -1) {
 		switch (c) {
 			case 'v':
 				if (!opt_verbose)
