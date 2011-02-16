@@ -77,6 +77,7 @@ OPTIONS:
  -n	    dry run; show the actually rdup command and pass -n to rdup
  -a	    reset atime
  -x         pass -x to rdup
+ -q         pass -q to rdup-up
  -s NUM	    pass -s NUM to rdup-up (strip NUM leading path components)
  -X FILE    encrypt all paths with AES and key in FILE
  -Y FILE    decrypt all paths with AES and key in FILE
@@ -101,7 +102,7 @@ link=false
 dry=false
 mcrypt=false
 
-while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
+while getopts "aE:k:vfgzxhVX:Y:s:Lnq" o; do
         case $o in
 		a) atime=" -a " ;;
 		E)
@@ -151,6 +152,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Ln" o; do
 		enc=true
 		;;
                 f) force=true;;
+                q) OPT_QUIET=" -q "
 		s) STRIP="-s $OPTARG";;
                 v) OPT=" $OPT -v "; verbose=true;;
 		n) dry=true; OPT_DRY=" -n ";;
@@ -235,9 +237,9 @@ LIST=$etc/list.${HOSTNAME}.${dest//\//_}
 
 # remote or not
 if [ -z "$ssh" ]; then
-        pipe="rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
+        pipe="rdup-up$OPT $OPT_QUIET $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 else
-        pipe="$ssh rdup-up$OPT $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
+        pipe="$ssh rdup-up$OPT $OPT_QUIET $OPT_DRY $STRIP -t $BACKUPDIR/$NOW"
 fi
 # path encryption
 if [ -n "$pathtrans" ]; then
