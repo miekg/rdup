@@ -10,7 +10,7 @@ echo2() {
 }
 
 version() {
-    echo "$(basename $PROGNAME) @PACKAGE_VERSION@"
+    rdup -V
 }
 
 copy_and_link() {
