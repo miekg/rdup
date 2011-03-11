@@ -24,6 +24,7 @@ Update a directory tree with an rdup archive.\n\
 	-n\t\tdry run, do not touch the filesystem\n\
 	-V\t\tprint version\n\
 	-T\t\tshow table of contents. DIRECTORY is optional\n\
+        -q\t\tsilence \'chown\' failures even when \'root\'\n\
 	-h\t\tthis help\n\
 	-v\t\tbe more verbose and print processed files to stdout\n\
 \n\
