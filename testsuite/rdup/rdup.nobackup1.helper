@@ -1,9 +1,9 @@
 #!/bin/bash
 
-touch sh/.nobackup
-total=$(./rdup -v /dev/null sh 2> /dev/null | sed -s "s/.*sh/sh/g" | grep 'sh/' | wc -l)
-# total should be 1 sh/.nobackup + zero content
+touch doc/.nobackup
+total=$(./rdup -v /dev/null doc 2> /dev/null | grep 'doc/' | wc -l)
+# total should be 1 doc/.nobackup + zero content
 if [ $total -ne 1 ];then
     echo FOUT
 fi
-rm sh/.nobackup
+rm doc/.nobackup
