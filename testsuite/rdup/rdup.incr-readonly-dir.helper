@@ -27,13 +27,13 @@ cp -rap doc doc2
 chmod a-w doc2
 
 # setup rdup-simple with doc2
-./sh/rdup-simple doc doc2 tmp
+./rdup-simple doc doc2 tmp
 
 # fails on the first
 ( cd tmp; cd *; mv [0-9][0-9] 01 )
 
 # without doc2
-./sh/rdup-simple doc doc2 tmp
+./rdup-simple doc doc2 tmp
 
 sleep 1
 

@@ -19,7 +19,7 @@ rm -f ~/.rdup/timestamp.$(uname -n).tmp
 
 rm -rf tmp
 mkdir tmp
-./sh/rdup-simple -g doc tmp
+./rdup-simple -g doc tmp
 EXIT=$?
 rm -rf tmp
 rm -f ~/.rdup/list.$(uname -n).tmp
