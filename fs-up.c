@@ -225,6 +225,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			if (out)
 				fclose(out);
 			opt_dry = old_dry;
+                        g_free(buf);
 			return FALSE;
 		}
 		if (ok && !opt_dry) {
@@ -233,6 +234,7 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 				if (out)
 					fclose(out);
 				opt_dry = old_dry;
+                                g_free(buf);
 				return FALSE;
 			}
 		}

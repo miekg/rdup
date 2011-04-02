@@ -44,6 +44,7 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 		*c = '\0';
 		if (lstat(path2, &s) != 0) {
 			msg(_("Could not stat path `%s\': %s"), path2, strerror(errno));
+                        g_free(path2);
 			return FALSE;
 		}
 		e.f_name      = path2;
@@ -75,6 +76,7 @@ dir_prepend(GTree *t, char *path, GHashTable *u, GHashTable *g)
 			 */
 			g_tree_insert(t, (gpointer) entry_dup(&e), VALUE);
 			g_free(e.f_target);
+                        g_free(path2);
 			return FALSE;
 		}
 
