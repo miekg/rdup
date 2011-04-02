@@ -219,7 +219,6 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				pop.f_name_size += 4 + strlen(pop.f_target);
 			}
 
-
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 
 			if (S_ISLNK(s.st_mode))
