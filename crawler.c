@@ -221,7 +221,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 
-			if (S_ISLNK(s.st_mode))
+			if (pop.f_target != NULL)
 				g_free(pop.f_target);
 			g_free(curpath);
 			continue;
