@@ -23,9 +23,8 @@ hlink(GHashTable *t, struct rdup *e)
 	key = g_strdup_printf("%d,%d", (gint)e->f_dev, (gint)e->f_ino);
 
 	if ( ! (name = g_hash_table_lookup(t, (gpointer)key))) {
-		g_hash_table_insert(t, g_strdup(key), g_strdup(e->f_name));
+		g_hash_table_insert(t, key, g_strdup(e->f_name));
 	}
-	g_free(key);
 	return g_strdup(name); /* entry_free will free this */
 }
 
