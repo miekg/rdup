@@ -37,36 +37,34 @@ struct rdup *
 parse_entry(char *buf, size_t l)
 {
 	struct rdup *e;
-	struct stat *s;
+	struct stat s;
 	gint i;
 	char *n, *pos;
 	e = g_malloc(sizeof(struct rdup));
-	s = g_malloc(sizeof(struct stat));
 	e->f_ctime = 0;		/* not used in rdup-* */
 	
 	switch (opt_input) {
 		case I_LIST:
-			if (lstat(buf, s) == -1) {
+			if (lstat(buf, &s) == -1) {
 				msg(_("Could not stat path `%s\': %s"), buf, strerror(errno));
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 			e->plusmin     = PLUS;
 			e->f_name      = g_strdup(buf);
 			e->f_name_size = strlen(buf);
 			e->f_target    = NULL;
-			e->f_mode      = s->st_mode;
-			e->f_uid       = s->st_uid;
-			e->f_gid       = s->st_gid;
-			e->f_size      = s->st_size;
-			e->f_dev       = s->st_dev;
-			e->f_ino       = s->st_ino;
-			e->f_rdev      = s->st_rdev;
+			e->f_mode      = s.st_mode;
+			e->f_uid       = s.st_uid;
+			e->f_gid       = s.st_gid;
+			e->f_size      = s.st_size;
+			e->f_dev       = s.st_dev;
+			e->f_ino       = s.st_ino;
+			e->f_rdev      = s.st_rdev;
 			e->f_lnk       = 0;
-			e->f_ctime     = s->st_ctime;
-			e->f_mtime     = s->st_mtime;
-			e->f_atime     = s->st_atime;
+			e->f_ctime     = s.st_ctime;
+			e->f_mtime     = s.st_mtime;
+			e->f_atime     = s.st_atime;
 
 			/* you will loose hardlink information here
 			 * as 'stat' cannot check this */
@@ -79,7 +77,6 @@ parse_entry(char *buf, size_t l)
 			if (strlen(buf) < LIST_MINSIZE){
 				msg(_("Corrupt entry `%s\' in input at line: %zd"), buf, l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 
@@ -95,7 +92,6 @@ parse_entry(char *buf, size_t l)
 			if (buf[0] != '-' && buf[0] != '+') {
 				msg(_("First character should \'-\' or \'+\', `%s\' at line: %zd"), buf, l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 			if (buf[0] == '+')
@@ -106,7 +102,6 @@ parse_entry(char *buf, size_t l)
 			if (opt_output != O_RDUP && e->plusmin == MINUS) {
 				msg(_("Removing files is not supported for any output except rdup"));
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 
@@ -123,7 +118,6 @@ parse_entry(char *buf, size_t l)
 				default:
 					msg(_("Type must be one of d, l, h, -, c, b, p or s"));
                                         g_free(e);
-                                        g_free(s);
 					return NULL;
 			}
 			
@@ -133,7 +127,6 @@ parse_entry(char *buf, size_t l)
 			if (i < 0 || i > 07777) {
 				msg(_("Invalid permissions at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 			e->f_mode |= i;
@@ -143,7 +136,6 @@ parse_entry(char *buf, size_t l)
 			if (!n) {
 				msg(_("Malformed input for m_time at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 			e->f_mtime = (time_t)atol(buf + 8);
@@ -154,7 +146,6 @@ parse_entry(char *buf, size_t l)
 			if (!n) {
 				msg(_("Malformed input for uid at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			} else {
 				*n = '\0';
@@ -167,7 +158,6 @@ parse_entry(char *buf, size_t l)
 			if (!n) {
 				msg(_("Malformed input for user at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			} else {
 				*n = '\0';
@@ -180,7 +170,6 @@ parse_entry(char *buf, size_t l)
 			if (!n) {
 				msg(_("Malformed input for gid at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			} else {
 				*n = '\0';
@@ -193,7 +182,6 @@ parse_entry(char *buf, size_t l)
 			if (!n) {
 				msg(_("Malformed input for group at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			} else {
 				*n = '\0';
@@ -206,7 +194,6 @@ parse_entry(char *buf, size_t l)
 			if (!n) {
 				msg(_("Malformed input for path length at line: %zd"), l);
                                 g_free(e);
-                                g_free(s);
 				return NULL;
 			}
 			e->f_name_size = atoi(pos); /* checks */
@@ -218,6 +205,7 @@ parse_entry(char *buf, size_t l)
 				n = strchr(pos, ',');
 				if (!n) {
 					msg("No major,minor found for device at line: %zd", l);
+                                        g_free(e);
 					return NULL;
 				}
 				*n = '\0';
@@ -229,7 +217,6 @@ parse_entry(char *buf, size_t l)
 			
 			break;
 	}
-        g_free(s);
 	return e;
 }
 

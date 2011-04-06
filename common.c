@@ -10,8 +10,16 @@ entry_dup(struct rdup *f)
         struct rdup *g;
         g = g_malloc(sizeof(struct rdup));
 	g->plusmin	= f->plusmin;
-        g->f_name       = g_strdup(f->f_name);
-        g->f_target     = g_strdup(f->f_target);
+        if (f->f_name != NULL)
+                g->f_name       = g_strdup(f->f_name);
+        else
+                g->f_name       = NULL;
+
+        if (f->f_target != NULL)
+                g->f_target     = g_strdup(f->f_target);
+        else
+                g->f_target     = NULL;
+
         g->f_name_size  = f->f_name_size;
         g->f_lnk	= f->f_lnk;
         g->f_uid        = f->f_uid;
@@ -32,7 +40,9 @@ entry_dup(struct rdup *f)
 void
 entry_free(struct rdup *f)
 {
-	g_free(f->f_name);
-	g_free(f->f_target);
+        if (f->f_name != NULL)
+        	g_free(f->f_name);
+        if (f->f_target != NULL)
+	        g_free(f->f_target);
 	g_free(f);
 }

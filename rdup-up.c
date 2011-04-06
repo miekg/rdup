@@ -111,11 +111,9 @@ update(char *path)
 		rdup_entry->f_name = p;
 		if (mk_obj(stdin, path, rdup_entry, uidhash, gidhash) == FALSE)
 			ok = FALSE;
-//	Look into this XXX
-//		g_free(rdup_entry->f_name);
-//		g_free(rdup_entry->f_user);
-//		g_free(rdup_entry->f_group);
-//		g_free(rdup_entry);
+                g_free(rdup_entry->f_user);
+                g_free(rdup_entry->f_group);
+		g_free(rdup_entry);
 	}
 
 	/* post-process hardlinks */

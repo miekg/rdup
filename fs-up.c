@@ -22,6 +22,10 @@ extern GSList *hlink_list;
 /* signal.c */
 void got_sig(int signal);
 
+/* common.c */
+struct rdup * entry_dup(struct rdup *); 
+void entry_free(struct rdup *); 
+
 static gboolean
 mk_time(struct rdup *e)
 {
@@ -170,7 +174,7 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 	/* target must also fall in backup dir */
 	t = g_strdup_printf("%s%s", p, e->f_target);
 	e->f_target = t;
-	hlink_list = g_slist_append(hlink_list, e);
+	hlink_list = g_slist_append(hlink_list, entry_dup(e));
 	return TRUE;
 }
 
@@ -206,9 +210,11 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			st = dir_write(parent);
 			if (!(out = fopen(e->f_name, "w"))) {
 				msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
+                                g_free(parent);
 				ok = FALSE;
 			}
 			dir_restore(parent, st);
+                        g_free(parent);
 		} else {
 			msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
 			ok = FALSE;
@@ -397,6 +403,7 @@ mk_hlink(GSList *h)
 				return FALSE;
 			}
 		}
+                entry_free(e);
 	}
 	return TRUE;
 }
