@@ -1,5 +1,7 @@
-xx Apr 2011: 1.1.12 Miek Gieben <rdup@miek.nl>
+21 Jan 2012: 1.1.12 Miek Gieben <rdup@miek.nl>
    * Test suite fixed
+   * Fix Debian bug 627617
+
 
 18 Feb 2011. 1.1.11 Miek Gieben <rdup@miek.nl>
    * Polish
