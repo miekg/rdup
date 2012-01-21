@@ -1,3 +1,7 @@
+xx Yyy 2012: 1.1.13 Miek Gieben <rdup@miek.nl>
+   * Make rdup-tr compile when libnettle was not found
+
+
 21 Jan 2012: 1.1.12 Miek Gieben <rdup@miek.nl>
    * Test suite fixed
    * Fix Debian bug 627617

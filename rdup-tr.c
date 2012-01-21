@@ -104,7 +104,10 @@ stdin2archive(void)
 	struct rdup  *rdup_entry = NULL;
 	GSList *hlinks = NULL;
 	GSList *hl     = NULL;
+#ifdef HAVE_LIBNETTLE
 	GHashTable *trhash;		/* look up for encrypted/decrypted strs */
+	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
+#endif /* HAVE_LIBNETTLE */
 
 	delim   = '\n';
 	i       = BUFSIZE;
@@ -115,7 +118,6 @@ stdin2archive(void)
 	j	= ARCHIVE_OK;
 	entry   = NULL;
 	line    = 0;
-	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
 
 	if (opt_output == O_RDUP) {
 		archive = NULL;
