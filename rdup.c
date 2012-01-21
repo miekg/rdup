@@ -59,7 +59,7 @@ g_tree_subtract(GTree *a, GTree *b)
 static GTree *
 g_tree_read_file(FILE *fp)
 {
-	gchar 	      *buf, *n, *p, *q;
+	gchar 	      *buf, *p, *q;
 	gchar 	      delim, linktype;
 	mode_t        modus;
 	GTree         *tree;
@@ -94,7 +94,7 @@ g_tree_read_file(FILE *fp)
 		if (s < LIST_MINSIZE)
 			CORRUPT("Corrupt entry at line: %zd, line to short");
 
-		n = strrchr(buf, '\n');
+		/* n = strrchr(buf, '\n'); */
 
 		/* get modus */
 		if (buf[LIST_SPACEPOS] != ' ')
