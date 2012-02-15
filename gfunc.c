@@ -441,12 +441,12 @@ gfunc_write(gpointer data, gpointer value, gpointer fp)
 	if (S_ISDIR(e->f_mode)) /* the same as in the normal output */
 		file_size = 0;
 
-	fprintf((FILE*) fp, "%5ld %ld %ld %c %ld %ld %ld %ld %s", (long int)e->f_mode,
+	fprintf((FILE*) fp, "%5ld %ld %lld %c %ld %ld %ld %lld %s", (long int)e->f_mode,
 			(long int)e->f_dev,
-			(long int)e->f_ino, linktype,
+			(long long)e->f_ino, linktype,
 			(long int)e->f_uid,
 			(long int)e->f_gid,
-			(long int)name_size, (long int)file_size, n);
+			(long int)name_size, (long long)file_size, n);
 	fputc('\n', (FILE*)fp);
 	g_free(n);
 	return FALSE;

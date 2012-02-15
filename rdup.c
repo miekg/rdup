@@ -123,7 +123,7 @@ g_tree_read_file(FILE *fp)
 			CORRUPT("Corrupt entry at line: %zd, no space found");
 		
 		*p = '\0';
-		f_ino = (ino_t)atoi(q);
+		f_ino = (ino_t)atoll(q);
 		if (f_ino == 0)
 			CORRUPT("Corrupt entry at line: %zd, zero inode");
 
@@ -168,7 +168,7 @@ g_tree_read_file(FILE *fp)
 			CORRUPT("Corrupt entry at line: %zd, no space found");
 
 		*p = '\0';
-		f_size = (size_t)atoi(q);
+		f_size = (size_t)atoll(q);
 
 		/* with getdelim we read the delimeter too kill it here */
 		str_len = strlen(p + 1);
