@@ -83,7 +83,7 @@ realclean: clean
 	rm -f rdup*.tar.bz2
 	rm -f rdup*.tar.bz2.sha1
 	rm -f ${MAN1}
-	rm -r sh/rdup-simple
+	rm -r rdup-simple
 	$(MAKE) -C po realclean
 
 distclean: 
