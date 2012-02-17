@@ -50,7 +50,7 @@ implement a (incremental) backup scheme.\n\
         \'%u\': uid\n\
         \'%g\': gid\n\
         \'%l\': path length (for links: length of \'path -> target\')\n\
-        \'%s\': file size\n\
+        \'%s\': original file size\n\
         \'%n\': path (for links: \'path -> target\')\n\
         \'%N\': path (for links: \'path')\n\
         \'%t\': time of modification (epoch)\n\

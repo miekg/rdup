@@ -274,7 +274,7 @@ The following escape sequences are understood by \fBrdup\fR:
 .BR
         'l': path name length
 .BR
-        's': file size, but see 
+        's': original file size, but see 
 .B CAVEATS 
 .BR
         'n': path name

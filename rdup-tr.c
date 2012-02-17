@@ -93,11 +93,11 @@ decrypt_entry(struct rdup *e, GHashTable *tr)
 static void
 stdin2archive(void)
 {
-	char		*buf, *fbuf, *readbuf, *n, *pathbuf;
+	char		*buf, *fbuf, *readbuf, *n, *pathbuf, *tmpname;
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		bytes;
-	int		j;
+	int		j, k, tmpfd = 0;
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     *s;
@@ -109,6 +109,7 @@ stdin2archive(void)
 	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
 #endif /* HAVE_LIBNETTLE */
 
+        tmpname = g_strdup("rdup-XXXXXX");
 	delim   = '\n';
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
@@ -122,6 +123,12 @@ stdin2archive(void)
 	if (opt_output == O_RDUP) {
 		archive = NULL;
 	} else {
+                // Open tmpfile
+                tmpfd = mkstemp(tmpname);
+                if (tmpfd == -1) {
+                        msg(_("Failure to open temporary file: %s\n"), strerror(errno));
+                        exit(EXIT_FAILURE);
+                }
 		if ( (archive = archive_write_new()) == NULL) {
 			msg(_("Failed to create archive"));
 			exit(EXIT_FAILURE);
@@ -243,35 +250,60 @@ stdin2archive(void)
                         g_free(s);
 		}
 
-		/* size may be changed - we don't care anymore */
-		if (opt_output != O_RDUP)
-			archive_write_header(archive, entry);
-		else
+		if (opt_output == O_RDUP)
 			(void)rdup_write_header(rdup_entry);
 
 		/* bail out for non regular files */
-		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1)
+		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
+                        // We haven't written a header yet for != O_RDUP
+			archive_write_header(archive, entry);
 			goto not_s_isreg;
+                }
 
 		/* regular files */
+                ssize_t totalbytes = 0;
 		while ((bytes = block_in_header(stdin)) > 0) {
+                        totalbytes += bytes;
 			if (block_in(stdin, bytes, fbuf) == -1) {
 				msg(_("Failure to read from stdin: %s"), strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 
-			if (sig != 0)
+			if (sig != 0) {
 				signal_abort(sig);
+                        }
 
 			if (opt_output == O_RDUP)
 				(void)rdup_write_data(rdup_entry, fbuf, bytes);
-			else
-				archive_write_data(archive, fbuf, bytes);
-		}
 
+                        if (opt_output != O_RDUP) {
+                                // Write to temp file
+                                if (write(tmpfd, fbuf, bytes) != bytes) {
+                                        msg(_("Failure to write to temporary file: %s"), strerror(errno));
+                                        exit(EXIT_FAILURE);
+                                }
+                        }
+		}
 		/* final block for rdup output */
 		if (opt_output == O_RDUP)
 			block_out_header(NULL, 0, 1);
+
+                if (opt_output != O_RDUP) {
+                        // For output that is not O_RDUP we saved the data in a temporary file.
+                        // Read back this data and output the archive with the correct size.
+                        archive_entry_set_size(entry, totalbytes);
+			archive_write_header(archive, entry);
+                        if (lseek(tmpfd, 0, SEEK_SET) == -1) {
+                                msg(_("Failure to rewind temporary file"), strerror(errno));
+                                exit(EXIT_FAILURE);
+                        }
+                        
+                        k = read(tmpfd, fbuf, BUFSIZE);
+                        while (k > 0) {
+				archive_write_data(archive, fbuf, k);
+                                k = read(tmpfd, fbuf, BUFSIZE);
+                        }
+                }
 
 not_s_isreg:
 		if (opt_output != O_RDUP)
@@ -297,6 +329,7 @@ not_s_isreg:
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
+                close(tmpfd);
 	}
 	g_free(readbuf);
 	g_free(buf);
