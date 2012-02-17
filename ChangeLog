@@ -1,8 +1,10 @@
-16 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>
+18 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>
    * Make rdup-tr compile when libnettle was not found (Miek Gieben)
    * Fix for very large inodes and filesizes (Kojedzinszky Richard)
    * Fix tar/pax output when the filesize of files changes (rdup -Pgzip for
-     instance) (Reported by: Alejandro Pulver)
+     instance) (Reported by: Alejandro Pulver). This created files padded
+     with zero bytes.
+
 
 21 Jan 2012: 1.1.12 Miek Gieben <rdup@miek.nl>
    * Test suite fixed
