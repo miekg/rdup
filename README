@@ -1,41 +1,47 @@
-1/ TO BUILD
+# TO BUILD
 
 Run:
-autoreconf && ./configure && make 
+
+    autoreconf && ./configure && make 
 
 Then a:
-make install
 
-as root, to get rdup installed.
+    make install
+
+as root, to get `rdup` installed.
 
 Optionally you can also do a:
-make check
+
+    make check
 
 to run the test suite, note that you will need DejaGNU installed 
 for this to work. If you find errors in this testrun, please
 look at testlogs/rdup.log and send that to the author.
 
 rdup depends on:
-o Gmake for compilation
-o Glib to build. Glib is the low level C library of the
+
+* Gmake for compilation
+* Glib to build. Glib is the low level C library of the
   GTK project. Configure will check for this.
-o PCRE library 
-o LibNettle  - if you want rdup-tr to do path encryption and
+* PCRE library 
+* LibNettle  - if you want rdup-tr to do path encryption and
   for sha hashing
 
 optional:
-o Libarchive - if you want to have rdup-tr
+
+* Libarchive - if you want to have rdup-tr
 
 rdup should compile on all unix platforms out there. It is tested on
 the following
-o Linux
-o Solaris
-o FreeBSD
+
+* Linux
+* Solaris
+* FreeBSD
 
 ./configure will try to do the right thing, if you don't have
 specific libraries certain functionality isn't built.
 
-2/ DIFFERENCE WITH RSYNC
+# DIFFERENCE WITH RSYNC
 
 While rsync really works well, I wanted to have the ability to gzip
 and/or encrypt the backed up files. rsync can not do that. That is why I
@@ -44,7 +50,7 @@ wrote rdup, which, with the help of rdup-tr and rdup-up will do that.
 Rdup was created to make custom backups, but due to its flexibility it
 can be used for much more.
 
-3/ DOCUMENTATION
+# DOCUMENTATION
 
 rdup is a utility inspired by rsync and the plan9 way of doing backups.
 rdup it self does not backup anything, it only print a list of absolute
@@ -63,13 +69,13 @@ A small script 'rdup-simple' is also included, this makes starting
 with rdup even more easy: rdup-simple ~ /backup. Will create a
 backup of your homedir in /backup.
 
-4/ COPYRIGHT
+# COPYRIGHT
 
 All files in this archive are copyrighted by Miek Gieben, unless stated
 otherwise in the file itself.
 
 (c) Miek Gieben, 2005-2011.
 
-5/ LICENSE
+# LICENSE
 
 GPL, version 3, see the file LICENSE.

@@ -2,21 +2,25 @@ rdup is a small program, which depends on a number of a other programs
 and tools to make it all work. The dependencies are listed here:
 
 Mandatory:
-o libglib (core C gtk library)
-o libpcre (Perl regular expressions)
-o libssl  (OpenSSL)
-o libarchive (Create tar/cpio/etc archive - used in rdup-tr)
+
+* libglib (core C gtk library)
+* libpcre (Perl regular expressions)
+* libnettle  (Nettle - small crypto library)
+* libarchive (Create tar/cpio/etc archive - used in rdup-tr)
 
 If libarchive is not found rdup-tr is not built.
 
 To build from git:
-autoconf && ./configure && make && make install
+
+    autoconf && ./configure && make && make install
 
 from tar.bz2:
-./configure && make && make install
+
+    ./configure && make && make install
 
 To run the testsuite:
-make check
+
+    make check
 
 DejaGNU is used for the testsuite.
 
