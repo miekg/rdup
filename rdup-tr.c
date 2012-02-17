@@ -256,7 +256,9 @@ stdin2archive(void)
 		/* bail out for non regular files */
 		if (! S_ISREG(rdup_entry->f_mode) || rdup_entry->f_lnk == 1) {
                         // We haven't written a header yet for != O_RDUP
-			archive_write_header(archive, entry);
+                        if (opt_output != O_RDUP) {
+			        archive_write_header(archive, entry);
+                        }
 			goto not_s_isreg;
                 }
 
