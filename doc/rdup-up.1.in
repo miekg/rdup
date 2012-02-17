@@ -60,10 +60,6 @@ to count the slashes. Note \-s is always performed before \-r.
 .B \-v
 Be more verbose and echo the processed files to \fIstandard output\fR.
 .TP
-.B \-vv
-Be even more verbose and echo processed file \fIand\fR the uid and
-gid information to standard output.
-.TP
 .B \-T
 Show a table of contents of the rdup stream received (ala tar \-tf \-).
 With \-T the directory argument is optional. \-T unsets any verbose (\-v) options.

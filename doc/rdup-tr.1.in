@@ -72,7 +72,7 @@ Force output to the tty. Normally \fBrdup-tr\fR wants to see it's
 output redirected.
 .TP
 .B \-v
-Be more verbose. 
+Be more verbose. Print the processed file names to standard error.
 .TP
 .B \-V
 Print rdup-tr's version.

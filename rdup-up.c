@@ -169,10 +169,7 @@ main(int argc, char **argv)
 	while ((c = getopt (argc, argv, "thnVvs:r:Tq")) != -1) {
 		switch (c) {
 			case 'v':
-				if (!opt_verbose)
-					opt_verbose++;
-				else
-					opt_verbose = 0;
+				opt_verbose = 1;
 				break;
 			case 'h':
 				usage_up(stdout);

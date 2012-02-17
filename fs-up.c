@@ -314,20 +314,14 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 gboolean
 mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 {
-	if (opt_verbose == 1  && e->f_name) {
+	if (opt_verbose >= 1  && e->f_name) {
 		if (S_ISLNK(e->f_mode) || e->f_lnk)
-			fprintf(stdout, "%s -> %s\n", e->f_name, e->f_target);
+			fprintf(stderr, "%s -> %s\n", e->f_name, e->f_target);
 		else
-			fprintf(stdout, "%s\n", e->f_name);
-	
+			fprintf(stderr, "%s\n", e->f_name);
 	}
 	if (opt_table)
 		rdup_write_table(e, stdout);
-
-	if (opt_verbose == 2 && e->f_name)
-		fprintf(stdout, "%c %d %d %s\n",
-				e->plusmin == PLUS ? '+' : '-',
-				e->f_uid, e->f_gid, e->f_name);
 
 	/* split here - or above - return when path is zero length
 	 * for links check that the f_size is zero */
