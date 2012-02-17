@@ -97,7 +97,8 @@ stdin2archive(void)
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		bytes;
-	int		j, k, tmpfd = 0;
+	int		j, k
+        int             tmpfd = -1;
 	struct archive  *archive;
 	struct archive_entry *entry;
 	struct stat     *s;
@@ -109,7 +110,7 @@ stdin2archive(void)
 	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
 #endif /* HAVE_LIBNETTLE */
 
-        tmpname = g_strdup("rdup-XXXXXX");
+        tmpname = g_strdup("/tmp/rdup-XXXXXX");
 	delim   = '\n';
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
@@ -131,6 +132,7 @@ stdin2archive(void)
                 }
 		if ( (archive = archive_write_new()) == NULL) {
 			msg(_("Failed to create archive"));
+                        tmpclean(opt_output, tmpfd, tmpname)
 			exit(EXIT_FAILURE);
 		}
 
@@ -151,6 +153,7 @@ stdin2archive(void)
 
 		if (j != ARCHIVE_OK) {
 			msg(_("Failed to set archive type to %s"), o_fmt[opt_output]);
+                        tmpclean(opt_output, tmpfd, tmpname)
 			exit(EXIT_FAILURE);
 		} else {
 			archive_write_open_fd(archive, 1);
@@ -163,11 +166,14 @@ stdin2archive(void)
 		if (n)
 			*n = '\0';
 
-		if (sig != 0)
+		if (sig != 0) {
+                        tmpclean(opt_output, tmpfd, tmpname)
 			signal_abort(sig);
+                }
 
 		if (!(rdup_entry = parse_entry(buf, line))) {
 			/* msgs from entry.c */
+                        tmpclean(opt_output, tmpfd, tmpname)
 			exit(EXIT_FAILURE);
 		}
 
@@ -177,11 +183,13 @@ stdin2archive(void)
                 if (pathsize != rdup_entry->f_name_size) {
                         msg(_("Reported name size (%zd) does not match actual name size (%zd)"),
                                         rdup_entry->f_name_size, pathsize);
+                        tmpclean(opt_output, tmpfd, tmpname)
                         exit(EXIT_FAILURE);
                 }
                 pathbuf[pathsize] = '\0';
                 if (pathbuf[0] != '/') {
                         msg(_("Pathname does not start with /: `%s\'"), pathbuf);
+                        tmpclean(opt_output, tmpfd, tmpname)
                         exit(EXIT_FAILURE);
                 }
 
@@ -208,8 +216,10 @@ stdin2archive(void)
 			}
 		}
 
-		if (sig != 0)
+		if (sig != 0) {
+                        tmpclean(opt_output, tmpfd, tmpname)
 			signal_abort(sig);
+                }
 
 		rdup_entry = rdup_entry;
 #ifdef HAVE_LIBNETTLE
@@ -218,8 +228,10 @@ stdin2archive(void)
 		if (opt_decrypt_key)
 			rdup_entry = decrypt_entry(rdup_entry, trhash);
 
-		if (!rdup_entry)
+		if (!rdup_entry) {
+                        tmpclean(opt_output, tmpfd, tmpname)
 			exit(EXIT_FAILURE); /* encryption problem */
+                }
 
 #endif /* HAVE_LIBNETTLE */
 
@@ -268,10 +280,12 @@ stdin2archive(void)
                         totalbytes += bytes;
 			if (block_in(stdin, bytes, fbuf) == -1) {
 				msg(_("Failure to read from stdin: %s"), strerror(errno));
+                                tmpclean(opt_output, tmpfd, tmpname)
 				exit(EXIT_FAILURE);
 			}
 
 			if (sig != 0) {
+                                tmpclean(opt_output, tmpfd, tmpname)
 				signal_abort(sig);
                         }
 
@@ -282,6 +296,7 @@ stdin2archive(void)
                                 // Write to temp file
                                 if (write(tmpfd, fbuf, bytes) != bytes) {
                                         msg(_("Failure to write to temporary file: %s"), strerror(errno));
+                                        tmpclean(opt_output, tmpfd, tmpname)
                                         exit(EXIT_FAILURE);
                                 }
                         }
@@ -297,6 +312,7 @@ stdin2archive(void)
 			archive_write_header(archive, entry);
                         if (lseek(tmpfd, 0, SEEK_SET) == -1) {
                                 msg(_("Failure to rewind temporary file"), strerror(errno));
+                                tmpclean(opt_output, tmpfd, tmpname)
                                 exit(EXIT_FAILURE);
                         }
                         
@@ -304,6 +320,10 @@ stdin2archive(void)
                         while (k > 0) {
 				archive_write_data(archive, fbuf, k);
                                 k = read(tmpfd, fbuf, BUFSIZE);
+                                if (sig != 0) {
+                                        tmpclean(opt_output, tmpfd, tmpname)
+                                        signal_abort(sig);
+                                }
                         }
                 }
 
@@ -331,7 +351,7 @@ not_s_isreg:
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
-                close(tmpfd);
+                tmpclean(opt_output, tmpfd, tmpname)
 	}
 	g_free(readbuf);
 	g_free(buf);
@@ -467,4 +487,12 @@ main(int argc, char **argv)
 	/* read stdin and (re)make an archive */
 	stdin2archive();
 	exit(EXIT_SUCCESS);
+}
+
+void tmpclean(int opt_output, int f, char *name) {
+        if opt_output != O_RDUP {
+                if f != -1
+                        close(f);
+                unlink(name);
+        }
 }
