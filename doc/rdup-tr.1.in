@@ -47,7 +47,8 @@ filelist	    DH	H
 .B \-L
 Select list input format. Normally \fBrdup-tr\fR accepts rdup output,
 with this option you can give it a list of path names.
-Note: with list input \fBrdup-tr\fR will `stat()` each file.
+Note: with list input \fBrdup-tr\fR will `stat()` each file, so this can not
+be used in remote back ups.
 .TP
 .B \-O
 Output format. This can be 'tar', 'cpio', 'pax' or 'rdup'. It
