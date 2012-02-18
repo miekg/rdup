@@ -1,3 +1,7 @@
+xx Yyy 2012: 1.1.14 Miek Gieben <rdup@miek.nl>
+   * ...
+
+
 18 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>
    * Make rdup-tr compile when libnettle was not found (Miek Gieben)
    * Fix for very large inodes and filesizes (Kojedzinszky Richard)
