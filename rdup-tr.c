@@ -92,6 +92,7 @@ void tmpclean(int opt_output, int f, char *name) {
                         close(f);
                 unlink(name);
         }
+        g_free(name);
 }
 
 /* read filenames from stdin, put them through
@@ -118,7 +119,6 @@ stdin2archive(void)
 	trhash  = g_hash_table_new(g_str_hash, g_str_equal);
 #endif /* HAVE_LIBNETTLE */
 
-        tmpname = g_strdup("/tmp/rdup-XXXXXX");
 	delim   = '\n';
 	i       = BUFSIZE;
 	buf     = g_malloc(BUFSIZE + 1);
@@ -132,15 +132,8 @@ stdin2archive(void)
 	if (opt_output == O_RDUP) {
 		archive = NULL;
 	} else {
-                // Open tmpfile
-                tmpfd = mkstemp(tmpname);
-                if (tmpfd == -1) {
-                        msg(_("Failure to open temporary file: %s\n"), strerror(errno));
-                        exit(EXIT_FAILURE);
-                }
 		if ( (archive = archive_write_new()) == NULL) {
 			msg(_("Failed to create archive"));
-                        tmpclean(opt_output, tmpfd, tmpname);
 			exit(EXIT_FAILURE);
 		}
 
@@ -161,7 +154,6 @@ stdin2archive(void)
 
 		if (j != ARCHIVE_OK) {
 			msg(_("Failed to set archive type to %s"), o_fmt[opt_output]);
-                        tmpclean(opt_output, tmpfd, tmpname);
 			exit(EXIT_FAILURE);
 		} else {
 			archive_write_open_fd(archive, 1);
@@ -169,6 +161,14 @@ stdin2archive(void)
 	}
 
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
+                if (opt_output != O_RDUP) {
+                        tmpname = g_strdup("/tmp/rdup-XXXXXX");
+                        tmpfd = mkstemp(tmpname);
+                        if (tmpfd == -1) {
+                                msg(_("Failure to open temporary file `%s\': %s\n"), tmpname, strerror(errno));
+                                exit(EXIT_FAILURE);
+                        }
+                }
 		line++;
 		n = strrchr(buf, '\n');
 		if (n)
@@ -257,6 +257,7 @@ stdin2archive(void)
 				/* hardlinks must come last */
 				hlinks = g_slist_append(hlinks, entry_dup(rdup_entry));
                                 g_free(rdup_entry);
+                                tmpclean(opt_output, tmpfd, tmpname);
 				continue;
 			}
 
@@ -303,7 +304,7 @@ stdin2archive(void)
                         if (opt_output != O_RDUP) {
                                 // Write to temp file
                                 if (write(tmpfd, fbuf, bytes) != bytes) {
-                                        msg(_("Failure to write to temporary file: %s"), strerror(errno));
+                                        msg(_("Failure to write to temporary file `%s\': %s"), tmpname, strerror(errno));
                                         tmpclean(opt_output, tmpfd, tmpname);
                                         exit(EXIT_FAILURE);
                                 }
@@ -319,7 +320,7 @@ stdin2archive(void)
                         archive_entry_set_size(entry, totalbytes);
 			archive_write_header(archive, entry);
                         if (lseek(tmpfd, 0, SEEK_SET) == -1) {
-                                msg(_("Failure to rewind temporary file"), strerror(errno));
+                                msg(_("Failure to rewind temporary file `%s\': %s"), tmpname, strerror(errno));
                                 tmpclean(opt_output, tmpfd, tmpname);
                                 exit(EXIT_FAILURE);
                         }
@@ -342,7 +343,7 @@ not_s_isreg:
                 g_free(rdup_entry->f_user);
                 g_free(rdup_entry->f_group);
                 g_free(rdup_entry);
-
+                tmpclean(opt_output, tmpfd, tmpname);
 	}
 	/* output hardlinks -- if any, is zero for O_RDUP */
 	for (hl = g_slist_nth(hlinks, 0); hl; hl = hl->next) {
@@ -359,7 +360,6 @@ not_s_isreg:
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
 		archive_write_finish(archive);
-                tmpclean(opt_output, tmpfd, tmpname);
 	}
 	g_free(readbuf);
 	g_free(buf);
