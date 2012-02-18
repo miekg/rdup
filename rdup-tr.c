@@ -91,8 +91,8 @@ void tmpclean(int opt_output, int f, char *name) {
                 if (f != -1)
                         close(f);
                 unlink(name);
+                g_free(name);
         }
-        g_free(name);
 }
 
 /* read filenames from stdin, put them through
