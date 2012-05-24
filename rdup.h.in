@@ -82,6 +82,17 @@ struct remove_path {
         char *path;
 };
 
+/* chown.c */
+struct chown_pack {
+    uid_t u;
+    gchar *user;
+    gid_t g;
+    gchar *group;
+};
+
+void chown_write(gchar *dir, gchar *base, uid_t u, gchar *user, gid_t g, gchar *group);
+/* chown_parse */
+
 /* child.c */
 void close_pipes(GSList *, int, int);
 int wait_pids(GSList *, int);
