@@ -136,7 +136,8 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 
 	while((dent = readdir(dir))) {
 		if (!strcmp(dent->d_name, ".") ||
-				!strcmp(dent->d_name, ".."))
+				!strcmp(dent->d_name, "..") ||
+                                !strncmp(dent->d_name, USRGRPINFO, LEN_USRGRPINFO))
 			continue;
 
 		if (strcmp(path, "/") == 0)  {
@@ -218,6 +219,9 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				pop.f_size = pop.f_name_size;
 				pop.f_name_size += 4 + strlen(pop.f_target);
 			}
+                        /* check if there exists a USRGRPINFO + 'curfile' file and if so parse it's
+                         * contents and set uid:user/gid:group */
+                         
 
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 

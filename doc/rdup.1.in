@@ -252,6 +252,11 @@ is used to save the exact time of rdup's run. The file \fILIST\fR is
 used to calculate the correct incremental dump list, this is needed
 for files that are removed, or have a different type.
 
+.SH NON-ROOT BACKUPS
+If backups are made by a non-root user of on a filesystem that does
+not implement \fIchown\fR (think sshfs mounted by an ordinary users).
+\fI._rdup_.fR.
+
 .SH FORMAT
 The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\\n%n%C"
 .PP

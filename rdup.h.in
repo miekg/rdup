@@ -55,6 +55,8 @@
 
 #define REG_VECTOR	30
 #define NOBACKUP        ".nobackup"
+#define USRGRPINFO      "._rdup_."      /* files starting with this prefix are ignored by rdup, they contain user/group info */
+#define LEN_USRGRPINFO  8               /* length(USRGRPINFO) */
 #define NULL_DUMP       0
 #define VALUE          (void*)1 /* g_tree_lookup returns this in rdup */
 #define NO_PRINT       (void*)2 /* don't print values with this flag */
