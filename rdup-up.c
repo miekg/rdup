@@ -17,6 +17,7 @@ gboolean opt_quiet         = FALSE;                     /* don't complain about 
 gboolean opt_dry	   = FALSE;			/* don't touch the filesystem */
 gboolean opt_table	   = FALSE;			/* table of contents */
 gboolean opt_top	   = FALSE;			/* create top dir if it does not exist */
+gboolean opt_chown         = TRUE;                      /* create ._rdup._ files with user/group info */
 gchar *opt_path_strip	   = NULL;			/* -r PATH, strip PATH from pathnames */
 guint opt_path_strip_len   = 0;				/* number of path labels in opt_path_strip */
 guint opt_strip		   = 0;				/* -s: strippath */
@@ -166,7 +167,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	while ((c = getopt (argc, argv, "thnVvs:r:Tq")) != -1) {
+	while ((c = getopt (argc, argv, "thnVvus:r:Tq")) != -1) {
 		switch (c) {
 			case 'v':
 				opt_verbose = 1;
@@ -182,6 +183,9 @@ main(int argc, char **argv)
 				opt_dry = TRUE;
 				opt_verbose = 0;
 				break;
+                        case 'u':
+                                opt_chown = FALSE;
+                                break;
 			case 's':
                                 opt_strip = abs(atoi(optarg));
                                 break;

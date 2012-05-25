@@ -253,9 +253,17 @@ used to calculate the correct incremental dump list, this is needed
 for files that are removed, or have a different type.
 
 .SH NON-ROOT BACKUPS
-If backups are made by a non-root user of on a filesystem that does
-not implement \fIchown\fR (think sshfs mounted by an ordinary users).
-\fI._rdup_.fR.
+If backups are made by a non-root user or on a filesystem that does
+not implement/allow \fIchown\fR (think sshfs mounted by an ordinary user),
+\fIrdup\fR create a seperate file which contains the correct user and group
+information. If the file's name is \fIfoobar\fR a seperate file called
+\fI._rdup_.foobar\fR is created in the same directory. This file contains
+one line, with for instance:
+.RS
+    root:0/root:0
+.RE
+That tells that the \fIactual\fR ownership should be root:root. For directories
+a \fI._rdup_.\fR file is created inside the current directory.
 
 .SH FORMAT
 The default format \fBrdup\fR uses is: "%p%T %b %t %u %U %g %G %l %s\\n%n%C"

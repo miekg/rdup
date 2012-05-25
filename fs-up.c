@@ -15,6 +15,7 @@ extern int sig;
 extern gboolean opt_dry;
 extern gboolean opt_table;
 extern gboolean opt_quiet;
+extern gboolean opt_chown;
 extern guint opt_strip;
 extern gint opt_verbose;
 extern GSList *hlink_list;
@@ -45,10 +46,21 @@ mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	u = lookup_uid(uidhash, e->f_user, e->f_uid);
 	g = lookup_gid(gidhash, e->f_group, e->f_gid);
 
-	/* Capabilities under Linux?? TODO */
-	if (getuid() == 0)
-		if (lchown(e->f_name, u, g) == -1 && ! opt_quiet)
-			msgd(__func__, __LINE__,_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
+	if (lchown(e->f_name, u, g) == -1) {
+                if (opt_chown) {
+                        /* chown failed, use and create ._rdup_. - file, it that fails too
+                         * we're out of luck - so we don't care about the return value */
+                        if (S_ISDIR(e->f_mode)) {
+                                chown_write(e->f_name, NULL, e->f_uid, e->f_user, e->f_gid, e->f_group);
+                        } else {
+                                chown_write(dirname(e->f_name), basename(e->f_name), e->f_uid, e->f_user, e->f_gid, e->f_group);
+                        }
+                } else {
+                        if (!opt_quiet) {
+                                msgd(__func__, __LINE__,_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
+                        }
+                }
+        }
 	return TRUE;
 }
 

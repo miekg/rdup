@@ -92,4 +92,8 @@ int mkpath(const char *, mode_t);
 struct stat * dir_write(gchar *);
 void dir_restore(gchar *, struct stat *);
 gchar *dir_parent(gchar *);
+
+/* chown.c */
+void chown_write(gchar *dir, gchar *base, uid_t u, gchar *user, gid_t g, gchar *group);                    
+
 #endif  /* _RDUP_UP_H */

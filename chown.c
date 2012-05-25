@@ -20,7 +20,7 @@ chown_write(gchar *dir, gchar *base, uid_t u, gchar *user, gid_t g, gchar *group
         } else {
                 path = g_strdup_printf("%s/%s%s", dir, USRGRPINFO, base);
         }
-        if ( ! ( f = fopen(path, "r"))) {
+        if ( ! ( f = fopen(path, "w"))) {
                 /* no file found or failure to open */
                 g_free(path);
                 return;

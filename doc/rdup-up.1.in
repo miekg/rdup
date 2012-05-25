@@ -64,6 +64,11 @@ Be more verbose and echo the processed files to \fIstandard output\fR.
 Show a table of contents of the rdup stream received (ala tar \-tf \-).
 With \-T the directory argument is optional. \-T unsets any verbose (\-v) options.
 .TP
+.B \-u
+Do not create a \fI._rdup_.\fR file which contains user/group information when failing
+to \fBchown\fR the actual file or directory. Useful when restoring a backup when you
+do not want to see \fI._rdup._\fR-files being created.
+.TP
 .B \-q
 Silence 'chown' failures even when running as root. This can be helpful when the 
 file system does not implement 'chown' or disallows it ('sshfs' for instance).
