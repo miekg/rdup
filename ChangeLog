@@ -1,5 +1,6 @@
-xx Yyy 2012: 1.1.14 Miek Gieben <rdup@miek.nl>
-   * ...
+26 May 2012: 1.1.14 Miek Gieben <miek@miek.nl>
+   * Save user/group info in ._rdup_. files when chown(1)ing them has failed.
+     Useful when backing up via sshfs. See rdup(1) section "Non-root backups"
 
 
 18 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>
