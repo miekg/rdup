@@ -95,6 +95,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 	DIR 		*dir;
 	struct dirent 	*dent;
 	struct rdup     *directory;
+        struct chown_pack *cp;
 	char 		*curpath;
 	gchar		*lnk;
 	struct stat   	s;
@@ -219,10 +220,13 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				pop.f_size = pop.f_name_size;
 				pop.f_name_size += 4 + strlen(pop.f_target);
 			}
-                        /* check if there exists a USRGRPINFO + 'curfile' file and if so parse it's
-                         * contents and set uid:user/gid:group */
-                         
-
+                        /* check for USRGRPINFO file */
+                        if ( (cp = chown_parse(path, dent->d_name)) != NULL ) {
+                                pop.f_uid = cp->u;
+                                pop.f_gid = cp->g;
+                                pop.f_user = cp->user;
+                                pop.f_group = cp->group;
+                        }
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 
 			if (pop.f_target != NULL)
@@ -258,6 +262,14 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			dirstack[d]->f_rdev       = s.st_rdev;
 			dirstack[d]->f_ino        = s.st_ino;
 			dirstack[d]->f_lnk        = 0;
+
+                        /* check for USRGRPINFO file */
+                        if ( (cp = chown_parse(curpath, NULL)) != NULL ) {
+                                dirstack[d]->f_uid = cp->u;
+                                dirstack[d]->f_gid = cp->g;
+                                dirstack[d]->f_user = cp->user;
+                                dirstack[d]->f_group = cp->group;
+                        }
 
 			if (d++ % D_STACKSIZE == 0) {
 				dirstack = g_realloc(dirstack,

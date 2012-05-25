@@ -91,6 +91,7 @@ struct chown_pack {
 };
 
 void chown_write(gchar *dir, gchar *base, uid_t u, gchar *user, gid_t g, gchar *group);
+struct chown_pack * chown_parse(gchar *dir, gchar *base);
 /* chown_parse */
 
 /* child.c */
