@@ -13,7 +13,8 @@ gboolean opt_removed       = TRUE; 		      /* whether to print removed files */
 gboolean opt_modified      = TRUE; 		      /* whether to print modified files */
 gboolean opt_reverse	   = FALSE;		      /* whether to reverse print the lists */
 gboolean opt_tty	   = FALSE;		      /* force write to tty */
-gboolean opt_atime	   = FALSE;			      /* reset access time */
+gboolean opt_atime	   = FALSE;		      /* reset access time */
+gboolean opt_chown         = TRUE;                    /* handle ._rdup_.-files specially */       
 char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s\n%n%C"; /* format of rdup output */
 #if 0
 char *opt_format 	   = "%p%T %b %t %u %U %g %G %l %s %n\n";
@@ -304,7 +305,7 @@ main(int argc, char **argv)
 #ifdef DEBUG
 	msgd(__func__, __LINE__, _("DEBUG is enabled!"));
 #endif /* DEBUG */
-	while ((c = getopt (argc, argv, "acrlmhVRnd:N:M:P:s:vqxF:E:")) != -1) {
+	while ((c = getopt (argc, argv, "acrlmhVRnud:N:M:P:s:vqxF:E:")) != -1) {
 		switch (c) {
 			case 'F':
 				opt_format = optarg;
@@ -313,6 +314,9 @@ main(int argc, char **argv)
 				if (!regexp_init(optarg))
 					exit(EXIT_FAILURE);
 				break;
+                        case 'u':
+                                opt_chown = FALSE;
+                                break;
 			case 'a':
 				opt_atime = TRUE;
 				/* when atime is true, every file is touched during the

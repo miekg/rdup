@@ -38,6 +38,7 @@ implement a (incremental) backup scheme.\n\
         -n\t\tignore .nobackup files\n\
         -r\t\tonly print removed files (unsets -m)\n\
         -s SIZE\t\tonly output files smaller then SIZE bytes\n\
+        -u\t\tdisable the special handling of ._rdup._ files\n\
         -x\t\tstay in local file system\n\
         -v\t\tbe more verbose\n\
         -h\t\tthis help\n\

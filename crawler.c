@@ -9,6 +9,7 @@
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
 extern gboolean opt_atime;
+extern gboolean opt_chown;
 extern time_t opt_timestamp;
 extern gint opt_verbose;
 extern GSList *pregex_list;
@@ -137,9 +138,14 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 
 	while((dent = readdir(dir))) {
 		if (!strcmp(dent->d_name, ".") ||
-				!strcmp(dent->d_name, "..") ||
-                                !strncmp(dent->d_name, USRGRPINFO, LEN_USRGRPINFO))
+				!strcmp(dent->d_name, ".."))
 			continue;
+
+                if (opt_chown) {
+                        if ( !strncmp(dent->d_name, USRGRPINFO, LEN_USRGRPINFO) ) {
+                                continue;
+                        }
+                }
 
 		if (strcmp(path, "/") == 0)  {
 			curpath = g_strdup_printf("/%s", dent->d_name);
@@ -221,7 +227,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 				pop.f_name_size += 4 + strlen(pop.f_target);
 			}
                         /* check for USRGRPINFO file */
-                        if ( (cp = chown_parse(path, dent->d_name)) != NULL ) {
+                        if ( opt_chown && (cp = chown_parse(path, dent->d_name)) != NULL ) {
                                 pop.f_uid = cp->u;
                                 pop.f_gid = cp->g;
                                 pop.f_user = cp->user;
@@ -264,7 +270,7 @@ dir_crawl(GTree *t, GHashTable *linkhash, GHashTable *userhash,
 			dirstack[d]->f_lnk        = 0;
 
                         /* check for USRGRPINFO file */
-                        if ( (cp = chown_parse(curpath, NULL)) != NULL ) {
+                        if ( opt_chown && (cp = chown_parse(curpath, NULL)) != NULL ) {
                                 dirstack[d]->f_uid = cp->u;
                                 dirstack[d]->f_gid = cp->g;
                                 dirstack[d]->f_user = cp->user;

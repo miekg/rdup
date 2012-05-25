@@ -3,7 +3,8 @@
      to restore the actual files' ownership
    * [rdup-up] save user/group info in ._rdup_. files when chown(1)ing them has failed.
      Useful when backing up via sshfs. See rdup(1) section "Non-root backups"
-   * [rdup-up] add -u flag to suppress creating these ._rdup_. files. (when restoring)
+   * [rdup-up] add -u flag to suppress creating these ._rdup_. files. (useful when restoring)
+   * [rdup] add -u flag to suppress interpreting these ._rdup_. files.
 
 
 18 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>

@@ -172,6 +172,10 @@ Don't honor \fI.nobackup\fR files. Normally if such a file is found the
 directory and all files containing it, are not 
 printed to standard output. Now they are.
 .TP
+.B \-u
+Ouput files with a \fI._rdup_.\fR prefix just as normal files. When this option
+is not given these files are skipped by \fIrdup\fR.
+.TP
 .B \-r
 Only print removed files; entries that start with a `\-'. This 
 option unsets \-m.
