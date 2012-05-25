@@ -255,13 +255,15 @@ for files that are removed, or have a different type.
 .SH NON-ROOT BACKUPS
 If backups are made by a non-root user or on a filesystem that does
 not implement/allow \fIchown\fR (think sshfs mounted by an ordinary user),
-\fIrdup\fR create a seperate file which contains the correct user and group
-information. If the file's name is \fIfoobar\fR a seperate file called
+\fIrdup\fR create a seperate file which stores the correct user and group
+information. If the file's name is \fIfoobar\fR a new file called
 \fI._rdup_.foobar\fR is created in the same directory. This file contains
-one line, with for instance:
+one line, for instance:
+
 .RS
     root:0/root:0
 .RE
+
 That tells that the \fIactual\fR ownership should be root:root. For directories
 a \fI._rdup_.\fR file is created inside the current directory.
 
