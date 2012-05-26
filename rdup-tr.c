@@ -102,7 +102,8 @@ void tmpclean(int opt_output, int f, char *name) {
 static void
 stdin2archive(void)
 {
-	char		*buf, *fbuf, *readbuf, *n, *pathbuf, *tmpname;
+	char		*buf, *fbuf, *readbuf, *n, *pathbuf;
+        char            *tmpname = NULL;
 	char		delim;
 	size_t		i, line, pathsize;
 	ssize_t		bytes;
