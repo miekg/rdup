@@ -173,7 +173,7 @@ directory and all files containing it, are not
 printed to standard output. Now they are.
 .TP
 .B \-u
-Ouput files with a \fI._rdup_.\fR prefix just as normal files. When this option
+Output files with a \fI._rdup_.\fR prefix just as normal files. When this option
 is not given these files are skipped by \fIrdup\fR.
 .TP
 .B \-r
@@ -259,7 +259,7 @@ for files that are removed, or have a different type.
 .SH NON-ROOT BACKUPS
 If backups are made by a non-root user or on a filesystem that does
 not implement/allow \fIchown\fR (think sshfs mounted by an ordinary user),
-\fIrdup\fR create a seperate file which stores the correct user and group
+\fIrdup\fR creates a seperate file which stores the correct user and group
 information. If the file's name is \fIfoobar\fR a new file called
 \fI._rdup_.foobar\fR is created in the same directory. This file contains
 one line, for instance:
