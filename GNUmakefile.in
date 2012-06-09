@@ -55,8 +55,13 @@ rdup-tr: $(OBJ_TR) $(HDR)
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${OBJ} ${GLIB_LIBS} ${LDFLAGS} ${LIBS} -o rdup
 
+ifeq (${ARCHIVE_L},no)
 strip:	
-	strip ${CMD}
+	strip rdup rdup-up
+else
+strip:	
+	strip rdup rdup-tr rdup-up
+endif
 
 po:	rdup.pot 
 	( cd po ; $(MAKE) -f GNUmakefile all )
