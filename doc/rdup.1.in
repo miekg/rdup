@@ -22,6 +22,8 @@ It works as follows, for a full dump
 .TP
 .B 1.
 Crawl all directories, and print all the names found to standard output.
+Also check for \fI._rdup_.\fR files to restore the original ownership
+(see the \fI\-u\fR flag).
 .TP
 .B 2.
 Write a filelist with all the names found when crawling.

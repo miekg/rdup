@@ -19,6 +19,14 @@ may be a totally different system) checks if the user name and uid
 match. If the user name and uid don't match the (numeric) uid is
 used on the file. The same holds true for the group name and gid.
 
+.SS File ownership
+As \fBrdup\fR supports backups via SSH the following situation can occur:
+locally \fBrdup\fR is run a root, but \fBrdup-up\fR is run as a non-root
+user (the one logged in via SSH). In this case the original owner- and
+group name can not be set. If this happens \fBrdup-up\fR will create
+a \fI._rdup_.\fR file which contains the user/group information, also
+see the \fI\-u\fR flag for \fBrdup-tr\fR (and \fBrdup\fR).
+
 .SH OPTIONS
 .TP
 .B \-n
