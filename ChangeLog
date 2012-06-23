@@ -7,6 +7,7 @@
      (useful when restoring) (Miek Gieben)
    * [rdup] add -u flag to suppress interpreting these ._rdup_. files. (Miek Gieben)
    * [rdup-tr] compile fix when compiling with gcc 4.7 (reported by D. L.)
+   * [rdup-tr] honor the TMPDIR environment variable (Miek Gieben)
 
 
 18 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>

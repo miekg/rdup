@@ -160,10 +160,15 @@ stdin2archive(void)
 			archive_write_open_fd(archive, 1);
 		}
 	}
+        
+        char * tmpenv = getenv("TMPDIR");
+        if (!tmpenv) {
+                tmpenv = "/tmp";
+        }
 
 	while ((rdup_getdelim(&buf, &i, delim, stdin)) != -1) {
                 if (opt_output != O_RDUP) {
-                        tmpname = g_strdup("/tmp/rdup-XXXXXX");
+                        tmpname = g_strdup_printf("%s/%s", tmpenv, "rdup-XXXXXX");
                         tmpfd = mkstemp(tmpname);
                         if (tmpfd == -1) {
                                 msg(_("Failure to open temporary file `%s\': %s\n"), tmpname, strerror(errno));
