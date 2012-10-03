@@ -132,6 +132,7 @@ main(int argc, char **argv)
 	struct sigaction sa;
 	char		 pwd[BUFSIZE + 1];
 	int		 c;
+        guint            i;
 	char		 *path;
 	
 #ifdef ENABLE_NLS
@@ -205,7 +206,6 @@ main(int argc, char **argv)
 					opt_path_strip = g_strdup_printf("%s/", opt_path_strip);
 
 				/* count the number of labels */
-				guint i;
 				for(i = 0; i < strlen(opt_path_strip); i++) {
 					if (opt_path_strip[i] == '/')
 						opt_path_strip_len++;
