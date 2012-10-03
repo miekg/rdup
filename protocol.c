@@ -106,6 +106,7 @@ block_in_header(FILE *f)
 	 */
 	char c[6];
 	int bytes;
+        gchar *out;
 
 	/* I cannot think of anything smarter */
 	/* version check */
@@ -162,7 +163,7 @@ block_in_header(FILE *f)
 		return -1;
 	}
 
-        gchar* out = g_strdup_printf("%c%c%c%c%c",
+        out = g_strdup_printf("%c%c%c%c%c",
 			c[0], c[1], c[2], c[3], c[4]);
 	
 	bytes = atoi(out);
