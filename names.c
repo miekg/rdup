@@ -3,12 +3,7 @@
  * Use hashes to speed things up
  */
 
-#include <glib.h>
-#include "config.h"
-#include <pwd.h>
-#include <grp.h>
-
-#include <stdio.h>
+#include "rdup.h"
 
 /* lookup the uid belonging to username
  * if the uid is not found, return uid_given
