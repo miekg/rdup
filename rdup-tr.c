@@ -235,7 +235,6 @@ stdin2archive(void)
 			signal_abort(sig);
                 }
 
-		rdup_entry = rdup_entry;
 #ifdef HAVE_LIBNETTLE
 		if (opt_crypt_key)
 			rdup_entry = crypt_entry(rdup_entry, trhash);
