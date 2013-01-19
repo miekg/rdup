@@ -1,4 +1,4 @@
-26 May 2012: 1.1.14 Miek Gieben <miek@miek.nl>
+19 Jan 2013: 1.1.14 Miek Gieben <miek@miek.nl>
    * [rdup] check for the existence of ._rdup_. files and parse its contents
      to restore the actual files' ownership (Miek Gieben)
    * [rdup-up] save user/group info in ._rdup_. files when chown(1)ing has failed.
@@ -8,6 +8,8 @@
    * [rdup] add -u flag to suppress interpreting these ._rdup_. files. (Miek Gieben)
    * [rdup-tr] compile fix when compiling with gcc 4.7 (reported by D. L.)
    * [rdup-tr] honor the TMPDIR environment variable (Miek Gieben)
+   * [rdup] Don't look at the device ID when deciding if a file needs to be backed up 
+     (See https://github.com/miekg/rdup/issues/3) 
 
 
 18 Feb 2012: 1.1.13 Miek Gieben <rdup@miek.nl>
