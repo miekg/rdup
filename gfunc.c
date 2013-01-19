@@ -558,8 +558,14 @@ gfunc_equal(gconstpointer a, gconstpointer b)
 
 	e = strcmp(((struct rdup*)a)->f_name, ((struct rdup*)b)->f_name);
 	if (e == 0) {
+                /*
+                 * newer Linux version automount disks, so sometimes /dev/sda becomes
+                 * /dev/sdb. This leads to an full dump which isn't needed.
+                 */
+                /*
 		if (ae->f_dev != be->f_dev)
 			return -1;
+                */
 		if (ae->f_ino != be->f_ino)
 			return -2;
 
