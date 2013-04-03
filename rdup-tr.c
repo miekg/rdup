@@ -364,7 +364,7 @@ not_s_isreg:
 
 	if (opt_output != O_RDUP) {
 		archive_write_close(archive);
-		archive_write_finish(archive);
+		archive_write_free(archive);
 	}
 	g_free(readbuf);
 	g_free(buf);
