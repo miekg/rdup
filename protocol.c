@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2009 - 2011 Miek Gieben
+ * See LICENSE for the license
+ *
  * A simple protocol for rdup, if you even want
  * to call it a protocol
  *

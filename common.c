@@ -1,4 +1,8 @@
-/* common functions for entries */
+/*
+ * Copyright (c) 2009 - 2011 Miek Gieben
+ * See LICENSE for the license
+ * common functions for entries
+ */
 
 #include <glib.h>
 #include <sys/stat.h>

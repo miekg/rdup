@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012 Miek Gieben
+ * Copyright (c) 2009 - 2011 Miek Gieben
+ * See LICENSE for the license
  * Parse username:group helper files
  */
 
