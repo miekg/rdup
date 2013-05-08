@@ -125,19 +125,6 @@ the entire archive yet again
  gzip > my_compressed_encrypted_rdup_archive.gz
 .RE
 
-Recreating the original \fBrdup\fR output, which can be fed to
-\fBrdup-up\fR.
-
-.RS
- gunzip -c my_compressed_encrypted_rdup_archive.gz |\\
- rdup-tr -Popenssl,enc,-d,-des-cbc,-k,secret -Pgzip,-d >\\
- my_rdup_archive
-
- rdup-up < my_rdup_archive -t /tmp/restore
-.RE
-
-Notice the reversal of the \-P options.
-
 .SH EXIT CODE
 \fBrdup-tr\fR return a zero exit code on success, otherwise 1 is returned.
 
