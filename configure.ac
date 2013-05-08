@@ -123,8 +123,6 @@ NETTLE_L=""
 AC_CHECK_LIB(nettle, nettle_aes_encrypt, ,NETTLE_L="no")
 if test "$NETTLE_L" = "no"; then
     AC_MSG_WARN([** No nettle library found.])
-else
-    LIBS="${LIBS} -lgmp"
 fi
 AC_SUBST(NETTLE_L)
 
