@@ -55,13 +55,11 @@ rdup-tr: $(OBJ_TR) $(HDR)
 rdup:	${OBJ} ${HDR} 
 	${GCC} ${OBJ} ${GLIB_LIBS} ${LDFLAGS} ${LIBS} -o rdup
 
-ifeq (${ARCHIVE_L},no)
-strip:	
-	strip rdup rdup-up
-else
-strip:	
-	strip rdup rdup-tr rdup-up
+strip:	rdup rdup-up
+ifneq (${ARCHIVE_L},no)
+strip:	drup-tr
 endif
+	strip $^
 
 po:	rdup.pot 
 	( cd po ; $(MAKE) -f GNUmakefile all )
