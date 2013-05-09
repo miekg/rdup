@@ -15,9 +15,8 @@
 
 extern gint opt_verbose;
 
-uid_t
-read_attr_uid(__attribute__((unused))
-	char *path, uid_t u)
+uid_t read_attr_uid( __attribute__ ((unused))
+		    char *path, uid_t u)
 {
 #ifdef HAVE_ATTR_XATTR_H
 	/* linux */
@@ -26,11 +25,11 @@ read_attr_uid(__attribute__((unused))
 	int r;
 
 	if ((r = lgetxattr(path, "user.r_uid", buf, ATTR_SIZE)) > 0) {
-		x = (uid_t)atoi(buf);
+		x = (uid_t) atoi(buf);
 		buf[r - 1] = '\0';
 		if (x > R_MAX_ID) {
-			msg(_("Too large uid `%zd\' for `%s\', truncating"), (size_t)x,
-				path);
+			msg(_("Too large uid `%zd\' for `%s\', truncating"),
+			    (size_t) x, path);
 			return R_MAX_ID;
 		}
 		return x;
@@ -57,20 +56,20 @@ read_attr_uid(__attribute__((unused))
 	}
 	close(attfd);
 	buf[r - 1] = '\0';
-	x = (uid_t)atoi(buf);
+	x = (uid_t) atoi(buf);
 	if (x > R_MAX_ID) {
-		msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x, path);
+		msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t) x,
+		    path);
 		return R_MAX_ID;
 	}
 	return x;
 #else
 	return u;
-#endif /* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
+#endif				/* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
 }
 
-gid_t
-read_attr_gid(__attribute__((unused))
-	char *path, gid_t g)
+gid_t read_attr_gid( __attribute__ ((unused))
+		    char *path, gid_t g)
 {
 #ifdef HAVE_ATTR_XATTR_H
 	char buf[ATTR_SIZE + 1];
@@ -79,10 +78,10 @@ read_attr_gid(__attribute__((unused))
 
 	if ((r = lgetxattr(path, "user.r_gid", buf, ATTR_SIZE)) > 0) {
 		buf[r - 1] = '\0';
-		x = (gid_t)atoi(buf);
+		x = (gid_t) atoi(buf);
 		if (x > R_MAX_ID) {
-			msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x,
-					path);
+			msg(_("Too large gid `%zd\' for `%s\', truncating"),
+			    (size_t) x, path);
 			return R_MAX_ID;
 		}
 		return x;
@@ -109,13 +108,14 @@ read_attr_gid(__attribute__((unused))
 	}
 	close(attfd);
 	buf[r - 1] = '\0';
-	x = (uid_t)atoi(buf);
+	x = (uid_t) atoi(buf);
 	if (x > R_MAX_ID) {
-		msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t)x, path);
+		msg(_("Too large gid `%zd\' for `%s\', truncating"), (size_t) x,
+		    path);
 		return R_MAX_ID;
 	}
 	return x;
 #else
 	return g;
-#endif /* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
+#endif				/* HAVE_ATTR_XATTR_H, HAVE_ATTROPEN */
 }

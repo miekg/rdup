@@ -12,7 +12,7 @@
  *
  * Also see realpath(3)
  */
-char * abspath(char *path)
+char *abspath(char *path)
 {
 	char *p, *c;
 	char *slash, *abspath2;
@@ -59,11 +59,11 @@ char * abspath(char *path)
 			}
 		} else {
 			if (abspath == NULL || abspath[0] == '\0' ||
-				(strcmp(abspath, "/") == 0) )  {
+			    (strcmp(abspath, "/") == 0)) {
 				g_free(abspath);
 				abspath = g_strconcat("/", p, NULL);
 			} else {
-				gchar* tmp = g_strdup(abspath);
+				gchar *tmp = g_strdup(abspath);
 				g_free(abspath);
 				abspath = g_strjoin("/", tmp, p, NULL);
 				g_free(tmp);

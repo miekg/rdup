@@ -41,12 +41,11 @@ void signal_abort(int);
 /**
  * output a block header
  */
-gint
-block_out_header(FILE *f, size_t size, int fp)
+gint block_out_header(FILE * f, size_t size, int fp)
 {
 	char *p;
 	p = g_strdup_printf("%c%c%s%05d\n", PROTO_VERSION_MAJOR,
-			PROTO_VERSION_MINOR, PROTO_BLOCK,(int)size);
+			    PROTO_VERSION_MINOR, PROTO_BLOCK, (int)size);
 	if (sig != 0)
 		signal_abort(sig);
 	if (f) {
@@ -64,8 +63,7 @@ block_out_header(FILE *f, size_t size, int fp)
 /**
  * output a block
  */
-gint
-block_out(FILE *f, size_t size, char *buf, int fp)
+gint block_out(FILE * f, size_t size, char *buf, int fp)
 {
 	if (sig != 0)
 		signal_abort(sig);
@@ -83,8 +81,7 @@ block_out(FILE *f, size_t size, char *buf, int fp)
 /**
  * read a block from f
  */
-gint
-block_in(FILE *f, size_t size, char *buf)
+gint block_in(FILE * f, size_t size, char *buf)
 {
 	if (sig != 0)
 		signal_abort(sig);
@@ -101,84 +98,92 @@ block_in(FILE *f, size_t size, char *buf)
  * 00000 signals the end (no more bytes to read
  * -1 for parse errors
  */
-size_t
-block_in_header(FILE *f)
+size_t block_in_header(FILE * f)
 {
 	/* we are expecting a block header:
 	 * 2 pos version; the word block; 5 digit number; newline
 	 */
 	char c[6];
 	int bytes;
-        gchar *out;
+	gchar *out;
 
 	/* I cannot think of anything smarter */
 	/* version check */
 	c[0] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
 	c[1] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
 
-	if (c[0] != PROTO_VERSION_MAJOR ||
-			c[1] != PROTO_VERSION_MINOR) {
+	if (c[0] != PROTO_VERSION_MAJOR || c[1] != PROTO_VERSION_MINOR) {
 		msg(_("Wrong protocol version `%c%c\': want `%c%c'"),
-				c[0], c[1],
-				PROTO_VERSION_MAJOR,
-				PROTO_VERSION_MINOR);
+		    c[0], c[1], PROTO_VERSION_MAJOR, PROTO_VERSION_MINOR);
 		return -1;
 	}
 
 	/* 'block' */
-	c[0] = fgetc(f); /* B */
-	if (sig != 0) signal_abort(sig);
-	c[1] = fgetc(f); /* L */
-	if (sig != 0) signal_abort(sig);
-	c[2] = fgetc(f); /* O */
-	if (sig != 0) signal_abort(sig);
-	c[3] = fgetc(f); /* C */
-	if (sig != 0) signal_abort(sig);
-	c[4] = fgetc(f); /* K */
-	if (sig != 0) signal_abort(sig);
+	c[0] = fgetc(f);	/* B */
+	if (sig != 0)
+		signal_abort(sig);
+	c[1] = fgetc(f);	/* L */
+	if (sig != 0)
+		signal_abort(sig);
+	c[2] = fgetc(f);	/* O */
+	if (sig != 0)
+		signal_abort(sig);
+	c[3] = fgetc(f);	/* C */
+	if (sig != 0)
+		signal_abort(sig);
+	c[4] = fgetc(f);	/* K */
+	if (sig != 0)
+		signal_abort(sig);
 
 	if (c[0] != 'B' || c[1] != 'L' || c[2] != 'O' ||
-			c[3] != 'C' || c[4] != 'K') {
+	    c[3] != 'C' || c[4] != 'K') {
 		msg(_("BLOCK protocol seperator not found: `%c%c%c%c%c\'"),
-				c[0], c[1], c[2], c[3], c[4]);
+		    c[0], c[1], c[2], c[3], c[4]);
 		return -1;
 	}
 
 	/* the bytes */
 	c[0] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
 	c[1] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
 	c[2] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
 	c[3] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
 	c[4] = fgetc(f);
-	if (sig != 0) signal_abort(sig);
-	c[5] = fgetc(f); /* \n */
-	if (sig != 0) signal_abort(sig);
+	if (sig != 0)
+		signal_abort(sig);
+	c[5] = fgetc(f);	/* \n */
+	if (sig != 0)
+		signal_abort(sig);
 
 	if (!isdigit(c[0]) || !isdigit(c[1]) || !isdigit(c[2]) ||
-			!isdigit(c[3]) || !isdigit(c[4])) {
+	    !isdigit(c[3]) || !isdigit(c[4])) {
 		msg(_("Illegal block size"));
 		return -1;
 	}
 
-        out = g_strdup_printf("%c%c%c%c%c",
-			c[0], c[1], c[2], c[3], c[4]);
-	
+	out = g_strdup_printf("%c%c%c%c%c", c[0], c[1], c[2], c[3], c[4]);
+
 	bytes = atoi(out);
 
 	g_free(out);
 
-	if (bytes > BUFSIZE) {		/* out of bounds...? */
+	if (bytes > BUFSIZE) {	/* out of bounds...? */
 		msg(_("Block size larger then BUFSIZE"));
 		return -1;
 	}
 	if (opt_verbose > 2)
 		msg(_("Block seen, start read of %d bytes"), bytes);
-	
+
 	return bytes;
 }

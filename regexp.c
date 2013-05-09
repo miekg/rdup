@@ -14,29 +14,28 @@ GSList *pregex_list = NULL;
  * Read the filename and create the compiled regexp
  * in a linked list
  */
-gboolean
-regexp_init(char *file)
+gboolean regexp_init(char *file)
 {
-	FILE 	      	*fp;
-	char 		*buf;
-	const char	*errbuf;
-	int		erroff;
-	char          	delim;
-	gpointer 	d;
-	size_t 	 	l;
-	size_t		s;
-	size_t		re_length;
-	ssize_t	 	j;
-	pcre		*P;
+	FILE *fp;
+	char *buf;
+	const char *errbuf;
+	int erroff;
+	char delim;
+	gpointer d;
+	size_t l;
+	size_t s;
+	size_t re_length;
+	ssize_t j;
+	pcre *P;
 
 	if ((fp = fopen(file, "r")) == NULL) {
 		msg(_("Could not open '%s\': %s"), file, strerror(errno));
 		exit(EXIT_FAILURE);
-	}	
+	}
 	/* read the regexp */
-	buf  = g_malloc(BUFSIZE + 1);
-	s    = BUFSIZE;
-        delim = '\n';
+	buf = g_malloc(BUFSIZE + 1);
+	s = BUFSIZE;
+	delim = '\n';
 
 	l = 1;
 	while ((j = rdup_getdelim(&buf, &s, delim, fp)) != -1) {
@@ -49,7 +48,9 @@ regexp_init(char *file)
 		if ((P = pcre_compile(buf, 0, &errbuf, &erroff, NULL)) == NULL) {
 			/* error */
 			fclose(fp);
-			msg(_("Corrupt regular expression line: %zd, column %d: %s"), l, erroff, errbuf);
+			msg(_
+			    ("Corrupt regular expression line: %zd, column %d: %s"),
+			    l, erroff, errbuf);
 			g_free(buf);
 			return FALSE;
 		} else {

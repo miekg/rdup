@@ -79,3 +79,7 @@ otherwise in the file itself.
 # LICENSE
 
 GPL, version 3, see the file LICENSE.
+
+# Coding style
+
+All code has been indented by `indent -linux`

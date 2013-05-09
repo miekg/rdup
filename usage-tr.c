@@ -7,11 +7,10 @@
 
 extern char *PROGNAME;
 
-void
-usage_tr(FILE *f)
+void usage_tr(FILE * f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... \n"), PROGNAME);
-	fputs( _("\
+	fprintf(f, _("USAGE: %s [OPTION]... \n"), PROGNAME);
+	fputs(_("\
 Translate rdup output into something else.\n\
 \n\
 \n\

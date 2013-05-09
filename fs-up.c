@@ -23,55 +23,60 @@ extern GSList *hlink_list;
 void got_sig(int signal);
 
 /* common.c */
-struct rdup * entry_dup(struct rdup *); 
-void entry_free(struct rdup *); 
+struct rdup *entry_dup(struct rdup *);
+void entry_free(struct rdup *);
 
-static gboolean
-mk_time(struct rdup *e)
+static gboolean mk_time(struct rdup *e)
 {
 	struct utimbuf ut;
 	/* we don't carry the a_time, how cares anyway with noatime? */
 	ut.actime = ut.modtime = e->f_mtime;
 
 	if (utime(e->f_name, &ut) == -1)
-		msgd(__func__, __LINE__,_("Failed to set mtime '%s\': %s"), e->f_name, strerror(errno));
+		msgd(__func__, __LINE__, _("Failed to set mtime '%s\': %s"),
+		     e->f_name, strerror(errno));
 	return TRUE;
 }
 
 static gboolean
-mk_chown(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_chown(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
-	uid_t u; gid_t g;
+	uid_t u;
+	gid_t g;
 	u = lookup_uid(uidhash, e->f_user, e->f_uid);
 	g = lookup_gid(gidhash, e->f_group, e->f_gid);
 
 	if (lchown(e->f_name, u, g) == -1) {
-                if (opt_chown) {
-                        /* chown failed, use and create ._rdup_. - file, it that fails too
-                         * we're out of luck - so we don't care about the return value */
-                        if (S_ISDIR(e->f_mode)) {
-                                chown_write(e->f_name, NULL, e->f_uid, e->f_user, e->f_gid, e->f_group);
-                        } else {
-                                chown_write(dirname(e->f_name), basename(e->f_name), e->f_uid, e->f_user, e->f_gid, e->f_group);
-                        }
-                } else {
-                        if (!opt_quiet) {
-                                msgd(__func__, __LINE__,_("Failed to chown `%s\': %s"), e->f_name, strerror(errno));
-                        }
-                }
-        }
+		if (opt_chown) {
+			/* chown failed, use and create ._rdup_. - file, it that fails too
+			 * we're out of luck - so we don't care about the return value */
+			if (S_ISDIR(e->f_mode)) {
+				chown_write(e->f_name, NULL, e->f_uid,
+					    e->f_user, e->f_gid, e->f_group);
+			} else {
+				chown_write(dirname(e->f_name),
+					    basename(e->f_name), e->f_uid,
+					    e->f_user, e->f_gid, e->f_group);
+			}
+		} else {
+			if (!opt_quiet) {
+				msgd(__func__, __LINE__,
+				     _("Failed to chown `%s\': %s"), e->f_name,
+				     strerror(errno));
+			}
+		}
+	}
 	return TRUE;
 }
 
-static gboolean
-mk_mode(struct rdup *e)
+static gboolean mk_mode(struct rdup *e)
 {
 	chmod(e->f_name, e->f_mode);
 	return TRUE;
 }
 
 static gboolean
-mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_meta(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
 	mk_mode(e);
 	mk_chown(e, uidhash, gidhash);
@@ -80,7 +85,7 @@ mk_meta(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_dev(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
 	gchar *parent;
 	struct stat *st;
@@ -96,7 +101,9 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
-				msgd(__func__, __LINE__, _("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__,
+				     _("Failed to make device `%s\': %s"),
+				     e->f_name, strerror(errno));
 				dir_restore(parent, st);
 				g_free(parent);
 				return FALSE;
@@ -104,7 +111,9 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, st);
 			g_free(parent);
 		} else {
-			msgd(__func__, __LINE__, _("Failed to make device `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__,
+			     _("Failed to make device `%s\': %s"), e->f_name,
+			     strerror(errno));
 			return FALSE;
 		}
 	}
@@ -113,7 +122,7 @@ mk_dev(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_sock(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
 	gchar *parent;
 	struct stat *st;
@@ -129,7 +138,9 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mkfifo(e->f_name, e->f_mode) == -1) {
-				msgd(__func__, __LINE__, _("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__,
+				     _("Failed to make socket `%s\': %s"),
+				     e->f_name, strerror(errno));
 				dir_restore(parent, st);
 				g_free(parent);
 				return FALSE;
@@ -137,7 +148,9 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, st);
 			g_free(parent);
 		} else {
-			msgd(__func__, __LINE__, _("Failed to make socket `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__,
+			     _("Failed to make socket `%s\': %s"), e->f_name,
+			     strerror(errno));
 			return FALSE;
 		}
 	}
@@ -146,7 +159,7 @@ mk_sock(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
+mk_link(struct rdup *e, char *p, GHashTable * uidhash, GHashTable * gidhash)
 {
 	struct stat *st;
 	gchar *t;
@@ -165,7 +178,11 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (symlink(e->f_target, e->f_name) == -1) {
-					msgd(__func__, __LINE__, _("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
+					msgd(__func__, __LINE__,
+					     _
+					     ("Failed to make symlink `%s -> %s\': %s"),
+					     e->f_name, e->f_target,
+					     strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
@@ -173,7 +190,10 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 				dir_restore(parent, st);
 				g_free(parent);
 			} else {
-				msgd(__func__, __LINE__, _("Failed to make symlink `%s -> %s\': %s"), e->f_name, e->f_target, strerror(errno));
+				msgd(__func__, __LINE__,
+				     _
+				     ("Failed to make symlink `%s -> %s\': %s"),
+				     e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
 		}
@@ -190,12 +210,12 @@ mk_link(struct rdup *e, char *p, GHashTable *uidhash, GHashTable *gidhash)
 }
 
 static gboolean
-mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_reg(FILE * in, struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
 	FILE *out = NULL;
 	char *buf;
 	gchar *parent;
-	size_t  bytes;
+	size_t bytes;
 	gboolean ok = TRUE;
 	gboolean old_dry = opt_dry;
 	struct stat *st;
@@ -204,12 +224,12 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	 * need to suck in the file's content - which is thrown
 	 * away in that case */
 
-	if (! e->f_name) {
+	if (!e->f_name) {
 		/* fake an opt_dry */
 		opt_dry = TRUE;
 	}
 
-	if (!opt_dry)  {
+	if (!opt_dry) {
 		if (!rm(e->f_name)) {
 			opt_dry = old_dry;
 			return FALSE;
@@ -220,14 +240,18 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (!(out = fopen(e->f_name, "w"))) {
-				msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
-                                g_free(parent);
+				msgd(__func__, __LINE__,
+				     _("Failed to open file `%s\': %s"),
+				     e->f_name, strerror(errno));
+				g_free(parent);
 				ok = FALSE;
 			}
 			dir_restore(parent, st);
-                        g_free(parent);
+			g_free(parent);
 		} else {
-			msgd(__func__, __LINE__, _("Failed to open file `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__,
+			     _("Failed to open file `%s\': %s"), e->f_name,
+			     strerror(errno));
 			ok = FALSE;
 		}
 	}
@@ -236,22 +260,24 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	 * the flow into rdup-up, but we are not
 	 * creating anything when opt_dry is active
 	 */
-	buf   = g_malloc(BUFSIZE + 1);
+	buf = g_malloc(BUFSIZE + 1);
 	while ((bytes = block_in_header(in)) > 0) {
 		if (block_in(in, bytes, buf) == -1) {
 			if (out)
 				fclose(out);
 			opt_dry = old_dry;
-                        g_free(buf);
+			g_free(buf);
 			return FALSE;
 		}
 		if (ok && !opt_dry) {
 			if (fwrite(buf, sizeof(char), bytes, out) != bytes) {
-				msgd(__func__, __LINE__, _("Write failure `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__,
+				     _("Write failure `%s\': %s"), e->f_name,
+				     strerror(errno));
 				if (out)
 					fclose(out);
 				opt_dry = old_dry;
-                                g_free(buf);
+				g_free(buf);
 				return FALSE;
 			}
 		}
@@ -265,13 +291,13 @@ mk_reg(FILE *in, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 
 #ifdef DEBUG
 	msgd(__func__, __LINE__, "Wrote file `%s\'", e->f_name);
-#endif /* DEBUG */
+#endif				/* DEBUG */
 	opt_dry = old_dry;
 	return TRUE;
 }
 
 static gboolean
-mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_dir(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
 	struct stat *s;
 	struct stat st;
@@ -283,8 +309,9 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	if (lstat(e->f_name, &st) == 0) {
 		if (S_ISDIR(st.st_mode)) {
 #if 0
-			msgd(__func__, __LINE__, _("Updating current dir `%s\'"), e->f_name);
-#endif /* DEBUG */
+			msgd(__func__, __LINE__,
+			     _("Updating current dir `%s\'"), e->f_name);
+#endif				/* DEBUG */
 			/* some dir is here - update the perms and ownership */
 			mk_meta(e, uidhash, gidhash);
 			return TRUE;
@@ -298,13 +325,16 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			parent = dir_parent(e->f_name);
 #ifdef DEBUG
 			msgd(__func__, __LINE__, _("EACCES for `%s\'"), parent);
-#endif /* DEBUG */
+#endif				/* DEBUG */
 			s = dir_write(parent);
 			if (!s)
-				msgd(__func__, __LINE__, _("Failed to make parent writable"));
-			
+				msgd(__func__, __LINE__,
+				     _("Failed to make parent writable"));
+
 			if (mkdir(e->f_name, e->f_mode) == -1) {
-				msgd(__func__, __LINE__, _("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
+				msgd(__func__, __LINE__,
+				     _("Failed to create directory `%s\': %s"),
+				     e->f_name, strerror(errno));
 				dir_restore(parent, s);
 				g_free(parent);
 				return FALSE;
@@ -312,7 +342,9 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 			dir_restore(parent, s);
 			g_free(parent);
 		} else {
-			msgd(__func__, __LINE__, _("Failed to create directory `%s\': %s"), e->f_name, strerror(errno));
+			msgd(__func__, __LINE__,
+			     _("Failed to create directory `%s\': %s"),
+			     e->f_name, strerror(errno));
 			return FALSE;
 		}
 	}
@@ -320,12 +352,12 @@ mk_dir(struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
 	return TRUE;
 }
 
-
 /* make (or delete) an object in the filesystem */
 gboolean
-mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidhash)
+mk_obj(FILE * in, char *p, struct rdup * e, GHashTable * uidhash,
+       GHashTable * gidhash)
 {
-	if (opt_verbose >= 1  && e->f_name) {
+	if (opt_verbose >= 1 && e->f_name) {
 		if (S_ISLNK(e->f_mode) || e->f_lnk)
 			fprintf(stderr, "%s -> %s\n", e->f_name, e->f_target);
 		else
@@ -336,47 +368,46 @@ mk_obj(FILE *in, char *p, struct rdup *e, GHashTable *uidhash, GHashTable *gidha
 
 	/* split here - or above - return when path is zero length
 	 * for links check that the f_size is zero */
-	switch(e->plusmin) {
-		case MINUS:
-			if (opt_dry || ! e->f_name)
-				return TRUE;
+	switch (e->plusmin) {
+	case MINUS:
+		if (opt_dry || !e->f_name)
+			return TRUE;
 
-			return rm(e->f_name);
-		case PLUS:
-			/* opt_dry handled within the subfunctions */
+		return rm(e->f_name);
+	case PLUS:
+		/* opt_dry handled within the subfunctions */
 
-			/* only files, no hardlinks! */
-			if (S_ISREG(e->f_mode) && ! e->f_lnk )
-				return mk_reg(in, e, uidhash, gidhash);
+		/* only files, no hardlinks! */
+		if (S_ISREG(e->f_mode) && !e->f_lnk)
+			return mk_reg(in, e, uidhash, gidhash);
 
-			/* no name, we can exit here - for files this is handled
-			 * in mk_reg, because we may need to suck in data */
-			if (e->f_name == NULL)
-				return TRUE;
+		/* no name, we can exit here - for files this is handled
+		 * in mk_reg, because we may need to suck in data */
+		if (e->f_name == NULL)
+			return TRUE;
 
-			if (S_ISDIR(e->f_mode))
-				return mk_dir(e, uidhash, gidhash);	
+		if (S_ISDIR(e->f_mode))
+			return mk_dir(e, uidhash, gidhash);
 
-			/* First sym and hardlinks and then regular files */
-			if (S_ISLNK(e->f_mode) || e->f_lnk)
-				return mk_link(e, p, uidhash, gidhash);
+		/* First sym and hardlinks and then regular files */
+		if (S_ISLNK(e->f_mode) || e->f_lnk)
+			return mk_link(e, p, uidhash, gidhash);
 
-			if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
-				return mk_dev(e, uidhash, gidhash);
+		if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
+			return mk_dev(e, uidhash, gidhash);
 
-			if (S_ISSOCK(e->f_mode))
-				return mk_sock(e, uidhash, gidhash);
+		if (S_ISSOCK(e->f_mode))
+			return mk_sock(e, uidhash, gidhash);
 
-			if (S_ISFIFO(e->f_mode))
-				return mk_sock(e, uidhash, gidhash);
+		if (S_ISFIFO(e->f_mode))
+			return mk_sock(e, uidhash, gidhash);
 	}
 	/* only reached during the heat death of the universe */
 	return TRUE;
 }
 
 /* Create the remaining hardlinks in the target directory */
-gboolean
-mk_hlink(GSList *h)
+gboolean mk_hlink(GSList * h)
 {
 	struct rdup *e;
 	GSList *p;
@@ -393,8 +424,11 @@ mk_hlink(GSList *h)
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (link(e->f_target, e->f_name) == -1) {
-					msgd(__func__, __LINE__, _("Failed to create hardlink `%s -> %s\': %s"),
-							e->f_name, e->f_target, strerror(errno));
+					msgd(__func__, __LINE__,
+					     _
+					     ("Failed to create hardlink `%s -> %s\': %s"),
+					     e->f_name, e->f_target,
+					     strerror(errno));
 					dir_restore(parent, st);
 					g_free(parent);
 					return FALSE;
@@ -403,12 +437,14 @@ mk_hlink(GSList *h)
 				g_free(parent);
 				return TRUE;
 			} else {
-				msgd(__func__, __LINE__, _("Failed to create hardlink `%s -> %s\': %s"),
-						e->f_name, e->f_target, strerror(errno));
+				msgd(__func__, __LINE__,
+				     _
+				     ("Failed to create hardlink `%s -> %s\': %s"),
+				     e->f_name, e->f_target, strerror(errno));
 				return FALSE;
 			}
 		}
-                entry_free(e);
+		entry_free(e);
 	}
 	return TRUE;
 }

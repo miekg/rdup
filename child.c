@@ -12,8 +12,7 @@ extern int sig;
 void got_sig(int signal);
 
 /* close all pipes except n1 and n2 (-1 is not needed) */
-void
-close_pipes(GSList *pipes, int n1, int n2)
+void close_pipes(GSList * pipes, int n1, int n2)
 {
 	GSList *p;
 	int *q;
@@ -30,28 +29,28 @@ close_pipes(GSList *pipes, int n1, int n2)
 }
 
 /* return 0 if all ok, -1 for trouble */
-int
-wait_pids(GSList *pids, int flags)
+int wait_pids(GSList * pids, int flags)
 {
 	GSList *p;
 	int status;
 
 	for (p = g_slist_nth(pids, 0); p; p = p->next) {
-                if (sig != 0)
-                        signal_abort(sig);
+		if (sig != 0)
+			signal_abort(sig);
 
 #ifdef DEBUG
-		msgd(__func__, __LINE__,"Waiting for pid %d", (int) *(pid_t*)(p->data));
-#endif /* DEBUG */
+		msgd(__func__, __LINE__, "Waiting for pid %d",
+		     (int)*(pid_t *) (p->data));
+#endif				/* DEBUG */
 
 		/* -1 on error */
-		waitpid(*(pid_t* )(p->data), &status, flags); /* errno ECHILD is ok */
+		waitpid(*(pid_t *) (p->data), &status, flags);	/* errno ECHILD is ok */
 #if 0
 		if (WIFEXITED(status)) {
 			/* msg("Child exit %d", WEXITSTATUS(status));
-			if (WEXITSTATUS(status) != 0)
-				ret = -1;
-			*/
+			   if (WEXITSTATUS(status) != 0)
+			   ret = -1;
+			 */
 			/* assume ok */
 			ret = 0;
 		} else {
@@ -63,17 +62,16 @@ wait_pids(GSList *pids, int flags)
 }
 
 /* create pipes and childs, return pids */
-GSList *
-create_childeren(GSList *child, GSList **pipes, int file)
+GSList *create_childeren(GSList * child, GSList ** pipes, int file)
 {
-	GSList  *p;
-	GSList	*pids	= NULL;
-	GSList	*cpipe  = NULL;
+	GSList *p;
+	GSList *pids = NULL;
+	GSList *cpipe = NULL;
 
-	char	**args;
-	int	*pips;
-	int	childs, j;
-	pid_t	*cpid;
+	char **args;
+	int *pips;
+	int childs, j;
+	pid_t *cpid;
 
 	if (!child)
 		return NULL;
@@ -91,27 +89,27 @@ create_childeren(GSList *child, GSList **pipes, int file)
 			exit(EXIT_FAILURE);
 		}
 		cpipe = g_slist_append(cpipe, pips);
-	}	
+	}
 
 	for (j = 0, p = g_slist_nth(child, 0); p; p = p->next, j++) {
-                if (sig != 0)
-                        signal_abort(sig);
+		if (sig != 0)
+			signal_abort(sig);
 
 		/* fork, exec child */
-                args = (char**) p->data;
+		args = (char **)p->data;
 		cpid = g_malloc(sizeof(pid_t));
 		pips = (g_slist_nth(cpipe, j))->data;
 
-		if ( (*cpid = fork()) == -1) {
+		if ((*cpid = fork()) == -1) {
 			msg(_("Fork error"));
-			return NULL; /* more gracefull then exit */
+			return NULL;	/* more gracefull then exit */
 			/* exit(EXIT_FAILURE); */
 		}
 
-		if (*cpid != 0) {			/* parent */
+		if (*cpid != 0) {	/* parent */
 			/* save the pids */
 			pids = g_slist_append(pids, cpid);
-		} else {				/* child */
+		} else {	/* child */
 			if (j == 0) {
 				/* dup f to stdin */
 				if (dup2(file, 0) == -1)
@@ -142,15 +140,16 @@ create_childeren(GSList *child, GSList **pipes, int file)
 			}
 
 			/* finally ... exec */
-			if ( execvp(args[0], args) == -1) {
-				msg(_("Failed to exec `%s\': %s"), args[0], strerror(errno));
+			if (execvp(args[0], args) == -1) {
+				msg(_("Failed to exec `%s\': %s"), args[0],
+				    strerror(errno));
 				exit(EXIT_FAILURE);
 			}
-			
+
 			/* never reached */
 			exit(EXIT_SUCCESS);
 		}
-        }
+	}
 	/* all childeren created, close all pipes except the last one */
 	close_pipes(cpipe, childs - 1, -1);
 	/* close write end, we only need to read as parent */

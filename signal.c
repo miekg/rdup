@@ -7,8 +7,7 @@
 
 extern int sig;
 
-void
-got_sig(int signal)
+void got_sig(int signal)
 {
 	sig = signal;
 }
@@ -16,26 +15,25 @@ got_sig(int signal)
 /**
  * we received a signal
  */
-void
-signal_abort(int signal)
+void signal_abort(int signal)
 {
 	int status;
-        switch(signal) {
-                case SIGPIPE:
-                        msg(_("SIGPIPE received, exiting"));
-                        break;
-                case SIGINT:
-                        msg(_("SIGINT received, exiting"));
-                        break;
-		case SIGCHLD:
-			(void)wait(&status);
+	switch (signal) {
+	case SIGPIPE:
+		msg(_("SIGPIPE received, exiting"));
+		break;
+	case SIGINT:
+		msg(_("SIGINT received, exiting"));
+		break;
+	case SIGCHLD:
+		(void)wait(&status);
 #ifdef DEBUG
-			msg("Wait stat: %d\n", status);
-#endif /* DEBUG */
-			return;
-                default:
-                        msg(_("Unhandled signal reveived, exiting"));
-                        break;
-        }
-        exit(EXIT_FAILURE);
+		msg("Wait stat: %d\n", status);
+#endif				/* DEBUG */
+		return;
+	default:
+		msg(_("Unhandled signal reveived, exiting"));
+		break;
+	}
+	exit(EXIT_FAILURE);
 }

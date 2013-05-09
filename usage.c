@@ -7,11 +7,11 @@
 
 extern char *PROGNAME;
 
-void
-usage(FILE *f)
+void usage(FILE * f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... FILELIST  [ DIR | FILE ]...\n"), PROGNAME);
-	fputs( _("\
+	fprintf(f, _("USAGE: %s [OPTION]... FILELIST  [ DIR | FILE ]...\n"),
+		PROGNAME);
+	fputs(_("\
 Generate a full or incremental file list. This list can be used to\n\
 implement a (incremental) backup scheme.\n\
 \n\
@@ -31,7 +31,7 @@ implement a (incremental) backup scheme.\n\
 	\t\tfilter file contents through CMD\n\
 	\t\tmay be repeated, output will be filtered through all commands\n\
         -V\t\tprint version\n"), f);
-	fputs( _("\
+	fputs(_("\
         -a\t\treset atime\n\
         -c\t\tforce output to tty\n\
         -m\t\tonly print new/modified files (unsets -r)\n\

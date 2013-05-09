@@ -7,11 +7,10 @@
 
 extern char *PROGNAME;
 
-void
-usage_up(FILE *f)
+void usage_up(FILE * f)
 {
-        fprintf(f, _("USAGE: %s [OPTION]... DIRECTORY\n"), PROGNAME);
-	fputs( _("\
+	fprintf(f, _("USAGE: %s [OPTION]... DIRECTORY\n"), PROGNAME);
+	fputs(_("\
 Update a directory tree with an rdup archive.\n\
 \n\
         DIRECTORY\twhere to unpack the archive\n\

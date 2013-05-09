@@ -6,16 +6,14 @@
 
 #ifdef HAVE_LIBNETTLE
 #include <nettle/sha.h>
-#endif /* HAVE_LIBNETTLE */
+#endif				/* HAVE_LIBNETTLE */
 
 #ifndef HAVE_LIBNETTLE
-int
-sha1_stream( __attribute__((unused)) FILE *f, __attribute__((unused)) unsigned char *digest)
+int sha1_stream( __attribute__ ((unused)) FILE * f, __attribute__ ((unused))
+		unsigned char *digest)
 #else
-int
-sha1_stream(FILE *f, unsigned char *digest)
+int sha1_stream(FILE * f, unsigned char *digest)
 #endif
-
 {
 
 #ifdef HAVE_LIBNETTLE
@@ -23,8 +21,7 @@ sha1_stream(FILE *f, unsigned char *digest)
 	uint8_t buffer[SHA1_DIGEST_SIZE];
 
 	sha1_init(&ctx);
-	for (;;)
-	{
+	for (;;) {
 		guint done = fread(buffer, 1, sizeof(buffer), f);
 		sha1_update(&ctx, done, buffer);
 		if (done < sizeof(buffer))
@@ -34,6 +31,6 @@ sha1_stream(FILE *f, unsigned char *digest)
 		return -1;
 
 	sha1_digest(&ctx, SHA1_DIGEST_SIZE, digest);
-#endif /* HAVE_LIBNETTLE */
+#endif				/* HAVE_LIBNETTLE */
 	return 0;
 }
