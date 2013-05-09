@@ -97,7 +97,7 @@ struct chown_pack * chown_parse(gchar *dir, gchar *base);
 /* child.c */
 void close_pipes(GSList *, int, int);
 int wait_pids(GSList *, int);
-GSList *create_childeren(GSList *, GSList **, int);
+GSList *create_children(GSList *, GSList **, int);
 
 /* gfunc.c */
 gint gfunc_equal(gconstpointer, gconstpointer);

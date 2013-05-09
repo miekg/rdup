@@ -62,7 +62,7 @@ int wait_pids(GSList * pids, int flags)
 }
 
 /* create pipes and childs, return pids */
-GSList *create_childeren(GSList * child, GSList ** pipes, int file)
+GSList *create_children(GSList * child, GSList ** pipes, int file)
 {
 	GSList *p;
 	GSList *pids = NULL;
