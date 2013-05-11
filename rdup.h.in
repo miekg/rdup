@@ -61,7 +61,6 @@
 #define VALUE          (void*)1 /* g_tree_lookup returns this in rdup */
 #define NO_PRINT       (void*)2 /* don't print values with this flag */
 #define D_STACKSIZE    100
-#define MAX_CHILD_OPT  7
 
 #define NO_SHA         "0000000000000000000000000000000000000000"
 
