@@ -253,8 +253,7 @@ int main(int argc, char **argv)
 	gint i;
 	int c;
 	char pwd[BUFSIZE + 1];
-	char *path, *stamp, *q, *r;
-	gchar **args;
+	char *path, *stamp;
 	gboolean devnull = FALSE;	/* hack: remember if we open /dev/null */
 	struct sigaction sa;
 
@@ -358,32 +357,8 @@ int main(int argc, char **argv)
 			opt_reverse = TRUE;
 			break;
 		case 'P':
-			/* allocate new for each child */
-			args = g_malloc((MAX_CHILD_OPT + 2) * sizeof(char *));
-			q = g_strdup(optarg);
-			/* this should be a comma seprated list
-			 * arg0,arg1,arg2,...,argN */
-			r = strchr(q, ',');
-			if (!r) {
-				args[0] = q;
-				args[1] = NULL;
-			} else {
-				*r = '\0';
-				for (i = 0; r; r = strchr(r + 1, ','), i++) {
-					if (i > MAX_CHILD_OPT) {
-						msg(_
-						    ("Only %d extra args per child allowed"),
-						    MAX_CHILD_OPT);
-						exit(EXIT_FAILURE);
-					}
-					*r = '\0';
-					args[i] = g_strdup(q);
-					q = r + 1;
-				}
-				args[i] = g_strdup(q);
-				args[i + 1] = NULL;
-			}
-			child = g_slist_append(child, args);
+			/* safe filter string for later processing */
+			child = g_slist_append(child, g_strdup(optarg));
 			break;
 		case 'v':
 			opt_verbose++;

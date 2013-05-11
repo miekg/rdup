@@ -99,7 +99,7 @@ static gboolean cat(FILE * fp, char *filename)
 		fclose(file);
 
 	} else {
-		pids = create_childeren(child, &pipes, fileno(file));
+		pids = create_children(child, &pipes, fileno(file));
 
 		if (!pids) {
 			fclose(file);

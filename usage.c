@@ -27,8 +27,8 @@ implement a (incremental) backup scheme.\n\
         \t\tdefaults to: \"%p%T %b %u %g %l %s %n\\n\"\n\
 	-R\t\treverse the output (depth first, first the dirs then the files)\n\
 	-E FILE\t\tuse FILE as an exclude list\n\
-	-P CMD,opt0,...,opt6\n\
-	\t\tfilter file contents through CMD\n\
+	-P CMD\n\
+	\t\tfilter file contents through CMD, will be called with 'sh -c CMD'\n\
 	\t\tmay be repeated, output will be filtered through all commands\n\
         -V\t\tprint version\n"), f);
 	fputs(_("\

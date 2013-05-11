@@ -68,9 +68,9 @@ DEST - where to store the backup. This can be:
 	directory
 
 OPTIONS:
- -k KEYFILE encrypt all files: rdup -Pmcrypt,-f,KEYFILE
- -g	    encrypt all files: rdup -Pgpg,--default-recipient-self,--encrypt
- -z         compress all files: rdup -Pgzip
+ -k KEYFILE encrypt all files: rdup -P "mcrypt -f KEYFILE"
+ -g	    encrypt all files: rdup -P "gpg --default-recipient-self --encrypt"
+ -z         compress all files: rdup -P gzip
  -E FILE    use FILE as an exclude list
  -f         force a full dump
  -v         echo the files processed to stderr and be more verbose
@@ -125,7 +125,7 @@ while getopts "aE:k:vfgzxhVX:Y:s:Lnq" o; do
                         echo2 "Cannot read keyfile \`$OPTARG': failed"
                         exit 1
                 fi
-                trans="$trans -Pmcrypt,-q,-f,$OPTARG"
+                trans="$trans -P 'mcrypt -q -f $OPTARG'"
 		if $enc; then
 			echo2 "Encryption already set"
 			exit 1
@@ -133,13 +133,13 @@ while getopts "aE:k:vfgzxhVX:Y:s:Lnq" o; do
 		enc=true
 		mcrypt=true
                 ;;
-                z) trans="$trans -Pgzip"
+                z) trans="$trans -P gzip"
 		if $enc; then
 			echo2 "Select compression first, then encryption"
 			exit 1
 		fi
                 ;;
-		g) trans="$trans -Pgpg,-e,--default-recipient-self"
+		g) trans="$trans -P 'gpg -e --default-recipient-self'"
 		if $enc; then
 			echo2 "Encryption already set"
 			exit 1
