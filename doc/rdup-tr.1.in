@@ -85,7 +85,7 @@ A short help.
 The following is possible
 
 .RS
- rdup -Pgzip -Pmcrypt,-f,KEY,-c /dev/null /home | \\
+ rdup -P gzip -P "mcrypt -f KEY -c" /dev/null /home | \\
  rdup-tr -O tar -X<(echo secret) | gzip > \\
  my-home-zipped-crypted-pathcrypted-tar.gz
 .RE
@@ -100,28 +100,28 @@ Creating a compressed and encrypted tar archive out of a full
 rdup dump might be done as follows
 
 .RS
- rdup -Pgzip -Pmcrypt,-f,KEY,-c /dev/null /home | \\
+ rdup -P gzip -P "mcrypt -f KEY -c" /dev/null /home | \\
  rdup-tr -O tar > my-home-zipped-and-crypted.tar
 .RE
 
 Or even pack and unpack it on the fly
 
 .RS
- rdup -Pgzip -Pmcrypt,-fKEY,-c /dev/null /home | rdup-tr -Otar | \\
+ rdup -P gzip -P "mcrypt -fKEY -c" /dev/null /home | rdup-tr -Otar | \\
  ssh user@remotehost tar xvCf /tmp -
 .RE
 
 Or encryption with openssl
 
 .RS
-rdup -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home
+rdup -P "openssl enc -e -des-cbc -k secret" /dev/null /home
 .RE
 
 Or, compressing with gzip, encrypting with openssl and then compressing
 the entire archive yet again
 
 .RS
- rdup -Pgzip -Popenssl,enc,-e,-des-cbc,-k,secret /dev/null /home | \\
+ rdup -P gzip -P "openssl enc -e -des-cbc -k secret" /dev/null /home | \\
  gzip > my_compressed_encrypted_rdup_archive.gz
 .RE
 

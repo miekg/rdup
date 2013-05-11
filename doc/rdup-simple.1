@@ -5,7 +5,7 @@ rdup-simple \- create a hardlinked backup
 .SH SYNOPSIS
 .B rdup-simple
 [\fI\+DAYS\fR]
--[\fI\-Pcmd,opt1,...,opt7\fR]...
+-[\fI\-P CMD\fR]...
 [\fIOPTION\fR]...
 \fIFILELIST\fR
 [\fIDIR/FILE]...\fR
@@ -63,11 +63,11 @@ Also note that the PATH on the remote host should be set in such a way that all 
 
 .SH OPTIONS
 .TP
-.B \-P\fIcommand\fR,\fIopt0\fR,...,\fIopt6\fR
-Filter all output through \fIcommand\fR. \fIopt0\fR through \fIopt6\fR are
-given as options to the command. Multiple \-P's can be used, there is
-however a maximum of seven options for each command. The options
-are separated with commas, there must be \fIno\fR space in between.
+.B \-P\fIcommand\fR
+Filter all output through \fIcommand\fR, which is called via `sh -c command'.
+Multiple \-P's can be used, there is however a maximum of seven options for
+each command. The options are separated with commas, there must be \fIno\fR
+space in between.
 
 .SH AUTHOR
 Written by Miek Gieben. 
