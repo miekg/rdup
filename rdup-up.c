@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2009 - 2011 Miek Gieben
- * See LICENSE for the license
+ * License: GPLv3(+), see LICENSE for details
  * rdup-up -- update an directory tree with
  * and rdup archive
  */

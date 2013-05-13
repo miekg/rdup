@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2009 - 2011 Miek Gieben
- * See LICENSE for the license
+ * License: GPLv3(+), see LICENSE for details
  * rdup-tr -- rdup translate, transform an
  * rdup filelist to an tar/cpio archive with
  * per file compression and/or encryption or whatever

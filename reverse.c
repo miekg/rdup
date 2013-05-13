@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2005 - 2011 Miek Gieben
- * See LICENSE for the license
+ * License: GPLv3(+), see LICENSE for details
  * Reverse a GTree by putting all element in a GList
  * and reverse print that. Needed for rdup's -R switch
  */

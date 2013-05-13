@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2005 - 2011 Miek Gieben
- * See LICENSE for the license
+ * License: GPLv3(+), see LICENSE for details
  */
 
 #include "rdup.h"

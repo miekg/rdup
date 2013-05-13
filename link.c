@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2005 - 2011 Miek Gieben
- * See LICENSE for the license
+ * License: GPLv3(+), see LICENSE for details
  *
  * dev_t,ino_t -> path look up table
  * needed for hardlink implementation
