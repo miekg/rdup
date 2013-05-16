@@ -1,4 +1,4 @@
-xx Yyy 2013: 1.1.5 Miek Gieben <miek@miek.nl>
+xx Yyy 2013: 1.1.15 Miek Gieben <miek@miek.nl>
   * [rdup] Change -P so any arguments are executed with 'sh -c', 
     this removes the 7 option limit (Alexander Neumann)
   * [rdup-tr] Fix crashes with filename encryption and symlinks (reported by
