@@ -54,7 +54,8 @@ static struct rdup *crypt_entry(struct rdup *e, GHashTable * tr)
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		dest = crypt_path(aes_ctx, e->f_target, tr);
-		g_free(e->f_target);
+                //this crashes rdup-tr. TODO(mg): figure out if this leaks
+		//g_free(e->f_target);
 		e->f_target = dest;
 		e->f_size = strlen(crypt);	/* use crypt here */
 	}
