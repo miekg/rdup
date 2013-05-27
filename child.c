@@ -71,7 +71,7 @@ GSList *create_children(GSList * child, GSList ** pipes, int file)
 	char *args[4];
 	int *pips;
 	int childs, j;
-	pid_t *cpid;
+	pid_t cpid;
 
 	if (!child)
 		return NULL;
@@ -100,18 +100,17 @@ GSList *create_children(GSList * child, GSList ** pipes, int file)
 		args[1] = "-c";
 		args[2] = (char *)p->data;
                 args[3] = NULL;
-		cpid = g_malloc(sizeof(pid_t));
 		pips = (g_slist_nth(cpipe, j))->data;
 
-		if ((*cpid = fork()) == -1) {
+		if ((cpid = fork()) == -1) {
 			msg(_("Fork error"));
 			return NULL;	/* more gracefull then exit */
 			/* exit(EXIT_FAILURE); */
 		}
 
-		if (*cpid != 0) {	/* parent */
+		if (cpid != 0) {	/* parent */
 			/* save the pids */
-			pids = g_slist_append(pids, cpid);
+			pids = g_slist_append(pids, &cpid);
 		} else {	/* child */
 			if (j == 0) {
 				/* dup f to stdin */
