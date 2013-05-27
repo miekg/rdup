@@ -11,7 +11,8 @@ rm -f ~/.rdup/timestamp.$(uname -n).tmp
 
 rm -rf tmp
 mkdir tmp
-./rdup-simple -z -f -k <(echo 0123456789abcdef) doc tmp
+echo 0123456789abcdef > key
+./rdup-simple -z -f -k key doc tmp
 EXIT=$?
 rm -rf tmp
 rm -f key
