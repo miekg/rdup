@@ -298,17 +298,17 @@ The following escape sequences are understood by \fBrdup\fR:
         'n': path name
 .BR
         'N': path name, but in case of a soft- or hardlink \fIonly\fR
-the link name.
+the link name
 .BR
         't': time of modification (seconds from epoch)
 .BR
-        'H': the SHA1 hash of the regular file, all zeros ("0") for all other types
+        'H': the SHA1 hash of the file, all zeros ("0") for all other types
 .BR
         'T': file type
 .RS
        \fB-\fR normal file, \fBl\fR symlink, \fBh\fR hardlink, \fBd\fR directory,
        \fBc\fR character device, \fBb\fR block device, \fBp\fR named pipe
-       and \fBs\fR socket.
+       and \fBs\fR socket
 .RE
         'C': the content of the file (none for all other types)
 .PP

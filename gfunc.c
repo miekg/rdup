@@ -317,13 +317,10 @@ static void entry_print_data(FILE * out, char n, struct rdup *e)
 		break;
 	case 'H':		/* sha1 hash */
 		if (S_ISREG(e->f_mode)) {
-			/* normal file and no hardlink */
-			if (e->f_lnk == 0) {
-				sha1(out, e->f_name);
-			}
-		} else {
-			fprintf(out, NO_SHA);
-		}
+                        sha1(out, e->f_name);
+                        break;
+                }
+		fprintf(out, NO_SHA);
 		break;
 	case 'T':		/* file type */
 		if (S_ISDIR(e->f_mode)) {
