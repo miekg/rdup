@@ -3,7 +3,7 @@
 # this takes place in the rdup source tree
 # make sure the executables used are also
 # these
-PATH=`pwd`:.:$PATH
+PATH=$PWD:$PATH
 
 # test rdup-simple with path enryption
 rm -f ~/.rdup/list.$(uname -n).tmp

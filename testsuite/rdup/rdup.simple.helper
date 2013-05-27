@@ -3,7 +3,7 @@
 # this takes place in the rdup source tree
 # make sure the executables used are also
 # these
-PATH=`pwd`:.:$PATH
+PATH=$PWD:$PATH
 
 if ! which gpg 2>/dev/null 1>&2; then
     exit 0

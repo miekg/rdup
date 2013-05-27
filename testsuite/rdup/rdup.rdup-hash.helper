@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 ./rdup -F '%n %H\n' /dev/null testsuite

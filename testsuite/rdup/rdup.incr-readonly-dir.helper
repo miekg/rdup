@@ -3,7 +3,7 @@
 # this takes place in the rdup source tree
 # make sure the executables used are also
 # these
-PATH=`pwd`:`pwd`/sh:.:$PATH
+PATH=`pwd`:.:$PATH
 
 #this test fails on the first, because we move
 #the current backup to 01
