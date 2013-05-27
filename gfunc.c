@@ -305,11 +305,11 @@ static void entry_print_data(FILE * out, char n, struct rdup *e)
 		}
 		/* links */
 		if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-			fprintf(out, "%ld", (unsigned long)e->f_size);
+			fprintf(out, "%zd", e->f_size);
 			break;
 		}
 
-		fprintf(out, "%zd", (size_t) e->f_size);
+		fprintf(out, "%zd", e->f_size);
 		break;
 	case 'H':		/* sha1 hash */
 		if (S_ISREG(e->f_mode)) {
