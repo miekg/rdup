@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# this takes place in the rdup source tree
-# make sure the executables used are also
-# these
-PATH=`pwd`:`pwd`/sh:.:$PATH
+PATH=`pwd`:.:$PATH
 
 if ! which gpg 2>/dev/null 1>&2; then
     exit 0
@@ -13,7 +10,7 @@ if [ ! -d ~/.gnupg ]; then
     exit 0
 fi
 
-# test rdup-simple with mcrypt and path enryption
+# test rdup-simple with gpg
 rm -f ~/.rdup/list.$(uname -n).tmp
 rm -f ~/.rdup/timestamp.$(uname -n).tmp
 
