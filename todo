@@ -1,24 +1,4 @@
 TODO
 
-rdup:
-    update manpage
-    make metachanges more efficient - now it sends the entire file again
-    (this needs a %P change + - and a m - for meta, only send the new
-    meta data - rdup-{up,tr} need to grok this too)
-
-    non-root ssh backups, if chown of a file fails (non-root sshfs) create
-    a file <basename>._rdup_ that holds the uid:gid combo username:group
-    is nicer
-
-rdup-tr:
-    with tar/pax output hardlinks must come last
-    update manpage
-
-rdup-up:
-    update manpage
-
-tests:
-    tweak almost correct input and let rdup crash
-
-    autom. tests...?
-    for i in $(seq 0 100); do make check 2>/dev/null | grep '^# of expected'; sleep 1; done
+Rewrite in Go?
+Make a input format modifier for rdup-tr and rdup (one day?)
