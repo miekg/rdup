@@ -34,6 +34,7 @@ int sha1_stream(FILE * stream, void *digest);
  */
 static gboolean sha1(FILE * fp, char *filename)
 {
+#ifdef HAVE_LIBNETTLE
 	unsigned char digest[SHA1_DIGEST_SIZE];
 	gint i;
 	FILE *file;
@@ -51,6 +52,9 @@ static gboolean sha1(FILE * fp, char *filename)
 	for (i = 0; i < SHA1_DIGEST_SIZE; i++) {
 		fprintf(fp, "%02x", digest[i]);
 	}
+#else
+	fprintf(fd, "%s", NO_SHA);
+#endif				/* HAVE_LIBNETTLE */
 	return TRUE;
 }
 
