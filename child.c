@@ -68,7 +68,7 @@ GSList *create_children(GSList * child, GSList ** pipes, int file)
 	GSList *pids = NULL;
 	GSList *cpipe = NULL;
 
-	char *args[3];
+	char *args[4];
 	int *pips;
 	int childs, j;
 	pid_t *cpid;
@@ -99,6 +99,7 @@ GSList *create_children(GSList * child, GSList ** pipes, int file)
 		args[0] = "sh";
 		args[1] = "-c";
 		args[2] = (char *)p->data;
+                args[3] = NULL;
 		cpid = g_malloc(sizeof(pid_t));
 		pips = (g_slist_nth(cpipe, j))->data;
 
