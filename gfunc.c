@@ -119,14 +119,6 @@ static gboolean cat(FILE * fp, char *filename)
 			close(parent[0]);
 			return FALSE;
 		}
-#if 0
-		/* use 0 for the flags field */
-		if (wait_pids(pids, WNOHANG) == -1) {
-			msg(_("Wait pid failure"));
-			fclose(file);
-			return FALSE;
-		}
-#endif
 		while (i > 0) {
 			if (sig != 0)
 				signal_abort(sig);

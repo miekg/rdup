@@ -33,6 +33,7 @@ int wait_pids(GSList * pids, int flags)
 {
 	GSList *p;
 	int status;
+	pid_t pid;
 
 	for (p = g_slist_nth(pids, 0); p; p = p->next) {
 		if (sig != 0)
@@ -43,18 +44,15 @@ int wait_pids(GSList * pids, int flags)
 		     (int)*(pid_t *) (p->data));
 #endif				/* DEBUG */
 
-		/* -1 on error */
-		waitpid(*(pid_t *) (p->data), &status, flags);	/* errno ECHILD is ok */
+		pid = waitpid(*(pid_t *) (p->data), &status, flags);
+		if (pid != *(pid_t *) (p->data)) {
+			msg("Waitpid returned different pid %d than expected %d: `%s\'", pid, *(pid_t *) (p->data), strerror(errno));
+			continue;
+		}
 #if 0
-		if (WIFEXITED(status)) {
-			/* msg("Child exit %d", WEXITSTATUS(status));
-			   if (WEXITSTATUS(status) != 0)
-			   ret = -1;
-			 */
-			/* assume ok */
-			ret = 0;
-		} else {
-			ret = -1;
+		/* enable later */
+		if (!WIFEXITED(status)) {
+			return -1;
 		}
 #endif
 	}
@@ -67,11 +65,11 @@ GSList *create_children(GSList * child, GSList ** pipes, int file)
 	GSList *p;
 	GSList *pids = NULL;
 	GSList *cpipe = NULL;
+	pid_t *cpid;
 
 	char *args[4];
 	int *pips;
 	int childs, j;
-	pid_t cpid;
 
 	if (!child)
 		return NULL;
@@ -99,18 +97,19 @@ GSList *create_children(GSList * child, GSList ** pipes, int file)
 		args[0] = "sh";
 		args[1] = "-c";
 		args[2] = (char *)p->data;
-                args[3] = NULL;
+		args[3] = NULL;
 		pips = (g_slist_nth(cpipe, j))->data;
 
-		if ((cpid = fork()) == -1) {
+		cpid = g_malloc(sizeof(int));
+		if ((*cpid = fork()) == -1) {
 			msg(_("Fork error"));
-			return NULL;	/* more gracefull then exit */
+			return NULL;
 			/* exit(EXIT_FAILURE); */
 		}
 
-		if (cpid != 0) {	/* parent */
+		if (*cpid != 0) {	/* parent */
 			/* save the pids */
-			pids = g_slist_append(pids, &cpid);
+			pids = g_slist_append(pids, cpid);
 		} else {	/* child */
 			if (j == 0) {
 				/* dup f to stdin */
