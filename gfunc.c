@@ -468,7 +468,6 @@ gfunc_backup(gpointer data, gpointer value,
 			return FALSE;
 		default:	/* INC_DUMP */
 			if (((struct rdup *)data)->f_ctime >= opt_timestamp) {
-                                fprintf(stderr, "%zd %zd\n", ((struct rdup *)data)->f_ctime, opt_timestamp); /* MIEK */
 				entry_print(stdout, PLUS, (struct rdup *)data,
 					    opt_format);
 #if DEBUG
