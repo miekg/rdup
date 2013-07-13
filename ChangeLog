@@ -4,6 +4,7 @@ xx Yyy 2013: 1.1.15 Miek Gieben <miek@miek.nl>
   * [rdup-tr] Fix crashes with filename encryption and symlinks (reported by
     Jakob Fink)
   * [rdup] Fix the linked list that tracks the child's PIDs.
+  * [rdup] Drop -a option, it's racy and must proper or not at all.
 
 19 Jan 2013: 1.1.14 Miek Gieben <miek@miek.nl>
    * [rdup] check for the existence of ._rdup_. files and parse its contents

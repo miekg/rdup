@@ -8,7 +8,6 @@
 
 extern gboolean opt_onefilesystem;
 extern gboolean opt_nobackup;
-extern gboolean opt_atime;
 extern gboolean opt_chown;
 extern time_t opt_timestamp;
 extern gint opt_verbose;
@@ -304,17 +303,6 @@ dir_crawl(GTree * t, GHashTable * linkhash, GHashTable * userhash,
 		}
 	}
 	closedir(dir);
-	if (opt_atime) {
-		/* reset dirs atime */
-		if (d > 0 && opt_atime) {
-			struct utimbuf ut;
-			ut.actime = dirstack[d - 1]->f_atime;
-			ut.modtime = dirstack[d - 1]->f_mtime;
-			if (utime(dirstack[d - 1]->f_name, &ut) == -1)
-				msg(_("Failed to reset atime: '%s\': %s"),
-				    dirstack[d - 1]->f_name, strerror(errno));
-		}
-	}
 
 	while (d > 0) {
 		directory = dirstack[--d];

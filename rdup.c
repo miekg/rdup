@@ -319,13 +319,11 @@ int main(int argc, char **argv)
 			break;
 		case 'a':
 			opt_atime = TRUE;
-			/* when atime is true, every file is touched during the
-			 * backup (the c_time changes). To make rdup not see these
-			 * files as new in the backup, we must set the timestamp
-			 * file with a timestamp AFTER the backup.
-			 * If we do this we will not see file the are changed
-			 * DURING the backup...
-			 */
+                        /* -a creates race conditions that can be solved, but using
+                         * higher resolution timestamps, for now disbale this 
+                         * feature
+                         */
+                        msg(_("The option `-a\' is a noop"));
 			break;
 		case 'c':
 			opt_tty = TRUE;
@@ -498,8 +496,7 @@ int main(int argc, char **argv)
 			    stamp, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
-		/* and set the time when rdup was started, only when -a was not given */
-		if (!opt_atime && utime(stamp, &ut) == -1) {
+		if (utime(stamp, &ut) == -1) {
 			msg(_("Failed to reset atime: '%s\': %s"), stamp,
 			    strerror(errno));
 			exit(EXIT_FAILURE);
