@@ -1,3 +1,2 @@
 #!/bin/bash
-
-./rdup -a /dev/null testsuite > /dev/null
+./rdup -a /dev/null testsuite > /dev/null 2>&1
