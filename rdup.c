@@ -319,11 +319,11 @@ int main(int argc, char **argv)
 			break;
 		case 'a':
 			opt_atime = TRUE;
-                        /* -a creates race conditions that can be solved, but using
-                         * higher resolution timestamps, for now disbale this 
-                         * feature
-                         */
-                        msg(_("The option `-a\' is a noop"));
+			/* -a creates race conditions that can be solved, but using
+			 * higher resolution timestamps, for now disbale this 
+			 * feature
+			 */
+			msg(_("The option `-a\' is a noop"));
 			break;
 		case 'c':
 			opt_tty = TRUE;

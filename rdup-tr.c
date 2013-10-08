@@ -48,12 +48,18 @@ static struct rdup *crypt_entry(struct rdup *e, GHashTable * tr)
 		return NULL;
 	}
 
+	if (!e->f_name) {
+		free(e->f_name);
+	}
 	e->f_name = crypt;
 	e->f_name_size = strlen(crypt);
 
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		dest = crypt_path(aes_ctx, e->f_target, tr);
+		if (!e->f_target) {
+			free(e->f_target);
+		}
 		e->f_target = dest;
 		e->f_size = strlen(crypt);	/* use crypt here */
 	}
@@ -281,8 +287,7 @@ static void stdin2archive(void)
 
 			if (S_ISLNK(rdup_entry->f_mode))
 				archive_entry_copy_symlink(entry,
-							   rdup_entry->
-							   f_target);
+							   rdup_entry->f_target);
 			g_free(s);
 		}
 
@@ -373,8 +378,8 @@ static void stdin2archive(void)
 		archive_entry_copy_pathname(entry,
 					    ((struct rdup *)hl->data)->f_name);
 		archive_entry_copy_hardlink(entry,
-					    ((struct rdup *)hl->data)->
-					    f_target);
+					    ((struct rdup *)hl->
+					     data)->f_target);
 		archive_write_header(archive, entry);
 		archive_entry_free(entry);
 		g_free(s);
