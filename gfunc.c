@@ -31,7 +31,7 @@ int sha1_stream(FILE * stream, void *digest);
 /*
  * calculates a files sha1 sum
  */
-static gboolean sha1(FILE * fp, char *filename)
+static gboolean sha1(FILE * fp, __attribute__ ((unused)) char *filename)
 {
 #ifdef HAVE_LIBNETTLE
 	unsigned char digest[SHA1_DIGEST_SIZE];
@@ -52,7 +52,7 @@ static gboolean sha1(FILE * fp, char *filename)
 		fprintf(fp, "%02x", digest[i]);
 	}
 #else
-	fprintf(fd, "%s", NO_SHA);
+	fprintf(fp, "%s", NO_SHA);
 #endif				/* HAVE_LIBNETTLE */
 	return TRUE;
 }
