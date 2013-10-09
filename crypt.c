@@ -162,7 +162,7 @@ gchar *decrypt_path_ele(struct aes_ctx * ctx, char *b64, GHashTable * tr)
  */
 gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
 {
-	gchar *q, *c, *t, *crypt, *xpath, d;
+	gchar *q, *c, *t, *crypt, *xpath, *temp, d;
 	gboolean abs;
 
 	/* links might have relative targets */
@@ -182,20 +182,39 @@ gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
 		}
 		crypt = crypt_path_ele(ctx, q, tr);
 
-		if (xpath)
-			xpath = g_strdup_printf("%s/%s", xpath, crypt);
-		else
-			abs ? (xpath = g_strdup_printf("/%s", crypt)) :
-			    (xpath = g_strdup(crypt));
+		if (xpath) {
+			temp = g_strdup_printf("%s/%s", xpath, crypt);
+			g_free(xpath);
+			xpath = temp;
+		} else {
+			if (abs) {
+				g_free(xpath);
+				xpath = g_strdup_printf("/%s", crypt);
+			} else {
+				g_free(xpath);
+				xpath = g_strdup(crypt);
+			}
+		}
+
 		q = c;
 		*c = d;
 	}
 	crypt = crypt_path_ele(ctx, q, tr);
-	if (xpath)
-		xpath = g_strdup_printf("%s/%s", xpath, crypt);
-	else
-		abs ? (xpath = g_strdup_printf("/%s", crypt)) :
-		    (xpath = g_strdup(crypt));
+
+	if (xpath) {
+		temp = g_strdup_printf("%s/%s", xpath, crypt);
+		g_free(xpath);
+		xpath = temp;
+	} else {
+		if (abs) {
+			g_free(xpath);
+			xpath = g_strdup_printf("/%s", crypt);
+		} else {
+			g_free(xpath);
+			xpath = g_strdup(crypt);
+		}
+	}
+
 	return xpath;
 }
 
@@ -205,7 +224,7 @@ gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
 gchar *decrypt_path(struct aes_ctx * ctx, gchar * x, GHashTable * tr)
 {
 
-	gchar *path, *q, *c, *t, *plain, d;
+	gchar *path, *q, *c, *t, *plain, *temp, d;
 	gboolean abs;
 
 	/* links */
@@ -225,20 +244,39 @@ gchar *decrypt_path(struct aes_ctx * ctx, gchar * x, GHashTable * tr)
 		}
 		plain = decrypt_path_ele(ctx, q, tr);
 
-		if (path)
-			path = g_strdup_printf("%s/%s", path, plain);
-		else
-			abs ? (path = g_strdup_printf("/%s", plain)) :
-			    (path = g_strdup(plain));
+		if (path) {
+			temp = g_strdup_printf("%s/%s", path, plain);
+			g_free(path);
+			path = temp;
+		} else {
+			if (abs) {
+				g_free(path);
+				path = g_strdup_printf("/%s", plain);
+			} else {
+				g_free(path);
+				path = g_strdup(plain);
+			}
+		}
+
 		q = c;
 		*c = d;
 	}
 	plain = decrypt_path_ele(ctx, q, tr);
-	if (path)
-		path = g_strdup_printf("%s/%s", path, plain);
-	else
-		abs ? (path = g_strdup_printf("/%s", plain)) :
-		    (path = g_strdup(plain));
+
+	if (path) {
+		temp = g_strdup_printf("%s/%s", path, plain);
+		g_free(path);
+		path = temp;
+	} else {
+		if (abs) {
+			g_free(path);
+			path = g_strdup_printf("/%s", plain);
+		} else {
+			g_free(path);
+			path = g_strdup(plain);
+		}
+	}
+
 	return path;
 }
 

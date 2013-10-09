@@ -359,8 +359,12 @@ static void stdin2archive(void)
 		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
 
-                g_free(rdup_entry->f_name);
-                g_free(rdup_entry->f_target);
+#if HAVE_LIBNETTLE
+                if (opt_crypt_key) {
+                        g_free(rdup_entry->f_name);
+                        g_free(rdup_entry->f_target);
+                }
+#endif
 		g_free(rdup_entry->f_user);
 		g_free(rdup_entry->f_group);
 		g_free(rdup_entry);

@@ -38,6 +38,7 @@ static gboolean update(char *path)
 	GHashTable *uidhash;	/* holds username -> uid */
 	GHashTable *gidhash;	/* holds groupname -> gid */
 
+        p = NULL;
 	buf = g_malloc(BUFSIZE + 1);
 	pathbuf = g_malloc(BUFSIZE + 1);
 	i = BUFSIZE;
@@ -106,6 +107,7 @@ static gboolean update(char *path)
 			if ((pathlen == 1 && path[0] == '/') || pathlen == 0) {
 				p = g_strdup(rdup_entry->f_name);
 			} else {
+                                g_free(p);
 				p = g_strdup_printf("%s%s", path,
 						    rdup_entry->f_name);
 				rdup_entry->f_name_size += pathlen;
