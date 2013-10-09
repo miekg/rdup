@@ -48,14 +48,12 @@ static struct rdup *crypt_entry(struct rdup *e, GHashTable * tr)
 		return NULL;
 	}
 
-	free(e->f_name);
 	e->f_name = crypt;
 	e->f_name_size = strlen(crypt);
 
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
 		dest = crypt_path(aes_ctx, e->f_target, tr);
-		free(e->f_target);
 		e->f_target = dest;
 		e->f_size = strlen(crypt);	/* use crypt here */
 	}
@@ -361,6 +359,8 @@ static void stdin2archive(void)
 		if (opt_output != O_RDUP)
 			archive_entry_free(entry);
 
+                g_free(rdup_entry->f_name);
+                g_free(rdup_entry->f_target);
 		g_free(rdup_entry->f_user);
 		g_free(rdup_entry->f_group);
 		g_free(rdup_entry);
