@@ -213,9 +213,9 @@ if [ ${dest:0:6} = "ssh://" ]; then
 	BACKUPDIR=${rest/$h/}
 
 	if [ -z "$u" ]; then
-		ssh=" ssh -c blowfish -x $h"
+		ssh=" ssh -x $h"
 	else
-		ssh=" ssh -c blowfish -x $u@$h"
+		ssh=" ssh -x $u@$h"
 	fi
 fi
 if [ ${dest:0:7} = "file://" ]; then
