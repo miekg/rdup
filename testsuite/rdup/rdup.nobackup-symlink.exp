@@ -1,0 +1,6 @@
+set test "Create a backup of a dir with .nobackup being a symlink"
+spawn ./testsuite/rdup/rdup.nobackup-symlink.helper
+expect {
+    -re "..*" { fail "$test" }
+    default { pass "$test" }
+}
