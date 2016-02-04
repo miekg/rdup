@@ -1,0 +1,10 @@
+language: c
+compiler:
+  - clang
+  - gcc
+install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libarchive-dev nettle-dev dejagnu expect mcrypt
+script:
+  - rm -Rf ~/.gnupg # Skip gpg tests
+  - autoreconf && ./configure && make && make check
