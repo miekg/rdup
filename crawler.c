@@ -195,26 +195,6 @@ dir_crawl(GTree * t, GHashTable * linkhash, GHashTable * userhash,
 				continue;
 			}
 
-			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
-				/* return after seeing .nobackup */
-				if (opt_verbose > 0) {
-					msg(_("%s found in '%s\'"), NOBACKUP,
-					    path);
-				}
-				/* remove all files found in this path */
-				rp.tree = t;
-				rp.len = strlen(path);
-				rp.path = path;
-				g_tree_foreach(t, gfunc_remove_path,
-					       (gpointer) & rp);
-				/* add .nobackup back in */
-				g_tree_insert(t, (gpointer) entry_dup(&pop),
-					      VALUE);
-				g_free(dirstack);
-				closedir(dir);
-				return;
-			}
-
 			/* hardlinks */
 			if (s.st_nlink > 1) {
 				if ((lnk = hlink(linkhash, &pop))) {
@@ -238,6 +218,27 @@ dir_crawl(GTree * t, GHashTable * linkhash, GHashTable * userhash,
 				pop.f_user = cp->user;
 				pop.f_group = cp->group;
 			}
+
+			if (opt_nobackup && !strcmp(dent->d_name, NOBACKUP)) {
+				/* return after seeing .nobackup */
+				if (opt_verbose > 0) {
+					msg(_("%s found in '%s\'"), NOBACKUP,
+					    path);
+				}
+				/* remove all files found in this path */
+				rp.tree = t;
+				rp.len = strlen(path);
+				rp.path = path;
+				g_tree_foreach(t, gfunc_remove_path,
+					       (gpointer) & rp);
+				/* add .nobackup back in */
+				g_tree_insert(t, (gpointer) entry_dup(&pop),
+					      VALUE);
+				g_free(dirstack);
+				closedir(dir);
+				return;
+			}
+
 			g_tree_insert(t, (gpointer) entry_dup(&pop), VALUE);
 
 			if (pop.f_target != NULL)

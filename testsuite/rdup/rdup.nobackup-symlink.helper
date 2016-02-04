@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rm -Rf nobackup-symlink
+mkdir -p nobackup-symlink/{a,b,c}
+ln -sf /dev/null nobackup-symlink/b/.nobackup
+
+total=$(./rdup -v /dev/null nobackup-symlink 2> /dev/null | grep "`pwd`/nobackup-symlink" | wc -l)
+dev_null_present=$(./rdup -v /dev/null nobackup-symlink 2> /dev/null | grep "`pwd`/nobackup-symlink" | grep /dev/null | wc -l)
+if [ $total -ne 5 ];then
+    echo FOUT
+fi
+
+if [ $dev_null_present -ne 1 ];then
+    echo FOUT
+fi
+
+rm -Rf nobackup-symlink
