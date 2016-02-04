@@ -396,8 +396,9 @@ mk_obj(FILE * in, char *p, struct rdup * e, GHashTable * uidhash,
 		if (S_ISBLK(e->f_mode) || S_ISCHR(e->f_mode))
 			return mk_dev(e, uidhash, gidhash);
 
+		// There's no way to restore a named socket
 		if (S_ISSOCK(e->f_mode))
-			return mk_sock(e, uidhash, gidhash);
+			return TRUE;
 
 		if (S_ISFIFO(e->f_mode))
 			return mk_sock(e, uidhash, gidhash);
