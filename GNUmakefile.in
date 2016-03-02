@@ -57,7 +57,7 @@ rdup:	${OBJ} ${HDR}
 
 strip:	rdup rdup-up
 ifneq (${ARCHIVE_L},no)
-strip:	drup-tr
+strip:	rdup-tr
 endif
 	strip $^
 
