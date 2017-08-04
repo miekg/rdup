@@ -37,6 +37,7 @@ the following
 * Linux
 * Solaris
 * FreeBSD
+* Cygwin
 
 ./configure will try to do the right thing, if you don't have
 specific libraries certain functionality isn't built.

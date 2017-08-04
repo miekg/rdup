@@ -10,6 +10,13 @@ Mandatory:
 
 If libarchive is not found rdup-tr is not built.
 
+Cygwin dependencies:
+* Build:
+  * autoconf,automake,gcc-core,make
+  * libarchive-devel,libglib2.0-devel,libnettle-devel,libpcre-devel
+* Test: dejagnu,mcrypt
+* Run: libarchive13,libglib2.0_0,libnettle4,libpcre1
+
 To build from git:
 
     autoconf && ./configure && make && make install
