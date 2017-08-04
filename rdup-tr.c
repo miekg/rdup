@@ -30,9 +30,12 @@ gint opt_input = I_RDUP;	/* default intput */
 int sig = 0;
 char *o_fmt[] = { "", "tar", "cpio", "pax", "rdup" };	/* O_NONE, O_TAR, O_CPIO, O_PAX, O_RDUP */
 
+#ifdef __CYGWIN__
+extern int __declspec(dllimport) opterr;
+#else
 extern int opterr;
-
 int opterr = 0;
+#endif
 
 /* common.c */
 struct rdup *entry_dup(struct rdup *f);

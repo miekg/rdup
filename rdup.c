@@ -24,8 +24,12 @@ size_t opt_size = 0;		/* only output files smaller then <size> */
 time_t opt_timestamp = 0;	/* timestamp file c|m time */
 
 int sig = 0;
+#ifdef __CYGWIN__
+extern int __declspec(dllimport) opterr;
+#else
 extern int opterr;
 int opterr = 0;
+#endif
 GSList *child = NULL;
 
 #define CORRUPT(x)	{ \

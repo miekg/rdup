@@ -23,8 +23,12 @@ guint opt_path_strip_len = 0;	/* number of path labels in opt_path_strip */
 guint opt_strip = 0;		/* -s: strippath */
 int sig = 0;
 GSList *hlink_list = NULL;	/* save hardlink for post processing */
+#ifdef __CYGWIN__
+extern int __declspec(dllimport) opterr;
+#else
 extern int opterr;
 int opterr = 0;
+#endif
 
 /* update the directory with the archive */
 static gboolean update(char *path)

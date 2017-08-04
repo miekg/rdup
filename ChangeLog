@@ -1,3 +1,6 @@
+04 Aug 2017: 1.1.16 Masen Furer <mf@0x26.net>
+  * add windows support with Cygwin
+
 02 Mar 2016: 1.1.15 Miek Gieben <miek@miek.nl>
   * [rdup] Change -P so any arguments are executed with 'sh -c', 
     this removes the 7 option limit (Alexander Neumann)
