@@ -1,7 +1,7 @@
 '\" t
-.TH RDUP 1 "24 Dec 2005" "1.1.14" "rdup"
+.TH RDUP 1 "24 Dec 2005" "@PACKAGE_VERSION@" "@PACKAGE_NAME@"
 .SH NAME
-rdup-simple \- create a hardlinked backup
+@PACKAGE_NAME@-simple \- create a hardlinked backup
 .SH SYNOPSIS
 .B rdup-simple
 [\fI\+DAYS\fR]
