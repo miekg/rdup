@@ -12,70 +12,121 @@
 DESTINATION
 
 .SH DESCRIPTION
-rdup-simple is a frontend for 'rdup-snap' and 'rdup'. It will backup all directories and files given on the command line. It will
+rdup-simple is a frontend for 'rdup-up', 'rdup-tr' and 'rdup'. It will backup all directories and files given on the command line. It will
 create a hard linked backup directory, where the backup is created.
 With the optional +DAYS argument you can specify how far backup rdup-simple looks back for previous backups. This should be a
 number in the range 1..99. It defaults to 8 days.
-
+.PP
 rdup-simple will create the directory '~/.rdup' and will store its administrative files there. This program does not need to be
 run with root permissions.
-
+.PP
 The last argument of rdup-simple is used as the destination; the following destinations are supported:
-
-ssh:///user@host/directory
+.TP
+.I ssh:///user@host/directory
 Use 'ssh' as a protocol and 'user' as the remote user name. Store the backup in 'directory' on the remote server 'host'.
-ssh://host/directory
-Use 'ssh' as a protocol and the current username as the remote user name. Store the backup in 'directory' on the remote server
-'host'.
-file:///directory
+.TP
+.I ssh://host/directory
+Use 'ssh' as a protocol and the current username as the remote user name. Store the backup in 'directory' on the remote server 'host'.
+.TP
+.I file:///directory
 Use '/directory' to store the backup, 'file://' is optional. Note: there are 3 slashes here.
-/directory
+.TP
+.I /directory
 Use '/directory' to store the backup.
-directory
+.TP
+.I directory
 Use 'directory' in the current directory for the backup.
+.SS
 Making a backup
-
+.PP
 Making a backup is as simple as:
+.PP
+.in +4n
+.EX
 rdup-simple ~ /adm /vol/backup/$HOSTNAME
-
-~ and /adm are the directories to be backed up. Multiple directories or files are allowed on the command line.
-
-The backup will be stored in '/vol/backup/$HOSTNAME'.
-
-For the backup a YYYYMM directory is created. In this directory specific day-dumps are placed. So the first dump in October 2006,
-will created in 200610/01 and the second in 200610/02, etc.
-
-You can use incremental dumps for ever, there is no need to do a full dump every once in a while.
-
-Note that rdup-simple calls rdup-snap-link. This small utility will actually hardlink copy the previous backup. The return value
-of rdup-snap-link will determine if a full or incremental dump will be performed.
-
+.EE
+.in
+.PP
+~ and /adm are the directories to be backed up.
+Multiple directories or files are allowed on the command line.
+.PP
+The backup will be stored in
+.I /vol/backup/$HOSTNAME.
+.PP
+For the backup a YYYYMM directory is created.
+In this directory specific day-dumps are placed.
+So the first dump in October 2006,
+will be created in 200610/01 and the second in 200610/02, etc.
+.PP
+You can use incremental dumps for ever,
+there is no need to do a full dump every once in a while.
+.SS
 Remote backups
-
-Note: for remote backups to work, the receiving machine must have rdup installed. Also note: there is no colon between the
+.PP
+Note: for remote backups to work,
+the receiving machine must have rdup installed.
+Also note: there is no colon between the
 hostname and the directory. Remote backup will create a pipeline of the form:
 rdup -c DIR|FILE | ssh user@remotehost
-
-rdup-shapshot -c -b backupdir
-
+.PP
 There is no provisioning for ssh so unless you have configured ssh to work without a passphrase you will be asked to supply one.
-Also note that the PATH on the remote host should be set in such a way that all the rdup-util scripts can be found.
 
 .SH OPTIONS
 .TP
-.B \-P\fIcommand\fR
-Filter all output through \fIcommand\fR, which is called via `sh -c command'.
-Multiple \-P's can be used.
+.TP
+.B \-k \fIkeyfile\fR
+encrypt all files: rdup -P "mcrypt -f keyfile"
+.TP
+.B \-z
+compress all files: rdup -P gzip
+.TP
+.B \-E \fIFILE\fR
+use FILE as en exclude list
+.TP
+.B \-f
+Force a full dump.
+.TP
+.B \-v
+echo the files processed to standard error and be more verbose
+.TP
+.B \-n
+Dry run; show the actual rdup comand and pass -n to rdup
+.TP
+.B \-x
+Pass -x to
+.BR rdup (8).
+.TP
+.B \-q
+Pass -q to
+.BR rdup-up (1).
+.TP
+.B \-s \fINUM\fR
+pass -s NUM to rdup-up (strip NUM leading path components)
+.TP
+.B \-X \fIFILE\fR
+encrypt all paths with AES and key in FILE
+.TP
+.B \-Y \fIFILE\fR
+decrypt all paths with AES and key in FILE
+.TP
+.B \-h
+Show a short help message.
+.TP
+.B \-V
+Show the version.
 
 .SH AUTHOR
-Written by Miek Gieben. 
+Written by Miek Gieben.
 
 .SH REPORTING BUGS
-Report bugs to <miek@miek.nl>. 
+Report bugs to <miek@miek.nl>.
 
 .SH SEE ALSO
 http:/www.miek.nl/projects/rdup is the main site of rdup. Also see
-rdup-tr(1), rdup-up(1) and rdup-backups(7).
+.BR rdup-tr (1),
+.BR rdup-up (1)
+and
+.BR rdup-backups (7).
 
 .SH COPYRIGHT
 Copyright (C) 2005-2011 Miek Gieben. This is free software. There is NO
@@ -84,29 +135,3 @@ PURPOSE.
 .PP
 Licensed under the GPL version 3. See the file LICENSE in the source distribution
 of rdup.
-
-
-rdup-simple [ +DAYS ] [ OPTIONS ] DIR|FILE [ DIR|FILE ] DESTINATION
-Description
-
-Options
-
--k keyfile Encrypt the files while backing up with keyfile. This option inserts rdup-crypt keyfile in the pipeline.
--a
-Enable extended attributes. Write the uid/gid to the extended user attributes r_uid and r_gid.
--f
-Force a full dump.
--x
-See -x in rdup(8).
--z
-Compress the files while backing up. This option inserts rdup-gzip in the pipeline.
--v
-Echo the files processed to standard error.
--h
-Show a short help message.
--V
-Show the version.
-See Also
-
-rdup(8), rdup-snap-link(8) and rdup-snapshot(8). See rdup-backups(8) for examples and an introduction into making backups with
-rdup.
