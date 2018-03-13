@@ -123,13 +123,13 @@ if test ${sysconfdir} = '${prefix}/etc'; then
 fi
 
 AC_CONFIG_FILES([GNUmakefile 
-		 po/GNUmakefile
+                 po/GNUmakefile
                  rdup.h
                  rdup-tr.h
                  rdup-up.h
                  doc/rdup.1
                  doc/rdup-tr.1
                  doc/rdup-up.1
-                 ])
+                 doc/rdup-simple.1])
 AC_CONFIG_HEADER([config.h])
 AC_OUTPUT
