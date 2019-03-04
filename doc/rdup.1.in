@@ -69,8 +69,8 @@ can be specified multiple times. These are the directories and files
 you want to backup. If omitted it defaults to the current directory "." .
 .PP
 If the \fI\-N timestamp\fR option is not given, all paths found are
-printed. Only when a \fI\-N timestamp\fR file is given, times can be
-compared and an incremental output can be generated. 
+printed. Only when a \fI\-N timestamp\fR file is given can times be
+compared and an incremental output generated. 
 .PP
 \fBrdup\fR prints a filelist to standard output. 
 Subsequent programs in a pipe line can be used to actually
