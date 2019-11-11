@@ -88,7 +88,7 @@ gchar *crypt_path_ele(struct aes_ctx * ctx, gchar * elem, GHashTable * tr)
 	source = g_malloc0(aes_size);
 	dest = g_malloc0(aes_size);
 
-	g_memmove(source, elem, len);
+	memmove(source, elem, len);
 	aes_encrypt(ctx, aes_size, dest, source);
 
 	b64 = encode_base64(aes_size, dest);
@@ -136,7 +136,7 @@ gchar *decrypt_path_ele(struct aes_ctx * ctx, char *b64, GHashTable * tr)
 	source = g_malloc0(aes_size);
 	dest = g_malloc0(aes_size);
 
-	g_memmove(source, crypt, crypt_size);
+	memmove(source, crypt, crypt_size);
 	aes_decrypt(ctx, aes_size, dest, source);
 
 	g_free(source);
