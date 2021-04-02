@@ -61,10 +61,9 @@ gchar *dir_parent(gchar * p)
 	copy = g_strdup(p);
 	n = strrchr(copy, '/');
 	if (n) {
-		*(n + 1) = '\0';
+		*n = '\0';
 		p2 = g_strdup(copy);
 		g_free(copy);
-		*n = '/';
 		return p2;
 	}
 	return NULL;
