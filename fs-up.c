@@ -97,7 +97,20 @@ mk_dev(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 		return FALSE;
 
 	if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
-		if (errno == EACCES) {
+		if ( errno == ENOENT ) {
+			// A path element does not exist, this is probably a -R dump
+			// Create path with default perms, dir entry itself will appear later
+			// and set things right regarding perms/ownership
+			dir_mkpath(e->f_name);
+
+			// Retry mknod
+			if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
+				msgd(__func__, __LINE__,
+				     _("Failed to make device `%s\': %s"),
+				     e->f_name, strerror(errno));
+				return FALSE;
+			}
+		} else if (errno == EACCES) {
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mknod(e->f_name, e->f_mode, e->f_rdev) == -1) {
@@ -105,10 +118,12 @@ mk_dev(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 				     _("Failed to make device `%s\': %s"),
 				     e->f_name, strerror(errno));
 				dir_restore(parent, st);
+				g_free(st);
 				g_free(parent);
 				return FALSE;
 			}
 			dir_restore(parent, st);
+			g_free(st);
 			g_free(parent);
 		} else {
 			msgd(__func__, __LINE__,
@@ -134,7 +149,20 @@ mk_sock(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 		return FALSE;
 
 	if (mkfifo(e->f_name, e->f_mode) == -1) {
-		if (errno == EACCES) {
+		if ( errno == ENOENT ) {
+			// A path element does not exist, this is probably a -R dump
+			// Create path with default perms, dir entry itself will appear later
+			// and set things right regarding perms/ownership
+			dir_mkpath(e->f_name);
+
+			// Retry fifio
+			if (mkfifo(e->f_name, e->f_mode) == -1) {
+				msgd(__func__, __LINE__,
+				     _("Failed to make socket  `%s\': %s"),
+				     e->f_name, strerror(errno));
+				return FALSE;
+			}
+		} else if (errno == EACCES) {
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (mkfifo(e->f_name, e->f_mode) == -1) {
@@ -142,10 +170,12 @@ mk_sock(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 				     _("Failed to make socket `%s\': %s"),
 				     e->f_name, strerror(errno));
 				dir_restore(parent, st);
+				g_free(st);
 				g_free(parent);
 				return FALSE;
 			}
 			dir_restore(parent, st);
+			g_free(st);
 			g_free(parent);
 		} else {
 			msgd(__func__, __LINE__,
@@ -174,7 +204,20 @@ mk_link(struct rdup *e, char *p, GHashTable * uidhash, GHashTable * gidhash)
 	/* symlink */
 	if (S_ISLNK(e->f_mode)) {
 		if (symlink(e->f_target, e->f_name) == -1) {
-			if (errno == EACCES) {
+			if ( errno == ENOENT ) {
+				// A path element does not exist, this is probably a -R dump
+				// Create path with default perms, dir entry itself will appear later
+				// and set things right regarding perms/ownership
+				dir_mkpath(e->f_name);
+
+				// Retry symlink
+				if (symlink(e->f_target, e->f_name) == -1) {
+					msgd(__func__, __LINE__,
+					     _("Failed to make symlink `%s -> %s\': %s"),
+					     e->f_name, e->f_target, strerror(errno));
+					return FALSE;
+				}
+			} else if (errno == EACCES) {
 				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (symlink(e->f_target, e->f_name) == -1) {
@@ -184,10 +227,12 @@ mk_link(struct rdup *e, char *p, GHashTable * uidhash, GHashTable * gidhash)
 					     e->f_name, e->f_target,
 					     strerror(errno));
 					dir_restore(parent, st);
+					g_free(st);
 					g_free(parent);
 					return FALSE;
 				}
 				dir_restore(parent, st);
+				g_free(st);
 				g_free(parent);
 			} else {
 				msgd(__func__, __LINE__,
@@ -236,17 +281,32 @@ mk_reg(FILE * in, struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 		}
 	}
 	if (!opt_dry && !(out = fopen(e->f_name, "w"))) {
-		if (errno == EACCES) {
+		if ( errno == ENOENT ) {
+			// A path element does not exist, this is probably a -R dump
+			// Create path with default perms, dir entry itself will appear later
+			// and set things right regarding perms/ownership
+			dir_mkpath(e->f_name);
+
+			// Reopen file now
+			if (!(out = fopen(e->f_name, "w"))) {
+				msgd(__func__, __LINE__,
+				     _("ENOENT file `%s\': %s"),
+				     e->f_name, strerror(errno));
+				ok = FALSE;
+			}
+		} else if (errno == EACCES) {
 			parent = dir_parent(e->f_name);
 			st = dir_write(parent);
 			if (!(out = fopen(e->f_name, "w"))) {
 				msgd(__func__, __LINE__,
 				     _("Failed to open file `%s\': %s"),
 				     e->f_name, strerror(errno));
+				g_free(st);
 				g_free(parent);
 				ok = FALSE;
 			}
 			dir_restore(parent, st);
+			g_free(st);
 			g_free(parent);
 		} else {
 			msgd(__func__, __LINE__,
@@ -320,7 +380,20 @@ mk_dir(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 	/* nothing there */
 
 	if (mkdir(e->f_name, e->f_mode) == -1) {
-		if (errno == EACCES) {
+		if ( errno == ENOENT ) {
+			// A path element does not exist, this is probably a -R dump
+			// Create path with default perms, dir entry itself will appear later
+			// and set things right regarding perms/ownership
+			dir_mkpath(e->f_name);
+
+			// Retry mkdir
+			if (mkdir(e->f_name, e->f_mode) == -1) {
+				msgd(__func__, __LINE__,
+				     _("Failed to create directory `%s\': %s"),
+				     e->f_name, strerror(errno));
+                                return FALSE;
+			}
+		} else if (errno == EACCES) {
 			/* make parent dir writable, and try again */
 			parent = dir_parent(e->f_name);
 #ifdef DEBUG
@@ -336,10 +409,12 @@ mk_dir(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 				     _("Failed to create directory `%s\': %s"),
 				     e->f_name, strerror(errno));
 				dir_restore(parent, s);
+				g_free(s);
 				g_free(parent);
 				return FALSE;
 			}
 			dir_restore(parent, s);
+			g_free(s);
 			g_free(parent);
 		} else {
 			msgd(__func__, __LINE__,
