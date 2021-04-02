@@ -412,17 +412,31 @@ gboolean mk_hlink(GSList * h)
 {
 	struct rdup *e;
 	GSList *p;
-	struct stat *st;
+	struct stat *st, st_parent;
 	gchar *parent;
+	struct utimbuf times;
+	gboolean parent_stat_res, ok = TRUE;
 
 	if (opt_dry)
 		return TRUE;
 
 	for (p = g_slist_nth(h, 0); p; p = p->next) {
 		e = (struct rdup *)p->data;
+
+		// save parent atime and mtime
+		parent = dir_parent(e->f_name);
+		if ((parent_stat_res = stat(parent, &st_parent)) == -1) {
+			msgd(__func__, __LINE__,
+			     _
+			     ("Failed to stat parent `%s\': %s"),
+			     e->f_name, strerror(errno));
+			ok = FALSE;
+		}
+
 		if (link(e->f_target, e->f_name) == -1) {
+			// hard links are created after all the dump has been processed
+			// any paths should be created already
 			if (errno == EACCES) {
-				parent = dir_parent(e->f_name);
 				st = dir_write(parent);
 				if (link(e->f_target, e->f_name) == -1) {
 					msgd(__func__, __LINE__,
@@ -430,22 +444,35 @@ gboolean mk_hlink(GSList * h)
 					     ("Failed to create hardlink `%s -> %s\': %s"),
 					     e->f_name, e->f_target,
 					     strerror(errno));
-					dir_restore(parent, st);
-					g_free(parent);
-					return FALSE;
+					ok = FALSE;
 				}
 				dir_restore(parent, st);
-				g_free(parent);
-				return TRUE;
+				g_free(st);
 			} else {
 				msgd(__func__, __LINE__,
 				     _
 				     ("Failed to create hardlink `%s -> %s\': %s"),
 				     e->f_name, e->f_target, strerror(errno));
-				return FALSE;
+				ok = FALSE;
 			}
 		}
+
+		// reset parents atime and mtime
+		if (!parent_stat_res) {
+			times.actime = st_parent.st_atime;
+			times.modtime = st_parent.st_mtime;
+			if (utime(parent, &times) == -1) {
+				msgd(__func__, __LINE__,
+				     _
+				     ("Failed to update atime/mtime`%s\': %s"),
+				     parent, strerror(errno));
+				ok = FALSE;
+			}
+		}
+
+		g_free(parent);
+
 		entry_free(e);
 	}
-	return TRUE;
+	return ok;
 }
