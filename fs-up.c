@@ -198,6 +198,18 @@ mk_link(struct rdup *e, char *p, GHashTable * uidhash, GHashTable * gidhash)
 			}
 		}
 		mk_chown(e, uidhash, gidhash);
+
+		// Set mtime and atime through lutimes(2);
+		struct timeval times[2];
+
+		// Element 0 is atime, 1 is mtime
+		times[0].tv_sec = times[1].tv_sec = e->f_mtime;
+		times[0].tv_usec = times[1].tv_usec = 0;
+		if ( lutimes(e->f_name, times) == -1)
+		{
+			msgd(__func__, __LINE__, _("Failed to set mtime on symlink target '%s\': %s"),
+			     e->f_name, strerror(errno));
+		}
 		return TRUE;
 	}
 
