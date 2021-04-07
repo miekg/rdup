@@ -25,10 +25,9 @@ uid_t lookup_uid(GHashTable * u, gchar * user, uid_t uid_given)
 		return *uid_tmp;
 
 	p = getpwnam(user);
-	if (!p)			/* user does not exist on this system */
-		return uid_given;
+	/* if user does not exist on this system cache uid_given */
+	uid = (!p) ? uid_given : p->pw_uid;
 
-	uid = p->pw_uid;
 	uid_tmp = g_malloc(sizeof(uid_t));
 	*uid_tmp = uid;
 	g_hash_table_insert(u, g_strdup(user), (gpointer) uid_tmp);
@@ -52,10 +51,9 @@ gid_t lookup_gid(GHashTable * g, gchar * group, gid_t gid_given)
 		return *gid_tmp;
 
 	p = getgrnam(group);
-	if (!p)			/* grp does not exist on this system */
-		return gid_given;
+	/* if grp does not exist on this system cache it gid_given */
+	gid = (!p) ? gid_given : p->gr_gid;
 
-	gid = p->gr_gid;
 	gid_tmp = g_malloc(sizeof(gid_t));
 	*gid_tmp = gid;
 
