@@ -43,8 +43,11 @@ mk_chown(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 {
 	uid_t u;
 	gid_t g;
+	gchar *dup;
+
 	u = lookup_uid(uidhash, e->f_user, e->f_uid);
 	g = lookup_gid(gidhash, e->f_group, e->f_gid);
+
 
 	if (lchown(e->f_name, u, g) == -1) {
 		if (opt_chown) {
@@ -54,9 +57,13 @@ mk_chown(struct rdup *e, GHashTable * uidhash, GHashTable * gidhash)
 				chown_write(e->f_name, NULL, e->f_uid,
 					    e->f_user, e->f_gid, e->f_group);
 			} else {
-				chown_write(dirname(e->f_name),
+				/* dirname may (will!) mess source string, so
+				 * we have to use duplicates! */
+				dup = g_strdup(e->f_name);
+				chown_write(dirname(dup),
 					    basename(e->f_name), e->f_uid,
 					    e->f_user, e->f_gid, e->f_group);
+				g_free(dup);
 			}
 		} else {
 			if (!opt_quiet) {
