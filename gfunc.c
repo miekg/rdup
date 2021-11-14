@@ -14,6 +14,15 @@
 #define SHA1_DIGEST_SIZE 20
 #endif				/* HAVE_LIBNETTLE */
 
+/* see https://github.com/miekg/rdup/pull/47 for why this is necessary */
+#if SIZEOF_OFF_T == SIZEOF_LONG_LONG
+#define OFF_T_FORMAT "lld"
+#elif SIZEOF_OFF_T == SIZEOF_LONG
+#define OFF_T_FORMAT "ld"
+#else
+#error Unknown sizeof(off_t)
+#endif
+
 extern gboolean opt_removed;
 extern gboolean opt_modified;
 extern gboolean opt_skip;
@@ -293,11 +302,11 @@ static void entry_print_data(FILE * out, char n, struct rdup *e)
 		}
 		/* links */
 		if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-			fprintf(out, "%jd", e->f_size);
+			fprintf(out, "%" OFF_T_FORMAT, e->f_size);
 			break;
 		}
 
-		fprintf(out, "%jd", e->f_size);
+		fprintf(out, "%" OFF_T_FORMAT, e->f_size);
 		break;
 	case 'H':		/* sha1 hash */
 		if (S_ISREG(e->f_mode)) {
