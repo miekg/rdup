@@ -15,7 +15,7 @@ Cygwin dependencies:
   * autoconf,automake,gcc-core,make
   * libarchive-devel,libglib2.0-devel,libnettle-devel,libpcre-devel
 * Test: dejagnu,mcrypt
-* Run: libarchive13,libglib2.0_0,libnettle4,libpcre1
+* Run: libarchive20,libglib2.0_0,libnettle8,libpcre2
 
 To build from git:
 

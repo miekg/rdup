@@ -62,28 +62,28 @@ AC_ARG_WITH(libpcre_libraries,
 if test "$with_libpcre_includes" != "no"; then
    CFLAGS="${CFLAGS} -I${with_libpcre_includes}"
 else
-   CFLAGS="${CFLAGS} `pcre-config --cflags`"
+   CFLAGS="${CFLAGS} `pcre2-config --cflags`"
 fi
 
 if test "$with_libpcre_libraries" != "no"; then
    LIBS="${LIBS} -L${with_libpcre_libraries}"
 else
-   LIBS="${LIBS} `pcre-config --libs`"
+   LIBS="${LIBS} `pcre2-config --libs8`"
 fi
 
 # PCRE configuration (required)
 # Verify that we have the headers
 PCRE_H=""
-AC_CHECK_HEADERS(pcre.h,, PCRE_H="no")
+AC_CHECK_HEADERS(pcre2.h,, PCRE_H="no", [#define PCRE2_CODE_UNIT_WIDTH 8])
 if test "$PCRE_H" = "no"; then
-	AC_MSG_ERROR([** No pcre library found.])
+	AC_MSG_ERROR([** No pcre2 header for library found.])
 fi
 
 # Verify that we have the library
 PCRE_L=""
-AC_CHECK_LIB(pcre, pcre_compile, ,PCRE_L="no")
+AC_CHECK_LIB(pcre2-8, pcre2_compile_8, , PCRE_L="no")
 if test "$PCRE_L" = "no"; then
-	AC_MSG_ERROR([** No pcre library found.])
+	AC_MSG_ERROR([** No pcre2 library found.])
 fi
 
 AC_ARG_WITH(libnettle_includes,
