@@ -121,6 +121,11 @@ if test ${sysconfdir} = '${prefix}/etc'; then
         sysconfdir='/etc'
 fi
 
+# fix macOS build error
+AC_CHECK_SIZEOF(off_t)
+AC_CHECK_SIZEOF(long long)
+AC_CHECK_SIZEOF(long)
+
 AC_CONFIG_FILES([GNUmakefile 
                  po/GNUmakefile
                  rdup.h
