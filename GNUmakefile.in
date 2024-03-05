@@ -29,8 +29,8 @@ GLIB_LIBS=@GLIB_LIBS@
 LIBS=@LIBS@
 DEBUG=@DEBUG@
 CFLAGS=-Wall -W -Werror @CFLAGS@ @DEFS@ -DLOCALEROOTDIR=\"@localedir@\" -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -Os -Wpointer-arith -Wstrict-prototypes 
-INSTALL=./install-sh -c
-INSTALL_DATA=$(INSTALL) -m 644
+INSTALL_BIN=$(INSTALL) -D
+INSTALL_DATA=$(INSTALL) -D -m 644
 
 .PHONY:	all clean install all uninstall strip
 
@@ -91,10 +91,8 @@ realclean: clean
 distclean: 
 
 install: all
-	mkdir -p ${DESTDIR}${mandir}/man1
-#	mkdir -p ${DESTDIR}${datadir}
-	for i in ${CMD}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
-	for i in ${SH}; do ${INSTALL} $$i ${DESTDIR}${bindir}/$$i ; done
+	for i in ${CMD}; do ${INSTALL_BIN} $$i ${DESTDIR}${bindir}/$$i ; done
+	for i in ${SH}; do ${INSTALL_BIN} $$i ${DESTDIR}${bindir}/$$i ; done
 	for i in ${MAN1}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man1/`basename $$i` ; done; exit 0
 	for i in ${MAN7}; do [ -f $$i ] &&  ${INSTALL_DATA} $$i ${DESTDIR}${mandir}/man7/`basename $$i` ; done; exit 0
 	$(MAKE) -C po install

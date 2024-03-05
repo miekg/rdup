@@ -1,13 +1,12 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.57)
-AC_INIT(rdup, 1.1.16, miek@miek.nl, rdup)
+AC_PREREQ([2.71])
+AC_INIT([rdup],[1.1.16],[miek@miek.nl],[rdup])
 AC_CONFIG_SRCDIR([rdup.c])
 AC_PREFIX_DEFAULT(/usr/local)
 
-sinclude(glib-2.0.m4)
-AC_AIX
+AC_USE_SYSTEM_EXTENSIONS
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
@@ -131,5 +130,5 @@ AC_CONFIG_FILES([GNUmakefile
                  doc/rdup-tr.1
                  doc/rdup-up.1
                  doc/rdup-simple.1])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_OUTPUT
