@@ -7,7 +7,8 @@
 
 #include "rdup.h"
 #include "protocol.h"
-#include <pcre.h>
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
 #ifdef HAVE_LIBNETTLE
 #include <nettle/sha.h>
 #else
@@ -622,20 +623,30 @@ gboolean gfunc_subtract(gpointer data, gpointer value, gpointer diff)
 gboolean gfunc_regexp(GSList * l, char *n, size_t len)
 {
 	GSList *k;
-	pcre *P;
-	int ovector[REG_VECTOR];
+	pcre2_code *P;
 
 	for (k = g_slist_nth(l, 0); k; k = k->next) {
 		if (sig != 0)
 			signal_abort(sig);
 
-		P = (pcre *) k->data;
+		P = (pcre2_code *) k->data;
+
+		pcre2_match_data* match_data = pcre2_match_data_create_from_pattern(P,NULL);
+
 		/* pcre_exec errors are all < 0, so >= 0 is some kind
 		 * of success
 		 */
-		if (pcre_exec(P, NULL, n, len, 0, 0, ovector, REG_VECTOR) >= 0)
+
+		if (pcre2_match(P, (PCRE2_SPTR8)n, len, 0, 0, match_data, NULL) >= 0) {
+
+                        if(match_data) pcre2_match_data_free(match_data);
+
 			return TRUE;
+		}
+
+		if(match_data) pcre2_match_data_free(match_data);
 	}
+
 	return FALSE;
 }
 

@@ -6,7 +6,8 @@
  */
 
 #include "rdup.h"
-#include <pcre.h>
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
 
 GSList *pregex_list = NULL;
 
@@ -18,15 +19,15 @@ gboolean regexp_init(char *file)
 {
 	FILE *fp;
 	char *buf;
-	const char *errbuf;
-	int erroff;
+	int errcode;
+	PCRE2_SIZE erroff;
 	char delim;
 	gpointer d;
 	size_t l;
 	size_t s;
 	size_t re_length;
 	ssize_t j;
-	pcre *P;
+	pcre2_code *P;
 
 	if ((fp = fopen(file, "r")) == NULL) {
 		msg(_("Could not open '%s\': %s"), file, strerror(errno));
@@ -45,16 +46,16 @@ gboolean regexp_init(char *file)
 		/* buf[j - 1] holds the delimeter */
 		buf[j - 1] = '\0';
 
-		if ((P = pcre_compile(buf, 0, &errbuf, &erroff, NULL)) == NULL) {
+		if ((P = pcre2_compile((PCRE2_SPTR)buf, PCRE2_ZERO_TERMINATED, 0, &errcode, &erroff, NULL)) == NULL) {
 			/* error */
 			fclose(fp);
 			msg(_
-			    ("Corrupt regular expression line: %zd, column %d: %s"),
-			    l, erroff, errbuf);
+			    ("Corrupt regular expression line: %zd, column %d: %d"),
+			    l, erroff, errcode);
 			g_free(buf);
 			return FALSE;
 		} else {
-			pcre_fullinfo(P, NULL, PCRE_INFO_SIZE, &re_length);
+			pcre2_pattern_info(P, PCRE2_INFO_SIZE, &re_length);
 			d = g_malloc(re_length);
 			d = memcpy(d, P, re_length);
 			pregex_list = g_slist_append(pregex_list, d);

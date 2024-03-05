@@ -23,7 +23,7 @@ rdup depends on:
 * Gmake for compilation
 * Glib to build. Glib is the low level C library of the
   GTK project. Configure will check for this.
-* PCRE library 
+* PCRE2 library
 * LibNettle  - if you want rdup-tr to do path encryption and
   for sha hashing
 
