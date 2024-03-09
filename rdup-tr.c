@@ -20,8 +20,14 @@ char *template;
 gboolean opt_tty = FALSE;	/* force write to tty */
 #ifdef HAVE_LIBNETTLE
 gchar *opt_crypt_key = NULL;	/* encryption key */
+guint opt_crypt_key_length = 0;
 gchar *opt_decrypt_key = NULL;	/* decryption key */
-struct aes_ctx *aes_ctx = NULL;
+guint opt_decrypt_key_length = 0;
+union {
+	struct aes128_ctx *ctx128;
+	struct aes192_ctx *ctx192;
+	struct aes256_ctx *ctx256;
+} aes = { NULL };
 #endif				/* HAVE_LIBNETTLE */
 gint opt_verbose = 0;		/* be more verbose */
 gint opt_output = O_RDUP;	/* default output */
@@ -45,8 +51,16 @@ void entry_free(struct rdup *f);
 /* encrypt an rdup_entry (just the path of course) */
 static struct rdup *crypt_entry(struct rdup *e, GHashTable * tr)
 {
-	gchar *crypt, *dest;
-	if (!(crypt = crypt_path(aes_ctx, e->f_name, tr))) {
+	gchar *crypt = NULL, *dest = NULL;
+
+	if (opt_crypt_key_length == 16)
+		crypt = crypt_path(aes.ctx128, opt_crypt_key_length, e->f_name, tr);
+	else if (opt_crypt_key_length == 24)
+		crypt = crypt_path(aes.ctx192, opt_crypt_key_length, e->f_name, tr);
+	else if (opt_crypt_key_length == 32)
+		crypt = crypt_path(aes.ctx256, opt_crypt_key_length, e->f_name, tr);
+
+	if (!crypt) {
 		msg(_("Failed to encrypt path `%s\'"), e->f_name);
 		return NULL;
 	}
@@ -56,7 +70,12 @@ static struct rdup *crypt_entry(struct rdup *e, GHashTable * tr)
 
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-		dest = crypt_path(aes_ctx, e->f_target, tr);
+		if (opt_crypt_key_length == 16)
+			dest = crypt_path(aes.ctx128, opt_crypt_key_length, e->f_target, tr);
+		else if (opt_crypt_key_length == 24)
+			dest = crypt_path(aes.ctx192, opt_crypt_key_length, e->f_target, tr);
+		else if (opt_crypt_key_length == 32)
+			dest = crypt_path(aes.ctx256, opt_crypt_key_length, e->f_target, tr);
 		e->f_target = dest;
 		e->f_size = strlen(crypt);	/* use crypt here */
 	}
@@ -66,9 +85,16 @@ static struct rdup *crypt_entry(struct rdup *e, GHashTable * tr)
 /* decrypt an rdup_entry */
 static struct rdup *decrypt_entry(struct rdup *e, GHashTable * tr)
 {
-	gchar *plain, *dest;
+	gchar *plain = NULL, *dest = NULL;
 
-	if (!(plain = decrypt_path(aes_ctx, e->f_name, tr))) {
+	if (opt_decrypt_key_length == 16)
+		plain = decrypt_path(aes.ctx128, opt_decrypt_key_length, e->f_name, tr);
+	else if (opt_decrypt_key_length == 24)
+		plain = decrypt_path(aes.ctx192, opt_decrypt_key_length, e->f_name, tr);
+	else if (opt_decrypt_key_length == 32)
+		plain = decrypt_path(aes.ctx256, opt_decrypt_key_length, e->f_name, tr);
+
+	if (!plain) {
 		msg(_("Failed to decrypt path `%s\'"), e->f_name);
 		return NULL;
 	}
@@ -78,7 +104,12 @@ static struct rdup *decrypt_entry(struct rdup *e, GHashTable * tr)
 
 	/* links are special */
 	if (S_ISLNK(e->f_mode) || e->f_lnk == 1) {
-		dest = decrypt_path(aes_ctx, e->f_target, tr);
+		if (opt_decrypt_key_length == 16)
+			dest = decrypt_path(aes.ctx128, opt_decrypt_key_length, e->f_target, tr);
+		else if (opt_decrypt_key_length == 24)
+			dest = decrypt_path(aes.ctx192, opt_decrypt_key_length, e->f_target, tr);
+		else if (opt_decrypt_key_length == 32)
+			dest = decrypt_path(aes.ctx256, opt_decrypt_key_length, e->f_target, tr);
 		g_free(e->f_target);
 		e->f_target = dest;
 		e->f_size = strlen(plain);
@@ -475,9 +506,18 @@ int main(int argc, char **argv)
 			if (!(opt_crypt_key = crypt_key(optarg)))
 				exit(EXIT_FAILURE);
 
-			aes_ctx = crypt_init(opt_crypt_key, TRUE);
-			if (!aes_ctx)
-				exit(EXIT_FAILURE);
+			opt_crypt_key_length = strlen(opt_crypt_key);
+
+			if (opt_crypt_key_length == 16) {
+				if (!(aes.ctx128 = crypt_init(opt_crypt_key, opt_crypt_key_length, TRUE)))
+					exit(EXIT_FAILURE);
+			} else if (opt_crypt_key_length == 24) {
+				if (!(aes.ctx192 = crypt_init(opt_crypt_key, opt_crypt_key_length, TRUE)))
+					exit(EXIT_FAILURE);
+			} else if (opt_crypt_key_length == 32) {
+				if (!(aes.ctx256 = crypt_init(opt_crypt_key, opt_crypt_key_length, TRUE)))
+					exit(EXIT_FAILURE);
+			}
 #else
 			msg(_("Compiled without encryption, can not encrypt"));
 			exit(EXIT_FAILURE);
@@ -493,9 +533,18 @@ int main(int argc, char **argv)
 			if (!(opt_decrypt_key = crypt_key(optarg)))
 				exit(EXIT_FAILURE);
 
-			aes_ctx = crypt_init(opt_decrypt_key, FALSE);
-			if (!aes_ctx)
-				exit(EXIT_FAILURE);
+			opt_decrypt_key_length = strlen(opt_decrypt_key);
+
+			if (opt_decrypt_key_length == 16) {
+				if (!(aes.ctx128 = crypt_init(opt_decrypt_key, opt_decrypt_key_length, FALSE)))
+					exit(EXIT_FAILURE);
+			} else if (opt_decrypt_key_length == 24) {
+				if (!(aes.ctx192 = crypt_init(opt_decrypt_key, opt_decrypt_key_length, FALSE)))
+					exit(EXIT_FAILURE);
+			} else if (opt_decrypt_key_length == 32) {
+				if (!(aes.ctx256 = crypt_init(opt_decrypt_key, opt_decrypt_key_length, FALSE)))
+					exit(EXIT_FAILURE);
+			}
 #else
 			msg(_("Compiled without encryption, can not decrypt"));
 			exit(EXIT_FAILURE);

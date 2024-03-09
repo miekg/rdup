@@ -14,24 +14,55 @@
 
 extern guint opt_verbose;
 
+static struct aes128_ctx *crypt_init_128(gchar *key, gboolean crypt)
+{
+	struct aes128_ctx *ctx = g_malloc(sizeof(*ctx));
+	if (crypt)
+		aes128_set_encrypt_key(ctx, (uint8_t *)key);
+	else
+		aes128_set_decrypt_key(ctx, (uint8_t *)key);
+	return ctx;
+}
+
+static struct aes192_ctx *crypt_init_192(gchar *key, gboolean crypt)
+{
+	struct aes192_ctx *ctx = g_malloc(sizeof(*ctx));
+	if (crypt)
+		aes192_set_encrypt_key(ctx, (uint8_t *)key);
+	else
+		aes192_set_decrypt_key(ctx, (uint8_t *)key);
+	return ctx;
+}
+
+static struct aes256_ctx *crypt_init_256(gchar *key, gboolean crypt)
+{
+	struct aes256_ctx *ctx = g_malloc(sizeof(*ctx));
+	if (crypt)
+		aes256_set_encrypt_key(ctx, (uint8_t *)key);
+	else
+		aes256_set_decrypt_key(ctx, (uint8_t *)key);
+	return ctx;
+}
+
 /**
  * init the cryto
  * with key  *key
- * and length length
- * lenght MUST be 16, 24 or 32
- * anything short will be zero padded to
+ * anything short will be padded to
  * create a correct key
  * return aes context
  */
-struct aes_ctx *crypt_init(gchar * key, gboolean crypt)
+void *crypt_init(gchar *key, guint key_size, gboolean crypt)
 {
-	guint length = strlen(key);
-	struct aes_ctx *ctx = g_malloc(sizeof(struct aes_ctx));
-	if (crypt)
-		aes_set_encrypt_key(ctx, length, (uint8_t *) key);
-	else
-		aes_set_decrypt_key(ctx, length, (uint8_t *) key);
-	return ctx;
+	switch (key_size) {
+	case AES128_KEY_SIZE:
+		return crypt_init_128(key, crypt);
+	case AES192_KEY_SIZE:
+		return crypt_init_192(key, crypt);
+	case AES256_KEY_SIZE:
+		return crypt_init_256(key, crypt);
+	default:
+		return NULL;
+	}
 }
 
 static gboolean is_plain(gchar * s)
@@ -70,7 +101,7 @@ gchar *dot_dotdot(gchar * q, gchar * p, gboolean abs)
 /* encrypt and base64 encode path element
  * return the result
  */
-gchar *crypt_path_ele(struct aes_ctx * ctx, gchar * elem, GHashTable * tr)
+static gchar *crypt_path_ele(void * ctx, guint key_size, gchar * elem, GHashTable * tr)
 {
 	guint aes_size, len;
 	guchar *source;
@@ -89,7 +120,13 @@ gchar *crypt_path_ele(struct aes_ctx * ctx, gchar * elem, GHashTable * tr)
 	dest = g_malloc0(aes_size);
 
 	memmove(source, elem, len);
-	aes_encrypt(ctx, aes_size, dest, source);
+
+	if (key_size == AES128_KEY_SIZE)
+		aes128_encrypt(ctx, aes_size, dest, source);
+	if (key_size == AES192_KEY_SIZE)
+		aes192_encrypt(ctx, aes_size, dest, source);
+	if (key_size == AES256_KEY_SIZE)
+		aes256_encrypt(ctx, aes_size, dest, source);
 
 	b64 = encode_base64(aes_size, dest);
 	g_free(source);
@@ -111,7 +148,7 @@ gchar *crypt_path_ele(struct aes_ctx * ctx, gchar * elem, GHashTable * tr)
 /* decrypt and base64 decode path element
  * return the result
  */
-gchar *decrypt_path_ele(struct aes_ctx * ctx, char *b64, GHashTable * tr)
+static gchar *decrypt_path_ele(void * ctx, guint key_size, char *b64, GHashTable * tr)
 {
 	guint aes_size, len;
 	guchar *source;
@@ -137,7 +174,13 @@ gchar *decrypt_path_ele(struct aes_ctx * ctx, char *b64, GHashTable * tr)
 	dest = g_malloc0(aes_size);
 
 	memmove(source, crypt, crypt_size);
-	aes_decrypt(ctx, aes_size, dest, source);
+
+	if (key_size == AES128_KEY_SIZE)
+		aes128_decrypt(ctx, aes_size, dest, source);
+	else if (key_size == AES192_KEY_SIZE)
+		aes192_decrypt(ctx, aes_size, dest, source);
+	else if (key_size == AES256_KEY_SIZE)
+		aes256_decrypt(ctx, aes_size, dest, source);
 
 	g_free(source);
 	g_free(crypt);
@@ -160,7 +203,7 @@ gchar *decrypt_path_ele(struct aes_ctx * ctx, char *b64, GHashTable * tr)
 /**
  * encrypt an entire path
  */
-gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
+gchar *crypt_path(void * ctx, guint key_size, gchar * p, GHashTable * tr)
 {
 	gchar *q, *c, *t, *crypt, *xpath, *temp, d;
 	gboolean abs;
@@ -180,7 +223,7 @@ gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
 			*c = d;
 			continue;
 		}
-		crypt = crypt_path_ele(ctx, q, tr);
+		crypt = crypt_path_ele(ctx, key_size, q, tr);
 
 		if (xpath) {
 			temp = g_strdup_printf("%s/%s", xpath, crypt);
@@ -199,7 +242,7 @@ gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
 		q = c;
 		*c = d;
 	}
-	crypt = crypt_path_ele(ctx, q, tr);
+	crypt = crypt_path_ele(ctx, key_size, q, tr);
 
 	if (xpath) {
 		temp = g_strdup_printf("%s/%s", xpath, crypt);
@@ -221,7 +264,7 @@ gchar *crypt_path(struct aes_ctx * ctx, gchar * p, GHashTable * tr)
 /**
  * decrypt an entire path
  */
-gchar *decrypt_path(struct aes_ctx * ctx, gchar * x, GHashTable * tr)
+gchar *decrypt_path(void * ctx, guint key_size, gchar * x, GHashTable * tr)
 {
 
 	gchar *path, *q, *c, *t, *plain, *temp, d;
@@ -242,7 +285,7 @@ gchar *decrypt_path(struct aes_ctx * ctx, gchar * x, GHashTable * tr)
 			*c = d;
 			continue;
 		}
-		plain = decrypt_path_ele(ctx, q, tr);
+		plain = decrypt_path_ele(ctx, key_size, q, tr);
 
 		if (path) {
 			temp = g_strdup_printf("%s/%s", path, plain);
@@ -261,7 +304,7 @@ gchar *decrypt_path(struct aes_ctx * ctx, gchar * x, GHashTable * tr)
 		q = c;
 		*c = d;
 	}
-	plain = decrypt_path_ele(ctx, q, tr);
+	plain = decrypt_path_ele(ctx, key_size, q, tr);
 
 	if (path) {
 		temp = g_strdup_printf("%s/%s", path, plain);

@@ -88,10 +88,8 @@ gint rdup_write_table(struct rdup *, FILE *);
 gchar *slink(struct rdup *);
 
 /* crypt.c */
-struct aes_ctx * crypt_init(gchar *, gboolean);
-gchar * crypt_path_ele(struct aes_ctx *, gchar *, GHashTable *);
-gchar * decrypt_path_ele(struct aes_ctx *, gchar *, GHashTable *);
-gchar * crypt_path(struct aes_ctx *, gchar *, GHashTable *);
-gchar * decrypt_path(struct aes_ctx *, gchar *, GHashTable *);
+void *crypt_init(gchar *, guint, gboolean);
+gchar * crypt_path(void *, guint, gchar *, GHashTable *);
+gchar * decrypt_path(void *, guint, gchar *, GHashTable *);
 char *  crypt_key(gchar *);
 #endif  /* _RDUP_TR_H */
