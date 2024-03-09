@@ -68,3 +68,41 @@ gchar *dir_parent(gchar * p)
 	}
 	return NULL;
 }
+
+/**
+  * Make sure a path exists
+  */
+
+void dir_mkpath(gchar *p)
+{
+	gchar *parent;
+
+        parent = dir_parent(p);
+
+	if (parent && (parent[0] == 0)) {
+		msgd(__func__, __LINE__, _("Reached / while trying to create path, bailing out."));
+		g_free(parent);
+		return;
+	}
+
+#if DEBUG
+	msgd(__func__, __LINE__, _("Creating skeleton directory `%s\'"), parent);
+#endif
+
+	struct stat *st = g_malloc(sizeof(struct stat));
+
+	if (stat(parent, st) != 0) {
+		/* Directory does not exist. EEXIST for race condition */
+		if (mkdir(parent, 0700) != 0 && errno != EEXIST) {
+			dir_mkpath(parent);
+			if (mkdir(parent, 0700) != 0 && errno != EEXIST)
+				msgd(__func__, __LINE__, _("Failed to create `%s\'"), parent);
+		}
+	}
+	else if (!S_ISDIR(st->st_mode)) {
+		msgd(__func__, __LINE__, _("%s\': already exists and not a directory"), parent);
+	}
+
+	g_free(st);
+	g_free(parent);
+}
